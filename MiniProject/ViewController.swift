@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import GoogleMaps
 
 class ViewController: UIViewController {
 
@@ -13,7 +14,13 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-        //a
+//        GMSServices.provideAPIKey("XXX") //replace with real API key
+        let options = GMSMapViewOptions()
+        options.camera = GMSCameraPosition.camera(withLatitude: -33.86, longitude: 151.20, zoom: 6.0)
+        options.frame = self.view.bounds
+
+        let mapView = GMSMapView(options: options)
+        self.view.addSubview(mapView)
     }
 
 
