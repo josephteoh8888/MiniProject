@@ -14,6 +14,16 @@
 		2E670A792C2D560000EBA6D3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E670A782C2D560000EBA6D3 /* Assets.xcassets */; };
 		2E670A7C2C2D560000EBA6D3 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 2E670A7B2C2D560000EBA6D3 /* Base */; };
 		2E670A842C2DA35700EBA6D3 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 2E670A832C2DA35700EBA6D3 /* Podfile */; };
+		2E670A862C30448D00EBA6D3 /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670A852C30448D00EBA6D3 /* CacheManager.swift */; };
+		2E670A882C3046D500EBA6D3 /* Regex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670A872C3046D500EBA6D3 /* Regex.swift */; };
+		2E670A8A2C30471700EBA6D3 /* SignInManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670A892C30471700EBA6D3 /* SignInManager.swift */; };
+		2E670A8C2C30476000EBA6D3 /* StrokeUILabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670A8B2C30476000EBA6D3 /* StrokeUILabel.swift */; };
+		2E670A8E2C30479E00EBA6D3 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670A8D2C30479E00EBA6D3 /* Colors.swift */; };
+		2E670A902C3047D500EBA6D3 /* GeohashBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670A8F2C3047D500EBA6D3 /* GeohashBox.swift */; };
+		2E670A922C30480B00EBA6D3 /* Geohash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670A912C30480A00EBA6D3 /* Geohash.swift */; };
+		2E670A942C30484000EBA6D3 /* APICaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670A932C30484000EBA6D3 /* APICaller.swift */; };
+		2E670A962C30486B00EBA6D3 /* DataFetchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670A952C30486B00EBA6D3 /* DataFetchManager.swift */; };
+		2E670A982C3048CA00EBA6D3 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670A972C3048CA00EBA6D3 /* Constant.swift */; };
 		C5CC767E2CB297E68B5CC5A3 /* libPods-MiniProject.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 03A1117512D738091634CA45 /* libPods-MiniProject.a */; };
 /* End PBXBuildFile section */
 
@@ -28,6 +38,16 @@
 		2E670A7B2C2D560000EBA6D3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2E670A7D2C2D560000EBA6D3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2E670A832C2DA35700EBA6D3 /* Podfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
+		2E670A852C30448D00EBA6D3 /* CacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
+		2E670A872C3046D500EBA6D3 /* Regex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Regex.swift; sourceTree = "<group>"; };
+		2E670A892C30471700EBA6D3 /* SignInManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInManager.swift; sourceTree = "<group>"; };
+		2E670A8B2C30476000EBA6D3 /* StrokeUILabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokeUILabel.swift; sourceTree = "<group>"; };
+		2E670A8D2C30479E00EBA6D3 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		2E670A8F2C3047D500EBA6D3 /* GeohashBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeohashBox.swift; sourceTree = "<group>"; };
+		2E670A912C30480A00EBA6D3 /* Geohash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Geohash.swift; sourceTree = "<group>"; };
+		2E670A932C30484000EBA6D3 /* APICaller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APICaller.swift; sourceTree = "<group>"; };
+		2E670A952C30486B00EBA6D3 /* DataFetchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataFetchManager.swift; sourceTree = "<group>"; };
+		2E670A972C3048CA00EBA6D3 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		8E8FDD7B5A32B613FBBD6779 /* Pods-MiniProject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiniProject.release.xcconfig"; path = "Target Support Files/Pods-MiniProject/Pods-MiniProject.release.xcconfig"; sourceTree = "<group>"; };
 		8FF00F2FE6845908F1AA29DE /* Pods-MiniProject.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiniProject.debug.xcconfig"; path = "Target Support Files/Pods-MiniProject/Pods-MiniProject.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -70,6 +90,16 @@
 				2E670A712C2D55FF00EBA6D3 /* SceneDelegate.swift */,
 				2E670A732C2D55FF00EBA6D3 /* ViewController.swift */,
 				2E670A752C2D55FF00EBA6D3 /* Main.storyboard */,
+				2E670A8B2C30476000EBA6D3 /* StrokeUILabel.swift */,
+				2E670A872C3046D500EBA6D3 /* Regex.swift */,
+				2E670A932C30484000EBA6D3 /* APICaller.swift */,
+				2E670A8F2C3047D500EBA6D3 /* GeohashBox.swift */,
+				2E670A972C3048CA00EBA6D3 /* Constant.swift */,
+				2E670A912C30480A00EBA6D3 /* Geohash.swift */,
+				2E670A852C30448D00EBA6D3 /* CacheManager.swift */,
+				2E670A952C30486B00EBA6D3 /* DataFetchManager.swift */,
+				2E670A892C30471700EBA6D3 /* SignInManager.swift */,
+				2E670A8D2C30479E00EBA6D3 /* Colors.swift */,
 				2E670A782C2D560000EBA6D3 /* Assets.xcassets */,
 				2E670A7A2C2D560000EBA6D3 /* LaunchScreen.storyboard */,
 				2E670A7D2C2D560000EBA6D3 /* Info.plist */,
@@ -210,7 +240,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E670A962C30486B00EBA6D3 /* DataFetchManager.swift in Sources */,
+				2E670A862C30448D00EBA6D3 /* CacheManager.swift in Sources */,
+				2E670A902C3047D500EBA6D3 /* GeohashBox.swift in Sources */,
+				2E670A8E2C30479E00EBA6D3 /* Colors.swift in Sources */,
+				2E670A8C2C30476000EBA6D3 /* StrokeUILabel.swift in Sources */,
+				2E670A882C3046D500EBA6D3 /* Regex.swift in Sources */,
 				2E670A742C2D55FF00EBA6D3 /* ViewController.swift in Sources */,
+				2E670A8A2C30471700EBA6D3 /* SignInManager.swift in Sources */,
+				2E670A922C30480B00EBA6D3 /* Geohash.swift in Sources */,
+				2E670A982C3048CA00EBA6D3 /* Constant.swift in Sources */,
+				2E670A942C30484000EBA6D3 /* APICaller.swift in Sources */,
 				2E670A702C2D55FF00EBA6D3 /* AppDelegate.swift in Sources */,
 				2E670A722C2D55FF00EBA6D3 /* SceneDelegate.swift in Sources */,
 			);
