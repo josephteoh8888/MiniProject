@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "filename" : "flaticon_sbts2018_celebrity.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "flaticon_sbts2018_celebrity 1.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "flaticon_sbts2018_celebrity 2.png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

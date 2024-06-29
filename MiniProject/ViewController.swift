@@ -20,6 +20,7 @@ class ViewController: UIViewController {
         options.frame = self.view.bounds
 
         let mapView = GMSMapView(options: options)
+        mapView.mapType = .hybrid
         self.view.addSubview(mapView)
 
     }
