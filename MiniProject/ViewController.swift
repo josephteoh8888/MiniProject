@@ -14,7 +14,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-        GMSServices.provideAPIKey("XXX") //replace with real API key
+        GMSServices.provideAPIKey("AIzaSyBOD7PnDnBW5PlensQ_pwa2bEjh8iNZ0oQ") //replace with real API key
         let options = GMSMapViewOptions()
         options.camera = GMSCameraPosition.camera(withLatitude: -33.86, longitude: 151.20, zoom: 6.0)
         options.frame = self.view.bounds

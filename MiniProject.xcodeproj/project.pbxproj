@@ -24,11 +24,10 @@
 		2E670A942C30484000EBA6D3 /* APICaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670A932C30484000EBA6D3 /* APICaller.swift */; };
 		2E670A962C30486B00EBA6D3 /* DataFetchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670A952C30486B00EBA6D3 /* DataFetchManager.swift */; };
 		2E670A982C3048CA00EBA6D3 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670A972C3048CA00EBA6D3 /* Constant.swift */; };
-		C5CC767E2CB297E68B5CC5A3 /* libPods-MiniProject.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 03A1117512D738091634CA45 /* libPods-MiniProject.a */; };
+		D9E5DA9CED1FA78875BA9B32 /* Pods_MiniProject.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC1D4569B6E7DBC2F6F78A70 /* Pods_MiniProject.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		03A1117512D738091634CA45 /* libPods-MiniProject.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MiniProject.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E670A6C2C2D55FF00EBA6D3 /* MiniProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiniProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E670A6F2C2D55FF00EBA6D3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2E670A712C2D55FF00EBA6D3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -50,6 +49,7 @@
 		2E670A972C3048CA00EBA6D3 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		8E8FDD7B5A32B613FBBD6779 /* Pods-MiniProject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiniProject.release.xcconfig"; path = "Target Support Files/Pods-MiniProject/Pods-MiniProject.release.xcconfig"; sourceTree = "<group>"; };
 		8FF00F2FE6845908F1AA29DE /* Pods-MiniProject.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiniProject.debug.xcconfig"; path = "Target Support Files/Pods-MiniProject/Pods-MiniProject.debug.xcconfig"; sourceTree = "<group>"; };
+		AC1D4569B6E7DBC2F6F78A70 /* Pods_MiniProject.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MiniProject.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,7 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C5CC767E2CB297E68B5CC5A3 /* libPods-MiniProject.a in Frameworks */,
+				D9E5DA9CED1FA78875BA9B32 /* Pods_MiniProject.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,7 +119,7 @@
 		79984C417DA90C347B0B8153 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				03A1117512D738091634CA45 /* libPods-MiniProject.a */,
+				AC1D4569B6E7DBC2F6F78A70 /* Pods_MiniProject.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -136,6 +136,7 @@
 				2E670A692C2D55FF00EBA6D3 /* Frameworks */,
 				2E670A6A2C2D55FF00EBA6D3 /* Resources */,
 				8DD704D1D9A9DAE325ADB34B /* [CP] Copy Pods Resources */,
+				9013D6EAF05C7F8E31D8F7C3 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -209,6 +210,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MiniProject/Pods-MiniProject-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9013D6EAF05C7F8E31D8F7C3 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MiniProject/Pods-MiniProject-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MiniProject/Pods-MiniProject-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MiniProject/Pods-MiniProject-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		F649CE01D6059C287368A6C7 /* [CP] Check Pods Manifest.lock */ = {
