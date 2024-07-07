@@ -346,19 +346,16 @@
 				2E670B782C3126FA00EBA6D3 /* CustomShapes */,
 				2E670B902C31289E00EBA6D3 /* Models */,
 				2E670B812C3127B200EBA6D3 /* HighlightCells */,
+				2EF15C1A2C3A2BA400B63907 /* Manager */,
 				2E670A752C2D55FF00EBA6D3 /* Main.storyboard */,
 				2E670A732C2D55FF00EBA6D3 /* ViewController.swift */,
 				2E670A6F2C2D55FF00EBA6D3 /* AppDelegate.swift */,
 				2E670A712C2D55FF00EBA6D3 /* SceneDelegate.swift */,
 				2E670A8B2C30476000EBA6D3 /* StrokeUILabel.swift */,
 				2E670A872C3046D500EBA6D3 /* Regex.swift */,
-				2E670A932C30484000EBA6D3 /* APICaller.swift */,
 				2E670A8F2C3047D500EBA6D3 /* GeohashBox.swift */,
 				2E670A972C3048CA00EBA6D3 /* Constant.swift */,
 				2E670A912C30480A00EBA6D3 /* Geohash.swift */,
-				2E670A852C30448D00EBA6D3 /* CacheManager.swift */,
-				2E670A952C30486B00EBA6D3 /* DataFetchManager.swift */,
-				2E670A892C30471700EBA6D3 /* SignInManager.swift */,
 				2E670A8D2C30479E00EBA6D3 /* Colors.swift */,
 				2E670A782C2D560000EBA6D3 /* Assets.xcassets */,
 				2E670A7A2C2D560000EBA6D3 /* LaunchScreen.storyboard */,
@@ -547,6 +544,17 @@
 				2E670B932C3128D300EBA6D3 /* PostData.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		2EF15C1A2C3A2BA400B63907 /* Manager */ = {
+			isa = PBXGroup;
+			children = (
+				2E670A952C30486B00EBA6D3 /* DataFetchManager.swift */,
+				2E670A852C30448D00EBA6D3 /* CacheManager.swift */,
+				2E670A892C30471700EBA6D3 /* SignInManager.swift */,
+				2E670A932C30484000EBA6D3 /* APICaller.swift */,
+			);
+			path = Manager;
 			sourceTree = "<group>";
 		};
 		3F547BBAAA474CD50C35558E /* Pods */ = {
