@@ -105,6 +105,12 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .portrait
     }
+    
+    //test > fix statusbar text color to light color, else the color will change wrt screen color
+    //*but this method is for ViewC only, need infoplist for entire app
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -2062,6 +2068,103 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
     }
     
     func getHeatmapPoints() {
+        let id = "g"
+        DataFetchManager.shared.fetchGeoData(id: id) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    print("gg getHeatmapPoints api success \(id), \(l)")
+
+                    guard let self = self else {
+                        return
+                    }
+
+                    for i in l {
+                        let geoL3 = i.getGeohashL3()
+                        let docId = i.getDocId()
+                        let coord = i.getGeoCoord()
+                        
+                        //initialize geohash
+                        if !self.geohashList.keys.contains(geoL3) {
+                            self.geohashList.updateValue([String](), forKey: geoL3)
+                        }
+                        
+                        //append docid into geohash
+                        if var existingValues = self.geohashList[geoL3] {
+                            existingValues.append(docId)
+                            self.geohashList.updateValue(existingValues, forKey: geoL3)
+                        }
+                        
+                        let geo = CLLocationCoordinate2D(latitude: coord.latitude, longitude: coord.longitude)
+                        let coords = GMUWeightedLatLng(
+                            coordinate: geo,
+                            intensity: 1.0
+                        )
+                        self.list.append(coords)
+                        
+                        //test > add geo to markergeolist
+//                            self.markerGeoList.updateValue(geo, forKey: document.documentID)
+                        //TODO
+                        let g = GeoData()
+                        g.setGeoType(type: GeoDataTypes.MARKER)
+                        g.setGeoCoord(coord: geo)
+                        self.markerGeoList.updateValue(g, forKey: docId)
+
+                        
+                        //test > mapzoomgeolist
+                        if !self.mapZoomGeoList.keys.contains(2) {
+                            self.mapZoomGeoList.updateValue([GMUWeightedLatLng](), forKey: 2)
+                        }
+                        if var existingValues = self.mapZoomGeoList[2] {
+                            existingValues.append(coords)
+                            self.mapZoomGeoList.updateValue(existingValues, forKey: 2)
+                        }
+                        
+                        if !self.mapZoomGeoList.keys.contains(14) {
+                            self.mapZoomGeoList.updateValue([GMUWeightedLatLng](), forKey: 14)
+                        }
+                        if var existingValues = self.mapZoomGeoList[14] {
+                            existingValues.append(coords)
+                            self.mapZoomGeoList.updateValue(existingValues, forKey: 14)
+                        }
+                    }
+                    
+                    //test > show heatmap first instead of markers
+                    self.refreshHeatmap(mapZoom: 2)
+                    
+                    //test 0 > test geohash neighbors of clusters
+                    var geos = [String]()
+                    for entry in self.geohashList {
+                        geos.append(entry.key)
+                    }
+                    for geo in geos {
+                        let geoNeighbor = Geohash.neighbors(geo)!
+                        for nEntry in geoNeighbor {
+                            if(geos.contains(nEntry)) {
+                                print("geoL3 n: \(geo), \(nEntry)")
+                                //ws, we, wd
+                                //wx, wy
+                                //gc, u0
+                            }
+                        }
+                    }
+                    
+                    //test > refactor showing markers in one line
+                    self.showHeatmapPoints()
+                    
+                    //test > map collision test **originally not in firestore fetching code
+                    self.mapCheckCollisionPoints(withAnimation: true)
+                }
+
+                case .failure(_):
+                    print("api fail")
+                    break
+            }
+        }
+        
+        //old method > direct fetch from firestore
 //        let db = Firestore.firestore()
 //        let docRef = db.collection("post")
 //        docRef
@@ -3092,6 +3195,41 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
 //    }
     
     func getSinglePlacePoint() {
+        let id = "g"
+        DataFetchManager.shared.fetchSingleGeoData(id: id) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    print("gg getsinglepoint api success \(id), \(l)")
+
+                    guard let self = self else {
+                        return
+                    }
+
+                    //test 2 > new method for id and geodata mapping
+                    for i in l {
+                        let docId = i.getDocId()
+                        let coord = i.getGeoCoord()
+                        
+                        let geo = CLLocationCoordinate2D(latitude: coord.latitude, longitude: coord.longitude)
+                        let g = GeoData()
+                        g.setGeoType(type: GeoDataTypes.PLACEMARKER)
+                        g.setGeoCoord(coord: geo)
+                        self.markerGeoList.updateValue(g, forKey: docId)
+                        
+                        self.placeMarkerIdList.append(docId)
+                    }
+                }
+
+                case .failure(_):
+                    print("api fail")
+                    break
+            }
+        }
+        
+        //old method > direct fetch from firestore
 //        let db = Firestore.firestore()
 //        let docRef = db.collection("post")
 //        docRef
