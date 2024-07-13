@@ -1009,8 +1009,8 @@ class LoginPanelView: PanelView{
                     self.closePanel(isAnimated: true)
                 }
 
-                case .failure(_):
-                    print("api fail")
+                case .failure(let error):
+                    print("signin error : \(error)")
                     break
             }
         }

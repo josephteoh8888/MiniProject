@@ -14,6 +14,8 @@ protocol MePanelDelegate : AnyObject {
     //test > connect to other panel
     func didMeClickUser()
     func didMeClickLogin()
+    func didMeStartSignout()
+    func didMeCompleteSignout()
 }
 
 class MePanelView: PanelView{
@@ -321,14 +323,14 @@ class MePanelView: PanelView{
             
             if(isUserLoggedIn) {
                 aLoggedOutBox.isHidden = true
-                aLoggedOutTextBox.isHidden = true
-                aLoggedInTextBox.isHidden = false
+//                aLoggedOutTextBox.isHidden = true
+//                aLoggedInTextBox.isHidden = false
                 
                 self.asyncFetchFeed(id: "post_feed")
             } else {
                 aLoggedOutBox.isHidden = false
-                aLoggedOutTextBox.isHidden = false
-                aLoggedInTextBox.isHidden = true
+//                aLoggedOutTextBox.isHidden = false
+//                aLoggedInTextBox.isHidden = true
             }
         }
         //test > check signin status
@@ -605,6 +607,9 @@ class MePanelView: PanelView{
     }
     
     func asyncSignoutAccount(id: String) {
+        
+        delegate?.didMeStartSignout()
+        
         SignInManager.shared.signOut(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -626,6 +631,9 @@ class MePanelView: PanelView{
                         self.isInitialized = false
                         self.initialize()
                     }
+                    
+                    //test > remove signout progress view
+                    self.delegate?.didMeCompleteSignout()
                 }
 
                 case .failure(_):
@@ -733,11 +741,16 @@ extension MePanelView: MeCellDelegate{
 extension ViewController: MePanelDelegate{
 
     func didMeClickUser() {
-        //test
         openUserPanel()
     }
     func didMeClickLogin() {
         openLoginPanel()
-
+    }
+    //test > signout progress view
+    func didMeStartSignout() {
+        openSignoutProgressPanel()
+    }
+    func didMeCompleteSignout() {
+        signoutProgressPanel?.closePanel(isAnimated: true)
     }
 }

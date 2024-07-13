@@ -8,6 +8,11 @@
 import Foundation
 import UIKit
 
+enum SignInError: Error {
+    case networkError
+    case invalidResponse
+}
+
 class SignInManager {
 
     static let shared = SignInManager()
@@ -24,7 +29,9 @@ class SignInManager {
             isSignedIn = true
 
             completion(.success(isSignedIn))
-
+            
+            //test > testing for error handling
+//            completion(.failure(SignInError.invalidResponse))
         })
     }
     

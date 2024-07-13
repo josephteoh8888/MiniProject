@@ -91,6 +91,7 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
 //    let notifyPanel : NotifyPanelView
     let mePanel = MePanelView()
     var createSelectPanel: CreateSelectPanelView?
+    var signoutProgressPanel: SignoutProgressView? //test > signout progress view
     
     //test > user current location
     let locationManager = CLLocationManager()
@@ -1385,17 +1386,7 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
     
     func openCreateSelectPanel(lastMenuMode: String) {
         
-//        let panel = CreateSelectPanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
-//        self.view.addSubview(panel)
-//        panel.translatesAutoresizingMaskIntoConstraints = false
-//        panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
-//        panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
-//        panel.setLastAppMenuMode(mode: lastMenuMode)
-//        panel.delegate = self
-////        panel.initialize()
-//        panel.initialize(width: view.frame.width, height: view.frame.height)
-        
-        //test > try another way
+        //test > try another way -> using optional
 //        print("openCreateSelectPanel \(createSelectPanel)")
         createSelectPanel = CreateSelectPanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
         guard let createSelectPanel = self.createSelectPanel else {
@@ -1408,6 +1399,18 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         createSelectPanel.setLastAppMenuMode(mode: lastMenuMode)
         createSelectPanel.delegate = self
         createSelectPanel.initialize(width: view.frame.width, height: view.frame.height)
+    }
+    
+    //test > signout progress view
+    func openSignoutProgressPanel() {
+        signoutProgressPanel = SignoutProgressView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
+        guard let signoutProgressPanel = self.signoutProgressPanel else {
+            return
+        }
+        self.view.addSubview(signoutProgressPanel)
+        signoutProgressPanel.translatesAutoresizingMaskIntoConstraints = false
+        signoutProgressPanel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
+        signoutProgressPanel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
     }
     
     func mapViewSnapshotReady(_ mapView: GMSMapView) {
@@ -2155,6 +2158,8 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
                     self.showHeatmapPoints()
                     
                     //test > map collision test **originally not in firestore fetching code
+//                    self.mapCheckCollisionPoints(withAnimation: true)
+                    self.mapRefreshObjectsProjectionPoints(withAnimation: true)
                     self.mapCheckCollisionPoints(withAnimation: true)
                 }
 
@@ -2270,22 +2275,6 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         return Int.random(in: 0..<3)
     }
     func showHeatmapPoints() {
-        //test 0 > show all markers
-//                    for entry in self.markerGeoList{
-//                        guard let mapView = self.mapView else {
-//                            return
-//                        }
-//                        let geo = entry.value
-//
-//                        let point = mapView.projection.point(for: geo)
-//                        print("refresh markers create x: \(point.x)")
-//
-//                        let marker = ExploreMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
-//                        marker.addLocation(coordinate: geo)
-//                        self.view.insertSubview(marker, aboveSubview: mapView)
-//                        self.markerList.append(marker)
-//                        marker.delegate = self
-//                    }
         
         //test 1 > algo #0 => show 1 marker from every geohash
 //        print("state marker initialized \(generateRandomTypes())")
@@ -2302,19 +2291,6 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
                 let geoType = g.getGeoType()
                 let point = mapView.projection.point(for: geo)
                 print("refresh markers create x: \(point.x)")
-
-//                let marker = ExploreMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
-//                marker.addLocation(coordinate: geo)
-//                self.view.insertSubview(marker, aboveSubview: mapView)
-//                self.markerList.append(marker)
-//                marker.delegate = self
-//                marker.initialize(withAnimation: true, changeSizeZoom: CGFloat(zoom))
-//                marker.frame.origin.x = point.x - marker.frame.width/2
-//                marker.frame.origin.y = point.y - marker.frame.height
-//
-//                //test > markerId map to marker list
-//                self.markerGeoMarkerIdList.updateValue(marker, forKey: markerId)
-//                marker.setMarkerId(markerId: markerId) //test market id
                 
                 //test 2 check scrollable id
                 print("show heatmap scrollableid \(vcScrollableId), \(appScrollableId)")
@@ -3406,22 +3382,6 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
                 
                 pv.markerIdList.append(markerId)
                 print("pv panel list: \(pv.markerIdList)")
-        
-                //test > add place marker
-//    //            let marker = PlaceAMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
-//                let marker = PlaceBMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
-//                marker.addLocation(coordinate: geo)
-//                self.view.insertSubview(marker, aboveSubview: mapView)
-//                self.markerList.append(marker) //test
-//                marker.delegate = self
-////                marker.initialize(withAnimation: true, changeSizeZoom: CGFloat(zoom))
-//                marker.initialize(withAnimation: true, changeSizeZoom: CGFloat(tZoom)) //try 14, default: zoom
-//                marker.frame.origin.x = point.x - marker.frame.width/2 //update position after changesize()
-//                marker.frame.origin.y = point.y - marker.frame.height
-//
-//                //test > markerId map to marker list
-//                self.markerGeoMarkerIdList.updateValue(marker, forKey: markerId)
-//                marker.setMarkerId(markerId: markerId)
                 
                 //test 2 > check scrollable id to prevent markers conflict between scrollable panels
                 print("show single scrollableid \(pv.getScrollableId()), \(appScrollableId)")
@@ -3448,68 +3408,46 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
     //test > show places mini app markers
     func showPlacesMiniPoints(pv: PlacesMiniScrollablePanelView) {
         
-//        if let c = pageList[pageList.count - 1] as? ScrollablePanelView {
         if pageList[pageList.count - 1] == pv { //test > new checker
 
             guard let mapView = self.mapView else {
                 return
             }
             
-//            var count = 0
             for entry in placeMarkerIdList {
-//                if(count < 1) {
-                    let markerId = entry
-                    if var g = self.markerGeoList[markerId] {
-                        let zoom = mapView.camera.zoom
-                        let geo = g.getGeoCoord()
-                        let geoType = g.getGeoType()
-                        let point = mapView.projection.point(for: geo)
+                let markerId = entry
+                if var g = self.markerGeoList[markerId] {
+                    let zoom = mapView.camera.zoom
+                    let geo = g.getGeoCoord()
+                    let geoType = g.getGeoType()
+                    let point = mapView.projection.point(for: geo)
+                    
+                    pv.markerIdList.append(markerId)
+                    print("pv panel list: \(pv.markerIdList)")
+                    
+                    //test 2 check scrollable id
+                    print("show placesmini scrollableid \(pv.getScrollableId()), \(appScrollableId)")
+                    if(appScrollableId == pv.getScrollableId()) {
+            //            let marker = PlaceAMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
+                        let marker = PlaceBMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
+                        marker.addLocation(coordinate: geo)
+                        self.view.insertSubview(marker, aboveSubview: mapView)
+                        self.markerList.append(marker) //test
+                        marker.delegate = self
+                        marker.initialize(withAnimation: true, changeSizeZoom: CGFloat(zoom))
+                        marker.frame.origin.x = point.x - marker.frame.width/2 //update position after changesize()
+                        marker.frame.origin.y = point.y - marker.frame.height
                         
-    //                    mapView.moveCamera(GMSCameraUpdate.setTarget(geo, zoom: 14))
-                        
-    //                    c.placeMarkerIdList.append(markerId)
-    //                    print("c panel list: \(c.placeMarkerIdList)")
-                        
-                        pv.markerIdList.append(markerId)
-                        print("pv panel list: \(pv.markerIdList)")
-                
-                        //test > add place marker
-    //        //            let marker = PlaceAMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
-    //                    let marker = PlaceBMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
-    //                    marker.addLocation(coordinate: geo)
-    //                    self.view.insertSubview(marker, aboveSubview: mapView)
-    //                    self.markerList.append(marker) //test
-    //                    marker.delegate = self
-    //                    marker.initialize(withAnimation: true, changeSizeZoom: CGFloat(zoom))
-    //                    marker.frame.origin.x = point.x - marker.frame.width/2 //update position after changesize()
-    //                    marker.frame.origin.y = point.y - marker.frame.height
-    //
-    //                    //test > markerId map to marker list
-    //                    self.markerGeoMarkerIdList.updateValue(marker, forKey: markerId)
-    //                    marker.setMarkerId(markerId: markerId)
-                        
-                        //test 2 check scrollable id
-                        print("show placesmini scrollableid \(pv.getScrollableId()), \(appScrollableId)")
-                        if(appScrollableId == pv.getScrollableId()) {
-                //            let marker = PlaceAMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
-                            let marker = PlaceBMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
-                            marker.addLocation(coordinate: geo)
-                            self.view.insertSubview(marker, aboveSubview: mapView)
-                            self.markerList.append(marker) //test
-                            marker.delegate = self
-                            marker.initialize(withAnimation: true, changeSizeZoom: CGFloat(zoom))
-                            marker.frame.origin.x = point.x - marker.frame.width/2 //update position after changesize()
-                            marker.frame.origin.y = point.y - marker.frame.height
-                            
-                            //test > markerId map to marker list
-                            self.markerGeoMarkerIdList.updateValue(marker, forKey: markerId)
-                            marker.setMarkerId(markerId: markerId)
-                        }
-                        
-//                        count += 1
+                        //test > markerId map to marker list
+                        self.markerGeoMarkerIdList.updateValue(marker, forKey: markerId)
+                        marker.setMarkerId(markerId: markerId)
                     }
                 }
-//            }
+            }
+            
+            //test > check collision of markers created
+            self.mapRefreshObjectsProjectionPoints(withAnimation: true)
+            self.mapCheckCollisionPoints(withAnimation: true)
         }
     }
     
@@ -3521,41 +3459,40 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
                 return
             }
             
-//            var count = 0
             for entry in placeMarkerIdList {
-//                if(count < 1) {
-                    let markerId = entry
-                    if var g = self.markerGeoList[markerId] {
-                        let zoom = mapView.camera.zoom
-                        let geo = g.getGeoCoord()
-                        let geoType = g.getGeoType()
-                        let point = mapView.projection.point(for: geo)
+                let markerId = entry
+                if var g = self.markerGeoList[markerId] {
+                    let zoom = mapView.camera.zoom
+                    let geo = g.getGeoCoord()
+                    let geoType = g.getGeoType()
+                    let point = mapView.projection.point(for: geo)
+                    
+                    pv.markerIdList.append(markerId)
+                    print("pv panel list: \(pv.markerIdList)")
+                    
+                    //test 2 check scrollable id
+                    print("show usersmini scrollableid \(pv.getScrollableId()), \(appScrollableId)")
+                    if(appScrollableId == pv.getScrollableId()) {
+                        let marker = UserMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
+                        marker.addLocation(coordinate: geo)
+                        self.view.insertSubview(marker, aboveSubview: mapView)
+                        self.markerList.append(marker) //test
+                        marker.delegate = self
+                        marker.hideInfoBox() //test
+                        marker.initialize(withAnimation: true, changeSizeZoom: CGFloat(zoom))
+                        marker.frame.origin.x = point.x - marker.frame.width/2 //update position after changesize()
+                        marker.frame.origin.y = point.y - marker.frame.height
                         
-                        pv.markerIdList.append(markerId)
-                        print("pv panel list: \(pv.markerIdList)")
-                        
-                        //test 2 check scrollable id
-                        print("show usersmini scrollableid \(pv.getScrollableId()), \(appScrollableId)")
-                        if(appScrollableId == pv.getScrollableId()) {
-                            let marker = UserMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
-                            marker.addLocation(coordinate: geo)
-                            self.view.insertSubview(marker, aboveSubview: mapView)
-                            self.markerList.append(marker) //test
-                            marker.delegate = self
-                            marker.hideInfoBox() //test
-                            marker.initialize(withAnimation: true, changeSizeZoom: CGFloat(zoom))
-                            marker.frame.origin.x = point.x - marker.frame.width/2 //update position after changesize()
-                            marker.frame.origin.y = point.y - marker.frame.height
-                            
-                            //test > markerId map to marker list
-                            self.markerGeoMarkerIdList.updateValue(marker, forKey: markerId)
-                            marker.setMarkerId(markerId: markerId)
-                        }
-                        
-//                        count += 1
+                        //test > markerId map to marker list
+                        self.markerGeoMarkerIdList.updateValue(marker, forKey: markerId)
+                        marker.setMarkerId(markerId: markerId)
                     }
                 }
-//            }
+            }
+            
+            //test > check collision of markers created
+            self.mapRefreshObjectsProjectionPoints(withAnimation: true)
+            self.mapCheckCollisionPoints(withAnimation: true)
         }
     }
     

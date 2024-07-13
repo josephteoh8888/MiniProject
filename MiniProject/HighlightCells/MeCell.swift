@@ -1372,8 +1372,8 @@ class ProfileMeCell: UIView {
         aFollowAText.translatesAutoresizingMaskIntoConstraints = false
         aFollowAText.leadingAnchor.constraint(equalTo: aNameText.leadingAnchor, constant: 0).isActive = true //20
 //        aFollowAText.trailingAnchor.constraint(equalTo: aFollowA.trailingAnchor, constant: -15).isActive = true
-        aFollowAText.topAnchor.constraint(equalTo: aNameText.bottomAnchor, constant: 10).isActive = true //20
-        aFollowAText.text = "Profile" //Go to Profile
+        aFollowAText.topAnchor.constraint(equalTo: aNameText.bottomAnchor, constant: 5).isActive = true //10
+        aFollowAText.text = "@mic809" //Go to Profile
         
         let rArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
         rArrowBtn.tintColor = .ddmDarkGrayColor

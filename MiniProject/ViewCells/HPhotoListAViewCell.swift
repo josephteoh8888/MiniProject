@@ -674,7 +674,7 @@ class HPhotoListAViewCell: UICollectionViewCell {
         //        scrollView.contentSize = CGSize(width: 360, height: 280)
                 scrollView.isPagingEnabled = true //false
                 scrollView.delegate = self
-//                scrollView.layer.cornerRadius = 10 //5
+                scrollView.layer.cornerRadius = 10 //5
                 aTestArray.append(scrollView)
                 photoConArray.append(scrollView)
 
@@ -872,7 +872,7 @@ class HPhotoListAViewCell: UICollectionViewCell {
         //        scrollView.contentSize = CGSize(width: 360, height: 280)
                 scrollView.isPagingEnabled = true //false
                 scrollView.delegate = self
-//                scrollView.layer.cornerRadius = 10 //5
+                scrollView.layer.cornerRadius = 10 //5
                 aTestArray.append(scrollView)
                 photoConArray.append(scrollView)
 

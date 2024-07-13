@@ -150,6 +150,7 @@
 		2E670B982C31291100EBA6D3 /* AudioClip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B972C31291100EBA6D3 /* AudioClip.swift */; };
 		2E670B9A2C31292F00EBA6D3 /* VideoClip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B992C31292F00EBA6D3 /* VideoClip.swift */; };
 		2E670B9C2C31294B00EBA6D3 /* GeoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B9B2C31294B00EBA6D3 /* GeoData.swift */; };
+		2EADB52B2C4159B70023B7F2 /* SignoutProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB52A2C4159B70023B7F2 /* SignoutProgressView.swift */; };
 		D9E5DA9CED1FA78875BA9B32 /* Pods_MiniProject.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC1D4569B6E7DBC2F6F78A70 /* Pods_MiniProject.framework */; };
 /* End PBXBuildFile section */
 
@@ -299,6 +300,7 @@
 		2E670B972C31291100EBA6D3 /* AudioClip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioClip.swift; sourceTree = "<group>"; };
 		2E670B992C31292F00EBA6D3 /* VideoClip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoClip.swift; sourceTree = "<group>"; };
 		2E670B9B2C31294B00EBA6D3 /* GeoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoData.swift; sourceTree = "<group>"; };
+		2EADB52A2C4159B70023B7F2 /* SignoutProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignoutProgressView.swift; sourceTree = "<group>"; };
 		8E8FDD7B5A32B613FBBD6779 /* Pods-MiniProject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiniProject.release.xcconfig"; path = "Target Support Files/Pods-MiniProject/Pods-MiniProject.release.xcconfig"; sourceTree = "<group>"; };
 		8FF00F2FE6845908F1AA29DE /* Pods-MiniProject.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiniProject.debug.xcconfig"; path = "Target Support Files/Pods-MiniProject/Pods-MiniProject.debug.xcconfig"; sourceTree = "<group>"; };
 		AC1D4569B6E7DBC2F6F78A70 /* Pods_MiniProject.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MiniProject.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -485,6 +487,7 @@
 				2E670B4F2C31238100EBA6D3 /* ExploreMarker.swift */,
 				2E670B4B2C31234500EBA6D3 /* MiniApp.swift */,
 				2E670B452C3122E300EBA6D3 /* UserMarker.swift */,
+				2EADB52A2C4159B70023B7F2 /* SignoutProgressView.swift */,
 				2E670B4D2C31236400EBA6D3 /* Marker.swift */,
 				2E670B2D2C31215000EBA6D3 /* GetCameraMsg.swift */,
 				2E670B372C3121FB00EBA6D3 /* PlaceAMarker.swift */,
@@ -709,6 +712,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E670AFE2C31080E00EBA6D3 /* VGridColumnViewCell.swift in Sources */,
+				2EADB52B2C4159B70023B7F2 /* SignoutProgressView.swift in Sources */,
 				2E670B3C2C31224900EBA6D3 /* GetStorageMsg.swift in Sources */,
 				2E670B462C3122E300EBA6D3 /* UserMarker.swift in Sources */,
 				2E670AC72C3101AE00EBA6D3 /* CameraPhotoRollPanelView.swift in Sources */,
