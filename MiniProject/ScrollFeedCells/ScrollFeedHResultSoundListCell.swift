@@ -232,7 +232,7 @@ extension ScrollFeedHResultSoundListCell: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HResultSoundListViewCell.identifier, for: indexPath) as! HResultSoundListViewCell
-//        cell.aDelegate = self
+        cell.aDelegate = self
         //test > configure cell
 //        cell.configure(data: vDataList[indexPath.row])
         
@@ -242,4 +242,29 @@ extension ScrollFeedHResultSoundListCell: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
      }
 
+}
+
+extension ScrollFeedHResultSoundListCell: HResultListViewDelegate{
+
+    func didHResultClickUser(){
+
+    }
+    func didHResultClickPlace(){
+        
+    }
+    func didHResultClickSound(){
+        aDelegate?.sfcDidClickVcvClickSound()
+    }
+    func didHResultClickHashtag() {
+        
+    }
+    func didHResultClickPhoto(){
+        
+    }
+    func didHResultClickVideo(){
+        
+    }
+    func didHResultClickPost(){
+        
+    }
 }

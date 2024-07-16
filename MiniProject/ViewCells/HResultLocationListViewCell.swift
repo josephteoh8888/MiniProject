@@ -12,7 +12,7 @@ import SDWebImage
 class HResultLocationListViewCell: UICollectionViewCell {
     static let identifier = "HResultLocationListViewCell"
     
-//    weak var aDelegate : HUsersListDelegate?
+    weak var aDelegate : HResultListViewDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -137,6 +137,6 @@ class HResultLocationListViewCell: UICollectionViewCell {
     }
     
     @objc func onUserClicked(gesture: UITapGestureRecognizer) {
-//        aDelegate?.didHUsersClickUser()
+        aDelegate?.didHResultClickPlace()
     }
 }

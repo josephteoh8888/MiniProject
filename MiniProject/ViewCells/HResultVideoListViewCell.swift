@@ -12,7 +12,7 @@ import SDWebImage
 class HResultVideoListViewCell: UICollectionViewCell {
     static let identifier = "HResultVideoListViewCell"
     
-//    weak var aDelegate : HUsersListDelegate?
+    weak var aDelegate : HResultListViewDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -161,6 +161,6 @@ class HResultVideoListViewCell: UICollectionViewCell {
     }
     
     @objc func onUserClicked(gesture: UITapGestureRecognizer) {
-//        aDelegate?.didHUsersClickUser()
+        aDelegate?.didHResultClickVideo()
     }
 }

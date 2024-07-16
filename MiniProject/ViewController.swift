@@ -4603,7 +4603,7 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
                 } else {
                     //left with 1 unscrollable panel
                     mapRevertMarkerTransition(withAnimation: false)
-                    print("backpage 5")
+                    print("backpage 5 : =>\(pageList.count), \(appMenuMode)")
                     
                     //*new test > search panel, notify panel
                     revertAppMainPanel()
@@ -4617,12 +4617,14 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
                 mapRevertMarkerTransition(withAnimation: true) // try with animation
                 
                 //*new test > search panel, notify panel
-                revertAppMainPanel()
+//                revertAppMainPanel()
+                revertAppMainPanel(isToRevertUIState: true)
                 //*
             }
             //test > include unscrollable panel
             else {
-                revertAppMainPanel()
+//                revertAppMainPanel()
+                revertAppMainPanel(isToRevertUIState: true)
             }
         }
     }
@@ -4707,9 +4709,26 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         } else if(appMenuMode == "profile") {
             mePanel.isHidden = false
             mePanel.resumeActiveState()
+        } else if(appMenuMode == "create") {
+            createSelectPanel?.resumeActiveState()
         }
-        //test > create panel
-        else if(appMenuMode == "create") {
+    }
+    
+    func revertAppMainPanel(isToRevertUIState: Bool) {
+        print("revert resume active 2 \(appMenuMode)")
+        if(appMenuMode == "search") {
+            searchPanel.isHidden = false
+            searchPanel.resumeActiveState()
+            if(isToRevertUIState) {
+                searchPanel.revertCellUIState()
+            }
+        } else if(appMenuMode == "notify") {
+            notifyPanel.isHidden = false
+            notifyPanel.resumeActiveState()
+        } else if(appMenuMode == "profile") {
+            mePanel.isHidden = false
+            mePanel.resumeActiveState()
+        } else if(appMenuMode == "create") {
             createSelectPanel?.resumeActiveState()
         }
     }

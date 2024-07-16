@@ -11,6 +11,8 @@ import SDWebImage
 
 protocol HMultiLocationDelegate : AnyObject {
     func didClickUserCurrentLocation()
+    //test
+    func didClickPlaceLocation()
 }
 class HMultiLocationViewCell: UICollectionViewCell {
     static let identifier = "HMultiViewCell"
@@ -141,9 +143,15 @@ class HMultiLocationViewCell: UICollectionViewCell {
 //        bText.topAnchor.constraint(equalTo: aText.bottomAnchor, constant: 15).isActive = true
         dText.leadingAnchor.constraint(equalTo: dGrid.trailingAnchor, constant: 10).isActive = true
         dText.text = "Global"
+        dText.isUserInteractionEnabled = true
+        dText.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPlaceLocationClicked)))
     }
     
     @objc func onAroundYouClicked(gesture: UITapGestureRecognizer) {
         aDelegate?.didClickUserCurrentLocation()
+    }
+    
+    @objc func onPlaceLocationClicked(gesture: UITapGestureRecognizer) {
+        aDelegate?.didClickPlaceLocation()
     }
 }

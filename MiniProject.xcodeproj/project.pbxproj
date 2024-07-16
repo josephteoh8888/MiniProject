@@ -151,6 +151,7 @@
 		2E670B9A2C31292F00EBA6D3 /* VideoClip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B992C31292F00EBA6D3 /* VideoClip.swift */; };
 		2E670B9C2C31294B00EBA6D3 /* GeoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B9B2C31294B00EBA6D3 /* GeoData.swift */; };
 		2EADB52B2C4159B70023B7F2 /* SignoutProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB52A2C4159B70023B7F2 /* SignoutProgressView.swift */; };
+		2EADB52D2C44011B0023B7F2 /* HSingleLocationViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB52C2C44011B0023B7F2 /* HSingleLocationViewCell.swift */; };
 		D9E5DA9CED1FA78875BA9B32 /* Pods_MiniProject.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC1D4569B6E7DBC2F6F78A70 /* Pods_MiniProject.framework */; };
 /* End PBXBuildFile section */
 
@@ -301,6 +302,7 @@
 		2E670B992C31292F00EBA6D3 /* VideoClip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoClip.swift; sourceTree = "<group>"; };
 		2E670B9B2C31294B00EBA6D3 /* GeoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoData.swift; sourceTree = "<group>"; };
 		2EADB52A2C4159B70023B7F2 /* SignoutProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignoutProgressView.swift; sourceTree = "<group>"; };
+		2EADB52C2C44011B0023B7F2 /* HSingleLocationViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HSingleLocationViewCell.swift; sourceTree = "<group>"; };
 		8E8FDD7B5A32B613FBBD6779 /* Pods-MiniProject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiniProject.release.xcconfig"; path = "Target Support Files/Pods-MiniProject/Pods-MiniProject.release.xcconfig"; sourceTree = "<group>"; };
 		8FF00F2FE6845908F1AA29DE /* Pods-MiniProject.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiniProject.debug.xcconfig"; path = "Target Support Files/Pods-MiniProject/Pods-MiniProject.debug.xcconfig"; sourceTree = "<group>"; };
 		AC1D4569B6E7DBC2F6F78A70 /* Pods_MiniProject.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MiniProject.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -417,32 +419,33 @@
 		2E670AEC2C31068C00EBA6D3 /* ViewCells */ = {
 			isa = PBXGroup;
 			children = (
-				2E670AED2C3106AA00EBA6D3 /* HResultSoundListViewCell.swift */,
 				2E670AEF2C3106CE00EBA6D3 /* HListViewCell.swift */,
-				2E670AF12C3106EF00EBA6D3 /* HPostListBViewCell.swift */,
-				2E670AF52C31073200EBA6D3 /* HPhotoListBViewCell.swift */,
+				2EADB52C2C44011B0023B7F2 /* HSingleLocationViewCell.swift */,
+				2E670AF92C3107D200EBA6D3 /* HMultiLocationViewCell.swift */,
 				2E670AF72C31075500EBA6D3 /* GridVideoViewCell.swift */,
 				2E670B012C31085B00EBA6D3 /* GridVideo2xViewCell.swift */,
-				2E670AF92C3107D200EBA6D3 /* HMultiLocationViewCell.swift */,
+				2E670B192C3109C600EBA6D3 /* GridPhotoViewCell.swift */,
 				2E670AFD2C31080E00EBA6D3 /* VGridColumnViewCell.swift */,
+				2E670AED2C3106AA00EBA6D3 /* HResultSoundListViewCell.swift */,
 				2E670B152C31098B00EBA6D3 /* HResultUserListViewCell.swift */,
 				2E670AF32C31071300EBA6D3 /* HResultLocationListViewCell.swift */,
-				2E670B1F2C310A3500EBA6D3 /* HNotifyChatListViewCell.swift */,
 				2E670B1B2C3109EC00EBA6D3 /* HResultVideoListViewCell.swift */,
-				2E670B0F2C31092B00EBA6D3 /* HPostListAViewCell.swift */,
-				2E670B052C31089800EBA6D3 /* GridPhotoRollViewCell.swift */,
 				2E670B1D2C310A1400EBA6D3 /* HResultPhotoListViewCell.swift */,
-				2E670B112C31094A00EBA6D3 /* VCAViewCell.swift */,
-				2E670B0B2C3108F200EBA6D3 /* HUsersListViewCell.swift */,
-				2E670B192C3109C600EBA6D3 /* GridPhotoViewCell.swift */,
-				2E670B172C3109AA00EBA6D3 /* HPhotoListAViewCell.swift */,
-				2E670B072C3108B800EBA6D3 /* HCommentListViewCell.swift */,
-				2E670B132C31096B00EBA6D3 /* VCBViewCell.swift */,
-				2E670B0D2C31091000EBA6D3 /* HNotifyInboxListViewCell.swift */,
-				2E670AFB2C3107F100EBA6D3 /* HPlacesListViewCell.swift */,
 				2E670B092C3108D600EBA6D3 /* HResultHashtagListViewCell.swift */,
-				2E670B032C31087800EBA6D3 /* GridVideoRollViewCell.swift */,
 				2E670AFF2C31082B00EBA6D3 /* HResultPostListViewCell.swift */,
+				2E670B112C31094A00EBA6D3 /* VCAViewCell.swift */,
+				2E670B132C31096B00EBA6D3 /* VCBViewCell.swift */,
+				2E670B0F2C31092B00EBA6D3 /* HPostListAViewCell.swift */,
+				2E670AF12C3106EF00EBA6D3 /* HPostListBViewCell.swift */,
+				2E670B172C3109AA00EBA6D3 /* HPhotoListAViewCell.swift */,
+				2E670AF52C31073200EBA6D3 /* HPhotoListBViewCell.swift */,
+				2E670B072C3108B800EBA6D3 /* HCommentListViewCell.swift */,
+				2E670B0B2C3108F200EBA6D3 /* HUsersListViewCell.swift */,
+				2E670AFB2C3107F100EBA6D3 /* HPlacesListViewCell.swift */,
+				2E670B1F2C310A3500EBA6D3 /* HNotifyChatListViewCell.swift */,
+				2E670B0D2C31091000EBA6D3 /* HNotifyInboxListViewCell.swift */,
+				2E670B052C31089800EBA6D3 /* GridPhotoRollViewCell.swift */,
+				2E670B032C31087800EBA6D3 /* GridVideoRollViewCell.swift */,
 			);
 			path = ViewCells;
 			sourceTree = "<group>";
@@ -451,23 +454,23 @@
 			isa = PBXGroup;
 			children = (
 				2E670B512C3123C800EBA6D3 /* ScrollFeedHResultLocationListCell.swift */,
-				2E670B552C31240700EBA6D3 /* ScrollFeedVideoCell.swift */,
-				2E670B592C31245800EBA6D3 /* ScrollFeedHResultPhotoListCell.swift */,
-				2E670B572C31243A00EBA6D3 /* ScrollFeedGridPhoto2xViewCell.swift */,
-				2E670B632C31255C00EBA6D3 /* ScrollFeedHNotifyChatListCell.swift */,
-				2E670B692C3125AC00EBA6D3 /* ScrollFeedHResultMainListCell.swift */,
-				2E670B5D2C3124A700EBA6D3 /* ScrollFeedCell.swift */,
-				2E670B612C31250100EBA6D3 /* ScrollFeedHPostListCell.swift */,
-				2E670B6D2C3125F000EBA6D3 /* ScrollFeedHResultHashtagListCell.swift */,
-				2E670B712C31262A00EBA6D3 /* ScrollFeedHResultVideoListCell.swift */,
-				2E670B732C31264700EBA6D3 /* ScrollFeedGridVideo3xViewCell.swift */,
-				2E670B6B2C3125D400EBA6D3 /* ScrollFeedHResultPostListCell.swift */,
-				2E670B6F2C31260F00EBA6D3 /* ScrollFeedGridVideo2xViewCell.swift */,
-				2E670B652C31257700EBA6D3 /* ScrollFeedHNotifyInboxListCell.swift */,
 				2E670B672C31259200EBA6D3 /* ScrollFeedHResultUserListCell.swift */,
-				2E670B5F2C3124E000EBA6D3 /* ScrollFeedHPhotoListCell.swift */,
-				2E670B5B2C31248400EBA6D3 /* ScrollFeedGridPhoto3xViewCell.swift */,
 				2E670B532C3123E800EBA6D3 /* ScrollFeedHResultSoundListCell.swift */,
+				2E670B6D2C3125F000EBA6D3 /* ScrollFeedHResultHashtagListCell.swift */,
+				2E670B692C3125AC00EBA6D3 /* ScrollFeedHResultMainListCell.swift */,
+				2E670B592C31245800EBA6D3 /* ScrollFeedHResultPhotoListCell.swift */,
+				2E670B712C31262A00EBA6D3 /* ScrollFeedHResultVideoListCell.swift */,
+				2E670B6B2C3125D400EBA6D3 /* ScrollFeedHResultPostListCell.swift */,
+				2E670B5D2C3124A700EBA6D3 /* ScrollFeedCell.swift */,
+				2E670B552C31240700EBA6D3 /* ScrollFeedVideoCell.swift */,
+				2E670B612C31250100EBA6D3 /* ScrollFeedHPostListCell.swift */,
+				2E670B5F2C3124E000EBA6D3 /* ScrollFeedHPhotoListCell.swift */,
+				2E670B632C31255C00EBA6D3 /* ScrollFeedHNotifyChatListCell.swift */,
+				2E670B652C31257700EBA6D3 /* ScrollFeedHNotifyInboxListCell.swift */,
+				2E670B732C31264700EBA6D3 /* ScrollFeedGridVideo3xViewCell.swift */,
+				2E670B6F2C31260F00EBA6D3 /* ScrollFeedGridVideo2xViewCell.swift */,
+				2E670B572C31243A00EBA6D3 /* ScrollFeedGridPhoto2xViewCell.swift */,
+				2E670B5B2C31248400EBA6D3 /* ScrollFeedGridPhoto3xViewCell.swift */,
 			);
 			path = ScrollFeedCells;
 			sourceTree = "<group>";
@@ -807,6 +810,7 @@
 				2E670B8D2C31286500EBA6D3 /* HighlightCell.swift in Sources */,
 				2E670A9B2C30FC8500EBA6D3 /* PanelView.swift in Sources */,
 				2E670B5E2C3124A700EBA6D3 /* ScrollFeedCell.swift in Sources */,
+				2EADB52D2C44011B0023B7F2 /* HSingleLocationViewCell.swift in Sources */,
 				2E670A8A2C30471700EBA6D3 /* SignInManager.swift in Sources */,
 				2E670AB92C31008400EBA6D3 /* PhotoDraftPanelView.swift in Sources */,
 				2E670B022C31085B00EBA6D3 /* GridVideo2xViewCell.swift in Sources */,

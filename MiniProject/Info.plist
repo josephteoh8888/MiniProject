@@ -2,6 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Location access is required for showing relevant content</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Media access is required for posting video or photo</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Microphone access is required for video recording</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Camera access is required for video recording</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

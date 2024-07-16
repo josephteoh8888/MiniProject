@@ -1259,7 +1259,7 @@ class UserScrollablePanelView: ScrollablePanelView{
                     self?.aBioText.text = "I am just a normal girl"
                     
                     self?.aFollowerCountAText.text = "1.5m"
-                    self?.aFollowerAText.text = "Followes"
+                    self?.aFollowerAText.text = "Followers"
                     self?.aFollowA.isHidden = false
 
                     self?.aSpinner.stopAnimating()

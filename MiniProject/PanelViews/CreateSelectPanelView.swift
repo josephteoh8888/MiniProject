@@ -172,7 +172,7 @@ class CreateSelectPanelView: PanelView, UIGestureRecognizerDelegate{
         dText.leadingAnchor.constraint(equalTo: dGrid.trailingAnchor, constant: 20).isActive = true //10
 //        dText.leadingAnchor.constraint(equalTo: cTextView.leadingAnchor, constant: 0).isActive = true //10
 //        dText.trailingAnchor.constraint(equalTo: cTextView.trailingAnchor, constant: 0).isActive = true //10
-        dText.text = "Share Nice Shot"
+        dText.text = "Share Nice Photo" //*share nice shot
 //        dText.isUserInteractionEnabled = true
 //        dText.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onCreateShortPostClicked)))
         

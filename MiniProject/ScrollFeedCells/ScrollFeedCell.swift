@@ -85,7 +85,8 @@ class ScrollPhotoDataFeedCell: ScrollFeedCell {
 }
 
 class ScrollFeedHResultListCell: ScrollFeedCell {
-    var vDataList = [String]()
+//    var vDataList = [String]()
+    var vDataList = [PostData]()
 }
 
 class ScrollFeedHNotifyListCell: ScrollFeedCell {

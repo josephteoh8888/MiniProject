@@ -12,7 +12,7 @@ import SDWebImage
 class HResultHashtagListViewCell: UICollectionViewCell {
     static let identifier = "HResultHashtagListViewCell"
     
-//    weak var aDelegate : HUsersListDelegate?
+    weak var aDelegate : HResultListViewDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -153,6 +153,6 @@ class HResultHashtagListViewCell: UICollectionViewCell {
     }
     
     @objc func onUserClicked(gesture: UITapGestureRecognizer) {
-//        aDelegate?.didHUsersClickUser()
+        aDelegate?.didHResultClickHashtag()
     }
 }

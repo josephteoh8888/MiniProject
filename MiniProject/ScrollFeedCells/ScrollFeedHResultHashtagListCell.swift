@@ -243,3 +243,28 @@ extension ScrollFeedHResultHashtagListCell: UICollectionViewDataSource {
      }
 
 }
+
+extension ScrollFeedHResultHashtagListCell: HResultListViewDelegate{
+
+    func didHResultClickUser(){
+
+    }
+    func didHResultClickPlace(){
+        
+    }
+    func didHResultClickSound(){
+//        aDelegate?.sfcDidClickVcvClickSound()
+    }
+    func didHResultClickHashtag() {
+        
+    }
+    func didHResultClickPhoto(){
+        
+    }
+    func didHResultClickVideo(){
+        
+    }
+    func didHResultClickPost(){
+        
+    }
+}

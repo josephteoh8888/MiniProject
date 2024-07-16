@@ -789,7 +789,7 @@ extension NotifyPanelView: ScrollFeedCellDelegate {
 
     func sfcDidClickVcvClickUser() {
         //test
-//        delegate?.didClickPostPanelVcvClickUser()
+        delegate?.didNotifyClickUser()
     }
     func sfcDidClickVcvClickPlace() {
 //        delegate?.didClickPostPanelVcvClickPlace()

@@ -394,15 +394,16 @@ class MultiPostsMeCell: UIView {
         aScroll1.topAnchor.constraint(equalTo: aHLightTitle.bottomAnchor, constant: 10).isActive = true //20
         aScroll1.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true
         
-        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
-//        let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+//        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
+        let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
 //        let imageUrl2 = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
         
         let aGrid = UIView()
         aGrid.backgroundColor = .ddmDarkColor
         aHLightRect1.addSubview(aGrid)
         aGrid.translatesAutoresizingMaskIntoConstraints = false
-        aGrid.trailingAnchor.constraint(equalTo: aScroll1.trailingAnchor, constant: -10).isActive = true
+//        aGrid.trailingAnchor.constraint(equalTo: aScroll1.trailingAnchor, constant: -40).isActive = true //-10
+        aGrid.leadingAnchor.constraint(equalTo: aScroll1.leadingAnchor, constant: 10).isActive = true //-10
         aGrid.heightAnchor.constraint(equalToConstant: 50).isActive = true //60
         aGrid.widthAnchor.constraint(equalToConstant: 50).isActive = true //40
 //        aGrid.topAnchor.constraint(equalTo: aPhoto.bottomAnchor, constant: 20).isActive = true
@@ -429,8 +430,10 @@ class MultiPostsMeCell: UIView {
         aHLightRect1.addSubview(aHItem1ATitle)
         aHItem1ATitle.translatesAutoresizingMaskIntoConstraints = false
         aHItem1ATitle.topAnchor.constraint(equalTo: aScroll1.topAnchor, constant: 0).isActive = true //5
-        aHItem1ATitle.leadingAnchor.constraint(equalTo: aScroll1.leadingAnchor, constant: 10).isActive = true
-        aHItem1ATitle.trailingAnchor.constraint(equalTo: aGrid.leadingAnchor, constant: -20).isActive = true
+//        aHItem1ATitle.leadingAnchor.constraint(equalTo: aScroll1.leadingAnchor, constant: 10).isActive = true
+        aHItem1ATitle.leadingAnchor.constraint(equalTo: aGrid.trailingAnchor, constant: 10).isActive = true
+//        aHItem1ATitle.trailingAnchor.constraint(equalTo: aGrid.leadingAnchor, constant: -20).isActive = true
+        aHItem1ATitle.trailingAnchor.constraint(equalTo: aScroll1.trailingAnchor, constant: -40).isActive = true
         aHItem1ATitle.text = "往年的这个时候，iPhone 虽然也是位列销量榜榜首，但那都是上一代的旧机型呀...\n只能说这次 11.11 各家给的优惠都太给力了."
         aHItem1ATitle.numberOfLines = 3
     }

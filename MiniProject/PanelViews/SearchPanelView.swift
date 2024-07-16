@@ -16,6 +16,12 @@ protocol SearchPanelDelegate : AnyObject {
     func didSearchClickUser()
     func didSearchClickPlace()
     func didSearchClickSound()
+    func didSearchClickHashtag()
+    func didSearchClickPost()
+//    func didSearchClickPhoto()
+    func didSearchClickClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
+//    func didSearchClickVideo()
+    func didSearchClickClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
 }
 class SearchPanelView: PanelView{
 
@@ -404,14 +410,30 @@ class SearchPanelView: PanelView{
         bbText.isHidden = true
     }
 
-    @objc func onAPhotoClicked(gesture: UITapGestureRecognizer) {
-        delegate?.didSearchClickPlace()
+    func dehideCurrentCell() {
+        
+        let feed = self.feedList[currentIndex]
+        if let b = feed as? ScrollFeedHResultVideoListCell {
+            b.dehideCellAt()
+        }
+        else if let c = feed as? ScrollFeedHResultPhotoListCell {
+            c.dehideCellAt()
+        }
     }
-    @objc func onBPhotoClicked(gesture: UITapGestureRecognizer) {
-        delegate?.didSearchClickUser()
+    
+    //test > stop current video for closing
+    func pauseCurrentPostFeedVideo() {
+        let feed = feedList[currentIndex]
+        if let b = feed as? ScrollFeedHResultPostListCell {
+//            b.pauseCurrentVideo()
+        }
     }
-    @objc func onCPhotoClicked(gesture: UITapGestureRecognizer) {
-        delegate?.didSearchClickSound()
+    //test > resume current video
+    func resumeCurrentPostFeedVideo() {
+        let feed = feedList[currentIndex]
+        if let b = feed as? ScrollFeedHResultPostListCell {
+//            b.resumeCurrentVideo()
+        }
     }
     
     //test
@@ -420,6 +442,11 @@ class SearchPanelView: PanelView{
         
         //test > check for signin status when in active state
         asyncFetchSigninStatus()
+    }
+    
+    //test > dehide any cells that was hidden e.g. video or photo
+    func revertCellUIState() {
+        dehideCurrentCell()
     }
 
     //test > initialization state
@@ -568,7 +595,14 @@ class SearchPanelView: PanelView{
                     }
 
                     //test 1
-                    feed.vDataList.append(contentsOf: l)
+//                    feed.vDataList.append(contentsOf: l)
+                    for i in l {
+                        let postData = PostData()
+                        postData.setDataType(data: i)
+                        postData.setData(data: i)
+                        postData.setTextString(data: i)
+                        feed.vDataList.append(postData)
+                    }
                     feed.vCV?.reloadData()
 
                     //test
@@ -605,17 +639,18 @@ class SearchPanelView: PanelView{
                     if(l.isEmpty) {
                         feed.dataPaginateStatus = "end"
                     }
-
-                    //test 1
-//                    feed.vDataList.append(contentsOf: l)
-//                    feed.vCV?.reloadData()
                     
                     //*test 3 > reload only appended data, not entire dataset
                     let dataCount = feed.vDataList.count
                     var indexPaths = [IndexPath]()
                     var j = 1
                     for i in l {
-                        feed.vDataList.append(i)
+//                        feed.vDataList.append(i)
+                        let postData = PostData()
+                        postData.setDataType(data: i)
+                        postData.setData(data: i)
+                        postData.setTextString(data: i)
+                        feed.vDataList.append(postData)
 
                         let idx = IndexPath(item: dataCount - 1 + j, section: 0)
                         indexPaths.append(idx)
@@ -847,19 +882,32 @@ extension SearchPanelView: ScrollFeedCellDelegate {
         delegate?.didSearchClickUser()
     }
     func sfcDidClickVcvClickPlace() {
-//        delegate?.didClickPostPanelVcvClickPlace()
+        //test
+        delegate?.didSearchClickPlace()
     }
     func sfcDidClickVcvClickSound() {
-
+        //test
+        delegate?.didSearchClickSound()
     }
     func sfcDidClickVcvClickPost() {
-//        openPostDetail()
+        delegate?.didSearchClickPost()
     }
     func sfcDidClickVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
-
+        //test
+        let b = self.feedList[self.currentIndex]
+        let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
+        
+        let adjustY = pointY + originInRootView.y
+        print("searchphoto ori: \(pointY), \(originInRootView.y)")
+        delegate?.didSearchClickClickPhoto(pointX: pointX, pointY: adjustY, view: view, mode: mode)
     }
     func sfcDidClickVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
-
+        //test
+        let b = self.feedList[self.currentIndex]
+        let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
+        
+        let adjustY = pointY + originInRootView.y
+        delegate?.didSearchClickClickVideo(pointX: pointX, pointY: adjustY, view: view, mode: mode)
     }
 
     //test
@@ -895,8 +943,6 @@ extension ViewController: SearchPanelDelegate{
     func didSearchClickUser() {
         //test
         openUserPanel()
-        
-//        openPostDetailPanel()
     }
     func didSearchClickPlace() {
         openPlacePanel()
@@ -904,6 +950,37 @@ extension ViewController: SearchPanelDelegate{
     func didSearchClickSound() {
         //test
         openSoundPanel()
+    }
+    func didSearchClickHashtag() {
+        
+    }
+    func didSearchClickPost(){
+        openPostDetailPanel()
+    }
+    func didSearchClickClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
+        let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
+        let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
+        
+        if(mode == PhotoTypes.P_SHOT) {
+//            openPhotoDetailPanel()
+            
+            //test > open photo panel with predetermined datasets
+            var dataset = [String]()
+            dataset.append("a")
+            self.openPhotoPanel(offX: offsetX, offY: offsetY, originatorView: view, originatorViewType: OriginatorTypes.UIVIEW, id: 0, originatorViewId: "", preterminedDatasets: dataset)
+        } else if(mode == PhotoTypes.P_0){
+            openPhotoZoomPanel(offX: offsetX, offY: offsetY)
+        }
+    }
+    func didSearchClickClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
+        let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
+        let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
+
+        //test 1 > for video only
+        var dataset = [String]()
+//        dataset.append("a")
+        dataset.append("a")
+        self.openVideoPanel(offX: offsetX, offY: offsetY, originatorView: view, originatorViewType: OriginatorTypes.UIVIEW, id: 0, originatorViewId: "", preterminedDatasets: dataset, mode: mode)
     }
 }
 

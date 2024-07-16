@@ -11,6 +11,7 @@ import UIKit
 protocol PlaceSelectPanelDelegate : AnyObject {
     func didInitializePlaceSelect()
     func didClickUserCurrentLocation(panel: PlaceSelectPanelView)
+    func didClickPlaceLocation(panel: PlaceSelectPanelView)
     func didClickFinishPlaceSelect()
 }
 class PlaceSelectPanelView: PanelView, UIGestureRecognizerDelegate{
@@ -350,15 +351,16 @@ class PlaceSelectPanelView: PanelView, UIGestureRecognizerDelegate{
 //        vDataList.append("a")
         let gridLayout = UICollectionViewFlowLayout()
         gridLayout.scrollDirection = .vertical
-        gridLayout.minimumLineSpacing = 20 //default: 8 => spacing between rows
+        gridLayout.minimumLineSpacing = 10 //default: 20 => spacing between rows
         gridLayout.minimumInteritemSpacing = 0 //default: 4 => spacing between columns
 //        let vCV = UICollectionView(frame: .zero, collectionViewLayout: gridLayout)
         vCV = UICollectionView(frame: .zero, collectionViewLayout: gridLayout)
         guard let vCV = vCV else {
             return
         }
-        vCV.register(HListViewCell.self, forCellWithReuseIdentifier: HListViewCell.identifier)
+//        vCV.register(HListViewCell.self, forCellWithReuseIdentifier: HListViewCell.identifier)
         vCV.register(HMultiLocationViewCell.self, forCellWithReuseIdentifier: HMultiLocationViewCell.identifier)
+        vCV.register(HSingleLocationViewCell.self, forCellWithReuseIdentifier: HSingleLocationViewCell.identifier)
         vCV.dataSource = self
         vCV.delegate = self
         vCV.backgroundColor = .clear
@@ -734,7 +736,8 @@ extension PlaceSelectPanelView: UICollectionViewDelegateFlowLayout {
         if(indexPath.item == 0) {
             return CGSize(width: collectionView.frame.width, height: 200)
         } else {
-            return CGSize(width: collectionView.frame.width - 30, height: 120)
+//            return CGSize(width: collectionView.frame.width - 30, height: 120)
+            return CGSize(width: collectionView.frame.width, height: 60)
         }
     }
     
@@ -825,18 +828,14 @@ extension PlaceSelectPanelView: UICollectionViewDataSource {
             cell.aDelegate = self
             return cell
         } else {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HListViewCell.identifier, for: indexPath) as! HListViewCell
-//            cell.aDelegate = self
+//            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HListViewCell.identifier, for: indexPath) as! HListViewCell
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HSingleLocationViewCell.identifier, for: indexPath) as! HSingleLocationViewCell
+            cell.aDelegate = self
             return cell
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HListViewCell.identifier, for: indexPath) as! HListViewCell
-//        let originInRootView = collectionView.convert(cell.frame.origin, to: self)
-//        print("collectionView index: \(indexPath), \(cell.frame.origin.x), \(cell.frame.origin.y), \(originInRootView)")
-        
-//        delegate?.didClickVcvSoundItem(pointX: originInRootView.x, pointY: originInRootView.y, view: cell)
 
      }
 }
@@ -914,6 +913,16 @@ extension PlaceSelectPanelView: HMultiLocationDelegate{
     func didClickUserCurrentLocation(){
         delegate?.didClickUserCurrentLocation(panel: self)
     }
+    
+    func didClickPlaceLocation() {
+        delegate?.didClickPlaceLocation(panel: self)
+    }
+}
+
+extension PlaceSelectPanelView: HSingleLocationDelegate{
+    func didClickSinglePlaceLocation() {
+        delegate?.didClickPlaceLocation(panel: self)
+    }
 }
 
 extension ViewController: PlaceSelectPanelDelegate{
@@ -984,6 +993,9 @@ extension ViewController: PlaceSelectPanelDelegate{
             //test > location error msg
             openLocationErrorPromptMsg()
         }
+    }
+    func didClickPlaceLocation(panel : PlaceSelectPanelView) {
+        panel.closePanel(isAnimated: true)
     }
     func didInitializePlaceSelect() {
         //test > UI change when clicked on place select

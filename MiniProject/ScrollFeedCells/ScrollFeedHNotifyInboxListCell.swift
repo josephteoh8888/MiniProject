@@ -213,6 +213,7 @@ extension ScrollFeedHNotifyInboxListCell: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HNotifyInboxListViewCell.identifier, for: indexPath) as! HNotifyInboxListViewCell
+        cell.aDelegate = self
         //test > configure cell
 //        cell.configure(data: vDataList[indexPath.row])
         
@@ -222,4 +223,28 @@ extension ScrollFeedHNotifyInboxListCell: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
      }
 
+}
+
+extension ScrollFeedHNotifyInboxListCell: HNotifyListViewDelegate{
+    func didHNotifyClickUser(){
+        aDelegate?.sfcDidClickVcvClickUser()
+    }
+    func didHNotifyClickPlace(){
+        
+    }
+    func didHNotifyClickSound(){
+        
+    }
+    func didHNotifyClickHashtag(){
+        
+    }
+    func didHNotifyClickPhoto(){
+        
+    }
+    func didHNotifyClickVideo(){
+        
+    }
+    func didHNotifyClickPost(){
+        
+    }
 }

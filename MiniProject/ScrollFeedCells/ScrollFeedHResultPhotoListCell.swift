@@ -10,6 +10,8 @@ import UIKit
 
 class ScrollFeedHResultPhotoListCell: ScrollFeedHResultListCell {
     
+    //test
+    var hideCellIndex = -1
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -77,6 +79,30 @@ class ScrollFeedHResultPhotoListCell: ScrollFeedHResultListCell {
         aSpinner.centerXAnchor.constraint(equalTo: vCV.centerXAnchor).isActive = true
         aSpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
         aSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
+    }
+    
+    //test > make viewcell image reappear after video panel closes
+    func dehideCellAt(){
+        let vc = vCV?.cellForItem(at: IndexPath(item: hideCellIndex, section: 0))
+        guard let b = vc as? GridPhotoViewCell else {
+            return
+        }
+        b.dehideCell()
+        
+        vDataList[hideCellIndex].setGridHidden(toHide: false)
+        hideCellIndex = -1
+    }
+    
+    func hideCellAt(itemIndex: Int) {
+        print("upv scroll3xphoto hide \(itemIndex)")
+        let vc = vCV?.cellForItem(at: IndexPath(item: itemIndex, section: 0))
+        guard let b = vc as? GridPhotoViewCell else {
+            return
+        }
+        b.hideCell()
+        
+        vDataList[itemIndex].setGridHidden(toHide: true)
+        hideCellIndex = itemIndex
     }
     
     override func setShowVerticalScroll(isShowVertical: Bool) {
@@ -217,12 +243,19 @@ extension ScrollFeedHResultPhotoListCell: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: GridPhotoViewCell.identifier, for: indexPath) as! GridPhotoViewCell
 //        cell.aDelegate = self
         //test > configure cell
-//        cell.configure(data: vDataList[indexPath.row])
+        cell.configure(data: vDataList[indexPath.row])
         
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: GridPhotoViewCell.identifier, for: indexPath) as! GridPhotoViewCell
+        let originInRootView = collectionView.convert(cell.frame.origin, to: self)
+        print("collectionView index: \(indexPath), \(cell.frame.origin.x), \(cell.frame.origin.y), \(originInRootView)")
+
+        aDelegate?.sfcDidClickVcvClickPhoto(pointX: originInRootView.x, pointY: originInRootView.y, view: cell, mode: PhotoTypes.P_SHOT)
+        hideCellAt(itemIndex: indexPath.row)
      }
 
 }
+

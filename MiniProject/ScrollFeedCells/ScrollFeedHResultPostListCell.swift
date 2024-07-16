@@ -235,8 +235,7 @@ extension ScrollFeedHResultPostListCell: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HResultPostListViewCell.identifier, for: indexPath) as! HResultPostListViewCell
-//        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HResultPhotoListViewCell.identifier, for: indexPath) as! HResultPhotoListViewCell
-//        cell.aDelegate = self
+        cell.aDelegate = self
         //test > configure cell
 //        cell.configure(data: vDataList[indexPath.row])
         
@@ -246,4 +245,29 @@ extension ScrollFeedHResultPostListCell: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
      }
 
+}
+
+extension ScrollFeedHResultPostListCell: HResultListViewDelegate{
+
+    func didHResultClickUser(){
+
+    }
+    func didHResultClickPlace(){
+        
+    }
+    func didHResultClickSound(){
+//        aDelegate?.sfcDidClickVcvClickSound()
+    }
+    func didHResultClickHashtag() {
+        
+    }
+    func didHResultClickPhoto(){
+        
+    }
+    func didHResultClickVideo(){
+        
+    }
+    func didHResultClickPost(){
+        aDelegate?.sfcDidClickVcvClickPost()
+    }
 }

@@ -122,7 +122,8 @@ extension ScrollFeedHResultMainListCell: UICollectionViewDelegateFlowLayout {
         
 //        return CGSize(width: collectionView.frame.width, height: 150)
         
-        let data = vDataList[indexPath.row]
+        let dataL = vDataList[indexPath.row]
+        let data = dataL.dataTextString
         var sumHeight = 0.0
         if(data == "a") {
             let userPhotoHeight = 40.0
@@ -273,7 +274,8 @@ extension ScrollFeedHResultMainListCell: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let data = vDataList[indexPath.row]
+        let dataL = vDataList[indexPath.row]
+        let data = dataL.dataTextString
         if(data == "a") {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HResultUserListViewCell.identifier, for: indexPath) as! HResultUserListViewCell
             return cell

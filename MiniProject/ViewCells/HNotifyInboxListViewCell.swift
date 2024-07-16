@@ -9,12 +9,23 @@ import Foundation
 import UIKit
 import SDWebImage
 
+protocol HNotifyListViewDelegate : AnyObject {
+
+    //test > connect to other panel
+    func didHNotifyClickUser()
+    func didHNotifyClickPlace()
+    func didHNotifyClickSound()
+    func didHNotifyClickHashtag()
+    func didHNotifyClickPhoto()
+    func didHNotifyClickVideo()
+    func didHNotifyClickPost()
+}
 //test > horizontal list viewcell for sound panel
 class HNotifyInboxListViewCell: UICollectionViewCell {
     static let identifier = "HNotifyInboxListViewCell"
 //    var gifImage = SDAnimatedImageView()
     
-//    weak var aDelegate : VCViewCellDelegate?
+    weak var aDelegate : HNotifyListViewDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -42,6 +53,8 @@ class HNotifyInboxListViewCell: UICollectionViewCell {
         aResult.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0).isActive = true
 //        aResult.layer.cornerRadius = 10
         aResult.layer.opacity = 0.1 //0.3
+        aResult.isUserInteractionEnabled = true
+        aResult.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onUserClicked)))
         ////////////////////
         ///
         let eUserCover = UIView()
@@ -96,5 +109,9 @@ class HNotifyInboxListViewCell: UICollectionViewCell {
 //        contentText.trailingAnchor.constraint(equalTo: aUserPhoto.leadingAnchor, constant: -20).isActive = true //-30
         contentText.text = "started following you."
         contentText.numberOfLines = 2 //0
+    }
+    
+    @objc func onUserClicked(gesture: UITapGestureRecognizer) {
+        aDelegate?.didHNotifyClickUser()
     }
 }

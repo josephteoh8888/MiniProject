@@ -232,7 +232,7 @@ extension ScrollFeedHResultLocationListCell: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HResultLocationListViewCell.identifier, for: indexPath) as! HResultLocationListViewCell
-//        cell.aDelegate = self
+        cell.aDelegate = self
         //test > configure cell
 //        cell.configure(data: vDataList[indexPath.row])
         
@@ -242,4 +242,29 @@ extension ScrollFeedHResultLocationListCell: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
      }
 
+}
+
+extension ScrollFeedHResultLocationListCell: HResultListViewDelegate{
+
+    func didHResultClickUser(){
+
+    }
+    func didHResultClickPlace(){
+        aDelegate?.sfcDidClickVcvClickPlace()
+    }
+    func didHResultClickSound(){
+        
+    }
+    func didHResultClickHashtag() {
+        
+    }
+    func didHResultClickPhoto(){
+        
+    }
+    func didHResultClickVideo(){
+        
+    }
+    func didHResultClickPost(){
+        
+    }
 }

@@ -9,10 +9,21 @@ import Foundation
 import UIKit
 import SDWebImage
 
+protocol HResultListViewDelegate : AnyObject {
+
+    //test > connect to other panel
+    func didHResultClickUser()
+    func didHResultClickPlace()
+    func didHResultClickSound()
+    func didHResultClickHashtag()
+    func didHResultClickPhoto()
+    func didHResultClickVideo()
+    func didHResultClickPost()
+}
 class HResultSoundListViewCell: UICollectionViewCell {
     static let identifier = "HResultSoundListViewCell"
     
-//    weak var aDelegate : HUsersListDelegate?
+    weak var aDelegate : HResultListViewDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -153,6 +164,6 @@ class HResultSoundListViewCell: UICollectionViewCell {
     }
     
     @objc func onUserClicked(gesture: UITapGestureRecognizer) {
-//        aDelegate?.didHUsersClickUser()
+        aDelegate?.didHResultClickSound()
     }
 }

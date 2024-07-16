@@ -12,7 +12,7 @@ import SDWebImage
 class HResultPostListViewCell: UICollectionViewCell {
     static let identifier = "HResultPostListViewCell"
     
-//    weak var aDelegate : HUsersListDelegate?
+    weak var aDelegate : HResultListViewDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -163,6 +163,6 @@ class HResultPostListViewCell: UICollectionViewCell {
     }
     
     @objc func onUserClicked(gesture: UITapGestureRecognizer) {
-//        aDelegate?.didHUsersClickUser()
+        aDelegate?.didHResultClickPost()
     }
 }

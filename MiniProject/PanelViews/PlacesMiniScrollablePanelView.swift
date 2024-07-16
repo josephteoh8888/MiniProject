@@ -863,14 +863,12 @@ extension PlacesMiniScrollablePanelView: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HListViewCell.identifier, for: indexPath) as! HListViewCell
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HPlacesListViewCell.identifier, for: indexPath) as! HPlacesListViewCell
         cell.aDelegate = self
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HListViewCell.identifier, for: indexPath) as! HListViewCell
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HPlacesListViewCell.identifier, for: indexPath) as! HPlacesListViewCell
         let originInRootView = collectionView.convert(cell.frame.origin, to: self)
         print("collectionView index: \(indexPath), \(cell.frame.origin.x), \(cell.frame.origin.y), \(originInRootView)")

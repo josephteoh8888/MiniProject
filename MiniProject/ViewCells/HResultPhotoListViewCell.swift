@@ -12,7 +12,7 @@ import SDWebImage
 class HResultPhotoListViewCell: UICollectionViewCell {
     static let identifier = "HResultPhotoListViewCell"
     
-//    weak var aDelegate : HUsersListDelegate?
+    weak var aDelegate : HResultListViewDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -161,6 +161,6 @@ class HResultPhotoListViewCell: UICollectionViewCell {
     }
     
     @objc func onUserClicked(gesture: UITapGestureRecognizer) {
-//        aDelegate?.didHUsersClickUser()
+        aDelegate?.didHResultClickPhoto()
     }
 }
