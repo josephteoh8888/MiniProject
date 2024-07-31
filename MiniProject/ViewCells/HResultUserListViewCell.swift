@@ -14,6 +14,16 @@ class HResultUserListViewCell: UICollectionViewCell {
     
     weak var aDelegate : HResultListViewDelegate?
     
+    let aUserPhoto = SDAnimatedImageView()
+    let aFollowA = UIView()
+    let aFollowAText = UILabel()
+    let aNameText = UILabel()
+    let aUserNameText = UILabel()
+    let aBioText = UILabel()
+    let vBtn = UIImageView()
+    
+    var isAction = false
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -56,7 +66,7 @@ class HResultUserListViewCell: UICollectionViewCell {
         eUserCover.layer.cornerRadius = 20
         eUserCover.layer.opacity = 1.0 //default 0.3
         
-        let aUserPhoto = SDAnimatedImageView()
+//        let aUserPhoto = SDAnimatedImageView()
         contentView.addSubview(aUserPhoto)
         aUserPhoto.translatesAutoresizingMaskIntoConstraints = false
         aUserPhoto.widthAnchor.constraint(equalToConstant: 40).isActive = true //36
@@ -68,11 +78,11 @@ class HResultUserListViewCell: UICollectionViewCell {
         aUserPhoto.contentMode = .scaleAspectFill
         aUserPhoto.layer.masksToBounds = true
         aUserPhoto.layer.cornerRadius = 20
-        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-        aUserPhoto.sd_setImage(with: imageUrl)
+//        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//        aUserPhoto.sd_setImage(with: imageUrl)
         aUserPhoto.backgroundColor = .ddmDarkGreyColor
         
-        let aFollowA = UIView()
+//        let aFollowA = UIView()
         aFollowA.backgroundColor = .yellow
         contentView.addSubview(aFollowA)
         aFollowA.translatesAutoresizingMaskIntoConstraints = false
@@ -83,10 +93,10 @@ class HResultUserListViewCell: UICollectionViewCell {
         aFollowA.topAnchor.constraint(equalTo: eUserCover.topAnchor, constant: 5).isActive = true
         aFollowA.layer.cornerRadius = 10
         aFollowA.isUserInteractionEnabled = true
-//        aFollowA.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onFollowClicked)))
-//        aFollowA.isHidden = true
+        aFollowA.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onFollowClicked)))
+        aFollowA.isHidden = true
 
-        let aFollowAText = UILabel()
+//        let aFollowAText = UILabel()
         aFollowAText.textAlignment = .center
         aFollowAText.textColor = .black
         aFollowAText.font = .boldSystemFont(ofSize: 13) //default 14
@@ -98,20 +108,21 @@ class HResultUserListViewCell: UICollectionViewCell {
         aFollowAText.centerYAnchor.constraint(equalTo: aFollowA.centerYAnchor).isActive = true
         aFollowAText.text = "Follow"
         
-        let aNameText = UILabel()
+//        let aNameText = UILabel()
         aNameText.textAlignment = .left
         aNameText.textColor = .white
         aNameText.font = .boldSystemFont(ofSize: 13)
         contentView.addSubview(aNameText)
         aNameText.translatesAutoresizingMaskIntoConstraints = false
-//        aNameText.topAnchor.constraint(equalTo: aResult.topAnchor, constant: 10).isActive = true
+        aNameText.trailingAnchor.constraint(lessThanOrEqualTo: aFollowA.leadingAnchor, constant: -30).isActive = true
         aNameText.topAnchor.constraint(equalTo: eUserCover.topAnchor, constant: 5).isActive = true
         aNameText.leadingAnchor.constraint(equalTo: aUserPhoto.trailingAnchor, constant: 10).isActive = true
-        aNameText.text = "Michael Kins"
+        aNameText.text = ""
         
         //test > verified badge
-        let vBtn = UIImageView(image: UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate))
+//        let vBtn = UIImageView(image: UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate))
 //        vBtn.tintColor = .yellow //ddmGoldenYellowColor
+        vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
         vBtn.tintColor = .ddmGoldenYellowColor
 //        vBtn.tintColor = .white //darkGray
         contentView.addSubview(vBtn)
@@ -120,9 +131,10 @@ class HResultUserListViewCell: UICollectionViewCell {
         vBtn.centerYAnchor.constraint(equalTo: aNameText.centerYAnchor, constant: 0).isActive = true
         vBtn.heightAnchor.constraint(equalToConstant: 14).isActive = true
         vBtn.widthAnchor.constraint(equalToConstant: 14).isActive = true
+        vBtn.isHidden = true
         //
         
-        let aUserNameText = UILabel()
+//        let aUserNameText = UILabel()
         aUserNameText.textAlignment = .left
         aUserNameText.textColor = .white
         aUserNameText.font = .systemFont(ofSize: 12)
@@ -130,11 +142,11 @@ class HResultUserListViewCell: UICollectionViewCell {
         aUserNameText.translatesAutoresizingMaskIntoConstraints = false
         aUserNameText.topAnchor.constraint(equalTo: aNameText.bottomAnchor).isActive = true
         aUserNameText.leadingAnchor.constraint(equalTo: aNameText.leadingAnchor, constant: 0).isActive = true
-        aUserNameText.text = "140k followers"
+        aUserNameText.text = ""
 //        aUserNameText.text = "@mic1809"
         aUserNameText.layer.opacity = 0.3 //0.5
         
-        let aBioText = UILabel()
+//        let aBioText = UILabel()
         aBioText.textAlignment = .left
         aBioText.textColor = .white
         aBioText.font = .systemFont(ofSize: 14) //12
@@ -142,10 +154,69 @@ class HResultUserListViewCell: UICollectionViewCell {
         aBioText.translatesAutoresizingMaskIntoConstraints = false
         aBioText.topAnchor.constraint(equalTo: eUserCover.bottomAnchor, constant: 10).isActive = true
         aBioText.leadingAnchor.constraint(equalTo: aNameText.leadingAnchor, constant: 0).isActive = true
+        aBioText.text = ""
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        print("HResultUserListViewCell prepare for reuse")
+        
+        let imageUrl = URL(string: "")
+        aUserPhoto.sd_setImage(with: imageUrl)
+        aNameText.text = ""
+        aBioText.text = ""
+        aUserNameText.text = ""
+        vBtn.isHidden = true
+        //test
+        aFollowA.isHidden = true
+        
+        actionUI(doneState: false)
+    }
+    
+    func configure(data: PostData) {
+        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+        aUserPhoto.sd_setImage(with: imageUrl)
+        aNameText.text = "Michael Kins"
         aBioText.text = "I am just a normal girl"
+        aUserNameText.text = "140k followers" //"@mic1809"
+        vBtn.isHidden = false
+        //test
+        aFollowA.isHidden = false
+        
+        actionUI(doneState: isAction)
     }
     
     @objc func onUserClicked(gesture: UITapGestureRecognizer) {
         aDelegate?.didHResultClickUser()
+    }
+    
+    func actionUI(doneState: Bool) {
+        if(doneState) {
+            aFollowA.backgroundColor = .ddmDarkColor
+            aFollowAText.text = "Following"
+            aFollowAText.textColor = .white
+        }
+        else {
+            aFollowA.backgroundColor = .yellow
+            aFollowAText.text = "Follow"
+            aFollowAText.textColor = .black
+        }
+    }
+    
+    @objc func onFollowClicked(gesture: UITapGestureRecognizer) {
+        
+        let isSignedIn = SignInManager.shared.getStatus()
+        if(isSignedIn) {
+            if(isAction) {
+                actionUI(doneState: false)
+                isAction = false
+            } else {
+                actionUI(doneState: true)
+                isAction = true
+            }
+        }
+        else {
+            aDelegate?.didHResultClickSignIn()
+        }
     }
 }

@@ -14,6 +14,15 @@ class HResultLocationListViewCell: UICollectionViewCell {
     
     weak var aDelegate : HResultListViewDelegate?
     
+    let aFollowA = UIView()
+    let aFollowAText = UILabel()
+    let aNameText = UILabel()
+    let aUserNameText = UILabel()
+    let vBtn = UIImageView()
+    let aUserPhoto = SDAnimatedImageView()
+    
+    var isAction = false
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -56,7 +65,7 @@ class HResultLocationListViewCell: UICollectionViewCell {
         eUserCover.layer.cornerRadius = 20
         eUserCover.layer.opacity = 1.0 //default 0.3
         
-        let aUserPhoto = SDAnimatedImageView()
+//        let aUserPhoto = SDAnimatedImageView()
         contentView.addSubview(aUserPhoto)
         aUserPhoto.translatesAutoresizingMaskIntoConstraints = false
         aUserPhoto.widthAnchor.constraint(equalToConstant: 40).isActive = true //36
@@ -68,11 +77,11 @@ class HResultLocationListViewCell: UICollectionViewCell {
         aUserPhoto.contentMode = .scaleAspectFill
         aUserPhoto.layer.masksToBounds = true
         aUserPhoto.layer.cornerRadius = 5
-        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-        aUserPhoto.sd_setImage(with: imageUrl)
+//        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//        aUserPhoto.sd_setImage(with: imageUrl)
         aUserPhoto.backgroundColor = .ddmDarkGreyColor
         
-        let aFollowA = UIView()
+//        let aFollowA = UIView()
         aFollowA.backgroundColor = .yellow
         contentView.addSubview(aFollowA)
         aFollowA.translatesAutoresizingMaskIntoConstraints = false
@@ -83,10 +92,10 @@ class HResultLocationListViewCell: UICollectionViewCell {
         aFollowA.topAnchor.constraint(equalTo: eUserCover.topAnchor, constant: 5).isActive = true
         aFollowA.layer.cornerRadius = 10
         aFollowA.isUserInteractionEnabled = true
-//        aFollowA.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onFollowClicked)))
+        aFollowA.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onFollowClicked)))
 //        aFollowA.isHidden = true
 
-        let aFollowAText = UILabel()
+//        let aFollowAText = UILabel()
         aFollowAText.textAlignment = .center
         aFollowAText.textColor = .black
         aFollowAText.font = .boldSystemFont(ofSize: 13) //default 14
@@ -98,19 +107,20 @@ class HResultLocationListViewCell: UICollectionViewCell {
         aFollowAText.centerYAnchor.constraint(equalTo: aFollowA.centerYAnchor).isActive = true
         aFollowAText.text = "Save"
         
-        let aNameText = UILabel()
+//        let aNameText = UILabel()
         aNameText.textAlignment = .left
         aNameText.textColor = .white
         aNameText.font = .boldSystemFont(ofSize: 13)
         contentView.addSubview(aNameText)
         aNameText.translatesAutoresizingMaskIntoConstraints = false
-//        aNameText.topAnchor.constraint(equalTo: aResult.topAnchor, constant: 10).isActive = true
+        aNameText.trailingAnchor.constraint(lessThanOrEqualTo: aFollowA.leadingAnchor, constant: -30).isActive = true
         aNameText.topAnchor.constraint(equalTo: eUserCover.topAnchor, constant: 5).isActive = true
         aNameText.leadingAnchor.constraint(equalTo: aUserPhoto.trailingAnchor, constant: 10).isActive = true
-        aNameText.text = "Petronas Twin Tower"
+        aNameText.text = ""
         
         //test > verified badge
-        let vBtn = UIImageView(image: UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate))
+//        let vBtn = UIImageView(image: UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate))
+        vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
 //        vBtn.tintColor = .yellow //ddmGoldenYellowColor
         vBtn.tintColor = .ddmGoldenYellowColor
 //        vBtn.tintColor = .white //darkGray
@@ -122,7 +132,7 @@ class HResultLocationListViewCell: UICollectionViewCell {
         vBtn.widthAnchor.constraint(equalToConstant: 14).isActive = true
         //
         
-        let aUserNameText = UILabel()
+//        let aUserNameText = UILabel()
         aUserNameText.textAlignment = .left
         aUserNameText.textColor = .white
         aUserNameText.font = .systemFont(ofSize: 12)
@@ -130,13 +140,69 @@ class HResultLocationListViewCell: UICollectionViewCell {
         aUserNameText.translatesAutoresizingMaskIntoConstraints = false
         aUserNameText.topAnchor.constraint(equalTo: aNameText.bottomAnchor).isActive = true
         aUserNameText.leadingAnchor.constraint(equalTo: aNameText.leadingAnchor, constant: 0).isActive = true
-        aUserNameText.text = "101 posts"
+        aUserNameText.text = ""
 //        aUserNameText.text = "@mic1809"
         aUserNameText.layer.opacity = 0.3 //0.5
         
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        print("HResultUserListViewCell prepare for reuse")
+        
+        let imageUrl = URL(string: "")
+        aUserPhoto.sd_setImage(with: imageUrl)
+        aNameText.text = ""
+        aUserNameText.text = ""
+        vBtn.isHidden = true
+        //test
+        aFollowA.isHidden = true
+        
+        actionUI(doneState: false)
+    }
+    
+    func configure(data: PostData) {
+        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+        aUserPhoto.sd_setImage(with: imageUrl)
+        aNameText.text = "Petronas Twin Tower"
+        aUserNameText.text = "101 posts"
+        vBtn.isHidden = false
+        //test
+        aFollowA.isHidden = false
+        
+        actionUI(doneState: isAction)
+    }
+    
     @objc func onUserClicked(gesture: UITapGestureRecognizer) {
         aDelegate?.didHResultClickPlace()
+    }
+    
+    func actionUI(doneState: Bool) {
+        if(doneState) {
+            aFollowA.backgroundColor = .ddmDarkColor
+            aFollowAText.text = "Saved"
+            aFollowAText.textColor = .white
+        }
+        else {
+            aFollowA.backgroundColor = .yellow
+            aFollowAText.text = "Save"
+            aFollowAText.textColor = .black
+        }
+    }
+    
+    @objc func onFollowClicked(gesture: UITapGestureRecognizer) {
+        let isSignedIn = SignInManager.shared.getStatus()
+        if(isSignedIn) {
+            if(isAction) {
+                actionUI(doneState: false)
+                isAction = false
+            } else {
+                actionUI(doneState: true)
+                isAction = true
+            }
+        }
+        else {
+            aDelegate?.didHResultClickSignIn()
+        }
     }
 }

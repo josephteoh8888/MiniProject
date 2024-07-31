@@ -24,13 +24,22 @@ class SignInManager {
                 id
             ]
             
-            var isSignedIn = false
-            self.isUserSignedIn = true
-            isSignedIn = true
+            //test 1 > success handling
+            if(id == "sign_in_facebook") {
+                var isSignedIn = false
+                self.isUserSignedIn = true
+                isSignedIn = true
+                
+                completion(.success(isSignedIn))
+            }
+            else if(id == "sign_in_google") {
+                completion(.failure(SignInError.invalidResponse))
+            }
+            else {
+                completion(.failure(SignInError.networkError))
+            }
 
-            completion(.success(isSignedIn))
-            
-            //test > testing for error handling
+            //test 2 > error handling
 //            completion(.failure(SignInError.invalidResponse))
         })
     }
@@ -41,12 +50,20 @@ class SignInManager {
                 id
             ]
             
-            var isSignedIn = false
-            self.isUserSignedIn = false
-            isSignedIn = false
+            //test 1 > success handling
+            if(id == "sign_out") {
+                var isSignedIn = false
+                self.isUserSignedIn = false
+                isSignedIn = false
 
-            completion(.success(isSignedIn))
-
+                completion(.success(isSignedIn))
+            }
+            else {
+                completion(.failure(SignInError.invalidResponse))
+            }
+            
+            //test 2 > error handling
+//            completion(.failure(SignInError.invalidResponse))
         })
     }
     
@@ -57,6 +74,7 @@ class SignInManager {
                 id
             ]
             
+            //test 1 > success handling
             var isSignedIn = false
             if(self.isUserSignedIn) {
                 isSignedIn = true
@@ -65,6 +83,12 @@ class SignInManager {
             }
 
             completion(.success(isSignedIn))
+            
         })
+    }
+    
+    //test > simple getter/setter for status retrieval
+    func getStatus() -> Bool {
+        return self.isUserSignedIn
     }
 }

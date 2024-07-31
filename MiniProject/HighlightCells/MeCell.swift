@@ -12,10 +12,26 @@ import SDWebImage
 protocol MeCellDelegate : AnyObject {
     
     func didMeCellClickUser()
+    func didMeCellClickBase()
+    func didMeCellClickEditProfile()
+    func didMeCellClickAccountSetting()
+    func didMeCellClickFollow()
+    func didMeCellClickHistory()
+    func didMeCellClickLike()
+    func didMeCellClickBookmark()
+    func didMeCellClickLocations()
+    func didMeCellClickComments()
+    func didMeCellClickPosts()
+    func didMeCellClickPhotos()
+    func didMeCellClickVideos()
     func didMeCellClickSignout()
 }
 
-class MultiPhotosMeCell: UIView {
+class MeCell: UIView {
+    weak var aDelegate : MeCellDelegate?
+}
+
+class MultiPhotosMeCell: MeCell {
     
     let aHLightRect1 = UIView()
     var viewHeight: CGFloat = 0
@@ -58,6 +74,8 @@ class MultiPhotosMeCell: UIView {
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
         aHLightRectBG.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
         aHLightRectBG.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
+        aHLightRectBG.isUserInteractionEnabled = true
+        aHLightRectBG.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onRectClicked)))
         
         let aHLightTitle = UILabel()
         aHLightTitle.textAlignment = .left
@@ -164,9 +182,13 @@ class MultiPhotosMeCell: UIView {
         gifImage2.bottomAnchor.constraint(equalTo: cGrid.bottomAnchor).isActive = true
         gifImage2.trailingAnchor.constraint(equalTo: cGrid.trailingAnchor).isActive = true
     }
+    
+    @objc func onRectClicked(gesture: UITapGestureRecognizer) {
+        aDelegate?.didMeCellClickPhotos()
+    }
 }
 
-class MultiLoopsMeCell: UIView {
+class MultiLoopsMeCell: MeCell {
     
     let aHLightRect1 = UIView()
     var viewHeight: CGFloat = 0
@@ -209,6 +231,8 @@ class MultiLoopsMeCell: UIView {
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
         aHLightRectBG.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
         aHLightRectBG.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
+        aHLightRectBG.isUserInteractionEnabled = true
+        aHLightRectBG.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onRectClicked)))
         
         let aHLightTitle = UILabel()
         aHLightTitle.textAlignment = .left
@@ -315,9 +339,13 @@ class MultiLoopsMeCell: UIView {
         gifImage2.bottomAnchor.constraint(equalTo: cGrid.bottomAnchor).isActive = true
         gifImage2.trailingAnchor.constraint(equalTo: cGrid.trailingAnchor).isActive = true
     }
+    
+    @objc func onRectClicked(gesture: UITapGestureRecognizer) {
+        aDelegate?.didMeCellClickVideos()
+    }
 }
 
-class MultiPostsMeCell: UIView {
+class MultiPostsMeCell: MeCell {
     
     let aHLightRect1 = UIView()
     var viewHeight: CGFloat = 0
@@ -360,6 +388,8 @@ class MultiPostsMeCell: UIView {
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
         aHLightRectBG.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
         aHLightRectBG.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
+        aHLightRectBG.isUserInteractionEnabled = true
+        aHLightRectBG.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onRectClicked)))
         
         let aHLightTitle = UILabel()
         aHLightTitle.textAlignment = .left
@@ -437,9 +467,13 @@ class MultiPostsMeCell: UIView {
         aHItem1ATitle.text = "往年的这个时候，iPhone 虽然也是位列销量榜榜首，但那都是上一代的旧机型呀...\n只能说这次 11.11 各家给的优惠都太给力了."
         aHItem1ATitle.numberOfLines = 3
     }
+    
+    @objc func onRectClicked(gesture: UITapGestureRecognizer) {
+        aDelegate?.didMeCellClickPosts()
+    }
 }
 
-class MultiCommentsMeCell: UIView {
+class MultiCommentsMeCell: MeCell {
     
     let aHLightRect1 = UIView()
     var viewHeight: CGFloat = 0
@@ -482,6 +516,8 @@ class MultiCommentsMeCell: UIView {
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
         aHLightRectBG.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
         aHLightRectBG.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
+        aHLightRectBG.isUserInteractionEnabled = true
+        aHLightRectBG.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onRectClicked)))
         
         let aHLightTitle = UILabel()
         aHLightTitle.textAlignment = .left
@@ -529,9 +565,13 @@ class MultiCommentsMeCell: UIView {
         aHItem1ATitle.text = "Nice food, nice environment! Worth a visit."
         aHItem1ATitle.numberOfLines = 3
     }
+    
+    @objc func onRectClicked(gesture: UITapGestureRecognizer) {
+        aDelegate?.didMeCellClickComments()
+    }
 }
 
-class HistoryMeCell: UIView {
+class HistoryMeCell: MeCell {
     
     let aHLightRect1 = UIView()
     var viewHeight: CGFloat = 0
@@ -574,6 +614,8 @@ class HistoryMeCell: UIView {
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
         aHLightRectBG.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
         aHLightRectBG.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
+        aHLightRectBG.isUserInteractionEnabled = true
+        aHLightRectBG.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onRectClicked)))
         
         let aHLightTitle = UILabel()
         aHLightTitle.textAlignment = .left
@@ -598,9 +640,13 @@ class HistoryMeCell: UIView {
         rArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
         rArrowBtn.layer.opacity = 0.5
     }
+    
+    @objc func onRectClicked(gesture: UITapGestureRecognizer) {
+        aDelegate?.didMeCellClickHistory()
+    }
 }
 
-class LikeMeCell: UIView {
+class LikeMeCell: MeCell {
     
     let aHLightRect1 = UIView()
     var viewHeight: CGFloat = 0
@@ -643,6 +689,8 @@ class LikeMeCell: UIView {
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
         aHLightRectBG.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
         aHLightRectBG.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
+        aHLightRectBG.isUserInteractionEnabled = true
+        aHLightRectBG.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onRectClicked)))
         
         let aHLightTitle = UILabel()
         aHLightTitle.textAlignment = .left
@@ -667,9 +715,13 @@ class LikeMeCell: UIView {
         rArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
         rArrowBtn.layer.opacity = 0.5
     }
+    
+    @objc func onRectClicked(gesture: UITapGestureRecognizer) {
+        aDelegate?.didMeCellClickLike()
+    }
 }
 
-class BookmarkMeCell: UIView {
+class BookmarkMeCell: MeCell {
     
     let aHLightRect1 = UIView()
     var viewHeight: CGFloat = 0
@@ -712,6 +764,8 @@ class BookmarkMeCell: UIView {
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
         aHLightRectBG.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
         aHLightRectBG.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
+        aHLightRectBG.isUserInteractionEnabled = true
+        aHLightRectBG.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onRectClicked)))
         
         let aHLightTitle = UILabel()
         aHLightTitle.textAlignment = .left
@@ -736,9 +790,13 @@ class BookmarkMeCell: UIView {
         rArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
         rArrowBtn.layer.opacity = 0.5
     }
+    
+    @objc func onRectClicked(gesture: UITapGestureRecognizer) {
+        aDelegate?.didMeCellClickBookmark()
+    }
 }
 
-class AccountMeCell: UIView {
+class AccountMeCell: MeCell {
     
     let aHLightRect1 = UIView()
     var viewHeight: CGFloat = 0
@@ -781,6 +839,8 @@ class AccountMeCell: UIView {
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
         aHLightRectBG.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
         aHLightRectBG.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
+        aHLightRectBG.isUserInteractionEnabled = true
+        aHLightRectBG.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onRectClicked)))
         
         let aHLightTitle = UILabel()
         aHLightTitle.textAlignment = .left
@@ -790,7 +850,7 @@ class AccountMeCell: UIView {
         aHLightTitle.translatesAutoresizingMaskIntoConstraints = false
         aHLightTitle.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 10).isActive = true
         aHLightTitle.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 10).isActive = true
-        aHLightTitle.text = "Account Settings"
+        aHLightTitle.text = "Account Settings" //Identity Verification
 //        aHLightTitle.isHidden = true
         aHLightTitle.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true
         
@@ -816,9 +876,13 @@ class AccountMeCell: UIView {
         notifiedBox.widthAnchor.constraint(equalToConstant: 10).isActive = true
         notifiedBox.layer.cornerRadius = 5
     }
+    
+    @objc func onRectClicked(gesture: UITapGestureRecognizer) {
+        aDelegate?.didMeCellClickAccountSetting()
+    }
 }
 
-class EditProfileMeCell: UIView {
+class EditProfileMeCell: MeCell {
     
     let aHLightRect1 = UIView()
     var viewHeight: CGFloat = 0
@@ -861,6 +925,8 @@ class EditProfileMeCell: UIView {
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
         aHLightRectBG.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
         aHLightRectBG.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
+        aHLightRectBG.isUserInteractionEnabled = true
+        aHLightRectBG.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onRectClicked)))
         
         let aHLightTitle = UILabel()
         aHLightTitle.textAlignment = .left
@@ -896,9 +962,83 @@ class EditProfileMeCell: UIView {
 //        notifiedBox.widthAnchor.constraint(equalToConstant: 10).isActive = true
 //        notifiedBox.layer.cornerRadius = 5
     }
+    
+    @objc func onRectClicked(gesture: UITapGestureRecognizer) {
+        
+        aDelegate?.didMeCellClickEditProfile()
+    }
 }
 
-class FollowingMeCell: UIView {
+//class FollowingMeCell: MeCell {
+//    
+//    let aHLightRect1 = UIView()
+//    var viewHeight: CGFloat = 0
+//    var viewWidth: CGFloat = 0
+//    
+//    override init(frame: CGRect) {
+//        super.init(frame: frame)
+//
+//        viewWidth = frame.width
+//        viewHeight = frame.height
+//        setupViews()
+//
+//    }
+//    required init?(coder aDecoder: NSCoder) {
+//        super.init(coder: aDecoder)
+//
+//        setupViews()
+//    }
+//    
+//    func setupViews() {
+//        //move to redrawUI()
+//    }
+//    
+//    func redrawUI() {
+//        
+//        self.addSubview(aHLightRect1)
+//        aHLightRect1.translatesAutoresizingMaskIntoConstraints = false
+//        aHLightRect1.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
+//        aHLightRect1.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true //5
+//        aHLightRect1.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0).isActive = true
+//        aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
+//        
+//        let aHLightRectBG = UIView()
+//        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+//        aHLightRect1.addSubview(aHLightRectBG)
+//        aHLightRectBG.layer.cornerRadius = 10 //10
+//        aHLightRectBG.layer.opacity = 0.1 //0.2, 0.1
+//        aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
+//        aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
+//        aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
+//        aHLightRectBG.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
+//        aHLightRectBG.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
+//        
+//        let aHLightTitle = UILabel()
+//        aHLightTitle.textAlignment = .left
+//        aHLightTitle.textColor = .white
+//        aHLightTitle.font = .boldSystemFont(ofSize: 14)
+//        aHLightRect1.addSubview(aHLightTitle)
+//        aHLightTitle.translatesAutoresizingMaskIntoConstraints = false
+//        aHLightTitle.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 10).isActive = true
+//        aHLightTitle.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 10).isActive = true
+//        aHLightTitle.text = "Followings"
+////        aHLightTitle.isHidden = true
+//        aHLightTitle.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true
+//        
+//        let rArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
+//        rArrowBtn.tintColor = .white
+//        aHLightRect1.addSubview(rArrowBtn)
+//        rArrowBtn.translatesAutoresizingMaskIntoConstraints = false
+//        rArrowBtn.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true
+////        rArrowBtn.centerYAnchor.constraint(equalTo: aHLightRect1.centerYAnchor).isActive = true
+//        rArrowBtn.centerYAnchor.constraint(equalTo: aHLightTitle.centerYAnchor).isActive = true
+//        rArrowBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
+//        rArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
+//        rArrowBtn.layer.opacity = 0.5
+//    }
+//}
+
+class FollowerMeCell: MeCell {
     
     let aHLightRect1 = UIView()
     var viewHeight: CGFloat = 0
@@ -941,75 +1081,8 @@ class FollowingMeCell: UIView {
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
         aHLightRectBG.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
         aHLightRectBG.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
-        
-        let aHLightTitle = UILabel()
-        aHLightTitle.textAlignment = .left
-        aHLightTitle.textColor = .white
-        aHLightTitle.font = .boldSystemFont(ofSize: 14)
-        aHLightRect1.addSubview(aHLightTitle)
-        aHLightTitle.translatesAutoresizingMaskIntoConstraints = false
-        aHLightTitle.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 10).isActive = true
-        aHLightTitle.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 10).isActive = true
-        aHLightTitle.text = "Followings"
-//        aHLightTitle.isHidden = true
-        aHLightTitle.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true
-        
-        let rArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
-        rArrowBtn.tintColor = .white
-        aHLightRect1.addSubview(rArrowBtn)
-        rArrowBtn.translatesAutoresizingMaskIntoConstraints = false
-        rArrowBtn.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true
-//        rArrowBtn.centerYAnchor.constraint(equalTo: aHLightRect1.centerYAnchor).isActive = true
-        rArrowBtn.centerYAnchor.constraint(equalTo: aHLightTitle.centerYAnchor).isActive = true
-        rArrowBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
-        rArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        rArrowBtn.layer.opacity = 0.5
-    }
-}
-
-class FollowerMeCell: UIView {
-    
-    let aHLightRect1 = UIView()
-    var viewHeight: CGFloat = 0
-    var viewWidth: CGFloat = 0
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-
-        viewWidth = frame.width
-        viewHeight = frame.height
-        setupViews()
-
-    }
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-
-        setupViews()
-    }
-    
-    func setupViews() {
-        //move to redrawUI()
-    }
-    
-    func redrawUI() {
-        
-        self.addSubview(aHLightRect1)
-        aHLightRect1.translatesAutoresizingMaskIntoConstraints = false
-        aHLightRect1.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
-        aHLightRect1.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true //5
-        aHLightRect1.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0).isActive = true
-        aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
-        
-        let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
-        aHLightRect1.addSubview(aHLightRectBG)
-        aHLightRectBG.layer.cornerRadius = 10 //10
-        aHLightRectBG.layer.opacity = 0.1 //0.2, 0.1
-        aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
-        aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
-        aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
-        aHLightRectBG.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-        aHLightRectBG.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
+        aHLightRectBG.isUserInteractionEnabled = true
+        aHLightRectBG.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onRectClicked)))
         
         let aHLightTitle = UILabel()
         aHLightTitle.textAlignment = .left
@@ -1035,9 +1108,13 @@ class FollowerMeCell: UIView {
         rArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
         rArrowBtn.layer.opacity = 0.5
     }
+    
+    @objc func onRectClicked(gesture: UITapGestureRecognizer) {
+        aDelegate?.didMeCellClickFollow()
+    }
 }
 
-class BaseMeCell: UIView {
+class BaseMeCell: MeCell {
     
     let aHLightRect1 = UIView()
     var viewHeight: CGFloat = 0
@@ -1080,6 +1157,8 @@ class BaseMeCell: UIView {
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
         aHLightRectBG.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
         aHLightRectBG.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
+        aHLightRectBG.isUserInteractionEnabled = true
+        aHLightRectBG.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onRectClicked)))
         
         let aHLightTitle = UILabel()
         aHLightTitle.textAlignment = .left
@@ -1154,9 +1233,13 @@ class BaseMeCell: UIView {
         aHSubDesc2.text = "Malaysia"
         aHSubDesc2.layer.opacity = 0.4
     }
+    
+    @objc func onRectClicked(gesture: UITapGestureRecognizer) {
+        aDelegate?.didMeCellClickBase()
+    }
 }
 
-class LocationMeCell: UIView {
+class LocationMeCell: MeCell {
     
     let aHLightRect1 = UIView()
     var viewHeight: CGFloat = 0
@@ -1199,6 +1282,8 @@ class LocationMeCell: UIView {
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
         aHLightRectBG.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
         aHLightRectBG.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
+        aHLightRectBG.isUserInteractionEnabled = true
+        aHLightRectBG.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onRectClicked)))
         
         let aHLightTitle = UILabel()
         aHLightTitle.textAlignment = .left
@@ -1273,15 +1358,19 @@ class LocationMeCell: UIView {
         aHSubDesc2.text = "United States"
         aHSubDesc2.layer.opacity = 0.4
     }
+    
+    @objc func onRectClicked(gesture: UITapGestureRecognizer) {
+        aDelegate?.didMeCellClickLocations()
+    }
 }
 
-class ProfileMeCell: UIView {
+class ProfileMeCell: MeCell {
     
     let aHLightRect1 = UIView()
     var viewHeight: CGFloat = 0
     var viewWidth: CGFloat = 0
     
-    weak var aDelegate : MeCellDelegate?
+//    weak var aDelegate : MeCellDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -1398,13 +1487,13 @@ class ProfileMeCell: UIView {
     }
 }
 
-class SignoutMeCell: UIView {
+class SignoutMeCell: MeCell {
     
     let aHLightRect1 = UIView()
     var viewHeight: CGFloat = 0
     var viewWidth: CGFloat = 0
     
-    weak var aDelegate : MeCellDelegate?
+//    weak var aDelegate : MeCellDelegate?
     
 //    let aSpinner = SpinLoader()
     

@@ -20,8 +20,6 @@ class ShopHighlightCell: HighlightCell {
     let aTab3 = UIView()
     let scrollView1 = UIScrollView()
     
-//    weak var aDelegate : HighlightCellDelegate?
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
 

@@ -19,11 +19,23 @@ protocol HResultListViewDelegate : AnyObject {
     func didHResultClickPhoto()
     func didHResultClickVideo()
     func didHResultClickPost()
+    
+    func didHResultClickSignIn()
 }
 class HResultSoundListViewCell: UICollectionViewCell {
     static let identifier = "HResultSoundListViewCell"
     
     weak var aDelegate : HResultListViewDelegate?
+    
+    let aUserPhoto = SDAnimatedImageView()
+    let aFollowA = UIView()
+    let aFollowAText = UILabel()
+    let aNameText = UILabel()
+    let aUserNameText = UILabel()
+//    let aBioText = UILabel()
+    let vBtn = UIImageView()
+    
+    var isAction = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -67,7 +79,7 @@ class HResultSoundListViewCell: UICollectionViewCell {
         eUserCover.layer.cornerRadius = 20
         eUserCover.layer.opacity = 1.0 //default 0.3
         
-        let aUserPhoto = SDAnimatedImageView()
+//        let aUserPhoto = SDAnimatedImageView()
         contentView.addSubview(aUserPhoto)
         aUserPhoto.translatesAutoresizingMaskIntoConstraints = false
         aUserPhoto.widthAnchor.constraint(equalToConstant: 40).isActive = true //36
@@ -125,7 +137,7 @@ class HResultSoundListViewCell: UICollectionViewCell {
 //        playBtn.isUserInteractionEnabled = true
 //        playBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onResumeAudioClicked)))
         
-        let aNameText = UILabel()
+//        let aNameText = UILabel()
         aNameText.textAlignment = .left
         aNameText.textColor = .white
         aNameText.font = .boldSystemFont(ofSize: 13)
@@ -137,7 +149,8 @@ class HResultSoundListViewCell: UICollectionViewCell {
         aNameText.text = "明知故犯"
         
         //test > verified badge
-        let vBtn = UIImageView(image: UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate))
+//        let vBtn = UIImageView(image: UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate))
+        vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
 //        vBtn.tintColor = .yellow //ddmGoldenYellowColor
         vBtn.tintColor = .ddmGoldenYellowColor
 //        vBtn.tintColor = .white //darkGray
@@ -149,7 +162,7 @@ class HResultSoundListViewCell: UICollectionViewCell {
         vBtn.widthAnchor.constraint(equalToConstant: 14).isActive = true
         //
         
-        let aUserNameText = UILabel()
+//        let aUserNameText = UILabel()
         aUserNameText.textAlignment = .left
         aUserNameText.textColor = .white
         aUserNameText.font = .systemFont(ofSize: 12)

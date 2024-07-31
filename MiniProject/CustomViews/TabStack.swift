@@ -22,8 +22,8 @@ class TabStack: UIView {
     var tabCode = ""
     var isTypeSmall = false
     var isUIChange = true
-    var isArrowAdded = true
-    var isNotifyFeatureAdded = true
+    var isArrowAdded = false
+    var isNotifyFeatureAdded = false
     
     weak var delegate : TabStackDelegate?
     

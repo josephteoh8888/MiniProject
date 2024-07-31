@@ -321,9 +321,9 @@ class PostDetailPanelView: PanelView {
     }
     
     @objc func onBackPanelClicked(gesture: UITapGestureRecognizer) {
-//        closePanel(isAnimated: true)
+        closePanel(isAnimated: true)
         
-        bSpinner.startAnimating()
+//        bSpinner.startAnimating()
     }
     
     @objc func onStickyHeaderClicked(gesture: UITapGestureRecognizer) {

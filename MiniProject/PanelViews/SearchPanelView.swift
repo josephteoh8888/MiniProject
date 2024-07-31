@@ -22,6 +22,8 @@ protocol SearchPanelDelegate : AnyObject {
     func didSearchClickClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
 //    func didSearchClickVideo()
     func didSearchClickClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
+    
+    func didSearchClickSignIn()
 }
 class SearchPanelView: PanelView{
 
@@ -212,7 +214,7 @@ class SearchPanelView: PanelView{
         tabDataList.append("p")
         tabDataList.append("l")
         tabDataList.append("s")
-        tabDataList.append("h")
+//        tabDataList.append("h")//temp disable hashtag search
 
         //test > add sections tab
 //        stackviewUsableLength = viewWidth - 20*2 //2 sides of 20.0 margin
@@ -372,6 +374,8 @@ class SearchPanelView: PanelView{
 
             stackFeed.initialize()
             stackFeed.aDelegate = self
+            //test > additional delegate
+            stackFeed.bDelegate = self
             
             //test > set code
             stackFeed.setCode(code: d)
@@ -380,6 +384,7 @@ class SearchPanelView: PanelView{
         let tabCount = tabDataList.count
         feedScrollView.contentSize = CGSize(width: viewWidth * CGFloat(tabCount), height: feedHeight)
         print("searchpanel contentsize \(viewWidth * CGFloat(tabCount)), \(feedHeight)")
+
     }
 
     @objc func onOpenTextBoxClicked(gesture: UITapGestureRecognizer) {
@@ -411,37 +416,48 @@ class SearchPanelView: PanelView{
     }
 
     func dehideCurrentCell() {
-        
-        let feed = self.feedList[currentIndex]
-        if let b = feed as? ScrollFeedHResultVideoListCell {
-            b.dehideCellAt()
-        }
-        else if let c = feed as? ScrollFeedHResultPhotoListCell {
-            c.dehideCellAt()
+
+        if(!self.feedList.isEmpty) {
+            let feed = self.feedList[currentIndex]
+            if let b = feed as? ScrollFeedHResultVideoListCell {
+                b.dehideCellAt()
+            }
+            else if let c = feed as? ScrollFeedHResultPhotoListCell {
+                c.dehideCellAt()
+            }
         }
     }
     
     //test > stop current video for closing
     func pauseCurrentPostFeedVideo() {
-        let feed = feedList[currentIndex]
-        if let b = feed as? ScrollFeedHResultPostListCell {
-//            b.pauseCurrentVideo()
+        if(!self.feedList.isEmpty) {
+            let feed = feedList[currentIndex]
+            if let b = feed as? ScrollFeedHResultPostListCell {
+    //            b.pauseCurrentVideo()
+            }
         }
     }
     //test > resume current video
     func resumeCurrentPostFeedVideo() {
-        let feed = feedList[currentIndex]
-        if let b = feed as? ScrollFeedHResultPostListCell {
-//            b.resumeCurrentVideo()
+        if(!self.feedList.isEmpty) {
+            let feed = feedList[currentIndex]
+            if let b = feed as? ScrollFeedHResultPostListCell {
+    //            b.resumeCurrentVideo()
+            }
         }
     }
     
     //test
     override func resumeActiveState() {
         print("searchpanelview resume active")
-        
         //test > check for signin status when in active state
         asyncFetchSigninStatus()
+    }
+    
+    func resumeActiveState(isToRevertUIState: Bool) {
+        print("searchpanelview resume active revert UIstate")
+        //test > check for signin status when in active state
+        asyncFetchSigninStatus(isToRevertUIState: isToRevertUIState)
     }
     
     //test > dehide any cells that was hidden e.g. video or photo
@@ -489,6 +505,23 @@ class SearchPanelView: PanelView{
         }
     }
     
+    func activateTabUI() {
+        //test > tab select
+        if(!self.tabList.isEmpty) {
+            for l in self.tabList {
+                self.stackviewUsableLength += l.frame.width
+            }
+//                        self.stackviewUsableLength += 10.0 //leading constraint on tabscrollview
+            self.tabScrollView.contentSize = CGSize(width: self.stackviewUsableLength, height: 40)
+
+            let tab = self.tabList[0]
+            self.tabSelectWidthCons?.constant = tab.frame.width
+            self.tabSelect.isHidden = false
+        }
+        
+        self.measureTabScroll()
+    }
+    
     //test > set up search UI
     func asyncInit(id: String) {
         DataFetchManager.shared.fetchData(id: id) { [weak self]result in
@@ -503,29 +536,33 @@ class SearchPanelView: PanelView{
                         return
                     }
 
-                    //test > tab select
-                    if(!self.tabList.isEmpty) {
-                        for l in self.tabList {
-                            self.stackviewUsableLength += l.frame.width
-                        }
-//                        self.stackviewUsableLength += 10.0 //leading constraint on tabscrollview
-                        self.tabScrollView.contentSize = CGSize(width: self.stackviewUsableLength, height: 40)
-
-                        let tab = self.tabList[0]
-                        self.tabSelectWidthCons?.constant = tab.frame.width
-                        self.tabSelect.isHidden = false
-                    }
+//                    //test > tab select
+//                    if(!self.tabList.isEmpty) {
+//                        for l in self.tabList {
+//                            self.stackviewUsableLength += l.frame.width
+//                        }
+////                        self.stackviewUsableLength += 10.0 //leading constraint on tabscrollview
+//                        self.tabScrollView.contentSize = CGSize(width: self.stackviewUsableLength, height: 40)
+//
+//                        let tab = self.tabList[0]
+//                        self.tabSelectWidthCons?.constant = tab.frame.width
+//                        self.tabSelect.isHidden = false
+//                    }
+//                    
+//                    self.measureTabScroll()
                     
-                    self.measureTabScroll()
-                    
+                    //test > init tabscroll UI e.g. measure width
+                    self.activateTabUI()
                     //test > for feed scroll
                     self.redrawUI()
 
                     //test > async fetch feed
-                    let feed = self.feedList[self.currentIndex]
-//                    if(self.isUserLoggedIn) {
-                        self.asyncFetchFeed(cell: feed, id: "search_feed")
-//                    }
+                    if(!self.feedList.isEmpty) {
+                        let feed = self.feedList[self.currentIndex]
+    //                    if(self.isUserLoggedIn) {
+                            self.asyncFetchFeed(cell: feed, id: "search_feed")
+    //                    }
+                    }
                 }
 
                 case .failure(_):
@@ -562,9 +599,11 @@ class SearchPanelView: PanelView{
 
     //test > fetch data => temp fake data => try refresh data first
     func refreshFetchData() {
-        let feed = feedList[currentIndex]
-        feed.dataPaginateStatus = ""
-        asyncFetchFeed(cell: feed, id: "search_feed")
+        if(!feedList.isEmpty) {
+            let feed = feedList[currentIndex]
+            feed.dataPaginateStatus = ""
+            asyncFetchFeed(cell: feed, id: "search_feed")
+        }
     }
 
 //    func asyncFetchFeed(cell: ScrollFeedCell?, id: String) {
@@ -578,7 +617,10 @@ class SearchPanelView: PanelView{
 
         cell?.dataPaginateStatus = "fetch"
 
-        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+        let id_ = "post"
+        let isPaginate = false
+        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -586,32 +628,59 @@ class SearchPanelView: PanelView{
                 DispatchQueue.main.async {
                     print("searchpanel api success \(id), \(l)")
 
-                    guard let self = self else {
-                        return
-                    }
-
                     guard let feed = cell else {
                         return
                     }
 
+                    //test
+                    feed.aSpinner.stopAnimating()
+                    
                     //test 1
-//                    feed.vDataList.append(contentsOf: l)
+//                    for i in l {
+//                        let postData = PostData()
+//                        postData.setDataType(data: i)
+//                        postData.setData(data: i)
+//                        postData.setTextString(data: i)
+//                        feed.vDataList.append(postData)
+//                    }
+//                    feed.vCV?.reloadData()
+
+                    //*test 3 > reload only appended data, not entire dataset
+                    let dataCount = feed.vDataList.count
+                    var indexPaths = [IndexPath]()
+                    var j = 1
                     for i in l {
                         let postData = PostData()
                         postData.setDataType(data: i)
                         postData.setData(data: i)
                         postData.setTextString(data: i)
                         feed.vDataList.append(postData)
-                    }
-                    feed.vCV?.reloadData()
 
+                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+                        indexPaths.append(idx)
+                        j += 1
+
+                        print("ppv asyncfetch reload \(idx)")
+                    }
+                    feed.vCV?.insertItems(at: indexPaths)
+                    //*
+                    
                     //test
-                    feed.aSpinner.stopAnimating()
+                    if(l.isEmpty) {
+                        print("postpanelscroll footer reuse configure")
+                        feed.configureFooterUI(data: "na")
+                        feed.aaText.text = "No results"
+                    }
                 }
 
-                case .failure(_):
-                    print("api fail")
-                    break
+                case .failure(let error):
+                print("api fail")
+                DispatchQueue.main.async {
+                    cell?.aSpinner.stopAnimating()
+                    
+                    cell?.configureFooterUI(data: "e")
+                }
+                break
             }
         }
     }
@@ -621,7 +690,10 @@ class SearchPanelView: PanelView{
 
         cell?.bSpinner.startAnimating()
 
-        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+        let id_ = "post"
+        let isPaginate = true
+        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -629,16 +701,15 @@ class SearchPanelView: PanelView{
                 DispatchQueue.main.async {
                     print("searchpanel api paginate success \(id), \(l), \(l.isEmpty)")
 
-                    guard let self = self else {
-                        return
-                    }
-
                     guard let feed = cell else {
                         return
                     }
                     if(l.isEmpty) {
                         feed.dataPaginateStatus = "end"
                     }
+                    
+                    //test
+                    feed.bSpinner.stopAnimating()
                     
                     //*test 3 > reload only appended data, not entire dataset
                     let dataCount = feed.vDataList.count
@@ -660,50 +731,98 @@ class SearchPanelView: PanelView{
                     //*
 
                     //test
-                    feed.bSpinner.stopAnimating()
+                    if(l.isEmpty) {
+                        feed.configureFooterUI(data: "end")
+                    }
                 }
 
                 case .failure(_):
+                DispatchQueue.main.async {
                     print("api fail")
-                    break
+                    cell?.bSpinner.stopAnimating()
+                    
+                    cell?.configureFooterUI(data: "e")
+                }
+                break
             }
         }
     }
     
-    func asyncFetchSigninStatus() {
-        SignInManager.shared.fetchStatus(id: "fetch_status") { [weak self]result in
-            switch result {
-                case .success(let l):
-
-                //update UI on main thread
-                DispatchQueue.main.async {
-                    print("notifypanelview api success: \(l)")
-                    guard let self = self else {
-                        return
-                    }
-                    
-                    let isSignedIn = l
-                    
-                    if(self.isInitialized) {
-                        if(self.isUserLoggedIn != isSignedIn) {
-                            self.isUserLoggedIn = isSignedIn
-                            
-                            self.deconfigurePanel()
-                    
-                            self.isInitialized = false
-                            self.initialize()
-                        }
-                    } else {
-                        self.isUserLoggedIn = isSignedIn
-                        self.initialize()
-                    }
+    func asyncFetchSigninStatus(isToRevertUIState: Bool) {
+        
+        //test > simple get method
+        let isSignedIn = SignInManager.shared.getStatus()
+        if(self.isInitialized) {
+            if(self.isUserLoggedIn != isSignedIn) {
+                self.isUserLoggedIn = isSignedIn
+                
+                self.deconfigurePanel()
+                
+                self.isInitialized = false
+                self.initialize()
+            } else {
+                if(isToRevertUIState) {
+                    revertCellUIState()
                 }
-
-                case .failure(_):
-                    print("api fail")
-                    break
             }
+        } else {
+            self.isUserLoggedIn = isSignedIn
+            self.initialize()
         }
+    }
+    
+    func asyncFetchSigninStatus() {
+ 
+        //test > simple get method
+        let isSignedIn = SignInManager.shared.getStatus()
+        if(self.isInitialized) {
+            if(self.isUserLoggedIn != isSignedIn) {
+                self.isUserLoggedIn = isSignedIn
+                
+                self.deconfigurePanel()
+        
+                self.isInitialized = false
+                self.initialize()
+            }
+        } else {
+            self.isUserLoggedIn = isSignedIn
+            self.initialize()
+        }
+        
+        //old method by fetching
+//        SignInManager.shared.fetchStatus(id: "fetch_status") { [weak self]result in
+//            switch result {
+//                case .success(let l):
+//
+//                //update UI on main thread
+//                DispatchQueue.main.async {
+//                    print("notifypanelview api success: \(l)")
+//                    guard let self = self else {
+//                        return
+//                    }
+//                    
+//                    let isSignedIn = l
+//                    
+//                    if(self.isInitialized) {
+//                        if(self.isUserLoggedIn != isSignedIn) {
+//                            self.isUserLoggedIn = isSignedIn
+//                            
+//                            self.deconfigurePanel()
+//                    
+//                            self.isInitialized = false
+//                            self.initialize()
+//                        }
+//                    } else {
+//                        self.isUserLoggedIn = isSignedIn
+//                        self.initialize()
+//                    }
+//                }
+//
+//                case .failure(_):
+//                    print("api fail")
+//                    break
+//            }
+//        }
     }
 }
 
@@ -778,16 +897,20 @@ extension SearchPanelView: UIScrollViewDelegate {
                     if(hOffsetX > totalTabScrollXLead) {
                         oX = totalTabScrollXLead
                     }
-                    let tabXContentOffset = oX/totalTabScrollXLead * tabScrollGap
-                    tabScrollView.setContentOffset(CGPoint(x: tabXContentOffset, y: 0), animated: false)
+                    if(totalTabScrollXLead > 0) {
+                        let tabXContentOffset = oX/totalTabScrollXLead * tabScrollGap
+                        tabScrollView.setContentOffset(CGPoint(x: tabXContentOffset, y: 0), animated: false)
+                    }
                 }
             }
             
             //test > async fetch feed
             let rIndex = Int(currentIndex)
-            let feed = self.feedList[rIndex]
-            if(feed.dataPaginateStatus == "") {
-                self.asyncFetchFeed(cell: feed, id: "search_feed")
+            if(!self.feedList.isEmpty) {
+                let feed = self.feedList[rIndex]
+                if(feed.dataPaginateStatus == "") {
+                    self.asyncFetchFeed(cell: feed, id: "search_feed")
+                }
             }
         }
     }
@@ -894,20 +1017,24 @@ extension SearchPanelView: ScrollFeedCellDelegate {
     }
     func sfcDidClickVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         //test
-        let b = self.feedList[self.currentIndex]
-        let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
-        
-        let adjustY = pointY + originInRootView.y
-        print("searchphoto ori: \(pointY), \(originInRootView.y)")
-        delegate?.didSearchClickClickPhoto(pointX: pointX, pointY: adjustY, view: view, mode: mode)
+        if(!self.feedList.isEmpty) {
+            let b = self.feedList[self.currentIndex]
+            let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
+            
+            let adjustY = pointY + originInRootView.y
+            print("searchphoto ori: \(pointY), \(originInRootView.y)")
+            delegate?.didSearchClickClickPhoto(pointX: pointX, pointY: adjustY, view: view, mode: mode)
+        }
     }
     func sfcDidClickVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         //test
-        let b = self.feedList[self.currentIndex]
-        let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
-        
-        let adjustY = pointY + originInRootView.y
-        delegate?.didSearchClickClickVideo(pointX: pointX, pointY: adjustY, view: view, mode: mode)
+        if(!self.feedList.isEmpty) {
+            let b = self.feedList[self.currentIndex]
+            let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
+            
+            let adjustY = pointY + originInRootView.y
+            delegate?.didSearchClickClickVideo(pointX: pointX, pointY: adjustY, view: view, mode: mode)
+        }
     }
 
     //test
@@ -934,6 +1061,30 @@ extension SearchPanelView: ScrollFeedCellDelegate {
     func sfcAutoplayVideo(cell: ScrollFeedCell?, vCCell: UICollectionViewCell?) {
 //    func sfcAutoplayVideo(cell: ScrollFeedCell?, vCCell: HPostListAViewCell?) {
         
+    }
+}
+
+//test > additional delegate
+extension SearchPanelView: ScrollFeedHResultListCellDelegate {
+    func didScrollFeedHResultClickSignIn() {
+        delegate?.didSearchClickSignIn()
+    }
+}
+
+extension SearchPanelView: TabStackDelegate {
+    func didClickTabStack(tabCode: String, isSelected: Bool) {
+        if let index = tabDataList.firstIndex(of: tabCode) {
+            print("tabstack index clicked: \(index), \(tabCode)")
+            if(currentIndex != index) {
+                let xOffset = CGFloat(index) * viewWidth
+                feedScrollView.setContentOffset(CGPoint(x: xOffset, y: 0), animated: true)
+            }
+            else {
+                
+            }
+        } else {
+            print("Element not found in the array")
+        }
     }
 }
 
@@ -982,22 +1133,9 @@ extension ViewController: SearchPanelDelegate{
         dataset.append("a")
         self.openVideoPanel(offX: offsetX, offY: offsetY, originatorView: view, originatorViewType: OriginatorTypes.UIVIEW, id: 0, originatorViewId: "", preterminedDatasets: dataset, mode: mode)
     }
-}
-
-extension SearchPanelView: TabStackDelegate {
-    func didClickTabStack(tabCode: String, isSelected: Bool) {
-        if let index = tabDataList.firstIndex(of: tabCode) {
-            print("tabstack index clicked: \(index), \(tabCode)")
-            if(currentIndex != index) {
-                let xOffset = CGFloat(index) * viewWidth
-                feedScrollView.setContentOffset(CGPoint(x: xOffset, y: 0), animated: true)
-            }
-            else {
-                
-            }
-        } else {
-            print("Element not found in the array")
-        }
+    
+    func didSearchClickSignIn(){
+        openLoginPanel()
     }
 }
 

@@ -160,7 +160,7 @@ class HNotifyChatListViewCell: UICollectionViewCell {
         if(data == "a") {
             messageText.text = "Happy Birthday!!"
             messageText.layer.opacity = 1.0 //0.5
-//            messageText.font = .boldSystemFont(ofSize: 13)
+            messageText.font = .boldSystemFont(ofSize: 13)
             messageCountBox.isHidden = false
             
             timeText.text = "5s"
@@ -169,7 +169,7 @@ class HNotifyChatListViewCell: UICollectionViewCell {
         } else if(data == "b") {
             messageText.text = "Honey, wanna come over tonight?"
             messageText.layer.opacity = 0.6 //0.5
-//            messageText.font = .systemFont(ofSize: 13)
+            messageText.font = .systemFont(ofSize: 13)
             messageCountBox.isHidden = true
             
             timeText.text = "3h"

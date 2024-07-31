@@ -615,6 +615,15 @@ class UserCreatorConsolePanelView: PanelView{
         
         isInitialized = true
     }
+    func initializeEditMode() {
+        
+        if(!isInitialized) {
+            
+            reactToPanelModeChange(mode: PANEL_MODE_EDIT)
+        }
+        
+        isInitialized = true
+    }
     func reactToPanelModeChange(mode: String) {
         if(mode == PANEL_MODE_CREATE) {
             currentPanelMode = PANEL_MODE_CREATE
@@ -732,15 +741,15 @@ extension UserCreatorConsolePanelView: UITextViewDelegate {
     }
 }
 
-//extension ViewController: UserCreatorPanelDelegate{
-//    func didInitializeUserCreator() {
-//
-//    }
-//
-//    func didClickFinishUserCreator() {
-//        backPage(isCurrentPageScrollable: false)
-//    }
-//}
+extension ViewController: UserCreatorPanelDelegate{
+    func didInitializeUserCreator() {
+
+    }
+
+    func didClickFinishUserCreator() {
+        backPage(isCurrentPageScrollable: false)
+    }
+}
 
 extension UserCreatorConsolePanelView: CameraPhotoRollPanelDelegate{
     func didInitializeCameraPhotoRoll() {

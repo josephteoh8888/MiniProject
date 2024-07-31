@@ -28,11 +28,12 @@ protocol SoundScrollablePanelDelegate : AnyObject {
     func didSClickSoundScrollableVcvClickPost()
     func didSClickSoundScrollableVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     func didSClickSoundScrollableVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
+    func didSClickSoundSignIn()
     
     //test > initialize
     func didFinishInitializeSoundScrollablePanel(pv: ScrollablePanelView)
     func didStartFetchSoundScrollableData(pv: ScrollablePanelView)
-    func didFinishFetchSoundScrollableData(pv: ScrollablePanelView)
+    func didFinishFetchSoundScrollableData(pv: ScrollablePanelView, isSuccess: Bool)
 }
 
 class SoundScrollablePanelView: ScrollablePanelView{
@@ -51,12 +52,18 @@ class SoundScrollablePanelView: ScrollablePanelView{
     let aPhotoB = SDAnimatedImageView()
     let bMiniBtn = UIImageView()
     let cBtn = UIView()
+    let aNameTextC = UILabel()
     
     let aUsernameAText = UILabel()
     let playBtn = UIImageView()
     let pauseBtn = UIImageView()
     let aHLightTitle = UILabel()
     let aFollowA = UIView()
+    let aFollowAText = UILabel()
+    let aFollow = UIView()
+    let aFollowText = UILabel()
+    let aFollowC = UIView()
+    let aFollowCText = UILabel()
 
     var aPhotoHeightCons: NSLayoutConstraint?
     var aPhotoWidthCons: NSLayoutConstraint?
@@ -125,7 +132,7 @@ class SoundScrollablePanelView: ScrollablePanelView{
     var aHLightViewArray = [UIView]()
     
     let feedScrollView = UIScrollView()
-    var feedList = [ScrollFeedCell]()
+    var feedList = [ScrollDataFeedCell]()
     var currentIndex = 0
     
     let tabScrollLHSBtn = UIView()
@@ -190,19 +197,6 @@ class SoundScrollablePanelView: ScrollablePanelView{
             redrawUI()
             
             layoutTabUI()
-            
-            //test > lay out halfmode highlight box
-            aHLightBoxArray.append("e") //base location
-            aHLightBoxArray.append("d_s") //discover more places
-            
-            //test > lay out highlight section
-//            aHLightDataArray.append("j") //job
-//            aHLightDataArray.append("j") //job
-//            aHLightDataArray.append("s") //shop
-//            aHLightDataArray.append("b") //booking
-//            aHLightDataArray.append("j") //job
-            aHLightDataArray.append("r") //ranking *
-            configureHLightUI()
             
             //UI before fetch data
             self.delegate?.didStartFetchSoundScrollableData(pv: self)
@@ -277,100 +271,7 @@ class SoundScrollablePanelView: ScrollablePanelView{
         aSpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
         aSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
         aSpinner.startAnimating()
-//
-////        let aGrid = UIView()
-//        aGrid.backgroundColor = .ddmDarkColor
-//        aPanelView.addSubview(aGrid)
-//        aGrid.translatesAutoresizingMaskIntoConstraints = false
-//        aGrid.leadingAnchor.constraint(equalTo: aPanelView.leadingAnchor, constant: 20).isActive = true
-//        aGrid.heightAnchor.constraint(equalToConstant: 100).isActive = true
-//        aGrid.widthAnchor.constraint(equalToConstant: 75).isActive = true
-////        aGrid.topAnchor.constraint(equalTo: aPhoto.bottomAnchor, constant: 20).isActive = true
-//        aGrid.topAnchor.constraint(equalTo: aNameText.bottomAnchor, constant: 20).isActive = true
-//        aGrid.layer.cornerRadius = 10
-//
-//        let aImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
-//        let gifImage = SDAnimatedImageView()
-//        gifImage.contentMode = .scaleAspectFill
-//        gifImage.layer.masksToBounds = true
-//        gifImage.layer.cornerRadius = 10
-////        gifImage.sd_setImage(with: aImageUrl) //temp disable picture
-//        aGrid.addSubview(gifImage)
-//        gifImage.translatesAutoresizingMaskIntoConstraints = false
-//        gifImage.topAnchor.constraint(equalTo: aGrid.topAnchor).isActive = true
-//        gifImage.leadingAnchor.constraint(equalTo: aGrid.leadingAnchor).isActive = true
-//        gifImage.bottomAnchor.constraint(equalTo: aGrid.bottomAnchor).isActive = true
-//        gifImage.trailingAnchor.constraint(equalTo: aGrid.trailingAnchor).isActive = true
-//
-////        let bGrid = UIView()
-//        bGrid.backgroundColor = .ddmDarkColor
-//        aPanelView.addSubview(bGrid)
-//        bGrid.translatesAutoresizingMaskIntoConstraints = false
-//        bGrid.leadingAnchor.constraint(equalTo: aGrid.trailingAnchor, constant: 10).isActive = true
-//        bGrid.heightAnchor.constraint(equalToConstant: 100).isActive = true
-//        bGrid.widthAnchor.constraint(equalToConstant: 75).isActive = true
-//        bGrid.topAnchor.constraint(equalTo: aGrid.topAnchor).isActive = true
-//        bGrid.layer.cornerRadius = 10
-//
-////        let cGrid = UIView()
-//        cGrid.backgroundColor = .ddmDarkColor
-//        aPanelView.addSubview(cGrid)
-//        cGrid.translatesAutoresizingMaskIntoConstraints = false
-//        cGrid.leadingAnchor.constraint(equalTo: bGrid.trailingAnchor, constant: 10).isActive = true
-//        cGrid.heightAnchor.constraint(equalToConstant: 100).isActive = true
-//        cGrid.widthAnchor.constraint(equalToConstant: 75).isActive = true
-//        cGrid.topAnchor.constraint(equalTo: aGrid.topAnchor).isActive = true
-////        cGrid.bottomAnchor.constraint(equalTo: aPanelView.bottomAnchor).isActive = true //
-//        cGrid.layer.cornerRadius = 10
-//
-////        let dGrid = UIView()
-//        dGrid.backgroundColor = .ddmDarkColor
-//        aPanelView.addSubview(dGrid)
-//        dGrid.translatesAutoresizingMaskIntoConstraints = false
-//        dGrid.leadingAnchor.constraint(equalTo: aGrid.leadingAnchor, constant: 0).isActive = true
-//        dGrid.heightAnchor.constraint(equalToConstant: 70).isActive = true
-//        dGrid.widthAnchor.constraint(equalToConstant: 200).isActive = true
-//        dGrid.topAnchor.constraint(equalTo: aGrid.bottomAnchor, constant: 20).isActive = true
-////        dGrid.bottomAnchor.constraint(equalTo: aPanelView.bottomAnchor).isActive = true //
-//        dGrid.layer.cornerRadius = 10
-//
-//        //test > connection to other panels
-//        let eGrid = UIView()
-//        eGrid.backgroundColor = .red
-//        aPanelView.addSubview(eGrid)
-//        eGrid.translatesAutoresizingMaskIntoConstraints = false
-//        eGrid.leadingAnchor.constraint(equalTo: dGrid.leadingAnchor, constant: 0).isActive = true
-//        eGrid.heightAnchor.constraint(equalToConstant: 50).isActive = true
-//        eGrid.widthAnchor.constraint(equalToConstant: 50).isActive = true
-//        eGrid.topAnchor.constraint(equalTo: dGrid.bottomAnchor, constant: 20).isActive = true
-//        eGrid.layer.cornerRadius = 10
-//        eGrid.isUserInteractionEnabled = true
-//        eGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onAPhotoClicked)))
-//
-//        let fGrid = UIView()
-//        fGrid.backgroundColor = .blue
-//        aPanelView.addSubview(fGrid)
-//        fGrid.translatesAutoresizingMaskIntoConstraints = false
-//        fGrid.leadingAnchor.constraint(equalTo: eGrid.trailingAnchor, constant: 20).isActive = true
-//        fGrid.heightAnchor.constraint(equalToConstant: 50).isActive = true
-//        fGrid.widthAnchor.constraint(equalToConstant: 50).isActive = true
-//        fGrid.topAnchor.constraint(equalTo: eGrid.topAnchor, constant: 0).isActive = true
-//        fGrid.layer.cornerRadius = 10
-//        fGrid.isUserInteractionEnabled = true
-//        fGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBPhotoClicked)))
-//
-//        let gGrid = UIView()
-//        gGrid.backgroundColor = .yellow
-//        aPanelView.addSubview(gGrid)
-//        gGrid.translatesAutoresizingMaskIntoConstraints = false
-//        gGrid.leadingAnchor.constraint(equalTo: fGrid.trailingAnchor, constant: 20).isActive = true
-//        gGrid.heightAnchor.constraint(equalToConstant: 50).isActive = true
-//        gGrid.widthAnchor.constraint(equalToConstant: 50).isActive = true
-//        gGrid.topAnchor.constraint(equalTo: fGrid.topAnchor, constant: 0).isActive = true
-//        gGrid.layer.cornerRadius = 10
-//        gGrid.isUserInteractionEnabled = true
-//        gGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onCPhotoClicked)))
-        
+   
         //test 2 > APanel redesign
         let photoWidth = 100.0 //same as photo
         let photoHeight = 100.0
@@ -390,11 +291,12 @@ class SoundScrollablePanelView: ScrollablePanelView{
         aPhoto.heightAnchor.constraint(equalToConstant: 100).isActive = true
         aPhoto.leadingAnchor.constraint(equalTo: aPanelView.leadingAnchor, constant: 20).isActive = true
         aPhoto.topAnchor.constraint(equalTo: aPanelView.topAnchor, constant: 10).isActive = true
-        let aImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//        let aImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
         aPhoto.contentMode = .scaleAspectFill
         aPhoto.layer.masksToBounds = true
         aPhoto.layer.cornerRadius = 10
-        aPhoto.sd_setImage(with: aImageUrl)
+//        aPhoto.sd_setImage(with: aImageUrl)
+        aPhoto.backgroundColor = .ddmDarkColor
         
 //        let aNameText = UILabel()
         aNameText.textAlignment = .left
@@ -491,10 +393,10 @@ class SoundScrollablePanelView: ScrollablePanelView{
         aFollowA.centerYAnchor.constraint(equalTo: aHLightTitle.centerYAnchor, constant: 0).isActive = true
         aFollowA.layer.cornerRadius = 10
         aFollowA.isUserInteractionEnabled = true
-//        aFollowA.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onFollowClicked)))
+        aFollowA.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onFollowClicked)))
         aFollowA.isHidden = true
         
-        let aFollowAText = UILabel()
+//        let aFollowAText = UILabel()
         aFollowAText.textAlignment = .center
         aFollowAText.textColor = .black
         aFollowAText.font = .boldSystemFont(ofSize: 13) //default 14
@@ -513,45 +415,7 @@ class SoundScrollablePanelView: ScrollablePanelView{
         aHLightBox.topAnchor.constraint(equalTo: aPhoto.bottomAnchor, constant: 10).isActive = true
         aHLightBox.leadingAnchor.constraint(equalTo: aPanelView.leadingAnchor, constant: 0).isActive = true
         aHLightBox.trailingAnchor.constraint(equalTo: aPanelView.trailingAnchor, constant: 0).isActive = true
-        aHLightBox.bottomAnchor.constraint(equalTo: aPanelView.bottomAnchor, constant: 0).isActive = true
-        
-//        let aHLightRect1 = UIView()
-//        aPanelView.addSubview(aHLightRect1)
-//        aHLightRect1.translatesAutoresizingMaskIntoConstraints = false
-//        aHLightRect1.leadingAnchor.constraint(equalTo: aPanelView.leadingAnchor, constant: 0).isActive = true
-//        aHLightRect1.topAnchor.constraint(equalTo: aPhoto.bottomAnchor, constant: 10).isActive = true //20
-//        aHLightRect1.trailingAnchor.constraint(equalTo: aPanelView.trailingAnchor, constant: 0).isActive = true
-//
-//        //test 1C => show rank highlight
-//        let cell = SoundEmptyPostHighlightBox(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
-////        let cell = PrivateHighlightCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
-////        let cell = About2HighlightCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
-////        let cell = Base3HighlightCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
-//        aHLightRect1.addSubview(cell)
-//        cell.translatesAutoresizingMaskIntoConstraints = false
-//        cell.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
-//        cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
-//        cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
-//        cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-//        cell.redrawUI()
-//
-//        //test 1C2 > show one more rank highlight below
-//        let aHLightRect2 = UIView()
-//        aPanelView.addSubview(aHLightRect2)
-//        aHLightRect2.translatesAutoresizingMaskIntoConstraints = false
-//        aHLightRect2.leadingAnchor.constraint(equalTo: aPanelView.leadingAnchor, constant: 0).isActive = true
-//        aHLightRect2.topAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 10).isActive = true //20
-//        aHLightRect2.trailingAnchor.constraint(equalTo: aPanelView.trailingAnchor, constant: 0).isActive = true
-//
-//        let cell2 = DiscoverSoundSizeMHighlightCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
-//        aHLightRect2.addSubview(cell2)
-//        cell2.translatesAutoresizingMaskIntoConstraints = false
-//        cell2.trailingAnchor.constraint(equalTo: aHLightRect2.trailingAnchor, constant: 0).isActive = true
-//        cell2.leadingAnchor.constraint(equalTo: aHLightRect2.leadingAnchor, constant: 0).isActive = true
-//        cell2.topAnchor.constraint(equalTo: aHLightRect2.topAnchor, constant: 0).isActive = true
-//        cell2.bottomAnchor.constraint(equalTo: aHLightRect2.bottomAnchor, constant: 0).isActive = true
-//        cell2.redrawUI()
-//        cell2.delegate = self
+//        aHLightBox.bottomAnchor.constraint(equalTo: aPanelView.bottomAnchor, constant: 0).isActive = true
         
         //test > gesture recognizer for dragging place panel
         let bPanelPanGesture = UIPanGestureRecognizer(target: self, action: #selector(onPanelPanGesture))
@@ -605,11 +469,12 @@ class SoundScrollablePanelView: ScrollablePanelView{
         aPhotoHeightCons?.isActive = true
         aPhotoB.leadingAnchor.constraint(equalTo: bPanelView.leadingAnchor, constant: 20).isActive = true
         aPhotoB.topAnchor.constraint(equalTo: bPanelView.topAnchor, constant: 0).isActive = true
-        let bImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//        let bImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
         aPhotoB.contentMode = .scaleAspectFill
         aPhotoB.layer.masksToBounds = true
         aPhotoB.layer.cornerRadius = 10
-        aPhotoB.sd_setImage(with: bImageUrl)
+//        aPhotoB.sd_setImage(with: bImageUrl)
+        aPhotoB.backgroundColor = .ddmDarkColor
 
 //        let aNameTextB = UILabel()
         aNameTextB.textAlignment = .left
@@ -646,7 +511,7 @@ class SoundScrollablePanelView: ScrollablePanelView{
         aSubDesc.text = ""//00:29
         aSubDesc.layer.opacity = 0.4
 
-        let aFollow = UIView()
+//        let aFollow = UIView()
         aFollow.backgroundColor = .yellow
         bPanelView.addSubview(aFollow)
         aFollow.translatesAutoresizingMaskIntoConstraints = false
@@ -659,12 +524,13 @@ class SoundScrollablePanelView: ScrollablePanelView{
         aFollow.layer.cornerRadius = 10
         aFollow.isUserInteractionEnabled = true
         aFollow.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onFollowClicked)))
-
-        let aFollowText = UILabel()
+        aFollow.isHidden = true
+        
+//        let aFollowText = UILabel()
         aFollowText.textAlignment = .center
         aFollowText.textColor = .black
         aFollowText.font = .boldSystemFont(ofSize: 13) //default 14
-        bPanelView.addSubview(aFollowText)
+        aFollow.addSubview(aFollowText)
         aFollowText.translatesAutoresizingMaskIntoConstraints = false
         aFollowText.centerXAnchor.constraint(equalTo: aFollow.centerXAnchor).isActive = true
         aFollowText.centerYAnchor.constraint(equalTo: aFollow.centerYAnchor).isActive = true
@@ -898,7 +764,7 @@ class SoundScrollablePanelView: ScrollablePanelView{
         objectSymbolC.widthAnchor.constraint(equalToConstant: 16).isActive = true
         //*
         
-        let aNameTextC = UILabel()
+//        let aNameTextC = UILabel()
         aNameTextC.textAlignment = .left
         aNameTextC.textColor = .white
         aNameTextC.font = .boldSystemFont(ofSize: 14)
@@ -906,10 +772,10 @@ class SoundScrollablePanelView: ScrollablePanelView{
         aNameTextC.translatesAutoresizingMaskIntoConstraints = false
         aNameTextC.centerYAnchor.constraint(equalTo: stickyHLight.centerYAnchor, constant: 0).isActive = true
         aNameTextC.leadingAnchor.constraint(equalTo: aStickyGridBG.trailingAnchor, constant: 10).isActive = true
-        aNameTextC.text = "明知故犯 - Hubert Wu"
+        aNameTextC.text = ""
 //        aNameTextC.text = ""
         
-        let aFollowC = UIView()
+//        let aFollowC = UIView()
         aFollowC.backgroundColor = .yellow
         stickyHLight.addSubview(aFollowC)
         aFollowC.translatesAutoresizingMaskIntoConstraints = false
@@ -917,14 +783,15 @@ class SoundScrollablePanelView: ScrollablePanelView{
         aFollowC.heightAnchor.constraint(equalToConstant: 30).isActive = true //30
         aFollowC.centerYAnchor.constraint(equalTo: stickyHLight.centerYAnchor).isActive = true
         aFollowC.layer.cornerRadius = 10
-//        aFollowC.isUserInteractionEnabled = true
-//        aFollowC.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onFollowClicked)))
-
-        let aFollowCText = UILabel()
+        aFollowC.isUserInteractionEnabled = true
+        aFollowC.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onFollowClicked)))
+        aFollowC.isHidden = true
+        
+//        let aFollowCText = UILabel()
         aFollowCText.textAlignment = .center
         aFollowCText.textColor = .black
         aFollowCText.font = .boldSystemFont(ofSize: 13) //default 14
-        stickyHLight.addSubview(aFollowCText)
+        aFollowC.addSubview(aFollowCText)
         aFollowCText.translatesAutoresizingMaskIntoConstraints = false
         aFollowCText.leadingAnchor.constraint(equalTo: aFollowC.leadingAnchor, constant: 20).isActive = true
         aFollowCText.trailingAnchor.constraint(equalTo: aFollowC.trailingAnchor, constant: -20).isActive = true
@@ -1057,7 +924,7 @@ class SoundScrollablePanelView: ScrollablePanelView{
             }
             aHLightBoxViewArray.append(aHLightRect1)
             
-            if(l == "e") {
+            if(l == "np") {
                 let cell = SoundEmptyPostHighlightBox(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
                 aHLightRect1.addSubview(cell)
                 cell.translatesAutoresizingMaskIntoConstraints = false
@@ -1076,6 +943,36 @@ class SoundScrollablePanelView: ScrollablePanelView{
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
                 cell.redrawUI()
                 cell.delegate = self
+            }
+            //test > error handling
+            else if(l == "na") {
+                let cell = SoundNotFoundHighlightBox(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
+                aHLightRect1.addSubview(cell)
+                cell.translatesAutoresizingMaskIntoConstraints = false
+                cell.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
+                cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
+                cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
+                cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
+                cell.redrawUI()
+            } else if(l == "e") {
+                let cell = FetchErrorHighlightBox(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
+                aHLightRect1.addSubview(cell)
+                cell.translatesAutoresizingMaskIntoConstraints = false
+                cell.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
+                cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
+                cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
+                cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
+                cell.redrawUI()
+                cell.delegate = self
+            } else if(l == "us") {
+                let cell = SoundSuspendedHighlightBox(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
+                aHLightRect1.addSubview(cell)
+                cell.translatesAutoresizingMaskIntoConstraints = false
+                cell.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
+                cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
+                cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
+                cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
+                cell.redrawUI()
             }
         }
     }
@@ -1104,7 +1001,8 @@ class SoundScrollablePanelView: ScrollablePanelView{
                 
                 //test 2 > reusable cell
                 let cell = JobHighlightCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
-                aHLightSection.addSubview(cell)
+//                aHLightSection.addSubview(cell)
+                aHLightRect1.addSubview(cell)
                 cell.translatesAutoresizingMaskIntoConstraints = false
                 cell.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
                 cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
@@ -1116,7 +1014,8 @@ class SoundScrollablePanelView: ScrollablePanelView{
                 
                 //test 2 > reusable cell
                 let cell = ShopHighlightCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
-                aHLightSection.addSubview(cell)
+//                aHLightSection.addSubview(cell)
+                aHLightRect1.addSubview(cell)
                 cell.translatesAutoresizingMaskIntoConstraints = false
                 cell.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
                 cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
@@ -1131,7 +1030,8 @@ class SoundScrollablePanelView: ScrollablePanelView{
                 
                 //test 2 > reusable cell
                 let cell = BookHighlightCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
-                aHLightSection.addSubview(cell)
+//                aHLightSection.addSubview(cell)
+                aHLightRect1.addSubview(cell)
                 cell.translatesAutoresizingMaskIntoConstraints = false
                 cell.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
                 cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
@@ -1143,7 +1043,39 @@ class SoundScrollablePanelView: ScrollablePanelView{
                 
                 //test 2 > reusable cell
                 let cell = RankHighlightCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
-                aHLightSection.addSubview(cell)
+//                aHLightSection.addSubview(cell)
+                aHLightRect1.addSubview(cell)
+                cell.translatesAutoresizingMaskIntoConstraints = false
+                cell.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
+                cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
+                cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
+                cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
+                cell.redrawUI()
+            }
+            //test > error handling
+            //reuse HighlightBox due to laziness to create new error handling HighlightCells
+            else if(l == "na") {
+                let cell = SoundNotFoundHighlightBox(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
+                aHLightRect1.addSubview(cell)
+                cell.translatesAutoresizingMaskIntoConstraints = false
+                cell.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
+                cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
+                cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
+                cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
+                cell.redrawUI()
+            } else if(l == "e") {
+                let cell = FetchErrorHighlightBox(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
+                aHLightRect1.addSubview(cell)
+                cell.translatesAutoresizingMaskIntoConstraints = false
+                cell.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
+                cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
+                cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
+                cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
+                cell.redrawUI()
+//                cell.delegate = self
+            } else if(l == "us") {
+                let cell = SoundSuspendedHighlightBox(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
+                aHLightRect1.addSubview(cell)
                 cell.translatesAutoresizingMaskIntoConstraints = false
                 cell.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
                 cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
@@ -1298,12 +1230,13 @@ class SoundScrollablePanelView: ScrollablePanelView{
             self.superview?.layoutIfNeeded()
             
             //test > pause video when close to half mode, check for video intersected when full mode
-            let aVc = self.feedList[self.currentIndex]
-            guard let b = aVc as? ScrollFeedHPostListCell else {
-                return
+            if(!self.feedList.isEmpty) {
+                let aVc = self.feedList[self.currentIndex]
+                guard let b = aVc as? ScrollFeedHPostListCell else {
+                    return
+                }
+                b.reactToIntersectedVideo(intersectedIdx: -1)
             }
-            b.reactToIntersectedVideo(intersectedIdx: -1)
-            
         }, completion: { finished in
 
         })
@@ -1327,9 +1260,46 @@ class SoundScrollablePanelView: ScrollablePanelView{
         return objectId
     }
     
-    //test > load spinner to fetch data
+    //test > click follow btn
+    var isAction = false
     @objc func onFollowClicked(gesture: UITapGestureRecognizer) {
-
+        let isSignedIn = SignInManager.shared.getStatus()
+        if(isSignedIn) {
+            if(isAction) {
+                actionUI(doneState: false)
+                isAction = false
+            } else {
+                actionUI(doneState: true)
+                isAction = true
+            }
+        }
+        else {
+            delegate?.didSClickSoundSignIn()
+        }
+    }
+    func actionUI(doneState: Bool) {
+        if(doneState) {
+            aFollowA.backgroundColor = .ddmDarkColor
+            aFollowAText.text = "Saved"
+            aFollowAText.textColor = .white
+            aFollow.backgroundColor = .ddmDarkColor
+            aFollowText.text = "Saved"
+            aFollowText.textColor = .white
+            aFollowC.backgroundColor = .ddmDarkColor
+            aFollowCText.text = "Saved"
+            aFollowCText.textColor = .white
+        }
+        else {
+            aFollowA.backgroundColor = .yellow
+            aFollowAText.text = "Save"
+            aFollowAText.textColor = .black
+            aFollow.backgroundColor = .yellow
+            aFollowText.text = "Save"
+            aFollowText.textColor = .black
+            aFollowC.backgroundColor = .yellow
+            aFollowCText.text = "Save"
+            aFollowCText.textColor = .black
+        }
     }
     
     var tabScrollGap = 0.0
@@ -1358,72 +1328,248 @@ class SoundScrollablePanelView: ScrollablePanelView{
         }
     }
     
+    //test > populate UI when data fetched
+    func configureUI(data: String) {
+        if(data == "a") {
+            self.aNameText.text = "明知故犯 - Hubert Wu"
+            self.aNameTextB.text = "明知故犯 - Hubert Wu"
+            self.aNameTextC.text = "明知故犯 - Hubert Wu"
+            self.objectSymbol.isHidden = false
+            self.aSubDesc.text = "00:29"
+            
+            self.aUsernameAText.text = "Hubert Wu"
+            self.playBtn.isHidden = false
+            self.aHLightTitle.text = "00:29"
+            self.aFollowA.isHidden = false
+            self.aFollow.isHidden = false
+            self.aFollowC.isHidden = false
+            
+            let aImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+            aPhoto.sd_setImage(with: aImageUrl)
+            aPhotoB.sd_setImage(with: aImageUrl)
+        }
+        else {
+            deconfigureUI()
+        }
+    }
+    
+    func activateTabUI() {
+        if(!self.tabList.isEmpty) {
+            for l in self.tabList {
+                self.stackviewUsableLength += l.frame.width
+            }
+            self.tabScrollView.contentSize = CGSize(width: self.stackviewUsableLength, height: 40)
+
+            let tab = self.tabList[0]
+            self.tabSelectWidthCons?.constant = tab.frame.width
+            self.tabSelect.isHidden = false
+        }
+        self.measureTabScroll()
+        let xTabOffset = self.tabScrollView.contentOffset.x
+        self.arrowReactToTabScroll(tabXOffset: xTabOffset)
+        self.reactToTabSectionChange(index: self.currentIndex)
+    }
+    
+    func deconfigurePanel() {
+        deconfigureUI()
+        deconfigureHLightBox()
+        deconfigureHLightUI()
+        deconfigureScrollFeedUI()
+        deconfigureTabUI()
+    }
+    func deconfigureUI() {
+        self.aNameText.text = ""
+        self.aNameTextB.text = ""
+        self.aNameTextC.text = ""
+        self.objectSymbol.isHidden = true
+        self.aSubDesc.text = ""
+        
+        self.aUsernameAText.text = ""
+        self.playBtn.isHidden = true
+        self.aHLightTitle.text = ""
+        self.aFollowA.isHidden = true
+        self.aFollow.isHidden = true
+        self.aFollowC.isHidden = true
+        
+        let aImageUrl = URL(string: "")
+        aPhoto.sd_setImage(with: aImageUrl)
+        aPhotoB.sd_setImage(with: aImageUrl)
+    }
+    func deconfigureHLightBox() {
+        if(!aHLightBoxViewArray.isEmpty) {
+            for e in aHLightBoxViewArray {
+                e.removeFromSuperview()
+            }
+            aHLightBoxViewArray.removeAll()
+        }
+        if(!aHLightBoxArray.isEmpty) {
+            aHLightBoxArray.removeAll()
+        }
+    }
+    func deconfigureHLightUI() {
+        if(!aHLightViewArray.isEmpty) {
+            for e in aHLightViewArray {
+                e.removeFromSuperview()
+            }
+            aHLightViewArray.removeAll()
+        }
+        if(!aHLightDataArray.isEmpty) {
+            aHLightDataArray.removeAll()
+        }
+    }
+    func deconfigureScrollFeedUI() {
+        if(!feedList.isEmpty) {
+            for feed in feedList {
+                feed.dataPaginateStatus = ""
+                feed.vDataList.removeAll()
+                feed.vCV?.reloadData()
+                
+                feed.removeFromSuperview()
+            }
+            feedList.removeAll()
+        }
+    }
+    func deconfigureTabUI() {
+        if(!tabList.isEmpty) {
+            for e in tabList {
+                e.removeFromSuperview()
+            }
+            tabList.removeAll()
+        }
+        
+        //reset to 0
+        stackviewUsableLength = 0.0
+        tabSelect.isHidden = true
+    }
+    func refreshFetchSoundProfile() {
+        deconfigurePanel()
+        
+        self.isFetchFeedAllowed = false
+        layoutTabUI()
+//        asyncFetchSoundProfile(id: getObjectId())
+        
+        //test for error handling
+        asyncFetchSoundProfile(id: "s_")
+    }
     //test > async fetch data sound profile => temp testing
+    var isFetchFeedAllowed = false
     func asyncFetchSoundProfile(id: String) {
-        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+        
+        self.aSpinner.startAnimating()
+        self.bSpinner.startAnimating()
+        
+        //test > new fetch method for testing error handling
+        DataFetchManager.shared.fetchSoundData(id: id) { [weak self]result in
+//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
                 //update UI on main thread
                 DispatchQueue.main.async {
                     print("api success \(id), \(l)")
-                    self?.aNameText.text = l[0]
-                    self?.aNameTextB.text = l[0]
-                    self?.objectSymbol.isHidden = false
-                    self?.aSubDesc.text = "00:29"
-                    
-                    self?.aUsernameAText.text = "Hubert Wu"
-                    self?.playBtn.isHidden = false
-                    self?.aHLightTitle.text = "00:29"
-                    self?.aFollowA.isHidden = false
-                    
-                    self?.aSpinner.stopAnimating()
-                    self?.bSpinner.stopAnimating()
-                    
-                    //test > half mode highlight box
-                    self?.configureHLightBox()
-                    
-                    //test > preload audio for playing sound
-                    self?.preloadAudio()
-                    
-                    //test > assue fetch placemarkers here, then show markers on map
-                    if let a = self {
-                        a.delegate?.didFinishFetchSoundScrollableData(pv: a)
-                    }
-                    
-                    //test > new async init
                     guard let self = self else {
                         return
                     }
-                    if(!self.tabList.isEmpty) {
-                        for l in self.tabList {
-                            self.stackviewUsableLength += l.frame.width
-                        }
-//                        self.stackviewUsableLength += 10.0 //leading constraint on tabscrollview
-                        self.tabScrollView.contentSize = CGSize(width: self.stackviewUsableLength, height: 40)
-
-                        let tab = self.tabList[0]
-                        self.tabSelectWidthCons?.constant = tab.frame.width
-                        self.tabSelect.isHidden = false
-                    }
-                    self.measureTabScroll()
-                    let xTabOffset = self.tabScrollView.contentOffset.x
-                    self.arrowReactToTabScroll(tabXOffset: xTabOffset)
-                    self.reactToTabSectionChange(index: self.currentIndex)
                     
+                    self.aSpinner.stopAnimating()
+                    self.bSpinner.stopAnimating()
+                    
+                    if(!l.isEmpty) {
+                        let l_ = l[0]
+                        if(l_ == "a") {
+                            
+                            //test > preload audio for playing sound
+                            self.preloadAudio()
+                            
+                            //user account exists
+                            self.isFetchFeedAllowed = true
+                            
+                            //test > lay out halfmode highlight box
+                            self.aHLightBoxArray.append("np") //no posts
+                            self.aHLightBoxArray.append("d_s") //discover more places
+                            
+                            //test > lay out highlight section
+                            self.aHLightDataArray.append("r") //ranking *
+                            
+                            self.configureUI(data: "a")
+                        }
+                        else if(l_ == "b"){
+                            self.aHLightBoxArray.append("us") //suspended
+                            self.aHLightDataArray.append("us") //job //*
+                            //suspended
+                            self.configureUI(data: "b")
+                        }
+                        else {
+                            //deleted
+                            self.aHLightBoxArray.append("na") //not found highlight box
+                            self.aHLightDataArray.append("na")
+                            self.configureUI(data: "na")//na - data not available
+                        }
+                    }
+                    
+                    //test > half mode highlight box
+                    self.configureHLightBox()
+                    self.configureHLightUI()
+                    
+                    //test > assue fetch placemarkers here, then show markers on map
+                    self.delegate?.didFinishFetchSoundScrollableData(pv: self, isSuccess: true)
+                    
+                    //test > init tabscroll UI e.g. measure width
+                    self.activateTabUI()
                     self.redrawScrollFeedUI()
                     
                     //test > async fetch feed
-                    let feed = self.feedList[self.currentIndex]
-                    guard let b = feed as? ScrollDataFeedCell else {
-                        return
+                    if(!self.feedList.isEmpty) {
+                        let b = self.feedList[self.currentIndex]
+                        if(self.isFetchFeedAllowed) {
+                            self.asyncFetchFeed(cell: b, id: "post_feed")
+                        }
                     }
-                    self.asyncFetchFeed(cell: b, id: "post_feed")
                 }
 
-                case .failure(_):
+                case .failure(let error):
+                DispatchQueue.main.async {
                     print("api fail")
-                    break
+                    guard let self = self else {
+                        return
+                    }
+                    self.aSpinner.stopAnimating()
+                    self.bSpinner.stopAnimating()
+                    
+                    if let a = error as? FetchDataError{
+                        
+                        if(a == .dataNotFound) {
+                            self.configureUI(data: "na")//na - user data not available
+                            
+                            self.aHLightBoxArray.append("na") //user not found highlight box
+                            self.aHLightDataArray.append("na")
+                        } else if(a == .invalidResponse) {
+                            self.configureUI(data: "e")//na - user data not available
+                            
+                            self.aHLightBoxArray.append("e") //user not found highlight box
+                            self.aHLightDataArray.append("e")
+                        } else if(a == .networkError) {
+                            self.configureUI(data: "e")//na - user data not available
+                            
+                            self.aHLightBoxArray.append("e") //user not found highlight box
+                            self.aHLightDataArray.append("e")
+                        }
+                    }
+                    
+                    //test > half mode highlight box
+                    self.configureHLightBox()
+                    self.configureHLightUI()
+                    
+                    //test > to be added with failure error
+                    self.delegate?.didFinishFetchSoundScrollableData(pv: self, isSuccess: false)
+                    
+                    //test > init tabscroll UI e.g. measure width
+                    self.activateTabUI()
+                    //test > populate scrollfeedcells
+                    self.redrawScrollFeedUI()
+                }
+                    
+                break
             }
         }
     }
@@ -1438,7 +1584,10 @@ class SoundScrollablePanelView: ScrollablePanelView{
         
         cell?.dataPaginateStatus = "fetch"
 
-        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+        let id_ = "post"
+        let isPaginate = false
+        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -1446,31 +1595,60 @@ class SoundScrollablePanelView: ScrollablePanelView{
                 DispatchQueue.main.async {
                     print("userscrollable api success \(id), \(l)")
 
-                    guard let self = self else {
-                        return
-                    }
-
                     guard let feed = cell else {
                         return
                     }
                     
+                    //test
+                    feed.aSpinner.stopAnimating()
+                    
                     //test 2 > new append method
+//                    for i in l {
+//                        let postData = PostData()
+//                        postData.setDataType(data: i)
+//                        postData.setData(data: i)
+//                        postData.setTextString(data: i)
+//                        feed.vDataList.append(postData)
+//                    }
+//                    feed.vCV?.reloadData()
+                    
+                    //*test 3 > reload only appended data, not entire dataset
+                    let dataCount = feed.vDataList.count
+                    var indexPaths = [IndexPath]()
+                    var j = 1
                     for i in l {
                         let postData = PostData()
                         postData.setDataType(data: i)
                         postData.setData(data: i)
                         postData.setTextString(data: i)
                         feed.vDataList.append(postData)
+
+                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+                        indexPaths.append(idx)
+                        j += 1
+
+                        print("ppv asyncfetch reload \(idx)")
                     }
-                    feed.vCV?.reloadData()
+                    feed.vCV?.insertItems(at: indexPaths)
+                    //*
 
                     //test
-                    feed.aSpinner.stopAnimating()
+                    if(l.isEmpty) {
+                        print("postpanelscroll footer reuse configure")
+                        feed.configureFooterUI(data: "na")
+                        feed.aaText.text = "Nothing has been posted yet."
+                    }
                 }
 
-                case .failure(_):
-                    print("api fail")
-                    break
+                case .failure(let error):
+                print("api fail")
+                DispatchQueue.main.async {
+                    cell?.aSpinner.stopAnimating()
+                    
+                    cell?.configureFooterUI(data: "e")
+                }
+
+                break
             }
         }
     }
@@ -1479,7 +1657,10 @@ class SoundScrollablePanelView: ScrollablePanelView{
 
         cell?.bSpinner.startAnimating()
         
-        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+        let id_ = "post"
+        let isPaginate = true
+        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -1497,6 +1678,9 @@ class SoundScrollablePanelView: ScrollablePanelView{
                     if(l.isEmpty) {
                         feed.dataPaginateStatus = "end"
                     }
+                    
+                    //test
+                    feed.bSpinner.stopAnimating()
                     
                     //test 2 > new append method
 //                    for i in l {
@@ -1529,12 +1713,19 @@ class SoundScrollablePanelView: ScrollablePanelView{
                     //*
                     
                     //test
-                    feed.bSpinner.stopAnimating()
+                    if(l.isEmpty) {
+                        feed.configureFooterUI(data: "end")
+                    }
                 }
 
-                case .failure(_):
+                case .failure(let error):
+                DispatchQueue.main.async {
                     print("api fail")
-                    break
+                    cell?.bSpinner.stopAnimating()
+                    
+                    cell?.configureFooterUI(data: "e")
+                }
+                break
             }
         }
     }
@@ -1543,24 +1734,14 @@ class SoundScrollablePanelView: ScrollablePanelView{
 //    var selectedVCVFeedIndex = 0
 //    var selectedVCVItemIndex = 0
     func dehideCurrentCell() {
-//        let feed = self.feedList[self.selectedVCVFeedIndex]
-//        guard let b = feed as? ScrollFeedGridLargeViewCell else {
-//            return
-//        }
-//        b.dehideCellAt(itemIndex: selectedVCVItemIndex)
-        
-//        if let b = feed as? ScrollFeedGridVideo2xViewCell {
-//            b.dehideCellAt(itemIndex: selectedVCVItemIndex)
-//        }
-//        else if let c = feed as? ScrollFeedGridPhoto2xViewCell {
-//            c.dehideCellAt(itemIndex: selectedVCVItemIndex)
-//        }
-        let feed = self.feedList[currentIndex]
-        if let b = feed as? ScrollFeedGridVideo2xViewCell {
-            b.dehideCellAt()
-        }
-        else if let c = feed as? ScrollFeedGridPhoto2xViewCell {
-            c.dehideCellAt()
+        if(!self.feedList.isEmpty) {
+            let feed = self.feedList[currentIndex]
+            if let b = feed as? ScrollFeedGridVideo2xViewCell {
+                b.dehideCellAt()
+            }
+            else if let c = feed as? ScrollFeedGridPhoto2xViewCell {
+                c.dehideCellAt()
+            }
         }
     }
 //    func hideViewCell(feedIndex: Int, itemIndex: Int) {
@@ -1761,16 +1942,20 @@ class SoundScrollablePanelView: ScrollablePanelView{
     
     //test > stop current video for closing
     func pauseCurrentPostFeedVideo() {
-        let feed = feedList[currentIndex]
-        if let b = feed as? ScrollFeedHPostListCell {
-            b.pauseCurrentVideo()
+        if(!feedList.isEmpty) {
+            let feed = feedList[currentIndex]
+            if let b = feed as? ScrollFeedHPostListCell {
+                b.pauseCurrentVideo()
+            }
         }
     }
     //test > resume current video
     func resumeCurrentPostFeedVideo() {
-        let feed = feedList[currentIndex]
-        if let b = feed as? ScrollFeedHPostListCell {
-            b.resumeCurrentVideo()
+        if(!feedList.isEmpty) {
+            let feed = feedList[currentIndex]
+            if let b = feed as? ScrollFeedHPostListCell {
+                b.resumeCurrentVideo()
+            }
         }
     }
     
@@ -1784,8 +1969,8 @@ class SoundScrollablePanelView: ScrollablePanelView{
     }
     
     //test > check for intersected dummy view with video while user scroll
-    func getIntersectedIdx() -> Int {
-        let aVc = feedList[currentIndex]
+    func getIntersectedIdx(aVc: ScrollFeedHPostListCell) -> Int {
+//        let aVc = feedList[currentIndex]
         var intersectedIdx = -1
         if let v = aVc.vCV {
             for cell in v.visibleCells {
@@ -1921,19 +2106,22 @@ extension SoundScrollablePanelView: UIScrollViewDelegate {
                     if(hOffsetX > totalTabScrollXLead) {
                         oX = totalTabScrollXLead
                     }
-                    let tabXContentOffset = oX/totalTabScrollXLead * tabScrollGap
-                    tabScrollView.setContentOffset(CGPoint(x: tabXContentOffset, y: 0), animated: false)
+                    if(totalTabScrollXLead > 0) {
+                        let tabXContentOffset = oX/totalTabScrollXLead * tabScrollGap
+                        tabScrollView.setContentOffset(CGPoint(x: tabXContentOffset, y: 0), animated: false)
+                    }
                 }
             }
             
             //test > async fetch feed
             let rIndex = Int(round(currentIndex))
-            let feed = self.feedList[rIndex]
-            guard let b = feed as? ScrollDataFeedCell else {
-                return
-            }
-            if(feed.dataPaginateStatus == "") {
-                self.asyncFetchFeed(cell: b, id: "post_feed")
+            if(!self.feedList.isEmpty) {
+                let b = self.feedList[rIndex]
+                if(b.dataPaginateStatus == "") {
+                    if(self.isFetchFeedAllowed) {
+                        self.asyncFetchFeed(cell: b, id: "post_feed")
+                    }
+                }
             }
         }
         else if(scrollView == tabScrollView) {
@@ -1948,46 +2136,48 @@ extension SoundScrollablePanelView: UIScrollViewDelegate {
             
             //test > METHOD 2
             if (bPanelHeight > 0) {
-                let feed = self.feedList[currentIndex]
-                guard let vCv = feed.vCV else {
-                    return
-                }
-                let h = vCv.collectionViewLayout.collectionViewContentSize.height
-                let feedH = feedScrollView.frame.height
+                if(!self.feedList.isEmpty) {
+                    let feed = self.feedList[currentIndex]
+                    guard let vCv = feed.vCV else {
+                        return
+                    }
+                    let h = vCv.collectionViewLayout.collectionViewContentSize.height
+                    let feedH = feedScrollView.frame.height
 
-                if !enableFatherViewScroll {
-                    //**default solution
-//                    scrollView.contentOffset.y = bPanelHeight // point A
-//                    enableChildViewScroll = true
-                    //**
-                    
-                    //test 1 > fix childscrollview that content height < cv height
-                    if(h > feedH) {
-                        scrollView.contentOffset.y = bPanelHeight // point A
-                        enableChildViewScroll = true
-                    } else {
-                        //y -ve scroll to top
-                        if scrollView.contentOffset.y >= bPanelHeight {
-                            scrollView.contentOffset.y = bPanelHeight
-                            enableFatherViewScroll = false
+                    if !enableFatherViewScroll {
+                        //**default solution
+    //                    scrollView.contentOffset.y = bPanelHeight // point A
+    //                    enableChildViewScroll = true
+                        //**
+                        
+                        //test 1 > fix childscrollview that content height < cv height
+                        if(h > feedH) {
+                            scrollView.contentOffset.y = bPanelHeight // point A
                             enableChildViewScroll = true
                         } else {
-                            //test > flip to reset
-                            enableFatherViewScroll = true
-                            enableChildViewScroll = false
+                            //y -ve scroll to top
+                            if scrollView.contentOffset.y >= bPanelHeight {
+                                scrollView.contentOffset.y = bPanelHeight
+                                enableFatherViewScroll = false
+                                enableChildViewScroll = true
+                            } else {
+                                //test > flip to reset
+                                enableFatherViewScroll = true
+                                enableChildViewScroll = false
+                            }
                         }
+                    } else if scrollView.contentOffset.y >= bPanelHeight {
+                        scrollView.contentOffset.y = bPanelHeight
+                        enableFatherViewScroll = false
+                        enableChildViewScroll = true
                     }
-                } else if scrollView.contentOffset.y >= bPanelHeight {
-                    scrollView.contentOffset.y = bPanelHeight
-                    enableFatherViewScroll = false
-                    enableChildViewScroll = true
-                }
-                
-                //test > stickyheader UI respond to scroll change
-                if(scrollView.contentOffset.y >= aPhotoBHeight) {
-                    cTitleAnimateDisplay()
-                } else {
-                    cTitleAnimateHide()
+                    
+                    //test > stickyheader UI respond to scroll change
+                    if(scrollView.contentOffset.y >= aPhotoBHeight) {
+                        cTitleAnimateDisplay()
+                    } else {
+                        cTitleAnimateHide()
+                    }
                 }
             }
             
@@ -2017,7 +2207,7 @@ extension SoundScrollablePanelView: UIScrollViewDelegate {
                 }
                 var idx = -1
                 if(currentPanelMode == PANEL_MODE_FULL) {
-                    idx = getIntersectedIdx()
+                    idx = getIntersectedIdx(aVc: b)
                 } else {
                     //for half mode and empty mode
                 }
@@ -2116,6 +2306,11 @@ extension SoundScrollablePanelView: HighlightCellDelegate {
     func didHighlightClickSound(id: String) {
         delegate?.didSClickSoundSoundScrollable()
     }
+    
+    func didHighlightClickRefresh(){
+        //test > refresh data when clicked to refetch
+        refreshFetchSoundProfile()
+    }
 }
 
 extension SoundScrollablePanelView: ScrollFeedCellDelegate {
@@ -2124,24 +2319,26 @@ extension SoundScrollablePanelView: ScrollFeedCellDelegate {
     }
     func sfcScrollViewDidScroll(offsetY: CGFloat) {
         //test > METHOD 2
-        let feed = self.feedList[currentIndex]
-        guard let vCv = feed.vCV else {
-            return
+        if(!self.feedList.isEmpty) {
+            let feed = self.feedList[currentIndex]
+            guard let vCv = feed.vCV else {
+                return
+            }
+            
+            if !enableChildViewScroll {
+                vCv.contentOffset.y = 0
+            } else if vCv.contentOffset.y <= 0 {
+                enableChildViewScroll = false
+                enableFatherViewScroll = true
+            }
+            
+            //test
+    //        let aVc = feedList[currentIndex]
+            guard let b = feed as? ScrollFeedHPostListCell else {
+                return
+            }
+            b.reactToIntersectedVideo(intersectedIdx: getIntersectedIdx(aVc: b))
         }
-        
-        if !enableChildViewScroll {
-            vCv.contentOffset.y = 0
-        } else if vCv.contentOffset.y <= 0 {
-            enableChildViewScroll = false
-            enableFatherViewScroll = true
-        }
-        
-        //test
-        let aVc = feedList[currentIndex]
-        guard let b = aVc as? ScrollFeedHPostListCell else {
-            return
-        }
-        b.reactToIntersectedVideo(intersectedIdx: getIntersectedIdx())
     }
     func sfcSrollViewDidEndDecelerating(offsetY: CGFloat) {
 
@@ -2164,11 +2361,11 @@ extension SoundScrollablePanelView: ScrollFeedCellDelegate {
 
     func sfcDidClickVcvItem(pointX: CGFloat, pointY: CGFloat, view:UIView, itemIndex:IndexPath){
         //test > add another conversionfor horizontal uicollectionview offset
-        let b = self.feedList[self.currentIndex]
-        let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
-        print("fcDidClickVcvItem \(originInRootView)")
+//        let b = self.feedList[self.currentIndex]
+//        let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
+//        print("fcDidClickVcvItem \(originInRootView)")
         
-        let adjustY = pointY + originInRootView.y
+//        let adjustY = pointY + originInRootView.y
 //        delegate?.didClickVcvSoundScrollablePanelItem(pointX: pointX, pointY: adjustY, view: view)
 //
 //        //test > hide image when video opens
@@ -2202,19 +2399,23 @@ extension SoundScrollablePanelView: ScrollFeedCellDelegate {
     }
     func sfcDidClickVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         //test
-        let b = self.feedList[self.currentIndex]
-        let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
-        
-        let adjustY = pointY + originInRootView.y
-        delegate?.didSClickSoundScrollableVcvClickPhoto(pointX: pointX, pointY: adjustY, view: view, mode: mode)
+        if(!self.feedList.isEmpty) {
+            let b = self.feedList[self.currentIndex]
+            let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
+            
+            let adjustY = pointY + originInRootView.y
+            delegate?.didSClickSoundScrollableVcvClickPhoto(pointX: pointX, pointY: adjustY, view: view, mode: mode)
+        }
     }
     func sfcDidClickVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         //test
-        let b = self.feedList[self.currentIndex]
-        let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
-        
-        let adjustY = pointY + originInRootView.y
-        delegate?.didSClickSoundScrollableVcvClickVideo(pointX: pointX, pointY: adjustY, view: view, mode: mode)
+        if(!self.feedList.isEmpty) {
+            let b = self.feedList[self.currentIndex]
+            let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
+            
+            let adjustY = pointY + originInRootView.y
+            delegate?.didSClickSoundScrollableVcvClickVideo(pointX: pointX, pointY: adjustY, view: view, mode: mode)
+        }
     }
 
     //test
@@ -2226,7 +2427,9 @@ extension SoundScrollablePanelView: ScrollFeedCellDelegate {
         guard let b = cell as? ScrollDataFeedCell else {
             return
         }
-        asyncPaginateFetchFeed(cell: b, id: "post_feed_end")
+        if(self.isFetchFeedAllowed) {
+            asyncPaginateFetchFeed(cell: b, id: "post_feed_end")
+        }
     }
     
     func sfcIsScrollCarousel(isScroll: Bool) {
@@ -2250,22 +2453,6 @@ extension ViewController: SoundScrollablePanelDelegate{
     
     func didClickVcvSoundScrollablePanelItem(pointX: CGFloat, pointY: CGFloat, view: UIView) {
         print("click vcv in VC \(pointX), \(pointY), \(view.frame)")
-        let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
-        let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
-        
-//        self.openVideoPanel(offX: offsetX, offY: offsetY, originatorView: view, originatorViewType: OriginatorTypes.UIVIEW, id: 0)
-        
-        //test 2 > for both photo and video
-//        if let a = view as? GridVideo2xViewCell {
-//            self.openVideoPanel(offX: offsetX, offY: offsetY, originatorView: view, originatorViewType: OriginatorTypes.UIVIEW, id: 0)
-//        } else if let c = view as? GridVideoViewCell {
-//            self.openVideoPanel(offX: offsetX, offY: offsetY, originatorView: view, originatorViewType: OriginatorTypes.UIVIEW, id: 0)
-//        }
-//        else if let b = view as? GridPhotoViewCell {
-////            self.openPhotoPanel(offX: offsetX, offY: offsetY)
-//            //test
-//            self.openPhotoPanel(offX: offsetX, offY: offsetY, originatorView: view, originatorViewType: OriginatorTypes.UIVIEW, id: 0)
-//        }
     }
     
     func didChangeMapPaddingSoundScrollable(y: CGFloat) {
@@ -2328,6 +2515,10 @@ extension ViewController: SoundScrollablePanelDelegate{
         self.openVideoPanel(offX: offsetX, offY: offsetY, originatorView: view, originatorViewType: OriginatorTypes.UIVIEW, id: 0, originatorViewId: "", preterminedDatasets: dataset, mode: mode)
     }
     
+    func didSClickSoundSignIn(){
+        openLoginPanel()
+    }
+    
     func didFinishInitializeSoundScrollablePanel(pv: ScrollablePanelView){
         //test > show place marker when scrollable is initialized
 //        showSinglePlacePoint(number: singleNumber, pv: pv)
@@ -2340,15 +2531,30 @@ extension ViewController: SoundScrollablePanelDelegate{
         sSemiTransparentText.text = ""
     }
     
-    func didFinishFetchSoundScrollableData(pv: ScrollablePanelView) {
+    func didFinishFetchSoundScrollableData(pv: ScrollablePanelView, isSuccess: Bool) {
         //test > show place marker when scrollable is initialized
-        showSingleSoundPoint(number: singleSoundNumber, pv: pv)
-        singleSoundNumber += 1
+//        showSingleSoundPoint(number: singleSoundNumber, pv: pv)
+//        singleSoundNumber += 1
+//        
+//        //show data on map semi transparent textbox
+//        sSemiTransparentSpinner.stopAnimating()
+//        sSemiGifImageOuter.isHidden = false
+//        sSemiTransparentText.text = "明知故犯 - Hubert Wu"
         
-        //show data on map semi transparent textbox
-        sSemiTransparentSpinner.stopAnimating()
-        sSemiGifImageOuter.isHidden = false
-        sSemiTransparentText.text = "明知故犯 - Hubert Wu"
+        //test 2 > with error handling
+        if(isSuccess) {
+            showSingleSoundPoint(number: singleSoundNumber, pv: pv)
+            singleSoundNumber += 1
+            
+            //show data on map semi transparent textbox
+            sSemiTransparentSpinner.stopAnimating()
+            sSemiGifImageOuter.isHidden = false
+            sSemiTransparentText.text = "明知故犯 - Hubert Wu"
+        } else {
+            sSemiTransparentSpinner.stopAnimating()
+            sSemiGifImageOuter.isHidden = true
+            sSemiTransparentText.text = ""
+        }
     }
 }
 

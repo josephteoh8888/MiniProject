@@ -1,34 +1,31 @@
 //
-//  NotifyPanelView.swift
+//  MeLocationListPanelView.swift
 //  MiniProject
 //
-//  Created by Joseph Teoh on 30/06/2024.
+//  Created by Joseph Teoh on 20/07/2024.
 //
 
 import Foundation
 import UIKit
 import SDWebImage
 
-protocol NotifyPanelDelegate : AnyObject {
-    
-    //test > connect to other panel
-    func didNotifyClickUser()
-    func didNotifyClickPlace()
-    func didNotifyClickSound()
-    func didNotifyClickLogin()
+protocol MeLocationPanelDelegate : AnyObject {
+    func didMeLocationClickLocation()
+    func didMeLocationClickClose()
 }
-
 //test > new method with uiscrollview of feedcells
-class NotifyPanelView: PanelView{
-    var notifyPanel = UIView()
+class MeLocationListPanelView: PanelView{
+    var panelLeadingCons: NSLayoutConstraint?
+    var currentPanelLeadingCons : CGFloat = 0.0
+    var panel = UIView()
     var tabDataList = [String]()
     
-    weak var delegate : NotifyPanelDelegate?
+    weak var delegate : MeLocationPanelDelegate?
     
     let aStickyHeader = UIView()
     
     let feedScrollView = UIScrollView()
-    var feedList = [ScrollFeedHNotifyListCell]()
+    var feedList = [ScrollFeedHResultListCell]()
     
 //    var tabList = [UIView]()
     var tabList = [TabStack]()
@@ -38,7 +35,7 @@ class NotifyPanelView: PanelView{
     var stackviewUsableLength = 0.0
     let tabScrollView = UIScrollView()
     let stackView = UIView()
-    let tabScrollMargin = 90.0 //20, 0, 50
+    let tabScrollMargin = 0.0 //90
     
     var currentIndex = 0
     
@@ -54,6 +51,9 @@ class NotifyPanelView: PanelView{
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
+        viewWidth = frame.width
+        viewHeight = frame.height
         setupViews()
 
     }
@@ -65,70 +65,82 @@ class NotifyPanelView: PanelView{
     
     func setupViews() {
         
-        notifyPanel.backgroundColor = .ddmBlackOverlayColor
-        self.addSubview(notifyPanel)
-        notifyPanel.translatesAutoresizingMaskIntoConstraints = false
-        notifyPanel.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
-        notifyPanel.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true //default 0
-        notifyPanel.layer.masksToBounds = true
-        notifyPanel.layer.cornerRadius = 10 //10
-        notifyPanel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
-        notifyPanel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
+        panel.backgroundColor = .ddmBlackOverlayColor
+        self.addSubview(panel)
+        panel.translatesAutoresizingMaskIntoConstraints = false
+        panel.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        panel.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true //default 0
+        panel.layer.masksToBounds = true
+        panel.layer.cornerRadius = 10 //10
+//        panel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
+//        panel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
+        panel.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true
+        panelLeadingCons = panel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0)
+        panelLeadingCons?.isActive = true
         
         let aStickyHeader = UIView()
 //        aStickyHeader.backgroundColor = .ddmBlackOverlayColor
-        notifyPanel.addSubview(aStickyHeader)
+        panel.addSubview(aStickyHeader)
         aStickyHeader.translatesAutoresizingMaskIntoConstraints = false
-        aStickyHeader.trailingAnchor.constraint(equalTo: notifyPanel.trailingAnchor).isActive = true
+        aStickyHeader.trailingAnchor.constraint(equalTo: panel.trailingAnchor).isActive = true
         aStickyHeader.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 50).isActive = true
         aStickyHeader.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
-        aStickyHeader.leadingAnchor.constraint(equalTo: notifyPanel.leadingAnchor, constant: 0).isActive = true
-        aStickyHeader.isHidden = true
+        aStickyHeader.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 0).isActive = true
+//        aStickyHeader.isHidden = true
         
-//        let aBtn = UIView()
-////        aBtn.backgroundColor = .ddmDarkColor
-////        aBtn.backgroundColor = .clear
-//        aStickyHeader.addSubview(aBtn)
-//        aBtn.translatesAutoresizingMaskIntoConstraints = false
-//        aBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true //ori: 40
-//        aBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
-////        aBtn.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -10).isActive = true
-//        aBtn.leadingAnchor.constraint(equalTo: aStickyHeader.leadingAnchor, constant: 20).isActive = true
-//    //        aBtn.topAnchor.constraint(equalTo: userPanel.topAnchor, constant: 30).isActive = true
-//        aBtn.bottomAnchor.constraint(equalTo: aStickyHeader.bottomAnchor, constant: 0).isActive = true
-//        aBtn.layer.cornerRadius = 20
-//        aBtn.layer.opacity = 0.3
-//        aBtn.isUserInteractionEnabled = true
-//        aBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onABtnClicked)))
-//
-//        let rBoxBtn = UIImageView()
-//        rBoxBtn.image = UIImage(named:"icon_round_setting")?.withRenderingMode(.alwaysTemplate)
-//        rBoxBtn.tintColor = .white
-//        aStickyHeader.addSubview(rBoxBtn)
-//        rBoxBtn.translatesAutoresizingMaskIntoConstraints = false
-//        rBoxBtn.centerXAnchor.constraint(equalTo: aBtn.centerXAnchor).isActive = true
-//        rBoxBtn.centerYAnchor.constraint(equalTo: aBtn.centerYAnchor).isActive = true
-//        rBoxBtn.heightAnchor.constraint(equalToConstant: 22).isActive = true
-//        rBoxBtn.widthAnchor.constraint(equalToConstant: 22).isActive = true
-////        rBoxBtn.layer.opacity = 0.5
+        let aBtn = UIView()
+//        aBtn.backgroundColor = .ddmDarkColor
+        aStickyHeader.addSubview(aBtn)
+        aBtn.translatesAutoresizingMaskIntoConstraints = false
+        aBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true //ori: 40
+        aBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        aBtn.leadingAnchor.constraint(equalTo: aStickyHeader.leadingAnchor, constant: 10).isActive = true
+    //        aBtn.topAnchor.constraint(equalTo: userPanel.topAnchor, constant: 30).isActive = true
+        aBtn.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
+        aBtn.layer.cornerRadius = 20
+        aBtn.layer.opacity = 0.3
+        aBtn.isUserInteractionEnabled = true
+        aBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBackPanelClicked)))
+
+        let bMiniBtn = UIImageView(image: UIImage(named:"icon_round_arrow_left")?.withRenderingMode(.alwaysTemplate))
+        bMiniBtn.tintColor = .white
+        aStickyHeader.addSubview(bMiniBtn)
+        bMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        bMiniBtn.centerXAnchor.constraint(equalTo: aBtn.centerXAnchor).isActive = true
+        bMiniBtn.centerYAnchor.constraint(equalTo: aBtn.centerYAnchor).isActive = true
+        bMiniBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
+        bMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
         
-        tabDataList.append("dm") //chat
-//        tabDataList.append("f") //follower
-//        tabDataList.append("l") //like
-//        tabDataList.append("c") //comment
-        tabDataList.append("n") //notification
+        let aTitleText = UILabel()
+        aTitleText.textAlignment = .center
+        aTitleText.textColor = .white
+        aTitleText.font = .boldSystemFont(ofSize: 14)
+//        aSemiTransparentTextBox.addSubview(aSemiTransparentText)
+        aStickyHeader.addSubview(aTitleText)
+        aTitleText.translatesAutoresizingMaskIntoConstraints = false
+        aTitleText.topAnchor.constraint(equalTo: aBtn.topAnchor, constant: 0).isActive = true
+        aTitleText.bottomAnchor.constraint(equalTo: aBtn.bottomAnchor, constant: 0).isActive = true
+        aTitleText.centerXAnchor.constraint(equalTo: aStickyHeader.centerXAnchor, constant: 0).isActive = true
+//        aTitleText.trailingAnchor.constraint(equalTo: aLoggedOutTextBox.trailingAnchor, constant: -10).isActive = true
+        aTitleText.text = "Locations" //Profile
+        
+        tabDataList.append("pu") //public
+        tabDataList.append("pr") //private
+//        tabDataList.append("i") shot
+//        tabDataList.append("l") //location
+//        tabDataList.append("s") //sound
 //        tabDataList.append("dm") //chat
 //        tabDataList.append("o") //chat
         
         //test ** > uiscrollview
-        notifyPanel.addSubview(tabScrollView)
+        panel.addSubview(tabScrollView)
         tabScrollView.backgroundColor = .clear //clear
         tabScrollView.translatesAutoresizingMaskIntoConstraints = false
         tabScrollView.heightAnchor.constraint(equalToConstant: 40).isActive = true //ori 60
-//        tabScrollView.topAnchor.constraint(equalTo: aStickyHeader.bottomAnchor, constant: 0).isActive = true
-        tabScrollView.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true //50
-        tabScrollView.leadingAnchor.constraint(equalTo: notifyPanel.leadingAnchor, constant: tabScrollMargin).isActive = true //20
-        tabScrollView.trailingAnchor.constraint(equalTo: notifyPanel.trailingAnchor, constant: -tabScrollMargin).isActive = true
+        tabScrollView.topAnchor.constraint(equalTo: aStickyHeader.bottomAnchor, constant: 0).isActive = true
+//        tabScrollView.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true //10
+        tabScrollView.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: tabScrollMargin).isActive = true
+        tabScrollView.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -tabScrollMargin).isActive = true
         tabScrollView.showsHorizontalScrollIndicator = false
         tabScrollView.alwaysBounceHorizontal = true //test
         //**
@@ -138,7 +150,7 @@ class NotifyPanelView: PanelView{
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.heightAnchor.constraint(equalToConstant: 40).isActive = true //ori 30
         stackView.topAnchor.constraint(equalTo: tabScrollView.topAnchor).isActive = true
-        stackView.leadingAnchor.constraint(equalTo: tabScrollView.leadingAnchor, constant: 10).isActive = true
+        stackView.leadingAnchor.constraint(equalTo: tabScrollView.leadingAnchor, constant: 0).isActive = true //10
 //
 //        aHighlight.backgroundColor = .yellow
         tabSelect.backgroundColor = .clear
@@ -163,13 +175,13 @@ class NotifyPanelView: PanelView{
         aHighlightInner.centerYAnchor.constraint(equalTo: tabSelect.centerYAnchor).isActive = true
         aHighlightInner.centerXAnchor.constraint(equalTo: tabSelect.centerXAnchor).isActive = true
         
-        notifyPanel.addSubview(feedScrollView)
+        panel.addSubview(feedScrollView)
         feedScrollView.backgroundColor = .clear //clear
         feedScrollView.translatesAutoresizingMaskIntoConstraints = false
         feedScrollView.topAnchor.constraint(equalTo: tabScrollView.bottomAnchor, constant: 10).isActive = true
-        feedScrollView.bottomAnchor.constraint(equalTo: notifyPanel.bottomAnchor, constant: 0).isActive = true //0
-        feedScrollView.leadingAnchor.constraint(equalTo: notifyPanel.leadingAnchor, constant: 0).isActive = true
-        feedScrollView.trailingAnchor.constraint(equalTo: notifyPanel.trailingAnchor, constant: 0).isActive = true
+        feedScrollView.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: 0).isActive = true //0
+        feedScrollView.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 0).isActive = true
+        feedScrollView.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: 0).isActive = true
         feedScrollView.showsHorizontalScrollIndicator = false
         feedScrollView.alwaysBounceHorizontal = true //test
         feedScrollView.isPagingEnabled = true
@@ -177,12 +189,12 @@ class NotifyPanelView: PanelView{
         
         //test > logged out UI
 //        let aLoggedOutBox = UIView()
-        notifyPanel.addSubview(aLoggedOutBox)
+        panel.addSubview(aLoggedOutBox)
         aLoggedOutBox.translatesAutoresizingMaskIntoConstraints = false
 //        aLoggedOutBox.topAnchor.constraint(equalTo: aSemiTransparentTextBox.topAnchor, constant: 0).isActive = true
-        aLoggedOutBox.centerYAnchor.constraint(equalTo: notifyPanel.centerYAnchor, constant: -90).isActive = true
-        aLoggedOutBox.leadingAnchor.constraint(equalTo: notifyPanel.leadingAnchor).isActive = true
-        aLoggedOutBox.trailingAnchor.constraint(equalTo: notifyPanel.trailingAnchor).isActive = true
+        aLoggedOutBox.centerYAnchor.constraint(equalTo: panel.centerYAnchor, constant: -90).isActive = true
+        aLoggedOutBox.leadingAnchor.constraint(equalTo: panel.leadingAnchor).isActive = true
+        aLoggedOutBox.trailingAnchor.constraint(equalTo: panel.trailingAnchor).isActive = true
         aLoggedOutBox.isHidden = false
 //        aLoggedOutBox.isHidden = true
         
@@ -230,6 +242,14 @@ class NotifyPanelView: PanelView{
         aFollowText.centerXAnchor.constraint(equalTo: aFollow.centerXAnchor).isActive = true
         aFollowText.centerYAnchor.constraint(equalTo: aFollow.centerYAnchor).isActive = true
         aFollowText.text = "Login"
+        
+        //test > gesture recognizer for dragging user panel
+        let panelPanGesture = UIPanGestureRecognizer(target: self, action: #selector(onPanelPanGesture))
+        self.addGestureRecognizer(panelPanGesture)
+    }
+    
+    @objc func onBackPanelClicked(gesture: UITapGestureRecognizer) {
+        closePanel(isAnimated: true)
     }
     
     @objc func onABtnClicked(gesture: UITapGestureRecognizer) {
@@ -237,23 +257,65 @@ class NotifyPanelView: PanelView{
     }
     
     @objc func onFollowClicked(gesture: UITapGestureRecognizer) {
-        
-        aLoggedOutBox.isHidden = true
-        
-        delegate?.didNotifyClickLogin()
+//        delegate?.didNotifyClickLogin()
     }
     
     //test
     override func resumeActiveState() {
-        print("notifypanelview resume active")
+        print("mefollowlistpanelview resume active")
         
         //test > check for signin status when in active state
         asyncFetchSigninStatus()
     }
     
+    var direction = "na"
+    @objc func onPanelPanGesture(gesture: UIPanGestureRecognizer) {
+        if(gesture.state == .began) {
+            
+            print("t1 onPanelPanGesture begin: ")
+            self.currentPanelLeadingCons = self.panelLeadingCons!.constant
+        } else if(gesture.state == .changed) {
+            let translation = gesture.translation(in: self)
+            let x = translation.x
+            let y = translation.y
+            
+            //test > determine direction of scroll
+//            print("t1 onSoundPanelPanGesture changed: \(x), \(self.soundPanelLeadingCons!.constant)")
+            if(direction == "na") {
+                if(abs(x) > abs(y)) {
+                    direction = "x"
+                } else {
+                    direction = "y"
+                }
+            }
+            if(direction == "x") {
+                var newX = self.currentPanelLeadingCons + x
+                if(newX < 0) {
+                    newX = 0
+                }
+                self.panelLeadingCons?.constant = newX
+            }
+        } else if(gesture.state == .ended){
+            
+            print("t1 onPanelPanGesture ended: ")
+            if(self.panelLeadingCons!.constant - self.currentPanelLeadingCons < 75) {
+                UIView.animate(withDuration: 0.2, animations: {
+                    self.panelLeadingCons?.constant = 0
+                    self.layoutIfNeeded()
+                }, completion: { _ in
+                })
+            } else {
+                closePanel(isAnimated: true)
+            }
+            
+            //test > determine direction of scroll
+            direction = "na"
+        }
+    }
+    
     //test > initialization state
     var isInitialized = false
-    func initialize() {
+    func initializePanel() {
         
         if(!isInitialized) {
             
@@ -269,21 +331,35 @@ class NotifyPanelView: PanelView{
             //start fetch data
             self.asyncInit(id: "search_term")
         }
-        //test > check signin status
-//        else {
-//            asyncFetchSigninStatus()
-//        }
             
         isInitialized = true
     }
-    func initialize(width: CGFloat, height: CGFloat) {
-        viewWidth = width
-        viewHeight = height
-        
-//        initialize()
+    func initialize() {
         
         //test
         asyncFetchSigninStatus()
+    }
+    
+    var isToClosePanel = false
+    func closePanel(isAnimated: Bool) {
+        
+        isToClosePanel = true
+        
+        if(isAnimated) {
+            UIView.animate(withDuration: 0.2, animations: {
+                self.panelLeadingCons?.constant = self.frame.width
+                self.layoutIfNeeded()
+            }, completion: { _ in
+                self.removeFromSuperview()
+                
+                //move back to origin
+                self.panelLeadingCons?.constant = 0
+                self.delegate?.didMeLocationClickClose()
+            })
+        } else {
+            self.removeFromSuperview()
+            self.delegate?.didMeLocationClickClose()
+        }
     }
     
     func layoutTabUI() {
@@ -307,8 +383,8 @@ class NotifyPanelView: PanelView{
             //test > if less than 3 tabs, can split width of tab to two equal parts
             let tabCount = tabDataList.count
             var isTabWidthFixed = false
-            if(tabCount < 3) {
-//            if(tabCount == 2 || tabCount == 3) {
+//            if(tabCount < 3) {
+            if(tabCount == 2 || tabCount == 3) {
                 let tabWidth = (viewWidth - tabScrollMargin*2)/CGFloat(tabCount)
                 stack.widthAnchor.constraint(equalToConstant: tabWidth).isActive = true
                 isTabWidthFixed = true
@@ -319,21 +395,11 @@ class NotifyPanelView: PanelView{
             stack.setArrowAdded(isArrowAdd: false)
             stack.delegate = self
 
-            if(d == "dm") {
-                stack.setText(code: d, d: "Chat") //Messages
-            } else if(d == "f") {
-                stack.setText(code: d, d: "Followers")
-            }  else if(d == "c") {
-                stack.setText(code: d, d: "Comments")
-            } else if(d == "l") {
-                stack.setText(code: d, d: "Likes")
-            } else if(d == "n") {
-//                stack.setText(code: d, d: "Notifications")
-                stack.setText(code: d, d: "Inbox")
-            } else if(d == "o") {
-                stack.setText(code: d, d: "Order")
+            if(d == "pu") {
+                stack.setText(code: d, d: "Public") //Messages
+            } else if(d == "pr") {
+                stack.setText(code: d, d: "Private")
             }
-
         }
     }
     
@@ -343,14 +409,14 @@ class NotifyPanelView: PanelView{
         for d in tabDataList {
 //            let stack = UIView()
             
-            var stack: ScrollFeedHNotifyListCell?
+            var stack: ScrollFeedHResultListCell?
             
-            if(d == "dm") {
-                stack = ScrollFeedHNotifyChatListCell()
-            } else if(d == "n") {
-                stack = ScrollFeedHNotifyInboxListCell()
+            if(d == "pu") {
+                stack = ScrollFeedHResultLocationListCell()
+            } else if(d == "pr") {
+                stack = ScrollFeedHResultLocationListCell()
             } else {
-                stack = ScrollFeedHNotifyInboxListCell()
+                stack = ScrollFeedHResultLocationListCell()
             }
             guard let stack = stack else {
                 return
@@ -376,7 +442,7 @@ class NotifyPanelView: PanelView{
         
         let tabCount = tabDataList.count
         feedScrollView.contentSize = CGSize(width: viewWidth * CGFloat(tabCount), height: feedHeight)
-        print("notifypanel contentsize \(viewWidth * CGFloat(tabCount)), \(feedHeight)")
+        print("mefollowlistpanel contentsize \(viewWidth * CGFloat(tabCount)), \(feedHeight)")
     }
     
     var tabScrollGap = 0.0
@@ -390,14 +456,13 @@ class NotifyPanelView: PanelView{
             totalTabScrollXLead = stackviewUsableLength - tabList[tabList.count - 1].frame.width
         }
     }
-    
     func activateTabUI() {
         if(!self.tabList.isEmpty) {
             for l in self.tabList {
                 self.stackviewUsableLength += l.frame.width
             }
 //                        self.stackviewUsableLength += 10.0 //leading constraint on tabscrollview
-            print("notifypanel tabstack usablewidth \(self.stackviewUsableLength)")
+            print("mefollowlistpanel tabstack usablewidth \(self.stackviewUsableLength)")
             self.tabScrollView.contentSize = CGSize(width: self.stackviewUsableLength, height: 40)
 
             let tab = self.tabList[0]
@@ -405,10 +470,7 @@ class NotifyPanelView: PanelView{
             self.tabSelect.isHidden = false
         }
         self.measureTabScroll()
-        
-        self.reactToTabSectionChange(index: self.currentIndex) //test
     }
-    
     func asyncInit(id: String) {
         DataFetchManager.shared.fetchData(id: id) { [weak self]result in
             switch result {
@@ -416,7 +478,7 @@ class NotifyPanelView: PanelView{
 
                 //update UI on main thread
                 DispatchQueue.main.async {
-                    print("notifypanel init api success \(id), \(l)")
+                    print("mefollowlistpanel init api success \(id), \(l)")
 
                     guard let self = self else {
                         return
@@ -427,7 +489,7 @@ class NotifyPanelView: PanelView{
 //                            self.stackviewUsableLength += l.frame.width
 //                        }
 ////                        self.stackviewUsableLength += 10.0 //leading constraint on tabscrollview
-//                        print("notifypanel tabstack usablewidth \(self.stackviewUsableLength)")
+//                        print("mefollowlistpanel tabstack usablewidth \(self.stackviewUsableLength)")
 //                        self.tabScrollView.contentSize = CGSize(width: self.stackviewUsableLength, height: 40)
 //
 //                        let tab = self.tabList[0]
@@ -435,10 +497,8 @@ class NotifyPanelView: PanelView{
 //                        self.tabSelect.isHidden = false
 //                    }
 //                    self.measureTabScroll()
-//                    
-//                    self.reactToTabSectionChange(index: self.currentIndex) //test
                     
-                    //test > init tabscroll UI e.g. measure width
+//                    self.reactToTabSectionChange(index: self.currentIndex) //test
                     self.activateTabUI()
                     self.redrawUI()
                     
@@ -485,7 +545,7 @@ class NotifyPanelView: PanelView{
     
     //test > fetch data => temp fake data => try refresh data first
     func refreshFetchData() {
-        if(!feedList.isEmpty) {
+        if(!self.feedList.isEmpty) {
             let feed = feedList[currentIndex]
             feed.dataPaginateStatus = ""
             asyncFetchFeed(cell: feed, id: "notify_feed")
@@ -493,22 +553,22 @@ class NotifyPanelView: PanelView{
     }
     
     //test > tab section UI Change (hardcoded - to be fixed in future)
-    func reactToTabSectionChange(index: Int) {
-        
-        if(!self.tabList.isEmpty) {
-            var i = 0
-            for l in self.tabList {
-                if(i == currentIndex) {
-                    l.selectStack()
-                } else {
-                    l.unselectStack()
-                }
-                i += 1
-            }
-        }
-    }
+//    func reactToTabSectionChange(index: Int) {
+//
+//        if(!self.tabList.isEmpty) {
+//            var i = 0
+//            for l in self.tabList {
+//                if(i == currentIndex) {
+//                    l.selectStack()
+//                } else {
+//                    l.unselectStack()
+//                }
+//                i += 1
+//            }
+//        }
+//    }
     
-    func asyncFetchFeed(cell: ScrollFeedHNotifyListCell?, id: String) {
+    func asyncFetchFeed(cell: ScrollFeedHResultListCell?, id: String) {
 
         cell?.vDataList.removeAll()
         cell?.vCV?.reloadData()
@@ -527,19 +587,26 @@ class NotifyPanelView: PanelView{
 
                 //update UI on main thread
                 DispatchQueue.main.async {
-                    print("notifypanel api success \(id), \(l)")
+                    print("mefollowlistpanel api success \(id), \(l)")
 
                     guard let feed = cell else {
                         return
                     }
                     
+//                    feed.dataPaginateStatus = "fetch"
+                    
                     //test
                     feed.aSpinner.stopAnimating()
                     
-//                    feed.dataPaginateStatus = "fetch"
-                    
                     //test 1
 //                    feed.vDataList.append(contentsOf: l)
+//                    for i in l {
+//                        let postData = PostData()
+//                        postData.setDataType(data: i)
+//                        postData.setData(data: i)
+//                        postData.setTextString(data: i)
+//                        feed.vDataList.append(postData)
+//                    }
 //                    feed.vCV?.reloadData()
 
                     //*test 3 > reload only appended data, not entire dataset
@@ -547,7 +614,11 @@ class NotifyPanelView: PanelView{
                     var indexPaths = [IndexPath]()
                     var j = 1
                     for i in l {
-                        feed.vDataList.append(i)
+                        let postData = PostData()
+                        postData.setDataType(data: i)
+                        postData.setData(data: i)
+                        postData.setTextString(data: i)
+                        feed.vDataList.append(postData)
 
                         let idx = IndexPath(item: dataCount - 1 + j, section: 0)
                         indexPaths.append(idx)
@@ -562,13 +633,13 @@ class NotifyPanelView: PanelView{
                     if(l.isEmpty) {
                         print("postpanelscroll footer reuse configure")
                         feed.configureFooterUI(data: "na")
-                        feed.aaText.text = "Nothing has been posted yet."
+                        feed.aaText.text = "No location created yet."
                     }
                 }
 
                 case .failure(let error):
-                print("api fail")
                 DispatchQueue.main.async {
+                    print("api fail")
                     cell?.aSpinner.stopAnimating()
                     
                     cell?.configureFooterUI(data: "e")
@@ -578,7 +649,7 @@ class NotifyPanelView: PanelView{
         }
     }
 
-    func asyncPaginateFetchFeed(cell: ScrollFeedHNotifyListCell?, id: String) {
+    func asyncPaginateFetchFeed(cell: ScrollFeedHResultListCell?, id: String) {
 
         cell?.bSpinner.startAnimating()
 
@@ -591,7 +662,7 @@ class NotifyPanelView: PanelView{
 
                 //update UI on main thread
                 DispatchQueue.main.async {
-                    print("notifypanel api paginate success \(id), \(l), \(l.isEmpty)")
+                    print("mefollowlistpanel api paginate success \(id), \(l), \(l.isEmpty)")
 
                     guard let feed = cell else {
                         return
@@ -599,9 +670,10 @@ class NotifyPanelView: PanelView{
                     if(l.isEmpty) {
                         feed.dataPaginateStatus = "end"
                     }
+
                     //test
                     feed.bSpinner.stopAnimating()
-
+                    
                     //test 1
 //                    feed.vDataList.append(contentsOf: l)
 //                    feed.vCV?.reloadData()
@@ -611,7 +683,13 @@ class NotifyPanelView: PanelView{
                     var indexPaths = [IndexPath]()
                     var j = 1
                     for i in l {
-                        feed.vDataList.append(i)
+//                        feed.vDataList.append(i)
+                        
+                        let postData = PostData()
+                        postData.setDataType(data: i)
+                        postData.setData(data: i)
+                        postData.setTextString(data: i)
+                        feed.vDataList.append(postData)
 
                         let idx = IndexPath(item: dataCount - 1 + j, section: 0)
                         indexPaths.append(idx)
@@ -639,76 +717,43 @@ class NotifyPanelView: PanelView{
     }
     
     func asyncFetchSigninStatus() {
-        //test > simple get method
-        let isSignedIn = SignInManager.shared.getStatus()
-        if(self.isInitialized) {
-            if(self.isUserLoggedIn != isSignedIn) {
-                self.isUserLoggedIn = isSignedIn
-                
-                self.deconfigurePanel()
-        
-                self.isInitialized = false
-                self.initialize()
-            }
-            //test > recheck UI for aLoggedOut
-            else {
-                if(self.isUserLoggedIn) {
-                    self.aLoggedOutBox.isHidden = true
-                } else {
-                    self.aLoggedOutBox.isHidden = false
+        SignInManager.shared.fetchStatus(id: "fetch_status") { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    print("mefollowlistpanel api success: \(l)")
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    let isSignedIn = l
+                    
+                    if(self.isInitialized) {
+                        if(self.isUserLoggedIn != isSignedIn) {
+                            self.isUserLoggedIn = isSignedIn
+                            
+                            self.deconfigurePanel()
+                    
+                            self.isInitialized = false
+                            self.initializePanel()
+                        }
+                    } else {
+                        self.isUserLoggedIn = isSignedIn
+                        self.initializePanel()
+                    }
                 }
+
+                case .failure(_):
+                    print("api fail")
+                    break
             }
-        } else {
-            self.isUserLoggedIn = isSignedIn
-            self.initialize()
         }
-        
-        //old method by fetching
-//        SignInManager.shared.fetchStatus(id: "fetch_status") { [weak self]result in
-//            switch result {
-//                case .success(let l):
-//
-//                //update UI on main thread
-//                DispatchQueue.main.async {
-//                    print("notifypanelview api success: \(l)")
-//                    guard let self = self else {
-//                        return
-//                    }
-//                    
-//                    let isSignedIn = l
-//                    
-//                    if(self.isInitialized) {
-//                        if(self.isUserLoggedIn != isSignedIn) {
-//                            self.isUserLoggedIn = isSignedIn
-//                            
-//                            self.deconfigurePanel()
-//                    
-//                            self.isInitialized = false
-//                            self.initialize()
-//                        }
-//                        //test > recheck UI for aLoggedOut
-//                        else {
-//                            if(self.isUserLoggedIn) {
-//                                self.aLoggedOutBox.isHidden = true
-//                            } else {
-//                                self.aLoggedOutBox.isHidden = false
-//                            }
-//                        }
-//                    } else {
-//                        self.isUserLoggedIn = isSignedIn
-//                        self.initialize()
-//                    }
-//                }
-//
-//                case .failure(_):
-//                    print("api fail")
-//                    break
-//            }
-//        }
     }
 }
 
-extension NotifyPanelView: UIScrollViewDelegate {
+extension MeLocationListPanelView: UIScrollViewDelegate {
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         //test 3 > new scrollview method
@@ -732,6 +777,11 @@ extension NotifyPanelView: UIScrollViewDelegate {
                 }
             }
             currentTabSelectLeadingCons = xWidth
+            
+            //test** > scroll feedscroll to pan soundpanel to close
+            if(self.currentIndex == 0) {
+                self.currentPanelLeadingCons = self.panelLeadingCons!.constant
+            }
         }
         //*
     }
@@ -744,7 +794,7 @@ extension NotifyPanelView: UIScrollViewDelegate {
 
             if(!self.tabList.isEmpty) {
                 let currentItemIndex = tempCurrentIndex
-                let currentX = notifyPanel.frame.width * CGFloat(currentItemIndex)
+                let currentX = panel.frame.width * CGFloat(currentItemIndex)
                 let currentTabWidth = tabList[currentItemIndex].frame.width
                 var hOffsetX = 0.0
                 if(xOffset >= currentX) {
@@ -752,10 +802,10 @@ extension NotifyPanelView: UIScrollViewDelegate {
                     if(currentItemIndex < tabList.count - 1) {
                         nextTabWidth = tabList[currentItemIndex + 1].frame.width
                     }
-                    hOffsetX = (xOffset - currentX)/(notifyPanel.frame.width) * currentTabWidth + currentTabSelectLeadingCons
+                    hOffsetX = (xOffset - currentX)/(panel.frame.width) * currentTabWidth + currentTabSelectLeadingCons
                     tabSelectLeadingCons?.constant = hOffsetX
 
-                    let hWidth = (xOffset - currentX)/(notifyPanel.frame.width) * (nextTabWidth - currentTabWidth) + currentTabWidth
+                    let hWidth = (xOffset - currentX)/(panel.frame.width) * (nextTabWidth - currentTabWidth) + currentTabWidth
                     tabSelectWidthCons?.constant = hWidth
                 }
                 else if (xOffset < currentX) {
@@ -764,10 +814,10 @@ extension NotifyPanelView: UIScrollViewDelegate {
                         prevTabWidth = tabList[currentItemIndex - 1].frame.width
                     }
 
-                    hOffsetX = (xOffset - currentX)/(notifyPanel.frame.width) * prevTabWidth + currentTabSelectLeadingCons
+                    hOffsetX = (xOffset - currentX)/(panel.frame.width) * prevTabWidth + currentTabSelectLeadingCons
                     tabSelectLeadingCons?.constant = hOffsetX
 
-                    let hWidth = (xOffset - currentX)/(notifyPanel.frame.width) * (currentTabWidth - prevTabWidth) + currentTabWidth
+                    let hWidth = (xOffset - currentX)/(panel.frame.width) * (currentTabWidth - prevTabWidth) + currentTabWidth
                     tabSelectWidthCons?.constant = hWidth
                 }
                 
@@ -794,6 +844,18 @@ extension NotifyPanelView: UIScrollViewDelegate {
                     }
                 }
             }
+
+            //test** > scroll feedscroll to pan soundpanel to close
+            if(self.currentIndex == 0) {
+                if(!isToClosePanel) {
+                    var newX = self.currentPanelLeadingCons - xOffset
+                    if(newX < 0) {
+                        newX = 0
+                    }
+                    self.panelLeadingCons?.constant = newX
+                }
+            }
+            //**
         }
     }
 
@@ -801,16 +863,32 @@ extension NotifyPanelView: UIScrollViewDelegate {
         if(scrollView == feedScrollView) {
             let xOffset = scrollView.contentOffset.x
             let viewWidth = self.frame.width
-            print("notifypanel scroll decelerate \(xOffset), \(viewWidth)")
+            print("mefollowlistpanel scroll decelerate \(xOffset), \(viewWidth)")
             
             currentIndex = Int(xOffset/viewWidth)
 
-            reactToTabSectionChange(index: currentIndex)
+//            reactToTabSectionChange(index: currentIndex)
         }
     }
 
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-
+        if(scrollView == feedScrollView) {
+            let xOffset = scrollView.contentOffset.x
+            let viewWidth = self.frame.width
+            
+            if(self.currentIndex == 0) {
+                print("feedscrollview enddrag \(self.panelLeadingCons!.constant), \(self.currentPanelLeadingCons)")
+                if(self.panelLeadingCons!.constant - self.currentPanelLeadingCons < 75) {
+                    UIView.animate(withDuration: 0.2, animations: {
+                        self.panelLeadingCons?.constant = 0
+                        self.layoutIfNeeded()
+                    }, completion: { _ in
+                    })
+                } else {
+                    closePanel(isAnimated: true)
+                }
+            }
+        }
     }
 
     func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
@@ -821,7 +899,7 @@ extension NotifyPanelView: UIScrollViewDelegate {
             currentIndex = Int(xOffset/viewWidth)
             
             //test > change tab title font opacity when scrolled
-            reactToTabSectionChange(index: currentIndex)
+//            reactToTabSectionChange(index: currentIndex)
             
             //test > finalize current index tabselect margin and width
             var xWidth = 0.0
@@ -841,7 +919,7 @@ extension NotifyPanelView: UIScrollViewDelegate {
     }
 }
 
-extension NotifyPanelView: ScrollFeedCellDelegate {
+extension MeLocationListPanelView: ScrollFeedCellDelegate {
     func sfcWillBeginDragging(offsetY: CGFloat) {
 
     }
@@ -887,13 +965,13 @@ extension NotifyPanelView: ScrollFeedCellDelegate {
 
     func sfcDidClickVcvClickUser() {
         //test
-        delegate?.didNotifyClickUser()
+//        delegate?.didNotifyClickUser()
     }
     func sfcDidClickVcvClickPlace() {
-        delegate?.didNotifyClickPlace()
+        delegate?.didMeLocationClickLocation()
     }
     func sfcDidClickVcvClickSound() {
-        delegate?.didNotifyClickSound()
+//        delegate?.didNotifyClickSound()
     }
     func sfcDidClickVcvClickPost() {
 //        openPostDetail()
@@ -912,7 +990,7 @@ extension NotifyPanelView: ScrollFeedCellDelegate {
     func sfcAsyncPaginateFeed(cell: ScrollFeedCell?) {
         //test
         print("feedhresultlistcell real paginate async")
-        if let d = cell as? ScrollFeedHNotifyListCell {
+        if let d = cell as? ScrollFeedHResultListCell {
             if(isUserLoggedIn) {
                 self.asyncPaginateFetchFeed(cell: d, id: "notify_feed_end")
             }
@@ -929,7 +1007,7 @@ extension NotifyPanelView: ScrollFeedCellDelegate {
     }
 }
 
-extension NotifyPanelView: TabStackDelegate {
+extension MeLocationListPanelView: TabStackDelegate {
     func didClickTabStack(tabCode: String, isSelected: Bool) {
         if let index = tabDataList.firstIndex(of: tabCode) {
             print("tabstack index clicked: \(index), \(tabCode)")
@@ -947,21 +1025,11 @@ extension NotifyPanelView: TabStackDelegate {
 }
 
 //test
-extension ViewController: NotifyPanelDelegate{
-
-    func didNotifyClickUser() {
-        //test
-        openUserPanel()
-    }
-    func didNotifyClickPlace() {
+extension ViewController: MeLocationPanelDelegate{
+    func didMeLocationClickLocation(){
         openPlacePanel()
     }
-    func didNotifyClickSound() {
-        //test
-        openSoundPanel()
-    }
-    func didNotifyClickLogin() {
-        //test
-        openLoginPanel()
+    func didMeLocationClickClose() {
+        backPage(isCurrentPageScrollable: false)
     }
 }

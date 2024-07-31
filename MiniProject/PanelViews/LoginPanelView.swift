@@ -863,11 +863,11 @@ class LoginPanelView: PanelView{
 //        openUserCreatorPanel()
         
         resignResponder()
-        asyncSigninAccount(id: "sign_in")
+        asyncSigninAccount(id: "sign_in_facebook")
     }
     @objc func onLoginHProceedClicked(gesture: UITapGestureRecognizer) {
         resignResponder()
-        asyncSigninAccount(id: "sign_in")
+        asyncSigninAccount(id: "sign_in_google")
     }
     @objc func onLoginIProceedClicked(gesture: UITapGestureRecognizer) {
         reactToPanelModeChange(mode: PANEL_MODE_LOGIN_EMAIL)
@@ -983,6 +983,7 @@ class LoginPanelView: PanelView{
         panel.translatesAutoresizingMaskIntoConstraints = false
         panel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
         panel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
+        panel.initialize()
         panel.delegate = self
     }
     
@@ -1010,8 +1011,15 @@ class LoginPanelView: PanelView{
                 }
 
                 case .failure(let error):
+                DispatchQueue.main.async {
                     print("signin error : \(error)")
-                    break
+                
+                    guard let self = self else {
+                        return
+                    }
+                    self.closePanel(isAnimated: true)
+                }
+                break
             }
         }
     }

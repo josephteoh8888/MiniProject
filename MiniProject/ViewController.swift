@@ -214,6 +214,7 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
     let lSemiTransparentText = UILabel()
     let cSemiTransparentText = UILabel()
     let sSemiTransparentText = UILabel()
+    let uSemiGifImage = SDAnimatedImageView()
     
 //    let locationPinner = UIImageView()
 //    let locationPinner = UIView()
@@ -774,12 +775,12 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
 
 //        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
 //        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
-        var uSemiGifImage = SDAnimatedImageView()
+//        var uSemiGifImage = SDAnimatedImageView()
         uSemiGifImage.contentMode = .scaleAspectFill
         uSemiGifImage.layer.masksToBounds = true
         uSemiGifImage.layer.cornerRadius = 17
         uSemiGifImage.backgroundColor = .ddmDarkGreyColor
-        uSemiGifImage.sd_setImage(with: imageUrl)
+//        uSemiGifImage.sd_setImage(with: imageUrl)
 //        self.view.addSubview(semiGifImage)
 //        aSemiTransparentTextBox.addSubview(semiGifImage)
         uSemiGifImageOuter.addSubview(uSemiGifImage)
@@ -3160,15 +3161,135 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         pageList.append(panel)
     }
     
-//    func openUserCreatorPanel() {
-//        //test > use reusable method
-//        let panel = UserCreatorConsolePanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
-//        self.view.addSubview(panel)
-//        panel.translatesAutoresizingMaskIntoConstraints = false
-//        panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
-//        panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
-////        panel.delegate = self
-//    }
+    func openMeListPanel(l : String) {
+        
+        //test > use reusable method
+        if(l == "ep") {
+            nextPage(isNextPageScrollable: false)
+            
+            let panel = UserCreatorConsolePanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
+            self.view.addSubview(panel)
+            panel.translatesAutoresizingMaskIntoConstraints = false
+            panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
+            panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
+            panel.initializeEditMode()
+            panel.delegate = self
+            
+            pageList.append(panel)
+        }
+        else if(l == "fr") {
+            nextPage(isNextPageScrollable: false)
+
+            //test > use reusable method
+            let panel = MeFollowListPanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
+            self.view.addSubview(panel)
+            panel.translatesAutoresizingMaskIntoConstraints = false
+            panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
+            panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
+            panel.delegate = self
+            panel.initialize()
+            
+            pageList.append(panel)
+        }
+        else if(l == "l") {
+            nextPage(isNextPageScrollable: false)
+
+            //test > use reusable method
+            let panel = MeLikeListPanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
+            self.view.addSubview(panel)
+            panel.translatesAutoresizingMaskIntoConstraints = false
+            panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
+            panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
+            panel.delegate = self
+            panel.initialize()
+            
+            pageList.append(panel)
+        }
+        else if(l == "s") {
+            nextPage(isNextPageScrollable: false)
+
+            //test > use reusable method
+            let panel = MeBookmarkListPanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
+            self.view.addSubview(panel)
+            panel.translatesAutoresizingMaskIntoConstraints = false
+            panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
+            panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
+            panel.delegate = self
+            panel.initialize()
+            
+            pageList.append(panel)
+        }
+        else if(l == "h") {
+            nextPage(isNextPageScrollable: false)
+
+            //test > use reusable method
+            let panel = MeHistoryListPanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
+            self.view.addSubview(panel)
+            panel.translatesAutoresizingMaskIntoConstraints = false
+            panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
+            panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
+            panel.delegate = self
+            panel.initialize()
+            
+            pageList.append(panel)
+        }
+        else if(l == "lo") {
+            nextPage(isNextPageScrollable: false)
+
+            //test > use reusable method
+            let panel = MeLocationListPanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
+            self.view.addSubview(panel)
+            panel.translatesAutoresizingMaskIntoConstraints = false
+            panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
+            panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
+            panel.delegate = self
+            panel.initialize()
+            
+            pageList.append(panel)
+        }
+        else if(l == "a") {
+            nextPage(isNextPageScrollable: false)
+
+            //test > use reusable method
+            let panel = MePhotoListPanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
+            self.view.addSubview(panel)
+            panel.translatesAutoresizingMaskIntoConstraints = false
+            panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
+            panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
+            panel.delegate = self
+            panel.initialize()
+            
+            pageList.append(panel)
+        }
+        else if(l == "b") {
+            nextPage(isNextPageScrollable: false)
+
+            //test > use reusable method
+            let panel = MeVideoListPanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
+            self.view.addSubview(panel)
+            panel.translatesAutoresizingMaskIntoConstraints = false
+            panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
+            panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
+            panel.delegate = self
+            panel.initialize()
+            
+            pageList.append(panel)
+        }
+        else if(l == "c") {
+            nextPage(isNextPageScrollable: false)
+
+            //test > use reusable method
+            let panel = MePostListPanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
+            self.view.addSubview(panel)
+            panel.translatesAutoresizingMaskIntoConstraints = false
+            panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
+            panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
+            panel.delegate = self
+            panel.initialize()
+            
+            pageList.append(panel)
+        }
+    }
     
     func getSinglePlacePoint() {
         let id = "g"
@@ -4718,10 +4839,11 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         print("revert resume active 2 \(appMenuMode)")
         if(appMenuMode == "search") {
             searchPanel.isHidden = false
-            searchPanel.resumeActiveState()
-            if(isToRevertUIState) {
-                searchPanel.revertCellUIState()
-            }
+//            searchPanel.resumeActiveState()
+//            if(isToRevertUIState) {
+//                searchPanel.revertCellUIState()
+//            }
+            searchPanel.resumeActiveState(isToRevertUIState: isToRevertUIState) //uistate for video and photo
         } else if(appMenuMode == "notify") {
             notifyPanel.isHidden = false
             notifyPanel.resumeActiveState()

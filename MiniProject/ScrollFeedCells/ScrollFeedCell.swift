@@ -44,12 +44,16 @@ class ScrollFeedCell: UIView {
 //    var vDataList = [String]()
     var vCV : UICollectionView?
     let aSpinner = SpinLoader()
-    let bSpinner = SpinLoader()
-    let footerView = UIView()
-    let aaText = UILabel()
     var isInitialized = false
     var dataPaginateStatus = "" //test
     weak var aDelegate : ScrollFeedCellDelegate?
+    
+    //footer
+    let bSpinner = SpinLoader()
+    let footerView = UIView()
+    let aaText = UILabel()
+    let errorText = UILabel()
+    let errorRefreshBtn = UIView()
     
     //test
 //    var scrollFeedHeightCons: NSLayoutConstraint?
@@ -72,6 +76,10 @@ class ScrollFeedCell: UIView {
     func setCode(code: String) {
         feedCode = code
     }
+    
+    func configureFooterUI(data: String) {
+        
+    }
 }
 
 class ScrollDataFeedCell: ScrollFeedCell {
@@ -87,6 +95,9 @@ class ScrollPhotoDataFeedCell: ScrollFeedCell {
 class ScrollFeedHResultListCell: ScrollFeedCell {
 //    var vDataList = [String]()
     var vDataList = [PostData]()
+    
+    //test > additional delegate
+    weak var bDelegate : ScrollFeedHResultListCellDelegate?
 }
 
 class ScrollFeedHNotifyListCell: ScrollFeedCell {

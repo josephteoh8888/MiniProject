@@ -9,12 +9,18 @@ import Foundation
 import UIKit
 import GoogleMaps
 
+enum FetchDataError: Error {
+    case dataNotFound
+    case networkError
+    case invalidResponse
+}
+
 class DataFetchManager {
 
     static let shared = DataFetchManager()
     
     public var isPaginating = false
-//    func fetchData(id: String, pagination: Bool = false, completion: @escaping (Result<[String], Error>) -> Void) {
+
     func fetchData(id: String, completion: @escaping (Result<[String], Error>) -> Void) {
 //        if pagination {
 //            isPaginating = true
@@ -117,6 +123,67 @@ class DataFetchManager {
 //            if pagination {
 //                self.isPaginating = false
 //            }
+        })
+    }
+    
+    func fetchUserData(id: String, completion: @escaping (Result<[String], Error>) -> Void) {
+        DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s
+            var newData = [String]()
+            if(id == "u") { // "u" - success, "u_" - error
+                newData.append("a") //a - data available, b - suspended, c - deleted
+                completion(.success(newData))
+            }
+            else {
+                completion(.failure(FetchDataError.invalidResponse))
+            }
+        })
+    }
+    
+    func fetchPlaceData(id: String, completion: @escaping (Result<[String], Error>) -> Void) {
+        DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s
+            var newData = [String]()
+            if(id == "p") {
+                newData.append("a")
+                completion(.success(newData))
+            }
+            else {
+                completion(.failure(FetchDataError.invalidResponse))
+            }
+        })
+    }
+    
+    func fetchSoundData(id: String, completion: @escaping (Result<[String], Error>) -> Void) {
+        DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s
+            var newData = [String]()
+            if(id == "s") {
+                newData.append("a")
+                completion(.success(newData))
+            }
+            else {
+                completion(.failure(FetchDataError.invalidResponse))
+            }
+        })
+    }
+    
+    func fetchFeedData(id: String, isPaginate: Bool, completion: @escaping (Result<[String], Error>) -> Void) {
+        DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s
+            var newData = [String]()
+            
+            if(id == "post") {
+                if(isPaginate == false) {
+        
+                    newData.append("a")
+                    newData.append("b") //a
+                    newData.append("d") //a
+                    newData.append("c") //a
+                } else  {
+                    //post_feed_end
+                }
+                completion(.success(newData))
+            }
+            else {
+                completion(.failure(FetchDataError.invalidResponse))
+            }
         })
     }
     

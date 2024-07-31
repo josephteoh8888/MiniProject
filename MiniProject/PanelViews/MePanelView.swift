@@ -13,9 +13,22 @@ protocol MePanelDelegate : AnyObject {
 
     //test > connect to other panel
     func didMeClickUser()
+    func didMeClickEditProfile()
+    func didMeClickFollowList()
+    func didMeClickHistoryList()
+    func didMeClickBookmarkList()
+    func didMeClickLikeList()
+    func didMeClickAccountSettingList()
+    func didMeClickBaseList()
+    func didMeClickMultiLocationList()
+    func didMeClickMultiPostList()
+    func didMeClickMultiPhotoList()
+    func didMeClickMultiVideoList()
+    func didMeClickCommentList()
     func didMeClickLogin()
     func didMeStartSignout()
-    func didMeCompleteSignout()
+    func didMeSignoutSuccess()
+    func didMeSignoutFail()
 }
 
 class MePanelView: PanelView{
@@ -302,6 +315,9 @@ class MePanelView: PanelView{
 
     }
     @objc func onFollowClicked(gesture: UITapGestureRecognizer) {
+        
+        aLoggedOutBox.isHidden = true
+        
         delegate?.didMeClickLogin()
     }
     @objc func onProfileClicked(gesture: UITapGestureRecognizer) {
@@ -323,14 +339,10 @@ class MePanelView: PanelView{
             
             if(isUserLoggedIn) {
                 aLoggedOutBox.isHidden = true
-//                aLoggedOutTextBox.isHidden = true
-//                aLoggedInTextBox.isHidden = false
                 
                 self.asyncFetchFeed(id: "post_feed")
             } else {
                 aLoggedOutBox.isHidden = false
-//                aLoggedOutTextBox.isHidden = false
-//                aLoggedInTextBox.isHidden = true
             }
         }
         //test > check signin status
@@ -389,6 +401,7 @@ class MePanelView: PanelView{
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
                 cell.redrawUI()
+                cell.aDelegate = self
             } else if(l == "b") {
                 let cell = MultiLoopsMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
                 aHLightRect1.addSubview(cell)
@@ -398,6 +411,7 @@ class MePanelView: PanelView{
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
                 cell.redrawUI()
+                cell.aDelegate = self
             } else if(l == "c") {
                 let cell = MultiPostsMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
                 aHLightRect1.addSubview(cell)
@@ -407,6 +421,7 @@ class MePanelView: PanelView{
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
                 cell.redrawUI()
+                cell.aDelegate = self
             } else if(l == "co") {
                 let cell = MultiCommentsMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
                 aHLightRect1.addSubview(cell)
@@ -416,6 +431,7 @@ class MePanelView: PanelView{
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
                 cell.redrawUI()
+                cell.aDelegate = self
             } else if(l == "h") {
                 let cell = HistoryMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
                 aHLightRect1.addSubview(cell)
@@ -425,6 +441,7 @@ class MePanelView: PanelView{
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
                 cell.redrawUI()
+                cell.aDelegate = self
             } else if(l == "l") {
                 let cell = LikeMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
                 aHLightRect1.addSubview(cell)
@@ -434,6 +451,7 @@ class MePanelView: PanelView{
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
                 cell.redrawUI()
+                cell.aDelegate = self
             } else if(l == "s") {
                 let cell = BookmarkMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
                 aHLightRect1.addSubview(cell)
@@ -443,6 +461,7 @@ class MePanelView: PanelView{
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
                 cell.redrawUI()
+                cell.aDelegate = self
             } else if(l == "as") {
                 let cell = AccountMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
                 aHLightRect1.addSubview(cell)
@@ -452,6 +471,7 @@ class MePanelView: PanelView{
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
                 cell.redrawUI()
+                cell.aDelegate = self
             } else if(l == "ba") {
                 let cell = BaseMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
                 aHLightRect1.addSubview(cell)
@@ -461,6 +481,7 @@ class MePanelView: PanelView{
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
                 cell.redrawUI()
+                cell.aDelegate = self
             } else if(l == "ep") {
                 let cell = EditProfileMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
                 aHLightRect1.addSubview(cell)
@@ -470,15 +491,7 @@ class MePanelView: PanelView{
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
                 cell.redrawUI()
-            } else if(l == "f") {
-                let cell = FollowingMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
-                aHLightRect1.addSubview(cell)
-                cell.translatesAutoresizingMaskIntoConstraints = false
-                cell.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
-                cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
-                cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
-                cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-                cell.redrawUI()
+                cell.aDelegate = self
             } else if(l == "fr") {
                 let cell = FollowerMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
                 aHLightRect1.addSubview(cell)
@@ -488,6 +501,7 @@ class MePanelView: PanelView{
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
                 cell.redrawUI()
+                cell.aDelegate = self
             } else if(l == "lo") {
                 let cell = LocationMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
                 aHLightRect1.addSubview(cell)
@@ -497,6 +511,7 @@ class MePanelView: PanelView{
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
                 cell.redrawUI()
+                cell.aDelegate = self
             } else if(l == "pme") {
                 let cell = ProfileMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
                 aHLightRect1.addSubview(cell)
@@ -588,7 +603,7 @@ class MePanelView: PanelView{
                     self.aHLightDataArray.append("b")
                     self.aHLightDataArray.append("c")
                     self.aHLightDataArray.append("lo")
-                    self.aHLightDataArray.append("co")
+//                    self.aHLightDataArray.append("co")
                     self.aHLightDataArray.append("so")
                     self.configureMeCell()
                     
@@ -633,50 +648,94 @@ class MePanelView: PanelView{
                     }
                     
                     //test > remove signout progress view
-                    self.delegate?.didMeCompleteSignout()
+                    self.delegate?.didMeSignoutSuccess()
                 }
 
                 case .failure(_):
-                    print("api fail")
-                    break
+                
+                DispatchQueue.main.async {
+                    print("mepanel signout api fail \(id)")
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    //test > remove signout progress view
+                    self.delegate?.didMeSignoutFail()
+                }
+                    
+                break
             }
         }
     }
     
     func asyncFetchSigninStatus() {
-        SignInManager.shared.fetchStatus(id: "fetch_status") { [weak self]result in
-            switch result {
-                case .success(let l):
-
-                //update UI on main thread
-                DispatchQueue.main.async {
-                    print("mepanelview api success: \(l)")
-                    guard let self = self else {
-                        return
-                    }
-                    
-                    let isSignedIn = l
-                    
-                    if(self.isInitialized) {
-                        if(self.isUserLoggedIn != isSignedIn) {
-                            self.isUserLoggedIn = isSignedIn
-                            
-                            self.deconfigureMeCell()
-                    
-                            self.isInitialized = false
-                            self.initialize()
-                        }
-                    } else {
-                        self.isUserLoggedIn = isSignedIn
-                        self.initialize()
-                    }
-                }
-
-                case .failure(_):
-                    print("api fail")
-                    break
+        //test > simple get method
+        let isSignedIn = SignInManager.shared.getStatus()
+        if(self.isInitialized) {
+            if(self.isUserLoggedIn != isSignedIn) {
+                self.isUserLoggedIn = isSignedIn
+                
+                self.deconfigureMeCell()
+        
+                self.isInitialized = false
+                self.initialize()
             }
+            //test > recheck UI for aLoggedOut
+            else {
+                if(self.isUserLoggedIn) {
+                    self.aLoggedOutBox.isHidden = true
+                } else {
+                    self.aLoggedOutBox.isHidden = false
+                }
+            }
+        } else {
+            self.isUserLoggedIn = isSignedIn
+            self.initialize()
         }
+        
+        //old method by fetching
+//        SignInManager.shared.fetchStatus(id: "fetch_status") { [weak self]result in
+//            switch result {
+//                case .success(let l):
+//
+//                //update UI on main thread
+//                DispatchQueue.main.async {
+//                    print("mepanelview api success: \(l)")
+//                    guard let self = self else {
+//                        return
+//                    }
+//                    
+//                    let isSignedIn = l
+//                    
+//                    if(self.isInitialized) {
+//                        if(self.isUserLoggedIn != isSignedIn) {
+//                            self.isUserLoggedIn = isSignedIn
+//                            
+//                            self.deconfigureMeCell()
+//                    
+//                            self.isInitialized = false
+//                            self.initialize()
+//                        } 
+//                        //test > recheck UI for aLoggedOut
+//                        else {
+//                            if(self.isUserLoggedIn) {
+//                                self.aLoggedOutBox.isHidden = true
+//                            } else {
+//                                self.aLoggedOutBox.isHidden = false
+//                            }
+//                        }
+//                    } else {
+//                        self.isUserLoggedIn = isSignedIn
+//                        self.initialize()
+//                    }
+//                }
+//
+//                case .failure(_):
+//                    print("api fail")
+//                    break
+//            }
+//        }
     }
 }
 
@@ -732,7 +791,42 @@ extension MePanelView: MeCellDelegate{
     func didMeCellClickSignout() {
         asyncSignoutAccount(id: "sign_out")
     }
-    
+    func didMeCellClickBase() {
+        delegate?.didMeClickBaseList()
+    }
+    func didMeCellClickEditProfile() {
+        delegate?.didMeClickEditProfile()
+    }
+    func didMeCellClickAccountSetting(){
+        delegate?.didMeClickAccountSettingList()
+    }
+    func didMeCellClickFollow(){
+        delegate?.didMeClickFollowList()
+    }
+    func didMeCellClickHistory(){
+        delegate?.didMeClickHistoryList()
+    }
+    func didMeCellClickLike(){
+        delegate?.didMeClickLikeList()
+    }
+    func didMeCellClickBookmark(){
+        delegate?.didMeClickBookmarkList()
+    }
+    func didMeCellClickLocations(){
+        delegate?.didMeClickMultiLocationList()
+    }
+    func didMeCellClickComments(){
+        delegate?.didMeClickCommentList()
+    }
+    func didMeCellClickPosts(){
+        delegate?.didMeClickMultiPostList()
+    }
+    func didMeCellClickPhotos(){
+        delegate?.didMeClickMultiPhotoList()
+    }
+    func didMeCellClickVideos(){
+        delegate?.didMeClickMultiVideoList()
+    }
     func didMeCellClickUser() {
         delegate?.didMeClickUser()
     }
@@ -743,6 +837,42 @@ extension ViewController: MePanelDelegate{
     func didMeClickUser() {
         openUserPanel()
     }
+    func didMeClickEditProfile(){
+        openMeListPanel(l: "ep")
+    }
+    func didMeClickFollowList(){
+        openMeListPanel(l: "fr")
+    }
+    func didMeClickHistoryList(){
+        openMeListPanel(l: "h")
+    }
+    func didMeClickBookmarkList(){
+        openMeListPanel(l: "s")
+    }
+    func didMeClickLikeList(){
+        openMeListPanel(l: "l")
+    }
+    func didMeClickAccountSettingList(){
+        //real identity verification
+    }
+    func didMeClickBaseList(){
+        
+    }
+    func didMeClickMultiLocationList(){
+        openMeListPanel(l: "lo")
+    }
+    func didMeClickMultiPostList(){
+        openMeListPanel(l: "c")
+    }
+    func didMeClickMultiPhotoList(){
+        openMeListPanel(l: "a")
+    }
+    func didMeClickMultiVideoList(){
+        openMeListPanel(l: "b")
+    }
+    func didMeClickCommentList(){
+        
+    }
     func didMeClickLogin() {
         openLoginPanel()
     }
@@ -750,7 +880,10 @@ extension ViewController: MePanelDelegate{
     func didMeStartSignout() {
         openSignoutProgressPanel()
     }
-    func didMeCompleteSignout() {
+    func didMeSignoutSuccess() {
+        signoutProgressPanel?.closePanel(isAnimated: true)
+    }
+    func didMeSignoutFail() {
         signoutProgressPanel?.closePanel(isAnimated: true)
     }
 }

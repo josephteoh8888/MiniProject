@@ -107,6 +107,29 @@ class ScrollFeedGridPhoto2xViewCell: ScrollDataFeedCell {
     override func setShowVerticalScroll(isShowVertical: Bool) {
         vCV?.showsVerticalScrollIndicator = isShowVertical
     }
+    
+    //test > footer error handling for refresh feed
+    @objc func onErrorRefreshClicked(gesture: UITapGestureRecognizer) {
+        print("error refresh clicked")
+    }
+    
+    override func configureFooterUI(data: String) {
+        aaText.text = ""
+        errorText.text = ""
+        errorRefreshBtn.isHidden = true
+        
+        if(data == "end") {
+            aaText.text = "End"
+        }
+        else if(data == "e") {
+            errorText.text = "Something went wrong. Try again"
+            errorRefreshBtn.isHidden = false
+        }
+        else if(data == "na") {
+//            aaText.text = "User has not posted any."
+            //removed, text to be customized at panelview level
+        }
+    }
 }
 
 extension ScrollFeedGridPhoto2xViewCell: UICollectionViewDelegateFlowLayout {
@@ -167,7 +190,7 @@ extension ScrollFeedGridPhoto2xViewCell: UICollectionViewDelegateFlowLayout {
             let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "footer", for: indexPath)
 //            footer.addSubview(footerView)
             
-            footerView.frame = CGRect(x: 0, y: 0, width: collectionView.frame.width, height: 50)
+            footerView.frame = CGRect(x: 0, y: 0, width: collectionView.frame.width, height: 100)
 //            footerView.backgroundColor = .ddmDarkColor
 //            footerView.backgroundColor = .blue
             footer.addSubview(footerView)
@@ -179,23 +202,59 @@ extension ScrollFeedGridPhoto2xViewCell: UICollectionViewDelegateFlowLayout {
             footerView.addSubview(aaText)
             aaText.clipsToBounds = true
             aaText.translatesAutoresizingMaskIntoConstraints = false
-            aaText.centerYAnchor.constraint(equalTo: footerView.centerYAnchor, constant: 0).isActive = true
+//            aaText.centerYAnchor.constraint(equalTo: footerView.centerYAnchor, constant: 0).isActive = true
+            aaText.topAnchor.constraint(equalTo: footerView.topAnchor, constant: 20).isActive = true
             aaText.centerXAnchor.constraint(equalTo: footerView.centerXAnchor, constant: 0).isActive = true
             aaText.layer.opacity = 0.5
-            if(dataPaginateStatus == "end") {
-                aaText.text = "End"
-            } else {
-                aaText.text = ""
-            }
+//            if(dataPaginateStatus == "end") {
+//                aaText.text = "End"
+//            } else {
+//                aaText.text = ""
+//            }
 
             bSpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
             footer.addSubview(bSpinner)
             bSpinner.translatesAutoresizingMaskIntoConstraints = false
-            bSpinner.centerYAnchor.constraint(equalTo: footer.centerYAnchor).isActive = true
+//            bSpinner.centerYAnchor.constraint(equalTo: footer.centerYAnchor).isActive = true
+            bSpinner.topAnchor.constraint(equalTo: footer.topAnchor, constant: 20).isActive = true
             bSpinner.centerXAnchor.constraint(equalTo: footer.centerXAnchor).isActive = true
             bSpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
             bSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
 //            bSpinner.isHidden = true
+            
+            //test > error handling
+            errorText.textAlignment = .center //left
+            errorText.textColor = .white
+            errorText.font = .systemFont(ofSize: 13)
+            footerView.addSubview(errorText)
+            errorText.clipsToBounds = true
+            errorText.translatesAutoresizingMaskIntoConstraints = false
+//            errorText.centerYAnchor.constraint(equalTo: footerView.centerYAnchor, constant: 0).isActive = true
+            errorText.topAnchor.constraint(equalTo: footerView.topAnchor, constant: 20).isActive = true
+            errorText.centerXAnchor.constraint(equalTo: footerView.centerXAnchor, constant: 0).isActive = true
+            errorText.text = ""
+            
+            errorRefreshBtn.backgroundColor = .ddmDarkColor //test to remove color
+            footerView.addSubview(errorRefreshBtn)
+            errorRefreshBtn.translatesAutoresizingMaskIntoConstraints = false
+            errorRefreshBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true //ori: 40
+            errorRefreshBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
+            errorRefreshBtn.centerXAnchor.constraint(equalTo: footerView.centerXAnchor).isActive = true
+            errorRefreshBtn.topAnchor.constraint(equalTo: errorText.bottomAnchor, constant: 10).isActive = true
+            errorRefreshBtn.layer.cornerRadius = 20
+            errorRefreshBtn.isUserInteractionEnabled = true
+            errorRefreshBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onErrorRefreshClicked)))
+            errorRefreshBtn.isHidden = true
+            
+            let bMiniBtn = UIImageView(image: UIImage(named:"icon_round_refresh")?.withRenderingMode(.alwaysTemplate))
+    //        bMiniBtn.tintColor = .black
+            bMiniBtn.tintColor = .white
+            errorRefreshBtn.addSubview(bMiniBtn)
+            bMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+            bMiniBtn.centerXAnchor.constraint(equalTo: errorRefreshBtn.centerXAnchor).isActive = true
+            bMiniBtn.centerYAnchor.constraint(equalTo: errorRefreshBtn.centerYAnchor).isActive = true
+            bMiniBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
+            bMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
             
             return footer
         default:
@@ -205,7 +264,7 @@ extension ScrollFeedGridPhoto2xViewCell: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
         print("postpanel referencesize: \(section)")
-        return CGSize(width: collectionView.bounds.size.width, height: 50)
+        return CGSize(width: collectionView.bounds.size.width, height: 100)
         
     }
 }

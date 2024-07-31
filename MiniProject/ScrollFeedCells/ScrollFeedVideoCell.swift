@@ -67,11 +67,10 @@ class ScrollFeedVideoCell: UIView {
 
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
-        layout.itemSize = CGSize(width: self.frame.size.width, height: self.frame.size.height)
+//        layout.itemSize = CGSize(width: self.frame.size.width, height: self.frame.size.height)
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         layout.minimumInteritemSpacing = 0
         layout.minimumLineSpacing = 0
-//        let videoCV = UICollectionView(frame: .zero, collectionViewLayout: layout)
         videoCV = UICollectionView(frame: .zero, collectionViewLayout: layout)
         guard let videoCV = videoCV else {
             return
