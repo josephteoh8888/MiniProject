@@ -186,6 +186,48 @@ class DataFetchManager {
             }
         })
     }
+    func fetchCommentFeedData(id: String, isPaginate: Bool, completion: @escaping (Result<[String], Error>) -> Void) {
+        DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s
+            var newData = [String]()
+            
+            if(id == "comment") {
+                if(isPaginate == false) {
+        
+                    newData.append("a")
+                    newData.append("b") //a
+                    newData.append("c") //a
+                } else  {
+                    //post_feed_end
+                }
+                completion(.success(newData))
+            }
+            else {
+                completion(.failure(FetchDataError.invalidResponse))
+            }
+        })
+    }
+    func fetchVideoData(id: String, isPaginate: Bool, completion: @escaping (Result<[String], Error>) -> Void) {
+        DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s
+            var newData = [String]()
+            
+            if(id == "video") {
+                if(isPaginate == false) {
+        
+                    newData.append("a")
+                    newData.append("a") //a
+                    newData.append("a") //a
+                    newData.append("a") //a
+                } else  {
+                    //video_feed_end
+//                    newData.append("a") 
+                }
+                completion(.success(newData))
+            }
+            else {
+                completion(.failure(FetchDataError.invalidResponse))
+            }
+        })
+    }
     
     //test > send data for uploading posts
     func sendData(id: String, completion: @escaping (Result<[String], Error>) -> Void) {

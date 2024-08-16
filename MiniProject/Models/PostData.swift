@@ -14,6 +14,8 @@ class BaseData {
 //    var dataCount = [String: Int]()
     var dataCount : [String: Int] = ["love": 0, "comment": 0, "bookmark": 0, "share": 0]
     
+    var chainDataArray = [String]() //for comment chaining
+    
     //test > to indicate hide/unhide in grid3x panels
     var isGridHidden = false
     func setGridHidden(toHide: Bool) {
@@ -43,8 +45,10 @@ class PostData: BaseData {
             dataArray.append("q") //text
 //            dataArray.append("q") //photo
 //            dataArray.append("q") //quote
-            dataArray.append("c") //comment
-            dataArray.append("c") //comment
+            
+//            dataArray.append("c") //comment
+//            dataArray.append("c") //comment
+            
 //            dataArray.append("c") //comment
         }
         else if(data == "b") {
@@ -57,7 +61,8 @@ class PostData: BaseData {
 //            dataArray.append("t")
             dataArray.append("p") //photo
             dataArray.append("q") //quote
-            dataArray.append("c") //comment
+            
+//            dataArray.append("c") //comment
         }
         else if(data == "d") {
             dataArray.append("t") //text
@@ -66,8 +71,26 @@ class PostData: BaseData {
             dataArray.append("t") //text
         }
         
+        //test > populate chaining comments
+        setChainData(data: data)
+        
         //test > populate data counts too
         setDataCount(data: data)
+    }
+    
+    func setChainData(data: String){
+        if(data == "a") {
+            chainDataArray.append("c") //comment
+            chainDataArray.append("c") //comment
+            chainDataArray.append("c") //comment
+//            chainDataArray.append("c") //comment
+        }
+        else if(data == "b") {
+            
+        }
+        else if(data == "c") {
+            chainDataArray.append("c") //comment
+        }
     }
     
     func setTextString(data: String) {
@@ -213,6 +236,12 @@ class VideoData: BaseData {
 //            dataArray.append("t") //text
 //            dataArray.append("c") //comment
         }
+        else if(data == "d") {
+            dataArray.append("d") //photo
+        }
+        else if(data == "e") {
+            dataArray.append("e") //photo
+        }
         
         //test > populate data counts too
         setDataCount(data: data)
@@ -229,7 +258,13 @@ class VideoData: BaseData {
             dataTextString = "往年的这个时候，iPhone 虽然也是位列销量榜榜首，但那都是上一代的旧机型呀...\n只能说这次 11.11 各家给的优惠都太给力了."
         }
         else if(data == "c") {
-            dataTextString = "Vấn đề đã rõ, đã chín, được thực tiễn chứng minh là đúng, thực hiện hiệu quả, đa số đồng tình thì tiếp tục thực hiện"
+            dataTextString = "End"
+        }
+        else if(data == "d") {
+            dataTextString = "No results"
+        }
+        else if(data == "e") {
+            dataTextString = "Something went wrong. Try again."
         }
     }
     
@@ -266,7 +301,7 @@ class VideoData: BaseData {
 }
 
 class CommentData: BaseData {
-
+    
     func setDataType(data: String) {
         dataType = data
     }
@@ -279,8 +314,10 @@ class CommentData: BaseData {
 //            dataArray.append("q") //text
 //            dataArray.append("q") //photo
 //            dataArray.append("q") //quote
-            dataArray.append("c") //comment
-            dataArray.append("c") //comment
+            
+//            dataArray.append("c") //comment
+//            dataArray.append("c") //comment
+            
 //            dataArray.append("c") //comment
         }
         else if(data == "b") {
@@ -291,11 +328,30 @@ class CommentData: BaseData {
             dataArray.append("t")
 //            dataArray.append("p") //photo
 //            dataArray.append("q") //quote
-            dataArray.append("c") //comment
+            
+//            dataArray.append("c") //comment
         }
+        
+        //test > populate chaining comments
+        setChainData(data: data)
         
         //test > populate data counts too
         setDataCount(data: data)
+    }
+    
+    func setChainData(data: String){
+        if(data == "a") {
+            chainDataArray.append("c") //comment
+            chainDataArray.append("c") //comment
+            chainDataArray.append("c") //comment
+            chainDataArray.append("c") //comment
+        }
+        else if(data == "b") {
+            
+        }
+        else if(data == "c") {
+            chainDataArray.append("c") //comment
+        }
     }
     
     func setTextString(data: String) {

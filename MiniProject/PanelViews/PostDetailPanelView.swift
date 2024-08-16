@@ -39,6 +39,8 @@ class PostDetailPanelView: PanelView {
     var dataFetchState = ""
     var dataPaginateStatus = "" //test
     var pageNumber = 0
+    let errorText = UILabel()
+    let errorRefreshBtn = UIView()
     
     weak var delegate : PostDetailPanelDelegate?
     
@@ -434,14 +436,26 @@ class PostDetailPanelView: PanelView {
                         return
                     }
                     
-                    //test 2 > new append method
+                    //test 1
                     let postData = PostData()
                     postData.setDataType(data: "d") //"b"
                     postData.setData(data: "d")
                     postData.setTextString(data: "d")
                     self.vcDataList.append(postData)
-                    
                     self.postCV?.reloadData()
+                    
+                    //test 2 > new append method
+//                    var indexPaths = [IndexPath]()
+//                    
+//                    let postData = PostData()
+//                    postData.setDataType(data: "d") //"b"
+//                    postData.setData(data: "d")
+//                    postData.setTextString(data: "d")
+//                    self.vcDataList.append(postData)
+//                    
+//                    let idx = IndexPath(item: 0, section: 0)
+//                    indexPaths.append(idx)
+//                    self.postCV?.insertItems(at: indexPaths)
                     
                     self.aSpinner.stopAnimating()
 
@@ -459,35 +473,27 @@ class PostDetailPanelView: PanelView {
     func asyncFetchFeed(id: String) {
         print("pdpv asyncfetch")
         dataFetchState = "start"
-//        aSpinner.startAnimating()
         bSpinner.startAnimating()
         
-        //test > adjust contentInset to y = 50 to move cv downward to accomodate spinner
-//        self.adjustContentInset(topInset: CGFloat(50), bottomInset: CGFloat(50))
-        
-        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+        let id_ = "post_"
+        let isPaginate = false
+        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
                 //update UI on main thread
                 DispatchQueue.main.async {
-                    print("api success \(id), \(l)")
+                    print("pdpv api success \(id), \(l)")
                     
                     guard let self = self else {
                         return
                     }
                     
-//                    self.vcDataList.removeAll() //test > refresh dataset
+                    //test
+                    self.bSpinner.stopAnimating()
                     
-                    //test 2 > new append method
-//                    for i in l {
-//                        let postData = PostData()
-//                        postData.setDataType(data: i)
-//                        postData.setData(data: i)
-//                        postData.setTextString(data: i)
-//                        self.vcDataList.append(postData)
-//                    }
-//                    self.postCV?.reloadData()
+                    self.dataFetchState = "end"
                     
                     //*test 3 > reload only appended data, not entire dataset
                     let dataCount = self.vcDataList.count
@@ -506,20 +512,22 @@ class PostDetailPanelView: PanelView {
                     }
                     self.postCV?.insertItems(at: indexPaths)
                     //*
-                    
+
                     //test
-//                    self.aSpinner.stopAnimating()
-                    self.bSpinner.stopAnimating()
-                    
-                    //test > animate cv back to y = 0 by contentOffset then only adjust contentInset after animate
-//                    self.adjustContentOffset(x: 0, y: 0, animated: true)
-                    
-                    self.dataFetchState = "end"
+                    if(l.isEmpty) {
+                        self.configureFooterUI(data: "na")
+                        self.aaText.text = "No comments yet."
+                    }
                 }
 
-                case .failure(_):
-                    print("api fail")
-                    break
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    print("pdpv fail fetch \(error)")
+                    self?.bSpinner.stopAnimating()
+                    
+                    self?.configureFooterUI(data: "e")
+                }
+                break
             }
         }
     }
@@ -530,37 +538,27 @@ class PostDetailPanelView: PanelView {
         
         pageNumber += 1
         
-        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+        let id_ = "post"
+        let isPaginate = true
+        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
                 //update UI on main thread
                 DispatchQueue.main.async {
-                    print("api success \(id), \(l), \(l.isEmpty)")
+                    print("pdpv api success \(id), \(l), \(l.isEmpty)")
                     
                     guard let self = self else {
                         return
                     }
                     
                     if(l.isEmpty) {
-//                        self.footerView.isHidden = false
-//                        self.aaText.text = "- End -"
                         self.dataPaginateStatus = "end"
                     }
                     
-                    //test 1
-//                    self.vcDataList.append(contentsOf: l)
-                    
-                    //test 2 > new append method
-//                    for i in l {
-//                        let postData = PostData()
-//                        postData.setDataType(data: i)
-//                        postData.setData(data: i)
-//                        postData.setTextString(data: i)
-//                        self.vcDataList.append(postData)
-//                    }
-//
-//                    self.postCV?.reloadData()
+                    //test
+                    self.bSpinner.stopAnimating()
                     
                     //*test 3 > reload only appended data, not entire dataset
                     let dataCount = self.vcDataList.count
@@ -581,16 +579,72 @@ class PostDetailPanelView: PanelView {
                     //*
                     
                     //test
-                    self.bSpinner.stopAnimating()
-//                    self.bSpinner.isHidden = true
-
+                    if(l.isEmpty) {
+                        self.configureFooterUI(data: "end")
+                    }
                 }
 
-                case .failure(_):
-                    print("api fail")
-                    break
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    print("pdpv api fail")
+                    self?.bSpinner.stopAnimating()
+                    
+                    self?.configureFooterUI(data: "e")
+                }
+                break
             }
         }
+    }
+    
+    //test > fetch data => temp fake data => try refresh data first
+    func refreshFetchData() {
+        if(self.vcDataList.count > 1) {
+            let dataCount = self.vcDataList.count
+            var indexPaths = [IndexPath]()
+            let endIndex = dataCount - 1
+            for i in 1...endIndex { //loop from 1 to endindex
+                let idx = IndexPath(item: i, section: 0)
+                indexPaths.append(idx)
+            }
+            self.vcDataList.removeSubrange(1..<endIndex + 1) //remove element from 1 to endindex
+            self.postCV?.deleteItems(at: indexPaths)
+        }
+        configureFooterUI(data: "")
+        
+        dataFetchState = ""
+        dataPaginateStatus = ""
+        self.asyncFetchFeed(id: "comment_feed")
+    }
+    
+    //test > footer error handling for refresh feed
+    @objc func onErrorRefreshClicked(gesture: UITapGestureRecognizer) {
+        print("error refresh clicked")
+        refreshFetchData()
+    }
+    
+    var footerState = ""
+    var footerAaText = ""
+    func setFooterAaText(text: String) {
+        footerAaText = text
+    }
+    func configureFooterUI(data: String) {
+        aaText.text = ""
+        errorText.text = ""
+        errorRefreshBtn.isHidden = true
+        
+        if(data == "end") {
+            aaText.text = "End"
+        }
+        else if(data == "e") {
+            errorText.text = "Unable to load comments. Try again"
+            errorRefreshBtn.isHidden = false
+        }
+        else if(data == "na") {
+            aaText.text = footerAaText
+            //removed, text to be customized at panelview level
+        }
+        
+        footerState = data
     }
     
     //test > sticky header title animation when scroll up and down
@@ -1057,9 +1111,9 @@ extension PostDetailPanelView: UICollectionViewDelegateFlowLayout {
             let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "footer", for: indexPath)
 //            footer.addSubview(footerView)
             
-            footerView.frame = CGRect(x: 0, y: 0, width: collectionView.frame.width, height: 50)
+            footerView.frame = CGRect(x: 0, y: 0, width: collectionView.frame.width, height: 100)
 //            footerView.backgroundColor = .ddmDarkColor
-//            footerView.backgroundColor = .blue
+//            footerView.backgroundColor = .blue //blue
             footer.addSubview(footerView)
 //            footerView.isHidden = true
 
@@ -1069,23 +1123,62 @@ extension PostDetailPanelView: UICollectionViewDelegateFlowLayout {
             footerView.addSubview(aaText)
             aaText.clipsToBounds = true
             aaText.translatesAutoresizingMaskIntoConstraints = false
-            aaText.centerYAnchor.constraint(equalTo: footerView.centerYAnchor, constant: 0).isActive = true
+//            aaText.centerYAnchor.constraint(equalTo: footerView.centerYAnchor, constant: 0).isActive = true
+            aaText.topAnchor.constraint(equalTo: footerView.topAnchor, constant: 20).isActive = true
             aaText.centerXAnchor.constraint(equalTo: footerView.centerXAnchor, constant: 0).isActive = true
             aaText.layer.opacity = 0.5
-            if(dataPaginateStatus == "end") {
-                aaText.text = "End"
-            } else {
-                aaText.text = ""
-            }
+//            if(dataPaginateStatus == "end") {
+//                aaText.text = "End"
+//            } else {
+//                aaText.text = ""
+//            }
             
             bSpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
             footer.addSubview(bSpinner)
             bSpinner.translatesAutoresizingMaskIntoConstraints = false
-            bSpinner.centerYAnchor.constraint(equalTo: footer.centerYAnchor).isActive = true
+//            bSpinner.centerYAnchor.constraint(equalTo: footer.centerYAnchor).isActive = true
+            bSpinner.topAnchor.constraint(equalTo: footer.topAnchor, constant: 20).isActive = true
             bSpinner.centerXAnchor.constraint(equalTo: footer.centerXAnchor).isActive = true
             bSpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
             bSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
 //            bSpinner.isHidden = true
+            
+            //test > error handling
+            errorText.textAlignment = .center //left
+            errorText.textColor = .white
+            errorText.font = .systemFont(ofSize: 13)
+            footerView.addSubview(errorText)
+            errorText.clipsToBounds = true
+            errorText.translatesAutoresizingMaskIntoConstraints = false
+//            errorText.centerYAnchor.constraint(equalTo: footerView.centerYAnchor, constant: 0).isActive = true
+            errorText.topAnchor.constraint(equalTo: footerView.topAnchor, constant: 20).isActive = true
+            errorText.centerXAnchor.constraint(equalTo: footerView.centerXAnchor, constant: 0).isActive = true
+            errorText.text = ""
+            
+            errorRefreshBtn.backgroundColor = .ddmDarkColor //test to remove color
+            footerView.addSubview(errorRefreshBtn)
+            errorRefreshBtn.translatesAutoresizingMaskIntoConstraints = false
+            errorRefreshBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true //ori: 40
+            errorRefreshBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
+            errorRefreshBtn.centerXAnchor.constraint(equalTo: footerView.centerXAnchor).isActive = true
+            errorRefreshBtn.topAnchor.constraint(equalTo: errorText.bottomAnchor, constant: 10).isActive = true
+            errorRefreshBtn.layer.cornerRadius = 20
+            errorRefreshBtn.isUserInteractionEnabled = true
+            errorRefreshBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onErrorRefreshClicked)))
+            errorRefreshBtn.isHidden = true
+            
+            let bMiniBtn = UIImageView(image: UIImage(named:"icon_round_refresh")?.withRenderingMode(.alwaysTemplate))
+    //        bMiniBtn.tintColor = .black
+            bMiniBtn.tintColor = .white
+            errorRefreshBtn.addSubview(bMiniBtn)
+            bMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+            bMiniBtn.centerXAnchor.constraint(equalTo: errorRefreshBtn.centerXAnchor).isActive = true
+            bMiniBtn.centerYAnchor.constraint(equalTo: errorRefreshBtn.centerYAnchor).isActive = true
+            bMiniBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
+            bMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
+            
+            //test > save footer state
+            configureFooterUI(data: footerState)
             
             return footer
         default:
@@ -1095,7 +1188,7 @@ extension PostDetailPanelView: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
         print("postpanel referencesize: \(section)")
-        return CGSize(width: collectionView.bounds.size.width, height: 50)
+        return CGSize(width: collectionView.bounds.size.width, height: 100)
         
     }
     
@@ -1103,11 +1196,13 @@ extension PostDetailPanelView: UICollectionViewDelegateFlowLayout {
         if indexPath.row == vcDataList.count - 1 {
             print("pdpv willdisplay: \(indexPath.row)")
 
-            if(dataPaginateStatus != "end") {
-                if(pageNumber >= 3) {
-                    asyncPaginateFetchFeed(id: "comment_feed_end")
-                } else {
-                    asyncPaginateFetchFeed(id: "comment_feed")
+            if(dataFetchState == "end") {
+                if(dataPaginateStatus != "end") {
+                    if(pageNumber >= 3) {
+                        asyncPaginateFetchFeed(id: "comment_feed_end")
+                    } else {
+                        asyncPaginateFetchFeed(id: "comment_feed")
+                    }
                 }
             }
         }
@@ -1177,13 +1272,8 @@ extension PostDetailPanelView: UICollectionViewDelegate {
         //test > refresh dataset
         if(isScrollViewAtTop) {
             if(scrollOffsetY < -80) {
-                //test > clear data for regenerate feed => not great
-//                vcDataList.removeAll()
-//                postCV?.reloadData()
-                //**
-                
-//                self.asyncFetchFeed(id: "post_feed")
-                self.asyncFetchFeed(id: "comment_feed")
+
+//                self.asyncFetchFeed(id: "comment_feed")
             }
         }
     }

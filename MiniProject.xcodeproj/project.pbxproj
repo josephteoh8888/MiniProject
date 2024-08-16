@@ -160,6 +160,7 @@
 		2EADB5392C4BF5310023B7F2 /* MePostListPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB5382C4BF5310023B7F2 /* MePostListPanelView.swift */; };
 		2EADB53B2C4BF59F0023B7F2 /* MePhotoListPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB53A2C4BF59F0023B7F2 /* MePhotoListPanelView.swift */; };
 		2EADB53D2C4BF5F40023B7F2 /* MeVideoListPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB53C2C4BF5F40023B7F2 /* MeVideoListPanelView.swift */; };
+		2EADB53F2C6E41D80023B7F2 /* CommentChainCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB53E2C6E41D80023B7F2 /* CommentChainCell.swift */; };
 		D9E5DA9CED1FA78875BA9B32 /* Pods_MiniProject.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC1D4569B6E7DBC2F6F78A70 /* Pods_MiniProject.framework */; };
 /* End PBXBuildFile section */
 
@@ -319,6 +320,7 @@
 		2EADB5382C4BF5310023B7F2 /* MePostListPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MePostListPanelView.swift; sourceTree = "<group>"; };
 		2EADB53A2C4BF59F0023B7F2 /* MePhotoListPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MePhotoListPanelView.swift; sourceTree = "<group>"; };
 		2EADB53C2C4BF5F40023B7F2 /* MeVideoListPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeVideoListPanelView.swift; sourceTree = "<group>"; };
+		2EADB53E2C6E41D80023B7F2 /* CommentChainCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentChainCell.swift; sourceTree = "<group>"; };
 		8E8FDD7B5A32B613FBBD6779 /* Pods-MiniProject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiniProject.release.xcconfig"; path = "Target Support Files/Pods-MiniProject/Pods-MiniProject.release.xcconfig"; sourceTree = "<group>"; };
 		8FF00F2FE6845908F1AA29DE /* Pods-MiniProject.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiniProject.debug.xcconfig"; path = "Target Support Files/Pods-MiniProject/Pods-MiniProject.debug.xcconfig"; sourceTree = "<group>"; };
 		AC1D4569B6E7DBC2F6F78A70 /* Pods_MiniProject.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MiniProject.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -362,7 +364,7 @@
 				2E670A992C30FC5400EBA6D3 /* PanelViews */,
 				2E670B222C311FF800EBA6D3 /* CustomViews */,
 				2E670B212C311FD600EBA6D3 /* ScrollFeedCells */,
-				2E670B752C3126A900EBA6D3 /* PostClipCells */,
+				2E670B752C3126A900EBA6D3 /* CustomCells */,
 				2E670B782C3126FA00EBA6D3 /* CustomShapes */,
 				2E670B902C31289E00EBA6D3 /* Models */,
 				2E670B812C3127B200EBA6D3 /* HighlightCells */,
@@ -530,12 +532,13 @@
 			path = CustomViews;
 			sourceTree = "<group>";
 		};
-		2E670B752C3126A900EBA6D3 /* PostClipCells */ = {
+		2E670B752C3126A900EBA6D3 /* CustomCells */ = {
 			isa = PBXGroup;
 			children = (
 				2E670B762C3126C900EBA6D3 /* PostClipPhotoCell.swift */,
+				2EADB53E2C6E41D80023B7F2 /* CommentChainCell.swift */,
 			);
-			path = PostClipCells;
+			path = CustomCells;
 			sourceTree = "<group>";
 		};
 		2E670B782C3126FA00EBA6D3 /* CustomShapes */ = {
@@ -839,6 +842,7 @@
 				2E670B8D2C31286500EBA6D3 /* HighlightCell.swift in Sources */,
 				2E670A9B2C30FC8500EBA6D3 /* PanelView.swift in Sources */,
 				2E670B5E2C3124A700EBA6D3 /* ScrollFeedCell.swift in Sources */,
+				2EADB53F2C6E41D80023B7F2 /* CommentChainCell.swift in Sources */,
 				2EADB52D2C44011B0023B7F2 /* HSingleLocationViewCell.swift in Sources */,
 				2EADB53D2C4BF5F40023B7F2 /* MeVideoListPanelView.swift in Sources */,
 				2EADB5312C4BB1DB0023B7F2 /* MeHistoryListPanelView.swift in Sources */,

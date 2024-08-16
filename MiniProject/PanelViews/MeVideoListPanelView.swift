@@ -560,6 +560,8 @@ class MeVideoListPanelView: PanelView{
     func refreshFetchData() {
         if(!self.feedList.isEmpty) {
             let feed = feedList[currentIndex]
+            feed.configureFooterUI(data: "")
+            
             feed.dataPaginateStatus = ""
             asyncFetchFeed(cell: feed, id: "notify_feed")
         }
@@ -645,8 +647,8 @@ class MeVideoListPanelView: PanelView{
                     //test
                     if(l.isEmpty) {
                         print("postpanelscroll footer reuse configure")
+                        feed.setFooterAaText(text: "No loop created yet.")
                         feed.configureFooterUI(data: "na")
-                        feed.aaText.text = "No loop created yet."
                     }
                 }
 
@@ -963,8 +965,8 @@ extension MeVideoListPanelView: ScrollFeedCellDelegate {
 
     }
 
-    func sfcDidClickVcvItem(pointX: CGFloat, pointY: CGFloat, view:UIView, itemIndex:IndexPath){
-
+    func sfcDidClickVcvRefresh(){
+        refreshFetchData()
     }
     func sfcDidClickVcvComment() {
         print("fcDidClickVcvComment ")

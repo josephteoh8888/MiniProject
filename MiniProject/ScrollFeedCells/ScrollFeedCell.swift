@@ -18,7 +18,7 @@ protocol ScrollFeedCellDelegate : AnyObject {
     func sfcVCVPanChanged(offsetY: CGFloat, isScrollActive: Bool)
     func sfcVCVPanEnded(offsetY: CGFloat, isScrollActive: Bool)
     
-    func sfcDidClickVcvItem(pointX: CGFloat, pointY: CGFloat, view:UIView, itemIndex: IndexPath) //try
+    func sfcDidClickVcvRefresh() //try
     func sfcDidClickVcvComment() //try
     func sfcDidClickVcvLove() //try
     func sfcDidClickVcvShare() //try
@@ -54,6 +54,8 @@ class ScrollFeedCell: UIView {
     let aaText = UILabel()
     let errorText = UILabel()
     let errorRefreshBtn = UIView()
+    var footerState = ""
+    var footerAaText = ""
     
     //test
 //    var scrollFeedHeightCons: NSLayoutConstraint?
@@ -79,6 +81,9 @@ class ScrollFeedCell: UIView {
     
     func configureFooterUI(data: String) {
         
+    }
+    func setFooterAaText(text: String) {
+        footerAaText = text
     }
 }
 

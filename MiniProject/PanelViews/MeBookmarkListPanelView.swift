@@ -580,6 +580,8 @@ class MeBookmarkListPanelView: PanelView{
     func refreshFetchData() {
         if(!feedList.isEmpty) {
             let feed = feedList[currentIndex]
+            feed.configureFooterUI(data: "")
+            
             feed.dataPaginateStatus = ""
             asyncFetchFeed(cell: feed, id: "notify_feed")
         }
@@ -665,8 +667,8 @@ class MeBookmarkListPanelView: PanelView{
                     //test
                     if(l.isEmpty) {
                         print("postpanelscroll footer reuse configure")
+                        feed.setFooterAaText(text: "You have not bookmarked any yet.")
                         feed.configureFooterUI(data: "na")
-                        feed.aaText.text = "You have not bookmarked any yet."
                     }
                 }
 
@@ -983,8 +985,8 @@ extension MeBookmarkListPanelView: ScrollFeedCellDelegate {
 
     }
 
-    func sfcDidClickVcvItem(pointX: CGFloat, pointY: CGFloat, view:UIView, itemIndex:IndexPath){
-
+    func sfcDidClickVcvRefresh(){
+        refreshFetchData()
     }
     func sfcDidClickVcvComment() {
         print("fcDidClickVcvComment ")

@@ -111,6 +111,7 @@ class ScrollFeedGridPhoto2xViewCell: ScrollDataFeedCell {
     //test > footer error handling for refresh feed
     @objc func onErrorRefreshClicked(gesture: UITapGestureRecognizer) {
         print("error refresh clicked")
+        aDelegate?.sfcDidClickVcvRefresh()
     }
     
     override func configureFooterUI(data: String) {
@@ -126,9 +127,11 @@ class ScrollFeedGridPhoto2xViewCell: ScrollDataFeedCell {
             errorRefreshBtn.isHidden = false
         }
         else if(data == "na") {
-//            aaText.text = "User has not posted any."
+            aaText.text = footerAaText
             //removed, text to be customized at panelview level
         }
+        
+        footerState = data
     }
 }
 
@@ -256,6 +259,8 @@ extension ScrollFeedGridPhoto2xViewCell: UICollectionViewDelegateFlowLayout {
             bMiniBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
             bMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
             
+            configureFooterUI(data: footerState)
+            
             return footer
         default:
             fatalError("Unexpected element kind")
@@ -317,7 +322,6 @@ extension ScrollFeedGridPhoto2xViewCell: UICollectionViewDataSource {
         let originInRootView = collectionView.convert(cell.frame.origin, to: self)
         print("collectionView index: \(indexPath), \(cell.frame.origin.x), \(cell.frame.origin.y), \(originInRootView)")
 
-//        aDelegate?.sfcDidClickVcvItem(pointX: originInRootView.x, pointY: originInRootView.y, view: cell, itemIndex: indexPath)
         aDelegate?.sfcDidClickVcvClickPhoto(pointX: originInRootView.x, pointY: originInRootView.y, view: cell, mode: PhotoTypes.P_SHOT)
         hideCellAt(itemIndex: indexPath.row)
      }

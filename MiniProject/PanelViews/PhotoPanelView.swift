@@ -1046,6 +1046,23 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
         }
     }
     
+    func activateTabUI() {
+        if(!self.tabList.isEmpty) {
+            for l in self.tabList {
+                self.stackviewUsableLength += l.frame.width
+            }
+//                        self.stackviewUsableLength += 10.0 //leading constraint on tabscrollview
+            self.tabScrollView.contentSize = CGSize(width: self.stackviewUsableLength, height: 40)
+
+            let tab = self.tabList[0]
+            self.tabSelectWidthCons?.constant = tab.frame.width
+            self.tabSelect.isHidden = false
+        }
+        self.measureTabScroll()
+        let xTabOffset = self.tabScrollView.contentOffset.x
+        self.arrowReactToTabScroll(tabXOffset: xTabOffset)
+        self.reactToTabSectionChange(index: self.currentIndex)
+    }
     func asyncInit(id: String) {
         DataFetchManager.shared.fetchData(id: id) { [weak self]result in
             switch result {
@@ -1059,22 +1076,24 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
                         return
                     }
                     
-                    if(!self.tabList.isEmpty) {
-                        for l in self.tabList {
-                            self.stackviewUsableLength += l.frame.width
-                        }
-//                        self.stackviewUsableLength += 10.0 //leading constraint on tabscrollview
-                        self.tabScrollView.contentSize = CGSize(width: self.stackviewUsableLength, height: 40)
-
-                        let tab = self.tabList[0]
-                        self.tabSelectWidthCons?.constant = tab.frame.width
-                        self.tabSelect.isHidden = false
-                    }
-                    self.measureTabScroll()
-                    let xTabOffset = self.tabScrollView.contentOffset.x
-                    self.arrowReactToTabScroll(tabXOffset: xTabOffset)
-                    self.reactToTabSectionChange(index: self.currentIndex)
+//                    if(!self.tabList.isEmpty) {
+//                        for l in self.tabList {
+//                            self.stackviewUsableLength += l.frame.width
+//                        }
+////                        self.stackviewUsableLength += 10.0 //leading constraint on tabscrollview
+//                        self.tabScrollView.contentSize = CGSize(width: self.stackviewUsableLength, height: 40)
+//
+//                        let tab = self.tabList[0]
+//                        self.tabSelectWidthCons?.constant = tab.frame.width
+//                        self.tabSelect.isHidden = false
+//                    }
+//                    self.measureTabScroll()
+//                    let xTabOffset = self.tabScrollView.contentOffset.x
+//                    self.arrowReactToTabScroll(tabXOffset: xTabOffset)
+//                    self.reactToTabSectionChange(index: self.currentIndex)
                     
+                    //test > init tabscroll UI e.g. measure width
+                    self.activateTabUI()
                     self.redrawScrollFeedUI()
                     
                     //test > async fetch feed
@@ -1083,8 +1102,10 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
                     
                     //test > predetermined datasets
                     if(self.predeterminedDatasets.isEmpty) {
-                        let feed = self.feedList[self.currentIndex]
-                        self.asyncFetchFeed(cell: feed, id: "photo_feed")
+                        if(!self.feedList.isEmpty) {
+                            let feed = self.feedList[self.currentIndex]
+                            self.asyncFetchFeed(cell: feed, id: "photo_feed")
+                        }
                     } else {
                         self.asyncInitPredeterminedDatasets(dataset: self.predeterminedDatasets)
                     }
@@ -1099,36 +1120,42 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
     
     func asyncInitPredeterminedDatasets(dataset: [String]) {
         
-        let feed = feedList[currentIndex]
-        
-        feed.vDataList.removeAll() //remove spinner "b"
+        if(!self.feedList.isEmpty) {
+            let feed = feedList[currentIndex]
+            
+            feed.vDataList.removeAll() //remove spinner "b"
 
-        var tempDataList = [PhotoData]()
-        for i in dataset {
-            let photoData = PhotoData()
-            photoData.setDataType(data: i)
-            photoData.setData(data: i)
-            photoData.setTextString(data: i)
-            tempDataList.append(photoData)
+            var tempDataList = [PhotoData]()
+            for i in dataset {
+                let photoData = PhotoData()
+                photoData.setDataType(data: i)
+                photoData.setData(data: i)
+                photoData.setTextString(data: i)
+                tempDataList.append(photoData)
+            }
+            feed.vDataList.append(contentsOf: tempDataList)
+
+            feed.vCV?.reloadData()
+
+            feed.dataPaginateStatus = "end"
+    //        feed.isInitialized = true
+            
+    //        isInitialized = true
+            
+            print("photopanel asyncinitdetermined \(dataset)")
         }
-        feed.vDataList.append(contentsOf: tempDataList)
-
-        feed.vCV?.reloadData()
-
-        feed.dataPaginateStatus = "end"
-//        feed.isInitialized = true
-        
-//        isInitialized = true
-        
-        print("photopanel asyncinitdetermined \(dataset)")
     }
 
     //test > fetch data => temp fake data => try refresh data first
     func refreshFetchData() {
         print("photopanel refreshpanel")
-        let feed = feedList[currentIndex]
-        feed.dataPaginateStatus = ""
-        asyncFetchFeed(cell: feed, id: "photo_feed")
+        if(!self.feedList.isEmpty) {
+            let feed = feedList[currentIndex]
+            feed.configureFooterUI(data: "")
+            
+            feed.dataPaginateStatus = ""
+            asyncFetchFeed(cell: feed, id: "photo_feed")
+        }
     }
     
     func asyncFetchFeed(cell: ScrollFeedHPhotoListCell?, id: String) {
@@ -1141,7 +1168,10 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
         
         cell?.dataPaginateStatus = "fetch"
 
-        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+        let id_ = "post"
+        let isPaginate = false
+        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -1149,33 +1179,60 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
                 DispatchQueue.main.async {
                     print("userscrollable api success \(id), \(l)")
 
-                    guard let self = self else {
-                        return
-                    }
-
                     guard let feed = cell else {
                         return
                     }
+                    //test
+                    feed.aSpinner.stopAnimating()
                     
                     //test 2 > new append method
+//                    for i in l {
+//                        
+//                        let photoData = PhotoData()
+//                        photoData.setDataType(data: i)
+//                        photoData.setData(data: i)
+//                        photoData.setTextString(data: i)
+//                        feed.vDataList.append(photoData)
+//                    }
+//                    
+//                    feed.vCV?.reloadData()
+
+                    //*test 3 > reload only appended data, not entire dataset
+                    let dataCount = feed.vDataList.count
+                    var indexPaths = [IndexPath]()
+                    var j = 1
                     for i in l {
-                        
                         let photoData = PhotoData()
                         photoData.setDataType(data: i)
                         photoData.setData(data: i)
                         photoData.setTextString(data: i)
                         feed.vDataList.append(photoData)
-                    }
-                    
-                    feed.vCV?.reloadData()
 
+                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+                        indexPaths.append(idx)
+                        j += 1
+
+                        print("ppv asyncfetch reload \(idx)")
+                    }
+                    feed.vCV?.insertItems(at: indexPaths)
+                    //*
+                    
                     //test
-                    feed.aSpinner.stopAnimating()
+                    if(l.isEmpty) {
+                        print("postpanelscroll footer reuse configure")
+                        feed.setFooterAaText(text: "No results. Come back later.")
+                        feed.configureFooterUI(data: "na")
+                    }
                 }
 
-                case .failure(_):
+                case .failure(let error):
+                DispatchQueue.main.async {
                     print("api fail")
-                    break
+                    cell?.aSpinner.stopAnimating()
+                    
+                    cell?.configureFooterUI(data: "e")
+                }
+                break
             }
         }
     }
@@ -1184,17 +1241,16 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
 
         cell?.bSpinner.startAnimating()
 
-        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+        let id_ = "post"
+        let isPaginate = true
+        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
                 //update UI on main thread
                 DispatchQueue.main.async {
                     print("api success \(id), \(l), \(l.isEmpty)")
-
-                    guard let self = self else {
-                        return
-                    }
 
                     guard let feed = cell else {
                         return
@@ -1203,17 +1259,8 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
                         feed.dataPaginateStatus = "end"
                     }
                     
-                    //test 2 > new append method
-//                    for i in l {
-//
-//                        let photoData = PhotoData()
-//                        photoData.setDataType(data: i)
-//                        photoData.setData(data: i)
-//                        photoData.setTextString(data: i)
-//                        feed.vDataList.append(photoData)
-//                    }
-//
-//                    feed.vCV?.reloadData()
+                    //test
+                    feed.bSpinner.stopAnimating()
                     
                     //*test 3 > reload only appended data, not entire dataset
                     let dataCount = feed.vDataList.count
@@ -1234,12 +1281,19 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
                     //*
 
                     //test
-                    feed.bSpinner.stopAnimating()
+                    if(l.isEmpty) {
+                        feed.configureFooterUI(data: "end")
+                    }
                 }
 
-                case .failure(_):
+                case .failure(let error):
+                DispatchQueue.main.async {
                     print("api fail")
-                    break
+                    cell?.bSpinner.stopAnimating()
+                    
+                    cell?.configureFooterUI(data: "e")
+                }
+                break
             }
         }
     }
@@ -1286,17 +1340,23 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
     
     //test > stop current video for closing
     func pauseCurrentAudio() {
-        let b = feedList[currentIndex]
-        b.pauseCurrentAudio()
+        if(!self.feedList.isEmpty) {
+            let b = feedList[currentIndex]
+            b.pauseCurrentAudio()
+        }
     }
     //test > resume current video
     func resumeCurrentAudio() {
-        let b = feedList[currentIndex]
-        b.resumeCurrentAudio()
+        if(!self.feedList.isEmpty) {
+            let b = feedList[currentIndex]
+            b.resumeCurrentAudio()
+        }
     }
     func dehideCurrentCell() {
-        let b = feedList[currentIndex]
-        b.dehideCell()
+        if(!self.feedList.isEmpty) {
+            let b = feedList[currentIndex]
+            b.dehideCell()
+        }
     }
     //test
     override func resumeActiveState() {
@@ -1308,8 +1368,8 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
     }
     
     //test > check for intersected dummy view with video while user scroll
-    func getIntersectedIdx() -> Int {
-        let aVc = feedList[currentIndex]
+    func getIntersectedIdx(aVc: ScrollFeedHPhotoListCell) -> Int {
+//        let aVc = feedList[currentIndex]
         var intersectedIdx = -1
         if let v = aVc.vCV {
             print("sfvideo ppv start \(v.visibleCells)")
@@ -1364,9 +1424,11 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
                     guard let self = self else {
                         return
                     }
-                    print("asyncLayoutVc api success \(id), \(l), \(self.getIntersectedIdx())")
-                    let aVc = self.feedList[self.currentIndex]
-                    aVc.reactToIntersectedAudio(intersectedIdx: self.getIntersectedIdx())
+                    print("asyncLayoutVc api success \(id), \(l)")
+                    if(!self.feedList.isEmpty) {
+                        let aVc = self.feedList[self.currentIndex]
+                        aVc.reactToIntersectedAudio(intersectedIdx: self.getIntersectedIdx(aVc: aVc))
+                    }
                 }
 
                 case .failure(_):
@@ -1448,16 +1510,20 @@ extension PhotoPanelView: UIScrollViewDelegate {
                     if(hOffsetX > totalTabScrollXLead) {
                         oX = totalTabScrollXLead
                     }
-                    let tabXContentOffset = oX/totalTabScrollXLead * tabScrollGap
-                    tabScrollView.setContentOffset(CGPoint(x: tabXContentOffset, y: 0), animated: false)
+                    if(totalTabScrollXLead > 0) {
+                        let tabXContentOffset = oX/totalTabScrollXLead * tabScrollGap
+                        tabScrollView.setContentOffset(CGPoint(x: tabXContentOffset, y: 0), animated: false)
+                    }
                 }
             }
             
             //test > async fetch feed
             let rIndex = Int(round(currentIndex))
-            let feed = self.feedList[rIndex]
-            if(feed.dataPaginateStatus == "") {
-                self.asyncFetchFeed(cell: feed, id: "photo_feed")
+            if(!self.feedList.isEmpty) {
+                let feed = self.feedList[rIndex]
+                if(feed.dataPaginateStatus == "") {
+                    self.asyncFetchFeed(cell: feed, id: "photo_feed")
+                }
             }
         }
         else if(scrollView == tabScrollView) {
@@ -1473,15 +1539,17 @@ extension PhotoPanelView: UIScrollViewDelegate {
             let viewWidth = self.frame.width
             
             let visibleIndex = Int(xOffset/viewWidth)
-            let currentFeed = self.feedList[visibleIndex]
-            let previousFeed = self.feedList[currentIndex]
-            
-//            currentIndex = Int(xOffset/viewWidth)
-            currentIndex = visibleIndex
-            
-            if(currentFeed != previousFeed) {
-                currentFeed.resumeCurrentAudio()
-                previousFeed.pauseCurrentAudio()
+            if(!self.feedList.isEmpty) {
+                let currentFeed = self.feedList[visibleIndex]
+                let previousFeed = self.feedList[currentIndex]
+                
+    //            currentIndex = Int(xOffset/viewWidth)
+                currentIndex = visibleIndex
+                
+                if(currentFeed != previousFeed) {
+                    currentFeed.resumeCurrentAudio()
+                    previousFeed.pauseCurrentAudio()
+                }
             }
             
             //test > change tab title font opacity when scrolled
@@ -1495,15 +1563,17 @@ extension PhotoPanelView: UIScrollViewDelegate {
             let viewWidth = self.frame.width
             
             let visibleIndex = Int(xOffset/viewWidth)
-            let currentFeed = self.feedList[visibleIndex]
-            let previousFeed = self.feedList[currentIndex]
-            
-//            currentIndex = Int(xOffset/viewWidth)
-            currentIndex = visibleIndex
-            
-            if(currentFeed != previousFeed) {
-                currentFeed.resumeCurrentAudio()
-                previousFeed.pauseCurrentAudio()
+            if(!self.feedList.isEmpty) {
+                let currentFeed = self.feedList[visibleIndex]
+                let previousFeed = self.feedList[currentIndex]
+                
+    //            currentIndex = Int(xOffset/viewWidth)
+                currentIndex = visibleIndex
+                
+                if(currentFeed != previousFeed) {
+                    currentFeed.resumeCurrentAudio()
+                    previousFeed.pauseCurrentAudio()
+                }
             }
             
             //test > change tab title font opacity when scrolled
@@ -1734,8 +1804,10 @@ extension PhotoPanelView: ScrollFeedCellDelegate {
     func sfcScrollViewDidScroll(offsetY: CGFloat) {
         print("ppv sfc scroll \(offsetY)")
         //test
-        let aVc = feedList[currentIndex]
-        aVc.reactToIntersectedAudio(intersectedIdx: getIntersectedIdx())
+        if(!self.feedList.isEmpty) {
+            let aVc = feedList[currentIndex]
+            aVc.reactToIntersectedAudio(intersectedIdx: getIntersectedIdx(aVc: aVc))
+        }
     }
     func sfcSrollViewDidEndDecelerating(offsetY: CGFloat) {
 
@@ -1763,8 +1835,8 @@ extension PhotoPanelView: ScrollFeedCellDelegate {
 
     }
 
-    func sfcDidClickVcvItem(pointX: CGFloat, pointY: CGFloat, view:UIView, itemIndex:IndexPath){
-
+    func sfcDidClickVcvRefresh(){
+        refreshFetchData()
     }
     func sfcDidClickVcvComment() {
         print("fcDidClickVcvComment ")
@@ -1824,12 +1896,14 @@ extension PhotoPanelView: ScrollFeedCellDelegate {
 //        }
         
         //test 2
-        let b = self.feedList[self.currentIndex]
-        let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
-        
-        let adjustY = pointY + originInRootView.y
-        
-        delegate?.didClickPhotoPanelVcvClickPhoto(pointX: pointX, pointY: adjustY, view: view, mode: mode)
+        if(!self.feedList.isEmpty) {
+            let b = self.feedList[self.currentIndex]
+            let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
+            
+            let adjustY = pointY + originInRootView.y
+            
+            delegate?.didClickPhotoPanelVcvClickPhoto(pointX: pointX, pointY: adjustY, view: view, mode: mode)
+        }
     }
     func sfcDidClickVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         

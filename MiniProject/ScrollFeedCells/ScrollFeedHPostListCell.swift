@@ -213,6 +213,7 @@ class ScrollFeedHPostListCell: ScrollDataFeedCell {
     //test > footer error handling for refresh feed
     @objc func onErrorRefreshClicked(gesture: UITapGestureRecognizer) {
         print("error refresh clicked")
+        aDelegate?.sfcDidClickVcvRefresh()
     }
     
     override func configureFooterUI(data: String) {
@@ -228,9 +229,11 @@ class ScrollFeedHPostListCell: ScrollDataFeedCell {
             errorRefreshBtn.isHidden = false
         }
         else if(data == "na") {
-//            aaText.text = "User has not posted any."
+            aaText.text = footerAaText
             //removed, text to be customized at panelview level
         }
+        
+        footerState = data
     }
 }
 
@@ -264,6 +267,7 @@ extension ScrollFeedHPostListCell: UICollectionViewDelegateFlowLayout {
         
         let text = vDataList[indexPath.row].dataTextString
         let dataL = vDataList[indexPath.row].dataArray
+        let dataCh = vDataList[indexPath.row].chainDataArray
         var contentHeight = 0.0
         for l in dataL {
             if(l == "t") {
@@ -307,7 +311,21 @@ extension ScrollFeedHPostListCell: UICollectionViewDelegateFlowLayout {
                 let qHeight = qTopMargin + qUserPhotoHeight + qUserPhotoTopMargin + qContentTopMargin + qContentHeight + qFrameBottomMargin
                 contentHeight += qHeight
             }
-            else if(l == "c") {
+//            else if(l == "c") {
+//                let cUserPhotoHeight = 28.0
+//                let cUserPhotoTopMargin = 20.0 //10
+//                let cContentTopMargin = 10.0
+//                let cText = "Worth a visit."
+//                let cContentHeight = estimateHeight(text: cText, textWidth: collectionView.frame.width - 58.0 - 20.0, fontSize: 14)
+//                let cActionBtnTopMargin = 10.0
+//                let cActionBtnHeight = 26.0
+//                let cHeight = cUserPhotoHeight + cUserPhotoTopMargin + cContentTopMargin + cContentHeight + cActionBtnTopMargin + cActionBtnHeight
+//                contentHeight += cHeight
+//            }
+        }
+        
+        for l in dataCh {
+            if(l == "c") {
                 let cUserPhotoHeight = 28.0
                 let cUserPhotoTopMargin = 20.0 //10
                 let cContentTopMargin = 10.0
@@ -438,6 +456,8 @@ extension ScrollFeedHPostListCell: UICollectionViewDelegateFlowLayout {
             bMiniBtn.centerYAnchor.constraint(equalTo: errorRefreshBtn.centerYAnchor).isActive = true
             bMiniBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
             bMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
+            
+            configureFooterUI(data: footerState)
             
             return footer
         default:

@@ -601,8 +601,12 @@ class SearchPanelView: PanelView{
     func refreshFetchData() {
         if(!feedList.isEmpty) {
             let feed = feedList[currentIndex]
+            
+            feed.configureFooterUI(data: "")
+            
             feed.dataPaginateStatus = ""
             asyncFetchFeed(cell: feed, id: "search_feed")
+//            asyncFetchFeed(cell: feed, id: "post")
         }
     }
 
@@ -618,6 +622,7 @@ class SearchPanelView: PanelView{
         cell?.dataPaginateStatus = "fetch"
 
         let id_ = "post"
+//        let id_ = id
         let isPaginate = false
         DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
 //        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
@@ -668,8 +673,8 @@ class SearchPanelView: PanelView{
                     //test
                     if(l.isEmpty) {
                         print("postpanelscroll footer reuse configure")
+                        feed.setFooterAaText(text: "No results")
                         feed.configureFooterUI(data: "na")
-                        feed.aaText.text = "No results"
                     }
                 }
 
@@ -910,6 +915,7 @@ extension SearchPanelView: UIScrollViewDelegate {
                 let feed = self.feedList[rIndex]
                 if(feed.dataPaginateStatus == "") {
                     self.asyncFetchFeed(cell: feed, id: "search_feed")
+//                    self.asyncFetchFeed(cell: feed, id: "post_")
                 }
             }
         }
@@ -987,8 +993,9 @@ extension SearchPanelView: ScrollFeedCellDelegate {
 
     }
 
-    func sfcDidClickVcvItem(pointX: CGFloat, pointY: CGFloat, view:UIView, itemIndex:IndexPath){
-
+    func sfcDidClickVcvRefresh(){
+        //test > refresh feed
+        refreshFetchData()
     }
     func sfcDidClickVcvComment() {
         print("fcDidClickVcvComment ")

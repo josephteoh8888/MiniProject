@@ -40,6 +40,8 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
     var dataFetchState = ""
     var dataPaginateStatus = "" //test
     var pageNumber = 0
+    let errorText = UILabel()
+    let errorRefreshBtn = UIView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -408,6 +410,9 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
     
     //test > fetch data => temp fake data => try refresh data first
     func asyncFetchFeed(id: String) {
+        //test 
+        self.vDataList.removeAll() //test > refresh dataset
+        self.vCV?.reloadData()
         
         dataFetchState = "start"
         aSpinner.startAnimating()
@@ -415,7 +420,10 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
         //test > adjust contentInset to y = 50 to move cv downward to accomodate spinner
         self.adjustContentInset(topInset: CGFloat(50), bottomInset: CGFloat(100))
         
-        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+        let id_ = "comment"
+        let isPaginate = false
+        DataFetchManager.shared.fetchCommentFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -427,41 +435,61 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
                         return
                     }
                     
-                    self.vDataList.removeAll() //test > refresh dataset
-                    
-                    //test 1 > append all data fetched
-//                    self.vDataList.append(contentsOf: l)
+//                    self.vDataList.removeAll() //test > refresh dataset
+ 
+                    //test
+                    self.aSpinner.stopAnimating()
                     
                     //test 2 > new append method
+//                    for i in l {
+//                        let commentData = CommentData()
+//                        commentData.setDataType(data: i)
+//                        commentData.setData(data: i)
+//                        commentData.setTextString(data: i)
+//                        self.vDataList.append(commentData)
+//                    }
+//                    self.vCV?.reloadData()
+                    
+                    //*test 3 > reload only appended data, not entire dataset
+                    let dataCount = self.vDataList.count
+                    var indexPaths = [IndexPath]()
+                    var j = 1
                     for i in l {
-//                        self.vDataList.append(self.getMessage(data: i))
-                        
-//                        let postData = PostData()
-//                        postData.setDataType(data: i)
-//                        postData.setData(data: i)
-//                        postData.setTextString(data: i)
-//                        self.vDataList.append(postData)
-                        
                         let commentData = CommentData()
                         commentData.setDataType(data: i)
                         commentData.setData(data: i)
                         commentData.setTextString(data: i)
                         self.vDataList.append(commentData)
+
+                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+                        indexPaths.append(idx)
+                        j += 1
+
+                        print("ppv asyncfetch reload \(idx)")
                     }
-                    self.vCV?.reloadData()
-                    
-                    //test
-                    self.aSpinner.stopAnimating()
+                    self.vCV?.insertItems(at: indexPaths)
+                    //*
                     
                     //test > animate cv back to y = 0 by contentOffset then only adjust contentInset after animate
                     self.adjustContentOffset(x: 0, y: 0, animated: true)
                     
                     self.dataFetchState = "end"
+                    
+                    //test
+                    if(l.isEmpty) {
+                        self.configureFooterUI(data: "na")
+                        self.aaText.text = "No comments yet."
+                    }
                 }
 
-                case .failure(_):
+                case .failure(let error):
+                DispatchQueue.main.async {
                     print("api fail")
-                    break
+                    self?.aSpinner.stopAnimating()
+                    
+                    self?.configureFooterUI(data: "e")
+                }
+                break
             }
         }
     }
@@ -471,7 +499,10 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
         
         pageNumber += 1
         
-        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+        let id_ = "comment"
+        let isPaginate = true
+        DataFetchManager.shared.fetchCommentFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -487,38 +518,95 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
                         self.dataPaginateStatus = "end"
                     }
                     
+                    //test
+                    self.bSpinner.stopAnimating()
+                    
                     //test 1 > append all data fetched
 //                    self.vDataList.append(contentsOf: l)
                     
                     //test 2 > new append method
+//                    for i in l {
+//                        let commentData = CommentData()
+//                        commentData.setDataType(data: i)
+//                        commentData.setData(data: i)
+//                        commentData.setTextString(data: i)
+//                        self.vDataList.append(commentData)
+//                    }
+//                    self.vCV?.reloadData()
+                    
+                    //*test 3 > reload only appended data, not entire dataset
+                    let dataCount = self.vDataList.count
+                    var indexPaths = [IndexPath]()
+                    var j = 1
                     for i in l {
-//                        self.vDataList.append(self.getMessage(data: i))
-                        
-//                        let postData = PostData()
-//                        postData.setDataType(data: i)
-//                        postData.setData(data: i)
-//                        postData.setTextString(data: i)
-//                        self.vDataList.append(postData)
-                        
                         let commentData = CommentData()
                         commentData.setDataType(data: i)
                         commentData.setData(data: i)
                         commentData.setTextString(data: i)
                         self.vDataList.append(commentData)
-                    }
-                    self.vCV?.reloadData()
-                    
-                    //test
-                    self.bSpinner.stopAnimating()
-//                    self.bSpinner.isHidden = true
 
+                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+                        indexPaths.append(idx)
+                        j += 1
+                    }
+                    self.vCV?.insertItems(at: indexPaths)
+                    //*
+
+                    //test
+                    if(l.isEmpty) {
+                        self.configureFooterUI(data: "end")
+                    }
                 }
 
-                case .failure(_):
+                case .failure(let error):
+                DispatchQueue.main.async {
                     print("api fail")
-                    break
+                    self?.bSpinner.stopAnimating()
+                    
+                    self?.configureFooterUI(data: "e")
+                }
+                break
             }
         }
+    }
+    
+    //test > fetch data => temp fake data => try refresh data first
+    func refreshFetchData() {
+        configureFooterUI(data: "")
+        
+        dataPaginateStatus = ""
+        self.asyncFetchFeed(id: "comment_feed")
+    }
+    
+    //test > footer error handling for refresh feed
+    @objc func onErrorRefreshClicked(gesture: UITapGestureRecognizer) {
+        print("error refresh clicked")
+        refreshFetchData()
+    }
+    
+    var footerState = ""
+    var footerAaText = ""
+    func setFooterAaText(text: String) {
+        footerAaText = text
+    }
+    func configureFooterUI(data: String) {
+        aaText.text = ""
+        errorText.text = ""
+        errorRefreshBtn.isHidden = true
+        
+        if(data == "end") {
+            aaText.text = "End"
+        }
+        else if(data == "e") {
+            errorText.text = "Something went wrong. Try again"
+            errorRefreshBtn.isHidden = false
+        }
+        else if(data == "na") {
+            aaText.text = footerAaText
+            //removed, text to be customized at panelview level
+        }
+        
+        footerState = data
     }
     
     //temp solution -> to be deleted
@@ -563,6 +651,7 @@ extension CommentScrollableView: UICollectionViewDelegateFlowLayout {
         
         let text = vDataList[indexPath.row].dataTextString
         let dataL = vDataList[indexPath.row].dataArray
+        let dataCh = vDataList[indexPath.row].chainDataArray
         var contentHeight = 0.0
         for l in dataL {
             if(l == "t") {
@@ -588,7 +677,21 @@ extension CommentScrollableView: UICollectionViewDelegateFlowLayout {
                 let qHeight = qTopMargin + qUserPhotoHeight + qUserPhotoTopMargin + qContentTopMargin + qContentHeight + qFrameBottomMargin
                 contentHeight += qHeight
             }
-            else if(l == "c") {
+//            else if(l == "c") {
+//                let cUserPhotoHeight = 28.0
+//                let cUserPhotoTopMargin = 20.0 //10
+//                let cContentTopMargin = 10.0
+//                let cText = "Worth a visit."
+//                let cContentHeight = estimateHeight(text: cText, textWidth: collectionView.frame.width - 58.0 - 20.0, fontSize: 14)
+//                let cActionBtnTopMargin = 10.0
+//                let cActionBtnHeight = 26.0
+//                let cHeight = cUserPhotoHeight + cUserPhotoTopMargin + cContentTopMargin + cContentHeight + cActionBtnTopMargin + cActionBtnHeight
+//                contentHeight += cHeight
+//            }
+        }
+        
+        for l in dataCh {
+            if(l == "c") {
                 let cUserPhotoHeight = 28.0
                 let cUserPhotoTopMargin = 20.0 //10
                 let cContentTopMargin = 10.0
@@ -611,22 +714,6 @@ extension CommentScrollableView: UICollectionViewDelegateFlowLayout {
         let miscHeight = userPhotoHeight + userPhotoTopMargin + actionBtnTopMargin + actionBtnHeight + frameBottomMargin
         let totalHeight = contentHeight + miscHeight
         
-//        let text = "Nice food, nice environment! Worth a visit"
-//        let text = vDataList[indexPath.row]
-        
-//        let photoHeight = 28.0 //24
-//        let photoTopMargin = 10.0
-//        let textTopMargin = 10.0
-//        let textHeight = estimateHeight(text: text, textWidth: viewWidth - 30.0 - 50.0)
-//        let gifImageTopMargin = 10.0
-//        let gifImageHeight = 150.0
-//        let actionBtnTopMargin = 20.0
-//        let actionBtnHeight = 26.0
-//        let frameBottomMargin = 10.0
-//        let totalHeight = photoTopMargin + photoHeight + textTopMargin + textHeight + actionBtnTopMargin + actionBtnHeight + frameBottomMargin
-//        let totalHeight = photoTopMargin + photoHeight + textTopMargin + textHeight + gifImageTopMargin + gifImageHeight + actionBtnTopMargin + actionBtnHeight + frameBottomMargin
-//        print("textheight: \(textHeight), \(totalHeight)")
-        
 //        return CGSize(width: collectionView.frame.width, height: 80)
         return CGSize(width: collectionView.frame.width, height: totalHeight)
     }
@@ -644,7 +731,7 @@ extension CommentScrollableView: UICollectionViewDelegateFlowLayout {
             let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "footer", for: indexPath)
 //            footer.addSubview(footerView)
             
-            footerView.frame = CGRect(x: 0, y: 0, width: collectionView.frame.width, height: 50)
+            footerView.frame = CGRect(x: 0, y: 0, width: collectionView.frame.width, height: 100)
 //            footerView.backgroundColor = .ddmDarkColor
 //            footerView.backgroundColor = .blue
             footer.addSubview(footerView)
@@ -656,23 +743,61 @@ extension CommentScrollableView: UICollectionViewDelegateFlowLayout {
             footerView.addSubview(aaText)
             aaText.clipsToBounds = true
             aaText.translatesAutoresizingMaskIntoConstraints = false
-            aaText.centerYAnchor.constraint(equalTo: footerView.centerYAnchor, constant: 0).isActive = true
+//            aaText.centerYAnchor.constraint(equalTo: footerView.centerYAnchor, constant: 0).isActive = true
+            aaText.topAnchor.constraint(equalTo: footerView.topAnchor, constant: 20).isActive = true
             aaText.centerXAnchor.constraint(equalTo: footerView.centerXAnchor, constant: 0).isActive = true
             aaText.layer.opacity = 0.5
-            if(dataPaginateStatus == "end") {
-                aaText.text = "End"
-            } else {
-                aaText.text = ""
-            }
+//            if(dataPaginateStatus == "end") {
+//                aaText.text = "End"
+//            } else {
+//                aaText.text = ""
+//            }
             
             bSpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
             footer.addSubview(bSpinner)
             bSpinner.translatesAutoresizingMaskIntoConstraints = false
-            bSpinner.centerYAnchor.constraint(equalTo: footer.centerYAnchor).isActive = true
+//            bSpinner.centerYAnchor.constraint(equalTo: footer.centerYAnchor).isActive = true
+            bSpinner.topAnchor.constraint(equalTo: footer.topAnchor, constant: 20).isActive = true
             bSpinner.centerXAnchor.constraint(equalTo: footer.centerXAnchor).isActive = true
             bSpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
             bSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
 //            bSpinner.isHidden = true
+            
+            //test > error handling
+            errorText.textAlignment = .center //left
+            errorText.textColor = .white
+            errorText.font = .systemFont(ofSize: 13)
+            footerView.addSubview(errorText)
+            errorText.clipsToBounds = true
+            errorText.translatesAutoresizingMaskIntoConstraints = false
+//            errorText.centerYAnchor.constraint(equalTo: footerView.centerYAnchor, constant: 0).isActive = true
+            errorText.topAnchor.constraint(equalTo: footerView.topAnchor, constant: 20).isActive = true
+            errorText.centerXAnchor.constraint(equalTo: footerView.centerXAnchor, constant: 0).isActive = true
+            errorText.text = ""
+            
+            errorRefreshBtn.backgroundColor = .ddmDarkColor //test to remove color
+            footerView.addSubview(errorRefreshBtn)
+            errorRefreshBtn.translatesAutoresizingMaskIntoConstraints = false
+            errorRefreshBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true //ori: 40
+            errorRefreshBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
+            errorRefreshBtn.centerXAnchor.constraint(equalTo: footerView.centerXAnchor).isActive = true
+            errorRefreshBtn.topAnchor.constraint(equalTo: errorText.bottomAnchor, constant: 10).isActive = true
+            errorRefreshBtn.layer.cornerRadius = 20
+            errorRefreshBtn.isUserInteractionEnabled = true
+            errorRefreshBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onErrorRefreshClicked)))
+            errorRefreshBtn.isHidden = true
+            
+            let bMiniBtn = UIImageView(image: UIImage(named:"icon_round_refresh")?.withRenderingMode(.alwaysTemplate))
+    //        bMiniBtn.tintColor = .black
+            bMiniBtn.tintColor = .white
+            errorRefreshBtn.addSubview(bMiniBtn)
+            bMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+            bMiniBtn.centerXAnchor.constraint(equalTo: errorRefreshBtn.centerXAnchor).isActive = true
+            bMiniBtn.centerYAnchor.constraint(equalTo: errorRefreshBtn.centerYAnchor).isActive = true
+            bMiniBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
+            bMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
+            
+            configureFooterUI(data: footerState)
             
             return footer
         default:
@@ -682,7 +807,7 @@ extension CommentScrollableView: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
         print("commentpanel referencesize: \(section)")
-        return CGSize(width: collectionView.bounds.size.width, height: 50)
+        return CGSize(width: collectionView.bounds.size.width, height: 100)
         
     }
     

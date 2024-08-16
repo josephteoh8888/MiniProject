@@ -116,6 +116,7 @@ class ScrollFeedGridVideo3xViewCell: ScrollDataFeedCell {
     //test > footer error handling for refresh feed
     @objc func onErrorRefreshClicked(gesture: UITapGestureRecognizer) {
         print("error refresh clicked")
+        aDelegate?.sfcDidClickVcvRefresh()
     }
     
     override func configureFooterUI(data: String) {
@@ -131,9 +132,11 @@ class ScrollFeedGridVideo3xViewCell: ScrollDataFeedCell {
             errorRefreshBtn.isHidden = false
         }
         else if(data == "na") {
-//            aaText.text = "User has not posted any."
+            aaText.text = footerAaText
             //removed, text to be customized at panelview level
         }
+        
+        footerState = data
     }
 }
 
@@ -263,6 +266,8 @@ extension ScrollFeedGridVideo3xViewCell: UICollectionViewDelegateFlowLayout {
             bMiniBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
             bMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
             
+            configureFooterUI(data: footerState)
+            
             return footer
         default:
             fatalError("Unexpected element kind")
@@ -323,7 +328,6 @@ extension ScrollFeedGridVideo3xViewCell: UICollectionViewDataSource {
         let originInRootView = collectionView.convert(cell.frame.origin, to: self)
         print("collectionView index: \(indexPath), \(cell.frame.origin.x), \(cell.frame.origin.y), \(originInRootView)")
 
-//        aDelegate?.sfcDidClickVcvItem(pointX: originInRootView.x, pointY: originInRootView.y, view: cell, itemIndex: indexPath)
         aDelegate?.sfcDidClickVcvClickVideo(pointX: originInRootView.x, pointY: originInRootView.y, view: cell, mode: VideoTypes.V_LOOP)
         hideCellAt(itemIndex: indexPath.row)
      }

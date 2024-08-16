@@ -978,6 +978,23 @@ class PostPanelView: PanelView, UIGestureRecognizerDelegate{
         }
     }
     
+    func activateTabUI() {
+        if(!self.tabList.isEmpty) {
+            for l in self.tabList {
+                self.stackviewUsableLength += l.frame.width
+            }
+//                        self.stackviewUsableLength += 10.0 //leading constraint on tabscrollview
+            self.tabScrollView.contentSize = CGSize(width: self.stackviewUsableLength, height: 40)
+
+            let tab = self.tabList[0]
+            self.tabSelectWidthCons?.constant = tab.frame.width
+            self.tabSelect.isHidden = false
+        }
+        self.measureTabScroll()
+        let xTabOffset = self.tabScrollView.contentOffset.x
+        self.arrowReactToTabScroll(tabXOffset: xTabOffset)
+        self.reactToTabSectionChange(index: self.currentIndex)
+    }
     func asyncInit(id: String) {
         DataFetchManager.shared.fetchData(id: id) { [weak self]result in
             switch result {
@@ -991,27 +1008,15 @@ class PostPanelView: PanelView, UIGestureRecognizerDelegate{
                         return
                     }
                     
-                    if(!self.tabList.isEmpty) {
-                        for l in self.tabList {
-                            self.stackviewUsableLength += l.frame.width
-                        }
-//                        self.stackviewUsableLength += 10.0 //leading constraint on tabscrollview
-                        self.tabScrollView.contentSize = CGSize(width: self.stackviewUsableLength, height: 40)
-
-                        let tab = self.tabList[0]
-                        self.tabSelectWidthCons?.constant = tab.frame.width
-                        self.tabSelect.isHidden = false
-                    }
-                    self.measureTabScroll()
-                    let xTabOffset = self.tabScrollView.contentOffset.x
-                    self.arrowReactToTabScroll(tabXOffset: xTabOffset)
-                    self.reactToTabSectionChange(index: self.currentIndex)
-                    
+                    //test > init tabscroll UI e.g. measure width
+                    self.activateTabUI()
                     self.redrawScrollFeedUI()
                     
                     //test > async fetch feed
-                    let feed = self.feedList[self.currentIndex]
-                    self.asyncFetchFeed(cell: feed, id: "post_feed")
+                    if(!self.feedList.isEmpty) {
+                        let feed = self.feedList[self.currentIndex]
+                        self.asyncFetchFeed(cell: feed, id: "post_feed")
+                    }
                 }
 
                 case .failure(_):
@@ -1023,10 +1028,28 @@ class PostPanelView: PanelView, UIGestureRecognizerDelegate{
 
     //test > fetch data => temp fake data => try refresh data first
     func refreshFetchData() {
-        
-        let feed = feedList[currentIndex]
-        feed.dataPaginateStatus = ""
-        asyncFetchFeed(cell: feed, id: "post_feed")
+        if(!self.feedList.isEmpty) {
+            let feed = feedList[currentIndex]
+            feed.configureFooterUI(data: "")
+            
+            feed.dataPaginateStatus = ""
+            asyncFetchFeed(cell: feed, id: "post_feed")
+        }
+    }
+    
+    //test > remove elements from dataset n uicollectionview
+    func removeData(cell: ScrollFeedHPostListCell?, idxToRemove: [Int]) {
+        guard let feed = cell else {
+            return
+        }
+        var indexPaths = [IndexPath]()
+        for i in idxToRemove {
+            feed.vDataList.remove(at: i)
+            
+            let idx = IndexPath(item: i, section: 0)
+            indexPaths.append(idx)
+        }
+        feed.vCV?.deleteItems(at: indexPaths)
     }
     
     func asyncFetchFeed(cell: ScrollFeedHPostListCell?, id: String) {
@@ -1039,7 +1062,10 @@ class PostPanelView: PanelView, UIGestureRecognizerDelegate{
         
         cell?.dataPaginateStatus = "fetch"
 
-        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+        let id_ = "post"
+        let isPaginate = false
+        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -1047,33 +1073,61 @@ class PostPanelView: PanelView, UIGestureRecognizerDelegate{
                 DispatchQueue.main.async {
                     print("userscrollable api success \(id), \(l)")
 
-                    guard let self = self else {
-                        return
-                    }
-
                     guard let feed = cell else {
                         return
                     }
                     
+                    //test
+                    feed.aSpinner.stopAnimating()
+                    
                     //test 2 > new append method
+//                    for i in l {
+//                        
+//                        let postData = PostData()
+//                        postData.setDataType(data: i)
+//                        postData.setData(data: i)
+//                        postData.setTextString(data: i)
+//                        feed.vDataList.append(postData)
+//                    }
+//                    
+//                    feed.vCV?.reloadData()
+
+                    //*test 3 > reload only appended data, not entire dataset
+                    let dataCount = feed.vDataList.count
+                    var indexPaths = [IndexPath]()
+                    var j = 1
                     for i in l {
-                        
                         let postData = PostData()
                         postData.setDataType(data: i)
                         postData.setData(data: i)
                         postData.setTextString(data: i)
                         feed.vDataList.append(postData)
-                    }
-                    
-                    feed.vCV?.reloadData()
 
+                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+                        indexPaths.append(idx)
+                        j += 1
+
+                        print("ppv asyncfetch reload \(idx)")
+                    }
+                    feed.vCV?.insertItems(at: indexPaths)
+                    //*
+                    
                     //test
-                    feed.aSpinner.stopAnimating()
+                    if(l.isEmpty) {
+                        print("postpanelscroll footer reuse configure")
+                        feed.setFooterAaText(text: "No results. Come back later.")
+                        feed.configureFooterUI(data: "na")
+                    }
                 }
 
-                case .failure(_):
+                case .failure(let error):
+                DispatchQueue.main.async {
                     print("api fail")
-                    break
+                    cell?.aSpinner.stopAnimating()
+                    
+                    cell?.configureFooterUI(data: "e")
+                }
+                break
             }
         }
     }
@@ -1082,17 +1136,16 @@ class PostPanelView: PanelView, UIGestureRecognizerDelegate{
 //        print("ppv asyncpaginate \(id)")
         cell?.bSpinner.startAnimating()
 
-        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+        let id_ = "post"
+        let isPaginate = true
+        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
                 //update UI on main thread
                 DispatchQueue.main.async {
                     print("api success \(id), \(l), \(l.isEmpty)")
-
-                    guard let self = self else {
-                        return
-                    }
 
                     guard let feed = cell else {
                         return
@@ -1101,15 +1154,8 @@ class PostPanelView: PanelView, UIGestureRecognizerDelegate{
                         feed.dataPaginateStatus = "end"
                     }
                     
-                    //test 2 > new append method
-//                    for i in l {
-//                        let postData = PostData()
-//                        postData.setDataType(data: i)
-//                        postData.setData(data: i)
-//                        postData.setTextString(data: i)
-//                        feed.vDataList.append(postData)
-//                    }
-//                    feed.vCV?.reloadData()
+                    //test
+                    feed.bSpinner.stopAnimating()
                     
                     //*test 3 > reload only appended data, not entire dataset
                     let dataCount = feed.vDataList.count
@@ -1132,12 +1178,19 @@ class PostPanelView: PanelView, UIGestureRecognizerDelegate{
                     //*
 
                     //test
-                    feed.bSpinner.stopAnimating()
+                    if(l.isEmpty) {
+                        feed.configureFooterUI(data: "end")
+                    }
                 }
 
-                case .failure(_):
+                case .failure(let error):
+                DispatchQueue.main.async {
                     print("api fail")
-                    break
+                    cell?.bSpinner.stopAnimating()
+                    
+                    cell?.configureFooterUI(data: "e")
+                }
+                break
             }
         }
     }
@@ -1181,17 +1234,23 @@ class PostPanelView: PanelView, UIGestureRecognizerDelegate{
     
     //test > stop current video for closing
     func pauseCurrentVideo() {
-        let b = feedList[currentIndex]
-        b.pauseCurrentVideo()
+        if(!self.feedList.isEmpty) {
+            let b = feedList[currentIndex]
+            b.pauseCurrentVideo()
+        }
     }
     //test > resume current video
     func resumeCurrentVideo() {
-        let b = feedList[currentIndex]
-        b.resumeCurrentVideo()
+        if(!self.feedList.isEmpty) {
+            let b = feedList[currentIndex]
+            b.resumeCurrentVideo()
+        }
     }
     func dehideCurrentCell() {
-        let b = feedList[currentIndex]
-        b.dehideCell()
+        if(!self.feedList.isEmpty) {
+            let b = feedList[currentIndex]
+            b.dehideCell()
+        }
     }
     
     //test
@@ -1204,8 +1263,8 @@ class PostPanelView: PanelView, UIGestureRecognizerDelegate{
     }
     
     //test > check for intersected dummy view with video while user scroll
-    func getIntersectedIdx() -> Int {
-        let aVc = feedList[currentIndex]
+    func getIntersectedIdx(aVc: ScrollFeedHPostListCell) -> Int {
+//        let aVc = feedList[currentIndex]
         var intersectedIdx = -1
         if let v = aVc.vCV {
             print("sfvideo ppv start \(v.visibleCells)")
@@ -1263,8 +1322,10 @@ class PostPanelView: PanelView, UIGestureRecognizerDelegate{
                     guard let self = self else {
                         return
                     }
-                    let aVc = self.feedList[self.currentIndex]
-                    aVc.reactToIntersectedVideo(intersectedIdx: self.getIntersectedIdx())
+                    if(!self.feedList.isEmpty) {
+                        let aVc = self.feedList[self.currentIndex]
+                        aVc.reactToIntersectedVideo(intersectedIdx: self.getIntersectedIdx(aVc: aVc))
+                    }
                 }
 
                 case .failure(_):
@@ -1346,16 +1407,20 @@ extension PostPanelView: UIScrollViewDelegate {
                     if(hOffsetX > totalTabScrollXLead) {
                         oX = totalTabScrollXLead
                     }
-                    let tabXContentOffset = oX/totalTabScrollXLead * tabScrollGap
-                    tabScrollView.setContentOffset(CGPoint(x: tabXContentOffset, y: 0), animated: false)
+                    if(totalTabScrollXLead > 0) {
+                        let tabXContentOffset = oX/totalTabScrollXLead * tabScrollGap
+                        tabScrollView.setContentOffset(CGPoint(x: tabXContentOffset, y: 0), animated: false)
+                    }
                 }
             }
             
             //test > async fetch feed
             let rIndex = Int(round(currentIndex))
-            let feed = self.feedList[rIndex]
-            if(feed.dataPaginateStatus == "") {
-                self.asyncFetchFeed(cell: feed, id: "post_feed")
+            if(!self.feedList.isEmpty) {
+                let feed = self.feedList[rIndex]
+                if(feed.dataPaginateStatus == "") {
+                    self.asyncFetchFeed(cell: feed, id: "post_feed")
+                }
             }
         }
         else if(scrollView == tabScrollView) {
@@ -1372,17 +1437,18 @@ extension PostPanelView: UIScrollViewDelegate {
             
 //            currentIndex = Int(xOffset/viewWidth)
             let visibleIndex = Int(xOffset/viewWidth)
-            let currentFeed = self.feedList[visibleIndex]
-            let previousFeed = self.feedList[currentIndex]
-            
-            currentIndex = visibleIndex
-            
-            if(currentFeed != previousFeed) {
-//                currentFeed.startPlayVideo()
-                currentFeed.resumeCurrentVideo()
-                previousFeed.pauseCurrentVideo()
+            if(!self.feedList.isEmpty) {
+                let currentFeed = self.feedList[visibleIndex]
+                let previousFeed = self.feedList[currentIndex]
+                
+                currentIndex = visibleIndex
+                
+                if(currentFeed != previousFeed) {
+    //                currentFeed.startPlayVideo()
+                    currentFeed.resumeCurrentVideo()
+                    previousFeed.pauseCurrentVideo()
+                }
             }
-            
             //test > change tab title font opacity when scrolled
             reactToTabSectionChange(index: currentIndex)
         }
@@ -1395,15 +1461,17 @@ extension PostPanelView: UIScrollViewDelegate {
             
 //            currentIndex = Int(xOffset/viewWidth)
             let visibleIndex = Int(xOffset/viewWidth)
-            let currentFeed = self.feedList[visibleIndex]
-            let previousFeed = self.feedList[currentIndex]
-            
-            currentIndex = visibleIndex
-            
-            if(currentFeed != previousFeed) {
-//                currentFeed.startPlayVideo()
-                currentFeed.resumeCurrentVideo()
-                previousFeed.pauseCurrentVideo()
+            if(!self.feedList.isEmpty) {
+                let currentFeed = self.feedList[visibleIndex]
+                let previousFeed = self.feedList[currentIndex]
+                
+                currentIndex = visibleIndex
+                
+                if(currentFeed != previousFeed) {
+    //                currentFeed.startPlayVideo()
+                    currentFeed.resumeCurrentVideo()
+                    previousFeed.pauseCurrentVideo()
+                }
             }
             
             //test > change tab title font opacity when scrolled
@@ -1623,9 +1691,10 @@ extension PostPanelView: ScrollFeedCellDelegate {
 //        print("ppv sfc scroll \(offsetY)")
         
         //test
-        let aVc = feedList[currentIndex]
-//        aVc.reactToIntersectedVideo(intersectedIdx: intersectedIdx)
-        aVc.reactToIntersectedVideo(intersectedIdx: getIntersectedIdx())
+        if(!self.feedList.isEmpty) {
+            let aVc = feedList[currentIndex]
+            aVc.reactToIntersectedVideo(intersectedIdx: getIntersectedIdx(aVc: aVc))
+        }
     }
     func sfcSrollViewDidEndDecelerating(offsetY: CGFloat) {
 
@@ -1649,8 +1718,9 @@ extension PostPanelView: ScrollFeedCellDelegate {
 
     }
 
-    func sfcDidClickVcvItem(pointX: CGFloat, pointY: CGFloat, view:UIView, itemIndex:IndexPath){
-
+    func sfcDidClickVcvRefresh(){
+        //test > refresh fetch feed
+        refreshFetchData()
     }
     func sfcDidClickVcvComment() {
         print("fcDidClickVcvComment ")
@@ -1662,6 +1732,12 @@ extension PostPanelView: ScrollFeedCellDelegate {
     func sfcDidClickVcvShare() {
         print("fcDidClickVcvShare ")
         openShareSheet()
+        
+        //test > remove item
+//        if(!self.feedList.isEmpty) {
+//            let aVc = feedList[currentIndex]
+//            self.removeData(cell: aVc, idxToRemove: [0])
+//        }
     }
 
     func sfcDidClickVcvClickUser() {
@@ -1696,37 +1772,28 @@ extension PostPanelView: ScrollFeedCellDelegate {
         pauseCurrentVideo()
         
         //test > open photo zoom panel
-        let b = self.feedList[self.currentIndex]
-        let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
-        
-        let adjustY = pointY + originInRootView.y
-        
-        //test 1
-//        let offsetX = pointX - self.frame.width/2 + view.frame.width/2
-//        let offsetY = adjustY - self.frame.height/2 + view.frame.height/2
-//        print("open photo0: \(self.frame.width), \(view.frame.width), \(view.frame.height)")
-//
-//        if(mode == PhotoTypes.P_SHOT) {
-////            openPhotoDetail()
-//            delegate?.didClickPostPanelVcvClickPhoto(pointX: offsetX, pointY: offsetY, view: view, mode: mode)
-//        } else if(mode == PhotoTypes.P_0){
-//            openPhotoZoom(offX: offsetX, offY: offsetY)
-//        }
-        
-        //test 2
-        delegate?.didClickPostPanelVcvClickPhoto(pointX: pointX, pointY: adjustY, view: view, mode: mode)
+        if(!self.feedList.isEmpty) {
+            let b = self.feedList[self.currentIndex]
+            let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
+            
+            let adjustY = pointY + originInRootView.y
+            //test 2
+            delegate?.didClickPostPanelVcvClickPhoto(pointX: pointX, pointY: adjustY, view: view, mode: mode)
+        }
     }
     func sfcDidClickVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         //test > pause current playing video when go to user
         let t_s = pauseCurrentVideo()
         
-        let b = self.feedList[self.currentIndex]
-        let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
-        print("sfcDidClickVcvClickVideo \(originInRootView)")
-        
-        let adjustY = pointY + originInRootView.y
-        
-        delegate?.didClickPostPanelVcvClickVideo(pointX: pointX, pointY: adjustY, view: view, mode: mode)
+        if(!self.feedList.isEmpty) {
+            let b = self.feedList[self.currentIndex]
+            let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
+            print("sfcDidClickVcvClickVideo \(originInRootView)")
+            
+            let adjustY = pointY + originInRootView.y
+            
+            delegate?.didClickPostPanelVcvClickVideo(pointX: pointX, pointY: adjustY, view: view, mode: mode)
+        }
     }
 
     func sfcAsyncFetchFeed() {

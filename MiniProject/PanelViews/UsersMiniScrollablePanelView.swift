@@ -63,6 +63,8 @@ class UsersMiniScrollablePanelView: ScrollablePanelView, UIGestureRecognizerDele
     var dataFetchState = ""
     var dataPaginateStatus = "" //test
     var pageNumber = 0
+    let errorText = UILabel()
+    let errorRefreshBtn = UIView()
     
     let initialVcTopMargin : CGFloat = 30.0 //30.0
     
@@ -567,6 +569,9 @@ class UsersMiniScrollablePanelView: ScrollablePanelView, UIGestureRecognizerDele
     //test > fetch data => temp fake data => try refresh data first
     func asyncFetchFeed(id: String) {
         
+        self.vDataList.removeAll() //test > refresh dataset
+        self.vCV?.reloadData()
+        
         dataFetchState = "start"
         aSpinner.startAnimating()
         
@@ -585,23 +590,44 @@ class UsersMiniScrollablePanelView: ScrollablePanelView, UIGestureRecognizerDele
                         return
                     }
                     
-                    self.vDataList.removeAll() //test > refresh dataset
-                    
-                    self.vDataList.append(contentsOf: l)
-                    self.vCV?.reloadData()
-                    
-                    //test
                     self.aSpinner.stopAnimating()
+                    
+                    //*test 3 > reload only appended data, not entire dataset
+                    let dataCount = self.vDataList.count
+                    var indexPaths = [IndexPath]()
+                    var j = 1
+                    for i in l {
+                        self.vDataList.append(i)
+
+                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+                        indexPaths.append(idx)
+                        j += 1
+
+                        print("ppv asyncfetch reload \(idx)")
+                    }
+                    self.vCV?.insertItems(at: indexPaths)
+                    //*
                     
                     //test > animate cv back to y = 0 by contentOffset then only adjust contentInset after animate
                     self.adjustContentOffset(x: 0, y: 0, animated: true)
                     
                     self.dataFetchState = "end"
+                    
+                    //test
+                    if(l.isEmpty) {
+                        self.configureFooterUI(data: "na")
+                        self.aaText.text = "No results."
+                    }
                 }
 
-                case .failure(_):
+                case .failure(let error):
+                DispatchQueue.main.async {
                     print("api fail")
-                    break
+                    self?.aSpinner.stopAnimating()
+                    
+                    self?.configureFooterUI(data: "e")
+                }
+                break
             }
         }
     }
@@ -624,25 +650,82 @@ class UsersMiniScrollablePanelView: ScrollablePanelView, UIGestureRecognizerDele
                     }
                     
                     if(l.isEmpty) {
-//                        self.footerView.isHidden = false
-//                        self.aaText.text = "- End -"
                         self.dataPaginateStatus = "end"
                     }
                     
-                    self.vDataList.append(contentsOf: l)
-                    self.vCV?.reloadData()
-                    
                     //test
                     self.bSpinner.stopAnimating()
-//                    self.bSpinner.isHidden = true
+                    
+                    let dataCount = self.vDataList.count
+                    var indexPaths = [IndexPath]()
+                    var j = 1
+                    for i in l {
+                        self.vDataList.append(i)
 
+                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+                        indexPaths.append(idx)
+                        j += 1
+
+                        print("ppv asyncfetch reload \(idx)")
+                    }
+                    self.vCV?.insertItems(at: indexPaths)
+                    //*
+                    
+                    //test
+                    if(l.isEmpty) {
+                        self.configureFooterUI(data: "end")
+                    }
                 }
 
-                case .failure(_):
+                case .failure(let error):
+                DispatchQueue.main.async {
                     print("api fail")
-                    break
+                    self?.bSpinner.stopAnimating()
+                    
+                    self?.configureFooterUI(data: "e")
+                }
+                break
             }
         }
+    }
+    
+    //test > fetch data => temp fake data => try refresh data first
+    func refreshFetchData() {
+        configureFooterUI(data: "")
+        
+        dataPaginateStatus = ""
+        self.asyncFetchFeed(id: "post_feed")
+    }
+    
+    //test > footer error handling for refresh feed
+    @objc func onErrorRefreshClicked(gesture: UITapGestureRecognizer) {
+        print("error refresh clicked")
+        refreshFetchData()
+    }
+    
+    var footerState = ""
+    var footerAaText = ""
+    func setFooterAaText(text: String) {
+        footerAaText = text
+    }
+    func configureFooterUI(data: String) {
+        aaText.text = ""
+        errorText.text = ""
+        errorRefreshBtn.isHidden = true
+        
+        if(data == "end") {
+            aaText.text = "End"
+        }
+        else if(data == "e") {
+            errorText.text = "Something went wrong. Try again"
+            errorRefreshBtn.isHidden = false
+        }
+        else if(data == "na") {
+            aaText.text = footerAaText
+            //removed, text to be customized at panelview level
+        }
+        
+        footerState = data
     }
 }
 
@@ -734,7 +817,7 @@ extension UsersMiniScrollablePanelView: UICollectionViewDelegateFlowLayout {
             let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "footer", for: indexPath)
 //            footer.addSubview(footerView)
             
-            footerView.frame = CGRect(x: 0, y: 0, width: collectionView.frame.width, height: 50)
+            footerView.frame = CGRect(x: 0, y: 0, width: collectionView.frame.width, height: 100)
 //            footerView.backgroundColor = .ddmDarkColor
 //            footerView.backgroundColor = .blue
             footer.addSubview(footerView)
@@ -746,23 +829,61 @@ extension UsersMiniScrollablePanelView: UICollectionViewDelegateFlowLayout {
             footerView.addSubview(aaText)
             aaText.clipsToBounds = true
             aaText.translatesAutoresizingMaskIntoConstraints = false
-            aaText.centerYAnchor.constraint(equalTo: footerView.centerYAnchor, constant: 0).isActive = true
+//            aaText.centerYAnchor.constraint(equalTo: footerView.centerYAnchor, constant: 0).isActive = true
+            aaText.topAnchor.constraint(equalTo: footerView.topAnchor, constant: 20).isActive = true
             aaText.centerXAnchor.constraint(equalTo: footerView.centerXAnchor, constant: 0).isActive = true
             aaText.layer.opacity = 0.5
-            if(dataPaginateStatus == "end") {
-                aaText.text = "End"
-            } else {
-                aaText.text = ""
-            }
+//            if(dataPaginateStatus == "end") {
+//                aaText.text = "End"
+//            } else {
+//                aaText.text = ""
+//            }
             
             bSpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
             footer.addSubview(bSpinner)
             bSpinner.translatesAutoresizingMaskIntoConstraints = false
-            bSpinner.centerYAnchor.constraint(equalTo: footer.centerYAnchor).isActive = true
+//            bSpinner.centerYAnchor.constraint(equalTo: footer.centerYAnchor).isActive = true
+            bSpinner.topAnchor.constraint(equalTo: footer.topAnchor, constant: 20).isActive = true
             bSpinner.centerXAnchor.constraint(equalTo: footer.centerXAnchor).isActive = true
             bSpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
             bSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
 //            bSpinner.isHidden = true
+            
+            //test > error handling
+            errorText.textAlignment = .center //left
+            errorText.textColor = .white
+            errorText.font = .systemFont(ofSize: 13)
+            footerView.addSubview(errorText)
+            errorText.clipsToBounds = true
+            errorText.translatesAutoresizingMaskIntoConstraints = false
+//            errorText.centerYAnchor.constraint(equalTo: footerView.centerYAnchor, constant: 0).isActive = true
+            errorText.topAnchor.constraint(equalTo: footerView.topAnchor, constant: 20).isActive = true
+            errorText.centerXAnchor.constraint(equalTo: footerView.centerXAnchor, constant: 0).isActive = true
+            errorText.text = ""
+            
+            errorRefreshBtn.backgroundColor = .ddmDarkColor //test to remove color
+            footerView.addSubview(errorRefreshBtn)
+            errorRefreshBtn.translatesAutoresizingMaskIntoConstraints = false
+            errorRefreshBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true //ori: 40
+            errorRefreshBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
+            errorRefreshBtn.centerXAnchor.constraint(equalTo: footerView.centerXAnchor).isActive = true
+            errorRefreshBtn.topAnchor.constraint(equalTo: errorText.bottomAnchor, constant: 10).isActive = true
+            errorRefreshBtn.layer.cornerRadius = 20
+            errorRefreshBtn.isUserInteractionEnabled = true
+            errorRefreshBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onErrorRefreshClicked)))
+            errorRefreshBtn.isHidden = true
+            
+            let bMiniBtn = UIImageView(image: UIImage(named:"icon_round_refresh")?.withRenderingMode(.alwaysTemplate))
+    //        bMiniBtn.tintColor = .black
+            bMiniBtn.tintColor = .white
+            errorRefreshBtn.addSubview(bMiniBtn)
+            bMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+            bMiniBtn.centerXAnchor.constraint(equalTo: errorRefreshBtn.centerXAnchor).isActive = true
+            bMiniBtn.centerYAnchor.constraint(equalTo: errorRefreshBtn.centerYAnchor).isActive = true
+            bMiniBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
+            bMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
+            
+            configureFooterUI(data: footerState)
             
             return footer
         default:
@@ -772,7 +893,7 @@ extension UsersMiniScrollablePanelView: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
         print("postpanel referencesize: \(section)")
-        return CGSize(width: collectionView.bounds.size.width, height: 50)
+        return CGSize(width: collectionView.bounds.size.width, height: 100)
         
     }
     

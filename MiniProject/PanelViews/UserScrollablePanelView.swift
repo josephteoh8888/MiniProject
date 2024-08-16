@@ -1599,6 +1599,17 @@ class UserScrollablePanelView: ScrollablePanelView{
         }
     }
 
+    //test > fetch data => temp fake data => try refresh data first
+    func refreshFetchData() {
+        if(!feedList.isEmpty) {
+            let feed = feedList[currentIndex]
+            feed.configureFooterUI(data: "")
+            
+            feed.dataPaginateStatus = ""
+            asyncFetchFeed(cell: feed, id: "post")
+        }
+    }
+    
     func asyncFetchFeed(cell: ScrollDataFeedCell?, id: String) {
 
         cell?.vDataList.removeAll()
@@ -1609,7 +1620,7 @@ class UserScrollablePanelView: ScrollablePanelView{
         
         cell?.dataPaginateStatus = "fetch"
 
-        let id_ = "post"
+        let id_ = "post_"
         let isPaginate = false
         DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
 //        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
@@ -1661,8 +1672,8 @@ class UserScrollablePanelView: ScrollablePanelView{
                     //test
                     if(l.isEmpty) {
                         print("postpanelscroll footer reuse configure")
+                        feed.setFooterAaText(text: "Nothing has been posted yet.")
                         feed.configureFooterUI(data: "na")
-                        feed.aaText.text = "Nothing has been posted yet."
                     }
                 }
 
@@ -2374,8 +2385,9 @@ extension UserScrollablePanelView: ScrollFeedCellDelegate {
 
     }
 
-    func sfcDidClickVcvItem(pointX: CGFloat, pointY: CGFloat, view:UIView, itemIndex:IndexPath){
-
+    func sfcDidClickVcvRefresh(){
+        //test > refresh feed
+        refreshFetchData()
     }
     func sfcDidClickVcvComment() {
         print("fcDidClickVcvComment ")

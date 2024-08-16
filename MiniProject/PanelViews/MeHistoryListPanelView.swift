@@ -555,6 +555,8 @@ class MeHistoryListPanelView: PanelView{
     func refreshFetchData() {
         if(!feedList.isEmpty) {
             let feed = feedList[currentIndex]
+            feed.configureFooterUI(data: "")
+            
             feed.dataPaginateStatus = ""
             asyncFetchFeed(cell: feed, id: "notify_feed")
         }
@@ -587,7 +589,7 @@ class MeHistoryListPanelView: PanelView{
         cell?.dataPaginateStatus = "fetch"
 
         let id_ = "post"
-        let isPaginate = true
+        let isPaginate = false
         DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
 //        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
             switch result {
@@ -640,8 +642,8 @@ class MeHistoryListPanelView: PanelView{
                     //test
                     if(l.isEmpty) {
                         print("postpanelscroll footer reuse configure")
+                        feed.setFooterAaText(text: "No history yet.")
                         feed.configureFooterUI(data: "na")
-                        feed.aaText.text = "No history yet."
                     }
                 }
 
@@ -958,8 +960,8 @@ extension MeHistoryListPanelView: ScrollFeedCellDelegate {
 
     }
 
-    func sfcDidClickVcvItem(pointX: CGFloat, pointY: CGFloat, view:UIView, itemIndex:IndexPath){
-
+    func sfcDidClickVcvRefresh(){
+        refreshFetchData()
     }
     func sfcDidClickVcvComment() {
         print("fcDidClickVcvComment ")

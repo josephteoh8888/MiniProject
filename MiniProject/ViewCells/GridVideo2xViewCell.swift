@@ -13,7 +13,6 @@ import SDWebImage
 class GridVideo2xViewCell: UICollectionViewCell {
     static let identifier = "GridVideo2xViewCell"
     var gifImage = SDAnimatedImageView()
-//    weak var aDelegate : VCViewCellDelegate?
     
     //test > add loading spinner
 //    var aSpinner = SpinLoader()

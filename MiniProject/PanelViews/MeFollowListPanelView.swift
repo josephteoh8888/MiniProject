@@ -478,22 +478,6 @@ class MeFollowListPanelView: PanelView{
                         return
                     }
                     
-//                    if(!self.tabList.isEmpty) {
-//                        for l in self.tabList {
-//                            self.stackviewUsableLength += l.frame.width
-//                        }
-////                        self.stackviewUsableLength += 10.0 //leading constraint on tabscrollview
-//                        print("mefollowlistpanel tabstack usablewidth \(self.stackviewUsableLength)")
-//                        self.tabScrollView.contentSize = CGSize(width: self.stackviewUsableLength, height: 40)
-//
-//                        let tab = self.tabList[0]
-//                        self.tabSelectWidthCons?.constant = tab.frame.width
-//                        self.tabSelect.isHidden = false
-//                    }
-//                    self.measureTabScroll()
-//                    
-//                    self.reactToTabSectionChange(index: self.currentIndex) //test
-                    
                     //test > init tabscroll UI e.g. measure width
                     self.activateTabUI()
                     self.redrawUI()
@@ -543,6 +527,8 @@ class MeFollowListPanelView: PanelView{
     func refreshFetchData() {
         if(!feedList.isEmpty) {
             let feed = feedList[currentIndex]
+            feed.configureFooterUI(data: "")
+            
             feed.dataPaginateStatus = ""
             asyncFetchFeed(cell: feed, id: "notify_feed")
         }
@@ -628,8 +614,8 @@ class MeFollowListPanelView: PanelView{
                     //test
                     if(l.isEmpty) {
                         print("postpanelscroll footer reuse configure")
+                        feed.setFooterAaText(text: "No followers yet.")
                         feed.configureFooterUI(data: "na")
-                        feed.aaText.text = "No followers yet."
                     }
                 }
 
@@ -942,8 +928,8 @@ extension MeFollowListPanelView: ScrollFeedCellDelegate {
 
     }
 
-    func sfcDidClickVcvItem(pointX: CGFloat, pointY: CGFloat, view:UIView, itemIndex:IndexPath){
-
+    func sfcDidClickVcvRefresh(){
+        refreshFetchData()
     }
     func sfcDidClickVcvComment() {
         print("fcDidClickVcvComment ")

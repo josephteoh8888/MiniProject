@@ -545,6 +545,8 @@ class MePhotoListPanelView: PanelView{
     func refreshFetchData() {
         if(!feedList.isEmpty) {
             let feed = feedList[currentIndex]
+            feed.configureFooterUI(data: "")
+            
             feed.dataPaginateStatus = ""
             asyncFetchFeed(cell: feed, id: "notify_feed")
         }
@@ -630,8 +632,8 @@ class MePhotoListPanelView: PanelView{
                     //test
                     if(l.isEmpty) {
                         print("postpanelscroll footer reuse configure")
+                        feed.setFooterAaText(text: "No shot created yet.")
                         feed.configureFooterUI(data: "na")
-                        feed.aaText.text = "No shot created yet."
                     }
                 }
 
@@ -948,8 +950,8 @@ extension MePhotoListPanelView: ScrollFeedCellDelegate {
 
     }
 
-    func sfcDidClickVcvItem(pointX: CGFloat, pointY: CGFloat, view:UIView, itemIndex:IndexPath){
-
+    func sfcDidClickVcvRefresh(){
+        refreshFetchData()
     }
     func sfcDidClickVcvComment() {
         print("fcDidClickVcvComment ")

@@ -14,8 +14,6 @@ class HListViewCell: UICollectionViewCell {
     static let identifier = "HListViewCell"
     var gifImage = SDAnimatedImageView()
     
-//    weak var aDelegate : VCViewCellDelegate?
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
 

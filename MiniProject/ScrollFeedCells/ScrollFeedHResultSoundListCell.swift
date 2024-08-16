@@ -89,6 +89,7 @@ class ScrollFeedHResultSoundListCell: ScrollFeedHResultListCell {
     //test > footer error handling for refresh feed
     @objc func onErrorRefreshClicked(gesture: UITapGestureRecognizer) {
         print("error refresh clicked")
+        aDelegate?.sfcDidClickVcvRefresh()
     }
     
     override func configureFooterUI(data: String) {
@@ -104,9 +105,11 @@ class ScrollFeedHResultSoundListCell: ScrollFeedHResultListCell {
             errorRefreshBtn.isHidden = false
         }
         else if(data == "na") {
-//            aaText.text = "User has not posted any."
+            aaText.text = footerAaText
             //removed, text to be customized at panelview level
         }
+        
+        footerState = data
     }
 }
 
@@ -244,6 +247,8 @@ extension ScrollFeedHResultSoundListCell: UICollectionViewDelegateFlowLayout {
             bMiniBtn.centerYAnchor.constraint(equalTo: errorRefreshBtn.centerYAnchor).isActive = true
             bMiniBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
             bMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
+            
+            configureFooterUI(data: footerState)
             
             return footer
         default:

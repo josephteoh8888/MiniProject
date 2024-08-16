@@ -1574,6 +1574,17 @@ class SoundScrollablePanelView: ScrollablePanelView{
         }
     }
 
+    //test > fetch data => temp fake data => try refresh data first
+    func refreshFetchData() {
+        if(!feedList.isEmpty) {
+            let feed = feedList[currentIndex]
+            feed.configureFooterUI(data: "")
+            
+            feed.dataPaginateStatus = ""
+            asyncFetchFeed(cell: feed, id: "post")
+        }
+    }
+    
     func asyncFetchFeed(cell: ScrollDataFeedCell?, id: String) {
 
         cell?.vDataList.removeAll()
@@ -1635,8 +1646,8 @@ class SoundScrollablePanelView: ScrollablePanelView{
                     //test
                     if(l.isEmpty) {
                         print("postpanelscroll footer reuse configure")
+                        feed.setFooterAaText(text: "Nothing has been posted yet.")
                         feed.configureFooterUI(data: "na")
-                        feed.aaText.text = "Nothing has been posted yet."
                     }
                 }
 
@@ -2359,17 +2370,9 @@ extension SoundScrollablePanelView: ScrollFeedCellDelegate {
 
     }
 
-    func sfcDidClickVcvItem(pointX: CGFloat, pointY: CGFloat, view:UIView, itemIndex:IndexPath){
-        //test > add another conversionfor horizontal uicollectionview offset
-//        let b = self.feedList[self.currentIndex]
-//        let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
-//        print("fcDidClickVcvItem \(originInRootView)")
-        
-//        let adjustY = pointY + originInRootView.y
-//        delegate?.didClickVcvSoundScrollablePanelItem(pointX: pointX, pointY: adjustY, view: view)
-//
-//        //test > hide image when video opens
-//        hideViewCell(feedIndex: currentIndex, itemIndex: itemIndex.row)
+    func sfcDidClickVcvRefresh(){
+        //test > refresh feed
+        refreshFetchData()
     }
     func sfcDidClickVcvComment() {
         print("fcDidClickVcvComment ")
