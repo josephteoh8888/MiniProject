@@ -26,9 +26,8 @@ class PhotoDetailPanelView: PanelView {
     
     let aStickyHeader = UIView()
     var photoCV : UICollectionView?
-//    var vcDataList = [String]()
-//    var vcDataList = [PostData]()
-    var vcDataList = [PhotoData]()
+//    var vcDataList = [PhotoData]()
+    var vcDataList = [BaseData]()
     
     var isScrollViewAtTop = true
     var scrollViewInitialY : CGFloat = 0.0
@@ -54,6 +53,11 @@ class PhotoDetailPanelView: PanelView {
     var currentPlayingVidIndex = -1
     //test > for video autoplay when user opens
     var isFeedDisplayed = false
+    
+    //test > track comment scrollable view
+    var pageList = [PanelView]()
+    
+    let bottomBox = UIView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -218,7 +222,7 @@ class PhotoDetailPanelView: PanelView {
         aTabText2Btn.widthAnchor.constraint(equalToConstant: 26).isActive = true
         
         //test bottom comment box => fake edittext
-        let bottomBox = UIView()
+//        let bottomBox = UIView()
 //        bottomBox.backgroundColor = .black
         bottomBox.backgroundColor = .ddmBlackOverlayColor
         panel.addSubview(bottomBox)
@@ -414,6 +418,65 @@ class PhotoDetailPanelView: PanelView {
         self.photoCV?.setContentOffset(CGPoint(x: x, y: y), animated: true)
     }
     
+    //*test > remove one comment
+    var selectedItemIdx = -1
+    func removeData(idxToRemove: Int) {
+        if(!vcDataList.isEmpty) {
+            if(idxToRemove > -1 && idxToRemove < vcDataList.count) {
+                if(idxToRemove == 0) {
+                    var indexPaths = [IndexPath]()
+                    var i = 0
+                    for _ in vcDataList {
+                        let idx = IndexPath(item: i, section: 0)
+                        indexPaths.append(idx)
+                        i += 1
+                    }
+                    vcDataList.removeAll()
+                    self.photoCV?.deleteItems(at: indexPaths)
+                } else {
+                    var indexPaths = [IndexPath]()
+                    let idx = IndexPath(item: idxToRemove, section: 0)
+                    indexPaths.append(idx)
+                    
+                    vcDataList.remove(at: idxToRemove)
+                    self.photoCV?.deleteItems(at: indexPaths)
+                }
+            
+                unselectItemData()
+                
+                //test
+                if(vcDataList.isEmpty) {
+                    //entire post is deleted
+                    self.setFooterAaText(text: "Shot no longer exists.")
+                    self.configureFooterUI(data: "na")
+//                    self.aaText.text = "Shot no longer exists."
+                }
+                else if(vcDataList.count == 1) {
+                    //no more comments
+                    self.setFooterAaText(text: "No comments yet.")
+                    self.configureFooterUI(data: "na")
+//                    self.aaText.text = "No comments yet."
+                }
+            }
+        }
+    }
+//    func removeDataSet(idxToRemove: [Int]) {
+//        if(!vDataList.isEmpty) {
+//            var indexPaths = [IndexPath]()
+//            for i in idxToRemove {
+//                vDataList.remove(at: i)
+//
+//                let idx = IndexPath(item: i, section: 0)
+//                indexPaths.append(idx)
+//            }
+//            self.vCV?.deleteItems(at: indexPaths)
+//        }
+//    }
+    func unselectItemData() {
+        selectedItemIdx = -1
+    }
+    //*
+    
     //test > fetch post before comments
     func asyncFetchPost(id: String) {
         aSpinner.startAnimating()
@@ -457,7 +520,7 @@ class PhotoDetailPanelView: PanelView {
         dataFetchState = "start"
         bSpinner.startAnimating()
         
-        let id_ = "post_"
+        let id_ = "post"
         let isPaginate = false
         DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
 //        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
@@ -480,11 +543,12 @@ class PhotoDetailPanelView: PanelView {
                     var indexPaths = [IndexPath]()
                     var j = 1
                     for i in l {
-                        let photoData = PhotoData()
-                        photoData.setDataType(data: i)
-                        photoData.setData(data: i)
-                        photoData.setTextString(data: i)
-                        self.vcDataList.append(photoData)
+//                        let photoData = PhotoData()
+                        let postData = PostData()
+                        postData.setDataType(data: i)
+                        postData.setData(data: i)
+                        postData.setTextString(data: i)
+                        self.vcDataList.append(postData)
 
                         let idx = IndexPath(item: dataCount - 1 + j, section: 0)
                         indexPaths.append(idx)
@@ -495,8 +559,9 @@ class PhotoDetailPanelView: PanelView {
                     
                     //test
                     if(l.isEmpty) {
+                        self.setFooterAaText(text: "No comments yet.")
                         self.configureFooterUI(data: "na")
-                        self.aaText.text = "No comments yet."
+//                        self.aaText.text = "No comments yet."
                     }
                 }
 
@@ -544,11 +609,12 @@ class PhotoDetailPanelView: PanelView {
                     var indexPaths = [IndexPath]()
                     var j = 1
                     for i in l {
-                        let photoData = PhotoData()
-                        photoData.setDataType(data: i)
-                        photoData.setData(data: i)
-                        photoData.setTextString(data: i)
-                        self.vcDataList.append(photoData)
+//                        let photoData = PhotoData()
+                        let postData = PostData()
+                        postData.setDataType(data: i)
+                        postData.setData(data: i)
+                        postData.setTextString(data: i)
+                        self.vcDataList.append(postData)
 
                         let idx = IndexPath(item: dataCount - 1 + j, section: 0)
                         indexPaths.append(idx)
@@ -660,7 +726,28 @@ class PhotoDetailPanelView: PanelView {
         sharePanel.translatesAutoresizingMaskIntoConstraints = false
         sharePanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
         sharePanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
-//        sharePanel.delegate = self
+        sharePanel.delegate = self
+        
+        //test > track comment scrollable view
+        pageList.append(sharePanel)
+    }
+    
+    //test > add comment panel
+    func openComment() {
+        let commentPanel = CommentScrollableView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
+//        self.addSubview(commentPanel)
+        panel.insertSubview(commentPanel, belowSubview: bottomBox)
+        commentPanel.translatesAutoresizingMaskIntoConstraints = false
+        commentPanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
+        commentPanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
+        commentPanel.delegate = self
+        commentPanel.initialize()
+        commentPanel.setBackgroundDark()
+        
+//        bottomBox.isHidden = false
+        
+        //test > track comment scrollable view
+        pageList.append(commentPanel)
     }
     
     //test > stop current video for closing
@@ -722,7 +809,7 @@ class PhotoDetailPanelView: PanelView {
         if let b = currentVc as? HPhotoListBViewCell {
             b.dehideCell()
         } else if let b1 = currentVc as? HCommentListViewCell {
-//                b.resumeVideo()
+            b1.dehideCell()
         } else {
 
         }
@@ -733,10 +820,24 @@ class PhotoDetailPanelView: PanelView {
     //test
     override func resumeActiveState() {
         print("photodetailpanelview resume active")
-        resumeCurrentAudio()
+//        resumeCurrentAudio()
+//        
+//        //test > dehide cell
+//        dehideCell()
         
-        //test > dehide cell
-        dehideCell()
+        //test > only resume video if no comment scrollable view/any other view
+        if(pageList.isEmpty) {
+            resumeCurrentAudio()
+            
+            //test > dehide cell
+            dehideCell()
+        }
+        else {
+            //dehide cell for commment view
+            if let c = pageList[pageList.count - 1] as? CommentScrollableView {
+                c.dehideCell()
+            }
+        }
     }
     
     //test > check for intersected dummy view with video while user scroll
@@ -914,26 +1015,10 @@ extension PhotoDetailPanelView: UICollectionViewDelegateFlowLayout {
                     contentHeight += pHeight
                 }
                 else if(l == "q") {
-    //                let qTopMargin = 20.0
-    //                let qUserPhotoHeight = 28.0
-    //                let qUserPhotoTopMargin = 10.0 //10
-    //                let qContentTopMargin = 10.0
-    //                let qText = "Nice food, nice environment! Worth a visit. \nSo good!\n\n\n\n...\n...\n..."
-    //                let qContentHeight = estimateHeight(text: qText, textWidth: collectionView.frame.width - 20.0 - 20.0, fontSize: 14)
-    //                let qFrameBottomMargin = 20.0 //10
-    //                let qHeight = qTopMargin + qUserPhotoHeight + qUserPhotoTopMargin + qContentTopMargin + qContentHeight + qFrameBottomMargin
-    //                contentHeight += qHeight
+
                 }
                 else if(l == "c") {
-//                    let cUserPhotoHeight = 28.0
-//                    let cUserPhotoTopMargin = 20.0 //10
-//                    let cContentTopMargin = 10.0
-//                    let cText = "Worth a visit."
-//                    let cContentHeight = estimateHeight(text: cText, textWidth: collectionView.frame.width - 58.0 - 20.0, fontSize: 14)
-//                    let cActionBtnTopMargin = 10.0
-//                    let cActionBtnHeight = 26.0
-//                    let cHeight = cUserPhotoHeight + cUserPhotoTopMargin + cContentTopMargin + cContentHeight + cActionBtnTopMargin + cActionBtnHeight
-//                    contentHeight += cHeight
+
                 }
             }
             
@@ -949,8 +1034,6 @@ extension PhotoDetailPanelView: UICollectionViewDelegateFlowLayout {
             let sortCommentBtnTopMargin = 30.0
             let sortCommentBtnHeight = 26.0
 
-//            let miscHeight = userPhotoHeight + userPhotoTopMargin + tTopMargin + tContentHeight + statTopMargin + statContentHeight + actionBtnTopMargin + actionBtnHeight + locationHeight + locationTopMargin + soundHeight + soundTopMargin + frameBottomMargin
-//            let totalHeight = contentHeight + miscHeight
             let miscHeight = userPhotoHeight + userPhotoTopMargin + statTopMargin + statContentHeight + actionBtnTopMargin + actionBtnHeight + locationHeight + locationTopMargin + frameBottomMargin + sortCommentBtnTopMargin + sortCommentBtnHeight
             let totalHeight = contentHeight + miscHeight
             
@@ -976,6 +1059,24 @@ extension PhotoDetailPanelView: UICollectionViewDelegateFlowLayout {
                     let pHeight = pTopMargin + pContentHeight
                     contentHeight += pHeight
                 }
+                else if(l == "p_s") {
+                    let pTopMargin = 20.0
+                    let pContentHeight = 280.0
+                    let pHeight = pTopMargin + pContentHeight + 40.0 //40.0 for bottom container for description
+                    contentHeight += pHeight
+                }
+                else if(l == "v") {
+                    let vTopMargin = 20.0
+                    let vContentHeight = 350.0 //250
+                    let vHeight = vTopMargin + vContentHeight
+                    contentHeight += vHeight
+                }
+                else if(l == "v_l") {
+                    let vTopMargin = 20.0
+                    let vContentHeight = 350.0 //250
+                    let vHeight = vTopMargin + vContentHeight + 40.0 //40.0 for bottom container for description
+                    contentHeight += vHeight
+                }
                 else if(l == "q") {
                     let qTopMargin = 20.0
                     let qUserPhotoHeight = 28.0
@@ -988,16 +1089,47 @@ extension PhotoDetailPanelView: UICollectionViewDelegateFlowLayout {
                     contentHeight += qHeight
                 }
                 else if(l == "c") {
-                    let cUserPhotoHeight = 28.0
-                    let cUserPhotoTopMargin = 20.0 //10
-                    let cContentTopMargin = 10.0
-                    let cText = "Worth a visit."
-                    let cContentHeight = estimateHeight(text: cText, textWidth: collectionView.frame.width - 58.0 - 20.0, fontSize: 14)
-                    let cActionBtnTopMargin = 10.0
-                    let cActionBtnHeight = 26.0
-                    let cHeight = cUserPhotoHeight + cUserPhotoTopMargin + cContentTopMargin + cContentHeight + cActionBtnTopMargin + cActionBtnHeight
-                    contentHeight += cHeight
+
                 }
+            }
+            
+            let dataCh = vcDataList[indexPath.row].xChainDataArray
+            for l in dataCh {
+                let xText = l.dataTextString
+                let xDataL = l.dataArray
+                var yContentHeight = 0.0
+                for y in xDataL {
+                    if(y == "t") {
+                        let xContentTopMargin = 20.0
+                        let xContentHeight = estimateHeight(text: xText, textWidth: collectionView.frame.width - 53.0 - 20.0, fontSize: 13)
+                        let xHeight = xContentTopMargin + xContentHeight
+                        yContentHeight += xHeight
+                    }
+                    else if(y == "p") {
+                        let pTopMargin = 20.0
+                        let pContentHeight = 280.0
+                        let pHeight = pTopMargin + pContentHeight
+                        yContentHeight += pHeight
+                    }
+                    else if(y == "q") {
+                        let qTopMargin = 20.0
+                        let qUserPhotoHeight = 28.0
+                        let qUserPhotoTopMargin = 10.0 //10
+                        let qContentTopMargin = 10.0
+                        let qText = "Nice food, nice environment! Worth a visit. \nSo good!\n\n\n\n...\n...\n..."
+                        let qContentHeight = estimateHeight(text: qText, textWidth: collectionView.frame.width - 53.0 - 20.0, fontSize: 13)
+                        let qFrameBottomMargin = 20.0 //10
+                        let qHeight = qTopMargin + qUserPhotoHeight + qUserPhotoTopMargin + qContentTopMargin + qContentHeight + qFrameBottomMargin
+                        yContentHeight += qHeight
+                    }
+                }
+                let cUserPhotoHeight = 28.0
+                let cUserPhotoTopMargin = 10.0 //10
+                let cActionBtnTopMargin = 20.0
+                let cActionBtnHeight = 26.0
+                let cFrameBottomMargin = 10.0 //10
+                let cHeight = cUserPhotoHeight + cUserPhotoTopMargin + yContentHeight + cActionBtnTopMargin + cActionBtnHeight + cFrameBottomMargin
+                contentHeight += cHeight
             }
             
             let userPhotoHeight = 28.0
@@ -1221,7 +1353,7 @@ extension PhotoDetailPanelView: UICollectionViewDataSource {
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HCommentListViewCell.identifier, for: indexPath) as! HCommentListViewCell
             
-//            cell.aDelegate = self
+            cell.aDelegate = self
             
             //test > configure cell
             let data = vcDataList[indexPath.row]
@@ -1237,16 +1369,38 @@ extension PhotoDetailPanelView: UICollectionViewDataSource {
 }
 
 extension PhotoDetailPanelView: HListCellDelegate {
-    func hListDidClickVcvComment() {
+    func hListDidClickVcvComment(vc: UICollectionViewCell) {
         print("PostDetailPanelView comment clicked")
-        photoCV?.setContentOffset(CGPoint(x: 0.0, y: postHeight), animated: true)
+//        photoCV?.setContentOffset(CGPoint(x: 0.0, y: postHeight), animated: true)
+        
+        if let b = vc as? HPhotoListBViewCell {
+            photoCV?.setContentOffset(CGPoint(x: 0.0, y: postHeight), animated: true)
+        } else if let b1 = vc as? HCommentListViewCell {
+            openComment()
+        }
     }
     func hListDidClickVcvLove() {
         print("PostDetailPanelView love clicked")
     }
-    func hListDidClickVcvShare() {
+    func hListDidClickVcvShare(vc: UICollectionViewCell) {
         print("PostDetailPanelView share clicked")
-        openShareSheet()
+//        openShareSheet()
+        
+        if let a = photoCV {
+            for cell in a.visibleCells {
+                
+                if(cell == vc) {
+                    let selectedIndexPath = a.indexPath(for: cell)
+                    openShareSheet()
+                    
+                    if let c = selectedIndexPath {
+                        selectedItemIdx = c.row
+                    }
+                    
+                    break
+                }
+            }
+        }
     }
     func hListDidClickVcvClickUser(){
         print("PostDetailPanelView user clicked")
@@ -1261,6 +1415,7 @@ extension PhotoDetailPanelView: HListCellDelegate {
     func hListDidClickVcvClickPost() {
         print("PostDetailPanelView post clicked")
 //        openPostDetail()
+        delegate?.didClickPhotoDetailPanelVcvClickPost()
     }
     func hListDidClickVcvClickPhoto(vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         
@@ -1315,6 +1470,10 @@ extension PhotoDetailPanelView: HListCellDelegate {
                 }
             }
         }
+    }
+    
+    func hListVideoStopTime(vc: UICollectionViewCell, ts: Double){
+        
     }
     
     func hListDidClickVcvPlayAudio(vc: UICollectionViewCell){
@@ -1392,12 +1551,124 @@ extension PhotoDetailPanelView: HListCellDelegate {
     }
 }
 
-extension ViewController: PhotoDetailPanelDelegate{
-    func didClickPhotoDetailPanelVcvClickPost() {
+extension PhotoDetailPanelView: ShareSheetScrollableDelegate{
+    func didShareSheetClick(){
+        //test > for deleting item
+        if(!pageList.isEmpty) {
+            pageList.remove(at: pageList.count - 1)
+            
+            if(pageList.count > 0) {
+                let lastPage = pageList[pageList.count - 1]
+                if let a = lastPage as? CommentScrollableView {
+                    print("lastpagelist e \(a.selectedItemIdx)")
+                    let idx = a.selectedItemIdx
+                    a.removeData(idxToRemove: idx)
+                }
+                else if let b = lastPage as? ShareSheetScrollableView {
+                    print("lastpagelist f")
+                }
+            } else {
+                removeData(idxToRemove: selectedItemIdx)
+            }
+        } else {
+
+        }
+    }
+    func didShareSheetClickClosePanel(){
+        
+    }
+    func didShareSheetFinishClosePanel(){
+        //test > remove scrollable view from pagelist
+        if(!pageList.isEmpty) {
+            pageList.remove(at: pageList.count - 1)
+            
+            if(pageList.count > 0) {
+                let lastPage = pageList[pageList.count - 1]
+                if let a = lastPage as? CommentScrollableView {
+                    print("lastpagelist c")
+                    a.unselectItemData()
+                }
+                else if let b = lastPage as? ShareSheetScrollableView {
+                    print("lastpagelist d")
+                }
+            } else {
+//                resumeCurrentVideo()
+                
+//                if(!self.feedList.isEmpty) {
+//                    let feed = feedList[currentIndex]
+//                    feed.unselectItemData()
+//                }
+                unselectItemData()
+            }
+        } else {
+//            resumeCurrentVideo()
+        }
+    }
+}
+
+extension PhotoDetailPanelView: CommentScrollableDelegate{
+    func didCClickUser(){
+//        delegate?.didClickUser()
+        delegate?.didClickPhotoDetailPanelVcvClickUser()
+    }
+    func didCClickPlace(){
+//        delegate?.didClickPlace()
+//        delegate?.didClickPhotoPanelVcvClickPlace()
+    }
+    func didCClickSound(){
+//        delegate?.didClickSound()
+//        delegate?.didClickPhotoPanelVcvClickSound()
+    }
+    func didCClickClosePanel(){
+//        bottomBox.isHidden = true
+    }
+    func didCFinishClosePanel() {
+//        resumeCurrentAudio()
+        
+        //test > remove comment scrollable view from pagelist
+        if(!pageList.isEmpty) {
+            pageList.remove(at: pageList.count - 1)
+            
+            if(pageList.count > 0) {
+                let lastPage = pageList[pageList.count - 1]
+                if let a = lastPage as? CommentScrollableView {
+                    print("lastpagelist a")
+                }
+                else if let b = lastPage as? ShareSheetScrollableView {
+                    print("lastpagelist b")
+                }
+            } else {
+//                resumeCurrentVideo()
+            }
+        } else {
+//            resumeCurrentVideo()
+        }
+    }
+    func didCClickComment(){
 
     }
-    func didClickPhotoDetailPanelVcvClickUser() {
+    func didCClickShare(){
+        //test
+        openShareSheet()
+    }
+    func didCClickPost(){
+        delegate?.didClickPhotoDetailPanelVcvClickPost()
+    }
+    func didCClickClickPhoto(pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        delegate?.didClickPhotoDetailPanelVcvClickPhoto(pointX: pointX, pointY: pointY, view: view, mode: mode)
+    }
+    func didCClickClickVideo(pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        
+    }
+}
 
+extension ViewController: PhotoDetailPanelDelegate{
+    func didClickPhotoDetailPanelVcvClickPost() {
+        openPostDetailPanel()
+    }
+    func didClickPhotoDetailPanelVcvClickUser() {
+        //test
+        openUserPanel()
     }
     func didClickPhotoDetailClosePanel() {
         backPage(isCurrentPageScrollable: false)

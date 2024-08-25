@@ -592,20 +592,26 @@ class UsersMiniScrollablePanelView: ScrollablePanelView, UIGestureRecognizerDele
                     
                     self.aSpinner.stopAnimating()
                     
-                    //*test 3 > reload only appended data, not entire dataset
-                    let dataCount = self.vDataList.count
-                    var indexPaths = [IndexPath]()
-                    var j = 1
+                    //test 2 > reload entire dataset
                     for i in l {
                         self.vDataList.append(i)
-
-                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
-                        indexPaths.append(idx)
-                        j += 1
-
-                        print("ppv asyncfetch reload \(idx)")
                     }
-                    self.vCV?.insertItems(at: indexPaths)
+                    self.vCV?.reloadData()
+                    
+                    //*test 3 > reload only appended data, not entire dataset
+//                    let dataCount = self.vDataList.count
+//                    var indexPaths = [IndexPath]()
+//                    var j = 1
+//                    for i in l {
+//                        self.vDataList.append(i)
+//
+//                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+//                        indexPaths.append(idx)
+//                        j += 1
+//
+//                        print("ppv asyncfetch reload \(idx)")
+//                    }
+//                    self.vCV?.insertItems(at: indexPaths)
                     //*
                     
                     //test > animate cv back to y = 0 by contentOffset then only adjust contentInset after animate

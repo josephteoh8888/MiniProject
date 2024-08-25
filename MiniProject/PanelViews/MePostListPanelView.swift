@@ -587,33 +587,33 @@ class MePostListPanelView: PanelView{
                     
                     //test 1
 //                    feed.vDataList.append(contentsOf: l)
-//                    for i in l {
-//                        let postData = PostData()
-//                        postData.setDataType(data: i)
-//                        postData.setData(data: i)
-//                        postData.setTextString(data: i)
-//                        feed.vDataList.append(postData)
-//                    }
-//                    feed.vCV?.reloadData()
-
-                    //*test 3 > reload only appended data, not entire dataset
-                    let dataCount = feed.vDataList.count
-                    var indexPaths = [IndexPath]()
-                    var j = 1
                     for i in l {
                         let postData = PostData()
                         postData.setDataType(data: i)
                         postData.setData(data: i)
                         postData.setTextString(data: i)
                         feed.vDataList.append(postData)
-
-                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
-                        indexPaths.append(idx)
-                        j += 1
-
-                        print("ppv asyncfetch reload \(idx)")
                     }
-                    feed.vCV?.insertItems(at: indexPaths)
+                    feed.vCV?.reloadData()
+
+                    //*test 3 > reload only appended data, not entire dataset
+//                    let dataCount = feed.vDataList.count
+//                    var indexPaths = [IndexPath]()
+//                    var j = 1
+//                    for i in l {
+//                        let postData = PostData()
+//                        postData.setDataType(data: i)
+//                        postData.setData(data: i)
+//                        postData.setTextString(data: i)
+//                        feed.vDataList.append(postData)
+//
+//                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+//                        indexPaths.append(idx)
+//                        j += 1
+//
+//                        print("ppv asyncfetch reload \(idx)")
+//                    }
+//                    feed.vCV?.insertItems(at: indexPaths)
                     //*
                     
                     //test

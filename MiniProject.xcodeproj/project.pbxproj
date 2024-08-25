@@ -161,6 +161,8 @@
 		2EADB53B2C4BF59F0023B7F2 /* MePhotoListPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB53A2C4BF59F0023B7F2 /* MePhotoListPanelView.swift */; };
 		2EADB53D2C4BF5F40023B7F2 /* MeVideoListPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB53C2C4BF5F40023B7F2 /* MeVideoListPanelView.swift */; };
 		2EADB53F2C6E41D80023B7F2 /* CommentChainCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB53E2C6E41D80023B7F2 /* CommentChainCell.swift */; };
+		2EBFCBA32C7B08A100EA9169 /* ShareObjectScrollableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBFCBA22C7B08A100EA9169 /* ShareObjectScrollableView.swift */; };
+		2EBFCBA52C7B260600EA9169 /* PostPhotoContentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBFCBA42C7B260600EA9169 /* PostPhotoContentCell.swift */; };
 		D9E5DA9CED1FA78875BA9B32 /* Pods_MiniProject.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC1D4569B6E7DBC2F6F78A70 /* Pods_MiniProject.framework */; };
 /* End PBXBuildFile section */
 
@@ -321,6 +323,8 @@
 		2EADB53A2C4BF59F0023B7F2 /* MePhotoListPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MePhotoListPanelView.swift; sourceTree = "<group>"; };
 		2EADB53C2C4BF5F40023B7F2 /* MeVideoListPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeVideoListPanelView.swift; sourceTree = "<group>"; };
 		2EADB53E2C6E41D80023B7F2 /* CommentChainCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentChainCell.swift; sourceTree = "<group>"; };
+		2EBFCBA22C7B08A100EA9169 /* ShareObjectScrollableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareObjectScrollableView.swift; sourceTree = "<group>"; };
+		2EBFCBA42C7B260600EA9169 /* PostPhotoContentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostPhotoContentCell.swift; sourceTree = "<group>"; };
 		8E8FDD7B5A32B613FBBD6779 /* Pods-MiniProject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiniProject.release.xcconfig"; path = "Target Support Files/Pods-MiniProject/Pods-MiniProject.release.xcconfig"; sourceTree = "<group>"; };
 		8FF00F2FE6845908F1AA29DE /* Pods-MiniProject.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiniProject.debug.xcconfig"; path = "Target Support Files/Pods-MiniProject/Pods-MiniProject.debug.xcconfig"; sourceTree = "<group>"; };
 		AC1D4569B6E7DBC2F6F78A70 /* Pods_MiniProject.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MiniProject.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -414,6 +418,7 @@
 				2EADB5362C4BE9220023B7F2 /* MeLocationListPanelView.swift */,
 				2E670AD62C3102E700EBA6D3 /* CommentScrollableView.swift */,
 				2E670A9C2C30FCCF00EBA6D3 /* ShareSheetScrollableView.swift */,
+				2EBFCBA22C7B08A100EA9169 /* ShareObjectScrollableView.swift */,
 				2E670AC82C3101CD00EBA6D3 /* PlacesMiniScrollablePanelView.swift */,
 				2E670AD42C3102C700EBA6D3 /* UsersMiniScrollablePanelView.swift */,
 				2E670ABA2C3100AB00EBA6D3 /* CreateSelectPanelView.swift */,
@@ -537,6 +542,7 @@
 			children = (
 				2E670B762C3126C900EBA6D3 /* PostClipPhotoCell.swift */,
 				2EADB53E2C6E41D80023B7F2 /* CommentChainCell.swift */,
+				2EBFCBA42C7B260600EA9169 /* PostPhotoContentCell.swift */,
 			);
 			path = CustomCells;
 			sourceTree = "<group>";
@@ -782,6 +788,7 @@
 				2E670B042C31087800EBA6D3 /* GridVideoRollViewCell.swift in Sources */,
 				2E670B362C3121D700EBA6D3 /* SavePlaceDraftMsg.swift in Sources */,
 				2E670B422C3122A700EBA6D3 /* TabStack.swift in Sources */,
+				2EBFCBA32C7B08A100EA9169 /* ShareObjectScrollableView.swift in Sources */,
 				2E670B302C31216F00EBA6D3 /* SGestureScrollView.swift in Sources */,
 				2E670AEE2C3106AA00EBA6D3 /* HResultSoundListViewCell.swift in Sources */,
 				2E670B852C3127F100EBA6D3 /* ShopHighlightCell.swift in Sources */,
@@ -852,6 +859,7 @@
 				2E670A922C30480B00EBA6D3 /* Geohash.swift in Sources */,
 				2E670B5A2C31245800EBA6D3 /* ScrollFeedHResultPhotoListCell.swift in Sources */,
 				2E670B102C31092B00EBA6D3 /* HPostListAViewCell.swift in Sources */,
+				2EBFCBA52C7B260600EA9169 /* PostPhotoContentCell.swift in Sources */,
 				2E670B942C3128D300EBA6D3 /* PostData.swift in Sources */,
 				2E670AA52C30FE9A00EBA6D3 /* VideoDraftPanelView.swift in Sources */,
 				2E670AD52C3102C700EBA6D3 /* UsersMiniScrollablePanelView.swift in Sources */,

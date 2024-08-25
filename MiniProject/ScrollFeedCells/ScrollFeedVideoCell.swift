@@ -28,6 +28,7 @@ protocol ScrollFeedVideoCellDelegate : AnyObject {
     func sfvcDidClickRefresh()
 }
 
+//TODO: erase currentIndexPath, replace with visibleitems
 class ScrollFeedVideoCell: UIView {
     
     var vcDataList = [VideoData]()
@@ -39,9 +40,11 @@ class ScrollFeedVideoCell: UIView {
     var dataFetchState = ""
     var dataPaginateStatus = "" //test
     var pageNumber = 0
-    var bufferDataList = [VideoData]()
+//    var bufferDataList = [VideoData]()
     
     var isInitialized = false
+    
+    var selectedItemIdx = -1
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -99,56 +102,83 @@ class ScrollFeedVideoCell: UIView {
     
     //test > start play video
     func startPlayVideo() {
-        print("fvcAutoplayVideo startplay")
         guard let a = self.videoCV else {
             return
         }
+        print("aaa startplay: \(a.indexPathsForVisibleItems), \(currentIndexPath)")
         let currentVc = a.cellForItem(at: self.currentIndexPath)
-        print("fvcAutoplayVideo startplay after \(currentVc), \(a)")
         guard let b = currentVc as? VCViewCell else {
             return
         }
-        b.playVideo()
-
+        if(!vcDataList.isEmpty && currentIndexPath.row < vcDataList.count) {
+            let z = vcDataList[currentIndexPath.row].dataType
+            if(z == "a") {
+                b.playVideo()
+            }
+        }
     }
     //test > resume current video
     func resumeCurrentVideo() {
         guard let a = self.videoCV else {
             return
         }
+        print("aaa resume: \(a.indexPathsForVisibleItems), \(currentIndexPath)")
         let currentVc = a.cellForItem(at: self.currentIndexPath)
         guard let b = currentVc as? VCViewCell else {
             return
         }
-        b.resumeVideo()
+        if(!vcDataList.isEmpty && currentIndexPath.row < vcDataList.count) {
+            let z = vcDataList[currentIndexPath.row].dataType
+            if(z == "a") {
+                b.resumeVideo()
+            }
+        }
     }
     //test > stop current video for closing
     func stopCurrentVideo() {
         guard let a = self.videoCV else {
             return
         }
+        print("aaa stopplay: \(a.indexPathsForVisibleItems), \(currentIndexPath)")
         let currentVc = a.cellForItem(at: self.currentIndexPath)
         guard let b = currentVc as? VCViewCell else {
             return
         }
-        b.stopVideo()
+        if(!vcDataList.isEmpty && currentIndexPath.row < vcDataList.count) {
+            let z = vcDataList[currentIndexPath.row].dataType
+            if(z == "a") {
+                b.stopVideo()
+            }
+        }
     }
     //test > pause current video for closing
     func pauseCurrentVideo() {
         guard let a = self.videoCV else {
             return
         }
+        print("aaa pause: \(a.indexPathsForVisibleItems), \(currentIndexPath)")
         let currentVc = a.cellForItem(at: self.currentIndexPath)
         guard let b = currentVc as? VCViewCell else {
             return
         }
-        b.pauseVideo()
+        if(!vcDataList.isEmpty && currentIndexPath.row < vcDataList.count) {
+            let z = vcDataList[currentIndexPath.row].dataType
+            if(z == "a") {
+                b.pauseVideo()
+            }
+        }
     }
     
     //test > scroll to top
     func scrollToTopVideo() {
         videoCV?.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: false)
         currentIndexPath = IndexPath(item: 0, section: 0)
+    }
+    
+    //test > selected item for delete etc
+    var isUserScrolling = false
+    func unselectItemData(){
+        selectedItemIdx = -1
     }
 }
 
@@ -168,38 +198,62 @@ extension ScrollFeedVideoCell: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
 
-        let w = self.vcDataList.count - 1
-        let x = self.currentIndexPath.row
-        let y = self.vcDataList[w].dataType
-        let z = self.vcDataList[x].dataType
-
+//        print("video scroll page point willdisplay: \(currentIndexPath),/ \(indexPath), \(collectionView.indexPathsForVisibleItems)")
+        print("video scroll page point willdisplay: \(currentIndexPath), \(indexPath), \(isUserScrolling)")
+        
+//        let w = self.vcDataList.count - 1
+//        let x = self.currentIndexPath.row
+//        let y = self.vcDataList[w].dataType
+//        let z = self.vcDataList[x].dataType
+//        
+//        if indexPath.row == vcDataList.count - 1 {
+//
+//            //test
+//            print("FeedVideoCell willdisplay: \(dataFetchState)")
+//            if(dataFetchState == "end") { //means asyncFetchData has been performed once(initialized)
+//                if(y == "b") {
+//                    if(dataPaginateStatus == "") {
+//                        //test
+//                        aDelegate?.sfvcAsyncPaginateFeed(cell: self)
+//                    }
+//                }
+//            }
+//        }
+//
+        //test 2
         if indexPath.row == vcDataList.count - 1 {
-
-            //test
-            print("FeedVideoCell willdisplay: \(dataFetchState)")
             if(dataFetchState == "end") { //means asyncFetchData has been performed once(initialized)
+                let y = vcDataList[indexPath.row].dataType
                 if(y == "b") {
                     if(dataPaginateStatus == "") {
-                        //test
                         aDelegate?.sfvcAsyncPaginateFeed(cell: self)
                     }
                 }
             }
         }
-//
-//        //test > autoplay if current indexpath is the same as willDisplay indexpath, e.g. reload data
-//        if(isPanelOpen) {
-            if(currentIndexPath == indexPath && z == "a") {
+        
+////        //test > autoplay if current indexpath is the same as willDisplay indexpath, e.g. reload data
+//        if(currentIndexPath == indexPath && z == "a") {
+//            if let c = cell as? VCViewCell {
+//                print("FeedVideoCell willdisplay play: \(indexPath), \(currentIndexPath)")
+//                aDelegate?.sfvcAutoplayVideo(cell: self, vCCell: c)
+//            }
+//        }
+        
+        //test 2 > only play video if user not scrolling
+        if(!isUserScrolling) {
+            let z = vcDataList[indexPath.row].dataType
+            if(z == "a") {
                 if let c = cell as? VCViewCell {
-                    print("FeedVideoCell willdisplay play: \(indexPath), \(currentIndexPath)")
-//                    c.playVideo()
                     aDelegate?.sfvcAutoplayVideo(cell: self, vCCell: c)
                 }
             }
-//        }
+            //test > renew currentindexpath after deleted item
+            currentIndexPath = indexPath
+        }
     }
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-//        print("videoCVpanel didEndDisplay: \(indexPath)")
+        print("video scroll page point enddisplay: \(indexPath)")
         
         //test > stop video when scroll past
         if let c = cell as? VCViewCell {
@@ -241,8 +295,11 @@ extension ScrollFeedVideoCell: UICollectionViewDataSource {
 extension ScrollFeedVideoCell: UICollectionViewDelegate {
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         print("scrollview begin: \(scrollView.contentOffset.y)")
-    
+        print("video scroll page point begin drag: ")
         aDelegate?.sfvcWillBeginDragging(offsetY: scrollView.contentOffset.y)
+        
+        //test
+        isUserScrolling = true
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -266,9 +323,7 @@ extension ScrollFeedVideoCell: UICollectionViewDelegate {
             return
         }
         
-//        let z = vcDataList[visibleIndexPath.row]
-        let z = vcDataList[visibleIndexPath.row].dataType
-        print("video scroll page point: \(visibleIndexPath), \(currentIndexPath), \(z)")
+        print("video scroll page point: \(visibleIndexPath), \(a.indexPathsForVisibleItems)")
         
         //play video when current page
         let currentVc = a.cellForItem(at: visibleIndexPath)
@@ -280,17 +335,25 @@ extension ScrollFeedVideoCell: UICollectionViewDelegate {
         guard let b = currentVc as? VCViewCell else {
             return
         }
-
-        //test > only play video if data is "a"(valid data, not loading spinner) && scroll from previous viewcell
-        if(currentVc != previousVc && z == "a") {
-            b.playVideo()
+        
+        if(!vcDataList.isEmpty) {
+            let z = vcDataList[visibleIndexPath.row].dataType
+            
+            //test > only play video if data is "a"(valid data, not loading spinner) && scroll from previous viewcell to prevent restart of video if scroll slightly
+            if(currentVc != previousVc && z == "a") {
+                b.playVideo()
+            }
         }
         
         aDelegate?.sfvcSrollViewDidEndDecelerating(offsetY: scrollView.contentOffset.y)
+        
+        //test
+        isUserScrolling = false
     }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         print("scrollview end drag: \(scrollView.contentOffset.y), \(decelerate)")
+//        print("video scroll page point end drag: ")
         aDelegate?.sfvcScrollViewDidEndDragging(offsetY: scrollView.contentOffset.y, decelerate: decelerate)
     }
 }
@@ -312,10 +375,31 @@ extension ScrollFeedVideoCell: VCViewCellDelegate{
 //        openComment()
         aDelegate?.sfvcDidClickComment()
     }
-    func didClickShare() {
+    func didClickShare(vc: VCViewCell) {
         //test
-//        openShareSheet()
+//        aDelegate?.sfvcDidClickShare()
+        
+        guard let a = self.videoCV else {
+            return
+        }
+        //test 2
+//        print("video scroll page point share: \(a.indexPathsForVisibleItems)")
+//        let currentVc = a.cellForItem(at: self.currentIndexPath)
+//        if(currentVc == vc) {
+//            
+//            aDelegate?.sfvcDidClickShare()
+//            
+//            selectedItemIdx = currentIndexPath.row
+//            print("scrollfeedvideo selected \(selectedItemIdx)")
+//        }
+        
+        //test 3 > use indexpath for visible item
+        let idxPath = a.indexPath(for: vc)
+        guard let idxPath = idxPath else {
+            return
+        }
         aDelegate?.sfvcDidClickShare()
+        selectedItemIdx = idxPath.row
     }
     func didClickRefresh() {
         aDelegate?.sfvcDidClickRefresh()
@@ -333,9 +417,11 @@ extension ScrollFeedVideoCell: VCViewCellDelegate{
 //    var dataFetchState = ""
 //    var dataPaginateStatus = "" //test
 //    var pageNumber = 0
-//    var bufferDataList = [VideoData]()
+////    var bufferDataList = [VideoData]()
 //    
 //    var isInitialized = false
+//    
+//    var selectedItemIdx = -1
 //    
 //    override init(frame: CGRect) {
 //        super.init(frame: frame)
@@ -354,12 +440,12 @@ extension ScrollFeedVideoCell: VCViewCellDelegate{
 //    }
 //    
 //    private func addSubViews() {
-////        vcDataList.append("b")//test => loading data
-//        let vData = VideoData()
-//        vData.setDataType(data: "b")
-//        vData.setData(data: "b")
-//        vData.setTextString(data: "b")
-//        vcDataList.append(vData)
+//
+////        let vData = VideoData()
+////        vData.setDataType(data: "b")
+////        vData.setData(data: "b")
+////        vData.setTextString(data: "b")
+////        vcDataList.append(vData)
 //
 //        let layout = UICollectionViewFlowLayout()
 //        layout.scrollDirection = .vertical
@@ -444,6 +530,11 @@ extension ScrollFeedVideoCell: VCViewCellDelegate{
 //        videoCV?.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: false)
 //        currentIndexPath = IndexPath(item: 0, section: 0)
 //    }
+//    
+//    //test > selected item for delete etc
+//    func unselectItemData(){
+//        selectedItemIdx = -1
+//    }
 //}
 //
 //extension ScrollFeedVideoCell: UICollectionViewDelegateFlowLayout {
@@ -466,51 +557,29 @@ extension ScrollFeedVideoCell: VCViewCellDelegate{
 //        let x = self.currentIndexPath.row
 //        let y = self.vcDataList[w].dataType
 //        let z = self.vcDataList[x].dataType
-//
+//        
 //        if indexPath.row == vcDataList.count - 1 {
 //
 //            //test
 //            print("FeedVideoCell willdisplay: \(dataFetchState)")
 //            if(dataFetchState == "end") { //means asyncFetchData has been performed once(initialized)
 //                if(y == "b") {
-////                    if(dataPaginateStatus != "end") {
 //                    if(dataPaginateStatus == "") {
 //                        //test
 //                        aDelegate?.sfvcAsyncPaginateFeed(cell: self)
-//                    } 
-//                    else if (dataPaginateStatus == "buffer") {
-//                        //reload data if buffer has data
-//                        if(bufferDataList.isEmpty) {
-//                            self.dataPaginateStatus = "end"
-////                            self.vcDataList[self.vcDataList.count - 1] = "c" //"a"
-//                            
-//                            let vData = VideoData()
-//                            vData.setDataType(data: "c")
-//                            vData.setData(data: "c")
-//                            vData.setTextString(data: "c")
-//                            self.vcDataList[self.vcDataList.count - 1] = vData
-//                        } else {
-//                            self.dataPaginateStatus = ""
-//                            self.vcDataList.insert(contentsOf: bufferDataList, at: self.vcDataList.count - 1)
-//
-//                            bufferDataList.removeAll()
-//                        }
-//                        self.videoCV?.reloadData()
 //                    }
 //                }
 //            }
 //        }
 ////
 ////        //test > autoplay if current indexpath is the same as willDisplay indexpath, e.g. reload data
-////        if(isPanelOpen) {
-//            if(currentIndexPath == indexPath && z == "a") {
-//                if let c = cell as? VCViewCell {
-//                    print("FeedVideoCell willdisplay play: \(indexPath), \(currentIndexPath)")
+//        if(currentIndexPath == indexPath && z == "a") {
+//            if let c = cell as? VCViewCell {
+//                print("FeedVideoCell willdisplay play: \(indexPath), \(currentIndexPath)")
 ////                    c.playVideo()
-//                    aDelegate?.sfvcAutoplayVideo(cell: self, vCCell: c)
-//                }
+//                aDelegate?.sfvcAutoplayVideo(cell: self, vCCell: c)
 //            }
-////        }
+//        }
 //    }
 //    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
 ////        print("videoCVpanel didEndDisplay: \(indexPath)")
@@ -580,25 +649,27 @@ extension ScrollFeedVideoCell: VCViewCellDelegate{
 //            return
 //        }
 //        
-////        let z = vcDataList[visibleIndexPath.row]
-//        let z = vcDataList[visibleIndexPath.row].dataType
-//        print("video scroll page point: \(visibleIndexPath), \(currentIndexPath), \(z)")
-//        
-//        //play video when current page
-//        let currentVc = a.cellForItem(at: visibleIndexPath)
-//        let previousVc = a.cellForItem(at: currentIndexPath)
-////        print("video scroll page check: \(currentVc), \(previousVc)")
-//        
-//        currentIndexPath = visibleIndexPath
-//        
-//        guard let b = currentVc as? VCViewCell else {
-//            return
-//        }
+////        if(!vcDataList.isEmpty) {
+////            print("video scroll page point: \(visibleIndexPath), \(currentIndexPath)")
+//            let z = vcDataList[visibleIndexPath.row].dataType
+//            print("video scroll page point: \(visibleIndexPath), \(currentIndexPath), \(z)")
+//            
+//            //play video when current page
+//            let currentVc = a.cellForItem(at: visibleIndexPath)
+//            let previousVc = a.cellForItem(at: currentIndexPath)
+//    //        print("video scroll page check: \(currentVc), \(previousVc)")
+//            
+//            currentIndexPath = visibleIndexPath
+//            
+//            guard let b = currentVc as? VCViewCell else {
+//                return
+//            }
 //
-//        //test > only play video if data is "a"(valid data, not loading spinner) && scroll from previous viewcell
-//        if(currentVc != previousVc && z == "a") {
-//            b.playVideo()
-//        }
+//            //test > only play video if data is "a"(valid data, not loading spinner) && scroll from previous viewcell
+//            if(currentVc != previousVc && z == "a") {
+//                b.playVideo()
+//            }
+////        }
 //        
 //        aDelegate?.sfvcSrollViewDidEndDecelerating(offsetY: scrollView.contentOffset.y)
 //    }
@@ -626,10 +697,24 @@ extension ScrollFeedVideoCell: VCViewCellDelegate{
 ////        openComment()
 //        aDelegate?.sfvcDidClickComment()
 //    }
-//    func didClickShare() {
+//    func didClickShare(vc: VCViewCell) {
 //        //test
-////        openShareSheet()
-//        aDelegate?.sfvcDidClickShare()
+////        aDelegate?.sfvcDidClickShare()
+//        
+//        guard let a = self.videoCV else {
+//            return
+//        }
+//        print("video scroll page point share: \(a.indexPathsForVisibleItems)")
+//        let currentVc = a.cellForItem(at: self.currentIndexPath)
+//        if(currentVc == vc) {
+//            
+//            aDelegate?.sfvcDidClickShare()
+//            
+//            selectedItemIdx = currentIndexPath.row
+//            print("scrollfeedvideo selected \(selectedItemIdx)")
+//        }
+//    }
+//    func didClickRefresh() {
+//        aDelegate?.sfvcDidClickRefresh()
 //    }
 //}
-

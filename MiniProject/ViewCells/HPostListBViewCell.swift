@@ -20,15 +20,19 @@ class HPostListBViewCell: UICollectionViewCell {
     let aGridNameText = UILabel()
     let aText = UILabel()
     var gifImage1 = SDAnimatedImageView()
+    let aUserPhoto = SDAnimatedImageView()
+    let aaText = UILabel()
+    let vBtn = UIImageView()
+    let aUserNameText = UILabel()
     
 //    weak var aDelegate : FeedHListCellDelegate?
     weak var aDelegate : HListCellDelegate?
     
     //test > dynamic method for various cells format
     let aTest = UIView()
-    let aTest2 = UIView()
+//    let aTest2 = UIView()
     var aTestArray = [UIView]()
-    var aTest2Array = [UIView]()
+//    var aTest2Array = [UIView]()
     
     //test > video player
     var player: AVPlayer!
@@ -42,7 +46,7 @@ class HPostListBViewCell: UICollectionViewCell {
     var bubbleArray = [PageBubbleIndicator]()
     
     var t_s = 0.0 //for video pause/resume time
-    var p_s = 0 //for photo carousel last viewed photo
+//    var p_s = 0 //for photo carousel last viewed photo
     
     let bText = UILabel()
     let cText = UILabel()
@@ -87,22 +91,42 @@ class HPostListBViewCell: UICollectionViewCell {
 //        aResult.addGestureRecognizer(tapGR)
 //        atapGR.require(toFail: tapGR) //enable double tap
         ////////////////////
+
+        //test > add container for clicks event
+        let aCon = UIView()
+        contentView.addSubview(aCon)
+//        aCon.backgroundColor = .red
+        aCon.translatesAutoresizingMaskIntoConstraints = false
+        aCon.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0).isActive = true
+        aCon.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 0).isActive = true
+//        aCon.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0).isActive = true
+        aCon.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0).isActive = true
+        
+        let atapGR = UITapGestureRecognizer(target: self, action: #selector(onSingleClicked))
+        atapGR.numberOfTapsRequired = 1
+        aCon.addGestureRecognizer(atapGR)
+        let tapGR = UITapGestureRecognizer(target: self, action: #selector(onDoubleClicked))
+        tapGR.numberOfTapsRequired = 2
+        aCon.addGestureRecognizer(tapGR)
+        atapGR.require(toFail: tapGR) //enable double tap
         
         let eUserCover = UIView()
 //        eUserCover.backgroundColor = .ddmBlackOverlayColor
 //        eUserCover.backgroundColor = .white
         eUserCover.backgroundColor = .clear
-        contentView.addSubview(eUserCover)
+//        contentView.addSubview(eUserCover)
+        aCon.addSubview(eUserCover)
         eUserCover.translatesAutoresizingMaskIntoConstraints = false
-        eUserCover.topAnchor.constraint(equalTo: aResult.topAnchor, constant: 20).isActive = true //10
-        eUserCover.leadingAnchor.constraint(equalTo: aResult.leadingAnchor, constant: 20).isActive = true //20
+        eUserCover.topAnchor.constraint(equalTo: aCon.topAnchor, constant: 20).isActive = true //10
+        eUserCover.leadingAnchor.constraint(equalTo: aCon.leadingAnchor, constant: 20).isActive = true //20
         eUserCover.heightAnchor.constraint(equalToConstant: 40).isActive = true
         eUserCover.widthAnchor.constraint(equalToConstant: 40).isActive = true
         eUserCover.layer.cornerRadius = 20
         eUserCover.layer.opacity = 1.0 //default 0.3
         
-        let aUserPhoto = SDAnimatedImageView()
-        contentView.addSubview(aUserPhoto)
+//        let aUserPhoto = SDAnimatedImageView()
+//        contentView.addSubview(aUserPhoto)
+        aCon.addSubview(aUserPhoto)
         aUserPhoto.translatesAutoresizingMaskIntoConstraints = false
         aUserPhoto.widthAnchor.constraint(equalToConstant: 40).isActive = true //36
         aUserPhoto.heightAnchor.constraint(equalToConstant: 40).isActive = true
@@ -113,9 +137,9 @@ class HPostListBViewCell: UICollectionViewCell {
         aUserPhoto.contentMode = .scaleAspectFill
         aUserPhoto.layer.masksToBounds = true
         aUserPhoto.layer.cornerRadius = 20
-        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-        aUserPhoto.sd_setImage(with: imageUrl)
-        aUserPhoto.backgroundColor = .ddmDarkGreyColor
+//        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//        aUserPhoto.sd_setImage(with: imageUrl)
+        aUserPhoto.backgroundColor = .ddmDarkColor
         aUserPhoto.isUserInteractionEnabled = true
         aUserPhoto.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onUserClicked)))
 
@@ -124,7 +148,8 @@ class HPostListBViewCell: UICollectionViewCell {
         aGridNameText.textColor = .white
         aGridNameText.font = .boldSystemFont(ofSize: 14)
 //        aGridNameText.font = .systemFont(ofSize: 14)
-        contentView.addSubview(aGridNameText)
+//        contentView.addSubview(aGridNameText)
+        aCon.addSubview(aGridNameText)
         aGridNameText.translatesAutoresizingMaskIntoConstraints = false
 //        aGridNameText.bottomAnchor.constraint(equalTo: aUserPhoto.bottomAnchor).isActive = true
 //        aGridNameText.centerYAnchor.constraint(equalTo: aUserPhoto.centerYAnchor).isActive = true
@@ -135,10 +160,11 @@ class HPostListBViewCell: UICollectionViewCell {
         aGridNameText.text = "-"
         
         //test > verified badge
-        let vBtn = UIImageView(image: UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate))
+//        let vBtn = UIImageView(image: UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate))
 //        vBtn.tintColor = .yellow //ddmGoldenYellowColor
         vBtn.tintColor = .white //darkGray
-        contentView.addSubview(vBtn)
+//        contentView.addSubview(vBtn)
+        aCon.addSubview(vBtn)
         vBtn.translatesAutoresizingMaskIntoConstraints = false
         vBtn.leadingAnchor.constraint(equalTo: aGridNameText.trailingAnchor, constant: 5).isActive = true
         vBtn.centerYAnchor.constraint(equalTo: aGridNameText.centerYAnchor, constant: 0).isActive = true
@@ -146,20 +172,22 @@ class HPostListBViewCell: UICollectionViewCell {
         vBtn.widthAnchor.constraint(equalToConstant: 14).isActive = true
         //
         
-        let aUserNameText = UILabel()
+//        let aUserNameText = UILabel()
         aUserNameText.textAlignment = .left
         aUserNameText.textColor = .white
         aUserNameText.font = .systemFont(ofSize: 12)
-        contentView.addSubview(aUserNameText)
+//        contentView.addSubview(aUserNameText)
+        aCon.addSubview(aUserNameText)
         aUserNameText.translatesAutoresizingMaskIntoConstraints = false
         aUserNameText.topAnchor.constraint(equalTo: aGridNameText.bottomAnchor).isActive = true
         aUserNameText.leadingAnchor.constraint(equalTo: aGridNameText.leadingAnchor, constant: 0).isActive = true
-        aUserNameText.text = "3hr . 1.2m views"
+        aUserNameText.text = "-"
 //        aUserNameText.text = "@mic1809"
         aUserNameText.layer.opacity = 0.3 //0.5
         
 //        let aTest = UIView()
-        contentView.addSubview(aTest)
+//        contentView.addSubview(aTest)
+        aCon.addSubview(aTest)
         aTest.translatesAutoresizingMaskIntoConstraints = false
         aTest.leadingAnchor.constraint(equalTo: aResult.leadingAnchor, constant: 0).isActive = true
         aTest.trailingAnchor.constraint(equalTo: aResult.trailingAnchor, constant: 0).isActive = true
@@ -168,23 +196,24 @@ class HPostListBViewCell: UICollectionViewCell {
         //test > click on aTest for click post
 //        aTest.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onSingleClicked)))
         
-        let atapGR = UITapGestureRecognizer(target: self, action: #selector(onSingleClicked))
-        atapGR.numberOfTapsRequired = 1
-        aTest.addGestureRecognizer(atapGR)
-        let tapGR = UITapGestureRecognizer(target: self, action: #selector(onDoubleClicked))
-        tapGR.numberOfTapsRequired = 2
-        aTest.addGestureRecognizer(tapGR)
-        atapGR.require(toFail: tapGR) //enable double tap
+//        let atapGR = UITapGestureRecognizer(target: self, action: #selector(onSingleClicked))
+//        atapGR.numberOfTapsRequired = 1
+//        aTest.addGestureRecognizer(atapGR)
+//        let tapGR = UITapGestureRecognizer(target: self, action: #selector(onDoubleClicked))
+//        tapGR.numberOfTapsRequired = 2
+//        aTest.addGestureRecognizer(tapGR)
+//        atapGR.require(toFail: tapGR) //enable double tap
         
         //test 2 > design location 2
         let aBox = UIView()
 //        aBox.backgroundColor = .ddmBlackOverlayColor
         aBox.backgroundColor = .ddmDarkColor
-        contentView.addSubview(aBox)
+//        contentView.addSubview(aBox)
+        aCon.addSubview(aBox)
         aBox.clipsToBounds = true
         aBox.translatesAutoresizingMaskIntoConstraints = false
 //        aBox.leadingAnchor.constraint(equalTo: aText.leadingAnchor, constant: 0).isActive = true
-        aBox.leadingAnchor.constraint(equalTo: aResult.leadingAnchor, constant: 20).isActive = true
+        aBox.leadingAnchor.constraint(equalTo: aCon.leadingAnchor, constant: 20).isActive = true
         aBox.heightAnchor.constraint(equalToConstant: 30).isActive = true //default: 50
 //        aBox.topAnchor.constraint(equalTo: aText.bottomAnchor, constant: 20).isActive = true
 //        aBox.topAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 20).isActive = true
@@ -197,7 +226,8 @@ class HPostListBViewCell: UICollectionViewCell {
 
         let bBox = UIView()
         bBox.backgroundColor = .clear //yellow
-        contentView.addSubview(bBox)
+//        contentView.addSubview(bBox)
+        aCon.addSubview(bBox)
         bBox.clipsToBounds = true
         bBox.translatesAutoresizingMaskIntoConstraints = false
         bBox.widthAnchor.constraint(equalToConstant: 16).isActive = true //ori: 40
@@ -218,32 +248,42 @@ class HPostListBViewCell: UICollectionViewCell {
         gridViewBtn.widthAnchor.constraint(equalToConstant: 16).isActive = true
 //        gridViewBtn.layer.opacity = 0.5
 
-        let aaText = UILabel()
+//        let aaText = UILabel()
         aaText.textAlignment = .left
         aaText.textColor = .white
 //        aaText.textColor = .ddmDarkColor
         aaText.font = .boldSystemFont(ofSize: 12)
 //        aaText.font = .systemFont(ofSize: 12)
-        contentView.addSubview(aaText)
+//        contentView.addSubview(aaText)
+        aCon.addSubview(aaText)
         aaText.clipsToBounds = true
         aaText.translatesAutoresizingMaskIntoConstraints = false
         aaText.topAnchor.constraint(equalTo: aBox.topAnchor, constant: 5).isActive = true
         aaText.bottomAnchor.constraint(equalTo: aBox.bottomAnchor, constant: -5).isActive = true
         aaText.leadingAnchor.constraint(equalTo: bBox.trailingAnchor, constant: 5).isActive = true //10
         aaText.trailingAnchor.constraint(equalTo: aBox.trailingAnchor, constant: -10).isActive = true
-        aaText.text = "Petronas Twin Tower"
+//        aaText.text = "Petronas Twin Tower"
+        aaText.text = "-"
 //        aaText.layer.opacity = 0.5
         
         //test > post performance count metrics
+        let bMiniCon = UIView()
+        aCon.addSubview(bMiniCon)
+        bMiniCon.translatesAutoresizingMaskIntoConstraints = false
+        bMiniCon.topAnchor.constraint(equalTo: aBox.bottomAnchor, constant: 10).isActive = true
+        bMiniCon.leadingAnchor.constraint(equalTo: aCon.leadingAnchor, constant: 20).isActive = true
+        bMiniCon.heightAnchor.constraint(equalToConstant: 30).isActive = true //26
+        bMiniCon.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        bMiniCon.isUserInteractionEnabled = true
+        bMiniCon.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onLoveClicked)))
+        
         let bMini = UIView()
         bMini.backgroundColor = .ddmDarkColor
-        contentView.addSubview(bMini)
+//        contentView.addSubview(bMini)
+        bMiniCon.addSubview(bMini)
         bMini.translatesAutoresizingMaskIntoConstraints = false
-//        bMini.bottomAnchor.constraint(equalTo: videoPanel.bottomAnchor, constant: -30).isActive = true
-//        bMini.topAnchor.constraint(equalTo: aText.bottomAnchor, constant: 30).isActive = true
-        bMini.topAnchor.constraint(equalTo: aBox.bottomAnchor, constant: 10).isActive = true
-//        bMini.leadingAnchor.constraint(equalTo: aText.leadingAnchor, constant: 0).isActive = true
-        bMini.leadingAnchor.constraint(equalTo: aResult.leadingAnchor, constant: 20).isActive = true
+        bMini.centerYAnchor.constraint(equalTo: bMiniCon.centerYAnchor).isActive = true
+        bMini.centerXAnchor.constraint(equalTo: bMiniCon.centerXAnchor).isActive = true
         bMini.heightAnchor.constraint(equalToConstant: 30).isActive = true //26
         bMini.widthAnchor.constraint(equalToConstant: 30).isActive = true
         bMini.layer.cornerRadius = 15
@@ -254,35 +294,47 @@ class HPostListBViewCell: UICollectionViewCell {
         bMiniBtn.image = UIImage(named:"icon_love")?.withRenderingMode(.alwaysTemplate)
         bMiniBtn.tintColor = .white
 //        bMiniBtn.tintColor = .red
-        contentView.addSubview(bMiniBtn)
+//        contentView.addSubview(bMiniBtn)
+        bMiniCon.addSubview(bMiniBtn)
         bMiniBtn.translatesAutoresizingMaskIntoConstraints = false
         bMiniBtn.centerXAnchor.constraint(equalTo: bMini.centerXAnchor).isActive = true
         bMiniBtn.centerYAnchor.constraint(equalTo: bMini.centerYAnchor).isActive = true
         bMiniBtn.heightAnchor.constraint(equalToConstant: 18).isActive = true //16
         bMiniBtn.widthAnchor.constraint(equalToConstant: 18).isActive = true
-        bMiniBtn.isUserInteractionEnabled = true
+//        bMiniBtn.isUserInteractionEnabled = true
 //        bMiniBtn.layer.opacity = 0.5
-        bMiniBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onLoveClicked)))
+//        bMiniBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onLoveClicked)))
         
 //        let bText = UILabel()
         bText.textAlignment = .left
         bText.textColor = .white
         bText.font = .boldSystemFont(ofSize: 10)
-        contentView.addSubview(bText)
+//        contentView.addSubview(bText)
+        aCon.addSubview(bText)
         bText.clipsToBounds = true
         bText.translatesAutoresizingMaskIntoConstraints = false
-        bText.leadingAnchor.constraint(equalTo: bMini.trailingAnchor, constant: 2).isActive = true
-        bText.centerYAnchor.constraint(equalTo: bMini.centerYAnchor).isActive = true
+        bText.leadingAnchor.constraint(equalTo: bMiniCon.trailingAnchor, constant: 2).isActive = true
+        bText.centerYAnchor.constraint(equalTo: bMiniCon.centerYAnchor).isActive = true
         bText.text = "-"
 //        bText.layer.opacity = 0.5
         
+        let cMiniCon = UIView()
+        aCon.addSubview(cMiniCon)
+        cMiniCon.translatesAutoresizingMaskIntoConstraints = false
+        cMiniCon.topAnchor.constraint(equalTo: bMiniCon.topAnchor, constant: 0).isActive = true
+        cMiniCon.leadingAnchor.constraint(equalTo: bText.trailingAnchor, constant: 20).isActive = true
+        cMiniCon.heightAnchor.constraint(equalToConstant: 30).isActive = true //26
+        cMiniCon.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        cMiniCon.isUserInteractionEnabled = true
+        cMiniCon.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onCommentBtnClicked)))
+        
         let cMini = UIView()
         cMini.backgroundColor = .ddmDarkColor
-        contentView.addSubview(cMini)
+//        contentView.addSubview(cMini)
+        cMiniCon.addSubview(cMini)
         cMini.translatesAutoresizingMaskIntoConstraints = false
-//        cMini.bottomAnchor.constraint(equalTo: videoPanel.bottomAnchor, constant: -30).isActive = true
-        cMini.topAnchor.constraint(equalTo: bMini.topAnchor, constant: 0).isActive = true
-        cMini.leadingAnchor.constraint(equalTo: bText.trailingAnchor, constant: 20).isActive = true
+        cMini.centerYAnchor.constraint(equalTo: cMiniCon.centerYAnchor).isActive = true
+        cMini.centerXAnchor.constraint(equalTo: cMiniCon.centerXAnchor).isActive = true
         cMini.heightAnchor.constraint(equalToConstant: 30).isActive = true
         cMini.widthAnchor.constraint(equalToConstant: 30).isActive = true
         cMini.layer.cornerRadius = 15
@@ -293,37 +345,49 @@ class HPostListBViewCell: UICollectionViewCell {
         let cMiniBtn = UIImageView(image: UIImage(named:"icon_comment")?.withRenderingMode(.alwaysTemplate))
 //        cMiniBtn.image = UIImage(named:"icon_comment")?.withRenderingMode(.alwaysTemplate)
         cMiniBtn.tintColor = .white //white
-        contentView.addSubview(cMiniBtn)
+//        contentView.addSubview(cMiniBtn)
+        cMiniCon.addSubview(cMiniBtn)
         cMiniBtn.translatesAutoresizingMaskIntoConstraints = false
         cMiniBtn.centerXAnchor.constraint(equalTo: cMini.centerXAnchor).isActive = true
         cMiniBtn.centerYAnchor.constraint(equalTo: cMini.centerYAnchor).isActive = true
         cMiniBtn.heightAnchor.constraint(equalToConstant: 16).isActive = true //16
         cMiniBtn.widthAnchor.constraint(equalToConstant: 16).isActive = true //16
-        cMiniBtn.isUserInteractionEnabled = true
+//        cMiniBtn.isUserInteractionEnabled = true
 //        cMiniBtn.layer.opacity = 0.5
 //        cMiniBtn.isHidden = true
-        cMiniBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onCommentBtnClicked)))
+//        cMiniBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onCommentBtnClicked)))
         
 //        let cText = UILabel()
         cText.textAlignment = .left
         cText.textColor = .white
         cText.font = .boldSystemFont(ofSize: 10)
-        contentView.addSubview(cText)
+//        contentView.addSubview(cText)
+        aCon.addSubview(cText)
         cText.clipsToBounds = true
         cText.translatesAutoresizingMaskIntoConstraints = false
-        cText.leadingAnchor.constraint(equalTo: cMini.trailingAnchor, constant: 2).isActive = true
-        cText.centerYAnchor.constraint(equalTo: cMini.centerYAnchor).isActive = true
+        cText.leadingAnchor.constraint(equalTo: cMiniCon.trailingAnchor, constant: 2).isActive = true
+        cText.centerYAnchor.constraint(equalTo: cMiniCon.centerYAnchor).isActive = true
         cText.text = "-"
 //        cText.isHidden = true
 //        cText.layer.opacity = 0.5
         
+        let dMiniCon = UIView()
+        aCon.addSubview(dMiniCon)
+        dMiniCon.translatesAutoresizingMaskIntoConstraints = false
+        dMiniCon.topAnchor.constraint(equalTo: bMiniCon.topAnchor, constant: 0).isActive = true
+        dMiniCon.leadingAnchor.constraint(equalTo: cText.trailingAnchor, constant: 20).isActive = true
+        dMiniCon.heightAnchor.constraint(equalToConstant: 30).isActive = true //26
+        dMiniCon.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        dMiniCon.isUserInteractionEnabled = true
+        dMiniCon.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBookmarkClicked)))
+        
         let dMini = UIView()
         dMini.backgroundColor = .ddmDarkColor
-        contentView.addSubview(dMini)
+//        contentView.addSubview(dMini)
+        dMiniCon.addSubview(dMini)
         dMini.translatesAutoresizingMaskIntoConstraints = false
-//        dMini.bottomAnchor.constraint(equalTo: videoPanel.bottomAnchor, constant: -30).isActive = true
-        dMini.topAnchor.constraint(equalTo: cMini.topAnchor, constant: 0).isActive = true //cMini
-        dMini.leadingAnchor.constraint(equalTo: cText.trailingAnchor, constant: 20).isActive = true //cText
+        dMini.centerYAnchor.constraint(equalTo: dMiniCon.centerYAnchor).isActive = true
+        dMini.centerXAnchor.constraint(equalTo: dMiniCon.centerXAnchor).isActive = true
         dMini.heightAnchor.constraint(equalToConstant: 30).isActive = true
         dMini.widthAnchor.constraint(equalToConstant: 30).isActive = true
         dMini.layer.cornerRadius = 15
@@ -335,36 +399,48 @@ class HPostListBViewCell: UICollectionViewCell {
         dMiniBtn.image = UIImage(named:"icon_round_bookmark_b")?.withRenderingMode(.alwaysTemplate)
         dMiniBtn.tintColor = .white
 //        dMiniBtn.tintColor = .ddmGoldenYellowColor
-        contentView.addSubview(dMiniBtn)
+//        contentView.addSubview(dMiniBtn)
+        dMiniCon.addSubview(dMiniBtn)
         dMiniBtn.translatesAutoresizingMaskIntoConstraints = false
         dMiniBtn.centerXAnchor.constraint(equalTo: dMini.centerXAnchor).isActive = true
         dMiniBtn.centerYAnchor.constraint(equalTo: dMini.centerYAnchor).isActive = true
         dMiniBtn.heightAnchor.constraint(equalToConstant: 18).isActive = true //16
         dMiniBtn.widthAnchor.constraint(equalToConstant: 18).isActive = true
-        dMiniBtn.isUserInteractionEnabled = true
+//        dMiniBtn.isUserInteractionEnabled = true
 //        dMiniBtn.layer.opacity = 0.5
-        dMiniBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBookmarkClicked)))
+//        dMiniBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBookmarkClicked)))
         
 //        let dText = UILabel()
         dText.textAlignment = .left
         dText.textColor = .white
         dText.font = .boldSystemFont(ofSize: 10)
-        contentView.addSubview(dText)
+//        contentView.addSubview(dText)
+        aCon.addSubview(dText)
         dText.clipsToBounds = true
         dText.translatesAutoresizingMaskIntoConstraints = false
-        dText.leadingAnchor.constraint(equalTo: dMini.trailingAnchor, constant: 2).isActive = true
-        dText.centerYAnchor.constraint(equalTo: dMini.centerYAnchor).isActive = true
+        dText.leadingAnchor.constraint(equalTo: dMiniCon.trailingAnchor, constant: 2).isActive = true
+        dText.centerYAnchor.constraint(equalTo: dMiniCon.centerYAnchor).isActive = true
         dText.text = "-"
 //        dText.layer.opacity = 0.5
+        
+        let eMiniCon = UIView()
+        aCon.addSubview(eMiniCon)
+        eMiniCon.translatesAutoresizingMaskIntoConstraints = false
+        eMiniCon.topAnchor.constraint(equalTo: bMiniCon.topAnchor, constant: 0).isActive = true
+        eMiniCon.leadingAnchor.constraint(equalTo: dText.trailingAnchor, constant: 20).isActive = true
+        eMiniCon.heightAnchor.constraint(equalToConstant: 28).isActive = true //26
+        eMiniCon.widthAnchor.constraint(equalToConstant: 28).isActive = true
+        eMiniCon.isUserInteractionEnabled = true
+        eMiniCon.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onShareClicked)))
         
         let eMini = UIView()
         eMini.backgroundColor = .ddmDarkColor
 //        eMini.backgroundColor = .green
-        contentView.addSubview(eMini)
+//        contentView.addSubview(eMini)
+        eMiniCon.addSubview(eMini)
         eMini.translatesAutoresizingMaskIntoConstraints = false
-//        eMini.bottomAnchor.constraint(equalTo: videoPanel.bottomAnchor, constant: -30).isActive = true
-        eMini.topAnchor.constraint(equalTo: dMini.topAnchor, constant: 0).isActive = true
-        eMini.leadingAnchor.constraint(equalTo: dText.trailingAnchor, constant: 20).isActive = true
+        eMini.centerYAnchor.constraint(equalTo: eMiniCon.centerYAnchor).isActive = true
+        eMini.centerXAnchor.constraint(equalTo: eMiniCon.centerXAnchor).isActive = true
         eMini.heightAnchor.constraint(equalToConstant: 30).isActive = true
         eMini.widthAnchor.constraint(equalToConstant: 30).isActive = true
         eMini.layer.cornerRadius = 15
@@ -375,15 +451,16 @@ class HPostListBViewCell: UICollectionViewCell {
 //        let eMiniBtn = UIImageView(image: UIImage(named:"icon_round_repeat")?.withRenderingMode(.alwaysTemplate))
         eMiniBtn.tintColor = .white
 //        eMiniBtn.tintColor = .green
-        contentView.addSubview(eMiniBtn)
+//        contentView.addSubview(eMiniBtn)
+        eMiniCon.addSubview(eMiniBtn)
         eMiniBtn.translatesAutoresizingMaskIntoConstraints = false
         eMiniBtn.centerXAnchor.constraint(equalTo: eMini.centerXAnchor).isActive = true
         eMiniBtn.centerYAnchor.constraint(equalTo: eMini.centerYAnchor, constant: -2).isActive = true //-2
         eMiniBtn.heightAnchor.constraint(equalToConstant: 22).isActive = true //22
         eMiniBtn.widthAnchor.constraint(equalToConstant: 22).isActive = true
-        eMiniBtn.isUserInteractionEnabled = true
+//        eMiniBtn.isUserInteractionEnabled = true
 //        eMiniBtn.layer.opacity = 0.5
-        eMiniBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onShareClicked)))
+//        eMiniBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onShareClicked)))
         
 //        let eMiniBtn = UIImageView(image: UIImage(named:"icon_round_repeat")?.withRenderingMode(.alwaysTemplate))
 //        eMiniBtn.tintColor = .green
@@ -400,23 +477,26 @@ class HPostListBViewCell: UICollectionViewCell {
         eText.textAlignment = .left
         eText.textColor = .white
         eText.font = .boldSystemFont(ofSize: 10)
-        contentView.addSubview(eText)
+//        contentView.addSubview(eText)
+        aCon.addSubview(eText)
         eText.clipsToBounds = true
         eText.translatesAutoresizingMaskIntoConstraints = false
-        eText.leadingAnchor.constraint(equalTo: eMini.trailingAnchor, constant: 2).isActive = true
-        eText.centerYAnchor.constraint(equalTo: eMini.centerYAnchor).isActive = true
+        eText.leadingAnchor.constraint(equalTo: eMiniCon.trailingAnchor, constant: 2).isActive = true
+        eText.centerYAnchor.constraint(equalTo: eMiniCon.centerYAnchor).isActive = true
         eText.text = "-"
 //        eText.layer.opacity = 0.5
         
 //        //test** > comment divider
         let e2UserCover = UIView()
         e2UserCover.backgroundColor = .clear
-        contentView.addSubview(e2UserCover)
+//        contentView.addSubview(e2UserCover)
+        aCon.addSubview(e2UserCover)
         e2UserCover.translatesAutoresizingMaskIntoConstraints = false
         e2UserCover.topAnchor.constraint(equalTo: bMini.bottomAnchor, constant: 30).isActive = true //20
-        e2UserCover.leadingAnchor.constraint(equalTo: aResult.leadingAnchor, constant: 0).isActive = true
+        e2UserCover.leadingAnchor.constraint(equalTo: aCon.leadingAnchor, constant: 0).isActive = true
         e2UserCover.heightAnchor.constraint(equalToConstant: 26).isActive = true //40
         e2UserCover.widthAnchor.constraint(equalToConstant: 0).isActive = true //40
+        e2UserCover.bottomAnchor.constraint(equalTo: aCon.bottomAnchor, constant: 0).isActive = true //test
         
         let commentTitleText = UILabel()
         commentTitleText.textAlignment = .center
@@ -424,16 +504,18 @@ class HPostListBViewCell: UICollectionViewCell {
 //        commentTitleText.font = .systemFont(ofSize: 13) //default 14
         commentTitleText.font = .boldSystemFont(ofSize: 13) //default 14
         commentTitleText.text = "Comments"
-        contentView.addSubview(commentTitleText)
+        aCon.addSubview(commentTitleText)
+//        contentView.addSubview(commentTitleText)
         commentTitleText.translatesAutoresizingMaskIntoConstraints = false
         commentTitleText.centerYAnchor.constraint(equalTo: e2UserCover.centerYAnchor, constant: 0).isActive = true
-        commentTitleText.leadingAnchor.constraint(equalTo: aResult.leadingAnchor, constant: 20).isActive = true
+        commentTitleText.leadingAnchor.constraint(equalTo: aCon.leadingAnchor, constant: 20).isActive = true
 //        commentTitleText.layer.opacity = 0.5
 
         let commentTitleBtn = UIImageView(image: UIImage(named:"icon_round_arrow_down")?.withRenderingMode(.alwaysTemplate))
 //            aArrowBtn.image = UIImage(named:"icon_round_arrow_down")?.withRenderingMode(.alwaysTemplate)
         commentTitleBtn.tintColor = .white
-        contentView.addSubview(commentTitleBtn)
+//        contentView.addSubview(commentTitleBtn)
+        aCon.addSubview(commentTitleBtn)
         commentTitleBtn.translatesAutoresizingMaskIntoConstraints = false
         commentTitleBtn.leadingAnchor.constraint(equalTo: commentTitleText.trailingAnchor).isActive = true
         commentTitleBtn.centerYAnchor.constraint(equalTo: commentTitleText.centerYAnchor).isActive = true
@@ -442,11 +524,11 @@ class HPostListBViewCell: UICollectionViewCell {
         //**
         
         //test > dynamic cell for comment
-        contentView.addSubview(aTest2)
-        aTest2.translatesAutoresizingMaskIntoConstraints = false
-        aTest2.leadingAnchor.constraint(equalTo: aResult.leadingAnchor, constant: 0).isActive = true
-        aTest2.trailingAnchor.constraint(equalTo: aResult.trailingAnchor, constant: 0).isActive = true
-        aTest2.topAnchor.constraint(equalTo: bMini.bottomAnchor, constant: 0).isActive = true
+//        contentView.addSubview(aTest2)
+//        aTest2.translatesAutoresizingMaskIntoConstraints = false
+//        aTest2.leadingAnchor.constraint(equalTo: aResult.leadingAnchor, constant: 0).isActive = true
+//        aTest2.trailingAnchor.constraint(equalTo: aResult.trailingAnchor, constant: 0).isActive = true
+//        aTest2.topAnchor.constraint(equalTo: bMini.bottomAnchor, constant: 0).isActive = true
     
     }
     
@@ -473,7 +555,10 @@ class HPostListBViewCell: UICollectionViewCell {
         //**
         
         aGridNameText.text = "-"
-//        aText.text = "-"
+        vBtn.image = nil
+        aaText.text = "-"
+        let imageUrl = URL(string: "")
+        aUserPhoto.sd_setImage(with: imageUrl)
         
         bText.text = "0"
         cText.text = "0"
@@ -485,29 +570,62 @@ class HPostListBViewCell: UICollectionViewCell {
         }
         aTestArray.removeAll()
         
-        for e in aTest2Array {
-            e.removeFromSuperview()
-        }
-        aTest2Array.removeAll()
+//        for e in aTest2Array {
+//            e.removeFromSuperview()
+//        }
+//        aTest2Array.removeAll()
         
-        var gifUrl1 = URL(string: "")
+        let gifUrl1 = URL(string: "")
         gifImage1.sd_setImage(with: gifUrl1)
     }
     
-//    func configure(data: String) {
-//        aGridNameText.text = "Michael Kins"
-//        aText.text = data
-//
-//        var gifUrl1 = URL(string: "")
-//        if(data == "Nice food, nice environment! Worth a visit. \n\nSo Good.") {
-//            gifUrl1 = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
-//        } else {
-//            gifUrl1 = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-//        }
-//        gifImage1.sd_setImage(with: gifUrl1)
-//    }
+    //*test > async fetch images/names/videos
+    func asyncConfigure(data: String) {
+        let id = "u_"
+        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    print("pdp api success \(id), \(l)")
+                    
+                    guard let self = self else {
+                        return
+                    }
+
+                    self.aGridNameText.text = "Michael Kins"
+                    self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
+                    
+                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+                    self.aUserPhoto.sd_setImage(with: imageUrl)
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    self.aGridNameText.text = "-"
+                    self.vBtn.image = nil
+                    
+                    let imageUrl = URL(string: "")
+                    self.aUserPhoto.sd_setImage(with: imageUrl)
+                    
+                }
+                break
+            }
+        }
+    }
+    //*
+    
     func configure(data: PostData) {
-        aGridNameText.text = "Michael Kins"
+//        aGridNameText.text = "Michael Kins"
+        asyncConfigure(data: "")
+        
+        aUserNameText.text = "3hr . 1.2m views"
+        aaText.text = "Petronas Twin Tower"
         
 //        let attributedText = NSMutableAttributedString(string: "Michael ")
 ////        let linkText = "www.example.com"
@@ -1303,10 +1421,10 @@ class HPostListBViewCell: UICollectionViewCell {
             lastArrayE.bottomAnchor.constraint(equalTo: aTest.bottomAnchor, constant: 0).isActive = true
         }
         
-        if(!aTest2Array.isEmpty) {
-            let lastArrayE = aTest2Array[aTest2Array.count - 1]
-            lastArrayE.bottomAnchor.constraint(equalTo: aTest2.bottomAnchor, constant: 0).isActive = true
-        }
+//        if(!aTest2Array.isEmpty) {
+//            let lastArrayE = aTest2Array[aTest2Array.count - 1]
+//            lastArrayE.bottomAnchor.constraint(equalTo: aTest2.bottomAnchor, constant: 0).isActive = true
+//        }
         
         //populate data count
         let dataC = data.dataCount
@@ -1325,10 +1443,10 @@ class HPostListBViewCell: UICollectionViewCell {
     }
     
     @objc func onCommentBtnClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.hListDidClickVcvComment()
+        aDelegate?.hListDidClickVcvComment(vc: self)
     }
     @objc func onShareClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.hListDidClickVcvShare()
+        aDelegate?.hListDidClickVcvShare(vc: self)
     }
     @objc func onLoveClicked(gesture: UITapGestureRecognizer) {
         
@@ -1477,25 +1595,17 @@ class HPostListBViewCell: UICollectionViewCell {
         let aColor = bMiniBtn.tintColor
         if(aColor == .white) {
             bMiniBtn.tintColor = .red
-//            bMiniBtn.layer.opacity = 1
         } else {
             bMiniBtn.tintColor = .white
-//            bMiniBtn.layer.opacity = 0.5
         }
-        
-//        updateResult()
     }
     func reactOnBookmarkClick() {
         let aColor = dMiniBtn.tintColor
         if(aColor == .white) {
             dMiniBtn.tintColor = .ddmGoldenYellowColor
-//            dMiniBtn.layer.opacity = 1
         } else {
             dMiniBtn.tintColor = .white
-//            dMiniBtn.layer.opacity = 0.5
         }
-        
-//        updateResult()
     }
     
     //for video play
@@ -1524,7 +1634,8 @@ class HPostListBViewCell: UICollectionViewCell {
                     return
                 }
                 print("hpl time observe videoT:\(currentT)")
-                s.t_s = currentT
+//                s.t_s = currentT
+                s.aDelegate?.hListVideoStopTime(vc: s, ts: currentT)
             }
         }
     }

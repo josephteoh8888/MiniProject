@@ -22,6 +22,8 @@ class ScrollFeedHPostListCell: ScrollDataFeedCell {
     //test
     var hideCellIndex = -1
     
+    var selectedItemIdx = -1
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -76,6 +78,7 @@ class ScrollFeedHPostListCell: ScrollDataFeedCell {
         vCV.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
         vCV.contentInsetAdjustmentBehavior = .never
 //        vCV.isScrollEnabled = false
+        vCV.alwaysBounceVertical = true //test > when empty result, still can refetch data
         
         vCV.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "footer")
         vCV.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
@@ -122,10 +125,11 @@ class ScrollFeedHPostListCell: ScrollDataFeedCell {
                 return 0.0
             }
             b.pauseVideo()
-            vDataList[currentPlayingVidIndex].t_s = b.t_s
+//            vDataList[currentPlayingVidIndex].t_s = b.t_s
             print("sfvideo pauseCurrentVideo: \(feedCode), \(currentPlayingVidIndex)")
             
-            return b.t_s
+//            return b.t_s
+            return 0.0
         } else {
             return 0.0
         }
@@ -161,6 +165,11 @@ class ScrollFeedHPostListCell: ScrollDataFeedCell {
         hideCellIndex = -1
     }
     
+    //test > selected item for delete etc
+    func unselectItemData(){
+        selectedItemIdx = -1
+    }
+    
     //test > react to intersected video
     func reactToIntersectedVideo(intersectedIdx: Int) {
         guard let a = vCV else {
@@ -180,7 +189,7 @@ class ScrollFeedHPostListCell: ScrollDataFeedCell {
                         return
                     }
                     b.pauseVideo()
-                    vDataList[currentPlayingVidIndex].t_s = b.t_s
+//                    vDataList[currentPlayingVidIndex].t_s = b.t_s
 
                     c.resumeVideo()
                     currentPlayingVidIndex = intersectedIdx
@@ -204,7 +213,7 @@ class ScrollFeedHPostListCell: ScrollDataFeedCell {
                     return
                 }
                 b.pauseVideo()
-                vDataList[currentPlayingVidIndex].t_s = b.t_s
+//                vDataList[currentPlayingVidIndex].t_s = b.t_s
                 currentPlayingVidIndex = -1
             }
         }
@@ -267,7 +276,6 @@ extension ScrollFeedHPostListCell: UICollectionViewDelegateFlowLayout {
         
         let text = vDataList[indexPath.row].dataTextString
         let dataL = vDataList[indexPath.row].dataArray
-        let dataCh = vDataList[indexPath.row].chainDataArray
         var contentHeight = 0.0
         for l in dataL {
             if(l == "t") {
@@ -311,31 +319,45 @@ extension ScrollFeedHPostListCell: UICollectionViewDelegateFlowLayout {
                 let qHeight = qTopMargin + qUserPhotoHeight + qUserPhotoTopMargin + qContentTopMargin + qContentHeight + qFrameBottomMargin
                 contentHeight += qHeight
             }
-//            else if(l == "c") {
-//                let cUserPhotoHeight = 28.0
-//                let cUserPhotoTopMargin = 20.0 //10
-//                let cContentTopMargin = 10.0
-//                let cText = "Worth a visit."
-//                let cContentHeight = estimateHeight(text: cText, textWidth: collectionView.frame.width - 58.0 - 20.0, fontSize: 14)
-//                let cActionBtnTopMargin = 10.0
-//                let cActionBtnHeight = 26.0
-//                let cHeight = cUserPhotoHeight + cUserPhotoTopMargin + cContentTopMargin + cContentHeight + cActionBtnTopMargin + cActionBtnHeight
-//                contentHeight += cHeight
-//            }
         }
         
+        let dataCh = vDataList[indexPath.row].xChainDataArray
         for l in dataCh {
-            if(l == "c") {
-                let cUserPhotoHeight = 28.0
-                let cUserPhotoTopMargin = 20.0 //10
-                let cContentTopMargin = 10.0
-                let cText = "Worth a visit."
-                let cContentHeight = estimateHeight(text: cText, textWidth: collectionView.frame.width - 58.0 - 20.0, fontSize: 14)
-                let cActionBtnTopMargin = 10.0
-                let cActionBtnHeight = 26.0
-                let cHeight = cUserPhotoHeight + cUserPhotoTopMargin + cContentTopMargin + cContentHeight + cActionBtnTopMargin + cActionBtnHeight
-                contentHeight += cHeight
+            let xText = l.dataTextString
+            let xDataL = l.dataArray
+            var yContentHeight = 0.0
+            for y in xDataL {
+                if(y == "t") {
+                    let xContentTopMargin = 20.0
+                    let xContentHeight = estimateHeight(text: xText, textWidth: collectionView.frame.width - 53.0 - 20.0, fontSize: 13)
+                    let xHeight = xContentTopMargin + xContentHeight
+                    yContentHeight += xHeight
+                }
+                else if(y == "p") {
+                    let pTopMargin = 20.0
+                    let pContentHeight = 280.0
+                    let pHeight = pTopMargin + pContentHeight
+                    yContentHeight += pHeight
+                }
+                else if(y == "q") {
+                    let qTopMargin = 20.0
+                    let qUserPhotoHeight = 28.0
+                    let qUserPhotoTopMargin = 10.0 //10
+                    let qContentTopMargin = 10.0
+                    let qText = "Nice food, nice environment! Worth a visit. \nSo good!\n\n\n\n...\n...\n..."
+                    let qContentHeight = estimateHeight(text: qText, textWidth: collectionView.frame.width - 53.0 - 20.0, fontSize: 13)
+                    let qFrameBottomMargin = 20.0 //10
+                    let qHeight = qTopMargin + qUserPhotoHeight + qUserPhotoTopMargin + qContentTopMargin + qContentHeight + qFrameBottomMargin
+                    yContentHeight += qHeight
+                }
             }
+            let cUserPhotoHeight = 28.0
+            let cUserPhotoTopMargin = 10.0 //10
+            let cActionBtnTopMargin = 20.0
+            let cActionBtnHeight = 26.0
+            let cFrameBottomMargin = 10.0 //10
+            let cHeight = cUserPhotoHeight + cUserPhotoTopMargin + yContentHeight + cActionBtnTopMargin + cActionBtnHeight + cFrameBottomMargin
+            contentHeight += cHeight
         }
         
         let userPhotoHeight = 40.0
@@ -529,14 +551,29 @@ extension ScrollFeedHPostListCell: UICollectionViewDataSource {
 }
 
 extension ScrollFeedHPostListCell: HListCellDelegate {
-    func hListDidClickVcvComment() {
+    func hListDidClickVcvComment(vc: UICollectionViewCell) {
         aDelegate?.sfcDidClickVcvComment()
     }
     func hListDidClickVcvLove() {
         aDelegate?.sfcDidClickVcvLove()
     }
-    func hListDidClickVcvShare() {
-        aDelegate?.sfcDidClickVcvShare()
+    func hListDidClickVcvShare(vc: UICollectionViewCell) {
+//        aDelegate?.sfcDidClickVcvShare()
+        if let a = vCV {
+            for cell in a.visibleCells {
+                
+                if(cell == vc) {
+                    let selectedIndexPath = a.indexPath(for: cell)
+                    aDelegate?.sfcDidClickVcvShare()
+                    
+                    if let c = selectedIndexPath {
+                        selectedItemIdx = c.row
+                    }
+                    
+                    break
+                }
+            }
+        }
     }
     func hListDidClickVcvClickUser() {
         aDelegate?.sfcDidClickVcvClickUser()
@@ -615,6 +652,22 @@ extension ScrollFeedHPostListCell: HListCellDelegate {
                 
                 if(cell == vc) {
                     vDataList[indexPath.row].p_s = idx
+                    
+                    break
+                }
+            }
+        }
+    }
+    
+    func hListVideoStopTime(vc: UICollectionViewCell, ts: Double){
+        if let a = vCV {
+            for cell in a.visibleCells {
+                guard let indexPath = a.indexPath(for: cell) else {
+                    continue
+                }
+                
+                if(cell == vc) {
+                    vDataList[indexPath.row].t_s = ts
                     
                     break
                 }

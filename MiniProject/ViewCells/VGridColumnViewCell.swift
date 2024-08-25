@@ -14,6 +14,7 @@ class VGridColumnViewCell: UICollectionViewCell {
     
     let aMiniText = UILabel()
     let bMiniBtn = UIImageView()
+//    var code = ""
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -51,6 +52,8 @@ class VGridColumnViewCell: UICollectionViewCell {
         bMiniBtn.centerYAnchor.constraint(equalTo: aMiniRing.centerYAnchor, constant: 0).isActive = true
         bMiniBtn.heightAnchor.constraint(equalToConstant: 22).isActive = true
         bMiniBtn.widthAnchor.constraint(equalToConstant: 22).isActive = true
+//        bMiniBtn.isUserInteractionEnabled = true
+//        bMiniBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBtnClicked)))
         
         let aMiniTextBox = UIView()
 //        aMiniTextBox.backgroundColor = .ddmBlackOverlayColor
@@ -81,8 +84,12 @@ class VGridColumnViewCell: UICollectionViewCell {
         
         bMiniBtn.image = UIImage(named:"")?.withRenderingMode(.alwaysTemplate)
         aMiniText.text = ""
+        
+//        code = ""
     }
     func configure(data: String) {
+        
+//        code = data
         
         if(data == "r") {
             bMiniBtn.image = UIImage(named:"icon_round_repeat")?.withRenderingMode(.alwaysTemplate)
@@ -111,7 +118,11 @@ class VGridColumnViewCell: UICollectionViewCell {
         } else if(data == "sg") {
             bMiniBtn.image = UIImage(named:"icon_round_cash")?.withRenderingMode(.alwaysTemplate)
             aMiniText.text = "Send Gift"
+        } else if(data == "de") {
+            bMiniBtn.image = UIImage(named:"icon_round_delete")?.withRenderingMode(.alwaysTemplate)
+            aMiniText.text = "Delete"
         }
     }
+
 }
 

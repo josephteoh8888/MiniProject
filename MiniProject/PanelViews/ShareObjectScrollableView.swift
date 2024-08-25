@@ -1,20 +1,20 @@
 //
-//  ShareSheetScrollableView.swift
+//  ShareObjectScrollableView.swift
 //  MiniProject
 //
-//  Created by Joseph Teoh on 30/06/2024.
+//  Created by Joseph Teoh on 25/08/2024.
 //
 
 import Foundation
 import UIKit
 import SDWebImage
 
-protocol ShareSheetScrollableDelegate : AnyObject {
-    func didShareSheetClick()
-    func didShareSheetClickClosePanel()
-    func didShareSheetFinishClosePanel()
+protocol ShareObjectScrollableDelegate : AnyObject {
+    func didShareObjectClick()
+    func didShareObjectClickClosePanel()
+    func didShareObjectFinishClosePanel()
 }
-class ShareSheetScrollableView: PanelView, UIGestureRecognizerDelegate{
+class ShareObjectScrollableView: PanelView, UIGestureRecognizerDelegate{
     
     var viewHeight: CGFloat = 0
     var viewWidth: CGFloat = 0
@@ -22,7 +22,7 @@ class ShareSheetScrollableView: PanelView, UIGestureRecognizerDelegate{
     var currentPanelTopCons : CGFloat = 0.0
     var scrollablePanelHeight : CGFloat = 300.0
     
-    weak var delegate : ShareSheetScrollableDelegate?
+    weak var delegate : ShareObjectScrollableDelegate?
     
     var aView = UIView()
     
@@ -53,7 +53,7 @@ class ShareSheetScrollableView: PanelView, UIGestureRecognizerDelegate{
         aView.heightAnchor.constraint(equalToConstant: viewHeight).isActive = true
         aView.isUserInteractionEnabled = true
 //        aView.layer.opacity = 0.1 //default : 0
-        aView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onCloseShareSheetClicked)))
+        aView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onCloseShareObjectClicked)))
 //        aView.backgroundColor = .ddmBlackOverlayColor
 //        aView.layer.opacity = 0.3
         aView.backgroundColor = .black //test
@@ -101,9 +101,9 @@ class ShareSheetScrollableView: PanelView, UIGestureRecognizerDelegate{
         //test > horizontal vcv for sharing functions
 //        aVDataList.append("sg") //send gift
 //        aVDataList.append("f") //follow
-        aVDataList.append("rp")//report post
-        aVDataList.append("d") //dislike
-        aVDataList.append("de") //dislike
+//        aVDataList.append("rp")//report post
+//        aVDataList.append("d") //dislike
+//        aVDataList.append("de") //delete
 //        aVDataList.append("sg") //send gift
         let gridLayout = UICollectionViewFlowLayout()
         gridLayout.scrollDirection = .horizontal
@@ -129,13 +129,13 @@ class ShareSheetScrollableView: PanelView, UIGestureRecognizerDelegate{
         
         //test > horizontal vcv for sharing functions
 //        bVDataList.append("sg")//send gift
-        bVDataList.append("sg") //send gift - **gift can be subscription rebate, money, app virtual gift, app pay per view etc
-        bVDataList.append("r")//repost
-        bVDataList.append("s")//share to
+//        bVDataList.append("sg") //send gift - **gift can be subscription rebate, money, app virtual gift, app pay per view etc
+//        bVDataList.append("r")//repost
+//        bVDataList.append("s")//share to
 //        bVDataList.append("wa")//whatsapp
 //        bVDataList.append("x")//x
-        bVDataList.append("c")//copy link
-        bVDataList.append("f") //follow
+//        bVDataList.append("c")//copy link
+//        bVDataList.append("f") //follow
 //        bVDataList.append("rp")//report post
         let bGridLayout = UICollectionViewFlowLayout()
         bGridLayout.scrollDirection = .horizontal
@@ -164,19 +164,47 @@ class ShareSheetScrollableView: PanelView, UIGestureRecognizerDelegate{
 //        panelPanGesture.delegate = self //for simultaneous pan recognizer for uicollectionview
 //        vCV.addGestureRecognizer(panelPanGesture)
         
-        let aPanelPanGesture = UIPanGestureRecognizer(target: self, action: #selector(onShareSheetPanelPanGesture))
+        let aPanelPanGesture = UIPanGestureRecognizer(target: self, action: #selector(onShareObjectPanelPanGesture))
         panelView.addGestureRecognizer(aPanelPanGesture)
         
         //test > to make comment bg non-movable
-        let bPanelPanGesture = UIPanGestureRecognizer(target: self, action: #selector(onShareSheetBackgroundPanGesture))
+        let bPanelPanGesture = UIPanGestureRecognizer(target: self, action: #selector(onShareObjectBackgroundPanGesture))
         aView.addGestureRecognizer(bPanelPanGesture)
+    }
+    
+    func setObjectType(t: String) {
+        if(t == "u") {
+            aVDataList.append("rp")//report post
+            aVDataList.append("d") //dislike
+            
+            bVDataList.append("r")//repost
+            bVDataList.append("s")//share to
+            bVDataList.append("c")//copy link
+        } else if(t == "p") {
+            aVDataList.append("rp")//report post
+            aVDataList.append("d") //dislike
+            
+            bVDataList.append("r")//repost
+            bVDataList.append("s")//share to
+            bVDataList.append("c")//copy link
+        } else if(t == "s") {
+            aVDataList.append("rp")//report post
+            aVDataList.append("d") //dislike
+            
+            bVDataList.append("r")//repost
+            bVDataList.append("s")//share to
+            bVDataList.append("c")//copy link
+        }
+        
+        aVCV?.reloadData()
+        bVCV?.reloadData()
     }
     
     @objc func onExitViewClicked(gesture: UITapGestureRecognizer) {
         closePanel(isAnimated: true)
     }
     
-    @objc func onShareSheetPanelPanGesture(gesture: UIPanGestureRecognizer) {
+    @objc func onShareObjectPanelPanGesture(gesture: UIPanGestureRecognizer) {
         if(gesture.state == .began) {
             self.currentPanelTopCons = self.panelTopCons!.constant
         } else if(gesture.state == .changed) {
@@ -193,12 +221,12 @@ class ShareSheetScrollableView: PanelView, UIGestureRecognizerDelegate{
                     self.panelTopCons?.constant = 0
                     self.layoutIfNeeded()
                     
-                    self.delegate?.didShareSheetClickClosePanel()
+                    self.delegate?.didShareObjectClickClosePanel()
                 }, completion: { _ in
                     self.removeFromSuperview()
                     
                     //test > trigger finish close panel
-                    self.delegate?.didShareSheetFinishClosePanel()
+                    self.delegate?.didShareObjectFinishClosePanel()
                 })
             } else {
                 UIView.animate(withDuration: 0.2, animations: {
@@ -211,11 +239,11 @@ class ShareSheetScrollableView: PanelView, UIGestureRecognizerDelegate{
     }
     
     //test > to make sharesheet bg non-movable
-    @objc func onShareSheetBackgroundPanGesture(gesture: UIPanGestureRecognizer) {
+    @objc func onShareObjectBackgroundPanGesture(gesture: UIPanGestureRecognizer) {
         
     }
     
-    @objc func onCloseShareSheetClicked(gesture: UITapGestureRecognizer) {
+    @objc func onCloseShareObjectClicked(gesture: UITapGestureRecognizer) {
         closePanel(isAnimated: true)
     }
     
@@ -225,23 +253,23 @@ class ShareSheetScrollableView: PanelView, UIGestureRecognizerDelegate{
                 self.panelTopCons?.constant = 0
                 self.layoutIfNeeded()
                 
-                self.delegate?.didShareSheetClickClosePanel()
+                self.delegate?.didShareObjectClickClosePanel()
             }, completion: { _ in
                 self.removeFromSuperview()
 
                 //test > trigger finish close panel
-                self.delegate?.didShareSheetFinishClosePanel()
+                self.delegate?.didShareObjectFinishClosePanel()
             })
         } else {
             self.removeFromSuperview()
             
             //test > trigger finish close panel
-            self.delegate?.didShareSheetFinishClosePanel()
+            self.delegate?.didShareObjectFinishClosePanel()
         }
     }
 }
 
-extension ShareSheetScrollableView: UICollectionViewDelegateFlowLayout {
+extension ShareObjectScrollableView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                   layout collectionViewLayout: UICollectionViewLayout,
                   insetForSectionAt section: Int) -> UIEdgeInsets {
@@ -265,7 +293,7 @@ extension ShareSheetScrollableView: UICollectionViewDelegateFlowLayout {
     }
 }
 
-extension ShareSheetScrollableView: UICollectionViewDataSource {
+extension ShareObjectScrollableView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == aVCV {
             print("aVCV count")
@@ -300,14 +328,14 @@ extension ShareSheetScrollableView: UICollectionViewDataSource {
             
             //close panel for more actions like delete item
             self.removeFromSuperview()
-            delegate?.didShareSheetClick()
+            delegate?.didShareObjectClick()
             
         } else if collectionView == bVCV {
             print("vgrid b selected: \(bVDataList[indexPath.row])")
             
             //close panel for more actions like delete item
             self.removeFromSuperview()
-            delegate?.didShareSheetClick()
+            delegate?.didShareObjectClick()
         }
      }
     

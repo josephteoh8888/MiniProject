@@ -982,6 +982,12 @@ class UserScrollablePanelView: ScrollablePanelView{
                 cell.redrawUI()
             }
         }
+        
+        //test
+        if(!aHLightBoxViewArray.isEmpty) {
+            let lastArrayE = aHLightBoxViewArray[aHLightBoxViewArray.count - 1]
+            lastArrayE.bottomAnchor.constraint(equalTo: aHLightBox.bottomAnchor, constant: -10).isActive = true
+        }
     }
 
     func configureHLightUI() {
@@ -1258,11 +1264,13 @@ class UserScrollablePanelView: ScrollablePanelView{
     //test > share sheet when click on share post
     func openShareSheet() {
         let sharePanel = ShareSheetScrollableView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
+//        let sharePanel = ShareObjectScrollableView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
         panelView.addSubview(sharePanel)
         sharePanel.translatesAutoresizingMaskIntoConstraints = false
         sharePanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
         sharePanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
 //        sharePanel.delegate = self
+//        sharePanel.setObjectType(t: "u")
     }
 
     //test > object id for fetching data
@@ -1620,7 +1628,7 @@ class UserScrollablePanelView: ScrollablePanelView{
         
         cell?.dataPaginateStatus = "fetch"
 
-        let id_ = "post_"
+        let id_ = "post"
         let isPaginate = false
         DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
 //        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
@@ -1639,34 +1647,34 @@ class UserScrollablePanelView: ScrollablePanelView{
                     feed.aSpinner.stopAnimating()
 
                     //test 2 > new append method
-//                    for i in l {
-//                        let postData = PostData()
-//                        postData.setDataType(data: i)
-//                        postData.setData(data: i)
-//                        postData.setTextString(data: i)
-//                        feed.vDataList.append(postData)
-//                    }
-//
-//                    feed.vCV?.reloadData()
-                    
-                    //*test 3 > reload only appended data, not entire dataset
-                    let dataCount = feed.vDataList.count
-                    var indexPaths = [IndexPath]()
-                    var j = 1
                     for i in l {
                         let postData = PostData()
                         postData.setDataType(data: i)
                         postData.setData(data: i)
                         postData.setTextString(data: i)
                         feed.vDataList.append(postData)
-
-                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
-                        indexPaths.append(idx)
-                        j += 1
-
-                        print("ppv asyncfetch reload \(idx)")
                     }
-                    feed.vCV?.insertItems(at: indexPaths)
+
+                    feed.vCV?.reloadData()
+                    
+                    //*test 3 > reload only appended data, not entire dataset
+//                    let dataCount = feed.vDataList.count
+//                    var indexPaths = [IndexPath]()
+//                    var j = 1
+//                    for i in l {
+//                        let postData = PostData()
+//                        postData.setDataType(data: i)
+//                        postData.setData(data: i)
+//                        postData.setTextString(data: i)
+//                        feed.vDataList.append(postData)
+//
+//                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+//                        indexPaths.append(idx)
+//                        j += 1
+//
+//                        print("ppv asyncfetch reload \(idx)")
+//                    }
+//                    feed.vCV?.insertItems(at: indexPaths)
                     //*
                     
                     //test
@@ -2516,6 +2524,14 @@ extension ViewController: UserScrollablePanelDelegate{
 
         //test
         openUserPanel()
+        
+        //test 2
+//        let panel = ShareObjectScrollableView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
+//        self.view.addSubview(panel)
+//        panel.translatesAutoresizingMaskIntoConstraints = false
+//        panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
+//        panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
+//        panel.setObjectType(t: "u")
     }
     func didUClickPlaceUserScrollable(){
 

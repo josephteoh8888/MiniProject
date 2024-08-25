@@ -1076,22 +1076,6 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
                         return
                     }
                     
-//                    if(!self.tabList.isEmpty) {
-//                        for l in self.tabList {
-//                            self.stackviewUsableLength += l.frame.width
-//                        }
-////                        self.stackviewUsableLength += 10.0 //leading constraint on tabscrollview
-//                        self.tabScrollView.contentSize = CGSize(width: self.stackviewUsableLength, height: 40)
-//
-//                        let tab = self.tabList[0]
-//                        self.tabSelectWidthCons?.constant = tab.frame.width
-//                        self.tabSelect.isHidden = false
-//                    }
-//                    self.measureTabScroll()
-//                    let xTabOffset = self.tabScrollView.contentOffset.x
-//                    self.arrowReactToTabScroll(tabXOffset: xTabOffset)
-//                    self.reactToTabSectionChange(index: self.currentIndex)
-                    
                     //test > init tabscroll UI e.g. measure width
                     self.activateTabUI()
                     self.redrawScrollFeedUI()
@@ -1158,6 +1142,45 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
         }
     }
     
+    //**test > remove elements from dataset n uicollectionview
+    func removeData(cell: ScrollFeedHPhotoListCell?, idxToRemove: Int) {
+        guard let feed = cell else {
+            return
+        }
+        if(!feed.vDataList.isEmpty) {
+            if(idxToRemove > -1 && idxToRemove < feed.vDataList.count) {
+                var indexPaths = [IndexPath]()
+                let idx = IndexPath(item: idxToRemove, section: 0)
+                indexPaths.append(idx)
+                
+                feed.vDataList.remove(at: idxToRemove)
+                feed.vCV?.deleteItems(at: indexPaths)
+                
+                feed.unselectItemData()
+                
+                //test > footer to show msg when no more data
+                if(feed.vDataList.isEmpty) {
+                    feed.setFooterAaText(text: "No results yet.")
+                    feed.configureFooterUI(data: "na")
+                }
+            }
+        }
+    }
+//    func removeDataSet(cell: ScrollFeedHPhotoListCell?, idxToRemove: [Int]) {
+//        guard let feed = cell else {
+//            return
+//        }
+//        var indexPaths = [IndexPath]()
+//        for i in idxToRemove {
+//            feed.vDataList.remove(at: i)
+//            
+//            let idx = IndexPath(item: i, section: 0)
+//            indexPaths.append(idx)
+//        }
+//        feed.vCV?.deleteItems(at: indexPaths)
+//    }
+    //**
+    
     func asyncFetchFeed(cell: ScrollFeedHPhotoListCell?, id: String) {
         print("photopanel asyncFetchFeed")
         cell?.vDataList.removeAll()
@@ -1186,35 +1209,35 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
                     feed.aSpinner.stopAnimating()
                     
                     //test 2 > new append method
-//                    for i in l {
-//                        
-//                        let photoData = PhotoData()
-//                        photoData.setDataType(data: i)
-//                        photoData.setData(data: i)
-//                        photoData.setTextString(data: i)
-//                        feed.vDataList.append(photoData)
-//                    }
-//                    
-//                    feed.vCV?.reloadData()
-
-                    //*test 3 > reload only appended data, not entire dataset
-                    let dataCount = feed.vDataList.count
-                    var indexPaths = [IndexPath]()
-                    var j = 1
                     for i in l {
+                        
                         let photoData = PhotoData()
                         photoData.setDataType(data: i)
                         photoData.setData(data: i)
                         photoData.setTextString(data: i)
                         feed.vDataList.append(photoData)
-
-                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
-                        indexPaths.append(idx)
-                        j += 1
-
-                        print("ppv asyncfetch reload \(idx)")
                     }
-                    feed.vCV?.insertItems(at: indexPaths)
+                    
+                    feed.vCV?.reloadData()
+
+                    //*test 3 > reload only appended data, not entire dataset
+//                    let dataCount = feed.vDataList.count
+//                    var indexPaths = [IndexPath]()
+//                    var j = 1
+//                    for i in l {
+//                        let photoData = PhotoData()
+//                        photoData.setDataType(data: i)
+//                        photoData.setData(data: i)
+//                        photoData.setTextString(data: i)
+//                        feed.vDataList.append(photoData)
+//
+//                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+//                        indexPaths.append(idx)
+//                        j += 1
+//
+//                        print("ppv asyncfetch reload \(idx)")
+//                    }
+//                    feed.vCV?.insertItems(at: indexPaths)
                     //*
                     
                     //test
@@ -1305,7 +1328,10 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
         sharePanel.translatesAutoresizingMaskIntoConstraints = false
         sharePanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
         sharePanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
-//        sharePanel.delegate = self
+        sharePanel.delegate = self
+        
+        //test > track share scrollable view
+        pageList.append(sharePanel)
     }
     
     //test > add comment panel
@@ -1318,8 +1344,12 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
         commentPanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
         commentPanel.delegate = self
         commentPanel.initialize()
+        commentPanel.setBackgroundDark()
         
         bottomBox.isHidden = false
+        
+        //test > track comment scrollable view
+        pageList.append(commentPanel)
     }
     
     //test > tab section UI Change (hardcoded - to be fixed in future)
@@ -1361,10 +1391,24 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
     //test
     override func resumeActiveState() {
         print("photopanelview resume active")
-        resumeCurrentAudio()
+//        resumeCurrentAudio()
+//        
+//        //test > dehide cell
+//        dehideCurrentCell()
         
-        //test > dehide cell
-        dehideCurrentCell()
+        //test > only resume video if no comment scrollable view/any other view
+        if(pageList.isEmpty) {
+            resumeCurrentAudio()
+            
+            //test > dehide cell
+            dehideCurrentCell()
+        }
+        else {
+            //dehide cell for commment view
+            if let c = pageList[pageList.count - 1] as? CommentScrollableView {
+                c.dehideCell()
+            }
+        }
     }
     
     //test > check for intersected dummy view with video while user scroll
@@ -1763,7 +1807,7 @@ extension ViewController: PhotoPanelDelegate{
         openSoundPanel()
     }
     func didClickPhotoPanelVcvClickPost() {
-
+        openPostDetailPanel()
     }
     func didClickPhotoPanelVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
 //        openPhotoDetailPanel()
@@ -1779,21 +1823,116 @@ extension ViewController: PhotoPanelDelegate{
     }
 }
 
+extension PhotoPanelView: ShareSheetScrollableDelegate{
+    func didShareSheetClick(){
+        //test > for deleting item
+        if(!pageList.isEmpty) {
+            pageList.remove(at: pageList.count - 1)
+            
+            if(pageList.count > 0) {
+                let lastPage = pageList[pageList.count - 1]
+                if let a = lastPage as? CommentScrollableView {
+                    print("lastpagelist e \(a.selectedItemIdx)")
+                    let idx = a.selectedItemIdx
+                    a.removeData(idxToRemove: idx)
+                }
+                else if let b = lastPage as? ShareSheetScrollableView {
+                    print("lastpagelist f")
+                }
+            } else {
+                if(!self.feedList.isEmpty) {
+                    let feed = feedList[currentIndex]
+                    removeData(cell: feed, idxToRemove: feed.selectedItemIdx)
+                }
+            }
+        } else {
+
+        }
+    }
+    func didShareSheetClickClosePanel(){
+        
+    }
+    func didShareSheetFinishClosePanel(){
+        //test > remove scrollable view from pagelist
+        if(!pageList.isEmpty) {
+            pageList.remove(at: pageList.count - 1)
+            
+            if(pageList.count > 0) {
+                let lastPage = pageList[pageList.count - 1]
+                if let a = lastPage as? CommentScrollableView {
+                    print("lastpagelist c")
+                    a.unselectItemData()
+                }
+                else if let b = lastPage as? ShareSheetScrollableView {
+                    print("lastpagelist d")
+                }
+            } else {
+                resumeCurrentAudio()
+                
+                if(!self.feedList.isEmpty) {
+                    let feed = feedList[currentIndex]
+                    feed.unselectItemData()
+                }
+            }
+        } else {
+//            resumeCurrentAudio()
+        }
+    }
+}
+
 extension PhotoPanelView: CommentScrollableDelegate{
     func didCClickUser(){
 //        delegate?.didClickUser()
+        delegate?.didClickPhotoPanelVcvClickUser()
     }
     func didCClickPlace(){
 //        delegate?.didClickPlace()
+        delegate?.didClickPhotoPanelVcvClickPlace()
     }
     func didCClickSound(){
 //        delegate?.didClickSound()
+        delegate?.didClickPhotoPanelVcvClickSound()
     }
     func didCClickClosePanel(){
         bottomBox.isHidden = true
     }
     func didCFinishClosePanel() {
-//        resumeCurrentVideo()
+//        resumeCurrentAudio()
+        
+        //test > remove comment scrollable view from pagelist
+        if(!pageList.isEmpty) {
+            pageList.remove(at: pageList.count - 1)
+            
+            if(pageList.count > 0) {
+                let lastPage = pageList[pageList.count - 1]
+                if let a = lastPage as? CommentScrollableView {
+                    print("lastpagelist a")
+                }
+                else if let b = lastPage as? ShareSheetScrollableView {
+                    print("lastpagelist b")
+                }
+            } else {
+                resumeCurrentAudio()
+            }
+        } else {
+//            resumeCurrentAudio()
+        }
+    }
+    func didCClickComment(){
+
+    }
+    func didCClickShare(){
+        //test
+        openShareSheet()
+    }
+    func didCClickPost(){
+        delegate?.didClickPhotoPanelVcvClickPost()
+    }
+    func didCClickClickPhoto(pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        delegate?.didClickPhotoPanelVcvClickPhoto(pointX: pointX, pointY: pointY, view: view, mode: mode)
+    }
+    func didCClickClickVideo(pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        
     }
 }
 
@@ -1841,6 +1980,9 @@ extension PhotoPanelView: ScrollFeedCellDelegate {
     func sfcDidClickVcvComment() {
         print("fcDidClickVcvComment ")
         openComment()
+        
+        //test > pause current playing video when go to user
+        pauseCurrentAudio()
     }
     func sfcDidClickVcvLove() {
         print("fcDidClickVcvLike ")

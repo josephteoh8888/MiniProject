@@ -55,6 +55,11 @@ class PostDetailPanelView: PanelView {
     //test
     var hideCellIndex = -1
     
+    //test > track comment scrollable view
+    var pageList = [PanelView]()
+    
+    let bottomBox = UIView()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -224,7 +229,7 @@ class PostDetailPanelView: PanelView {
         aTabText2Btn.widthAnchor.constraint(equalToConstant: 26).isActive = true
         
         //test bottom comment box => fake edittext
-        let bottomBox = UIView()
+//        let bottomBox = UIView()
 //        bottomBox.backgroundColor = .black
         bottomBox.backgroundColor = .ddmBlackOverlayColor
         panel.addSubview(bottomBox)
@@ -420,6 +425,65 @@ class PostDetailPanelView: PanelView {
         self.postCV?.setContentOffset(CGPoint(x: x, y: y), animated: true)
     }
     
+    //*test > remove one comment
+    var selectedItemIdx = -1
+    func removeData(idxToRemove: Int) {
+        if(!vcDataList.isEmpty) {
+            if(idxToRemove > -1 && idxToRemove < vcDataList.count) {
+                if(idxToRemove == 0) {
+                    var indexPaths = [IndexPath]()
+                    var i = 0
+                    for _ in vcDataList {
+                        let idx = IndexPath(item: i, section: 0)
+                        indexPaths.append(idx)
+                        i += 1
+                    }
+                    vcDataList.removeAll()
+                    self.postCV?.deleteItems(at: indexPaths)
+                } else {
+                    var indexPaths = [IndexPath]()
+                    let idx = IndexPath(item: idxToRemove, section: 0)
+                    indexPaths.append(idx)
+                    
+                    vcDataList.remove(at: idxToRemove)
+                    self.postCV?.deleteItems(at: indexPaths)
+                }
+                
+                unselectItemData()
+                
+                //test
+                if(vcDataList.isEmpty) {
+                    //entire post is deleted
+                    self.setFooterAaText(text: "Post no longer exists.")
+                    self.configureFooterUI(data: "na")
+//                    self.aaText.text = "Post no longer exists."
+                }
+                else if(vcDataList.count == 1) {
+                    //no more comments
+                    self.setFooterAaText(text: "No comments yet.")
+                    self.configureFooterUI(data: "na")
+//                    self.aaText.text = "No comments yet."
+                }
+            }
+        }
+    }
+//    func removeDataSet(idxToRemove: [Int]) {
+//        if(!vDataList.isEmpty) {
+//            var indexPaths = [IndexPath]()
+//            for i in idxToRemove {
+//                vDataList.remove(at: i)
+//
+//                let idx = IndexPath(item: i, section: 0)
+//                indexPaths.append(idx)
+//            }
+//            self.vCV?.deleteItems(at: indexPaths)
+//        }
+//    }
+    func unselectItemData() {
+        selectedItemIdx = -1
+    }
+    //*
+    
     //test > fetch post before comments
     func asyncFetchPost(id: String) {
         aSpinner.startAnimating()
@@ -475,7 +539,7 @@ class PostDetailPanelView: PanelView {
         dataFetchState = "start"
         bSpinner.startAnimating()
         
-        let id_ = "post_"
+        let id_ = "post"
         let isPaginate = false
         DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
 //        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
@@ -515,8 +579,9 @@ class PostDetailPanelView: PanelView {
 
                     //test
                     if(l.isEmpty) {
+                        self.setFooterAaText(text: "No comments yet.")
                         self.configureFooterUI(data: "na")
-                        self.aaText.text = "No comments yet."
+//                        self.aaText.text = "No comments yet."
                     }
                 }
 
@@ -673,17 +738,6 @@ class PostDetailPanelView: PanelView {
             })
         }
     }
-
-    //test > open another post detail
-//    func openPostDetail() {
-//        let panel = PostDetailPanelView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
-//        self.addSubview(panel)
-//        panel.translatesAutoresizingMaskIntoConstraints = false
-//        panel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
-//        panel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
-//        panel.initialize()
-////        panel.delegate = self
-//    }
     
     //test > share sheet
     func openShareSheet() {
@@ -692,20 +746,29 @@ class PostDetailPanelView: PanelView {
         sharePanel.translatesAutoresizingMaskIntoConstraints = false
         sharePanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
         sharePanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
-//        sharePanel.delegate = self
+        sharePanel.delegate = self
+        
+        //test > track comment scrollable view
+        pageList.append(sharePanel)
     }
     
-    //test > photo zoom panel
-//    func openPhotoZoom(offX: CGFloat, offY: CGFloat) {
-//        let panel = PhotoZoomPanelView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
-//        self.addSubview(panel)
-//        panel.translatesAutoresizingMaskIntoConstraints = false
-//        panel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
-//        panel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
-////        panel.initialize()
-//        panel.delegate = self
-//        panel.open(offX: offX, offY: offY, delay: 0.0, isAnimated: true)
-//    }
+    //test > add comment panel
+    func openComment() {
+        let commentPanel = CommentScrollableView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
+//        self.addSubview(commentPanel)
+        panel.insertSubview(commentPanel, belowSubview: bottomBox)
+        commentPanel.translatesAutoresizingMaskIntoConstraints = false
+        commentPanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
+        commentPanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
+        commentPanel.delegate = self
+        commentPanel.initialize()
+        commentPanel.setBackgroundDark()
+        
+//        bottomBox.isHidden = false
+        
+        //test > track comment scrollable view
+        pageList.append(commentPanel)
+    }
     
     //test > stop current video for closing
     func pauseCurrentVideo() -> CGFloat {
@@ -720,8 +783,9 @@ class PostDetailPanelView: PanelView {
 //            }
             if let b = currentVc as? HPostListBViewCell {
                 b.pauseVideo()
-                vcDataList[currentPlayingVidIndex].t_s = b.t_s
-                return b.t_s
+//                vcDataList[currentPlayingVidIndex].t_s = b.t_s
+//                return b.t_s
+                return 0.0
             } else if let b1 = currentVc as? HCommentListViewCell {
 //                b.pauseVideo()
 //                vcDataList[currentPlayingVidIndex].t_s = b.t_s
@@ -767,7 +831,7 @@ class PostDetailPanelView: PanelView {
         if let b = currentVc as? HPostListBViewCell {
             b.dehideCell()
         } else if let b1 = currentVc as? HCommentListViewCell {
-//            b.dehideCell()
+            b1.dehideCell()
         } else {
 
         }
@@ -778,10 +842,24 @@ class PostDetailPanelView: PanelView {
     //test
     override func resumeActiveState() {
         print("postdetailpanelview resume active")
-        resumeCurrentVideo()
+//        resumeCurrentVideo()
+//
+//        //test > dehide cell
+//        dehideCurrentCell()
+        
+        //test > only resume video if no comment scrollable view/any other view
+        if(pageList.isEmpty) {
+            resumeCurrentVideo()
 
-        //test > dehide cell
-        dehideCurrentCell()
+            //test > dehide cell
+            dehideCurrentCell()
+        }
+        else {
+            //dehide cell for commment view
+            if let c = pageList[pageList.count - 1] as? CommentScrollableView {
+                c.dehideCell()
+            }
+        }
     }
     
     //test > check for intersected dummy view with video while user scroll
@@ -848,22 +926,10 @@ class PostDetailPanelView: PanelView {
                     let prevVc = a.cellForItem(at: prevIdxPath)
                     let currentVc = a.cellForItem(at: idxPath)
                     
-//                    guard let b = prevVc as? HPostListBViewCell else {
-//                        return
-//                    }
-//                    b.pauseVideo()
-//                    vcDataList[currentPlayingVidIndex].t_s = b.t_s
-
-//                    guard let c = currentVc as? HPostListBViewCell else {
-//                        return
-//                    }
-//                    c.resumeVideo()
-//                    currentPlayingVidIndex = intersectedIdx
-                    
                     //test 2 > include HCommentListViewCell
                     if let b = prevVc as? HPostListBViewCell {
                         b.pauseVideo()
-                        vcDataList[currentPlayingVidIndex].t_s = b.t_s
+//                        vcDataList[currentPlayingVidIndex].t_s = b.t_s
                     } else if let b1 = prevVc as? HCommentListViewCell {
 //                        b.pauseVideo()
 //                        vcDataList[currentPlayingVidIndex].t_s = b.t_s
@@ -882,12 +948,6 @@ class PostDetailPanelView: PanelView {
             } else {
                 let idxPath = IndexPath(item: intersectedIdx, section: 0)
                 let currentVc = a.cellForItem(at: idxPath)
-//                guard let b = currentVc as? HPostListBViewCell else {
-//                    return
-//                }
-//
-//                b.resumeVideo()
-//                currentPlayingVidIndex = intersectedIdx
                 
                 //test 2 > include HCommentListViewCell
                 if let b = currentVc as? HPostListBViewCell {
@@ -906,17 +966,11 @@ class PostDetailPanelView: PanelView {
             if(currentPlayingVidIndex > -1) {
                 let idxPath = IndexPath(item: currentPlayingVidIndex, section: 0)
                 let currentVc = a.cellForItem(at: idxPath)
-//                guard let b = currentVc as? HPostListBViewCell else {
-//                    return
-//                }
-//                b.pauseVideo()
-//                vcDataList[currentPlayingVidIndex].t_s = b.t_s
-//                currentPlayingVidIndex = -1
                 
                 //test 2 > include HCommentListViewCell
                 if let b = currentVc as? HPostListBViewCell {
                     b.pauseVideo()
-                    vcDataList[currentPlayingVidIndex].t_s = b.t_s
+//                    vcDataList[currentPlayingVidIndex].t_s = b.t_s
                     currentPlayingVidIndex = -1
                 } else if let b1 = currentVc as? HCommentListViewCell {
 //                    b1.pauseVideo()
@@ -1062,6 +1116,24 @@ extension PostDetailPanelView: UICollectionViewDelegateFlowLayout {
                     let pHeight = pTopMargin + pContentHeight
                     contentHeight += pHeight
                 }
+                else if(l == "p_s") {
+                    let pTopMargin = 20.0
+                    let pContentHeight = 280.0
+                    let pHeight = pTopMargin + pContentHeight + 40.0 //40.0 for bottom container for description
+                    contentHeight += pHeight
+                }
+                else if(l == "v") {
+                    let vTopMargin = 20.0
+                    let vContentHeight = 350.0 //250
+                    let vHeight = vTopMargin + vContentHeight
+                    contentHeight += vHeight
+                }
+                else if(l == "v_l") {
+                    let vTopMargin = 20.0
+                    let vContentHeight = 350.0 //250
+                    let vHeight = vTopMargin + vContentHeight + 40.0 //40.0 for bottom container for description
+                    contentHeight += vHeight
+                }
                 else if(l == "q") {
                     let qTopMargin = 20.0
                     let qUserPhotoHeight = 28.0
@@ -1074,16 +1146,55 @@ extension PostDetailPanelView: UICollectionViewDelegateFlowLayout {
                     contentHeight += qHeight
                 }
                 else if(l == "c") {
-                    let cUserPhotoHeight = 28.0
-                    let cUserPhotoTopMargin = 20.0 //10
-                    let cContentTopMargin = 10.0
-                    let cText = "Worth a visit."
-                    let cContentHeight = estimateHeight(text: cText, textWidth: collectionView.frame.width - 58.0 - 20.0, fontSize: 14)
-                    let cActionBtnTopMargin = 10.0
-                    let cActionBtnHeight = 26.0
-                    let cHeight = cUserPhotoHeight + cUserPhotoTopMargin + cContentTopMargin + cContentHeight + cActionBtnTopMargin + cActionBtnHeight
-                    contentHeight += cHeight
+//                    let cUserPhotoHeight = 28.0
+//                    let cUserPhotoTopMargin = 20.0 //10
+//                    let cContentTopMargin = 10.0
+//                    let cText = "Worth a visit."
+//                    let cContentHeight = estimateHeight(text: cText, textWidth: collectionView.frame.width - 58.0 - 20.0, fontSize: 14)
+//                    let cActionBtnTopMargin = 10.0
+//                    let cActionBtnHeight = 26.0
+//                    let cHeight = cUserPhotoHeight + cUserPhotoTopMargin + cContentTopMargin + cContentHeight + cActionBtnTopMargin + cActionBtnHeight
+//                    contentHeight += cHeight
                 }
+            }
+            
+            let dataCh = vcDataList[indexPath.row].xChainDataArray
+            for l in dataCh {
+                let xText = l.dataTextString
+                let xDataL = l.dataArray
+                var yContentHeight = 0.0
+                for y in xDataL {
+                    if(y == "t") {
+                        let xContentTopMargin = 20.0
+                        let xContentHeight = estimateHeight(text: xText, textWidth: collectionView.frame.width - 53.0 - 20.0, fontSize: 13)
+                        let xHeight = xContentTopMargin + xContentHeight
+                        yContentHeight += xHeight
+                    }
+                    else if(y == "p") {
+                        let pTopMargin = 20.0
+                        let pContentHeight = 280.0
+                        let pHeight = pTopMargin + pContentHeight
+                        yContentHeight += pHeight
+                    }
+                    else if(y == "q") {
+                        let qTopMargin = 20.0
+                        let qUserPhotoHeight = 28.0
+                        let qUserPhotoTopMargin = 10.0 //10
+                        let qContentTopMargin = 10.0
+                        let qText = "Nice food, nice environment! Worth a visit. \nSo good!\n\n\n\n...\n...\n..."
+                        let qContentHeight = estimateHeight(text: qText, textWidth: collectionView.frame.width - 53.0 - 20.0, fontSize: 13)
+                        let qFrameBottomMargin = 20.0 //10
+                        let qHeight = qTopMargin + qUserPhotoHeight + qUserPhotoTopMargin + qContentTopMargin + qContentHeight + qFrameBottomMargin
+                        yContentHeight += qHeight
+                    }
+                }
+                let cUserPhotoHeight = 28.0
+                let cUserPhotoTopMargin = 10.0 //10
+                let cActionBtnTopMargin = 20.0
+                let cActionBtnHeight = 26.0
+                let cFrameBottomMargin = 10.0 //10
+                let cHeight = cUserPhotoHeight + cUserPhotoTopMargin + yContentHeight + cActionBtnTopMargin + cActionBtnHeight + cFrameBottomMargin
+                contentHeight += cHeight
             }
             
             let userPhotoHeight = 28.0
@@ -1306,7 +1417,7 @@ extension PostDetailPanelView: UICollectionViewDataSource {
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HCommentListViewCell.identifier, for: indexPath) as! HCommentListViewCell
             
-//            cell.aDelegate = self
+            cell.aDelegate = self
             
             //test > configure cell
             let data = vcDataList[indexPath.row]
@@ -1322,20 +1433,47 @@ extension PostDetailPanelView: UICollectionViewDataSource {
 }
 
 extension PostDetailPanelView: HListCellDelegate {
-    func hListDidClickVcvComment() {
+    func hListDidClickVcvComment(vc: UICollectionViewCell) {
         print("PostDetailPanelView comment clicked")
-        postCV?.setContentOffset(CGPoint(x: 0.0, y: postHeight), animated: true)
+//        postCV?.setContentOffset(CGPoint(x: 0.0, y: postHeight), animated: true)
+        if let b = vc as? HPostListBViewCell {
+            postCV?.setContentOffset(CGPoint(x: 0.0, y: postHeight), animated: true)
+        } else if let b1 = vc as? HCommentListViewCell {
+            openComment()
+            
+            pauseCurrentVideo()
+        }
     }
     func hListDidClickVcvLove() {
         print("PostDetailPanelView love clicked")
     }
-    func hListDidClickVcvShare() {
+    func hListDidClickVcvShare(vc: UICollectionViewCell) {
         print("PostDetailPanelView share clicked")
-        openShareSheet()
+//        openShareSheet()
+        
+        pauseCurrentVideo()
+        
+        if let a = postCV {
+            for cell in a.visibleCells {
+                
+                if(cell == vc) {
+                    let selectedIndexPath = a.indexPath(for: cell)
+                    openShareSheet()
+                    
+                    if let c = selectedIndexPath {
+                        selectedItemIdx = c.row
+                    }
+                    
+                    break
+                }
+            }
+        }
     }
     func hListDidClickVcvClickUser(){
         print("PostDetailPanelView user clicked")
         delegate?.didClickPostDetailPanelVcvClickUser()
+        
+        pauseCurrentVideo()
     }
     func hListDidClickVcvClickPlace(){
 //        delegate?.didClickPostPanelVcvClickPlace()
@@ -1346,6 +1484,10 @@ extension PostDetailPanelView: HListCellDelegate {
     func hListDidClickVcvClickPost() {
         print("PostDetailPanelView post clicked")
 //        openPostDetail()
+        delegate?.didClickPostDetailPanelVcvClickPost()
+        
+        //test
+        pauseCurrentVideo()
     }
     func hListDidClickVcvClickPhoto(vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         
@@ -1410,14 +1552,141 @@ extension PostDetailPanelView: HListCellDelegate {
         
     }
     
+    func hListVideoStopTime(vc: UICollectionViewCell, ts: Double){
+        if let a = postCV {
+            for cell in a.visibleCells {
+                guard let indexPath = a.indexPath(for: cell) else {
+                    continue
+                }
+                
+                if(cell == vc) {
+                    vcDataList[indexPath.row].t_s = ts
+                    
+                    break
+                }
+            }
+        }
+    }
+    
     func hListDidClickVcvPlayAudio(vc: UICollectionViewCell){
+        
+    }
+}
+
+extension PostDetailPanelView: ShareSheetScrollableDelegate{
+    func didShareSheetClick(){
+        //test > for deleting item
+        if(!pageList.isEmpty) {
+            pageList.remove(at: pageList.count - 1)
+            
+            if(pageList.count > 0) {
+                let lastPage = pageList[pageList.count - 1]
+                if let a = lastPage as? CommentScrollableView {
+                    print("lastpagelist e \(a.selectedItemIdx)")
+                    let idx = a.selectedItemIdx
+                    a.removeData(idxToRemove: idx)
+                }
+                else if let b = lastPage as? ShareSheetScrollableView {
+                    print("lastpagelist f")
+                }
+            } else {
+                removeData(idxToRemove: selectedItemIdx)
+            }
+        } else {
+
+        }
+    }
+    func didShareSheetClickClosePanel(){
+        
+    }
+    func didShareSheetFinishClosePanel(){
+        //test > remove scrollable view from pagelist
+        if(!pageList.isEmpty) {
+            pageList.remove(at: pageList.count - 1)
+            
+            if(pageList.count > 0) {
+                let lastPage = pageList[pageList.count - 1]
+                if let a = lastPage as? CommentScrollableView {
+                    print("lastpagelist c")
+                    a.unselectItemData()
+                }
+                else if let b = lastPage as? ShareSheetScrollableView {
+                    print("lastpagelist d")
+                }
+            } else {
+                resumeCurrentVideo()
+                
+//                if(!self.feedList.isEmpty) {
+//                    let feed = feedList[currentIndex]
+//                    feed.unselectItemData()
+//                }
+                unselectItemData()
+            }
+        } else {
+//            resumeCurrentVideo()
+        }
+    }
+}
+
+extension PostDetailPanelView: CommentScrollableDelegate{
+    func didCClickUser(){
+//        delegate?.didClickUser()
+        delegate?.didClickPostDetailPanelVcvClickUser()
+    }
+    func didCClickPlace(){
+//        delegate?.didClickPlace()
+//        delegate?.didClickPhotoPanelVcvClickPlace()
+    }
+    func didCClickSound(){
+//        delegate?.didClickSound()
+//        delegate?.didClickPhotoPanelVcvClickSound()
+    }
+    func didCClickClosePanel(){
+//        bottomBox.isHidden = true
+    }
+    func didCFinishClosePanel() {
+//        resumeCurrentAudio()
+        
+        //test > remove comment scrollable view from pagelist
+        if(!pageList.isEmpty) {
+            pageList.remove(at: pageList.count - 1)
+            
+            if(pageList.count > 0) {
+                let lastPage = pageList[pageList.count - 1]
+                if let a = lastPage as? CommentScrollableView {
+                    print("lastpagelist a")
+                }
+                else if let b = lastPage as? ShareSheetScrollableView {
+                    print("lastpagelist b")
+                }
+            } else {
+                resumeCurrentVideo()
+            }
+        } else {
+//            resumeCurrentVideo()
+        }
+    }
+    func didCClickComment(){
+
+    }
+    func didCClickShare(){
+        //test
+        openShareSheet()
+    }
+    func didCClickPost(){
+        delegate?.didClickPostDetailPanelVcvClickPost()
+    }
+    func didCClickClickPhoto(pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        delegate?.didClickPostDetailPanelVcvClickPhoto(pointX: pointX, pointY: pointY, view: view, mode: mode)
+    }
+    func didCClickClickVideo(pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         
     }
 }
 
 extension ViewController: PostDetailPanelDelegate{
     func didClickPostDetailPanelVcvClickPost() {
-
+        openPostDetailPanel()
     }
     func didClickPostDetailPanelVcvClickUser() {
         //test

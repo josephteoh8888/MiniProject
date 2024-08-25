@@ -11,9 +11,9 @@ import SDWebImage
 import AVFoundation
 
 protocol HListCellDelegate : AnyObject {
-    func hListDidClickVcvComment()
+    func hListDidClickVcvComment(vc: UICollectionViewCell)
     func hListDidClickVcvLove()
-    func hListDidClickVcvShare()
+    func hListDidClickVcvShare(vc: UICollectionViewCell)
     func hListDidClickVcvClickUser()
     func hListDidClickVcvClickPlace()
     func hListDidClickVcvClickSound()
@@ -26,6 +26,9 @@ protocol HListCellDelegate : AnyObject {
     //test > carousel photo scroll page
     func hListCarouselIdx(vc: UICollectionViewCell, idx: Int)
     
+    //test > video stop time
+    func hListVideoStopTime(vc: UICollectionViewCell, ts: Double)
+    
     //test > click play sound
     func hListDidClickVcvPlayAudio(vc: UICollectionViewCell)
 }
@@ -33,13 +36,17 @@ protocol HListCellDelegate : AnyObject {
 //test > horizontal list viewcell for posts
 class HPostListAViewCell: UICollectionViewCell {
     static let identifier = "HPostListStandardViewCell"
-    var gifImage = SDAnimatedImageView()
+//    var gifImage = SDAnimatedImageView()
     
     let bMiniBtn = UIImageView()
     let dMiniBtn = UIImageView()
     let aGridNameText = UILabel()
     let aText = UILabel()
-    var gifImage1 = SDAnimatedImageView()
+//    var gifImage1 = SDAnimatedImageView()
+    let aUserPhoto = SDAnimatedImageView()
+    let aaText = UILabel()
+    let vBtn = UIImageView()
+    let aUserNameText = UILabel()
     
     weak var aDelegate : HListCellDelegate?
     
@@ -60,8 +67,8 @@ class HPostListAViewCell: UICollectionViewCell {
     var photoConArray = [UIView]()
     var bubbleArray = [PageBubbleIndicator]()
     
-    var t_s = 0.0 //for video pause/resume time
-    var p_s = 0 //for photo carousel last viewed photo
+//    var t_s = 0.0 //for video pause/resume time
+//    var p_s = 0 //for photo carousel last viewed photo
     
     let bText = UILabel()
     let cText = UILabel()
@@ -108,21 +115,41 @@ class HPostListAViewCell: UICollectionViewCell {
 //        atapGR.require(toFail: tapGR) //enable double tap
         //////////////////
         
+        //test > add container for clicks event
+        let aCon = UIView()
+        contentView.addSubview(aCon)
+//        aCon.backgroundColor = .red
+        aCon.translatesAutoresizingMaskIntoConstraints = false
+        aCon.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0).isActive = true
+        aCon.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 0).isActive = true
+//        aCon.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0).isActive = true
+        aCon.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0).isActive = true
+        
+        let atapGR = UITapGestureRecognizer(target: self, action: #selector(onSingleClicked))
+        atapGR.numberOfTapsRequired = 1
+        aCon.addGestureRecognizer(atapGR)
+        let tapGR = UITapGestureRecognizer(target: self, action: #selector(onDoubleClicked))
+        tapGR.numberOfTapsRequired = 2
+        aCon.addGestureRecognizer(tapGR)
+        atapGR.require(toFail: tapGR) //enable double tap
+        
         let eUserCover = UIView()
 //        eUserCover.backgroundColor = .ddmBlackOverlayColor
 //        eUserCover.backgroundColor = .white
         eUserCover.backgroundColor = .clear
-        contentView.addSubview(eUserCover)
+//        contentView.addSubview(eUserCover)
+        aCon.addSubview(eUserCover)
         eUserCover.translatesAutoresizingMaskIntoConstraints = false
-        eUserCover.topAnchor.constraint(equalTo: aResult.topAnchor, constant: 20).isActive = true //10
-        eUserCover.leadingAnchor.constraint(equalTo: aResult.leadingAnchor, constant: 20).isActive = true //20
+        eUserCover.topAnchor.constraint(equalTo: aCon.topAnchor, constant: 20).isActive = true //10
+        eUserCover.leadingAnchor.constraint(equalTo: aCon.leadingAnchor, constant: 20).isActive = true //20
         eUserCover.heightAnchor.constraint(equalToConstant: 40).isActive = true
         eUserCover.widthAnchor.constraint(equalToConstant: 40).isActive = true
         eUserCover.layer.cornerRadius = 20
         eUserCover.layer.opacity = 1.0 //default 0.3
         
-        let aUserPhoto = SDAnimatedImageView()
-        contentView.addSubview(aUserPhoto)
+//        let aUserPhoto = SDAnimatedImageView()
+//        contentView.addSubview(aUserPhoto)
+        aCon.addSubview(aUserPhoto)
         aUserPhoto.translatesAutoresizingMaskIntoConstraints = false
         aUserPhoto.widthAnchor.constraint(equalToConstant: 40).isActive = true //36
         aUserPhoto.heightAnchor.constraint(equalToConstant: 40).isActive = true
@@ -133,9 +160,9 @@ class HPostListAViewCell: UICollectionViewCell {
         aUserPhoto.contentMode = .scaleAspectFill
         aUserPhoto.layer.masksToBounds = true
         aUserPhoto.layer.cornerRadius = 20
-        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-        aUserPhoto.sd_setImage(with: imageUrl)
-        aUserPhoto.backgroundColor = .ddmDarkGreyColor
+//        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//        aUserPhoto.sd_setImage(with: imageUrl)
+        aUserPhoto.backgroundColor = .ddmDarkColor
         aUserPhoto.isUserInteractionEnabled = true
         aUserPhoto.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onUserClicked)))
 
@@ -144,7 +171,8 @@ class HPostListAViewCell: UICollectionViewCell {
         aGridNameText.textColor = .white
         aGridNameText.font = .boldSystemFont(ofSize: 14)
 //        aGridNameText.font = .systemFont(ofSize: 14)
-        contentView.addSubview(aGridNameText)
+//        contentView.addSubview(aGridNameText)
+        aCon.addSubview(aGridNameText)
         aGridNameText.translatesAutoresizingMaskIntoConstraints = false
 //        aGridNameText.bottomAnchor.constraint(equalTo: aUserPhoto.bottomAnchor).isActive = true
 //        aGridNameText.centerYAnchor.constraint(equalTo: aUserPhoto.centerYAnchor).isActive = true
@@ -155,11 +183,13 @@ class HPostListAViewCell: UICollectionViewCell {
         aGridNameText.text = "-"
         
         //test > verified badge
-        let vBtn = UIImageView(image: UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate))
+//        let vBtn = UIImageView(image: UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate))
 //        vBtn.tintColor = .yellow //ddmGoldenYellowColor
+//        vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
         vBtn.tintColor = .ddmGoldenYellowColor
 //        vBtn.tintColor = .white //darkGray
-        contentView.addSubview(vBtn)
+//        contentView.addSubview(vBtn)
+        aCon.addSubview(vBtn)
         vBtn.translatesAutoresizingMaskIntoConstraints = false
         vBtn.leadingAnchor.constraint(equalTo: aGridNameText.trailingAnchor, constant: 5).isActive = true
         vBtn.centerYAnchor.constraint(equalTo: aGridNameText.centerYAnchor, constant: 0).isActive = true
@@ -167,20 +197,22 @@ class HPostListAViewCell: UICollectionViewCell {
         vBtn.widthAnchor.constraint(equalToConstant: 14).isActive = true
         //
         
-        let aUserNameText = UILabel()
+//        let aUserNameText = UILabel()
         aUserNameText.textAlignment = .left
         aUserNameText.textColor = .white
         aUserNameText.font = .systemFont(ofSize: 12)
-        contentView.addSubview(aUserNameText)
+//        contentView.addSubview(aUserNameText)
+        aCon.addSubview(aUserNameText)
         aUserNameText.translatesAutoresizingMaskIntoConstraints = false
         aUserNameText.topAnchor.constraint(equalTo: aGridNameText.bottomAnchor).isActive = true
         aUserNameText.leadingAnchor.constraint(equalTo: aGridNameText.leadingAnchor, constant: 0).isActive = true
-        aUserNameText.text = "3hr . 1.2m views"
+        aUserNameText.text = "-"
 //        aUserNameText.text = "@mic1809"
         aUserNameText.layer.opacity = 0.3 //0.5
         
 //        let aTest = UIView()
-        contentView.addSubview(aTest)
+//        contentView.addSubview(aTest)
+        aCon.addSubview(aTest)
         aTest.translatesAutoresizingMaskIntoConstraints = false
         aTest.leadingAnchor.constraint(equalTo: aResult.leadingAnchor, constant: 0).isActive = true
         aTest.trailingAnchor.constraint(equalTo: aResult.trailingAnchor, constant: 0).isActive = true
@@ -189,23 +221,24 @@ class HPostListAViewCell: UICollectionViewCell {
         //test > click on aTest for click post
 //        aTest.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onSingleClicked)))
         
-        let atapGR = UITapGestureRecognizer(target: self, action: #selector(onSingleClicked))
-        atapGR.numberOfTapsRequired = 1
-        aTest.addGestureRecognizer(atapGR)
-        let tapGR = UITapGestureRecognizer(target: self, action: #selector(onDoubleClicked))
-        tapGR.numberOfTapsRequired = 2
-        aTest.addGestureRecognizer(tapGR)
-        atapGR.require(toFail: tapGR) //enable double tap
+//        let atapGR = UITapGestureRecognizer(target: self, action: #selector(onSingleClicked))
+//        atapGR.numberOfTapsRequired = 1
+//        aTest.addGestureRecognizer(atapGR)
+//        let tapGR = UITapGestureRecognizer(target: self, action: #selector(onDoubleClicked))
+//        tapGR.numberOfTapsRequired = 2
+//        aTest.addGestureRecognizer(tapGR)
+//        atapGR.require(toFail: tapGR) //enable double tap
         
         //test 2 > design location 2
         let aBox = UIView()
 //        aBox.backgroundColor = .ddmBlackOverlayColor
         aBox.backgroundColor = .ddmDarkColor
-        contentView.addSubview(aBox)
+//        contentView.addSubview(aBox)
+        aCon.addSubview(aBox)
         aBox.clipsToBounds = true
         aBox.translatesAutoresizingMaskIntoConstraints = false
 //        aBox.leadingAnchor.constraint(equalTo: aText.leadingAnchor, constant: 0).isActive = true
-        aBox.leadingAnchor.constraint(equalTo: aResult.leadingAnchor, constant: 20).isActive = true
+        aBox.leadingAnchor.constraint(equalTo: aCon.leadingAnchor, constant: 20).isActive = true
         aBox.heightAnchor.constraint(equalToConstant: 30).isActive = true //default: 50
 //        aBox.topAnchor.constraint(equalTo: aText.bottomAnchor, constant: 20).isActive = true
 //        aBox.topAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 20).isActive = true
@@ -218,7 +251,8 @@ class HPostListAViewCell: UICollectionViewCell {
 
         let bBox = UIView()
         bBox.backgroundColor = .clear //yellow
-        contentView.addSubview(bBox)
+//        contentView.addSubview(bBox)
+        aCon.addSubview(bBox)
         bBox.clipsToBounds = true
         bBox.translatesAutoresizingMaskIntoConstraints = false
         bBox.widthAnchor.constraint(equalToConstant: 16).isActive = true //ori: 40
@@ -239,32 +273,44 @@ class HPostListAViewCell: UICollectionViewCell {
         gridViewBtn.widthAnchor.constraint(equalToConstant: 16).isActive = true
 //        gridViewBtn.layer.opacity = 0.5
 
-        let aaText = UILabel()
+//        let aaText = UILabel()
         aaText.textAlignment = .left
         aaText.textColor = .white
 //        aaText.textColor = .ddmDarkColor
         aaText.font = .boldSystemFont(ofSize: 12)
 //        aaText.font = .systemFont(ofSize: 12)
-        contentView.addSubview(aaText)
+//        contentView.addSubview(aaText)
+        aCon.addSubview(aaText)
         aaText.clipsToBounds = true
         aaText.translatesAutoresizingMaskIntoConstraints = false
         aaText.topAnchor.constraint(equalTo: aBox.topAnchor, constant: 5).isActive = true
         aaText.bottomAnchor.constraint(equalTo: aBox.bottomAnchor, constant: -5).isActive = true
         aaText.leadingAnchor.constraint(equalTo: bBox.trailingAnchor, constant: 5).isActive = true //10
         aaText.trailingAnchor.constraint(equalTo: aBox.trailingAnchor, constant: -10).isActive = true
-        aaText.text = "Petronas Twin Tower"
+//        aaText.text = "Petronas Twin Tower"
+        aaText.text = "-"
 //        aaText.layer.opacity = 0.5
         
         //test > post performance count metrics
+        let bMiniCon = UIView()
+        aCon.addSubview(bMiniCon)
+        bMiniCon.translatesAutoresizingMaskIntoConstraints = false
+        bMiniCon.bottomAnchor.constraint(equalTo: aCon.bottomAnchor, constant: 0).isActive = true
+        bMiniCon.topAnchor.constraint(equalTo: aBox.bottomAnchor, constant: 10).isActive = true
+        bMiniCon.leadingAnchor.constraint(equalTo: aCon.leadingAnchor, constant: 20).isActive = true
+        bMiniCon.heightAnchor.constraint(equalToConstant: 30).isActive = true //26
+        bMiniCon.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        bMiniCon.isUserInteractionEnabled = true
+        bMiniCon.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onLoveClicked)))
+        
         let bMini = UIView()
         bMini.backgroundColor = .ddmDarkColor
-        contentView.addSubview(bMini)
+//        contentView.addSubview(bMini)
+//        aCon.addSubview(bMini)
+        bMiniCon.addSubview(bMini)
         bMini.translatesAutoresizingMaskIntoConstraints = false
-//        bMini.bottomAnchor.constraint(equalTo: videoPanel.bottomAnchor, constant: -30).isActive = true
-//        bMini.topAnchor.constraint(equalTo: aText.bottomAnchor, constant: 30).isActive = true
-        bMini.topAnchor.constraint(equalTo: aBox.bottomAnchor, constant: 10).isActive = true
-//        bMini.leadingAnchor.constraint(equalTo: aText.leadingAnchor, constant: 0).isActive = true
-        bMini.leadingAnchor.constraint(equalTo: aResult.leadingAnchor, constant: 20).isActive = true
+        bMini.centerYAnchor.constraint(equalTo: bMiniCon.centerYAnchor).isActive = true
+        bMini.centerXAnchor.constraint(equalTo: bMiniCon.centerXAnchor).isActive = true
         bMini.heightAnchor.constraint(equalToConstant: 30).isActive = true //26
         bMini.widthAnchor.constraint(equalToConstant: 30).isActive = true
         bMini.layer.cornerRadius = 15
@@ -275,35 +321,49 @@ class HPostListAViewCell: UICollectionViewCell {
         bMiniBtn.image = UIImage(named:"icon_love")?.withRenderingMode(.alwaysTemplate)
         bMiniBtn.tintColor = .white
 //        bMiniBtn.tintColor = .red
-        contentView.addSubview(bMiniBtn)
+//        contentView.addSubview(bMiniBtn)
+//        aCon.addSubview(bMiniBtn)
+        bMiniCon.addSubview(bMiniBtn)
         bMiniBtn.translatesAutoresizingMaskIntoConstraints = false
         bMiniBtn.centerXAnchor.constraint(equalTo: bMini.centerXAnchor).isActive = true
         bMiniBtn.centerYAnchor.constraint(equalTo: bMini.centerYAnchor).isActive = true
         bMiniBtn.heightAnchor.constraint(equalToConstant: 18).isActive = true //16
         bMiniBtn.widthAnchor.constraint(equalToConstant: 18).isActive = true
-        bMiniBtn.isUserInteractionEnabled = true
+//        bMiniBtn.isUserInteractionEnabled = true
 //        bMiniBtn.layer.opacity = 0.5
-        bMiniBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onLoveClicked)))
+//        bMiniBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onLoveClicked)))
         
 //        let bText = UILabel()
         bText.textAlignment = .left
         bText.textColor = .white
         bText.font = .boldSystemFont(ofSize: 10)
-        contentView.addSubview(bText)
+//        contentView.addSubview(bText)
+        aCon.addSubview(bText)
         bText.clipsToBounds = true
         bText.translatesAutoresizingMaskIntoConstraints = false
-        bText.leadingAnchor.constraint(equalTo: bMini.trailingAnchor, constant: 2).isActive = true
-        bText.centerYAnchor.constraint(equalTo: bMini.centerYAnchor).isActive = true
+        bText.leadingAnchor.constraint(equalTo: bMiniCon.trailingAnchor, constant: 2).isActive = true
+        bText.centerYAnchor.constraint(equalTo: bMiniCon.centerYAnchor).isActive = true
         bText.text = "-"
 //        bText.layer.opacity = 0.5
         
+        let cMiniCon = UIView()
+        aCon.addSubview(cMiniCon)
+        cMiniCon.translatesAutoresizingMaskIntoConstraints = false
+        cMiniCon.topAnchor.constraint(equalTo: bMiniCon.topAnchor, constant: 0).isActive = true
+        cMiniCon.leadingAnchor.constraint(equalTo: bText.trailingAnchor, constant: 20).isActive = true
+        cMiniCon.heightAnchor.constraint(equalToConstant: 30).isActive = true //26
+        cMiniCon.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        cMiniCon.isUserInteractionEnabled = true
+        cMiniCon.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onCommentBtnClicked)))
+        
         let cMini = UIView()
         cMini.backgroundColor = .ddmDarkColor
-        contentView.addSubview(cMini)
+//        contentView.addSubview(cMini)
+//        aCon.addSubview(cMini)
+        cMiniCon.addSubview(cMini)
         cMini.translatesAutoresizingMaskIntoConstraints = false
-//        cMini.bottomAnchor.constraint(equalTo: videoPanel.bottomAnchor, constant: -30).isActive = true
-        cMini.topAnchor.constraint(equalTo: bMini.topAnchor, constant: 0).isActive = true
-        cMini.leadingAnchor.constraint(equalTo: bText.trailingAnchor, constant: 20).isActive = true
+        cMini.centerYAnchor.constraint(equalTo: cMiniCon.centerYAnchor).isActive = true
+        cMini.centerXAnchor.constraint(equalTo: cMiniCon.centerXAnchor).isActive = true
         cMini.heightAnchor.constraint(equalToConstant: 30).isActive = true
         cMini.widthAnchor.constraint(equalToConstant: 30).isActive = true
         cMini.layer.cornerRadius = 15
@@ -313,35 +373,48 @@ class HPostListAViewCell: UICollectionViewCell {
         let cMiniBtn = UIImageView(image: UIImage(named:"icon_comment")?.withRenderingMode(.alwaysTemplate))
 //        cMiniBtn.image = UIImage(named:"icon_comment")?.withRenderingMode(.alwaysTemplate)
         cMiniBtn.tintColor = .white
-        contentView.addSubview(cMiniBtn)
+//        contentView.addSubview(cMiniBtn)
+//        aCon.addSubview(cMiniBtn)
+        cMiniCon.addSubview(cMiniBtn)
         cMiniBtn.translatesAutoresizingMaskIntoConstraints = false
         cMiniBtn.centerXAnchor.constraint(equalTo: cMini.centerXAnchor).isActive = true
         cMiniBtn.centerYAnchor.constraint(equalTo: cMini.centerYAnchor).isActive = true
         cMiniBtn.heightAnchor.constraint(equalToConstant: 16).isActive = true //16
         cMiniBtn.widthAnchor.constraint(equalToConstant: 16).isActive = true //16
-        cMiniBtn.isUserInteractionEnabled = true
+//        cMiniBtn.isUserInteractionEnabled = true
 //        cMiniBtn.layer.opacity = 0.5
-        cMiniBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onCommentBtnClicked)))
+//        cMiniBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onCommentBtnClicked)))
         
 //        let cText = UILabel()
         cText.textAlignment = .left
         cText.textColor = .white
         cText.font = .boldSystemFont(ofSize: 10)
-        contentView.addSubview(cText)
+//        contentView.addSubview(cText)
+        aCon.addSubview(cText)
         cText.clipsToBounds = true
         cText.translatesAutoresizingMaskIntoConstraints = false
-        cText.leadingAnchor.constraint(equalTo: cMini.trailingAnchor, constant: 2).isActive = true
-        cText.centerYAnchor.constraint(equalTo: cMini.centerYAnchor).isActive = true
+        cText.leadingAnchor.constraint(equalTo: cMiniCon.trailingAnchor, constant: 2).isActive = true
+        cText.centerYAnchor.constraint(equalTo: cMiniCon.centerYAnchor).isActive = true
         cText.text = "-"
 //        cText.layer.opacity = 0.5
         
+        let dMiniCon = UIView()
+        aCon.addSubview(dMiniCon)
+        dMiniCon.translatesAutoresizingMaskIntoConstraints = false
+        dMiniCon.topAnchor.constraint(equalTo: bMiniCon.topAnchor, constant: 0).isActive = true
+        dMiniCon.leadingAnchor.constraint(equalTo: cText.trailingAnchor, constant: 20).isActive = true
+        dMiniCon.heightAnchor.constraint(equalToConstant: 30).isActive = true //26
+        dMiniCon.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        dMiniCon.isUserInteractionEnabled = true
+        dMiniCon.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBookmarkClicked)))
+        
         let dMini = UIView()
         dMini.backgroundColor = .ddmDarkColor
-        contentView.addSubview(dMini)
+//        contentView.addSubview(dMini)
+        dMiniCon.addSubview(dMini)
         dMini.translatesAutoresizingMaskIntoConstraints = false
-//        dMini.bottomAnchor.constraint(equalTo: videoPanel.bottomAnchor, constant: -30).isActive = true
-        dMini.topAnchor.constraint(equalTo: cMini.topAnchor, constant: 0).isActive = true
-        dMini.leadingAnchor.constraint(equalTo: cText.trailingAnchor, constant: 20).isActive = true
+        dMini.centerYAnchor.constraint(equalTo: dMiniCon.centerYAnchor).isActive = true
+        dMini.centerXAnchor.constraint(equalTo: dMiniCon.centerXAnchor).isActive = true
         dMini.heightAnchor.constraint(equalToConstant: 30).isActive = true
         dMini.widthAnchor.constraint(equalToConstant: 30).isActive = true
         dMini.layer.cornerRadius = 15
@@ -353,36 +426,48 @@ class HPostListAViewCell: UICollectionViewCell {
         dMiniBtn.image = UIImage(named:"icon_round_bookmark_b")?.withRenderingMode(.alwaysTemplate)
         dMiniBtn.tintColor = .white
 //        dMiniBtn.tintColor = .ddmGoldenYellowColor
-        contentView.addSubview(dMiniBtn)
+//        contentView.addSubview(dMiniBtn)
+        dMiniCon.addSubview(dMiniBtn)
         dMiniBtn.translatesAutoresizingMaskIntoConstraints = false
         dMiniBtn.centerXAnchor.constraint(equalTo: dMini.centerXAnchor).isActive = true
         dMiniBtn.centerYAnchor.constraint(equalTo: dMini.centerYAnchor).isActive = true
         dMiniBtn.heightAnchor.constraint(equalToConstant: 18).isActive = true //16
         dMiniBtn.widthAnchor.constraint(equalToConstant: 18).isActive = true
-        dMiniBtn.isUserInteractionEnabled = true
+//        dMiniBtn.isUserInteractionEnabled = true
 //        dMiniBtn.layer.opacity = 0.5
-        dMiniBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBookmarkClicked)))
+//        dMiniBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBookmarkClicked)))
         
 //        let dText = UILabel()
         dText.textAlignment = .left
         dText.textColor = .white
         dText.font = .boldSystemFont(ofSize: 10)
-        contentView.addSubview(dText)
+//        contentView.addSubview(dText)
+        aCon.addSubview(dText)
         dText.clipsToBounds = true
         dText.translatesAutoresizingMaskIntoConstraints = false
-        dText.leadingAnchor.constraint(equalTo: dMini.trailingAnchor, constant: 2).isActive = true
-        dText.centerYAnchor.constraint(equalTo: dMini.centerYAnchor).isActive = true
+        dText.leadingAnchor.constraint(equalTo: dMiniCon.trailingAnchor, constant: 2).isActive = true
+        dText.centerYAnchor.constraint(equalTo: dMiniCon.centerYAnchor).isActive = true
         dText.text = "-"
 //        dText.layer.opacity = 0.5
+        
+        let eMiniCon = UIView()
+        aCon.addSubview(eMiniCon)
+        eMiniCon.translatesAutoresizingMaskIntoConstraints = false
+        eMiniCon.topAnchor.constraint(equalTo: bMiniCon.topAnchor, constant: 0).isActive = true
+        eMiniCon.leadingAnchor.constraint(equalTo: dText.trailingAnchor, constant: 20).isActive = true
+        eMiniCon.heightAnchor.constraint(equalToConstant: 28).isActive = true //26
+        eMiniCon.widthAnchor.constraint(equalToConstant: 28).isActive = true
+        eMiniCon.isUserInteractionEnabled = true
+        eMiniCon.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onShareClicked)))
         
         let eMini = UIView()
         eMini.backgroundColor = .ddmDarkColor
 //        eMini.backgroundColor = .green
-        contentView.addSubview(eMini)
+//        contentView.addSubview(eMini)
+        eMiniCon.addSubview(eMini)
         eMini.translatesAutoresizingMaskIntoConstraints = false
-//        eMini.bottomAnchor.constraint(equalTo: videoPanel.bottomAnchor, constant: -30).isActive = true
-        eMini.topAnchor.constraint(equalTo: dMini.topAnchor, constant: 0).isActive = true
-        eMini.leadingAnchor.constraint(equalTo: dText.trailingAnchor, constant: 20).isActive = true
+        eMini.centerYAnchor.constraint(equalTo: eMiniCon.centerYAnchor).isActive = true
+        eMini.centerXAnchor.constraint(equalTo: eMiniCon.centerXAnchor).isActive = true
         eMini.heightAnchor.constraint(equalToConstant: 30).isActive = true
         eMini.widthAnchor.constraint(equalToConstant: 30).isActive = true
         eMini.layer.cornerRadius = 15
@@ -393,15 +478,17 @@ class HPostListAViewCell: UICollectionViewCell {
 //        let eMiniBtn = UIImageView(image: UIImage(named:"icon_round_repeat")?.withRenderingMode(.alwaysTemplate))
         eMiniBtn.tintColor = .white
 //        eMiniBtn.tintColor = .green
-        contentView.addSubview(eMiniBtn)
+//        contentView.addSubview(eMiniBtn)
+//        aCon.addSubview(eMiniBtn)
+        eMiniCon.addSubview(eMiniBtn)
         eMiniBtn.translatesAutoresizingMaskIntoConstraints = false
         eMiniBtn.centerXAnchor.constraint(equalTo: eMini.centerXAnchor).isActive = true
         eMiniBtn.centerYAnchor.constraint(equalTo: eMini.centerYAnchor, constant: -2).isActive = true //-2
         eMiniBtn.heightAnchor.constraint(equalToConstant: 22).isActive = true //22
         eMiniBtn.widthAnchor.constraint(equalToConstant: 22).isActive = true
-        eMiniBtn.isUserInteractionEnabled = true
+//        eMiniBtn.isUserInteractionEnabled = true
 //        eMiniBtn.layer.opacity = 0.5
-        eMiniBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onShareClicked)))
+//        eMiniBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onShareClicked)))
         
 //        let eMiniBtn = UIImageView(image: UIImage(named:"icon_round_repeat")?.withRenderingMode(.alwaysTemplate))
 //        eMiniBtn.tintColor = .green
@@ -418,11 +505,12 @@ class HPostListAViewCell: UICollectionViewCell {
         eText.textAlignment = .left
         eText.textColor = .white
         eText.font = .boldSystemFont(ofSize: 10)
-        contentView.addSubview(eText)
+//        contentView.addSubview(eText)
+        aCon.addSubview(eText)
         eText.clipsToBounds = true
         eText.translatesAutoresizingMaskIntoConstraints = false
-        eText.leadingAnchor.constraint(equalTo: eMini.trailingAnchor, constant: 2).isActive = true
-        eText.centerYAnchor.constraint(equalTo: eMini.centerYAnchor).isActive = true
+        eText.leadingAnchor.constraint(equalTo: eMiniCon.trailingAnchor, constant: 2).isActive = true
+        eText.centerYAnchor.constraint(equalTo: eMiniCon.centerYAnchor).isActive = true
         eText.text = "-"
 //        eText.layer.opacity = 0.5
         
@@ -431,8 +519,7 @@ class HPostListAViewCell: UICollectionViewCell {
         aTest2.translatesAutoresizingMaskIntoConstraints = false
         aTest2.leadingAnchor.constraint(equalTo: aResult.leadingAnchor, constant: 0).isActive = true
         aTest2.trailingAnchor.constraint(equalTo: aResult.trailingAnchor, constant: 0).isActive = true
-        aTest2.topAnchor.constraint(equalTo: bMini.bottomAnchor, constant: 0).isActive = true
-    
+        aTest2.topAnchor.constraint(equalTo: bMini.bottomAnchor, constant: 10).isActive = true
     }
     
     override func prepareForReuse() {
@@ -459,7 +546,10 @@ class HPostListAViewCell: UICollectionViewCell {
         //**
         
         aGridNameText.text = "-"
-//        aText.text = "-"
+        vBtn.image = nil
+        aaText.text = "-"
+        let imageUrl = URL(string: "")
+        aUserPhoto.sd_setImage(with: imageUrl)
         
         bText.text = "0"
         cText.text = "0"
@@ -476,24 +566,57 @@ class HPostListAViewCell: UICollectionViewCell {
         }
         aTest2Array.removeAll()
         
-        var gifUrl1 = URL(string: "")
-        gifImage1.sd_setImage(with: gifUrl1)
+//        let gifUrl1 = URL(string: "")
+//        gifImage1.sd_setImage(with: gifUrl1)
     }
     
-//    func configure(data: String) {
-//        aGridNameText.text = "Michael Kins"
-//        aText.text = data
-//
-//        var gifUrl1 = URL(string: "")
-//        if(data == "Nice food, nice environment! Worth a visit. \n\nSo Good.") {
-//            gifUrl1 = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
-//        } else {
-//            gifUrl1 = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-//        }
-//        gifImage1.sd_setImage(with: gifUrl1)
-//    }
+    //*test > async fetch images/names/videos
+    func asyncConfigure(data: String) {
+        let id = "u_"
+        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    print("pdp api success \(id), \(l)")
+                    
+                    guard let self = self else {
+                        return
+                    }
+
+                    self.aGridNameText.text = "Michael Kins"
+                    self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
+                    
+                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+                    self.aUserPhoto.sd_setImage(with: imageUrl)
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    self.aGridNameText.text = "-"
+                    self.vBtn.image = nil
+                    
+                    let imageUrl = URL(string: "")
+                    self.aUserPhoto.sd_setImage(with: imageUrl)
+                    
+                }
+                break
+            }
+        }
+    }
+    //*
+    
     func configure(data: PostData) {
-        aGridNameText.text = "Michael Kins"
+//        aGridNameText.text = "Michael Kins"
+        asyncConfigure(data: "")
+        
+        aUserNameText.text = "3hr . 1.2m views"
+        aaText.text = "Petronas Twin Tower"
         
 //        let attributedText = NSMutableAttributedString(string: "Michael ")
 ////        let linkText = "www.example.com"
@@ -532,108 +655,25 @@ class HPostListAViewCell: UICollectionViewCell {
                 aTestArray.append(aaText)
             }
             else if(l == "p") {
-                //carousel of images
-                let scrollView = UIScrollView()
-                aTest.addSubview(scrollView)
-                scrollView.backgroundColor = .clear
-                scrollView.translatesAutoresizingMaskIntoConstraints = false
-//                scrollView.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
+                //test 2 > reusable custom view
+                let contentCell = PostPhotoContentCell(frame: CGRect(x: 0, y: 0, width: 370, height: 280))
+                aTest.addSubview(contentCell)
+                contentCell.translatesAutoresizingMaskIntoConstraints = false
                 if(aTestArray.isEmpty) {
-                    scrollView.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
+                    contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
                 } else {
                     let lastArrayE = aTestArray[aTestArray.count - 1]
-                    scrollView.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
+                    contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
                 }
-                scrollView.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true //0
-//                scrollView.trailingAnchor.constraint(equalTo: aTest.trailingAnchor, constant: -20).isActive = true
-                scrollView.widthAnchor.constraint(equalToConstant: 370).isActive = true  //280
-                scrollView.heightAnchor.constraint(equalToConstant: 280).isActive = true  //280
-                scrollView.showsHorizontalScrollIndicator = false
-                scrollView.alwaysBounceHorizontal = true
-                scrollView.contentSize = CGSize(width: 740, height: 280) //800, 280
-        //        scrollView.contentSize = CGSize(width: 360, height: 280)
-                scrollView.isPagingEnabled = true //false
-                scrollView.delegate = self
-                scrollView.layer.cornerRadius = 10 //5
-                aTestArray.append(scrollView)
-                photoConArray.append(scrollView)
-
-//                let gifUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-//                let gifUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
-                let gifUrl = URL(string: "https://i3.ytimg.com/vi/2mcGhpbWlyg/maxresdefault.jpg")
-//            https://i3.ytimg.com/vi/2mcGhpbWlyg/maxresdefault.jpg
-                
-                var gifImage1 = SDAnimatedImageView()
-                gifImage1.contentMode = .scaleAspectFill
-                gifImage1.clipsToBounds = true
-                gifImage1.sd_setImage(with: gifUrl)
-//                gifImage1.layer.cornerRadius = 10 //5
-                scrollView.addSubview(gifImage1)
-                gifImage1.translatesAutoresizingMaskIntoConstraints = false
-                gifImage1.widthAnchor.constraint(equalToConstant: 370).isActive = true //180
-                gifImage1.heightAnchor.constraint(equalToConstant: 280).isActive = true //280
-                gifImage1.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 0).isActive = true
-                gifImage1.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 0).isActive = true
-                //test > click on photo
-                gifImage1.isUserInteractionEnabled = true
-                gifImage1.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPhotoClicked)))//20
-
-                var gifImage2 = SDAnimatedImageView()
-                gifImage2.contentMode = .scaleAspectFill
-                gifImage2.clipsToBounds = true
-                gifImage2.sd_setImage(with: gifUrl)
-//                gifImage2.layer.cornerRadius = 10 //5
-                scrollView.addSubview(gifImage2)
-                gifImage2.translatesAutoresizingMaskIntoConstraints = false
-                gifImage2.widthAnchor.constraint(equalToConstant: 370).isActive = true //180
-                gifImage2.heightAnchor.constraint(equalToConstant: 280).isActive = true //280
-                gifImage2.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 0).isActive = true
-                gifImage2.leadingAnchor.constraint(equalTo: gifImage1.trailingAnchor, constant: 0).isActive = true //10
-                
-                //test > add bubble
-                let dataCount = 2
-                let p = data.p_s
-                if(dataCount > 1) {
-                    let bubbleBox = PageBubbleIndicator()
-                    bubbleBox.backgroundColor = .clear
-                    aTest.addSubview(bubbleBox)
-                    bubbleBox.translatesAutoresizingMaskIntoConstraints = false
-//                    bubbleBox.topAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 10).isActive = true
-                    bubbleBox.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -10).isActive = true
-                    bubbleBox.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor, constant: 0).isActive = true
-                    bubbleBox.heightAnchor.constraint(equalToConstant: 3).isActive = true //30
-    //                bubbleBox.isHidden = true
-                    bubbleBox.setConfiguration(number: dataCount, color: .yellow)
-//                    bubbleBox.setIndicatorSelected(index: 0)
-                    bubbleBox.setIndicatorSelected(index: p) //revert to last viewed photo in carousel
-                    aTestArray.append(bubbleBox)
-                    
-                    bubbleArray.append(bubbleBox)
-                }
-                
-                //revert to last viewed photo in carousel
-                let xOffset = CGFloat(p) * 370
-                scrollView.setContentOffset(CGPoint(x: xOffset, y: 0), animated: false)
-            }
-            else if(l == "p_s") {
-                //test > loop cover
-                let pConBg = UIView()
-                pConBg.backgroundColor = .ddmDarkColor //.ddmDarkColor
-                aTest.addSubview(pConBg)
-                pConBg.frame = CGRect(x: 0, y: 0, width: 370, height: 320)
-                pConBg.translatesAutoresizingMaskIntoConstraints = false
-                pConBg.widthAnchor.constraint(equalToConstant: 370).isActive = true //150, 370
-                pConBg.heightAnchor.constraint(equalToConstant: 320).isActive = true //250, 280
-                if(aTestArray.isEmpty) {
-                    pConBg.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
-                } else {
-                    let lastArrayE = aTestArray[aTestArray.count - 1]
-                    pConBg.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
-                }
-                pConBg.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
-                pConBg.layer.cornerRadius = 10
-                pConBg.layer.opacity = 0.4 //0.2
-                aTestArray.append(pConBg)
+                contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
+                contentCell.widthAnchor.constraint(equalToConstant: 370).isActive = true  //280
+                contentCell.heightAnchor.constraint(equalToConstant: 280).isActive = true  //280
+                contentCell.layer.cornerRadius = 10 //5
+                aTestArray.append(contentCell)
+                contentCell.redrawUI()
+                contentCell.configure(data: "a")
+                contentCell.setState(p: data.p_s)
+                contentCell.aDelegate = self
                 
                 //carousel of images
 //                let scrollView = UIScrollView()
@@ -659,192 +699,290 @@ class HPostListAViewCell: UICollectionViewCell {
 //                scrollView.delegate = self
 //                scrollView.layer.cornerRadius = 10 //5
 //                aTestArray.append(scrollView)
-                
-                let scrollView = UIScrollView()
-                aTest.addSubview(scrollView)
-                scrollView.backgroundColor = .clear
-                scrollView.translatesAutoresizingMaskIntoConstraints = false
-                scrollView.topAnchor.constraint(equalTo: pConBg.topAnchor, constant: 0).isActive = true
-                scrollView.leadingAnchor.constraint(equalTo: pConBg.leadingAnchor, constant: 0).isActive = true //0
-//                scrollView.trailingAnchor.constraint(equalTo: aTest.trailingAnchor, constant: -20).isActive = true
-                scrollView.widthAnchor.constraint(equalToConstant: 370).isActive = true  //280
-                scrollView.heightAnchor.constraint(equalToConstant: 280).isActive = true  //280
-                scrollView.showsHorizontalScrollIndicator = false
-                scrollView.alwaysBounceHorizontal = true
-                scrollView.contentSize = CGSize(width: 740, height: 280) //800, 280
-        //        scrollView.contentSize = CGSize(width: 360, height: 280)
-                scrollView.isPagingEnabled = true //false
-                scrollView.delegate = self
-                scrollView.layer.cornerRadius = 10 //5
-                scrollView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
-//                scrollView.clipsToBounds = true
-//                scrollView.roundCorners(corners: [.topLeft, .topRight], radius: 10.0)
-                aTestArray.append(scrollView)
-                photoConArray.append(scrollView)
-
-//                let gifUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-                let gifUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
-//            https://i3.ytimg.com/vi/2mcGhpbWlyg/maxresdefault.jpg
-                
-                var gifImage1 = SDAnimatedImageView()
-                gifImage1.contentMode = .scaleAspectFill
-                gifImage1.clipsToBounds = true
-                gifImage1.sd_setImage(with: gifUrl)
-//                gifImage1.layer.cornerRadius = 10 //5
-                scrollView.addSubview(gifImage1)
-                gifImage1.translatesAutoresizingMaskIntoConstraints = false
-                gifImage1.widthAnchor.constraint(equalToConstant: 370).isActive = true //180
-                gifImage1.heightAnchor.constraint(equalToConstant: 280).isActive = true //280
-                gifImage1.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 0).isActive = true
-                gifImage1.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 0).isActive = true
-                //test > click on photo
-                gifImage1.isUserInteractionEnabled = true
-                gifImage1.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPhotoSClicked)))//20
-
-                var gifImage2 = SDAnimatedImageView()
-                gifImage2.contentMode = .scaleAspectFill
-                gifImage2.clipsToBounds = true
-                gifImage2.sd_setImage(with: gifUrl)
-//                gifImage2.layer.cornerRadius = 10 //5
-                scrollView.addSubview(gifImage2)
-                gifImage2.translatesAutoresizingMaskIntoConstraints = false
-                gifImage2.widthAnchor.constraint(equalToConstant: 370).isActive = true //180
-                gifImage2.heightAnchor.constraint(equalToConstant: 280).isActive = true //280
-                gifImage2.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 0).isActive = true
-                gifImage2.leadingAnchor.constraint(equalTo: gifImage1.trailingAnchor, constant: 0).isActive = true //10
-                
-                //test > add "shot" label
-                let label = UIView()
-                aTest.addSubview(label)
-//                label.backgroundColor = .ddmDarkColor
-                label.backgroundColor = .clear
-                label.translatesAutoresizingMaskIntoConstraints = false
-//                label.widthAnchor.constraint(equalToConstant: 80).isActive = true //80
-                label.heightAnchor.constraint(equalToConstant: 26).isActive = true //30
-                label.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 5).isActive = true
-//                label.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 5).isActive = true
-                label.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -5).isActive = true
-//                label.layer.opacity = 0.5
-                label.layer.cornerRadius = 5
-                aTestArray.append(label)
-                
-                let labelBg = UIView()
-                label.addSubview(labelBg)
-                labelBg.backgroundColor = .ddmDarkColor
-//                labelBg.backgroundColor = .white
-                labelBg.translatesAutoresizingMaskIntoConstraints = false
-                labelBg.topAnchor.constraint(equalTo: label.topAnchor, constant: 0).isActive = true
-                labelBg.leadingAnchor.constraint(equalTo: label.leadingAnchor, constant: 0).isActive = true
-                labelBg.trailingAnchor.constraint(equalTo: label.trailingAnchor, constant: 0).isActive = true
-                labelBg.bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 0).isActive = true
-//                labelBg.layer.opacity = 0.8 //0.5
-                labelBg.layer.opacity = 0.3 //0.5
-                labelBg.layer.cornerRadius = 5
-                
-                let e2UserCover = UIView()
-                e2UserCover.backgroundColor = .clear
-                label.addSubview(e2UserCover)
-                e2UserCover.translatesAutoresizingMaskIntoConstraints = false
-//                e2UserCover.topAnchor.constraint(equalTo: label.topAnchor, constant: 0).isActive = true //20
-                e2UserCover.centerYAnchor.constraint(equalTo: label.centerYAnchor, constant: 0).isActive = true
-                e2UserCover.leadingAnchor.constraint(equalTo: label.leadingAnchor, constant: 5).isActive = true
-                e2UserCover.heightAnchor.constraint(equalToConstant: 20).isActive = true //28
-                e2UserCover.widthAnchor.constraint(equalToConstant: 20).isActive = true //28
-                e2UserCover.layer.cornerRadius = 10
-                e2UserCover.layer.opacity = 1.0 //default 0.3
-
-                let a2UserPhoto = SDAnimatedImageView()
-                label.addSubview(a2UserPhoto)
-                a2UserPhoto.translatesAutoresizingMaskIntoConstraints = false
-                a2UserPhoto.widthAnchor.constraint(equalToConstant: 20).isActive = true //36
-                a2UserPhoto.heightAnchor.constraint(equalToConstant: 20).isActive = true
-                a2UserPhoto.centerXAnchor.constraint(equalTo: e2UserCover.centerXAnchor).isActive = true
-                a2UserPhoto.centerYAnchor.constraint(equalTo: e2UserCover.centerYAnchor).isActive = true
-                a2UserPhoto.contentMode = .scaleAspectFill
-                a2UserPhoto.layer.masksToBounds = true
-                a2UserPhoto.layer.cornerRadius = 10
-                let image2Url = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-                a2UserPhoto.sd_setImage(with: image2Url)
-                a2UserPhoto.backgroundColor = .ddmDarkGreyColor
-                
-                let aGridNameText = UILabel()
-                aGridNameText.textAlignment = .left
-                aGridNameText.textColor = .white
-//                aGridNameText.textColor = .ddmDarkColor
-                aGridNameText.font = .boldSystemFont(ofSize: 12)
-                label.addSubview(aGridNameText)
-                aGridNameText.translatesAutoresizingMaskIntoConstraints = false
-                aGridNameText.centerYAnchor.constraint(equalTo: e2UserCover.centerYAnchor).isActive = true
-                aGridNameText.trailingAnchor.constraint(equalTo: label.trailingAnchor, constant: -5).isActive = true
-                aGridNameText.leadingAnchor.constraint(equalTo: e2UserCover.trailingAnchor, constant: 5).isActive = true
-                aGridNameText.text = "Shot"
-//                aGridNameText.centerYAnchor.constraint(equalTo: label.centerYAnchor, constant: 0).isActive = true
-//                aGridNameText.leadingAnchor.constraint(equalTo: label.leadingAnchor, constant: 5).isActive = true
-                
-                //test > add bubble
-                let dataCount = 2
-                let p = data.p_s
-                if(dataCount > 1) {
-                    let bubbleBox = PageBubbleIndicator()
-                    bubbleBox.backgroundColor = .clear
-                    aTest.addSubview(bubbleBox)
-                    bubbleBox.translatesAutoresizingMaskIntoConstraints = false
-//                    bubbleBox.topAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 10).isActive = true
-                    bubbleBox.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -10).isActive = true
-                    bubbleBox.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor, constant: 0).isActive = true
-                    bubbleBox.heightAnchor.constraint(equalToConstant: 3).isActive = true //30
-    //                bubbleBox.isHidden = true
-                    bubbleBox.setConfiguration(number: dataCount, color: .yellow)
-//                    bubbleBox.setIndicatorSelected(index: 0)
-                    bubbleBox.setIndicatorSelected(index: p) //revert to last viewed photo in carousel
-                    aTestArray.append(bubbleBox)
-                    
-                    bubbleArray.append(bubbleBox)
+//                photoConArray.append(scrollView)
+//
+////                let gifUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+////                let gifUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+//                let gifUrl = URL(string: "https://i3.ytimg.com/vi/2mcGhpbWlyg/maxresdefault.jpg")
+////            https://i3.ytimg.com/vi/2mcGhpbWlyg/maxresdefault.jpg
+//                
+//                let gifImage1 = SDAnimatedImageView()
+//                gifImage1.contentMode = .scaleAspectFill
+//                gifImage1.clipsToBounds = true
+//                gifImage1.sd_setImage(with: gifUrl)
+//                scrollView.addSubview(gifImage1)
+//                gifImage1.translatesAutoresizingMaskIntoConstraints = false
+//                gifImage1.widthAnchor.constraint(equalToConstant: 370).isActive = true //180
+//                gifImage1.heightAnchor.constraint(equalToConstant: 280).isActive = true //280
+//                gifImage1.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 0).isActive = true
+//                gifImage1.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 0).isActive = true
+//                //test > click on photo
+//                gifImage1.isUserInteractionEnabled = true
+//                gifImage1.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPhotoClicked)))//20
+//
+//                let gifImage2 = SDAnimatedImageView()
+//                gifImage2.contentMode = .scaleAspectFill
+//                gifImage2.clipsToBounds = true
+//                gifImage2.sd_setImage(with: gifUrl)
+//                scrollView.addSubview(gifImage2)
+//                gifImage2.translatesAutoresizingMaskIntoConstraints = false
+//                gifImage2.widthAnchor.constraint(equalToConstant: 370).isActive = true //180
+//                gifImage2.heightAnchor.constraint(equalToConstant: 280).isActive = true //280
+//                gifImage2.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 0).isActive = true
+//                gifImage2.leadingAnchor.constraint(equalTo: gifImage1.trailingAnchor, constant: 0).isActive = true //10
+//                
+//                //test > add bubble
+//                let dataCount = 2
+//                let p = data.p_s
+//                if(dataCount > 1) {
+//                    let bubbleBox = PageBubbleIndicator()
+//                    bubbleBox.backgroundColor = .clear
+//                    aTest.addSubview(bubbleBox)
+//                    bubbleBox.translatesAutoresizingMaskIntoConstraints = false
+////                    bubbleBox.topAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 10).isActive = true
+//                    bubbleBox.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -10).isActive = true
+//                    bubbleBox.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor, constant: 0).isActive = true
+//                    bubbleBox.heightAnchor.constraint(equalToConstant: 3).isActive = true //30
+//    //                bubbleBox.isHidden = true
+//                    bubbleBox.setConfiguration(number: dataCount, color: .yellow)
+////                    bubbleBox.setIndicatorSelected(index: 0)
+//                    bubbleBox.setIndicatorSelected(index: p) //revert to last viewed photo in carousel
+//                    aTestArray.append(bubbleBox)
+//                    
+//                    bubbleArray.append(bubbleBox)
+//                }
+//                
+//                //revert to last viewed photo in carousel
+//                let xOffset = CGFloat(p) * 370
+//                scrollView.setContentOffset(CGPoint(x: xOffset, y: 0), animated: false)
+            }
+            else if(l == "p_s") {
+                //test 2 > reusable custom view
+                let contentCell = PostPhotoShotContentCell(frame: CGRect(x: 0, y: 0, width: 370, height: 320))
+                aTest.addSubview(contentCell)
+                contentCell.translatesAutoresizingMaskIntoConstraints = false
+                if(aTestArray.isEmpty) {
+                    contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
+                } else {
+                    let lastArrayE = aTestArray[aTestArray.count - 1]
+                    contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
                 }
+                contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
+                contentCell.widthAnchor.constraint(equalToConstant: 370).isActive = true  //280
+                contentCell.heightAnchor.constraint(equalToConstant: 320).isActive = true  //280
+                contentCell.layer.cornerRadius = 10 //5
+                aTestArray.append(contentCell)
+                contentCell.setDescHeight(lHeight: 40, txt: data.dataTextString)
+                contentCell.redrawUI()
+                contentCell.configure(data: "a")
+                contentCell.setState(p: data.p_s)
+                contentCell.aDelegate = self
                 
-                //revert to last viewed photo in carousel
-                let xOffset = CGFloat(p) * 370
-                scrollView.setContentOffset(CGPoint(x: xOffset, y: 0), animated: false)
-                
-                //test > shot description
-                let pConBottom = UIView()
-                pConBottom.frame = CGRect(x: 0, y: 0, width: 370, height: 40)
-//                vConBottom.backgroundColor = .ddmDarkColor //.ddmDarkColor
-                aTest.addSubview(pConBottom)
-                pConBottom.translatesAutoresizingMaskIntoConstraints = false
-                pConBottom.leadingAnchor.constraint(equalTo: pConBg.leadingAnchor, constant: 0).isActive = true
-//                pConBottom.trailingAnchor.constraint(equalTo: aTest.trailingAnchor, constant: -20).isActive = true //-30
-                pConBottom.heightAnchor.constraint(equalToConstant: 40).isActive = true
-                pConBottom.widthAnchor.constraint(equalToConstant: 370).isActive = true
-                pConBottom.bottomAnchor.constraint(equalTo: pConBg.bottomAnchor, constant: 0).isActive = true //0
-                pConBottom.isUserInteractionEnabled = true
-                pConBottom.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPhotoSClicked)))
-//                vConBottom.layer.cornerRadius = 10
-                aTestArray.append(pConBottom)
-                
-                let moreBtn = UIImageView()
-                moreBtn.image = UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate)
-//                moreBtn.image = UIImage(named:"icon_round_pause")?.withRenderingMode(.alwaysTemplate)
-                moreBtn.tintColor = .white
-                pConBottom.addSubview(moreBtn)
-                moreBtn.translatesAutoresizingMaskIntoConstraints = false
-                moreBtn.centerYAnchor.constraint(equalTo: pConBottom.centerYAnchor, constant: 0).isActive = true
-                moreBtn.trailingAnchor.constraint(equalTo: pConBottom.trailingAnchor, constant: -5).isActive = true
-                moreBtn.heightAnchor.constraint(equalToConstant: 22).isActive = true //30, 26, 22
-                moreBtn.widthAnchor.constraint(equalToConstant: 22).isActive = true
-                
-                let aaText = UILabel()
-                aaText.textAlignment = .left
-                aaText.textColor = .white
-                aaText.font = .systemFont(ofSize: 13)
-                aaText.numberOfLines = 1
-                pConBottom.addSubview(aaText)
-                aaText.translatesAutoresizingMaskIntoConstraints = false
-                aaText.centerYAnchor.constraint(equalTo: pConBottom.centerYAnchor, constant: 0).isActive = true
-//                aaText.leadingAnchor.constraint(equalTo: e2UserCover.trailingAnchor, constant: 10).isActive = true
-                aaText.leadingAnchor.constraint(equalTo: pConBottom.leadingAnchor, constant: 10).isActive = true //5
-                aaText.trailingAnchor.constraint(equalTo: moreBtn.leadingAnchor, constant: -5).isActive = true //-30
-                aaText.text = data.dataTextString
+                //test > loop cover
+//                let pConBg = UIView()
+//                pConBg.backgroundColor = .ddmDarkColor //.ddmDarkColor
+//                aTest.addSubview(pConBg)
+//                pConBg.frame = CGRect(x: 0, y: 0, width: 370, height: 320)
+//                pConBg.translatesAutoresizingMaskIntoConstraints = false
+//                pConBg.widthAnchor.constraint(equalToConstant: 370).isActive = true //150, 370
+//                pConBg.heightAnchor.constraint(equalToConstant: 320).isActive = true //250, 280
+//                if(aTestArray.isEmpty) {
+//                    pConBg.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
+//                } else {
+//                    let lastArrayE = aTestArray[aTestArray.count - 1]
+//                    pConBg.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
+//                }
+//                pConBg.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
+//                pConBg.layer.cornerRadius = 10
+//                pConBg.layer.opacity = 0.4 //0.2
+//                aTestArray.append(pConBg)
+//                
+//                //carousel of images
+//                let scrollView = UIScrollView()
+//                aTest.addSubview(scrollView)
+//                scrollView.backgroundColor = .clear
+//                scrollView.translatesAutoresizingMaskIntoConstraints = false
+//                scrollView.topAnchor.constraint(equalTo: pConBg.topAnchor, constant: 0).isActive = true
+//                scrollView.leadingAnchor.constraint(equalTo: pConBg.leadingAnchor, constant: 0).isActive = true //0
+////                scrollView.trailingAnchor.constraint(equalTo: aTest.trailingAnchor, constant: -20).isActive = true
+//                scrollView.widthAnchor.constraint(equalToConstant: 370).isActive = true  //280
+//                scrollView.heightAnchor.constraint(equalToConstant: 280).isActive = true  //280
+//                scrollView.showsHorizontalScrollIndicator = false
+//                scrollView.alwaysBounceHorizontal = true
+//                scrollView.contentSize = CGSize(width: 740, height: 280) //800, 280
+//        //        scrollView.contentSize = CGSize(width: 360, height: 280)
+//                scrollView.isPagingEnabled = true //false
+//                scrollView.delegate = self
+//                scrollView.layer.cornerRadius = 10 //5
+//                scrollView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
+////                scrollView.clipsToBounds = true
+////                scrollView.roundCorners(corners: [.topLeft, .topRight], radius: 10.0)
+//                aTestArray.append(scrollView)
+//                photoConArray.append(scrollView)
+//
+////                let gifUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//                let gifUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+////            https://i3.ytimg.com/vi/2mcGhpbWlyg/maxresdefault.jpg
+//                
+//                let gifImage1 = SDAnimatedImageView()
+//                gifImage1.contentMode = .scaleAspectFill
+//                gifImage1.clipsToBounds = true
+//                gifImage1.sd_setImage(with: gifUrl)
+////                gifImage1.layer.cornerRadius = 10 //5
+//                scrollView.addSubview(gifImage1)
+//                gifImage1.translatesAutoresizingMaskIntoConstraints = false
+//                gifImage1.widthAnchor.constraint(equalToConstant: 370).isActive = true //180
+//                gifImage1.heightAnchor.constraint(equalToConstant: 280).isActive = true //280
+//                gifImage1.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 0).isActive = true
+//                gifImage1.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 0).isActive = true
+//                //test > click on photo
+//                gifImage1.isUserInteractionEnabled = true
+//                gifImage1.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPhotoSClicked)))//20
+//
+//                let gifImage2 = SDAnimatedImageView()
+//                gifImage2.contentMode = .scaleAspectFill
+//                gifImage2.clipsToBounds = true
+//                gifImage2.sd_setImage(with: gifUrl)
+////                gifImage2.layer.cornerRadius = 10 //5
+//                scrollView.addSubview(gifImage2)
+//                gifImage2.translatesAutoresizingMaskIntoConstraints = false
+//                gifImage2.widthAnchor.constraint(equalToConstant: 370).isActive = true //180
+//                gifImage2.heightAnchor.constraint(equalToConstant: 280).isActive = true //280
+//                gifImage2.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 0).isActive = true
+//                gifImage2.leadingAnchor.constraint(equalTo: gifImage1.trailingAnchor, constant: 0).isActive = true //10
+//                
+//                //test > add "shot" label
+//                let label = UIView()
+//                aTest.addSubview(label)
+////                label.backgroundColor = .ddmDarkColor
+//                label.backgroundColor = .clear
+//                label.translatesAutoresizingMaskIntoConstraints = false
+////                label.widthAnchor.constraint(equalToConstant: 80).isActive = true //80
+//                label.heightAnchor.constraint(equalToConstant: 26).isActive = true //30
+//                label.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 5).isActive = true
+////                label.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 5).isActive = true
+//                label.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -5).isActive = true
+////                label.layer.opacity = 0.5
+//                label.layer.cornerRadius = 5
+//                aTestArray.append(label)
+//                
+//                let labelBg = UIView()
+//                label.addSubview(labelBg)
+//                labelBg.backgroundColor = .ddmDarkColor
+////                labelBg.backgroundColor = .white
+//                labelBg.translatesAutoresizingMaskIntoConstraints = false
+//                labelBg.topAnchor.constraint(equalTo: label.topAnchor, constant: 0).isActive = true
+//                labelBg.leadingAnchor.constraint(equalTo: label.leadingAnchor, constant: 0).isActive = true
+//                labelBg.trailingAnchor.constraint(equalTo: label.trailingAnchor, constant: 0).isActive = true
+//                labelBg.bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 0).isActive = true
+////                labelBg.layer.opacity = 0.8 //0.5
+//                labelBg.layer.opacity = 0.3 //0.5
+//                labelBg.layer.cornerRadius = 5
+//                
+//                let e2UserCover = UIView()
+//                e2UserCover.backgroundColor = .clear
+//                label.addSubview(e2UserCover)
+//                e2UserCover.translatesAutoresizingMaskIntoConstraints = false
+////                e2UserCover.topAnchor.constraint(equalTo: label.topAnchor, constant: 0).isActive = true //20
+//                e2UserCover.centerYAnchor.constraint(equalTo: label.centerYAnchor, constant: 0).isActive = true
+//                e2UserCover.leadingAnchor.constraint(equalTo: label.leadingAnchor, constant: 5).isActive = true
+//                e2UserCover.heightAnchor.constraint(equalToConstant: 20).isActive = true //28
+//                e2UserCover.widthAnchor.constraint(equalToConstant: 20).isActive = true //28
+//                e2UserCover.layer.cornerRadius = 10
+//                e2UserCover.layer.opacity = 1.0 //default 0.3
+//
+//                let a2UserPhoto = SDAnimatedImageView()
+//                label.addSubview(a2UserPhoto)
+//                a2UserPhoto.translatesAutoresizingMaskIntoConstraints = false
+//                a2UserPhoto.widthAnchor.constraint(equalToConstant: 20).isActive = true //36
+//                a2UserPhoto.heightAnchor.constraint(equalToConstant: 20).isActive = true
+//                a2UserPhoto.centerXAnchor.constraint(equalTo: e2UserCover.centerXAnchor).isActive = true
+//                a2UserPhoto.centerYAnchor.constraint(equalTo: e2UserCover.centerYAnchor).isActive = true
+//                a2UserPhoto.contentMode = .scaleAspectFill
+//                a2UserPhoto.layer.masksToBounds = true
+//                a2UserPhoto.layer.cornerRadius = 10
+//                let image2Url = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//                a2UserPhoto.sd_setImage(with: image2Url)
+//                a2UserPhoto.backgroundColor = .ddmDarkGreyColor
+//                
+//                let aGridNameText = UILabel()
+//                aGridNameText.textAlignment = .left
+//                aGridNameText.textColor = .white
+////                aGridNameText.textColor = .ddmDarkColor
+//                aGridNameText.font = .boldSystemFont(ofSize: 12)
+//                label.addSubview(aGridNameText)
+//                aGridNameText.translatesAutoresizingMaskIntoConstraints = false
+//                aGridNameText.centerYAnchor.constraint(equalTo: e2UserCover.centerYAnchor).isActive = true
+//                aGridNameText.trailingAnchor.constraint(equalTo: label.trailingAnchor, constant: -5).isActive = true
+//                aGridNameText.leadingAnchor.constraint(equalTo: e2UserCover.trailingAnchor, constant: 5).isActive = true
+//                aGridNameText.text = "Shot"
+////                aGridNameText.centerYAnchor.constraint(equalTo: label.centerYAnchor, constant: 0).isActive = true
+////                aGridNameText.leadingAnchor.constraint(equalTo: label.leadingAnchor, constant: 5).isActive = true
+//                
+//                //test > add bubble
+//                let dataCount = 2
+//                let p = data.p_s
+//                if(dataCount > 1) {
+//                    let bubbleBox = PageBubbleIndicator()
+//                    bubbleBox.backgroundColor = .clear
+//                    aTest.addSubview(bubbleBox)
+//                    bubbleBox.translatesAutoresizingMaskIntoConstraints = false
+////                    bubbleBox.topAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 10).isActive = true
+//                    bubbleBox.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -10).isActive = true
+//                    bubbleBox.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor, constant: 0).isActive = true
+//                    bubbleBox.heightAnchor.constraint(equalToConstant: 3).isActive = true //30
+//    //                bubbleBox.isHidden = true
+//                    bubbleBox.setConfiguration(number: dataCount, color: .yellow)
+////                    bubbleBox.setIndicatorSelected(index: 0)
+//                    bubbleBox.setIndicatorSelected(index: p) //revert to last viewed photo in carousel
+//                    aTestArray.append(bubbleBox)
+//                    
+//                    bubbleArray.append(bubbleBox)
+//                }
+//                
+//                //revert to last viewed photo in carousel
+//                let xOffset = CGFloat(p) * 370
+//                scrollView.setContentOffset(CGPoint(x: xOffset, y: 0), animated: false)
+//                
+//                //test > shot description
+//                let pConBottom = UIView()
+//                pConBottom.frame = CGRect(x: 0, y: 0, width: 370, height: 40)
+////                vConBottom.backgroundColor = .ddmDarkColor //.ddmDarkColor
+//                aTest.addSubview(pConBottom)
+//                pConBottom.translatesAutoresizingMaskIntoConstraints = false
+//                pConBottom.leadingAnchor.constraint(equalTo: pConBg.leadingAnchor, constant: 0).isActive = true
+////                pConBottom.trailingAnchor.constraint(equalTo: aTest.trailingAnchor, constant: -20).isActive = true //-30
+//                pConBottom.heightAnchor.constraint(equalToConstant: 40).isActive = true
+//                pConBottom.widthAnchor.constraint(equalToConstant: 370).isActive = true
+//                pConBottom.bottomAnchor.constraint(equalTo: pConBg.bottomAnchor, constant: 0).isActive = true //0
+//                pConBottom.isUserInteractionEnabled = true
+//                pConBottom.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPhotoSClicked)))
+////                vConBottom.layer.cornerRadius = 10
+//                aTestArray.append(pConBottom)
+//                
+//                let moreBtn = UIImageView()
+//                moreBtn.image = UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate)
+////                moreBtn.image = UIImage(named:"icon_round_pause")?.withRenderingMode(.alwaysTemplate)
+//                moreBtn.tintColor = .white
+//                pConBottom.addSubview(moreBtn)
+//                moreBtn.translatesAutoresizingMaskIntoConstraints = false
+//                moreBtn.centerYAnchor.constraint(equalTo: pConBottom.centerYAnchor, constant: 0).isActive = true
+//                moreBtn.trailingAnchor.constraint(equalTo: pConBottom.trailingAnchor, constant: -5).isActive = true
+//                moreBtn.heightAnchor.constraint(equalToConstant: 22).isActive = true //30, 26, 22
+//                moreBtn.widthAnchor.constraint(equalToConstant: 22).isActive = true
+//                
+//                let aaText = UILabel()
+//                aaText.textAlignment = .left
+//                aaText.textColor = .white
+//                aaText.font = .systemFont(ofSize: 13)
+//                aaText.numberOfLines = 1
+//                pConBottom.addSubview(aaText)
+//                aaText.translatesAutoresizingMaskIntoConstraints = false
+//                aaText.centerYAnchor.constraint(equalTo: pConBottom.centerYAnchor, constant: 0).isActive = true
+////                aaText.leadingAnchor.constraint(equalTo: e2UserCover.trailingAnchor, constant: 10).isActive = true
+//                aaText.leadingAnchor.constraint(equalTo: pConBottom.leadingAnchor, constant: 10).isActive = true //5
+//                aaText.trailingAnchor.constraint(equalTo: moreBtn.leadingAnchor, constant: -5).isActive = true //-30
+//                aaText.text = data.dataTextString
             }
             else if(l == "v_l") {//loop videos
                 
@@ -1282,36 +1420,39 @@ class HPostListAViewCell: UICollectionViewCell {
         }
         
         //test > for comment chaining
-        let dataCh = data.chainDataArray
+//        let dataCh = data.chainDataArray
+        let dataCh = data.xChainDataArray
         for l in dataCh {
-            if(l == "c") {
-                let aCPost = UIView()
+            
+            let aCPost = UIView()
 //                aCPost.backgroundColor = .ddmDarkColor //.ddmDarkColor
-                aTest2.addSubview(aCPost)
-                aCPost.translatesAutoresizingMaskIntoConstraints = false
-                aCPost.leadingAnchor.constraint(equalTo: aTest2.leadingAnchor, constant: 0).isActive = true
-                aCPost.trailingAnchor.constraint(equalTo: aTest2.trailingAnchor, constant: 0).isActive = true //-30
+            aTest2.addSubview(aCPost)
+            aCPost.translatesAutoresizingMaskIntoConstraints = false
+            aCPost.leadingAnchor.constraint(equalTo: aTest2.leadingAnchor, constant: 0).isActive = true
+            aCPost.trailingAnchor.constraint(equalTo: aTest2.trailingAnchor, constant: 0).isActive = true //-30
 //                aCPost.topAnchor.constraint(equalTo: aTest2.topAnchor, constant: 0).isActive = true
-                if(aTest2Array.isEmpty) {
-                    aCPost.topAnchor.constraint(equalTo: aTest2.topAnchor, constant: 10).isActive = true
-                } else {
-                    let lastArrayE = aTest2Array[aTest2Array.count - 1]
-                    aCPost.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 0).isActive = true //20
-                }
-                aTest2Array.append(aCPost)
-                
-                //test > use custom cell method for chaining comment
-                let cell = CommentChainCell(frame: CGRect(x: 0 , y: 0, width: 100, height: 100))
-                aCPost.addSubview(cell)
-                cell.translatesAutoresizingMaskIntoConstraints = false
-                cell.trailingAnchor.constraint(equalTo: aCPost.trailingAnchor, constant: 0).isActive = true
-                cell.leadingAnchor.constraint(equalTo: aCPost.leadingAnchor, constant: 0).isActive = true
-                cell.topAnchor.constraint(equalTo: aCPost.topAnchor, constant: 0).isActive = true
-                cell.bottomAnchor.constraint(equalTo: aCPost.bottomAnchor, constant: 0).isActive = true
-                cell.redrawUI()
-                //comment should not have connectors in post cell
-                cell.hideConnector()
+            if(aTest2Array.isEmpty) {
+                aCPost.topAnchor.constraint(equalTo: aTest2.topAnchor, constant: 10).isActive = true
+            } else {
+                let lastArrayE = aTest2Array[aTest2Array.count - 1]
+                aCPost.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 0).isActive = true //20
             }
+            aTest2Array.append(aCPost)
+            
+            //test > use custom cell method for chaining comment
+            let cell = CommentChainCell(frame: CGRect(x: 0 , y: 0, width: 100, height: 100))
+            aCPost.addSubview(cell)
+            cell.translatesAutoresizingMaskIntoConstraints = false
+            cell.trailingAnchor.constraint(equalTo: aCPost.trailingAnchor, constant: 0).isActive = true
+            cell.leadingAnchor.constraint(equalTo: aCPost.leadingAnchor, constant: 0).isActive = true
+            cell.topAnchor.constraint(equalTo: aCPost.topAnchor, constant: 0).isActive = true
+            cell.bottomAnchor.constraint(equalTo: aCPost.bottomAnchor, constant: 0).isActive = true
+            cell.redrawUI()
+            cell.aDelegate = self
+            cell.configure(data: l)
+            
+            //comment should not have connectors in post cell
+            cell.hideConnector()
         }
         
         if(!aTestArray.isEmpty) {
@@ -1341,10 +1482,10 @@ class HPostListAViewCell: UICollectionViewCell {
     }
     
     @objc func onCommentBtnClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.hListDidClickVcvComment()
+        aDelegate?.hListDidClickVcvComment(vc: self)
     }
     @objc func onShareClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.hListDidClickVcvShare()
+        aDelegate?.hListDidClickVcvShare(vc: self)
     }
     @objc func onLoveClicked(gesture: UITapGestureRecognizer) {
         
@@ -1493,25 +1634,17 @@ class HPostListAViewCell: UICollectionViewCell {
         let aColor = bMiniBtn.tintColor
         if(aColor == .white) {
             bMiniBtn.tintColor = .red
-//            bMiniBtn.layer.opacity = 1
         } else {
             bMiniBtn.tintColor = .white
-//            bMiniBtn.layer.opacity = 0.5
         }
-        
-//        updateResult()
     }
     func reactOnBookmarkClick() {
         let aColor = dMiniBtn.tintColor
         if(aColor == .white) {
             dMiniBtn.tintColor = .ddmGoldenYellowColor
-//            dMiniBtn.layer.opacity = 1
         } else {
             dMiniBtn.tintColor = .white
-//            dMiniBtn.layer.opacity = 0.5
         }
-        
-//        updateResult()
     }
     
     //for video play
@@ -1540,7 +1673,8 @@ class HPostListAViewCell: UICollectionViewCell {
                     return
                 }
                 print("hpl time observe videoT:\(currentT)")
-                s.t_s = currentT
+//                s.t_s = currentT
+                s.aDelegate?.hListVideoStopTime(vc: s, ts: currentT)
             }
         }
     }
@@ -1647,8 +1781,8 @@ extension HPostListAViewCell: UIScrollViewDelegate {
             bubble1.setIndicatorSelected(index: tempCurrentIndex)
             
             //test > for carousel page
-            p_s = tempCurrentIndex
-            aDelegate?.hListCarouselIdx(vc: self, idx: p_s)
+//            p_s = tempCurrentIndex
+            aDelegate?.hListCarouselIdx(vc: self, idx: tempCurrentIndex)
         }
     }
 
@@ -1661,4 +1795,35 @@ extension HPostListAViewCell: UIScrollViewDelegate {
         print("hpostview scrollview animation ended")
 
     }
+}
+
+extension HPostListAViewCell: ContentCellDelegate {
+    func contentCellIsScrollCarousel(isScroll: Bool){
+        aDelegate?.hListIsScrollCarousel(isScroll: isScroll)
+    }
+    
+    func contentCellCarouselIdx(idx: Int){
+        aDelegate?.hListCarouselIdx(vc: self, idx: idx)
+    }
+}
+
+extension HPostListAViewCell: CChainCellDelegate {
+    func cChainDidClickComment() {}
+    func cChainDidClickLove(){}
+    func cChainDidClickShare(){}
+    func cChainDidClickClickUser(){
+        aDelegate?.hListDidClickVcvClickUser()
+    }
+    func cChainDidClickClickPlace(){}
+    func cChainDidClickClickSound(){}
+    func cChainDidClickClickPost(){}
+    func cChainDidClickClickPhoto(cell: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){}
+    func cChainDidClickClickVideo(cell: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){}
+    func cChainIsScrollCarousel(isScroll: Bool){}
+    
+    //test > carousel photo scroll page
+    func cChainCarouselIdx(cell: UIView, idx: Int){}
+    
+    //test > click play sound
+    func cChainDidClickPlayAudio(cell: UIView){}
 }

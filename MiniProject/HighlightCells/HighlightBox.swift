@@ -414,6 +414,7 @@ class DiscoverUserSizeMHighlightCell: HighlightCell {
     
     @objc func onUserClicked(gesture: UITapGestureRecognizer) {
         self.delegate?.didHighlightClickUser(id: "")
+        print("onuserclicked")
     }
 }
 

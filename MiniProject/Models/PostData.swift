@@ -14,24 +14,27 @@ class BaseData {
 //    var dataCount = [String: Int]()
     var dataCount : [String: Int] = ["love": 0, "comment": 0, "bookmark": 0, "share": 0]
     
-    var chainDataArray = [String]() //for comment chaining
+//    var chainDataArray = [String]() //for comment chaining
+    var xChainDataArray = [ChainData]() //for comment chaining
     
     //test > to indicate hide/unhide in grid3x panels
     var isGridHidden = false
     func setGridHidden(toHide: Bool) {
         isGridHidden = toHide
     }
-}
-
-class PostData: BaseData {
-//    var dataType: String = ""
-//    var dataArray = [String]()
-//    var dataTextString: String = ""
     
     //test > t time for video paused timestamp, necessary for resume
     var t_s = 0.0
     //test > p for photo carousel
     var p_s = 0
+}
+
+class PostData: BaseData {
+    
+    //test > t time for video paused timestamp, necessary for resume
+//    var t_s = 0.0
+    //test > p for photo carousel
+//    var p_s = 0
     
     func setDataType(data: String) {
         dataType = data
@@ -72,24 +75,33 @@ class PostData: BaseData {
         }
         
         //test > populate chaining comments
-        setChainData(data: data)
+//        setXChainData(data: data)
         
         //test > populate data counts too
         setDataCount(data: data)
     }
     
-    func setChainData(data: String){
+    func setXChainData(data: String){
         if(data == "a") {
-            chainDataArray.append("c") //comment
-            chainDataArray.append("c") //comment
-            chainDataArray.append("c") //comment
-//            chainDataArray.append("c") //comment
+            for i in 0...2 {
+                let chainData = ChainData()
+                chainData.setDataType(data: data)
+                chainData.setData(data: data)
+                chainData.setTextString(data: data)
+                xChainDataArray.append(chainData)
+            }
         }
         else if(data == "b") {
             
         }
         else if(data == "c") {
-            chainDataArray.append("c") //comment
+            for i in 0...1 {
+                let chainData = ChainData()
+                chainData.setDataType(data: data)
+                chainData.setData(data: data)
+                chainData.setTextString(data: data)
+                xChainDataArray.append(chainData)
+            }
         }
     }
     
@@ -143,7 +155,7 @@ class PhotoData: BaseData {
 //    var dataTextString: String = ""
     
     //test > p for which photo was user scrolled
-    var p_s = 0
+//    var p_s = 0
     
     func setDataType(data: String) {
         dataType = data
@@ -164,10 +176,41 @@ class PhotoData: BaseData {
             dataArray.append("m") //photo
 //            dataArray.append("t") //text
 //            dataArray.append("c") //comment
+        }        
+        else if(data == "d") {
+            dataArray.append("p") //photo
+//            dataArray.append("t") //text
         }
+        
+        //test > populate chaining comments
+//        setXChainData(data: data)
         
         //test > populate data counts too
         setDataCount(data: data)
+    }
+    
+    func setXChainData(data: String){
+        if(data == "a") {
+            for i in 0...2 {
+                let chainData = ChainData()
+                chainData.setDataType(data: data)
+                chainData.setData(data: data)
+                chainData.setTextString(data: data)
+                xChainDataArray.append(chainData)
+            }
+        }
+        else if(data == "b") {
+            
+        }
+        else if(data == "c") {
+            for i in 0...1 {
+                let chainData = ChainData()
+                chainData.setDataType(data: data)
+                chainData.setData(data: data)
+                chainData.setTextString(data: data)
+                xChainDataArray.append(chainData)
+            }
+        }
     }
     
     func setTextString(data: String) {
@@ -180,6 +223,9 @@ class PhotoData: BaseData {
         }
         else if(data == "c") {
             dataTextString = "Vấn đề đã rõ, đã chín, được thực tiễn chứng minh là đúng, thực hiện hiệu quả, đa số đồng tình thì tiếp tục thực hiện"
+        }
+        else if(data == "d") {
+            dataTextString = ""
         }
     }
     
@@ -333,24 +379,33 @@ class CommentData: BaseData {
         }
         
         //test > populate chaining comments
-        setChainData(data: data)
+//        setXChainData(data: data)
         
         //test > populate data counts too
         setDataCount(data: data)
     }
     
-    func setChainData(data: String){
+    func setXChainData(data: String){
         if(data == "a") {
-            chainDataArray.append("c") //comment
-            chainDataArray.append("c") //comment
-            chainDataArray.append("c") //comment
-            chainDataArray.append("c") //comment
+            for i in 0...2 {
+                let chainData = ChainData()
+                chainData.setDataType(data: data)
+                chainData.setData(data: data)
+                chainData.setTextString(data: data)
+                xChainDataArray.append(chainData)
+            }
         }
         else if(data == "b") {
             
         }
         else if(data == "c") {
-            chainDataArray.append("c") //comment
+            for i in 0...1 {
+                let chainData = ChainData()
+                chainData.setDataType(data: data)
+                chainData.setData(data: data)
+                chainData.setTextString(data: data)
+                xChainDataArray.append(chainData)
+            }
         }
     }
     
@@ -395,54 +450,109 @@ class CommentData: BaseData {
     }
 }
 
-class Page {
+//test > chain data for comments
+class ChainData: BaseData {
     
-}
-
-class SubTabDataModel {
-    var identifier: String = ""
-    var type: String = ""
-    var currentSection: String = ""
-    var variant: String = ""
-//    var subTabDataMap = [String : [Post]]()
-    var subTabCurrentIndexMap = [String : Int]()
-//    var subTabDataFetchStatusMap = [String : FetchPostStatusModel]()
-
-    var currentCommentSection: String = ""
-//    var subTabCommentDataMap = [String : [Comment]]()
-    var subTabCurrentCommentReplyIdMap = [String : String]()
-    var subTabCommentCurrentIndexMap = [String : Int]()
-//    var subTabCommentDataFetchStatusMap = [String : FetchCommentStatusModel]()
-    
-    var isStoryOpened = false, isViewGridOpened = false, isCommentOpened = false, isReplyOpened = false
-    var isSoundPlaying = false
-    
-    //test for types of subtabdata
-//    var profileUserModel: User = User()
-//    var placeItemModel: PlaceItem = PlaceItem()
-//    var soundItemModel: MusicItem = MusicItem()
-//    var trendItemModel: TrendItem = TrendItem()
-//    var campaignItemModel: CampaignItem = CampaignItem()
-
-    
-    init() {
-
+    func setDataType(data: String) {
+        dataType = data
     }
     
-//    func setProfileUserModel(profileUserModel: User) {
-//        self.profileUserModel = profileUserModel
-//    }
-//    func setPlaceItemModel(placeItemModel: PlaceItem) {
-//        self.placeItemModel = placeItemModel
-//    }
-//    func setSoundItemModel(soundItemModel: MusicItem) {
-//        self.soundItemModel = soundItemModel
-//    }
-//    func setTrendItemModel(trendItemModel: TrendItem) {
-//        self.trendItemModel = trendItemModel
-//    }
-//    func setCampaignItemModel(campaignItemModel: CampaignItem) {
-//        self.campaignItemModel = campaignItemModel
-//    }
+    func setData(data: String) {
+        if(data == "a") {
+            dataArray.append("t") //text
+            dataArray.append("p") //photo
+//            dataArray.append("t") //text
+//            dataArray.append("q") //text
+//            dataArray.append("q") //photo
+//            dataArray.append("q") //quote
+        }
+        else if(data == "b") {
+            dataArray.append("p") //photo
+//            dataArray.append("t") //photo
+        }
+        else if(data == "c") {
+            dataArray.append("t")
+//            dataArray.append("p") //photo
+//            dataArray.append("q") //quote
+        }
+        
+        //test > populate data counts too
+        setDataCount(data: data)
+    }
     
+    func setTextString(data: String) {
+        if(data == "a") {
+            dataTextString = "iPhone 虽然也是位列销量榜榜首, 只能说这次 11.11 各家给的优惠都太给力了."
+        }
+        else if(data == "b") {
+            dataTextString = "Vđược thực tiễn chứng minh là đúng"
+        }
+        else if(data == "c") {
+            dataTextString = "Worth a visit."
+        }
+    }
+    
+    func setDataCount(data: String) {
+        if(data == "a") {
+            dataCount["love"] = 3796
+            dataCount["comment"] = 209
+            dataCount["bookmark"] = 45
+            dataCount["share"] = 98
+        }
+        else if(data == "b") {
+            dataCount["love"] = 675
+            dataCount["comment"] = 2708
+            dataCount["bookmark"] = 102
+            dataCount["share"] = 719
+        }
+        else if(data == "c") {
+            dataCount["love"] = 74
+            dataCount["comment"] = 921
+            dataCount["bookmark"] = 43
+            dataCount["share"] = 32
+        }
+        else if(data == "d") {
+            dataCount["love"] = 18312
+            dataCount["comment"] = 1309
+            dataCount["bookmark"] = 512
+            dataCount["share"] = 478
+        }
+    }
 }
+
+
+//class Page {
+//    
+//}
+//
+//class SubTabDataModel {
+//    var identifier: String = ""
+//    var type: String = ""
+//    var currentSection: String = ""
+//    var variant: String = ""
+////    var subTabDataMap = [String : [Post]]()
+//    var subTabCurrentIndexMap = [String : Int]()
+////    var subTabDataFetchStatusMap = [String : FetchPostStatusModel]()
+//
+//    var currentCommentSection: String = ""
+////    var subTabCommentDataMap = [String : [Comment]]()
+//    var subTabCurrentCommentReplyIdMap = [String : String]()
+//    var subTabCommentCurrentIndexMap = [String : Int]()
+////    var subTabCommentDataFetchStatusMap = [String : FetchCommentStatusModel]()
+//    
+//    var isStoryOpened = false, isViewGridOpened = false, isCommentOpened = false, isReplyOpened = false
+//    var isSoundPlaying = false
+//    
+//    //test for types of subtabdata
+////    var profileUserModel: User = User()
+////    var placeItemModel: PlaceItem = PlaceItem()
+////    var soundItemModel: MusicItem = MusicItem()
+////    var trendItemModel: TrendItem = TrendItem()
+////    var campaignItemModel: CampaignItem = CampaignItem()
+//
+//    
+//    init() {
+//
+//    }
+//    
+//}

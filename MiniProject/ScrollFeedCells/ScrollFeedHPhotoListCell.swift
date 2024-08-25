@@ -22,6 +22,8 @@ class ScrollFeedHPhotoListCell: ScrollPhotoDataFeedCell {
     //test
     var hideCellIndex = -1
     
+    var selectedItemIdx = -1
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -75,6 +77,7 @@ class ScrollFeedHPhotoListCell: ScrollPhotoDataFeedCell {
         vCV.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
         vCV.contentInsetAdjustmentBehavior = .never
 //        vCV.isScrollEnabled = false
+        vCV.alwaysBounceVertical = true //test > when empty result, still can refetch data
         
         vCV.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "footer")
         vCV.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
@@ -143,6 +146,11 @@ class ScrollFeedHPhotoListCell: ScrollPhotoDataFeedCell {
         b.dehideCell()
         
         hideCellIndex = -1
+    }
+    
+    //test > selected item for delete etc
+    func unselectItemData(){
+        selectedItemIdx = -1
     }
     
     //test > react to intersected video
@@ -282,6 +290,7 @@ extension ScrollFeedHPhotoListCell: UICollectionViewDelegateFlowLayout {
                 let tTopMargin = 10.0
 //                let tText = "Nice food, nice environment! Worth a visit. \nSo good!"
                 let tContentHeight = estimateHeight(text: text, textWidth: collectionView.frame.width - 20.0 - 20.0, fontSize: 14)
+                print("photo p text size: \(tContentHeight), \(text)")
 //                let pHeight = pTopMargin + pContentHeight
                 let pBubbleTopMargin = 10.0
                 let pBubbleHeight = 3.0
@@ -300,15 +309,15 @@ extension ScrollFeedHPhotoListCell: UICollectionViewDelegateFlowLayout {
 //                contentHeight += qHeight
             }
             else if(l == "c") {
-                let cUserPhotoHeight = 28.0
-                let cUserPhotoTopMargin = 20.0 //10
-                let cContentTopMargin = 10.0
-                let cText = "Worth a visit."
-                let cContentHeight = estimateHeight(text: cText, textWidth: collectionView.frame.width - 58.0 - 20.0, fontSize: 14)
-                let cActionBtnTopMargin = 10.0
-                let cActionBtnHeight = 26.0
-                let cHeight = cUserPhotoHeight + cUserPhotoTopMargin + cContentTopMargin + cContentHeight + cActionBtnTopMargin + cActionBtnHeight
-                contentHeight += cHeight
+//                let cUserPhotoHeight = 28.0
+//                let cUserPhotoTopMargin = 20.0 //10
+//                let cContentTopMargin = 10.0
+//                let cText = "Worth a visit."
+//                let cContentHeight = estimateHeight(text: cText, textWidth: collectionView.frame.width - 58.0 - 20.0, fontSize: 14)
+//                let cActionBtnTopMargin = 10.0
+//                let cActionBtnHeight = 26.0
+//                let cHeight = cUserPhotoHeight + cUserPhotoTopMargin + cContentTopMargin + cContentHeight + cActionBtnTopMargin + cActionBtnHeight
+//                contentHeight += cHeight
             }
         }
         
@@ -499,14 +508,29 @@ extension ScrollFeedHPhotoListCell: UICollectionViewDataSource {
 }
 
 extension ScrollFeedHPhotoListCell: HListCellDelegate {
-    func hListDidClickVcvComment() {
+    func hListDidClickVcvComment(vc: UICollectionViewCell) {
         aDelegate?.sfcDidClickVcvComment()
     }
     func hListDidClickVcvLove() {
         aDelegate?.sfcDidClickVcvLove()
     }
-    func hListDidClickVcvShare() {
-        aDelegate?.sfcDidClickVcvShare()
+    func hListDidClickVcvShare(vc: UICollectionViewCell) {
+//        aDelegate?.sfcDidClickVcvShare()
+        if let a = vCV {
+            for cell in a.visibleCells {
+                
+                if(cell == vc) {
+                    let selectedIndexPath = a.indexPath(for: cell)
+                    aDelegate?.sfcDidClickVcvShare()
+                    
+                    if let c = selectedIndexPath {
+                        selectedItemIdx = c.row
+                    }
+                    
+                    break
+                }
+            }
+        }
     }
     func hListDidClickVcvClickUser() {
         aDelegate?.sfcDidClickVcvClickUser()
@@ -570,6 +594,9 @@ extension ScrollFeedHPhotoListCell: HListCellDelegate {
         }
     }
     
+    func hListVideoStopTime(vc: UICollectionViewCell, ts: Double){
+        
+    }
     func hListDidClickVcvPlayAudio(vc: UICollectionViewCell){
         if let a = vCV {
             for cell in a.visibleCells {

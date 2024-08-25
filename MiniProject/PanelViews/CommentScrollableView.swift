@@ -15,6 +15,11 @@ protocol CommentScrollableDelegate : AnyObject {
     func didCClickSound()
     func didCClickClosePanel()
     func didCFinishClosePanel()
+    func didCClickComment()
+    func didCClickPost()
+    func didCClickShare()
+    func didCClickClickPhoto(pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String)
+    func didCClickClickVideo(pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String)
 }
 class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
     
@@ -43,6 +48,9 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
     let errorText = UILabel()
     let errorRefreshBtn = UIView()
     
+    //test
+    var hideCellIndex = -1
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -63,12 +71,12 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
         aView.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true
         aView.heightAnchor.constraint(equalToConstant: viewHeight).isActive = true
         aView.isUserInteractionEnabled = true
-//        aView.layer.opacity = 0.2 //default : 0
+//        aView.layer.opacity = 0.4 //default : 0
         aView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onCloseCommentClicked)))
 //        aView.backgroundColor = .black //ddmBlackOverlayColor
         aView.backgroundColor = .clear
         
-        var panelView = UIView()
+        let panelView = UIView()
         panelView.backgroundColor = .ddmBlackOverlayColor
         self.addSubview(panelView)
         panelView.translatesAutoresizingMaskIntoConstraints = false
@@ -341,15 +349,7 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
             self.delegate?.didCFinishClosePanel()
         })
     }
-    @objc func onAPhotoClicked(gesture: UITapGestureRecognizer) {
-        delegate?.didCClickPlace()
-    }
-    @objc func onBPhotoClicked(gesture: UITapGestureRecognizer) {
-        delegate?.didCClickUser()
-    }
-    @objc func onCPhotoClicked(gesture: UITapGestureRecognizer) {
-        delegate?.didCClickSound()
-    }
+
     @objc func onCommentPanelPanGesture(gesture: UIPanGestureRecognizer) {
         if(gesture.state == .began) {
             self.currentPanelTopCons = self.panelTopCons!.constant
@@ -389,6 +389,12 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
         
     }
     
+    //test > customize background color and opacity
+    func setBackgroundDark() {
+        aView.layer.opacity = 0.4 //default : 0
+        aView.backgroundColor = .black //ddmBlackOverlayColor
+    }
+    
     //test > initialization state
     var isInitialized = false
     func initialize() {
@@ -407,6 +413,62 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
     func adjustContentOffset(x: CGFloat, y: CGFloat, animated: Bool) {
         self.vCV?.setContentOffset(CGPoint(x: x, y: y), animated: true)
     }
+    
+    //*test > remove one comment
+    var selectedItemIdx = -1
+    func removeData(idxToRemove: Int) {
+        if(!vDataList.isEmpty) {
+            if(idxToRemove > -1 && idxToRemove < vDataList.count) {
+                var indexPaths = [IndexPath]()
+                let idx = IndexPath(item: idxToRemove, section: 0)
+                indexPaths.append(idx)
+                
+                vDataList.remove(at: idxToRemove)
+                self.vCV?.deleteItems(at: indexPaths)
+                
+                unselectItemData()
+                
+                //test
+                if(vDataList.isEmpty) {
+                    self.configureFooterUI(data: "na")
+                    self.aaText.text = "No comments yet."
+                }
+            }
+        }
+    }
+//    func removeDataSet(idxToRemove: [Int]) {
+//        if(!vDataList.isEmpty) {
+//            var indexPaths = [IndexPath]()
+//            for i in idxToRemove {
+//                vDataList.remove(at: i)
+//                
+//                let idx = IndexPath(item: i, section: 0)
+//                indexPaths.append(idx)
+//            }
+//            self.vCV?.deleteItems(at: indexPaths)
+//        }
+//    }
+    func unselectItemData() {
+        selectedItemIdx = -1
+    }
+    //*
+    
+    //**test > remove one chain comment
+    func removeChainData() {
+        if(!vDataList.isEmpty) {
+            let commentA = vDataList[0]
+            let chainData = commentA.xChainDataArray
+            if(!commentA.xChainDataArray.isEmpty) {
+                vDataList[0].xChainDataArray.remove(at: chainData.count - 1)
+            }
+            
+            var indexPaths = [IndexPath]()
+            let idx = IndexPath(item: 0, section: 0)
+            indexPaths.append(idx)
+            self.vCV?.reloadItems(at: indexPaths)
+        }
+    }
+    //**
     
     //test > fetch data => temp fake data => try refresh data first
     func asyncFetchFeed(id: String) {
@@ -441,33 +503,33 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
                     self.aSpinner.stopAnimating()
                     
                     //test 2 > new append method
-//                    for i in l {
-//                        let commentData = CommentData()
-//                        commentData.setDataType(data: i)
-//                        commentData.setData(data: i)
-//                        commentData.setTextString(data: i)
-//                        self.vDataList.append(commentData)
-//                    }
-//                    self.vCV?.reloadData()
-                    
-                    //*test 3 > reload only appended data, not entire dataset
-                    let dataCount = self.vDataList.count
-                    var indexPaths = [IndexPath]()
-                    var j = 1
                     for i in l {
                         let commentData = CommentData()
                         commentData.setDataType(data: i)
                         commentData.setData(data: i)
                         commentData.setTextString(data: i)
                         self.vDataList.append(commentData)
-
-                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
-                        indexPaths.append(idx)
-                        j += 1
-
-                        print("ppv asyncfetch reload \(idx)")
                     }
-                    self.vCV?.insertItems(at: indexPaths)
+                    self.vCV?.reloadData()
+                    
+                    //*test 3 > reload only appended data, not entire dataset
+//                    let dataCount = self.vDataList.count
+//                    var indexPaths = [IndexPath]()
+//                    var j = 1
+//                    for i in l {
+//                        let commentData = CommentData()
+//                        commentData.setDataType(data: i)
+//                        commentData.setData(data: i)
+//                        commentData.setTextString(data: i)
+//                        self.vDataList.append(commentData)
+//
+//                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+//                        indexPaths.append(idx)
+//                        j += 1
+//
+//                        print("ppv asyncfetch reload \(idx)")
+//                    }
+//                    self.vCV?.insertItems(at: indexPaths)
                     //*
                     
                     //test > animate cv back to y = 0 by contentOffset then only adjust contentInset after animate
@@ -584,6 +646,22 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
         refreshFetchData()
     }
     
+    //test > dehide cell
+    func dehideCell() {
+        guard let a = self.vCV else {
+            return
+        }
+
+        let idxPath = IndexPath(item: hideCellIndex, section: 0)
+        let currentVc = a.cellForItem(at: idxPath)
+        guard let b = currentVc as? HCommentListViewCell else {
+            return
+        }
+        b.dehideCell()
+        
+        hideCellIndex = -1
+    }
+    
     var footerState = ""
     var footerAaText = ""
     func setFooterAaText(text: String) {
@@ -651,7 +729,6 @@ extension CommentScrollableView: UICollectionViewDelegateFlowLayout {
         
         let text = vDataList[indexPath.row].dataTextString
         let dataL = vDataList[indexPath.row].dataArray
-        let dataCh = vDataList[indexPath.row].chainDataArray
         var contentHeight = 0.0
         for l in dataL {
             if(l == "t") {
@@ -677,31 +754,45 @@ extension CommentScrollableView: UICollectionViewDelegateFlowLayout {
                 let qHeight = qTopMargin + qUserPhotoHeight + qUserPhotoTopMargin + qContentTopMargin + qContentHeight + qFrameBottomMargin
                 contentHeight += qHeight
             }
-//            else if(l == "c") {
-//                let cUserPhotoHeight = 28.0
-//                let cUserPhotoTopMargin = 20.0 //10
-//                let cContentTopMargin = 10.0
-//                let cText = "Worth a visit."
-//                let cContentHeight = estimateHeight(text: cText, textWidth: collectionView.frame.width - 58.0 - 20.0, fontSize: 14)
-//                let cActionBtnTopMargin = 10.0
-//                let cActionBtnHeight = 26.0
-//                let cHeight = cUserPhotoHeight + cUserPhotoTopMargin + cContentTopMargin + cContentHeight + cActionBtnTopMargin + cActionBtnHeight
-//                contentHeight += cHeight
-//            }
         }
         
+        let dataCh = vDataList[indexPath.row].xChainDataArray
         for l in dataCh {
-            if(l == "c") {
-                let cUserPhotoHeight = 28.0
-                let cUserPhotoTopMargin = 20.0 //10
-                let cContentTopMargin = 10.0
-                let cText = "Worth a visit."
-                let cContentHeight = estimateHeight(text: cText, textWidth: collectionView.frame.width - 58.0 - 20.0, fontSize: 14)
-                let cActionBtnTopMargin = 10.0
-                let cActionBtnHeight = 26.0
-                let cHeight = cUserPhotoHeight + cUserPhotoTopMargin + cContentTopMargin + cContentHeight + cActionBtnTopMargin + cActionBtnHeight
-                contentHeight += cHeight
+            let xText = l.dataTextString
+            let xDataL = l.dataArray
+            var yContentHeight = 0.0
+            for y in xDataL {
+                if(y == "t") {
+                    let xContentTopMargin = 20.0
+                    let xContentHeight = estimateHeight(text: xText, textWidth: collectionView.frame.width - 53.0 - 20.0, fontSize: 13)
+                    let xHeight = xContentTopMargin + xContentHeight
+                    yContentHeight += xHeight
+                }
+                else if(y == "p") {
+                    let pTopMargin = 20.0
+                    let pContentHeight = 280.0
+                    let pHeight = pTopMargin + pContentHeight
+                    yContentHeight += pHeight
+                }
+                else if(y == "q") {
+                    let qTopMargin = 20.0
+                    let qUserPhotoHeight = 28.0
+                    let qUserPhotoTopMargin = 10.0 //10
+                    let qContentTopMargin = 10.0
+                    let qText = "Nice food, nice environment! Worth a visit. \nSo good!\n\n\n\n...\n...\n..."
+                    let qContentHeight = estimateHeight(text: qText, textWidth: collectionView.frame.width - 53.0 - 20.0, fontSize: 13)
+                    let qFrameBottomMargin = 20.0 //10
+                    let qHeight = qTopMargin + qUserPhotoHeight + qUserPhotoTopMargin + qContentTopMargin + qContentHeight + qFrameBottomMargin
+                    yContentHeight += qHeight
+                }
             }
+            let cUserPhotoHeight = 28.0
+            let cUserPhotoTopMargin = 10.0 //10
+            let cActionBtnTopMargin = 20.0
+            let cActionBtnHeight = 26.0
+            let cFrameBottomMargin = 10.0 //10
+            let cHeight = cUserPhotoHeight + cUserPhotoTopMargin + yContentHeight + cActionBtnTopMargin + cActionBtnHeight + cFrameBottomMargin
+            contentHeight += cHeight
         }
         
         let userPhotoHeight = 28.0
@@ -709,8 +800,6 @@ extension CommentScrollableView: UICollectionViewDelegateFlowLayout {
         let actionBtnTopMargin = 20.0
         let actionBtnHeight = 26.0
         let frameBottomMargin = 20.0 //10
-//        let locationTopMargin = 20.0
-//        let locationHeight = estimateHeight(text: "Petronas", textWidth: collectionView.frame.width - 20.0 - 20.0, fontSize: 14) + 10
         let miscHeight = userPhotoHeight + userPhotoTopMargin + actionBtnTopMargin + actionBtnHeight + frameBottomMargin
         let totalHeight = contentHeight + miscHeight
         
@@ -897,7 +986,7 @@ extension CommentScrollableView: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HCommentListViewCell.identifier, for: indexPath) as! HCommentListViewCell
-//        cell.aDelegate = self
+        cell.aDelegate = self
         print("commenttxt 2 \(indexPath)")
         
         //test > configure cell
@@ -912,5 +1001,83 @@ extension CommentScrollableView: UICollectionViewDataSource {
         print("collectionView index: \(indexPath), \(cell.frame.origin.x), \(cell.frame.origin.y), \(originInRootView)")
         
      }
+}
+
+extension CommentScrollableView: HListCellDelegate {
+    func hListDidClickVcvComment(vc: UICollectionViewCell){
+        //temp solution: to be diverted to comment section of post detail
+        delegate?.didCClickPost()
+    }
+    func hListDidClickVcvLove(){
+        
+    }
+    func hListDidClickVcvShare(vc: UICollectionViewCell){
+//        delegate?.didCClickShare()
+        
+        if let a = vCV {
+            for cell in a.visibleCells {
+                
+                if(cell == vc) {
+                    let selectedIndexPath = a.indexPath(for: cell)
+                    delegate?.didCClickShare()
+                    
+                    if let c = selectedIndexPath {
+                        selectedItemIdx = c.row
+                    }
+                    
+                    break
+                }
+            }
+        }
+    }
+    func hListDidClickVcvClickUser(){
+        delegate?.didCClickUser()
+    }
+    func hListDidClickVcvClickPlace(){
+        delegate?.didCClickPlace()
+    }
+    func hListDidClickVcvClickSound(){
+        delegate?.didCClickSound()
+    }
+    func hListDidClickVcvClickPost(){
+        delegate?.didCClickPost()
+    }
+    func hListDidClickVcvClickPhoto(vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        if let a = vCV {
+            for cell in a.visibleCells {
+                
+                if(cell == vc) {
+                    //commentview bounds is fullscreen, so no more conversion is needed
+                    let originInRootView = a.convert(cell.frame.origin, to: self)
+                    let visibleIndexPath = a.indexPath(for: cell)
+                    let pointX1 = originInRootView.x + pointX
+                    let pointY1 = originInRootView.y + pointY
+                    print("comment idx frame origin p: \(pointX1), \(pointY1)")
+                    delegate?.didCClickClickPhoto(pointX: pointX1, pointY: pointY1, view: view, mode: mode)
+                    
+                    if let c = visibleIndexPath {
+                        hideCellIndex = c.row
+                    }
+                    
+                    break
+                }
+            }
+        }
+    }
+    func hListDidClickVcvClickVideo(vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        
+    }
+    func hListDidClickVcvSortComment(){}
+    func hListIsScrollCarousel(isScroll: Bool){}
+    
+    //test > carousel photo scroll page
+    func hListCarouselIdx(vc: UICollectionViewCell, idx: Int){}
+    
+    func hListVideoStopTime(vc: UICollectionViewCell, ts: Double){
+        
+    }
+    
+    //test > click play sound
+    func hListDidClickVcvPlayAudio(vc: UICollectionViewCell){}
 }
 

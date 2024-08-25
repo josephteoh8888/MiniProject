@@ -541,23 +541,23 @@ class NotifyPanelView: PanelView{
 //                    feed.dataPaginateStatus = "fetch"
                     
                     //test 1
-//                    feed.vDataList.append(contentsOf: l)
-//                    feed.vCV?.reloadData()
+                    feed.vDataList.append(contentsOf: l)
+                    feed.vCV?.reloadData()
 
                     //*test 3 > reload only appended data, not entire dataset
-                    let dataCount = feed.vDataList.count
-                    var indexPaths = [IndexPath]()
-                    var j = 1
-                    for i in l {
-                        feed.vDataList.append(i)
-
-                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
-                        indexPaths.append(idx)
-                        j += 1
-
-                        print("ppv asyncfetch reload \(idx)")
-                    }
-                    feed.vCV?.insertItems(at: indexPaths)
+//                    let dataCount = feed.vDataList.count
+//                    var indexPaths = [IndexPath]()
+//                    var j = 1
+//                    for i in l {
+//                        feed.vDataList.append(i)
+//
+//                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+//                        indexPaths.append(idx)
+//                        j += 1
+//
+//                        print("ppv asyncfetch reload \(idx)")
+//                    }
+//                    feed.vCV?.insertItems(at: indexPaths)
                     //*
                     
                     //test

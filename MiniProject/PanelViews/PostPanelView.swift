@@ -90,6 +90,13 @@ class PostPanelView: PanelView, UIGestureRecognizerDelegate{
     let tabScrollLHSBtn = UIView()
     let tabScrollRHSBtn = UIView()
     
+    let bottomBox = UIView()
+    //test > comment textbox
+    let bTextBtn = UIImageView()
+    let lTextBtn = UIImageView()
+    let mTextBtn = UIImageView()
+    let nTextBtn = UIImageView()
+    
     //test page transition => track user journey in creating short video
     var pageList = [PanelView]()
     
@@ -362,6 +369,82 @@ class PostPanelView: PanelView, UIGestureRecognizerDelegate{
 //        searchBoxBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
 //        searchBoxBtn.layer.opacity = 0.5
 ////        addBoxBtn.isHidden = true
+        
+        //test bottom comment box => fake edittext
+        bottomBox.backgroundColor = .black
+        postPanel.addSubview(bottomBox)
+        bottomBox.clipsToBounds = true
+        bottomBox.translatesAutoresizingMaskIntoConstraints = false
+        bottomBox.leadingAnchor.constraint(equalTo: postPanel.leadingAnchor, constant: 0).isActive = true
+        bottomBox.trailingAnchor.constraint(equalTo: postPanel.trailingAnchor, constant: 0).isActive = true
+        bottomBox.heightAnchor.constraint(equalToConstant: 94).isActive = true //default: 50
+        bottomBox.bottomAnchor.constraint(equalTo: postPanel.bottomAnchor, constant: 0).isActive = true
+        bottomBox.isUserInteractionEnabled = true
+//        let aPanelPanGesture = UIPanGestureRecognizer(target: self, action: #selector(onTextViewPanGesture))
+//        bottomBox.addGestureRecognizer(aPanelPanGesture)
+//        bottomBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onOpenTextBoxClicked)))
+        bottomBox.isHidden = true
+
+        let bText = UILabel()
+        bText.textAlignment = .left
+        bText.textColor = .white
+        bText.font = .boldSystemFont(ofSize: 13)
+//        photoPanel.addSubview(bText)
+        bottomBox.addSubview(bText)
+        bText.clipsToBounds = true
+        bText.translatesAutoresizingMaskIntoConstraints = false
+//        bText.bottomAnchor.constraint(equalTo: bottomBox.bottomAnchor, constant: -30).isActive = true
+//        bText.leadingAnchor.constraint(equalTo: mImage.trailingAnchor, constant: 10).isActive = true
+        bText.leadingAnchor.constraint(equalTo: bottomBox.leadingAnchor, constant: 15).isActive = true
+        bText.trailingAnchor.constraint(equalTo: bottomBox.trailingAnchor, constant: -60).isActive = true
+        bText.topAnchor.constraint(equalTo: bottomBox.topAnchor, constant: 15).isActive = true
+        bText.text = "Add comment..."
+        bText.layer.opacity = 0.5
+        
+//        let bTextBtn = UIImageView()
+        bTextBtn.image = UIImage(named:"icon_round_send")?.withRenderingMode(.alwaysTemplate)
+        bTextBtn.tintColor = .white
+        bTextBtn.layer.opacity = 0.5
+        bottomBox.addSubview(bTextBtn)
+        bTextBtn.translatesAutoresizingMaskIntoConstraints = false
+        bTextBtn.trailingAnchor.constraint(equalTo: bottomBox.trailingAnchor, constant: -15).isActive = true
+        bTextBtn.centerYAnchor.constraint(equalTo: bText.centerYAnchor).isActive = true
+        bTextBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
+        bTextBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
+        bTextBtn.isHidden = true
+        
+        lTextBtn.image = UIImage(named:"icon_outline_photo")?.withRenderingMode(.alwaysTemplate)
+        lTextBtn.tintColor = .white
+        lTextBtn.layer.opacity = 0.5
+        bottomBox.addSubview(lTextBtn)
+        lTextBtn.translatesAutoresizingMaskIntoConstraints = false
+        lTextBtn.trailingAnchor.constraint(equalTo: bottomBox.trailingAnchor, constant: -15).isActive = true
+        lTextBtn.centerYAnchor.constraint(equalTo: bText.centerYAnchor).isActive = true
+        lTextBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
+        lTextBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
+        lTextBtn.isHidden = false
+
+        mTextBtn.image = UIImage(named:"icon_round_emoji")?.withRenderingMode(.alwaysTemplate)
+        mTextBtn.tintColor = .white
+        mTextBtn.layer.opacity = 0.5
+        bottomBox.addSubview(mTextBtn)
+        mTextBtn.translatesAutoresizingMaskIntoConstraints = false
+        mTextBtn.trailingAnchor.constraint(equalTo: lTextBtn.leadingAnchor, constant: -10).isActive = true
+        mTextBtn.centerYAnchor.constraint(equalTo: bText.centerYAnchor).isActive = true
+        mTextBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
+        mTextBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
+        mTextBtn.isHidden = false
+
+        nTextBtn.image = UIImage(named:"icon_round_at")?.withRenderingMode(.alwaysTemplate)
+        nTextBtn.tintColor = .white
+        nTextBtn.layer.opacity = 0.5
+        bottomBox.addSubview(nTextBtn)
+        nTextBtn.translatesAutoresizingMaskIntoConstraints = false
+        nTextBtn.trailingAnchor.constraint(equalTo: mTextBtn.leadingAnchor, constant: -10).isActive = true
+        nTextBtn.centerYAnchor.constraint(equalTo: bText.centerYAnchor).isActive = true
+        nTextBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
+        nTextBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
+        nTextBtn.isHidden = false
         
         //test > gesture recognizer for dragging user panel
 //        let panelPanGesture = UIPanGestureRecognizer(target: self, action: #selector(onPostPanelPanGesture))
@@ -1037,20 +1120,44 @@ class PostPanelView: PanelView, UIGestureRecognizerDelegate{
         }
     }
     
-    //test > remove elements from dataset n uicollectionview
-    func removeData(cell: ScrollFeedHPostListCell?, idxToRemove: [Int]) {
+    //**test > remove elements from dataset n uicollectionview
+    func removeData(cell: ScrollFeedHPostListCell?, idxToRemove: Int) {
         guard let feed = cell else {
             return
         }
-        var indexPaths = [IndexPath]()
-        for i in idxToRemove {
-            feed.vDataList.remove(at: i)
-            
-            let idx = IndexPath(item: i, section: 0)
-            indexPaths.append(idx)
+        if(!feed.vDataList.isEmpty) {
+            if(idxToRemove > -1 && idxToRemove < feed.vDataList.count) {
+                var indexPaths = [IndexPath]()
+                let idx = IndexPath(item: idxToRemove, section: 0)
+                indexPaths.append(idx)
+                
+                feed.vDataList.remove(at: idxToRemove)
+                feed.vCV?.deleteItems(at: indexPaths)
+                
+                feed.unselectItemData()
+                
+                //test > footer to show msg when no more data
+                if(feed.vDataList.isEmpty) {
+                    feed.setFooterAaText(text: "No results yet.")
+                    feed.configureFooterUI(data: "na")
+                }
+            }
         }
-        feed.vCV?.deleteItems(at: indexPaths)
     }
+//    func removeDataSet(cell: ScrollFeedHPostListCell?, idxToRemove: [Int]) {
+//        guard let feed = cell else {
+//            return
+//        }
+//        var indexPaths = [IndexPath]()
+//        for i in idxToRemove {
+//            feed.vDataList.remove(at: i)
+//            
+//            let idx = IndexPath(item: i, section: 0)
+//            indexPaths.append(idx)
+//        }
+//        feed.vCV?.deleteItems(at: indexPaths)
+//    }
+    //**
     
     func asyncFetchFeed(cell: ScrollFeedHPostListCell?, id: String) {
         print("ppv asyncfetch \(id)")
@@ -1064,6 +1171,7 @@ class PostPanelView: PanelView, UIGestureRecognizerDelegate{
 
         let id_ = "post"
         let isPaginate = false
+//        let isPaginate = true
         DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
 //        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
             switch result {
@@ -1081,35 +1189,35 @@ class PostPanelView: PanelView, UIGestureRecognizerDelegate{
                     feed.aSpinner.stopAnimating()
                     
                     //test 2 > new append method
-//                    for i in l {
-//                        
-//                        let postData = PostData()
-//                        postData.setDataType(data: i)
-//                        postData.setData(data: i)
-//                        postData.setTextString(data: i)
-//                        feed.vDataList.append(postData)
-//                    }
-//                    
-//                    feed.vCV?.reloadData()
-
-                    //*test 3 > reload only appended data, not entire dataset
-                    let dataCount = feed.vDataList.count
-                    var indexPaths = [IndexPath]()
-                    var j = 1
                     for i in l {
+                        
                         let postData = PostData()
                         postData.setDataType(data: i)
                         postData.setData(data: i)
                         postData.setTextString(data: i)
                         feed.vDataList.append(postData)
-
-                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
-                        indexPaths.append(idx)
-                        j += 1
-
-                        print("ppv asyncfetch reload \(idx)")
                     }
-                    feed.vCV?.insertItems(at: indexPaths)
+                    
+                    feed.vCV?.reloadData()
+
+                    //*test 3 > reload only appended data, not entire dataset
+//                    let dataCount = feed.vDataList.count
+//                    var indexPaths = [IndexPath]()
+//                    var j = 1
+//                    for i in l {
+//                        let postData = PostData()
+//                        postData.setDataType(data: i)
+//                        postData.setData(data: i)
+//                        postData.setTextString(data: i)
+//                        feed.vDataList.append(postData)
+//
+//                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+//                        indexPaths.append(idx)
+//                        j += 1
+//
+//                        print("ppv asyncfetch reload \(idx)")
+//                    }
+//                    feed.vCV?.insertItems(at: indexPaths)
                     //*
                     
                     //test
@@ -1202,18 +1310,28 @@ class PostPanelView: PanelView, UIGestureRecognizerDelegate{
         sharePanel.translatesAutoresizingMaskIntoConstraints = false
         sharePanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
         sharePanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
-//        sharePanel.delegate = self
+        sharePanel.delegate = self
+        
+        //test > track share scrollable view
+        pageList.append(sharePanel)
     }
     
     //test > add comment panel
     func openComment() {
         let commentPanel = CommentScrollableView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
-        self.addSubview(commentPanel)
+//        self.addSubview(commentPanel)
+        postPanel.insertSubview(commentPanel, belowSubview: bottomBox)
         commentPanel.translatesAutoresizingMaskIntoConstraints = false
         commentPanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
         commentPanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
-//        commentPanel.delegate = self
+        commentPanel.delegate = self
         commentPanel.initialize()
+        commentPanel.setBackgroundDark()
+        
+        bottomBox.isHidden = false
+        
+        //test > track comment scrollable view
+        pageList.append(commentPanel)
     }
     
     //test > tab section UI Change (hardcoded - to be fixed in future)
@@ -1256,10 +1374,24 @@ class PostPanelView: PanelView, UIGestureRecognizerDelegate{
     //test
     override func resumeActiveState() {
         print("postpanelview resume active")
-        resumeCurrentVideo()
+//        resumeCurrentVideo()
+//        
+//        //test > dehide cell
+//        dehideCurrentCell()
         
-        //test > dehide cell
-        dehideCurrentCell()
+        //test > only resume video if no comment scrollable view/any other view
+        if(pageList.isEmpty) {
+            resumeCurrentVideo()
+            
+            //test > dehide cell
+            dehideCurrentCell()
+        }
+        else {
+            //dehide cell for commment view
+            if let c = pageList[pageList.count - 1] as? CommentScrollableView {
+                c.dehideCell()
+            }
+        }
     }
     
     //test > check for intersected dummy view with video while user scroll
@@ -1683,6 +1815,118 @@ extension ViewController: PostPanelDelegate{
     }
 }
 
+extension PostPanelView: ShareSheetScrollableDelegate{
+    func didShareSheetClick(){
+        //test > for deleting item
+        if(!pageList.isEmpty) {
+            pageList.remove(at: pageList.count - 1)
+            
+            if(pageList.count > 0) {
+                let lastPage = pageList[pageList.count - 1]
+                if let a = lastPage as? CommentScrollableView {
+                    print("lastpagelist e \(a.selectedItemIdx)")
+                    let idx = a.selectedItemIdx
+                    a.removeData(idxToRemove: idx)
+                }
+                else if let b = lastPage as? ShareSheetScrollableView {
+                    print("lastpagelist f")
+                }
+            } else {
+                if(!self.feedList.isEmpty) {
+                    let feed = feedList[currentIndex]
+                    removeData(cell: feed, idxToRemove: feed.selectedItemIdx)
+                }
+            }
+        } else {
+
+        }
+    }
+    func didShareSheetClickClosePanel(){
+        
+    }
+    func didShareSheetFinishClosePanel(){
+        //test > remove scrollable view from pagelist
+        if(!pageList.isEmpty) {
+            pageList.remove(at: pageList.count - 1)
+            
+            if(pageList.count > 0) {
+                let lastPage = pageList[pageList.count - 1]
+                if let a = lastPage as? CommentScrollableView {
+                    print("lastpagelist c")
+                    a.unselectItemData()
+                }
+                else if let b = lastPage as? ShareSheetScrollableView {
+                    print("lastpagelist d")
+                }
+            } else {
+                resumeCurrentVideo()
+                
+                if(!self.feedList.isEmpty) {
+                    let feed = feedList[currentIndex]
+                    feed.unselectItemData()
+                }
+            }
+        } else {
+//            resumeCurrentVideo()
+        }
+    }
+}
+extension PostPanelView: CommentScrollableDelegate{
+    func didCClickUser(){
+//        delegate?.didClickUser()
+        delegate?.didClickPostPanelVcvClickUser()
+    }
+    func didCClickPlace(){
+//        delegate?.didClickPlace()
+        delegate?.didClickPostPanelVcvClickPlace()
+    }
+    func didCClickSound(){
+//        delegate?.didClickSound()
+        delegate?.didClickPostPanelVcvClickSound()
+    }
+    func didCClickClosePanel(){
+        bottomBox.isHidden = true
+    }
+    func didCFinishClosePanel() {
+//        resumeCurrentVideo()
+        
+        //test > remove comment scrollable view from pagelist
+        if(!pageList.isEmpty) {
+            pageList.remove(at: pageList.count - 1)
+            
+            if(pageList.count > 0) {
+                let lastPage = pageList[pageList.count - 1]
+                if let a = lastPage as? CommentScrollableView {
+                    print("lastpagelist a")
+                }
+                else if let b = lastPage as? ShareSheetScrollableView {
+                    print("lastpagelist b")
+                }
+            } else {
+                resumeCurrentVideo()
+            }
+        } else {
+//            resumeCurrentVideo()
+        }
+    }
+    func didCClickComment(){
+        
+    }
+    func didCClickShare(){
+        //test
+        openShareSheet()
+    }
+    func didCClickPost(){
+        delegate?.didClickPostPanelVcvClickPost()
+    }
+    func didCClickClickPhoto(pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        delegate?.didClickPostPanelVcvClickPhoto(pointX: pointX, pointY: pointY, view: view, mode: mode)
+    }
+    func didCClickClickVideo(pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        
+    }
+}
+
 extension PostPanelView: ScrollFeedCellDelegate {
     func sfcWillBeginDragging(offsetY: CGFloat) {
 
@@ -1724,7 +1968,10 @@ extension PostPanelView: ScrollFeedCellDelegate {
     }
     func sfcDidClickVcvComment() {
         print("fcDidClickVcvComment ")
-//        openComment()
+        openComment()
+        
+        //test > try pause video when go comment
+        pauseCurrentVideo()
     }
     func sfcDidClickVcvLove() {
         print("fcDidClickVcvLike ")
@@ -1733,11 +1980,8 @@ extension PostPanelView: ScrollFeedCellDelegate {
         print("fcDidClickVcvShare ")
         openShareSheet()
         
-        //test > remove item
-//        if(!self.feedList.isEmpty) {
-//            let aVc = feedList[currentIndex]
-//            self.removeData(cell: aVc, idxToRemove: [0])
-//        }
+        //test > try pause video when go comment
+        pauseCurrentVideo()
     }
 
     func sfcDidClickVcvClickUser() {
