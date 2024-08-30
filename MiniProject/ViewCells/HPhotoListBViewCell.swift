@@ -37,17 +37,17 @@ class HPhotoListBViewCell: UICollectionViewCell {
     var aDataList = [String]()
 //    let bubbleBox = PageBubbleIndicator()
     
-    var aBubbleArray = [PageBubbleIndicator]()
+//    var aBubbleArray = [PageBubbleIndicator]()
     
-    let aTestMusic = UIView()
-    var aTestMusicArray = [UIView]()
-    var player2: AVPlayer!
+//    let aTestMusic = UIView()
+//    var aTestMusicArray = [UIView]()
+//    var player2: AVPlayer!
     
     var musicConArray = [UIView]()
-    var mPlayArray = [UIImageView]()
-    var mPauseArray = [UIImageView]()
+//    var mPlayArray = [UIImageView]()
+//    var mPauseArray = [UIImageView]()
     
-    var photoConArray = [UIView]()
+//    var photoConArray = [UIView]()
     
 //    var p_s = 0
     
@@ -125,84 +125,13 @@ class HPhotoListBViewCell: UICollectionViewCell {
         aTest.topAnchor.constraint(equalTo: aResult.topAnchor, constant: 0).isActive = true //10
         //test > click on aTest for click post
 
-        let atapGR = UITapGestureRecognizer(target: self, action: #selector(onPhotoClicked))
-        atapGR.numberOfTapsRequired = 1
-        aTest.addGestureRecognizer(atapGR)
-        let tapGR = UITapGestureRecognizer(target: self, action: #selector(onDoubleClicked))
-        tapGR.numberOfTapsRequired = 2
-        aTest.addGestureRecognizer(tapGR)
-        atapGR.require(toFail: tapGR) //enable double tap
-        
-        //test > add bubble for multi images
-//        bubbleBox.backgroundColor = .clear
-//        contentView.addSubview(bubbleBox)
-//        bubbleBox.translatesAutoresizingMaskIntoConstraints = false
-//        bubbleBox.topAnchor.constraint(equalTo: aTest.bottomAnchor, constant: 10).isActive = true
-//        bubbleBox.centerXAnchor.constraint(equalTo: aResult.centerXAnchor, constant: 0).isActive = true
-//        bubbleBox.heightAnchor.constraint(equalToConstant: 3).isActive = true //30
-//        bubbleBox.isHidden = true
-        
-        //test > sound on top of profile name
-//        let sBox = UIView()
-////        sBox.backgroundColor = .ddmBlackOverlayColor
-//        sBox.backgroundColor = .ddmDarkColor
-//        contentView.addSubview(sBox)
-//        sBox.clipsToBounds = true
-//        sBox.translatesAutoresizingMaskIntoConstraints = false
-//        sBox.leadingAnchor.constraint(equalTo: aResult.leadingAnchor, constant: 0).isActive = true
-//        sBox.heightAnchor.constraint(equalToConstant: 30).isActive = true //default: 50
-////        sBox.topAnchor.constraint(equalTo: bubbleBox.bottomAnchor, constant: 10).isActive = true
-//        sBox.topAnchor.constraint(equalTo: aTest.bottomAnchor, constant: 0).isActive = true
-//        sBox.trailingAnchor.constraint(equalTo: aResult.trailingAnchor, constant: 0).isActive = true //20
-//        sBox.layer.cornerRadius = 5
-//        sBox.layer.opacity = 0.2 //0.3
-//        sBox.isUserInteractionEnabled = true
-////        sBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPlaceClicked)))
-//
-//        let sBoxInner = UIView()
-//        sBoxInner.backgroundColor = .clear //yellow
-//        contentView.addSubview(sBoxInner)
-//        sBoxInner.clipsToBounds = true
-//        sBoxInner.translatesAutoresizingMaskIntoConstraints = false
-//        sBoxInner.widthAnchor.constraint(equalToConstant: 16).isActive = true //ori: 40
-//        sBoxInner.heightAnchor.constraint(equalToConstant: 16).isActive = true
-//        sBoxInner.centerYAnchor.constraint(equalTo: sBox.centerYAnchor).isActive = true
-//        sBoxInner.leadingAnchor.constraint(equalTo: sBox.leadingAnchor, constant: 25).isActive = true //10
-//        sBoxInner.layer.cornerRadius = 5 //6
-//
-//        let mSBtn = UIImageView(image: UIImage(named:"icon_round_music")?.withRenderingMode(.alwaysTemplate))
-////        mSBtn.tintColor = .black
-//        mSBtn.tintColor = .white
-////        contentView.addSubview(mBtn)
-//        contentView.addSubview(mSBtn)
-//        mSBtn.translatesAutoresizingMaskIntoConstraints = false
-//        mSBtn.centerXAnchor.constraint(equalTo: sBoxInner.centerXAnchor).isActive = true
-//        mSBtn.centerYAnchor.constraint(equalTo: sBoxInner.centerYAnchor).isActive = true
-//        mSBtn.heightAnchor.constraint(equalToConstant: 16).isActive = true
-//        mSBtn.widthAnchor.constraint(equalToConstant: 16).isActive = true
-//
-//        let mSText = UILabel()
-//        mSText.textAlignment = .left
-//        mSText.textColor = .white
-//        mSText.font = .boldSystemFont(ofSize: 12) //13
-////        contentView.addSubview(mText)
-//        contentView.addSubview(mSText)
-//        mSText.translatesAutoresizingMaskIntoConstraints = false
-//        mSText.centerYAnchor.constraint(equalTo: mSBtn.centerYAnchor).isActive = true
-//        mSText.leadingAnchor.constraint(equalTo: mSBtn.trailingAnchor, constant: 10).isActive = true
-//        mSText.text = "明知故犯 - HubertWu"
-//        mSText.isUserInteractionEnabled = true
-//        mSText.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onSoundClicked)))
-//        mSText.widthAnchor.constraint(lessThanOrEqualToConstant: 250).isActive = true
-//
-//        bubbleBox.backgroundColor = .clear
-//        contentView.addSubview(bubbleBox)
-//        bubbleBox.translatesAutoresizingMaskIntoConstraints = false
-////        bubbleBox.topAnchor.constraint(equalTo: aTest.bottomAnchor, constant: 7).isActive = true
-//        bubbleBox.topAnchor.constraint(equalTo: sBox.bottomAnchor, constant: 7).isActive = true
-//        bubbleBox.centerXAnchor.constraint(equalTo: aResult.centerXAnchor, constant: 0).isActive = true
-//        bubbleBox.heightAnchor.constraint(equalToConstant: 3).isActive = true //30
-//        bubbleBox.isHidden = true
+//        let atapGR = UITapGestureRecognizer(target: self, action: #selector(onPhotoClicked))
+//        atapGR.numberOfTapsRequired = 1
+//        aTest.addGestureRecognizer(atapGR)
+//        let tapGR = UITapGestureRecognizer(target: self, action: #selector(onDoubleClicked))
+//        tapGR.numberOfTapsRequired = 2
+//        aTest.addGestureRecognizer(tapGR)
+//        atapGR.require(toFail: tapGR) //enable double tap
         
         let eUserCover = UIView()
 //        eUserCover.backgroundColor = .ddmBlackOverlayColor
@@ -298,66 +227,11 @@ class HPhotoListBViewCell: UICollectionViewCell {
         aUserNameText.layer.opacity = 0.3 //0.5
         
         //test > dynamic cell for comment
-        contentView.addSubview(aTestMusic)
-        aTestMusic.translatesAutoresizingMaskIntoConstraints = false
-        aTestMusic.leadingAnchor.constraint(equalTo: aCon.leadingAnchor, constant: 0).isActive = true
-        aTestMusic.trailingAnchor.constraint(equalTo: aCon.trailingAnchor, constant: 0).isActive = true
-        aTestMusic.topAnchor.constraint(equalTo: aUserNameText.bottomAnchor, constant: 0).isActive = true
-        
-//        //test > sound text
-//        let mBtn = UIImageView(image: UIImage(named:"icon_round_music")?.withRenderingMode(.alwaysTemplate))
-////        mBtn.tintColor = .black
-//        mBtn.tintColor = .white
-////        contentView.addSubview(mBtn)
-//        contentView.addSubview(mBtn)
-//        mBtn.translatesAutoresizingMaskIntoConstraints = false
-//        mBtn.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 25).isActive = true
-//        mBtn.topAnchor.constraint(equalTo: aUserNameText.bottomAnchor, constant: 10).isActive = true
-////        mBtn.topAnchor.constraint(equalTo: photoText.bottomAnchor, constant: 10).isActive = true
-//        mBtn.heightAnchor.constraint(equalToConstant: 16).isActive = true
-//        mBtn.widthAnchor.constraint(equalToConstant: 16).isActive = true
-//
-//        let mText = UILabel()
-//        mText.textAlignment = .left
-//        mText.textColor = .white
-//        mText.font = .boldSystemFont(ofSize: 12) //13
-////        contentView.addSubview(mText)
-//        contentView.addSubview(mText)
-//        mText.translatesAutoresizingMaskIntoConstraints = false
-//        mText.centerYAnchor.constraint(equalTo: mBtn.centerYAnchor).isActive = true
-//        mText.leadingAnchor.constraint(equalTo: mBtn.trailingAnchor, constant: 10).isActive = true
-//        mText.text = "明知故犯 - HubertWu"
-//        mText.isUserInteractionEnabled = true
-//        mText.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onSoundClicked)))
-//        mText.widthAnchor.constraint(lessThanOrEqualToConstant: 250).isActive = true
-
-//        //test > sound play button on photo carousel
-//        let playMini = UIView()
-//        playMini.backgroundColor = .ddmDarkColor
-//        contentView.addSubview(playMini)
-//        playMini.translatesAutoresizingMaskIntoConstraints = false
-//        playMini.bottomAnchor.constraint(equalTo: aTest.bottomAnchor, constant: -5).isActive = true //10
-//        playMini.trailingAnchor.constraint(equalTo: aTest.trailingAnchor, constant: -5).isActive = true
-//        playMini.heightAnchor.constraint(equalToConstant: 26).isActive = true //26
-//        playMini.widthAnchor.constraint(equalToConstant: 26).isActive = true
-//        playMini.layer.cornerRadius = 13 //15
-//        playMini.layer.opacity = 0.3 //0.2
-//        playMini.isHidden = true
-//
-//        let playBtn = UIImageView()
-//        playBtn.image = UIImage(named:"icon_round_volume")?.withRenderingMode(.alwaysTemplate)
-////        playBtn.image = UIImage(named:"icon_round_music")?.withRenderingMode(.alwaysTemplate)
-//        playBtn.tintColor = .white
-//        contentView.addSubview(playBtn)
-//        playBtn.translatesAutoresizingMaskIntoConstraints = false
-//        playBtn.centerYAnchor.constraint(equalTo: playMini.centerYAnchor).isActive = true //10
-//        playBtn.centerXAnchor.constraint(equalTo: playMini.centerXAnchor).isActive = true
-////        playBtn.isHidden = true
-//        playBtn.heightAnchor.constraint(equalToConstant: 22).isActive = true //16, 20
-//        playBtn.widthAnchor.constraint(equalToConstant: 22).isActive = true
-//        playBtn.isUserInteractionEnabled = true
-////        playBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onResumeVideoClicked)))
-//        //
+//        contentView.addSubview(aTestMusic)
+//        aTestMusic.translatesAutoresizingMaskIntoConstraints = false
+//        aTestMusic.leadingAnchor.constraint(equalTo: aCon.leadingAnchor, constant: 0).isActive = true
+//        aTestMusic.trailingAnchor.constraint(equalTo: aCon.trailingAnchor, constant: 0).isActive = true
+//        aTestMusic.topAnchor.constraint(equalTo: aUserNameText.bottomAnchor, constant: 0).isActive = true
         
         //test 2 > design location 2
         let aBox = UIView()
@@ -369,8 +243,8 @@ class HPhotoListBViewCell: UICollectionViewCell {
         aBox.translatesAutoresizingMaskIntoConstraints = false
         aBox.leadingAnchor.constraint(equalTo: aCon.leadingAnchor, constant: 20).isActive = true
         aBox.heightAnchor.constraint(equalToConstant: 30).isActive = true //default: 50
-//        aBox.topAnchor.constraint(equalTo: mBtn.bottomAnchor, constant: 10).isActive = true
-        aBox.topAnchor.constraint(equalTo: aTestMusic.bottomAnchor, constant: 10).isActive = true //20
+        aBox.topAnchor.constraint(equalTo: aUserNameText.bottomAnchor, constant: 10).isActive = true
+//        aBox.topAnchor.constraint(equalTo: aTestMusic.bottomAnchor, constant: 10).isActive = true //20
         aBox.layer.cornerRadius = 5
         aBox.layer.opacity = 0.2 //0.3
         aBox.isUserInteractionEnabled = true
@@ -713,36 +587,38 @@ class HPhotoListBViewCell: UICollectionViewCell {
         dText.text = "0"
         eText.text = "0"
         
-        player2?.pause()
-        player2?.replaceCurrentItem(with: nil)
-        player2 = nil
+//        player2?.pause()
+//        player2?.replaceCurrentItem(with: nil)
+//        player2 = nil
         
         musicConArray.removeAll()
-        mPlayArray.removeAll()
-        mPauseArray.removeAll()
+//        mPlayArray.removeAll()
+//        mPauseArray.removeAll()
         
-        photoConArray.removeAll()
+//        photoConArray.removeAll()
         hideConArray.removeAll()
         
-        aBubbleArray.removeAll()
-        
         for e in aTestArray {
+            //test > destroy inner content cell before removed
+            if let a = e as? ContentCell {
+                a.destroyCell()
+            }
             e.removeFromSuperview()
         }
         aTestArray.removeAll()
         
-        for e in aTestMusicArray {
-            e.removeFromSuperview()
-        }
-        aTestMusicArray.removeAll()
+//        for e in aTestMusicArray {
+//            e.removeFromSuperview()
+//        }
+//        aTestMusicArray.removeAll()
         
 //        for e in aTest2Array {
 //            e.removeFromSuperview()
 //        }
 //        aTest2Array.removeAll()
         
-        let gifUrl1 = URL(string: "")
-        gifImage1.sd_setImage(with: gifUrl1)
+//        let gifUrl1 = URL(string: "")
+//        gifImage1.sd_setImage(with: gifUrl1)
         
         aDataList.removeAll()
     }
@@ -813,285 +689,173 @@ class HPhotoListBViewCell: UICollectionViewCell {
         //test > dynamic create ui for various data types in sequence
         let dataL = data.dataArray
         for l in dataL {
+            
+            photoText.text = data.dataTextString
+            
+            let availableWidth = self.frame.width
+            let bubbleHeight = 3.0
+            let bubbleTopMargin = 10.0
+            let totalBubbleH = bubbleHeight + bubbleTopMargin
+
+            let assetSize = CGSize(width: 3, height: 4) //4:3
+            var cSize = CGSize(width: 0, height: 0)
+            if(assetSize.width > assetSize.height) {
+                //1 > landscape photo 4:3 w:h
+                let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                let cHeight = availableWidth * aRatio.height / aRatio.width + totalBubbleH
+                cSize = CGSize(width: availableWidth, height: cHeight)
+            }
+            else if (assetSize.width < assetSize.height){
+                //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                let aRatio = CGSize(width: 5, height: 6) //aspect ratio 2:3, 3:4
+                let cWidth = availableWidth
+                let cHeight = cWidth * aRatio.height / aRatio.width + totalBubbleH
+                cSize = CGSize(width: cWidth, height: cHeight)
+            } else {
+                //square
+                let cWidth = availableWidth
+                cSize = CGSize(width: cWidth, height: cWidth + totalBubbleH)
+            }
+            
+            //test 2 > reusable custom view
+//                let contentCell = PostPhotoContentCell(frame: CGRect(x: 0, y: 0, width: 370, height: 280))
+            let contentCell = ShotPhotoContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
+            aTest.addSubview(contentCell)
+            contentCell.translatesAutoresizingMaskIntoConstraints = false
+            if(aTestArray.isEmpty) {
+                contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 0).isActive = true
+            } else {
+                let lastArrayE = aTestArray[aTestArray.count - 1]
+                contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 0).isActive = true
+            }
+            contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 0).isActive = true
+            contentCell.trailingAnchor.constraint(equalTo: aTest.trailingAnchor, constant: 0).isActive = true
+//                contentCell.widthAnchor.constraint(equalToConstant: 370).isActive = true  //370
+//                contentCell.heightAnchor.constraint(equalToConstant: 280).isActive = true  //280
+            contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //370
+            contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //280
+            contentCell.layer.cornerRadius = 10 //5
+            aTestArray.append(contentCell)
+            contentCell.setBubbleHeight(lHeight: totalBubbleH)
+            contentCell.redrawUI()
+            contentCell.configure(data: "a")
+            contentCell.setState(p: data.p_s)
+            contentCell.aDelegate = self
+            
             if(l == "m") {
                 //with music
-//                aGridNameText.text = "Michael Kins"
-//                photoText.text = "往年的这个时候，iPhone 虽然也是位列销量榜榜首，但那都是上一代的旧机型呀."
-                photoText.text = data.dataTextString
+                let lhsMargin = 20.0
+                let rhsMargin = 20.0
+                let soundTopMargin = 10.0
+                let soundHeight = 30.0
+                let soundWidth = availableWidth - lhsMargin - rhsMargin
                 
-                aDataList.append("a")
-                
-                //carousel of images
-                let scrollView = UIScrollView()
-                aTest.addSubview(scrollView)
-                scrollView.backgroundColor = .clear
-                scrollView.translatesAutoresizingMaskIntoConstraints = false
-//                scrollView.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
+                let contentCell = ShotSoundContentCell(frame: CGRect(x: 0, y: 0, width: soundWidth, height: soundHeight))
+                aTest.addSubview(contentCell)
+                contentCell.translatesAutoresizingMaskIntoConstraints = false
                 if(aTestArray.isEmpty) {
-                    scrollView.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 0).isActive = true
+                    contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
                 } else {
                     let lastArrayE = aTestArray[aTestArray.count - 1]
-                    scrollView.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 0).isActive = true
+                    contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: soundTopMargin).isActive = true //20
                 }
-                scrollView.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 0).isActive = true //0
-                scrollView.trailingAnchor.constraint(equalTo: aTest.trailingAnchor, constant: 0).isActive = true
-//                scrollView.widthAnchor.constraint(equalToConstant: 370).isActive = true
-                scrollView.heightAnchor.constraint(equalToConstant: 400.0).isActive = true
-                scrollView.showsHorizontalScrollIndicator = false
-                scrollView.alwaysBounceHorizontal = true
-                let contentWidth = width * CGFloat(aDataList.count)
-                scrollView.contentSize = CGSize(width: contentWidth, height: 400.0) //800, 280
-        //        scrollView.contentSize = CGSize(width: 360, height: 280)
-                scrollView.isPagingEnabled = true //false
-                scrollView.delegate = self
-                scrollView.layer.cornerRadius = 10 //5
-                aTestArray.append(scrollView)
-                photoConArray.append(scrollView)
-
-                var viewList = [SDAnimatedImageView]()
-                for aData in aDataList {
-                    var gifImage1 = SDAnimatedImageView()
-                    gifImage1.contentMode = .scaleAspectFill
-                    gifImage1.clipsToBounds = true
-                    let gifUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
-                    gifImage1.sd_setImage(with: gifUrl)
-    //                gifImage1.layer.cornerRadius = 10 //5
-                    scrollView.addSubview(gifImage1)
-                    gifImage1.translatesAutoresizingMaskIntoConstraints = false
-                    gifImage1.widthAnchor.constraint(equalToConstant: width).isActive = true //180
-                    gifImage1.heightAnchor.constraint(equalToConstant: 400.0).isActive = true //280
-                    gifImage1.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 0).isActive = true
-                    if(viewList.isEmpty){
-                        gifImage1.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 0).isActive = true
-                    } else {
-                        gifImage1.leadingAnchor.constraint(equalTo: viewList[viewList.count - 1].trailingAnchor, constant: 0).isActive = true
-                    }
-                    viewList.append(gifImage1)
-                    
-//                    gifImage1.isUserInteractionEnabled = true
-//                    gifImage1.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPhotoClicked)))
-                }
+                contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
+//                contentCell.widthAnchor.constraint(equalToConstant: 220).isActive = true  //220
+//                contentCell.heightAnchor.constraint(equalToConstant: 390).isActive = true  //390
+                contentCell.widthAnchor.constraint(equalToConstant: soundWidth).isActive = true  //220
+                contentCell.heightAnchor.constraint(equalToConstant: soundHeight).isActive = true  //390
+//                contentCell.layer.cornerRadius = 10 //5
+                aTestArray.append(contentCell)
+                contentCell.redrawUI()
+                contentCell.configure(data: "a")
                 
-                //test > sound play button on photo carousel
-//                let playMini = UIView()
-//                playMini.backgroundColor = .ddmDarkColor
-////                contentView.addSubview(playMini)
-//                aTest.addSubview(playMini)
-//                playMini.translatesAutoresizingMaskIntoConstraints = false
-//                playMini.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -5).isActive = true //10
-//                playMini.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -5).isActive = true
-//                playMini.heightAnchor.constraint(equalToConstant: 26).isActive = true //26
-//                playMini.widthAnchor.constraint(equalToConstant: 26).isActive = true
-//                playMini.layer.cornerRadius = 13 //15
-//                playMini.layer.opacity = 0.3 //0.2
-//                playMini.isHidden = true
-//                aTestArray.append(playMini)
-//
-//                let playBtn = UIImageView()
-//                playBtn.image = UIImage(named:"icon_round_volume")?.withRenderingMode(.alwaysTemplate)
-//        //        playBtn.image = UIImage(named:"icon_round_music")?.withRenderingMode(.alwaysTemplate)
-//                playBtn.tintColor = .white
-////                contentView.addSubview(playBtn)
-//                aTest.addSubview(playBtn)
-//                playBtn.translatesAutoresizingMaskIntoConstraints = false
-//                playBtn.centerYAnchor.constraint(equalTo: playMini.centerYAnchor).isActive = true //10
-//                playBtn.centerXAnchor.constraint(equalTo: playMini.centerXAnchor).isActive = true
-//        //        playBtn.isHidden = true
-//                playBtn.heightAnchor.constraint(equalToConstant: 22).isActive = true //16, 20
-//                playBtn.widthAnchor.constraint(equalToConstant: 22).isActive = true
-//                playBtn.isUserInteractionEnabled = true
-//        //        playBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onResumeVideoClicked)))
-//                aTestArray.append(playBtn)
+                musicConArray.append(contentCell)
                 
-                let p = data.p_s
-                
-                let bubbleBox = PageBubbleIndicator()
-                bubbleBox.backgroundColor = .clear
-                aTest.addSubview(bubbleBox)
-                bubbleBox.translatesAutoresizingMaskIntoConstraints = false
-                bubbleBox.topAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 10).isActive = true
-                bubbleBox.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor, constant: 0).isActive = true
-                bubbleBox.heightAnchor.constraint(equalToConstant: 3).isActive = true //30
-                bubbleBox.setConfiguration(number: aDataList.count, color: .yellow)
-                bubbleBox.setIndicatorSelected(index: p) //revert to last viewed photo in carousel
-                bubbleBox.isHidden = true
-                aTestArray.append(bubbleBox)
-                aBubbleArray.append(bubbleBox)
-                if(aDataList.count > 1) {
-                    bubbleBox.isHidden = false
-                }
-                
-                //revert to last viewed photo in carousel
-                let xOffset = CGFloat(p) * width
-                scrollView.setContentOffset(CGPoint(x: xOffset, y: 0), animated: false)
-
                 //test > sound text
-                let audioContainer = UIView()
-                audioContainer.frame = CGRect(x: 0, y: 0, width: 5, height: 5) //150, 250
-                aTestMusic.addSubview(audioContainer)
-                audioContainer.translatesAutoresizingMaskIntoConstraints = false
-                audioContainer.widthAnchor.constraint(equalToConstant: 5).isActive = true //150, 370
-                audioContainer.heightAnchor.constraint(equalToConstant: 5).isActive = true //250, 280
-                audioContainer.topAnchor.constraint(equalTo: aTestMusic.topAnchor, constant: 10).isActive = true
-                audioContainer.leadingAnchor.constraint(equalTo: aTestMusic.leadingAnchor, constant: 25).isActive = true
-                audioContainer.clipsToBounds = true
-                audioContainer.layer.cornerRadius = 0
-                aTestMusicArray.append(audioContainer)
-                
-                musicConArray.append(audioContainer)
-                
-                let mBtn = UIImageView(image: UIImage(named:"icon_round_music")?.withRenderingMode(.alwaysTemplate))
-        //        mBtn.tintColor = .black
-                mBtn.tintColor = .white
-        //        contentView.addSubview(mBtn)
-                aTestMusic.addSubview(mBtn)
-                mBtn.translatesAutoresizingMaskIntoConstraints = false
-                mBtn.leadingAnchor.constraint(equalTo: aTestMusic.leadingAnchor, constant: 25).isActive = true
-//                mBtn.topAnchor.constraint(equalTo: aUserNameText.bottomAnchor, constant: 10).isActive = true
-                mBtn.topAnchor.constraint(equalTo: aTestMusic.topAnchor, constant: 10).isActive = true
-                mBtn.heightAnchor.constraint(equalToConstant: 16).isActive = true
-                mBtn.widthAnchor.constraint(equalToConstant: 16).isActive = true
-                aTestMusicArray.append(mBtn)
-
-                let mText = UILabel()
-                mText.textAlignment = .left
-                mText.textColor = .white
-                mText.font = .boldSystemFont(ofSize: 12) //13
-        //        contentView.addSubview(mText)
-                aTestMusic.addSubview(mText)
-                mText.translatesAutoresizingMaskIntoConstraints = false
-                mText.centerYAnchor.constraint(equalTo: mBtn.centerYAnchor).isActive = true
-                mText.leadingAnchor.constraint(equalTo: mBtn.trailingAnchor, constant: 10).isActive = true
-                mText.text = "明知故犯 - HubertWu"
-                mText.isUserInteractionEnabled = true
-                mText.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onSoundClicked)))
-                mText.widthAnchor.constraint(lessThanOrEqualToConstant: 250).isActive = true
-                aTestMusicArray.append(mText)
-                
-                let mPlayBtn = UIImageView(image: UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate))
-//                let mPlayBtn = UIImageView(image: UIImage(named:"icon_round_volume")?.withRenderingMode(.alwaysTemplate))
-                mPlayBtn.tintColor = .white
-                aTestMusic.addSubview(mPlayBtn)
-                mPlayBtn.translatesAutoresizingMaskIntoConstraints = false
-                mPlayBtn.centerYAnchor.constraint(equalTo: mBtn.centerYAnchor).isActive = true
-                mPlayBtn.leadingAnchor.constraint(equalTo: mText.trailingAnchor, constant: 10).isActive = true //0
-                mPlayBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true //20
-                mPlayBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
-                mPlayBtn.isUserInteractionEnabled = true
-                mPlayBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onResumeAudioClicked)))
-                mPlayBtn.isHidden = false
-                aTestMusicArray.append(mPlayBtn)
-                mPlayArray.append(mPlayBtn)
-                
-                let mPauseBtn = UIImageView(image: UIImage(named:"icon_round_pause")?.withRenderingMode(.alwaysTemplate))
-//                let mPauseBtn = UIImageView(image: UIImage(named:"icon_round_volume")?.withRenderingMode(.alwaysTemplate))
-                mPauseBtn.tintColor = .white
-                aTestMusic.addSubview(mPauseBtn)
-                mPauseBtn.translatesAutoresizingMaskIntoConstraints = false
-                mPauseBtn.centerYAnchor.constraint(equalTo: mBtn.centerYAnchor).isActive = true
-                mPauseBtn.leadingAnchor.constraint(equalTo: mText.trailingAnchor, constant: 10).isActive = true //0
-                mPauseBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true //20
-                mPauseBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
-                mPauseBtn.isUserInteractionEnabled = true
-                mPauseBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPauseAudioClicked)))
-                mPauseBtn.isHidden = true
-                aTestMusicArray.append(mPauseBtn)
-                mPauseArray.append(mPauseBtn)
-                
-                //preload audio
-                let videoURL2 = "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_audio_4.m4a?alt=media"
-                let audioUrl = CacheManager.shared.getCacheUrlFor(videoUrl: videoURL2)
-                let asset2 = AVAsset(url: audioUrl)
-                let item2 = AVPlayerItem(asset: asset2)
-                player2 = AVPlayer(playerItem: item2)
-                let layer2 = AVPlayerLayer(player: player2)
-                layer2.frame = audioContainer.bounds
-                audioContainer.layer.addSublayer(layer2)
+//                let audioContainer = UIView()
+//                audioContainer.frame = CGRect(x: 0, y: 0, width: 5, height: 5) //150, 250
+//                aTestMusic.addSubview(audioContainer)
+//                audioContainer.translatesAutoresizingMaskIntoConstraints = false
+//                audioContainer.widthAnchor.constraint(equalToConstant: 5).isActive = true //150, 370
+//                audioContainer.heightAnchor.constraint(equalToConstant: 5).isActive = true //250, 280
+//                audioContainer.topAnchor.constraint(equalTo: aTestMusic.topAnchor, constant: 10).isActive = true
+//                audioContainer.leadingAnchor.constraint(equalTo: aTestMusic.leadingAnchor, constant: 25).isActive = true
+//                audioContainer.clipsToBounds = true
+//                audioContainer.layer.cornerRadius = 0
+//                aTestMusicArray.append(audioContainer)
+//                
+//                musicConArray.append(audioContainer)
+//                
+//                let mBtn = UIImageView(image: UIImage(named:"icon_round_music")?.withRenderingMode(.alwaysTemplate))
+//        //        mBtn.tintColor = .black
+//                mBtn.tintColor = .white
+//        //        contentView.addSubview(mBtn)
+//                aTestMusic.addSubview(mBtn)
+//                mBtn.translatesAutoresizingMaskIntoConstraints = false
+//                mBtn.leadingAnchor.constraint(equalTo: aTestMusic.leadingAnchor, constant: 25).isActive = true
+////                mBtn.topAnchor.constraint(equalTo: aUserNameText.bottomAnchor, constant: 10).isActive = true
+//                mBtn.topAnchor.constraint(equalTo: aTestMusic.topAnchor, constant: 10).isActive = true
+//                mBtn.heightAnchor.constraint(equalToConstant: 16).isActive = true
+//                mBtn.widthAnchor.constraint(equalToConstant: 16).isActive = true
+//                aTestMusicArray.append(mBtn)
+//
+//                let mText = UILabel()
+//                mText.textAlignment = .left
+//                mText.textColor = .white
+//                mText.font = .boldSystemFont(ofSize: 12) //13
+//        //        contentView.addSubview(mText)
+//                aTestMusic.addSubview(mText)
+//                mText.translatesAutoresizingMaskIntoConstraints = false
+//                mText.centerYAnchor.constraint(equalTo: mBtn.centerYAnchor).isActive = true
+//                mText.leadingAnchor.constraint(equalTo: mBtn.trailingAnchor, constant: 10).isActive = true
+//                mText.text = "明知故犯 - HubertWu"
+//                mText.isUserInteractionEnabled = true
+//                mText.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onSoundClicked)))
+//                mText.widthAnchor.constraint(lessThanOrEqualToConstant: 250).isActive = true
+//                aTestMusicArray.append(mText)
+//                
+//                let mPlayBtn = UIImageView(image: UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate))
+////                let mPlayBtn = UIImageView(image: UIImage(named:"icon_round_volume")?.withRenderingMode(.alwaysTemplate))
+//                mPlayBtn.tintColor = .white
+//                aTestMusic.addSubview(mPlayBtn)
+//                mPlayBtn.translatesAutoresizingMaskIntoConstraints = false
+//                mPlayBtn.centerYAnchor.constraint(equalTo: mBtn.centerYAnchor).isActive = true
+//                mPlayBtn.leadingAnchor.constraint(equalTo: mText.trailingAnchor, constant: 10).isActive = true //0
+//                mPlayBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true //20
+//                mPlayBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
+//                mPlayBtn.isUserInteractionEnabled = true
+//                mPlayBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onResumeAudioClicked)))
+//                mPlayBtn.isHidden = false
+//                aTestMusicArray.append(mPlayBtn)
+//                mPlayArray.append(mPlayBtn)
+//                
+//                let mPauseBtn = UIImageView(image: UIImage(named:"icon_round_pause")?.withRenderingMode(.alwaysTemplate))
+////                let mPauseBtn = UIImageView(image: UIImage(named:"icon_round_volume")?.withRenderingMode(.alwaysTemplate))
+//                mPauseBtn.tintColor = .white
+//                aTestMusic.addSubview(mPauseBtn)
+//                mPauseBtn.translatesAutoresizingMaskIntoConstraints = false
+//                mPauseBtn.centerYAnchor.constraint(equalTo: mBtn.centerYAnchor).isActive = true
+//                mPauseBtn.leadingAnchor.constraint(equalTo: mText.trailingAnchor, constant: 10).isActive = true //0
+//                mPauseBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true //20
+//                mPauseBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
+//                mPauseBtn.isUserInteractionEnabled = true
+//                mPauseBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPauseAudioClicked)))
+//                mPauseBtn.isHidden = true
+//                aTestMusicArray.append(mPauseBtn)
+//                mPauseArray.append(mPauseBtn)
+//                
+//                //preload audio
+//                let videoURL2 = "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_audio_4.m4a?alt=media"
+//                let audioUrl = CacheManager.shared.getCacheUrlFor(videoUrl: videoURL2)
+//                let asset2 = AVAsset(url: audioUrl)
+//                let item2 = AVPlayerItem(asset: asset2)
+//                player2 = AVPlayer(playerItem: item2)
+//                let layer2 = AVPlayerLayer(player: player2)
+//                layer2.frame = audioContainer.bounds
+//                audioContainer.layer.addSublayer(layer2)
             }
             else if(l == "p") {
-                //without music
-//                aGridNameText.text = "Gerber Dharat"
-//                photoText.text = "Nice food, nice environment! Worth a visit. \nSo good!"
-                photoText.text = data.dataTextString
-                
-                aDataList.append("a")
-                aDataList.append("a")
-                aDataList.append("a")
-                aDataList.append("a")
-                
-                //carousel of images
-                let scrollView = UIScrollView()
-                aTest.addSubview(scrollView)
-                scrollView.backgroundColor = .clear
-                scrollView.translatesAutoresizingMaskIntoConstraints = false
-//                scrollView.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
-                if(aTestArray.isEmpty) {
-                    scrollView.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 0).isActive = true
-                } else {
-                    let lastArrayE = aTestArray[aTestArray.count - 1]
-                    scrollView.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 0).isActive = true
-                }
-                scrollView.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 0).isActive = true //0
-                scrollView.trailingAnchor.constraint(equalTo: aTest.trailingAnchor, constant: 0).isActive = true
-//                scrollView.widthAnchor.constraint(equalToConstant: 370).isActive = true
-                scrollView.heightAnchor.constraint(equalToConstant: 400.0).isActive = true
-                scrollView.showsHorizontalScrollIndicator = false
-                scrollView.alwaysBounceHorizontal = true
-                let contentWidth = width * CGFloat(aDataList.count)
-                scrollView.contentSize = CGSize(width: contentWidth, height: 400.0) //800, 280
-        //        scrollView.contentSize = CGSize(width: 360, height: 280)
-                scrollView.isPagingEnabled = true //false
-                scrollView.delegate = self
-                scrollView.layer.cornerRadius = 10 //5
-                aTestArray.append(scrollView)
-                photoConArray.append(scrollView)
 
-                var viewList = [SDAnimatedImageView]()
-                for aData in aDataList {
-                    var gifImage1 = SDAnimatedImageView()
-                    gifImage1.contentMode = .scaleAspectFill
-                    gifImage1.clipsToBounds = true
-                    let gifUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
-                    gifImage1.sd_setImage(with: gifUrl)
-    //                gifImage1.layer.cornerRadius = 10 //5
-                    scrollView.addSubview(gifImage1)
-                    gifImage1.translatesAutoresizingMaskIntoConstraints = false
-                    gifImage1.widthAnchor.constraint(equalToConstant: width).isActive = true //180
-                    gifImage1.heightAnchor.constraint(equalToConstant: 400.0).isActive = true //280
-                    gifImage1.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 0).isActive = true
-                    if(viewList.isEmpty){
-                        gifImage1.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 0).isActive = true
-                    } else {
-                        gifImage1.leadingAnchor.constraint(equalTo: viewList[viewList.count - 1].trailingAnchor, constant: 0).isActive = true
-                    }
-                    viewList.append(gifImage1)
-                    
-//                    gifImage1.isUserInteractionEnabled = true
-//                    gifImage1.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPhotoClicked)))
-                }
-                
-                let p = data.p_s
-                
-                let bubbleBox = PageBubbleIndicator()
-                bubbleBox.backgroundColor = .clear
-                aTest.addSubview(bubbleBox)
-                bubbleBox.translatesAutoresizingMaskIntoConstraints = false
-                bubbleBox.topAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 10).isActive = true
-                bubbleBox.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor, constant: 0).isActive = true
-                bubbleBox.heightAnchor.constraint(equalToConstant: 3).isActive = true //30
-                bubbleBox.setConfiguration(number: aDataList.count, color: .yellow)
-                bubbleBox.setIndicatorSelected(index: p) //revert to last viewed photo in carousel
-                bubbleBox.isHidden = true
-                aTestArray.append(bubbleBox)
-                aBubbleArray.append(bubbleBox)
-                if(aDataList.count > 1) {
-                    bubbleBox.isHidden = false
-                }
-                
-                //revert to last viewed photo in carousel
-                let xOffset = CGFloat(p) * width
-                scrollView.setContentOffset(CGPoint(x: xOffset, y: 0), animated: false)
-  
             }
         }
         
@@ -1104,11 +868,6 @@ class HPhotoListBViewCell: UICollectionViewCell {
 //            let lastArrayE = aTest2Array[aTest2Array.count - 1]
 //            lastArrayE.bottomAnchor.constraint(equalTo: aTest2.bottomAnchor, constant: 0).isActive = true
 //        }
-        
-        if(!aTestMusicArray.isEmpty) {
-            let lastArrayE = aTestMusicArray[aTestMusicArray.count - 1]
-            lastArrayE.bottomAnchor.constraint(equalTo: aTestMusic.bottomAnchor, constant: 0).isActive = true
-        }
         
         //populate data count
         let dataC = data.dataCount
@@ -1192,156 +951,252 @@ class HPhotoListBViewCell: UICollectionViewCell {
     @objc func onCommentClicked(gesture: UITapGestureRecognizer) {
         print("post comment clicked")
     }
-    @objc func onPhotoClicked(gesture: UITapGestureRecognizer) {
-        print("post photo clicked")
-        
-        if(!photoConArray.isEmpty) {
-            let pContainer = photoConArray[0]
-            let pFrame = pContainer.frame.origin
-            let aTestFrame = aTest.frame.origin
-            
-            let pointX = pFrame.x + aTestFrame.x
-            let pointY = pFrame.y + aTestFrame.y
-            aDelegate?.hListDidClickVcvClickPhoto(vc: self, pointX: pointX, pointY: pointY, view: pContainer, mode: PhotoTypes.P_0)
-            
-            //test
-            hideCell(view: pContainer)
-        }
-    }
+//    @objc func onPhotoClicked(gesture: UITapGestureRecognizer) {
+//        print("post photo clicked")
+//        
+//        if(!photoConArray.isEmpty) {
+//            let pContainer = photoConArray[0]
+//            let pFrame = pContainer.frame.origin
+//            let aTestFrame = aTest.frame.origin
+//            
+//            let pointX = pFrame.x + aTestFrame.x
+//            let pointY = pFrame.y + aTestFrame.y
+//            aDelegate?.hListDidClickVcvClickPhoto(vc: self, pointX: pointX, pointY: pointY, view: pContainer, mode: PhotoTypes.P_0)
+//            
+//            //test
+//            hideCell(view: pContainer)
+//        }
+//    }
     
     //test* > hide & dehide cells
     func dehideCell() {
         print("dehidecell hpostA: \(hideConArray)")
+//        if(!hideConArray.isEmpty) {
+//            let view = hideConArray[0]
+//            view.isHidden = false
+//            
+//            hideConArray.removeAll()
+//        }
+        
+        //test 2 > reusableview
         if(!hideConArray.isEmpty) {
             let view = hideConArray[0]
-            view.isHidden = false
+            if let a = view as? ContentCell{
+                a.dehideCell()
+            }
             
             hideConArray.removeAll()
         }
     }
         
-    func hideCell(view: UIView) {
-        view.isHidden = true
-        hideConArray.append(view)
-    }
+//    func hideCell(view: UIView) {
+//        view.isHidden = true
+//        hideConArray.append(view)
+//    }
     //*
     
     func reactOnLoveClick() {
         let aColor = bMiniBtn.tintColor
         if(aColor == .white) {
             bMiniBtn.tintColor = .red
-//            bMiniBtn.layer.opacity = 1
         } else {
             bMiniBtn.tintColor = .white
-//            bMiniBtn.layer.opacity = 0.5
         }
     }
     func reactOnBookmarkClick() {
         let aColor = dMiniBtn.tintColor
         if(aColor == .white) {
             dMiniBtn.tintColor = .ddmGoldenYellowColor
-//            dMiniBtn.layer.opacity = 1
         } else {
             dMiniBtn.tintColor = .white
-//            dMiniBtn.layer.opacity = 0.5
         }
     }
     
     func playAudio() {
-        player2?.seek(to: .zero)
-        player2?.play()
+//        player2?.seek(to: .zero)
+//        player2?.play()
+//        
+//        if(!mPlayArray.isEmpty && !mPauseArray.isEmpty) {
+//            mPlayArray[0].isHidden = true
+//            mPauseArray[0].isHidden = false
+//        }
         
-        if(!mPlayArray.isEmpty && !mPauseArray.isEmpty) {
-            mPlayArray[0].isHidden = true
-            mPauseArray[0].isHidden = false
+        //test 2 > reusable view
+        if(!musicConArray.isEmpty) {
+            let vidC = musicConArray[0]
+            if let a = vidC as? ShotSoundContentCell {
+                a.playVideo()
+            }
         }
     }
     func stopAudio() {
-        player2?.seek(to: .zero)
-        player2?.pause()
+//        player2?.seek(to: .zero)
+//        player2?.pause()
+//        
+//        if(!mPlayArray.isEmpty && !mPauseArray.isEmpty) {
+//            mPlayArray[0].isHidden = false
+//            mPauseArray[0].isHidden = true
+//        }
         
-        if(!mPlayArray.isEmpty && !mPauseArray.isEmpty) {
-            mPlayArray[0].isHidden = false
-            mPauseArray[0].isHidden = true
+        //test 2 > reusable view
+        if(!musicConArray.isEmpty) {
+            let vidC = musicConArray[0]
+            if let a = vidC as? ShotSoundContentCell {
+                a.stopVideo()
+            }
         }
     }
     
     func pauseAudio() {
-        player2?.pause()
+//        player2?.pause()
+//        
+//        if(!mPlayArray.isEmpty && !mPauseArray.isEmpty) {
+//            mPlayArray[0].isHidden = false
+//            mPauseArray[0].isHidden = true
+//        }
         
-        if(!mPlayArray.isEmpty && !mPauseArray.isEmpty) {
-            mPlayArray[0].isHidden = false
-            mPauseArray[0].isHidden = true
+        //test 2 > reusable view
+        if(!musicConArray.isEmpty) {
+            let vidC = musicConArray[0]
+            if let a = vidC as? ShotSoundContentCell {
+                a.pauseVideo()
+            }
         }
     }
     
     func resumeAudio() {
-        player2?.play()
+//        player2?.play()
+//        
+//        if(!mPlayArray.isEmpty && !mPauseArray.isEmpty) {
+//            mPlayArray[0].isHidden = true
+//            mPauseArray[0].isHidden = false
+//        }
         
-        if(!mPlayArray.isEmpty && !mPauseArray.isEmpty) {
-            mPlayArray[0].isHidden = true
-            mPauseArray[0].isHidden = false
+        //test 2 > reusable view
+        if(!musicConArray.isEmpty) {
+            let vidC = musicConArray[0]
+            if let a = vidC as? ShotSoundContentCell {
+                a.resumeVideo()
+            }
         }
     }
     
-    @objc func onResumeAudioClicked(gesture: UITapGestureRecognizer) {
-        print("resume audio clicked")
-        if(!mPlayArray.isEmpty && !mPauseArray.isEmpty) {
-            mPlayArray[0].isHidden = true
-            mPauseArray[0].isHidden = false
-        }
-        aDelegate?.hListDidClickVcvPlayAudio(vc: self)
-    }
-    
-    @objc func onPauseAudioClicked(gesture: UITapGestureRecognizer) {
-        print("pause audio clicked")
-        if(!mPlayArray.isEmpty && !mPauseArray.isEmpty) {
-            mPlayArray[0].isHidden = false
-            mPauseArray[0].isHidden = true
-        }
-        aDelegate?.hListDidClickVcvPlayAudio(vc: self)
-    }
+//    @objc func onResumeAudioClicked(gesture: UITapGestureRecognizer) {
+//        print("resume audio clicked")
+//        if(!mPlayArray.isEmpty && !mPauseArray.isEmpty) {
+//            mPlayArray[0].isHidden = true
+//            mPauseArray[0].isHidden = false
+//        }
+//        aDelegate?.hListDidClickVcvPlayAudio(vc: self)
+//    }
+//    
+//    @objc func onPauseAudioClicked(gesture: UITapGestureRecognizer) {
+//        print("pause audio clicked")
+//        if(!mPlayArray.isEmpty && !mPauseArray.isEmpty) {
+//            mPlayArray[0].isHidden = false
+//            mPauseArray[0].isHidden = true
+//        }
+//        aDelegate?.hListDidClickVcvPlayAudio(vc: self)
+//    }
 }
 
 //test > scroll view delegate for carousel of images
-extension HPhotoListBViewCell: UIScrollViewDelegate {
-    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        print("HPhotoListViewCell scrollview begin: \(scrollView.contentOffset.y)")
-        aDelegate?.hListIsScrollCarousel(isScroll: true)
-    }
+//extension HPhotoListBViewCell: UIScrollViewDelegate {
+//    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+//        print("HPhotoListViewCell scrollview begin: \(scrollView.contentOffset.y)")
+//        aDelegate?.hListIsScrollCarousel(isScroll: true)
+//    }
+//
+//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+//        print("HPhotoListViewCell scrollview scroll: \(scrollView.contentOffset.y)")
+//        aDelegate?.hListIsScrollCarousel(isScroll: true)
+//    }
+//
+//    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+//        print("HPhotoListViewCell scrollview end: \(scrollView.contentOffset.y)")
+//        
+//        aDelegate?.hListIsScrollCarousel(isScroll: false)
+//        
+//        let xOffset = scrollView.contentOffset.x
+//        let viewWidth = self.frame.width
+//        let currentIndex = round(xOffset/viewWidth)
+//        let tempCurrentIndex = Int(currentIndex)
+//        print("Current item index: \(tempCurrentIndex)")
+////        bubbleBox.setIndicatorSelected(index: tempCurrentIndex)
+//        if(!aBubbleArray.isEmpty) {
+//            aBubbleArray[0].setIndicatorSelected(index: tempCurrentIndex)
+//        }
+//        
+//        //test > for carousel page
+////        p_s = tempCurrentIndex
+//        aDelegate?.hListCarouselIdx(vc: self, idx: tempCurrentIndex)
+//    }
+//
+//    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+//        print("HPhotoListViewCell scrollview end drag: \(scrollView.contentOffset.y)")
+//        aDelegate?.hListIsScrollCarousel(isScroll: false)
+//    }
+//    
+//    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+//        print("HPhotoListViewCell scrollview animation ended")
+//
+//    }
+//}
 
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        print("HPhotoListViewCell scrollview scroll: \(scrollView.contentOffset.y)")
-        aDelegate?.hListIsScrollCarousel(isScroll: true)
-    }
-
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        print("HPhotoListViewCell scrollview end: \(scrollView.contentOffset.y)")
-        
-        aDelegate?.hListIsScrollCarousel(isScroll: false)
-        
-        let xOffset = scrollView.contentOffset.x
-        let viewWidth = self.frame.width
-        let currentIndex = round(xOffset/viewWidth)
-        let tempCurrentIndex = Int(currentIndex)
-        print("Current item index: \(tempCurrentIndex)")
-//        bubbleBox.setIndicatorSelected(index: tempCurrentIndex)
-        if(!aBubbleArray.isEmpty) {
-            aBubbleArray[0].setIndicatorSelected(index: tempCurrentIndex)
-        }
-        
-        //test > for carousel page
-//        p_s = tempCurrentIndex
-        aDelegate?.hListCarouselIdx(vc: self, idx: tempCurrentIndex)
-    }
-
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        print("HPhotoListViewCell scrollview end drag: \(scrollView.contentOffset.y)")
-        aDelegate?.hListIsScrollCarousel(isScroll: false)
+extension HPhotoListBViewCell: ContentCellDelegate {
+    func contentCellIsScrollCarousel(isScroll: Bool){
+        aDelegate?.hListIsScrollCarousel(isScroll: isScroll)
     }
     
-    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-        print("HPhotoListViewCell scrollview animation ended")
-
+    func contentCellCarouselIdx(idx: Int){
+        aDelegate?.hListCarouselIdx(vc: self, idx: idx)
+    }
+    
+    func contentCellVideoStopTime(ts: Double){
+        aDelegate?.hListVideoStopTime(vc: self, ts: ts)
+    }
+    
+    func contentCellDidClickVcvClickPhoto(cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        let aTestFrame = aTest.frame.origin
+        let ccFrame = cc.frame.origin
+        
+        let pointX1 = pointX + aTestFrame.x + ccFrame.x
+        let pointY1 = pointY + aTestFrame.y + ccFrame.y
+        aDelegate?.hListDidClickVcvClickPhoto(vc: self, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
+        
+        hideConArray.append(cc)
+    }
+    func contentCellDidClickVcvClickVideo(cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        let aTestFrame = aTest.frame.origin
+        let ccFrame = cc.frame.origin
+        
+        let pointX1 = pointX + aTestFrame.x + ccFrame.x
+        let pointY1 = pointY + aTestFrame.y + ccFrame.y
+        aDelegate?.hListDidClickVcvClickVideo(vc: self, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
+        
+        hideConArray.append(cc)
+    }
+    func contentCellDidDoubleClickPhoto(pointX: CGFloat, pointY: CGFloat){
+        let aColor = bMiniBtn.tintColor
+        if(aColor == .white) {
+            reactOnLoveClick()
+            
+            let bigLove = UIImageView(frame: CGRect(x: pointX - 16.0, y: pointY - 16.0, width: 32, height: 32))
+            bigLove.image = UIImage(named:"icon_love")?.withRenderingMode(.alwaysTemplate)
+            bigLove.tintColor = .red
+            contentView.addSubview(bigLove)
+            
+            UIView.animate(withDuration: 0.3, animations: {
+                bigLove.frame = CGRect(x: pointX - 35.0, y: pointY - 35.0, width: 70, height: 70)
+            }, completion: { _ in
+    //            bigLove.removeFromSuperview()
+                UIView.animate(withDuration: 0.2, animations: {
+                    bigLove.frame = CGRect(x: pointX - 5.0, y: pointY - 5.0, width: 10, height: 10)
+                }, completion: { _ in
+                    bigLove.removeFromSuperview()
+                })
+            })
+            print("photo content cell double clicked: \(pointX), \(pointY)")
+        }
     }
 }
