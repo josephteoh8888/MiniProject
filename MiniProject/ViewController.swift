@@ -186,7 +186,10 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         
         topInset = self.view.safeAreaInsets.top
         bottomInset = self.view.safeAreaInsets.bottom
-        print("viewDidLayoutSubviews: \(bottomInset), \(topInset)")
+        
+        let w = self.view.frame.width
+        let h = self.view.frame.height
+        print("viewc viewDidLayoutSubviews: \(bottomInset), \(topInset), \(w), \(h)")
     }
     
     let menuHomeBtn = UIImageView()

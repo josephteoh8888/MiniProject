@@ -249,11 +249,15 @@ extension ScrollFeedHPhotoListCell: UICollectionViewDelegateFlowLayout {
     }
     
     private func estimateHeight(text: String, textWidth: CGFloat, fontSize: CGFloat) -> CGFloat {
-        let size = CGSize(width: textWidth, height: 1000) //1000 height is dummy
-        let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: fontSize)]
-        let estimatedFrame = NSString(string: text).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
-        
-        return estimatedFrame.height
+        if(text == "") {
+            return 0.0
+        } else {
+            let size = CGSize(width: textWidth, height: 1000) //1000 height is dummy
+            let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: fontSize)]
+            let estimatedFrame = NSString(string: text).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
+            
+            return estimatedFrame.height
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView,
@@ -270,54 +274,51 @@ extension ScrollFeedHPhotoListCell: UICollectionViewDelegateFlowLayout {
         let statText = "1.2m views . 3hr"
         var contentHeight = 0.0
         for l in dataL {
+            let availableWidth = self.frame.width
+            let bubbleHeight = 3.0
+            let bubbleTopMargin = 10.0
+            let totalBubbleH = bubbleHeight + bubbleTopMargin
+//            let totalBubbleH = bubbleHeight + bubbleTopMargin + 40.0 //test for sound section
+
+            let assetSize = CGSize(width: 3, height: 4) //4:3
+            var cSize = CGSize(width: 0, height: 0)
+            if(assetSize.width > assetSize.height) {
+                //1 > landscape photo 4:3 w:h
+                let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                let cHeight = availableWidth * aRatio.height / aRatio.width + totalBubbleH
+                cSize = CGSize(width: availableWidth, height: cHeight)
+            }
+            else if (assetSize.width < assetSize.height){
+                //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                let aRatio = CGSize(width: 5, height: 6) //aspect ratio 2:3, 3:4 
+                let cWidth = availableWidth
+                let cHeight = cWidth * aRatio.height / aRatio.width + totalBubbleH
+                cSize = CGSize(width: cWidth, height: cHeight)
+            } else {
+                //square
+                let cWidth = availableWidth
+                cSize = CGSize(width: cWidth, height: cWidth + totalBubbleH)
+            }
+            
+            let pTopMargin = 0.0
+//                let pContentHeight = 400.0 //280.0
+            let pContentHeight = cSize.height
+            let tTopMargin = 10.0
+//                let tText = "Nice food, nice environment! Worth a visit. \nSo good!"
+            let tContentHeight = estimateHeight(text: text, textWidth: collectionView.frame.width - 20.0 - 20.0, fontSize: 14)
+            print("photo p text size: \(tContentHeight), \(text)")
+            let pHeight = pTopMargin + pContentHeight + tTopMargin + tContentHeight
+            contentHeight += pHeight
+            
             if(l == "m") {
-                let pTopMargin = 0.0
-                let pContentHeight = 400.0 //280.0
-                let tTopMargin = 10.0
-//                let tText = "往年的这个时候，iPhone 虽然也是位列销量榜榜首，但那都是上一代的旧机型呀."
-                let tContentHeight = estimateHeight(text: text, textWidth: collectionView.frame.width - 20.0 - 20.0, fontSize: 14)
-//                let pHeight = pTopMargin + pContentHeight
-                let pBubbleTopMargin = 10.0
-                let pBubbleHeight = 3.0
                 let soundTopMargin = 10.0
-                let soundHeight = 16.0
-                let pHeight = pTopMargin + pContentHeight + pBubbleTopMargin + pBubbleHeight + tTopMargin + tContentHeight + soundTopMargin + soundHeight
+                let soundHeight = 30.0
+//                let soundHeight = 16.0
+                let pHeight = soundTopMargin + soundHeight
                 contentHeight += pHeight
             }
             else if(l == "p") {
-                let pTopMargin = 0.0
-                let pContentHeight = 400.0 //280.0
-                let tTopMargin = 10.0
-//                let tText = "Nice food, nice environment! Worth a visit. \nSo good!"
-                let tContentHeight = estimateHeight(text: text, textWidth: collectionView.frame.width - 20.0 - 20.0, fontSize: 14)
-                print("photo p text size: \(tContentHeight), \(text)")
-//                let pHeight = pTopMargin + pContentHeight
-                let pBubbleTopMargin = 10.0
-                let pBubbleHeight = 3.0
-                let pHeight = pTopMargin + pContentHeight + pBubbleTopMargin + pBubbleHeight + tTopMargin + tContentHeight
-                contentHeight += pHeight
-            }
-            else if(l == "q") {
-//                let qTopMargin = 20.0
-//                let qUserPhotoHeight = 28.0
-//                let qUserPhotoTopMargin = 10.0 //10
-//                let qContentTopMargin = 10.0
-//                let qText = "Nice food, nice environment! Worth a visit. \nSo good!\n\n\n\n...\n...\n..."
-//                let qContentHeight = estimateHeight(text: qText, textWidth: collectionView.frame.width - 20.0 - 20.0, fontSize: 14)
-//                let qFrameBottomMargin = 20.0 //10
-//                let qHeight = qTopMargin + qUserPhotoHeight + qUserPhotoTopMargin + qContentTopMargin + qContentHeight + qFrameBottomMargin
-//                contentHeight += qHeight
-            }
-            else if(l == "c") {
-//                let cUserPhotoHeight = 28.0
-//                let cUserPhotoTopMargin = 20.0 //10
-//                let cContentTopMargin = 10.0
-//                let cText = "Worth a visit."
-//                let cContentHeight = estimateHeight(text: cText, textWidth: collectionView.frame.width - 58.0 - 20.0, fontSize: 14)
-//                let cActionBtnTopMargin = 10.0
-//                let cActionBtnHeight = 26.0
-//                let cHeight = cUserPhotoHeight + cUserPhotoTopMargin + cContentTopMargin + cContentHeight + cActionBtnTopMargin + cActionBtnHeight
-//                contentHeight += cHeight
+                
             }
         }
         
@@ -329,7 +330,7 @@ extension ScrollFeedHPhotoListCell: UICollectionViewDelegateFlowLayout {
         let statContentHeight = estimateHeight(text: statText, textWidth: collectionView.frame.width - 20.0 - 20.0, fontSize: 12)
         let actionBtnTopMargin = 10.0
         let actionBtnHeight = 30.0
-        let frameBottomMargin = 20.0 + 10.0//20
+        let frameBottomMargin = 30.0//20 for postlistcell, 30 for photo for better space out among rows
         let locationTopMargin = 10.0
         let locationHeight = estimateHeight(text: "Petronas", textWidth: collectionView.frame.width - 20.0 - 20.0, fontSize: 14) + 10
 //        let miscHeight = userPhotoHeight + userPhotoTopMargin + tTopMargin + tContentHeight + statTopMargin + statContentHeight + actionBtnTopMargin + actionBtnHeight + locationHeight + locationTopMargin + soundHeight + soundTopMargin + frameBottomMargin

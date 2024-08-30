@@ -1040,26 +1040,128 @@ extension PostDetailPanelView: UICollectionViewDelegateFlowLayout {
                     contentHeight += tHeight
                 }
                 else if(l == "p") {
+                    let cellWidth = collectionView.frame.width
+                    let lhsMargin = 20.0
+                    let rhsMargin = 20.0
+                    let availableWidth = cellWidth - lhsMargin - rhsMargin
+                    
+                    let assetSize = CGSize(width: 4, height: 3)
+                    var cSize = CGSize(width: 0, height: 0)
+                    if(assetSize.width > assetSize.height) {
+                        //1 > landscape photo 4:3 w:h
+                        let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                        let cHeight = availableWidth * aRatio.height / aRatio.width
+                        cSize = CGSize(width: availableWidth, height: cHeight)
+                    }
+                    else if (assetSize.width < assetSize.height){
+                        //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                        let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                        let cWidth = availableWidth * 2 / 3
+                        let cHeight = cWidth * aRatio.height / aRatio.width
+                        cSize = CGSize(width: cWidth, height: cHeight)
+                    } else {
+                        //square
+                        let cWidth = availableWidth
+                        cSize = CGSize(width: cWidth, height: cWidth)
+                    }
+                    
                     let pTopMargin = 20.0
-                    let pContentHeight = 280.0
+                    let pContentHeight = cSize.height //280
                     let pHeight = pTopMargin + pContentHeight
                     contentHeight += pHeight
                 }
                 else if(l == "p_s") {
+                    let cellWidth = self.frame.width
+                    let lhsMargin = 20.0
+                    let rhsMargin = 20.0
+                    let descHeight = 40.0
+                    let availableWidth = cellWidth - lhsMargin - rhsMargin
+                    
+                    let assetSize = CGSize(width: 4, height: 3)
+                    var cSize = CGSize(width: 0, height: 0)
+                    if(assetSize.width > assetSize.height) {
+                        //1 > landscape photo 4:3 w:h
+                        let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                        let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
+                        cSize = CGSize(width: availableWidth, height: cHeight)
+                    }
+                    else if (assetSize.width < assetSize.height){
+                        //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                        let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                        let cWidth = availableWidth * 2 / 3
+                        let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
+                        cSize = CGSize(width: cWidth, height: cHeight)
+                    } else {
+                        //square
+                        let cWidth = availableWidth
+                        cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                    }
+                    
                     let pTopMargin = 20.0
-                    let pContentHeight = 280.0
+                    let pContentHeight = cSize.height //280
                     let pHeight = pTopMargin + pContentHeight + 40.0 //40.0 for bottom container for description
                     contentHeight += pHeight
                 }
                 else if(l == "v") {
+                    let cellWidth = self.frame.width
+                    let lhsMargin = 20.0
+                    let rhsMargin = 20.0
+                    let availableWidth = cellWidth - lhsMargin - rhsMargin
+                    
+                    let assetSize = CGSize(width: 3, height: 4)
+                    var cSize = CGSize(width: 0, height: 0)
+                    if(assetSize.width > assetSize.height) {
+                        //1 > landscape photo 4:3 w:h
+                        let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                        let cHeight = availableWidth * aRatio.height / aRatio.width
+                        cSize = CGSize(width: availableWidth, height: cHeight)
+                    }
+                    else if (assetSize.width < assetSize.height){
+                        //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                        let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                        let cWidth = availableWidth * 2 / 3
+                        let cHeight = cWidth * aRatio.height / aRatio.width
+                        cSize = CGSize(width: cWidth, height: cHeight)
+                    } else {
+                        //square
+                        let cWidth = availableWidth
+                        cSize = CGSize(width: cWidth, height: cWidth)
+                    }
+                    
                     let vTopMargin = 20.0
-                    let vContentHeight = 350.0 //250
+                    let vContentHeight = cSize.height //350
                     let vHeight = vTopMargin + vContentHeight
                     contentHeight += vHeight
                 }
                 else if(l == "v_l") {
+                    let cellWidth = collectionView.frame.width
+                    let lhsMargin = 20.0
+                    let rhsMargin = 20.0
+                    let descHeight = 40.0
+                    let availableWidth = cellWidth - lhsMargin - rhsMargin
+                    
+                    let assetSize = CGSize(width: 3, height: 4)
+                    var cSize = CGSize(width: 0, height: 0)
+                    if(assetSize.width > assetSize.height) {
+                        //1 > landscape photo 4:3 w:h
+                        let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                        let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
+                        cSize = CGSize(width: availableWidth, height: cHeight)
+                    }
+                    else if (assetSize.width < assetSize.height){
+                        //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                        let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                        let cWidth = availableWidth * 2 / 3
+                        let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
+                        cSize = CGSize(width: cWidth, height: cHeight)
+                    } else {
+                        //square
+                        let cWidth = availableWidth
+                        cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                    }
+                    
                     let vTopMargin = 20.0
-                    let vContentHeight = 350.0 //250
+                    let vContentHeight = cSize.height //350
                     let vHeight = vTopMargin + vContentHeight + 40.0 //40.0 for bottom container for description
                     contentHeight += vHeight
                 }
@@ -1103,35 +1205,143 @@ extension PostDetailPanelView: UICollectionViewDelegateFlowLayout {
             let text = vcDataList[indexPath.row].dataTextString
             let dataL = vcDataList[indexPath.row].dataArray
             var contentHeight = 0.0
+            
+            let photoSize = 28.0
+            let photoLhsMargin = 20.0
+            let usernameLhsMargin = 5.0
+            let indentSize = photoSize + photoLhsMargin + usernameLhsMargin
+            
             for l in dataL {
                 if(l == "t") {
                     let tTopMargin = 20.0
-                    let tContentHeight = estimateHeight(text: text, textWidth: collectionView.frame.width - 53.0 - 30.0, fontSize: 13)
+                    let tContentHeight = estimateHeight(text: text, textWidth: collectionView.frame.width - indentSize - 30.0, fontSize: 13)
                     let tHeight = tTopMargin + tContentHeight
                     contentHeight += tHeight
                 }
                 else if(l == "p") {
+                    let cellWidth = self.frame.width
+                    let lhsMargin = indentSize
+                    let rhsMargin = 20.0
+                    let availableWidth = cellWidth - lhsMargin - rhsMargin
+                    
+                    let assetSize = CGSize(width: 3, height: 4) //4:3
+                    var cSize = CGSize(width: 0, height: 0)
+                    if(assetSize.width > assetSize.height) {
+                        //1 > landscape photo 4:3 w:h
+                        let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                        let cHeight = availableWidth * aRatio.height / aRatio.width
+                        cSize = CGSize(width: availableWidth, height: cHeight)
+                    }
+                    else if (assetSize.width < assetSize.height){
+                        //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                        let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                        let cWidth = availableWidth * 2 / 3
+                        let cHeight = cWidth * aRatio.height / aRatio.width
+                        cSize = CGSize(width: cWidth, height: cHeight)
+                    } else {
+                        //square
+                        let cWidth = availableWidth
+                        cSize = CGSize(width: cWidth, height: cWidth)
+                    }
+                    
                     let pTopMargin = 20.0
-                    let pContentHeight = 280.0
+                    let pContentHeight = cSize.height //280
                     let pHeight = pTopMargin + pContentHeight
                     contentHeight += pHeight
                 }
                 else if(l == "p_s") {
+                    let cellWidth = self.frame.width
+                    let lhsMargin = indentSize
+                    let rhsMargin = 20.0
+                    let descHeight = 40.0
+                    let availableWidth = cellWidth - lhsMargin - rhsMargin
+                    
+                    let assetSize = CGSize(width: 4, height: 3)
+                    var cSize = CGSize(width: 0, height: 0)
+                    if(assetSize.width > assetSize.height) {
+                        //1 > landscape photo 4:3 w:h
+                        let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                        let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
+                        cSize = CGSize(width: availableWidth, height: cHeight)
+                    }
+                    else if (assetSize.width < assetSize.height){
+                        //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                        let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                        let cWidth = availableWidth * 2 / 3
+                        let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
+                        cSize = CGSize(width: cWidth, height: cHeight)
+                    } else {
+                        //square
+                        let cWidth = availableWidth
+                        cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                    }
+                    
                     let pTopMargin = 20.0
-                    let pContentHeight = 280.0
-                    let pHeight = pTopMargin + pContentHeight + 40.0 //40.0 for bottom container for description
+                    let pContentHeight = cSize.height //280
+                    let pHeight = pTopMargin + pContentHeight
                     contentHeight += pHeight
                 }
                 else if(l == "v") {
+                    let cellWidth = self.frame.width
+                    let lhsMargin = indentSize
+                    let rhsMargin = 20.0
+                    let availableWidth = cellWidth - lhsMargin - rhsMargin
+                    
+                    let assetSize = CGSize(width: 3, height: 4)
+                    var cSize = CGSize(width: 0, height: 0)
+                    if(assetSize.width > assetSize.height) {
+                        //1 > landscape photo 4:3 w:h
+                        let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                        let cHeight = availableWidth * aRatio.height / aRatio.width
+                        cSize = CGSize(width: availableWidth, height: cHeight)
+                    }
+                    else if (assetSize.width < assetSize.height){
+                        //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                        let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                        let cWidth = availableWidth * 2 / 3
+                        let cHeight = cWidth * aRatio.height / aRatio.width
+                        cSize = CGSize(width: cWidth, height: cHeight)
+                    } else {
+                        //square
+                        let cWidth = availableWidth
+                        cSize = CGSize(width: cWidth, height: cWidth)
+                    }
+                    
                     let vTopMargin = 20.0
-                    let vContentHeight = 350.0 //250
+                    let vContentHeight = cSize.height //350
                     let vHeight = vTopMargin + vContentHeight
                     contentHeight += vHeight
                 }
                 else if(l == "v_l") {
+                    let cellWidth = self.frame.width
+                    let lhsMargin = indentSize
+                    let rhsMargin = 20.0
+                    let descHeight = 40.0
+                    let availableWidth = cellWidth - lhsMargin - rhsMargin
+                    
+                    let assetSize = CGSize(width: 3, height: 4)
+                    var cSize = CGSize(width: 0, height: 0)
+                    if(assetSize.width > assetSize.height) {
+                        //1 > landscape photo 4:3 w:h
+                        let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                        let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
+                        cSize = CGSize(width: availableWidth, height: cHeight)
+                    }
+                    else if (assetSize.width < assetSize.height){
+                        //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                        let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                        let cWidth = availableWidth * 2 / 3
+                        let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
+                        cSize = CGSize(width: cWidth, height: cHeight)
+                    } else {
+                        //square
+                        let cWidth = availableWidth
+                        cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                    }
+                    
                     let vTopMargin = 20.0
-                    let vContentHeight = 350.0 //250
-                    let vHeight = vTopMargin + vContentHeight + 40.0 //40.0 for bottom container for description
+                    let vContentHeight = cSize.height //350
+                    let vHeight = vTopMargin + vContentHeight
                     contentHeight += vHeight
                 }
                 else if(l == "q") {

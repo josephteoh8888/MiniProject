@@ -367,12 +367,12 @@ class CommentData: BaseData {
 //            dataArray.append("c") //comment
         }
         else if(data == "b") {
-//            dataArray.append("p") //photo
+            dataArray.append("p") //photo
             dataArray.append("t") //photo
         }
         else if(data == "c") {
             dataArray.append("t")
-//            dataArray.append("p") //photo
+            dataArray.append("p") //photo
 //            dataArray.append("q") //quote
             
 //            dataArray.append("c") //comment

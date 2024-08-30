@@ -57,15 +57,13 @@ class HPostListAViewCell: UICollectionViewCell {
     var aTest2Array = [UIView]()
     
     //test > video player
-    var player: AVPlayer!
-//    var playerLooper: AVPlayerLooper!
-//    var player: AVQueuePlayer!
+//    var player: AVPlayer!
     
     //test > for video container intersection as user scrolls to play/pause
     var vidConArray = [UIView]()
-    var playBtnArray = [UIImageView]()
-    var photoConArray = [UIView]()
-    var bubbleArray = [PageBubbleIndicator]()
+//    var playBtnArray = [UIImageView]()
+//    var photoConArray = [UIView]()
+//    var bubbleArray = [PageBubbleIndicator]()
     
 //    var t_s = 0.0 //for video pause/resume time
 //    var p_s = 0 //for photo carousel last viewed photo
@@ -527,21 +525,18 @@ class HPostListAViewCell: UICollectionViewCell {
         print("sfvideo prepare for reuse")
 //        print("postvc prepare for reuse \(player), \(timeObserverTokenVideo)")
         
-        removeTimeObserverVideo()
+//        removeTimeObserverVideo()
         
-        //**test > deallocate avplayer
-//        playerLooper = nil
+//        player?.pause()
+//        player?.replaceCurrentItem(with: nil)
+//        player = nil
         
-        player?.pause()
-        player?.replaceCurrentItem(with: nil)
-        player = nil
-        
-        vidPlayStatus = ""
+//        vidPlayStatus = ""
         
         vidConArray.removeAll()
-        playBtnArray.removeAll()
-        bubbleArray.removeAll()
-        photoConArray.removeAll()
+//        playBtnArray.removeAll()
+//        bubbleArray.removeAll()
+//        photoConArray.removeAll()
         hideConArray.removeAll()
         //**
         
@@ -557,6 +552,11 @@ class HPostListAViewCell: UICollectionViewCell {
         eText.text = "0"
         
         for e in aTestArray {
+            //test > destroy inner content cell before removed
+            if let a = e as? ContentCell {
+                a.destroyCell()
+            }
+            
             e.removeFromSuperview()
         }
         aTestArray.removeAll()
@@ -618,6 +618,7 @@ class HPostListAViewCell: UICollectionViewCell {
         aUserNameText.text = "3hr . 1.2m views"
         aaText.text = "Petronas Twin Tower"
         
+        print("abc configure \(self.frame.width), \(self.frame.height)")
 //        let attributedText = NSMutableAttributedString(string: "Michael ")
 ////        let linkText = "www.example.com"
 //        let linkText = "#Tesla"
@@ -655,8 +656,34 @@ class HPostListAViewCell: UICollectionViewCell {
                 aTestArray.append(aaText)
             }
             else if(l == "p") {
+                let cellWidth = self.frame.width
+                let lhsMargin = 20.0
+                let rhsMargin = 20.0
+                let availableWidth = cellWidth - lhsMargin - rhsMargin
+                
+                let assetSize = CGSize(width: 4, height: 3)
+                var cSize = CGSize(width: 0, height: 0)
+                if(assetSize.width > assetSize.height) {
+                    //1 > landscape photo 4:3 w:h
+                    let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                    let cHeight = availableWidth * aRatio.height / aRatio.width
+                    cSize = CGSize(width: availableWidth, height: cHeight)
+                }
+                else if (assetSize.width < assetSize.height){
+                    //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                    let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                    let cWidth = availableWidth * 2 / 3
+                    let cHeight = cWidth * aRatio.height / aRatio.width
+                    cSize = CGSize(width: cWidth, height: cHeight)
+                } else {
+                    //square
+                    let cWidth = availableWidth
+                    cSize = CGSize(width: cWidth, height: cWidth)
+                }
+                
                 //test 2 > reusable custom view
-                let contentCell = PostPhotoContentCell(frame: CGRect(x: 0, y: 0, width: 370, height: 280))
+//                let contentCell = PostPhotoContentCell(frame: CGRect(x: 0, y: 0, width: 370, height: 280))
+                let contentCell = PostPhotoContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
                 aTest.addSubview(contentCell)
                 contentCell.translatesAutoresizingMaskIntoConstraints = false
                 if(aTestArray.isEmpty) {
@@ -666,8 +693,10 @@ class HPostListAViewCell: UICollectionViewCell {
                     contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
                 }
                 contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
-                contentCell.widthAnchor.constraint(equalToConstant: 370).isActive = true  //280
-                contentCell.heightAnchor.constraint(equalToConstant: 280).isActive = true  //280
+//                contentCell.widthAnchor.constraint(equalToConstant: 370).isActive = true  //370
+//                contentCell.heightAnchor.constraint(equalToConstant: 280).isActive = true  //280
+                contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //370
+                contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //280
                 contentCell.layer.cornerRadius = 10 //5
                 aTestArray.append(contentCell)
                 contentCell.redrawUI()
@@ -676,8 +705,35 @@ class HPostListAViewCell: UICollectionViewCell {
                 contentCell.aDelegate = self
             }
             else if(l == "p_s") {
+                let cellWidth = self.frame.width
+                let lhsMargin = 20.0
+                let rhsMargin = 20.0
+                let descHeight = 40.0
+                let availableWidth = cellWidth - lhsMargin - rhsMargin
+                
+                let assetSize = CGSize(width: 4, height: 3)
+                var cSize = CGSize(width: 0, height: 0)
+                if(assetSize.width > assetSize.height) {
+                    //1 > landscape photo 4:3 w:h
+                    let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                    let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
+                    cSize = CGSize(width: availableWidth, height: cHeight)
+                }
+                else if (assetSize.width < assetSize.height){
+                    //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                    let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                    let cWidth = availableWidth * 2 / 3
+                    let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
+                    cSize = CGSize(width: cWidth, height: cHeight)
+                } else {
+                    //square
+                    let cWidth = availableWidth
+                    cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                }
+                
                 //test 2 > reusable custom view
-                let contentCell = PostPhotoShotContentCell(frame: CGRect(x: 0, y: 0, width: 370, height: 320))
+//                let contentCell = PostPhotoShotContentCell(frame: CGRect(x: 0, y: 0, width: 370, height: 320))
+                let contentCell = PostPhotoShotContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
                 aTest.addSubview(contentCell)
                 contentCell.translatesAutoresizingMaskIntoConstraints = false
                 if(aTestArray.isEmpty) {
@@ -687,357 +743,121 @@ class HPostListAViewCell: UICollectionViewCell {
                     contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
                 }
                 contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
-                contentCell.widthAnchor.constraint(equalToConstant: 370).isActive = true  //280
-                contentCell.heightAnchor.constraint(equalToConstant: 320).isActive = true  //280
+//                contentCell.widthAnchor.constraint(equalToConstant: 370).isActive = true  //370
+//                contentCell.heightAnchor.constraint(equalToConstant: 320).isActive = true  //320
+                contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //370
+                contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //320
                 contentCell.layer.cornerRadius = 10 //5
                 aTestArray.append(contentCell)
-                contentCell.setDescHeight(lHeight: 40, txt: data.dataTextString)
+                contentCell.setDescHeight(lHeight: descHeight, txt: data.dataTextString)
                 contentCell.redrawUI()
                 contentCell.configure(data: "a")
                 contentCell.setState(p: data.p_s)
                 contentCell.aDelegate = self
             }
             else if(l == "v_l") {//loop videos
+                let cellWidth = self.frame.width
+                let lhsMargin = 20.0
+                let rhsMargin = 20.0
+                let descHeight = 40.0
+                let availableWidth = cellWidth - lhsMargin - rhsMargin
                 
-                //test > loop cover
-                let vConBg = UIView()
-                vConBg.backgroundColor = .ddmDarkColor //.ddmDarkColor
-                aTest.addSubview(vConBg)
-                vConBg.frame = CGRect(x: 0, y: 0, width: 220, height: 390) //150, 250
-                vConBg.translatesAutoresizingMaskIntoConstraints = false
-                vConBg.widthAnchor.constraint(equalToConstant: 220).isActive = true //150, 370
-                vConBg.heightAnchor.constraint(equalToConstant: 390).isActive = true //250, 280
+                let assetSize = CGSize(width: 3, height: 4)
+                var cSize = CGSize(width: 0, height: 0)
+                if(assetSize.width > assetSize.height) {
+                    //1 > landscape photo 4:3 w:h
+                    let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                    let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
+                    cSize = CGSize(width: availableWidth, height: cHeight)
+                }
+                else if (assetSize.width < assetSize.height){
+                    //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                    let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                    let cWidth = availableWidth * 2 / 3
+                    let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
+                    cSize = CGSize(width: cWidth, height: cHeight)
+                } else {
+                    //square
+                    let cWidth = availableWidth
+                    cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                }
+                
+                //test 2 > reusable custom view
+//                let contentCell = PostVideoLoopContentCell(frame: CGRect(x: 0, y: 0, width: 220, height: 390))
+                let contentCell = PostVideoLoopContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
+                aTest.addSubview(contentCell)
+                contentCell.translatesAutoresizingMaskIntoConstraints = false
                 if(aTestArray.isEmpty) {
-                    vConBg.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
+                    contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
                 } else {
                     let lastArrayE = aTestArray[aTestArray.count - 1]
-                    vConBg.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
+                    contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
                 }
-                vConBg.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
-                vConBg.layer.cornerRadius = 10
-                vConBg.layer.opacity = 0.4 //0.2
-                aTestArray.append(vConBg)
+                contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
+//                contentCell.widthAnchor.constraint(equalToConstant: 220).isActive = true  //220
+//                contentCell.heightAnchor.constraint(equalToConstant: 390).isActive = true  //390
+                contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //220
+                contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //390
+                contentCell.layer.cornerRadius = 10 //5
+                aTestArray.append(contentCell)
+                contentCell.setDescHeight(lHeight: descHeight, txt: data.dataTextString)
+                contentCell.redrawUI()
+                contentCell.configure(data: "a")
+                contentCell.setState(t: data.t_s)
+                contentCell.aDelegate = self
                 
-                //test 2 > with real video player
-//                let videoContainer = UIView()
-//                videoContainer.frame = CGRect(x: 0, y: 0, width: 220, height: 350) //150, 250
-//                aTest.addSubview(videoContainer)
-//                videoContainer.translatesAutoresizingMaskIntoConstraints = false
-//                videoContainer.widthAnchor.constraint(equalToConstant: 220).isActive = true //150, 370
-//                videoContainer.heightAnchor.constraint(equalToConstant: 350).isActive = true //250, 280
-//                if(aTestArray.isEmpty) {
-//                    videoContainer.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
-//                } else {
-//                    let lastArrayE = aTestArray[aTestArray.count - 1]
-//                    videoContainer.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
-//                }
-//                videoContainer.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
-//                videoContainer.clipsToBounds = true
-////                videoContainer.layer.cornerRadius = 10
-//                videoContainer.backgroundColor = .black
-//                videoContainer.roundCorners(corners: [.topLeft, .topRight], radius: 10.0)
-//                videoContainer.isUserInteractionEnabled = true
-//                videoContainer.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onVideoLClicked)))
-//                aTestArray.append(videoContainer)
-                
-                let videoContainer = UIView()
-                videoContainer.frame = CGRect(x: 0, y: 0, width: 220, height: 350) //150, 250
-                aTest.addSubview(videoContainer)
-                videoContainer.translatesAutoresizingMaskIntoConstraints = false
-                videoContainer.widthAnchor.constraint(equalToConstant: 220).isActive = true //150, 370
-                videoContainer.heightAnchor.constraint(equalToConstant: 350).isActive = true //250, 280
-                videoContainer.topAnchor.constraint(equalTo: vConBg.topAnchor, constant: 0).isActive = true
-                videoContainer.leadingAnchor.constraint(equalTo: vConBg.leadingAnchor, constant: 0).isActive = true
-                videoContainer.clipsToBounds = true
-//                videoContainer.layer.cornerRadius = 10
-                videoContainer.backgroundColor = .black
-//                videoContainer.roundCorners(corners: [.topLeft, .topRight], radius: 10.0)
-                videoContainer.layer.cornerRadius = 10 //5
-                videoContainer.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
-                videoContainer.isUserInteractionEnabled = true
-                videoContainer.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onVideoLClicked)))
-                aTestArray.append(videoContainer)
-                
-                vidConArray.append(videoContainer)
-                
-                //test > add "shot" label
-                let label = UIView()
-                aTest.addSubview(label)
-//                label.backgroundColor = .ddmDarkColor
-                label.backgroundColor = .clear
-                label.translatesAutoresizingMaskIntoConstraints = false
-//                label.widthAnchor.constraint(equalToConstant: 80).isActive = true //80
-                label.heightAnchor.constraint(equalToConstant: 26).isActive = true //30
-                label.topAnchor.constraint(equalTo: videoContainer.topAnchor, constant: 5).isActive = true
-//                label.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 5).isActive = true
-                label.trailingAnchor.constraint(equalTo: videoContainer.trailingAnchor, constant: -5).isActive = true
-//                label.layer.opacity = 0.5
-                label.layer.cornerRadius = 5
-                aTestArray.append(label)
-                
-                let labelBg = UIView()
-                label.addSubview(labelBg)
-                labelBg.backgroundColor = .ddmDarkColor
-//                labelBg.backgroundColor = .white
-                labelBg.translatesAutoresizingMaskIntoConstraints = false
-                labelBg.topAnchor.constraint(equalTo: label.topAnchor, constant: 0).isActive = true
-                labelBg.leadingAnchor.constraint(equalTo: label.leadingAnchor, constant: 0).isActive = true
-                labelBg.trailingAnchor.constraint(equalTo: label.trailingAnchor, constant: 0).isActive = true
-                labelBg.bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 0).isActive = true
-//                labelBg.layer.opacity = 0.8 //0.5
-                labelBg.layer.opacity = 0.3 //0.5
-                labelBg.layer.cornerRadius = 5
-                
-                let e2UserCover = UIView()
-                e2UserCover.backgroundColor = .clear
-                label.addSubview(e2UserCover)
-                e2UserCover.translatesAutoresizingMaskIntoConstraints = false
-//                e2UserCover.topAnchor.constraint(equalTo: label.topAnchor, constant: 0).isActive = true //20
-                e2UserCover.centerYAnchor.constraint(equalTo: label.centerYAnchor, constant: 0).isActive = true
-                e2UserCover.leadingAnchor.constraint(equalTo: label.leadingAnchor, constant: 5).isActive = true
-                e2UserCover.heightAnchor.constraint(equalToConstant: 20).isActive = true //28
-                e2UserCover.widthAnchor.constraint(equalToConstant: 20).isActive = true //28
-                e2UserCover.layer.cornerRadius = 10
-                e2UserCover.layer.opacity = 1.0 //default 0.3
-
-                let a2UserPhoto = SDAnimatedImageView()
-                label.addSubview(a2UserPhoto)
-                a2UserPhoto.translatesAutoresizingMaskIntoConstraints = false
-                a2UserPhoto.widthAnchor.constraint(equalToConstant: 20).isActive = true //36
-                a2UserPhoto.heightAnchor.constraint(equalToConstant: 20).isActive = true
-                a2UserPhoto.centerXAnchor.constraint(equalTo: e2UserCover.centerXAnchor).isActive = true
-                a2UserPhoto.centerYAnchor.constraint(equalTo: e2UserCover.centerYAnchor).isActive = true
-                a2UserPhoto.contentMode = .scaleAspectFill
-                a2UserPhoto.layer.masksToBounds = true
-                a2UserPhoto.layer.cornerRadius = 10
-                let image2Url = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-                a2UserPhoto.sd_setImage(with: image2Url)
-                a2UserPhoto.backgroundColor = .ddmDarkGreyColor
-                
-                let aGridNameText = UILabel()
-                aGridNameText.textAlignment = .left
-                aGridNameText.textColor = .white
-//                aGridNameText.textColor = .ddmDarkColor
-                aGridNameText.font = .boldSystemFont(ofSize: 12)
-                label.addSubview(aGridNameText)
-                aGridNameText.translatesAutoresizingMaskIntoConstraints = false
-                aGridNameText.centerYAnchor.constraint(equalTo: e2UserCover.centerYAnchor).isActive = true
-                aGridNameText.trailingAnchor.constraint(equalTo: label.trailingAnchor, constant: -5).isActive = true
-                aGridNameText.leadingAnchor.constraint(equalTo: e2UserCover.trailingAnchor, constant: 5).isActive = true
-                aGridNameText.text = "Loop"
-//                aGridNameText.centerYAnchor.constraint(equalTo: label.centerYAnchor, constant: 0).isActive = true
-//                aGridNameText.leadingAnchor.constraint(equalTo: label.leadingAnchor, constant: 5).isActive = true
-                
-                //test > play/pause btn
-                let playBtn = UIImageView()
-                playBtn.image = UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate)
-//                playBtn.image = UIImage(named:"icon_round_pause")?.withRenderingMode(.alwaysTemplate)
-                playBtn.tintColor = .white
-                aTest.addSubview(playBtn)
-                playBtn.translatesAutoresizingMaskIntoConstraints = false
-                playBtn.bottomAnchor.constraint(equalTo: videoContainer.bottomAnchor, constant: -5).isActive = true
-                playBtn.trailingAnchor.constraint(equalTo: videoContainer.trailingAnchor, constant: -5).isActive = true
-//                playBtn.leadingAnchor.constraint(equalTo: videoContainer.trailingAnchor, constant: -5).isActive = true
-                playBtn.heightAnchor.constraint(equalToConstant: 22).isActive = true //30, 26, 22
-                playBtn.widthAnchor.constraint(equalToConstant: 22).isActive = true
-                playBtn.isUserInteractionEnabled = true
-                playBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onVideoBtnClicked)))
-                aTestArray.append(playBtn)
-                
-                playBtnArray.append(playBtn)
-                
-                //test > sound on/off
-                let soundOnBtn = UIImageView()
-//                soundOnBtn.image = UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate)
-                soundOnBtn.image = UIImage(named:"icon_round_volume")?.withRenderingMode(.alwaysTemplate)
-                soundOnBtn.tintColor = .white
-                aTest.addSubview(soundOnBtn)
-                soundOnBtn.translatesAutoresizingMaskIntoConstraints = false
-                soundOnBtn.bottomAnchor.constraint(equalTo: videoContainer.bottomAnchor, constant: -5).isActive = true
-                soundOnBtn.leadingAnchor.constraint(equalTo: videoContainer.leadingAnchor, constant: 5).isActive = true
-                soundOnBtn.heightAnchor.constraint(equalToConstant: 22).isActive = true //30, 26, 22
-                soundOnBtn.widthAnchor.constraint(equalToConstant: 22).isActive = true
-                soundOnBtn.isUserInteractionEnabled = true
-//                soundOnBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onVideoBtnClicked)))
-                aTestArray.append(soundOnBtn)
-                
-                //video player
-                let videoURL = "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_video_4.mp4?alt=media"
-                let url = CacheManager.shared.getCacheUrlFor(videoUrl: videoURL)
-                
-                //method 1
-//                player = AVPlayer()
-//                let playerView = AVPlayerLayer()
-//                playerView.player = player
-//                playerView.frame = videoContainer.bounds
-//                playerView.videoGravity = .resizeAspectFill
-//                videoContainer.layer.addSublayer(playerView)
-//                let playerItem = AVPlayerItem(url: url)
-//                player.replaceCurrentItem(with: playerItem)
-////                player?.seek(to: .zero)
-                
-                //method 2
-                if(player != nil && player.currentItem != nil) {
-                    NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
-                }
-                
-                let item2 = AVPlayerItem(url: url)
-                player = AVPlayer(playerItem: item2)
-                let layer2 = AVPlayerLayer(player: player)
-                layer2.frame = videoContainer.bounds
-                layer2.videoGravity = .resizeAspectFill
-                videoContainer.layer.addSublayer(layer2)
-
-                //test > resume to paused timestamp
-                let t = data.t_s
-                let seekTime = CMTime(seconds: t, preferredTimescale: CMTimeScale(1000)) //1000
-                player?.seek(to: seekTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
-
-                //add timestamp video while playing
-                addTimeObserverVideo()
-                
-                //test > for looping
-                NotificationCenter.default.addObserver(self, selector: #selector(playerDidFinishPlaying(_:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
-                
-                //method 3 > loop
-//                player = AVQueuePlayer()
-//                let playerView = AVPlayerLayer(player: player)
-//                let playerItem = AVPlayerItem(url: url)
-//                playerLooper = AVPlayerLooper(player: player, templateItem: playerItem)
-//                playerView.frame = videoContainer.bounds
-//                playerView.videoGravity = .resizeAspectFill
-//                videoContainer.layer.addSublayer(playerView)
-//
-//                let t = data.t_s
-//                let seekTime = CMTime(seconds: t, preferredTimescale: CMTimeScale(1000)) //1000
-//                print("sfvideo configure $$ \(t), \(player)")
-////                player?.seek(to: seekTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
-//                player?.seek(to: seekTime)
-//
-//                addTimeObserverVideo()
-                
-                //test > loop description
-                let vConBottom = UIView()
-                vConBottom.frame = CGRect(x: 0, y: 0, width: 220, height: 40)
-//                vConBottom.backgroundColor = .ddmDarkColor //.ddmDarkColor
-                aTest.addSubview(vConBottom)
-                vConBottom.translatesAutoresizingMaskIntoConstraints = false
-                vConBottom.leadingAnchor.constraint(equalTo: vConBg.leadingAnchor, constant: 0).isActive = true
-//                vConBottom.trailingAnchor.constraint(equalTo: aTest.trailingAnchor, constant: -20).isActive = true //-30
-                vConBottom.heightAnchor.constraint(equalToConstant: 40).isActive = true
-                vConBottom.widthAnchor.constraint(equalToConstant: 220).isActive = true
-                vConBottom.bottomAnchor.constraint(equalTo: vConBg.bottomAnchor, constant: 0).isActive = true //0
-                vConBottom.isUserInteractionEnabled = true
-                vConBottom.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onVideoLClicked)))
-//                vConBottom.layer.cornerRadius = 10
-                aTestArray.append(vConBottom)
-                
-                let moreBtn = UIImageView()
-                moreBtn.image = UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate)
-//                moreBtn.image = UIImage(named:"icon_round_pause")?.withRenderingMode(.alwaysTemplate)
-                moreBtn.tintColor = .white
-                vConBottom.addSubview(moreBtn)
-                moreBtn.translatesAutoresizingMaskIntoConstraints = false
-                moreBtn.centerYAnchor.constraint(equalTo: vConBottom.centerYAnchor, constant: 0).isActive = true
-                moreBtn.trailingAnchor.constraint(equalTo: vConBottom.trailingAnchor, constant: -5).isActive = true
-                moreBtn.heightAnchor.constraint(equalToConstant: 22).isActive = true //30, 26, 22
-                moreBtn.widthAnchor.constraint(equalToConstant: 22).isActive = true
-                
-                let aaText = UILabel()
-                aaText.textAlignment = .left
-                aaText.textColor = .white
-                aaText.font = .systemFont(ofSize: 13)
-                aaText.numberOfLines = 1
-                vConBottom.addSubview(aaText)
-                aaText.translatesAutoresizingMaskIntoConstraints = false
-                aaText.centerYAnchor.constraint(equalTo: vConBottom.centerYAnchor, constant: 0).isActive = true
-//                aaText.leadingAnchor.constraint(equalTo: e2UserCover.trailingAnchor, constant: 10).isActive = true
-                aaText.leadingAnchor.constraint(equalTo: vConBottom.leadingAnchor, constant: 10).isActive = true //5
-                aaText.trailingAnchor.constraint(equalTo: moreBtn.leadingAnchor, constant: -5).isActive = true //-30
-                aaText.text = data.dataTextString
+                vidConArray.append(contentCell)
             }
             else if(l == "v") { //vi
-                let videoContainer = UIView()
-                videoContainer.frame = CGRect(x: 0, y: 0, width: 220, height: 350) //150, 250
-                aTest.addSubview(videoContainer)
-                videoContainer.translatesAutoresizingMaskIntoConstraints = false
-                videoContainer.widthAnchor.constraint(equalToConstant: 220).isActive = true //150, 370
-                videoContainer.heightAnchor.constraint(equalToConstant: 350).isActive = true //250, 280
+                let cellWidth = self.frame.width
+                let lhsMargin = 20.0
+                let rhsMargin = 20.0
+                let availableWidth = cellWidth - lhsMargin - rhsMargin
+                
+                let assetSize = CGSize(width: 3, height: 4)
+                var cSize = CGSize(width: 0, height: 0)
+                if(assetSize.width > assetSize.height) {
+                    //1 > landscape photo 4:3 w:h
+                    let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                    let cHeight = availableWidth * aRatio.height / aRatio.width
+                    cSize = CGSize(width: availableWidth, height: cHeight)
+                }
+                else if (assetSize.width < assetSize.height){
+                    //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                    let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                    let cWidth = availableWidth * 2 / 3
+                    let cHeight = cWidth * aRatio.height / aRatio.width
+                    cSize = CGSize(width: cWidth, height: cHeight)
+                } else {
+                    //square
+                    let cWidth = availableWidth
+                    cSize = CGSize(width: cWidth, height: cWidth)
+                }
+                
+                //test 2 > reusable custom view
+//                let contentCell = PostVideoContentCell(frame: CGRect(x: 0, y: 0, width: 220, height: 350))
+                let contentCell = PostVideoContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
+                aTest.addSubview(contentCell)
+                contentCell.translatesAutoresizingMaskIntoConstraints = false
                 if(aTestArray.isEmpty) {
-                    videoContainer.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
+                    contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
                 } else {
                     let lastArrayE = aTestArray[aTestArray.count - 1]
-                    videoContainer.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
+                    contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
                 }
-                videoContainer.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
-                videoContainer.clipsToBounds = true
-                videoContainer.layer.cornerRadius = 10
-                videoContainer.backgroundColor = .black
-//                videoContainer.roundCorners(corners: [.topLeft, .topRight], radius: 10.0)
-                videoContainer.isUserInteractionEnabled = true
-                videoContainer.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onVideoClicked)))
-                aTestArray.append(videoContainer)
+                contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
+//                contentCell.widthAnchor.constraint(equalToConstant: 220).isActive = true  //220
+//                contentCell.heightAnchor.constraint(equalToConstant: 350).isActive = true  //350
+                contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //220
+                contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //350
+                contentCell.layer.cornerRadius = 10 //5
+                aTestArray.append(contentCell)
+                contentCell.redrawUI()
+                contentCell.configure(data: "a")
+                contentCell.setState(t: data.t_s)
+                contentCell.aDelegate = self
                 
-                vidConArray.append(videoContainer)
-                
-                //test > play/pause btn
-                let playBtn = UIImageView()
-                playBtn.image = UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate)
-//                playBtn.image = UIImage(named:"icon_round_pause")?.withRenderingMode(.alwaysTemplate)
-                playBtn.tintColor = .white
-                aTest.addSubview(playBtn)
-                playBtn.translatesAutoresizingMaskIntoConstraints = false
-                playBtn.bottomAnchor.constraint(equalTo: videoContainer.bottomAnchor, constant: -5).isActive = true
-                playBtn.trailingAnchor.constraint(equalTo: videoContainer.trailingAnchor, constant: -5).isActive = true
-//                playBtn.leadingAnchor.constraint(equalTo: videoContainer.trailingAnchor, constant: -5).isActive = true
-                playBtn.heightAnchor.constraint(equalToConstant: 22).isActive = true //30, 26, 22
-                playBtn.widthAnchor.constraint(equalToConstant: 22).isActive = true
-                playBtn.isUserInteractionEnabled = true
-                playBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onVideoBtnClicked)))
-                aTestArray.append(playBtn)
-                
-                playBtnArray.append(playBtn)
-                
-                //test > sound on/off
-                let soundOnBtn = UIImageView()
-//                soundOnBtn.image = UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate)
-                soundOnBtn.image = UIImage(named:"icon_round_volume")?.withRenderingMode(.alwaysTemplate)
-                soundOnBtn.tintColor = .white
-                aTest.addSubview(soundOnBtn)
-                soundOnBtn.translatesAutoresizingMaskIntoConstraints = false
-                soundOnBtn.bottomAnchor.constraint(equalTo: videoContainer.bottomAnchor, constant: -5).isActive = true
-                soundOnBtn.leadingAnchor.constraint(equalTo: videoContainer.leadingAnchor, constant: 5).isActive = true
-                soundOnBtn.heightAnchor.constraint(equalToConstant: 22).isActive = true //30, 26, 22
-                soundOnBtn.widthAnchor.constraint(equalToConstant: 22).isActive = true
-                soundOnBtn.isUserInteractionEnabled = true
-//                soundOnBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onVideoBtnClicked)))
-                aTestArray.append(soundOnBtn)
-                
-                //video player
-                let videoURL = "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_video_4.mp4?alt=media"
-                let url = CacheManager.shared.getCacheUrlFor(videoUrl: videoURL)
-                
-                if(player != nil && player.currentItem != nil) {
-                    NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
-                }
-                
-                let item2 = AVPlayerItem(url: url)
-                player = AVPlayer(playerItem: item2)
-                let layer2 = AVPlayerLayer(player: player)
-                layer2.frame = videoContainer.bounds
-                layer2.videoGravity = .resizeAspectFill
-                videoContainer.layer.addSublayer(layer2)
-
-                //test > resume to paused timestamp
-                let t = data.t_s
-                let seekTime = CMTime(seconds: t, preferredTimescale: CMTimeScale(1000)) //1000
-                player?.seek(to: seekTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
-
-                //add timestamp video while playing
-                addTimeObserverVideo()
-                
-                //test > for looping
-                NotificationCenter.default.addObserver(self, selector: #selector(playerDidFinishPlaying(_:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
+                vidConArray.append(contentCell)
             }
             else if(l == "q") {
                 let aQPost = UIView()
@@ -1201,7 +1021,6 @@ class HPostListAViewCell: UICollectionViewCell {
         aDelegate?.hListDidClickVcvShare(vc: self)
     }
     @objc func onLoveClicked(gesture: UITapGestureRecognizer) {
-        
         reactOnLoveClick()
     }
     @objc func onBookmarkClicked(gesture: UITapGestureRecognizer) {
@@ -1261,86 +1080,95 @@ class HPostListAViewCell: UICollectionViewCell {
     @objc func onCommentClicked(gesture: UITapGestureRecognizer) {
         print("post comment clicked")
     }
-    @objc func onPhotoSClicked(gesture: UITapGestureRecognizer) {
-        print("post photo shot clicked")
-//        aDelegate?.hListDidClickVcvClickPhoto()
-        
-        if(!photoConArray.isEmpty) {
-            let pContainer = photoConArray[0]
-            let pFrame = pContainer.frame.origin
-            let aTestFrame = aTest.frame.origin
-            
-            print("post photo shot clicked \(pFrame), \(aTestFrame)")
-            
-            let pointX = pFrame.x + aTestFrame.x
-            let pointY = pFrame.y + aTestFrame.y
-            aDelegate?.hListDidClickVcvClickPhoto(vc: self, pointX: pointX, pointY: pointY, view: pContainer, mode: PhotoTypes.P_SHOT_DETAIL)
-        }
-    }
-    @objc func onPhotoClicked(gesture: UITapGestureRecognizer) {
-        print("post photo clicked")
-        
-        if(!photoConArray.isEmpty) {
-            let pContainer = photoConArray[0]
-            let pFrame = pContainer.frame.origin
-            let aTestFrame = aTest.frame.origin
-            
-            let pointX = pFrame.x + aTestFrame.x
-            let pointY = pFrame.y + aTestFrame.y
-            aDelegate?.hListDidClickVcvClickPhoto(vc: self, pointX: pointX, pointY: pointY, view: pContainer, mode: PhotoTypes.P_0)
-            
-            //test > hide photo
-            hideCell(view: pContainer)
-        }
-    }
-    @objc func onVideoClicked(gesture: UITapGestureRecognizer) {
-        print("post video clicked")
-        
-        if(!vidConArray.isEmpty) {
-            let vContainer = vidConArray[0]
-            let vFrame = vContainer.frame.origin
-            let aTestFrame = aTest.frame.origin
-            
-            let pointX = vFrame.x + aTestFrame.x
-            let pointY = vFrame.y + aTestFrame.y
-            aDelegate?.hListDidClickVcvClickVideo(vc: self, pointX: pointX, pointY: pointY, view: vContainer, mode: VideoTypes.V_0)
-            
-            //test > hide video
-            hideCell(view: vContainer)
-        }
-    }
-    @objc func onVideoLClicked(gesture: UITapGestureRecognizer) {
-        print("post video loop clicked")
-        
-        if(!vidConArray.isEmpty) {
-            let vContainer = vidConArray[0]
-            let vFrame = vContainer.frame.origin
-            let aTestFrame = aTest.frame.origin
-            
-            let pointX = vFrame.x + aTestFrame.x
-            let pointY = vFrame.y + aTestFrame.y
-            aDelegate?.hListDidClickVcvClickVideo(vc: self, pointX: pointX, pointY: pointY, view: vContainer, mode: VideoTypes.V_LOOP)
-            
-            //test > hide video
-            hideCell(view: vContainer)
-        }
-    }
+//    @objc func onPhotoSClicked(gesture: UITapGestureRecognizer) {
+//        print("post photo shot clicked")
+//        
+//        if(!photoConArray.isEmpty) {
+//            let pContainer = photoConArray[0]
+//            let pFrame = pContainer.frame.origin
+//            let aTestFrame = aTest.frame.origin
+//            
+//            print("post photo shot clicked \(pFrame), \(aTestFrame)")
+//            
+//            let pointX = pFrame.x + aTestFrame.x
+//            let pointY = pFrame.y + aTestFrame.y
+//            aDelegate?.hListDidClickVcvClickPhoto(vc: self, pointX: pointX, pointY: pointY, view: pContainer, mode: PhotoTypes.P_SHOT_DETAIL)
+//        }
+//    }
+//    @objc func onPhotoClicked(gesture: UITapGestureRecognizer) {
+//        print("post photo clicked")
+//        
+//        if(!photoConArray.isEmpty) {
+//            let pContainer = photoConArray[0]
+//            let pFrame = pContainer.frame.origin
+//            let aTestFrame = aTest.frame.origin
+//            
+//            let pointX = pFrame.x + aTestFrame.x
+//            let pointY = pFrame.y + aTestFrame.y
+//            aDelegate?.hListDidClickVcvClickPhoto(vc: self, pointX: pointX, pointY: pointY, view: pContainer, mode: PhotoTypes.P_0)
+//            
+//            //test > hide photo
+//            hideCell(view: pContainer)
+//        }
+//    }
+//    @objc func onVideoClicked(gesture: UITapGestureRecognizer) {
+//        print("post video clicked")
+//        
+//        if(!vidConArray.isEmpty) {
+//            let vContainer = vidConArray[0]
+//            let vFrame = vContainer.frame.origin
+//            let aTestFrame = aTest.frame.origin
+//            
+//            let pointX = vFrame.x + aTestFrame.x
+//            let pointY = vFrame.y + aTestFrame.y
+//            aDelegate?.hListDidClickVcvClickVideo(vc: self, pointX: pointX, pointY: pointY, view: vContainer, mode: VideoTypes.V_0)
+//            
+//            //test > hide video
+//            hideCell(view: vContainer)
+//        }
+//    }
+//    @objc func onVideoLClicked(gesture: UITapGestureRecognizer) {
+//        print("post video loop clicked")
+//        
+//        if(!vidConArray.isEmpty) {
+//            let vContainer = vidConArray[0]
+//            let vFrame = vContainer.frame.origin
+//            let aTestFrame = aTest.frame.origin
+//            
+//            let pointX = vFrame.x + aTestFrame.x
+//            let pointY = vFrame.y + aTestFrame.y
+//            aDelegate?.hListDidClickVcvClickVideo(vc: self, pointX: pointX, pointY: pointY, view: vContainer, mode: VideoTypes.V_LOOP)
+//            
+//            //test > hide video
+//            hideCell(view: vContainer)
+//        }
+//    }
     
     //test* > hide & dehide cells
     func dehideCell() {
         print("dehidecell hpostA: \(hideConArray)")
+//        if(!hideConArray.isEmpty) {
+//            let view = hideConArray[0]
+//            view.isHidden = false
+//            
+//            hideConArray.removeAll()
+//        }
+        
+        //test 2 > reusableview
         if(!hideConArray.isEmpty) {
             let view = hideConArray[0]
-            view.isHidden = false
+            if let a = view as? ContentCell{
+                a.dehideCell()
+            }
             
             hideConArray.removeAll()
         }
     }
         
-    func hideCell(view: UIView) {
-        view.isHidden = true
-        hideConArray.append(view)
-    }
+//    func hideCell(view: UIView) {
+//        view.isHidden = true
+//        hideConArray.append(view)
+//    }
     //*
     
     func reactOnLoveClick() {
@@ -1361,154 +1189,188 @@ class HPostListAViewCell: UICollectionViewCell {
     }
     
     //for video play
-    var timeObserverTokenVideo: Any?
-    func addTimeObserverVideo() {
-        let timeInterval = CMTime(seconds: 0.01, preferredTimescale: CMTimeScale(1000))
-//        timeObserverTokenVideo = player?.addPeriodicTimeObserver(forInterval: timeInterval, queue: DispatchQueue.main) {
-//            [weak self] time in
+//    var timeObserverTokenVideo: Any?
+//    func addTimeObserverVideo() {
+//        let timeInterval = CMTime(seconds: 0.01, preferredTimescale: CMTimeScale(1000))
+//        
+//        //test > new method
+//        if let tokenV = timeObserverTokenVideo {
+//            //check if token exists
+//        } else {
+//            timeObserverTokenVideo = player?.addPeriodicTimeObserver(forInterval: timeInterval, queue: DispatchQueue.main) {
+//                [weak self] time in
 //
-//            let currentT = time.seconds
-//            guard let s = self else {
-//                return
+//                let currentT = time.seconds
+//                guard let s = self else {
+//                    return
+//                }
+//                print("hpl time observe videoT:\(currentT)")
+////                s.t_s = currentT
+//                s.aDelegate?.hListVideoStopTime(vc: s, ts: currentT)
 //            }
-//            print("hpl time observe videoT:\(currentT)")
 //        }
+//    }
+//    func removeTimeObserverVideo() {
+//        //remove video observer
+//        if let tokenV = timeObserverTokenVideo {
+//            player?.removeTimeObserver(tokenV)
+//            timeObserverTokenVideo = nil
+//        }
+//        
+//        //test > for looping
+////        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
+//        if(player != nil && player.currentItem != nil) {
+//            NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
+//        }
+//    }
+//    @objc func playerDidFinishPlaying(_ notification: Notification) {
+//        playVideo()
+//    }
+//    
+//    var vidPlayStatus = ""
+    func playVideo() {
+//        player?.seek(to: .zero)
+//        player?.play()
+//
+//        reactOnPlayStatus(status: "play")
         
-        //test > new method
-        if let tokenV = timeObserverTokenVideo {
-            //check if token exists
-        } else {
-            timeObserverTokenVideo = player?.addPeriodicTimeObserver(forInterval: timeInterval, queue: DispatchQueue.main) {
-                [weak self] time in
-
-                let currentT = time.seconds
-                guard let s = self else {
-                    return
-                }
-                print("hpl time observe videoT:\(currentT)")
-//                s.t_s = currentT
-                s.aDelegate?.hListVideoStopTime(vc: s, ts: currentT)
+        //test 2 > reusable view
+        if(!vidConArray.isEmpty) {
+            let vidC = vidConArray[0]
+            if let a = vidC as? PostVideoContentCell {
+                a.playVideo()
+            }
+            else if let b = vidC as? PostVideoLoopContentCell {
+                b.playVideo()
             }
         }
     }
-    func removeTimeObserverVideo() {
-        //remove video observer
-        if let tokenV = timeObserverTokenVideo {
-            player?.removeTimeObserver(tokenV)
-            timeObserverTokenVideo = nil
-        }
-        
-        //test > for looping
-//        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
-        if(player != nil && player.currentItem != nil) {
-            NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
-        }
-    }
-    @objc func playerDidFinishPlaying(_ notification: Notification) {
-        playVideo()
-    }
-    
-    var vidPlayStatus = ""
-    func playVideo() {
-        player?.seek(to: .zero)
-        player?.play()
-
-        reactOnPlayStatus(status: "play")
-    }
     func stopVideo() {
-        player?.seek(to: .zero)
-        player?.pause()
-
-        reactOnPlayStatus(status: "pause")
+//        player?.seek(to: .zero)
+//        player?.pause()
+//
+//        reactOnPlayStatus(status: "pause")
+        
+        //test 2 > reusable view
+        if(!vidConArray.isEmpty) {
+            let vidC = vidConArray[0]
+            if let a = vidC as? PostVideoContentCell {
+                a.stopVideo()
+            }
+            else if let b = vidC as? PostVideoLoopContentCell {
+                b.stopVideo()
+            }
+        }
     }
     
     func pauseVideo() {
-        player?.pause()
-
-        reactOnPlayStatus(status: "pause")
+//        player?.pause()
+//
+//        reactOnPlayStatus(status: "pause")
+        
+        //test 2 > reusable view
+        if(!vidConArray.isEmpty) {
+            let vidC = vidConArray[0]
+            if let a = vidC as? PostVideoContentCell {
+                a.pauseVideo()
+            }
+            else if let b = vidC as? PostVideoLoopContentCell {
+                b.pauseVideo()
+            }
+        }
     }
     
     func resumeVideo() {
-        player?.play()
-
-        reactOnPlayStatus(status: "play")
-    }
-    func reactOnPlayStatus(status: String) {
-        vidPlayStatus = status
-        if(status == "play") {
-            if(!playBtnArray.isEmpty) {
-                let playBtn = playBtnArray[0]
-                playBtn.image = UIImage(named:"icon_round_pause")?.withRenderingMode(.alwaysTemplate)
+//        player?.play()
+//
+//        reactOnPlayStatus(status: "play")
+        
+        //test 2 > reusable view
+        if(!vidConArray.isEmpty) {
+            let vidC = vidConArray[0]
+            if let a = vidC as? PostVideoContentCell {
+                a.resumeVideo()
             }
-        } else {
-            if(!playBtnArray.isEmpty) {
-                let playBtn = playBtnArray[0]
-                playBtn.image = UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate)
+            else if let b = vidC as? PostVideoLoopContentCell {
+                b.resumeVideo()
             }
         }
     }
-    @objc func onVideoBtnClicked(gesture: UITapGestureRecognizer) {
-        if(vidPlayStatus == "play") {
-            pauseVideo()
-        } else {
-            resumeVideo()
-        }
-    }
+//    func reactOnPlayStatus(status: String) {
+//        vidPlayStatus = status
+//        if(status == "play") {
+//            if(!playBtnArray.isEmpty) {
+//                let playBtn = playBtnArray[0]
+//                playBtn.image = UIImage(named:"icon_round_pause")?.withRenderingMode(.alwaysTemplate)
+//            }
+//        } else {
+//            if(!playBtnArray.isEmpty) {
+//                let playBtn = playBtnArray[0]
+//                playBtn.image = UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate)
+//            }
+//        }
+//    }
+//    @objc func onVideoBtnClicked(gesture: UITapGestureRecognizer) {
+//        if(vidPlayStatus == "play") {
+//            pauseVideo()
+//        } else {
+//            resumeVideo()
+//        }
+//    }
     
-    func seekToV() {
-        let t = 3.4
-        let seekTime = CMTime(seconds: t, preferredTimescale: CMTimeScale(1000)) //1000
-        player?.seek(to: seekTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
-    }
+//    func seekToV() {
+//        let t = 3.4
+//        let seekTime = CMTime(seconds: t, preferredTimescale: CMTimeScale(1000)) //1000
+//        player?.seek(to: seekTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+//    }
 }
 
 //test > scroll view delegate for carousel of images
-//extension HPostListViewNCell: UIScrollViewDelegate {
-extension HPostListAViewCell: UIScrollViewDelegate {
-    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        print("hpostview scrollview begin: \(scrollView.contentOffset.y)")
-        aDelegate?.hListIsScrollCarousel(isScroll: true)
-    }
-
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let x = scrollView.contentOffset.x
-        let y = scrollView.contentOffset.y
-        print("hpostview scrollview scroll: \(x), \(y)")
-        aDelegate?.hListIsScrollCarousel(isScroll: true)
-    }
-
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        print("hpostview scrollview end: \(scrollView.contentOffset.y)")
-        
-        aDelegate?.hListIsScrollCarousel(isScroll: false)
-        
-        //test > for bubble when scrolled thru carousel
-        let xOffset = scrollView.contentOffset.x
-        let viewWidth = self.frame.width
-        let currentIndex = round(xOffset/viewWidth)
-        let tempCurrentIndex = Int(currentIndex)
-        print("Current item index: \(tempCurrentIndex)")
-        
-        if(!bubbleArray.isEmpty) {
-            let bubble1 = bubbleArray[0]
-            bubble1.setIndicatorSelected(index: tempCurrentIndex)
-            
-            //test > for carousel page
-//            p_s = tempCurrentIndex
-            aDelegate?.hListCarouselIdx(vc: self, idx: tempCurrentIndex)
-        }
-    }
-
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        print("hpostview scrollview end drag: \(scrollView.contentOffset.y)")
-        aDelegate?.hListIsScrollCarousel(isScroll: false)
-    }
-    
-    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-        print("hpostview scrollview animation ended")
-
-    }
-}
+//extension HPostListAViewCell: UIScrollViewDelegate {
+//    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+//        print("hpostview scrollview begin: \(scrollView.contentOffset.y)")
+//        aDelegate?.hListIsScrollCarousel(isScroll: true)
+//    }
+//
+//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+//        let x = scrollView.contentOffset.x
+//        let y = scrollView.contentOffset.y
+//        print("hpostview scrollview scroll: \(x), \(y)")
+//        aDelegate?.hListIsScrollCarousel(isScroll: true)
+//    }
+//
+//    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+//        print("hpostview scrollview end: \(scrollView.contentOffset.y)")
+//        
+//        aDelegate?.hListIsScrollCarousel(isScroll: false)
+//        
+//        //test > for bubble when scrolled thru carousel
+//        let xOffset = scrollView.contentOffset.x
+//        let viewWidth = self.frame.width
+//        let currentIndex = round(xOffset/viewWidth)
+//        let tempCurrentIndex = Int(currentIndex)
+//        print("Current item index: \(tempCurrentIndex)")
+//        
+//        if(!bubbleArray.isEmpty) {
+//            let bubble1 = bubbleArray[0]
+//            bubble1.setIndicatorSelected(index: tempCurrentIndex)
+//            
+//            //test > for carousel page
+////            p_s = tempCurrentIndex
+//            aDelegate?.hListCarouselIdx(vc: self, idx: tempCurrentIndex)
+//        }
+//    }
+//
+//    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+//        print("hpostview scrollview end drag: \(scrollView.contentOffset.y)")
+//        aDelegate?.hListIsScrollCarousel(isScroll: false)
+//    }
+//    
+//    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+//        print("hpostview scrollview animation ended")
+//
+//    }
+//}
 
 extension HPostListAViewCell: ContentCellDelegate {
     func contentCellIsScrollCarousel(isScroll: Bool){
@@ -1517,6 +1379,34 @@ extension HPostListAViewCell: ContentCellDelegate {
     
     func contentCellCarouselIdx(idx: Int){
         aDelegate?.hListCarouselIdx(vc: self, idx: idx)
+    }
+    
+    func contentCellVideoStopTime(ts: Double){
+        aDelegate?.hListVideoStopTime(vc: self, ts: ts)
+    }
+    
+    func contentCellDidClickVcvClickPhoto(cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        let aTestFrame = aTest.frame.origin
+        let ccFrame = cc.frame.origin
+        
+        let pointX1 = pointX + aTestFrame.x + ccFrame.x
+        let pointY1 = pointY + aTestFrame.y + ccFrame.y
+        aDelegate?.hListDidClickVcvClickPhoto(vc: self, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
+        
+        hideConArray.append(cc)
+    }
+    func contentCellDidClickVcvClickVideo(cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        let aTestFrame = aTest.frame.origin
+        let ccFrame = cc.frame.origin
+        
+        let pointX1 = pointX + aTestFrame.x + ccFrame.x
+        let pointY1 = pointY + aTestFrame.y + ccFrame.y
+        aDelegate?.hListDidClickVcvClickVideo(vc: self, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
+        
+        hideConArray.append(cc)
+    }
+    func contentCellDidDoubleClickPhoto(pointX: CGFloat, pointY: CGFloat){
+        
     }
 }
 
