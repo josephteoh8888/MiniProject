@@ -23,9 +23,6 @@ class HCommentListViewCell: UICollectionViewCell {
     let bMiniBtn = UIImageView()
     let dMiniBtn = UIImageView()
     
-    //test > video player
-//    var player: AVPlayer!
-    
     //test > dynamic method for various cells format
     let aTest = UIView()
     var aTestArray = [UIView]()
@@ -40,10 +37,7 @@ class HCommentListViewCell: UICollectionViewCell {
     
     //test > for video container intersection as user scrolls to play/pause
     var vidConArray = [UIView]()
-//    var playBtnArray = [UIImageView]()
-//    var photoConArray = [UIView]()
     var hideConArray = [UIView]()
-//    var bubbleArray = [PageBubbleIndicator]()
     
     weak var aDelegate : HListCellDelegate?
     
@@ -851,7 +845,6 @@ class HCommentListViewCell: UICollectionViewCell {
         }
         
         //test > for comment chaining
-//        let dataCh = data.chainDataArray
         let dataCh = data.xChainDataArray
         var countCh = 0
         for l in dataCh {
@@ -879,7 +872,7 @@ class HCommentListViewCell: UICollectionViewCell {
             cell.topAnchor.constraint(equalTo: aCPost.topAnchor, constant: 0).isActive = true
             cell.bottomAnchor.constraint(equalTo: aCPost.bottomAnchor, constant: 0).isActive = true
             cell.redrawUI()
-            cell.aDelegate = self
+//            cell.aDelegate = self
             cell.configure(data: l)
             
             if(countCh == dataCh.count - 1) {
@@ -976,12 +969,6 @@ class HCommentListViewCell: UICollectionViewCell {
     //test* > hide & dehide cells
     func dehideCell() {
         print("dehidecell hpostA: \(hideConArray)")
-//        if(!hideConArray.isEmpty) {
-//            let view = hideConArray[0]
-//            view.isHidden = false
-//            
-//            hideConArray.removeAll()
-//        }
         
         //test 2 > reusableview
         if(!hideConArray.isEmpty) {
@@ -1119,35 +1106,38 @@ extension HCommentListViewCell: ContentCellDelegate {
     func contentCellDidDoubleClickPhoto(pointX: CGFloat, pointY: CGFloat){
         
     }
+    func contentCellDidClickSound(){
+        
+    }
 }
 
-extension HCommentListViewCell: CChainCellDelegate {
-    func cChainDidClickComment() {
-
-    }
-    func cChainDidClickLove(){}
-    func cChainDidClickShare(){
-        
-    }
-    func cChainDidClickClickUser(){
-        aDelegate?.hListDidClickVcvClickUser()
-    }
-    func cChainDidClickClickPlace(){}
-    func cChainDidClickClickSound(){}
-    func cChainDidClickClickPost(){
-        aDelegate?.hListDidClickVcvClickPost()
-    }
-    func cChainDidClickClickPhoto(cell: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
-        
-    }
-    func cChainDidClickClickVideo(cell: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
-        
-    }
-    func cChainIsScrollCarousel(isScroll: Bool){}
-    
-    //test > carousel photo scroll page
-    func cChainCarouselIdx(cell: UIView, idx: Int){}
-    
-    //test > click play sound
-    func cChainDidClickPlayAudio(cell: UIView){}
-}
+//extension HCommentListViewCell: CChainCellDelegate {
+//    func cChainDidClickComment() {
+//
+//    }
+//    func cChainDidClickLove(){}
+//    func cChainDidClickShare(){
+//        
+//    }
+//    func cChainDidClickClickUser(){
+//        aDelegate?.hListDidClickVcvClickUser()
+//    }
+//    func cChainDidClickClickPlace(){}
+//    func cChainDidClickClickSound(){}
+//    func cChainDidClickClickPost(){
+//        aDelegate?.hListDidClickVcvClickPost()
+//    }
+//    func cChainDidClickClickPhoto(cell: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+//        
+//    }
+//    func cChainDidClickClickVideo(cell: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+//        
+//    }
+//    func cChainIsScrollCarousel(isScroll: Bool){}
+//    
+//    //test > carousel photo scroll page
+//    func cChainCarouselIdx(cell: UIView, idx: Int){}
+//    
+//    //test > click play sound
+//    func cChainDidClickPlayAudio(cell: UIView){}
+//}

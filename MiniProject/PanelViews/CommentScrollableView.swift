@@ -51,6 +51,12 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
     //test
     var hideCellIndex = -1
     
+    //test
+    let panelView = UIView()
+    
+    //test > record which cell video is playing
+    var currentPlayingVidIndex = -1
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -76,7 +82,7 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
 //        aView.backgroundColor = .black //ddmBlackOverlayColor
         aView.backgroundColor = .clear
         
-        let panelView = UIView()
+//        let panelView = UIView()
         panelView.backgroundColor = .ddmBlackOverlayColor
         self.addSubview(panelView)
         panelView.translatesAutoresizingMaskIntoConstraints = false
@@ -235,32 +241,6 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
         aSpinner.centerXAnchor.constraint(equalTo: vCV.centerXAnchor).isActive = true
         aSpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
         aSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        
-        //test* > arrow down to exit comment
-//        let aBtn = UIView()
-////        aBtn.backgroundColor = .ddmDarkColor //test to remove color
-//        panelView.addSubview(aBtn)
-//        aBtn.translatesAutoresizingMaskIntoConstraints = false
-//        aBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true //ori: 40
-//        aBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
-//        aBtn.leadingAnchor.constraint(equalTo: panelView.leadingAnchor, constant: 10).isActive = true
-//    //        aBtn.topAnchor.constraint(equalTo: userPanel.topAnchor, constant: 30).isActive = true
-//        aBtn.topAnchor.constraint(equalTo: panelView.topAnchor, constant: 10).isActive = true
-//        aBtn.layer.cornerRadius = 20
-//        aBtn.layer.opacity = 0.3
-//        aBtn.isUserInteractionEnabled = true
-////        aBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onCloseClicked)))
-//
-//        let bMiniBtn = UIImageView(image: UIImage(named:"icon_round_arrow_down_a")?.withRenderingMode(.alwaysTemplate))
-////        let bMiniBtn = UIImageView(image: UIImage(named:"icon_round_close")?.withRenderingMode(.alwaysTemplate))
-//        bMiniBtn.tintColor = .white
-//        panelView.addSubview(bMiniBtn)
-//        bMiniBtn.translatesAutoresizingMaskIntoConstraints = false
-//        bMiniBtn.centerXAnchor.constraint(equalTo: aBtn.centerXAnchor).isActive = true
-//        bMiniBtn.centerYAnchor.constraint(equalTo: aBtn.centerYAnchor).isActive = true
-//        bMiniBtn.heightAnchor.constraint(equalToConstant: 18).isActive = true //26
-//        bMiniBtn.widthAnchor.constraint(equalToConstant: 18).isActive = true
-        //*
         
         //test > add footer ***
         vCV.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "footer")
@@ -436,18 +416,7 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
             }
         }
     }
-//    func removeDataSet(idxToRemove: [Int]) {
-//        if(!vDataList.isEmpty) {
-//            var indexPaths = [IndexPath]()
-//            for i in idxToRemove {
-//                vDataList.remove(at: i)
-//                
-//                let idx = IndexPath(item: i, section: 0)
-//                indexPaths.append(idx)
-//            }
-//            self.vCV?.deleteItems(at: indexPaths)
-//        }
-//    }
+
     func unselectItemData() {
         selectedItemIdx = -1
     }
@@ -687,20 +656,146 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
         footerState = data
     }
     
-    //temp solution -> to be deleted
-//    func getMessage(data: String) -> String {
-//        var s = ""
-//        if(data == "a") {
-//            s = "Nice food, nice environment! Worth a visit. \n\nSo Good."
-//        }
-//        else if(data == "b") {
-//            s = "往年的这个时候，iPhone 虽然也是位列销量榜榜首，但那都是上一代的旧机型呀...\n只能说这次 11.11 各家给的优惠都太给力了."
-//        }
-//        else {
-//            s = "Vấn đề đã rõ, đã chín, được thực tiễn chứng minh là đúng, thực hiện hiệu quả, đa số đồng tình thì tiếp tục thực hiện"
-//        }
-//        return s
-//    }
+    //test > resume current video
+    func resumeCurrentVideo() {
+        guard let a = self.vCV else {
+            return
+        }
+        if(currentPlayingVidIndex > -1) {
+            let idxPath = IndexPath(item: currentPlayingVidIndex, section: 0)
+            let currentVc = a.cellForItem(at: idxPath)
+            if let b = currentVc as? HCommentListViewCell {
+                b.resumeVideo()
+            }
+        }
+    }
+
+    //test > pause current video for closing
+    func pauseCurrentVideo() {
+        guard let a = self.vCV else {
+            return
+        }
+        if(currentPlayingVidIndex > -1) {
+            let idxPath = IndexPath(item: currentPlayingVidIndex, section: 0)
+            let currentVc = a.cellForItem(at: idxPath)
+            if let b = currentVc as? HCommentListViewCell {
+                b.pauseVideo()
+            }
+        }
+    }
+    
+    //test > check for intersected dummy view with video while user scroll
+    func getIntersectedIdx() -> Int {
+//        let aVc = feedList[currentIndex]
+        var intersectedIdx = -1
+//        print("comment scroll intersected start")
+        if let v = vCV {
+            print("sfvideo ppv start \(v.visibleCells)")
+            for cell in v.visibleCells {
+                guard let indexPath = v.indexPath(for: cell) else {
+                    continue
+                }
+                guard let b = cell as? HCommentListViewCell else {
+                    return -1
+                }
+
+//                print("comment scroll intersected in \(panelView.frame.origin.y)")
+                let cellRect = v.convert(b.frame, to: self)
+                let aTestRect = b.aTest.frame
+                
+                if(!b.vidConArray.isEmpty) {
+                    let vidC = b.vidConArray[0]
+                    let vidCFrame = vidC.frame
+                    let convertedVidCOriginY = vidCFrame.origin.y + aTestRect.origin.y + cellRect.origin.y
+                    let convertedVidCRect = CGRect(x: 0, y: convertedVidCOriginY, width: vidCFrame.size.width, height: vidCFrame.size.height)
+                    
+                    let cY = v.convert(vidCFrame, to: v)
+                    print("comment scroll intersected in: \(convertedVidCOriginY), \(vidCFrame.origin.y), \(cY)")
+                    
+                    //size can be changed
+                    let dummyTopMargin = 70.0
+                    let panelRectY = panelView.frame.origin.y
+                    let vCvRectY = v.frame.origin.y
+                    let dummyOriginY = panelRectY + vCvRectY + dummyTopMargin
+                    let dummyView = CGRect(x: 0, y: dummyOriginY, width: self.frame.width, height: 200)
+//                    let dummyView = CGRect(x: 0, y: dummyOriginY, width: 20, height: 200)
+//                    let dV = UIView(frame: dummyView)
+//                    dV.backgroundColor = .blue
+//                    self.addSubview(dV)
+                    
+//                    print("comment scroll intersected inner: \(dummyOriginY)")
+                    
+                    let isIntersect = dummyView.intersects(convertedVidCRect)
+                    let intersectArea = dummyView.intersection(convertedVidCRect)
+
+                    print("sfvideo x ppv 3.0 collectionView index: \(indexPath), \(isIntersect), \(intersectArea)")
+                    
+                    //test > play video if intersect
+                    if(isIntersect) {
+                        intersectedIdx = indexPath.item
+                    }
+                }
+            }
+        }
+        print("comment scroll intersected: \(intersectedIdx)")
+        return intersectedIdx
+    }
+    
+    //test > react to intersected video
+    func reactToIntersectedVideo(intersectedIdx: Int) {
+        guard let a = vCV else {
+            return
+        }
+        
+        print("comment reactToIntersectedVideo: \(intersectedIdx), \(currentPlayingVidIndex)")
+        if(intersectedIdx > -1) {
+            if(currentPlayingVidIndex > -1) {
+                if(currentPlayingVidIndex != intersectedIdx) {
+                    let prevIdxPath = IndexPath(item: currentPlayingVidIndex, section: 0)
+                    let idxPath = IndexPath(item: intersectedIdx, section: 0)
+                    let prevVc = a.cellForItem(at: prevIdxPath)
+                    let currentVc = a.cellForItem(at: idxPath)
+                    
+                    //test 2 > include HCommentListViewCell
+                    if let b1 = prevVc as? HCommentListViewCell {
+                        b1.pauseVideo()
+                    }
+                    
+                    if let c1 = currentVc as? HCommentListViewCell {
+                        //*test > to be disabled if autoplay turn off
+                        c1.resumeVideo()
+                        currentPlayingVidIndex = intersectedIdx
+                    }
+                    print("comment reactToIntersectedVideo A")
+                }
+            } else {
+                let idxPath = IndexPath(item: intersectedIdx, section: 0)
+                let currentVc = a.cellForItem(at: idxPath)
+                
+                if let b1 = currentVc as? HCommentListViewCell {
+                    //*test > to be disabled if autoplay turn off
+                    b1.resumeVideo()
+                    currentPlayingVidIndex = intersectedIdx
+                }
+                
+                print("comment reactToIntersectedVideo B")
+            }
+        } else {
+            //if intersectedIdx == -1, all video should pause/stop
+            if(currentPlayingVidIndex > -1) {
+                let idxPath = IndexPath(item: currentPlayingVidIndex, section: 0)
+                let currentVc = a.cellForItem(at: idxPath)
+                
+                //test 2 > include HCommentListViewCell
+                if let b1 = currentVc as? HCommentListViewCell {
+                    b1.pauseVideo()
+                    currentPlayingVidIndex = -1
+                }
+                
+                print("comment reactToIntersectedVideo C")
+            }
+        }
+    }
 }
 
 extension CommentScrollableView: UICollectionViewDelegateFlowLayout {
@@ -712,11 +807,16 @@ extension CommentScrollableView: UICollectionViewDelegateFlowLayout {
 //    }
     
     private func estimateHeight(text: String, textWidth: CGFloat, fontSize: CGFloat) -> CGFloat {
-        let size = CGSize(width: textWidth, height: 1000)
-        let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: fontSize)]
-        let estimatedFrame = NSString(string: text).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
-        
-        return estimatedFrame.height
+        if(text == "") {
+            return 0
+        }
+        else {
+            let size = CGSize(width: textWidth, height: 1000)
+            let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: fontSize)]
+            let estimatedFrame = NSString(string: text).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
+            
+            return estimatedFrame.height
+        }
     }
 
     //test > to comment out
@@ -1057,15 +1157,17 @@ extension CommentScrollableView: UICollectionViewDelegateFlowLayout {
 
             if(dataPaginateStatus != "end") {
                 if(pageNumber >= 3) {
-//                    asyncPaginateFetchFeed(id: "post_feed_end")
                     asyncPaginateFetchFeed(id: "comment_feed_end")
                 } else {
-//                    asyncPaginateFetchFeed(id: "post_feed")
                     asyncPaginateFetchFeed(id: "comment_feed")
                 }
 
             }
         }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        print("commentpanel didEndDisplaying: \(indexPath.row)")
     }
 }
 //test > try scrollview listener
@@ -1077,7 +1179,8 @@ extension CommentScrollableView: UICollectionViewDelegate {
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-
+        //test > react to intersected index
+        reactToIntersectedVideo(intersectedIdx: getIntersectedIdx())
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
@@ -1157,12 +1260,14 @@ extension CommentScrollableView: HListCellDelegate {
     func hListDidClickVcvComment(vc: UICollectionViewCell){
         //temp solution: to be diverted to comment section of post detail
         delegate?.didCClickPost()
+        
+        //test > try pause video when go comment
+        pauseCurrentVideo()
     }
     func hListDidClickVcvLove(){
         
     }
     func hListDidClickVcvShare(vc: UICollectionViewCell){
-//        delegate?.didCClickShare()
         
         if let a = vCV {
             for cell in a.visibleCells {
@@ -1182,17 +1287,30 @@ extension CommentScrollableView: HListCellDelegate {
     }
     func hListDidClickVcvClickUser(){
         delegate?.didCClickUser()
+        
+        //test > try pause video when go comment
+        pauseCurrentVideo()
     }
     func hListDidClickVcvClickPlace(){
         delegate?.didCClickPlace()
+        
+        //test > try pause video when go comment
+        pauseCurrentVideo()
     }
     func hListDidClickVcvClickSound(){
         delegate?.didCClickSound()
+        
+        //test > try pause video when go comment
+        pauseCurrentVideo()
     }
     func hListDidClickVcvClickPost(){
         delegate?.didCClickPost()
+        
+        //test > try pause video when go comment
+        pauseCurrentVideo()
     }
     func hListDidClickVcvClickPhoto(vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        
         if let a = vCV {
             for cell in a.visibleCells {
                 
@@ -1213,9 +1331,34 @@ extension CommentScrollableView: HListCellDelegate {
                 }
             }
         }
+        
+        //test > try pause video when go comment
+        pauseCurrentVideo()
     }
     func hListDidClickVcvClickVideo(vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        if let a = vCV {
+            for cell in a.visibleCells {
+                
+                if(cell == vc) {
+                    //commentview bounds is fullscreen, so no more conversion is needed
+                    let originInRootView = a.convert(cell.frame.origin, to: self)
+                    let visibleIndexPath = a.indexPath(for: cell)
+                    let pointX1 = originInRootView.x + pointX
+                    let pointY1 = originInRootView.y + pointY
+                    print("comment idx frame origin p: \(pointX1), \(pointY1)")
+                    delegate?.didCClickClickVideo(pointX: pointX1, pointY: pointY1, view: view, mode: mode)
+                    
+                    if let c = visibleIndexPath {
+                        hideCellIndex = c.row
+                    }
+                    
+                    break
+                }
+            }
+        }
         
+        //test > try pause video when go comment
+        pauseCurrentVideo()
     }
     func hListDidClickVcvSortComment(){}
     func hListIsScrollCarousel(isScroll: Bool){}
@@ -1224,7 +1367,19 @@ extension CommentScrollableView: HListCellDelegate {
     func hListCarouselIdx(vc: UICollectionViewCell, idx: Int){}
     
     func hListVideoStopTime(vc: UICollectionViewCell, ts: Double){
-        
+        if let a = vCV {
+            for cell in a.visibleCells {
+                guard let indexPath = a.indexPath(for: cell) else {
+                    continue
+                }
+                
+                if(cell == vc) {
+                    vDataList[indexPath.row].t_s = ts
+                    
+                    break
+                }
+            }
+        }
     }
     
     //test > click play sound

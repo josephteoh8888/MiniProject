@@ -1169,7 +1169,6 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
             feed.videoCV?.reloadData()
             feed.currentIndexPath = IndexPath(item: 0, section: 0) //to play video when willDisplay()
 
-//            feed.bufferDataList.removeAll()
             feed.dataPaginateStatus = ""
             feed.pageNumber = 0
 
@@ -1220,20 +1219,6 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
             }
         }
     }
-//    func removeDataSet(cell: ScrollFeedVideoCell?, idxToRemove: [Int]) {
-//        guard let feed = cell else {
-//            return
-//        }
-//        var indexPaths = [IndexPath]()
-//        for i in idxToRemove {
-//            feed.vcDataList.remove(at: i)
-//            
-//            let idx = IndexPath(item: i, section: 0)
-//            indexPaths.append(idx)
-//        }
-//        feed.videoCV?.deleteItems(at: indexPaths)
-//    }
-    //**
     
     func asyncFetchFeed(cell: ScrollFeedVideoCell?, id: String) {
 
@@ -1506,7 +1491,6 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
 
     //test
     override func resumeActiveState() {
-//        resumeCurrentVideo()
         
         //test > only resume video if no comment scrollable view/any other view
         if(pageList.isEmpty) {
@@ -1515,6 +1499,7 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         else {
             //dehide cell for commment view
             if let c = pageList[pageList.count - 1] as? CommentScrollableView {
+                c.resumeCurrentVideo()
                 c.dehideCell()
             }
         }
@@ -1711,7 +1696,14 @@ extension ViewController: VideoPanelDelegate{
         }
     }
     func didClickVideoPanelClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
-        
+        let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
+        let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
+
+        //test 1 > for video only
+        var dataset = [String]()
+//        dataset.append("a")
+        dataset.append("a")
+        self.openVideoPanel(offX: offsetX, offY: offsetY, originatorView: view, originatorViewType: OriginatorTypes.UIVIEW, id: 0, originatorViewId: "", preterminedDatasets: dataset, mode: mode)
     }
 }
 
@@ -2134,7 +2126,7 @@ extension VideoPanelView: CommentScrollableDelegate{
         delegate?.didClickVideoPanelClickPhoto(pointX: pointX, pointY: pointY, view: view, mode: mode)
     }
     func didCClickClickVideo(pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
-        
+        delegate?.didClickVideoPanelClickVideo(pointX: pointX, pointY: pointY, view: view, mode: mode)
     }
 }
 

@@ -104,10 +104,10 @@ class ScrollFeedHPhotoListCell: ScrollPhotoDataFeedCell {
         if(currentPlayingVidIndex > -1) {
             let idxPath = IndexPath(item: currentPlayingVidIndex, section: 0)
             let currentVc = a.cellForItem(at: idxPath)
-            guard let b = currentVc as? HPhotoListAViewCell else {
-                return
+
+            if let b = currentVc as? HPhotoListAViewCell {
+                b.resumeAudio()
             }
-            b.resumeAudio()
         }
         print("sfvideo resumeCurrentAudio: \(feedCode), \(currentPlayingVidIndex)")
     }
@@ -120,11 +120,10 @@ class ScrollFeedHPhotoListCell: ScrollPhotoDataFeedCell {
         if(currentPlayingVidIndex > -1) {
             let idxPath = IndexPath(item: currentPlayingVidIndex, section: 0)
             let currentVc = a.cellForItem(at: idxPath)
-            guard let b = currentVc as? HPhotoListAViewCell else {
-                return
+
+            if let b = currentVc as? HPhotoListAViewCell {
+                b.pauseAudio()
             }
-            b.pauseAudio()
-//            vDataList[currentPlayingVidIndex].t_s = b.t_s
             
             //test > new method to play sound, not automatic scroll and play
             currentPlayingVidIndex = -1
@@ -165,31 +164,26 @@ class ScrollFeedHPhotoListCell: ScrollPhotoDataFeedCell {
                     let idxPath = IndexPath(item: intersectedIdx, section: 0)
                     let prevVc = a.cellForItem(at: prevIdxPath)
                     let currentVc = a.cellForItem(at: idxPath)
-                    guard let b = prevVc as? HPhotoListAViewCell else {
-                        return
-                    }
-                    guard let c = currentVc as? HPhotoListAViewCell else {
-                        return
-                    }
-                    b.pauseAudio()
-
-//                    c.resumeAudio()
-//                    currentPlayingVidIndex = intersectedIdx
                     
-                    //test > new method to play sound, not automatic scroll and play
-                    currentPlayingVidIndex = -1
+                    if let b = prevVc as? HPhotoListAViewCell {
+                        b.pauseAudio()
+                        currentPlayingVidIndex = -1
+                    }
+                    if let c = currentVc as? HPhotoListAViewCell {
+//                        c.resumeAudio()
+//                        currentPlayingVidIndex = intersectedIdx
+                    }
                     
                     print("reactintersect photo A")
                 }
             } else {
                 let idxPath = IndexPath(item: intersectedIdx, section: 0)
                 let currentVc = a.cellForItem(at: idxPath)
-                guard let b = currentVc as? HPhotoListAViewCell else {
-                    return
-                }
 
-//                b.resumeAudio()
-//                currentPlayingVidIndex = intersectedIdx
+                if let b = currentVc as? HPhotoListAViewCell {
+//                    b.resumeAudio()
+//                    currentPlayingVidIndex = intersectedIdx
+                }
                 
                 print("reactintersect photo B")
             }
@@ -198,11 +192,11 @@ class ScrollFeedHPhotoListCell: ScrollPhotoDataFeedCell {
             if(currentPlayingVidIndex > -1) {
                 let idxPath = IndexPath(item: currentPlayingVidIndex, section: 0)
                 let currentVc = a.cellForItem(at: idxPath)
-                guard let b = currentVc as? HPhotoListAViewCell else {
-                    return
+
+                if let b = currentVc as? HPhotoListAViewCell {
+                    b.pauseAudio()
+                    currentPlayingVidIndex = -1
                 }
-                b.pauseAudio()
-                currentPlayingVidIndex = -1
                 
                 print("reactintersect photo B")
             }
@@ -313,7 +307,6 @@ extension ScrollFeedHPhotoListCell: UICollectionViewDelegateFlowLayout {
             if(l == "m") {
                 let soundTopMargin = 10.0
                 let soundHeight = 30.0
-//                let soundHeight = 16.0
                 let pHeight = soundTopMargin + soundHeight
                 contentHeight += pHeight
             }
@@ -516,7 +509,6 @@ extension ScrollFeedHPhotoListCell: HListCellDelegate {
         aDelegate?.sfcDidClickVcvLove()
     }
     func hListDidClickVcvShare(vc: UICollectionViewCell) {
-//        aDelegate?.sfcDidClickVcvShare()
         if let a = vCV {
             for cell in a.visibleCells {
                 

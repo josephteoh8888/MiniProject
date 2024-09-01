@@ -367,7 +367,8 @@ class CommentData: BaseData {
 //            dataArray.append("c") //comment
         }
         else if(data == "b") {
-            dataArray.append("p") //photo
+//            dataArray.append("p") //photo
+            dataArray.append("v") //photo
             dataArray.append("t") //photo
         }
         else if(data == "c") {

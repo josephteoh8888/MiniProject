@@ -196,6 +196,10 @@ class DataFetchManager {
                     newData.append("a")
                     newData.append("b") //a
                     newData.append("c") //a
+                    
+//                    newData.append("a")
+//                    newData.append("b") //a
+//                    newData.append("c") //a
                 } else  {
                     //post_feed_end
                 }

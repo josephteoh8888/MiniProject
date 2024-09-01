@@ -17,6 +17,7 @@ protocol ContentCellDelegate : AnyObject {
     func contentCellDidClickVcvClickPhoto(cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String)
     func contentCellDidClickVcvClickVideo(cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String)
     func contentCellDidDoubleClickPhoto(pointX: CGFloat, pointY: CGFloat)
+    func contentCellDidClickSound()
 }
 
 class ContentCell: UIView {
@@ -53,14 +54,26 @@ class PostPhotoContentCell: ContentCell {
     
     func redrawUI() {
         
+        let pConBg = UIView()
+        pConBg.backgroundColor = .ddmDarkColor //.ddmDarkColor
+        self.addSubview(pConBg)
+        pConBg.frame = CGRect(x: 0, y: 0, width: viewWidth, height: viewHeight)
+        pConBg.translatesAutoresizingMaskIntoConstraints = false
+        pConBg.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
+        pConBg.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true //0
+        pConBg.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true  //280
+        pConBg.heightAnchor.constraint(equalToConstant: viewHeight).isActive = true  //280
+        pConBg.layer.cornerRadius = 10
+        pConBg.layer.opacity = 0.4 //0.2
+        
         //carousel of images
 //        let scrollView = UIScrollView()
 //        aHLightRect1.addSubview(scrollView)
         self.addSubview(scrollView)
         scrollView.backgroundColor = .clear
         scrollView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
-        scrollView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true //0
+        scrollView.topAnchor.constraint(equalTo: pConBg.topAnchor, constant: 0).isActive = true
+        scrollView.leadingAnchor.constraint(equalTo: pConBg.leadingAnchor, constant: 0).isActive = true //0
 //        scrollView.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
 //        scrollView.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true //0
 //        scrollView.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
@@ -620,7 +633,16 @@ class PostVideoContentCell: ContentCell {
     let soundOnBtn = UIImageView()
     var player: AVPlayer!
     
+    let errorText = UILabel()
+    let errorRefreshBtn = UIView()
+    let bSpinner = SpinLoader()
+    
     weak var aDelegate : ContentCellDelegate?
+    
+    //TODO:
+    //1) setState t_s when asyncconfig
+    var t_s_ = 0.0
+    //2) indicate whether asset is loaded, then only playable
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -641,6 +663,29 @@ class PostVideoContentCell: ContentCell {
     }
     
     func redrawUI() {
+        let vConBg = UIView()
+        vConBg.backgroundColor = .ddmDarkColor //.ddmDarkColor
+        self.addSubview(vConBg)
+        vConBg.frame = CGRect(x: 0, y: 0, width: viewWidth, height: viewHeight) //150, 250
+        vConBg.translatesAutoresizingMaskIntoConstraints = false
+        vConBg.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
+        vConBg.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true //0
+        vConBg.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true  //280
+        vConBg.heightAnchor.constraint(equalToConstant: viewHeight).isActive = true  //280
+        vConBg.layer.cornerRadius = 10
+        vConBg.layer.opacity = 0.4 //0.2
+        
+        let videoContainerBg = UIView()
+        self.addSubview(videoContainerBg)
+        videoContainerBg.translatesAutoresizingMaskIntoConstraints = false
+        videoContainerBg.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true //150, 370
+        videoContainerBg.heightAnchor.constraint(equalToConstant: viewHeight).isActive = true //250, 280
+        videoContainerBg.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
+        videoContainerBg.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
+        videoContainerBg.clipsToBounds = true
+        videoContainerBg.layer.cornerRadius = 10
+        videoContainerBg.backgroundColor = .ddmDarkColor
+        
 //        let videoContainer = UIView()
         videoContainer.frame = CGRect(x: 0, y: 0, width: viewWidth, height: viewHeight) //150, 250
         self.addSubview(videoContainer)
@@ -652,6 +697,7 @@ class PostVideoContentCell: ContentCell {
         videoContainer.clipsToBounds = true
         videoContainer.layer.cornerRadius = 10
         videoContainer.backgroundColor = .black
+//        videoContainer.backgroundColor = .ddmDarkColor
         videoContainer.isUserInteractionEnabled = true
         videoContainer.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onVideoClicked)))
 
@@ -683,43 +729,158 @@ class PostVideoContentCell: ContentCell {
         soundOnBtn.isUserInteractionEnabled = true
 //                soundOnBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onVideoBtnClicked)))
 
+        //test > error handling
+        errorText.textAlignment = .center //left
+        errorText.textColor = .white
+        errorText.font = .systemFont(ofSize: 13)
+        self.addSubview(errorText)
+        errorText.clipsToBounds = true
+        errorText.translatesAutoresizingMaskIntoConstraints = false
+        errorText.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: -20).isActive = true
+//        errorText.centerXAnchor.constraint(equalTo: self.centerXAnchor, constant: 0).isActive = true
+        errorText.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
+        errorText.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
+        errorText.text = ""
+        errorText.numberOfLines = 0
+        errorText.isHidden = true
+        
+//        errorRefreshBtn.backgroundColor = .ddmDarkColor //test to remove color
+        self.addSubview(errorRefreshBtn)
+        errorRefreshBtn.translatesAutoresizingMaskIntoConstraints = false
+        errorRefreshBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true //ori: 40
+        errorRefreshBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        errorRefreshBtn.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        errorRefreshBtn.topAnchor.constraint(equalTo: errorText.bottomAnchor, constant: 0).isActive = true
+        errorRefreshBtn.layer.cornerRadius = 20
+        errorRefreshBtn.isUserInteractionEnabled = true
+        errorRefreshBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onErrorRefreshClicked)))
+        errorRefreshBtn.isHidden = true
+        
+        let bMiniBtn = UIImageView(image: UIImage(named:"icon_round_refresh")?.withRenderingMode(.alwaysTemplate))
+//        bMiniBtn.tintColor = .black
+        bMiniBtn.tintColor = .white
+        errorRefreshBtn.addSubview(bMiniBtn)
+        bMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        bMiniBtn.centerXAnchor.constraint(equalTo: errorRefreshBtn.centerXAnchor).isActive = true
+        bMiniBtn.centerYAnchor.constraint(equalTo: errorRefreshBtn.centerYAnchor).isActive = true
+        bMiniBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true //26
+        bMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
+        
+        bSpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
+        self.addSubview(bSpinner)
+        bSpinner.translatesAutoresizingMaskIntoConstraints = false
+            bSpinner.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+//        bSpinner.topAnchor.constraint(equalTo: footer.topAnchor, constant: 20).isActive = true
+        bSpinner.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        bSpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        bSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        bSpinner.isHidden = true
     }
     
+    //test > async fetch asset
+    func asyncConfigure(data: String) {
+        
+        let id = "s"
+        DataFetchManager.shared.fetchSoundData(id: id) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    print("pdp api success \(id), \(l)")
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    //UI change
+                    self.bSpinner.stopAnimating()
+                    self.bSpinner.isHidden = true
+                    
+                    self.videoContainer.isHidden = false
+                    self.soundOnBtn.isHidden = false
+                    self.playBtn.isHidden = false
+                    
+                    self.errorText.text = "-"
+                    self.errorText.isHidden = true
+                    self.errorRefreshBtn.isHidden = true
+                    
+                    //populate video
+                    var videoURL = ""
+                    videoURL = "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_video_4.mp4?alt=media"
+                    let url = CacheManager.shared.getCacheUrlFor(videoUrl: videoURL)
+                    
+                    if(self.player != nil && self.player.currentItem != nil) {
+                        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: self.player.currentItem)
+                    }
+                    
+                    let item2 = AVPlayerItem(url: url)
+                    self.player = AVPlayer(playerItem: item2)
+                    let layer2 = AVPlayerLayer(player: self.player)
+                    layer2.frame = self.videoContainer.bounds
+                    layer2.videoGravity = .resizeAspectFill
+                    self.videoContainer.layer.addSublayer(layer2)
+                    
+                    //add timestamp video while playing
+                    self.addTimeObserverVideo()
+                    
+                    //test > for looping
+                    NotificationCenter.default.addObserver(self, selector: #selector(self.playerDidFinishPlaying(_:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: self.player.currentItem)
+                    
+                    //seek to previously viewed state t_s
+                    let seekTime = CMTime(seconds: self.t_s_, preferredTimescale: CMTimeScale(1000)) //1000
+                    self.player?.seek(to: seekTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    self.bSpinner.stopAnimating()
+                    self.bSpinner.isHidden = true
+                    
+                    self.videoContainer.isHidden = true
+                    self.soundOnBtn.isHidden = true
+                    self.playBtn.isHidden = true
+                    
+                    //error handling e.g. refetch button
+                    self.errorText.text = "Error occurs. Retry."
+                    self.errorText.isHidden = false
+                    self.errorRefreshBtn.isHidden = false
+                }
+                break
+            }
+        }
+    }
+    
+    //test > async config
     func configure(data: String) {
-        var videoURL = ""
-        if(data == "a") {
-            videoURL = "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_video_4.mp4?alt=media"
-        }
-        else {
-            
-        }
+        bSpinner.startAnimating()
+        bSpinner.isHidden = false
         
-        let url = CacheManager.shared.getCacheUrlFor(videoUrl: videoURL)
+        //error handling e.g. refetch button
+        self.errorText.text = "-"
+        self.errorText.isHidden = true
+        self.errorRefreshBtn.isHidden = true
         
-        if(player != nil && player.currentItem != nil) {
-            NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
-        }
+        self.videoContainer.isHidden = true
+        self.soundOnBtn.isHidden = true
+        self.playBtn.isHidden = true
         
-        let item2 = AVPlayerItem(url: url)
-        player = AVPlayer(playerItem: item2)
-        let layer2 = AVPlayerLayer(player: player)
-        layer2.frame = videoContainer.bounds
-        layer2.videoGravity = .resizeAspectFill
-        videoContainer.layer.addSublayer(layer2)
-        
-        //add timestamp video while playing
-        addTimeObserverVideo()
-        
-        //test > for looping
-        NotificationCenter.default.addObserver(self, selector: #selector(playerDidFinishPlaying(_:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
-        
+        asyncConfigure(data: "")
     }
     
     //test > resume to paused timestamp
     func setState(t: Double) {
-        let seekTime = CMTime(seconds: t, preferredTimescale: CMTimeScale(1000)) //1000
-        player?.seek(to: seekTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+        t_s_ = t
     }
+//    func setState(t: Double) {
+//        let seekTime = CMTime(seconds: t, preferredTimescale: CMTimeScale(1000)) //1000
+//        player?.seek(to: seekTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+//    }
     
     func hideCell() {
         videoContainer.isHidden = true
@@ -737,6 +898,30 @@ class PostVideoContentCell: ContentCell {
         player = nil
         
         vidPlayStatus = ""
+        
+        t_s_ = 0.0
+    }
+    @objc func onErrorRefreshClicked(gesture: UITapGestureRecognizer) {
+        refreshFetchData()
+    }
+    
+    func refreshFetchData() {
+        
+        t_s_ = 0.0 //reset t_s
+        
+        self.bSpinner.startAnimating()
+        self.bSpinner.isHidden = false
+        
+        //error handling e.g. refetch button
+        self.errorText.text = "-"
+        self.errorText.isHidden = true
+        self.errorRefreshBtn.isHidden = true
+        
+        self.videoContainer.isHidden = true
+        self.soundOnBtn.isHidden = true
+        self.playBtn.isHidden = true
+        
+        asyncConfigure(data: "")
     }
     
     @objc func onVideoClicked(gesture: UITapGestureRecognizer) {
@@ -747,7 +932,7 @@ class PostVideoContentCell: ContentCell {
         aDelegate?.contentCellDidClickVcvClickVideo(cc: self, pointX: pointX, pointY: pointY, view: videoContainer, mode: VideoTypes.V_0)
         
         //test > hide photo
-        hideCell()
+//        hideCell() //disabled for testing only
     }
     @objc func onVideoBtnClicked(gesture: UITapGestureRecognizer) {
         print("postphoto click video btn:")
@@ -847,7 +1032,16 @@ class PostVideoLoopContentCell: ContentCell {
     let a2UserPhoto = SDAnimatedImageView()
     let aaText = UILabel()
     
+    let errorText = UILabel()
+    let errorRefreshBtn = UIView()
+    let bSpinner = SpinLoader()
+    
     weak var aDelegate : ContentCellDelegate?
+    
+    //TODO:
+    //1) setState t_s when asyncconfig
+    var t_s_ = 0.0
+    //2) indicate whether asset is loaded, then only playable
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -886,6 +1080,18 @@ class PostVideoLoopContentCell: ContentCell {
         vConBg.layer.cornerRadius = 10
         vConBg.layer.opacity = 0.4 //0.2
         
+        let videoContainerBg = UIView()
+        self.addSubview(videoContainerBg)
+        videoContainerBg.translatesAutoresizingMaskIntoConstraints = false
+        videoContainerBg.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true //150, 370
+        videoContainerBg.heightAnchor.constraint(equalToConstant: viewHeight - descHeight).isActive = true //250, 280
+        videoContainerBg.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
+        videoContainerBg.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
+        videoContainerBg.clipsToBounds = true
+        videoContainerBg.layer.cornerRadius = 10
+        videoContainerBg.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
+        videoContainerBg.backgroundColor = .ddmDarkColor
+        
 //        let videoContainer = UIView()
         videoContainer.frame = CGRect(x: 0, y: 0, width: viewWidth, height: viewHeight - descHeight) //150, 250
         self.addSubview(videoContainer)
@@ -897,7 +1103,8 @@ class PostVideoLoopContentCell: ContentCell {
         videoContainer.clipsToBounds = true
         videoContainer.layer.cornerRadius = 10
         videoContainer.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
-        videoContainer.backgroundColor = .black
+//        videoContainer.backgroundColor = .black
+        videoContainer.backgroundColor = .ddmDarkColor
         videoContainer.isUserInteractionEnabled = true
         videoContainer.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onVideoClicked)))
 
@@ -928,60 +1135,53 @@ class PostVideoLoopContentCell: ContentCell {
         soundOnBtn.widthAnchor.constraint(equalToConstant: 22).isActive = true
         soundOnBtn.isUserInteractionEnabled = true
 //                soundOnBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onVideoBtnClicked)))
-
-//        let label = UIView()
-//        self.addSubview(label)
-//        label.backgroundColor = .clear
-//        label.translatesAutoresizingMaskIntoConstraints = false
-//        label.heightAnchor.constraint(equalToConstant: 26).isActive = true //30
-//        label.topAnchor.constraint(equalTo: videoContainer.topAnchor, constant: 5).isActive = true
-//        label.trailingAnchor.constraint(equalTo: videoContainer.trailingAnchor, constant: -5).isActive = true
-//        label.layer.cornerRadius = 5
-//        
-//        let labelBg = UIView()
-//        label.addSubview(labelBg)
-//        labelBg.backgroundColor = .ddmDarkColor
-//        labelBg.translatesAutoresizingMaskIntoConstraints = false
-//        labelBg.topAnchor.constraint(equalTo: label.topAnchor, constant: 0).isActive = true
-//        labelBg.leadingAnchor.constraint(equalTo: label.leadingAnchor, constant: 0).isActive = true
-//        labelBg.trailingAnchor.constraint(equalTo: label.trailingAnchor, constant: 0).isActive = true
-//        labelBg.bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 0).isActive = true
-//        labelBg.layer.opacity = 0.3 //0.5
-//        labelBg.layer.cornerRadius = 5
-//        
-//        let e2UserCover = UIView()
-//        e2UserCover.backgroundColor = .clear
-//        label.addSubview(e2UserCover)
-//        e2UserCover.translatesAutoresizingMaskIntoConstraints = false
-//        e2UserCover.centerYAnchor.constraint(equalTo: label.centerYAnchor, constant: 0).isActive = true
-//        e2UserCover.leadingAnchor.constraint(equalTo: label.leadingAnchor, constant: 5).isActive = true
-//        e2UserCover.heightAnchor.constraint(equalToConstant: 20).isActive = true //28
-//        e2UserCover.widthAnchor.constraint(equalToConstant: 20).isActive = true //28
-//        e2UserCover.layer.cornerRadius = 10
-//        e2UserCover.layer.opacity = 1.0 //default 0.3
-//
-////        let a2UserPhoto = SDAnimatedImageView()
-//        label.addSubview(a2UserPhoto)
-//        a2UserPhoto.translatesAutoresizingMaskIntoConstraints = false
-//        a2UserPhoto.widthAnchor.constraint(equalToConstant: 20).isActive = true //36
-//        a2UserPhoto.heightAnchor.constraint(equalToConstant: 20).isActive = true
-//        a2UserPhoto.centerXAnchor.constraint(equalTo: e2UserCover.centerXAnchor).isActive = true
-//        a2UserPhoto.centerYAnchor.constraint(equalTo: e2UserCover.centerYAnchor).isActive = true
-//        a2UserPhoto.contentMode = .scaleAspectFill
-//        a2UserPhoto.layer.masksToBounds = true
-//        a2UserPhoto.layer.cornerRadius = 10
-//        a2UserPhoto.backgroundColor = .ddmDarkColor
-//        
-//        let aGridNameText = UILabel()
-//        aGridNameText.textAlignment = .left
-//        aGridNameText.textColor = .white
-//        aGridNameText.font = .boldSystemFont(ofSize: 12)
-//        label.addSubview(aGridNameText)
-//        aGridNameText.translatesAutoresizingMaskIntoConstraints = false
-//        aGridNameText.centerYAnchor.constraint(equalTo: e2UserCover.centerYAnchor).isActive = true
-//        aGridNameText.trailingAnchor.constraint(equalTo: label.trailingAnchor, constant: -5).isActive = true
-//        aGridNameText.leadingAnchor.constraint(equalTo: e2UserCover.trailingAnchor, constant: 5).isActive = true
-//        aGridNameText.text = "Loop"
+        
+        //test > error handling
+        errorText.textAlignment = .center //left
+        errorText.textColor = .white
+        errorText.font = .systemFont(ofSize: 13)
+        self.addSubview(errorText)
+        errorText.clipsToBounds = true
+        errorText.translatesAutoresizingMaskIntoConstraints = false
+        errorText.centerYAnchor.constraint(equalTo: videoContainer.centerYAnchor, constant: -20).isActive = true
+//        errorText.centerXAnchor.constraint(equalTo: self.centerXAnchor, constant: 0).isActive = true
+        errorText.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
+        errorText.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
+        errorText.text = ""
+        errorText.numberOfLines = 0
+        errorText.isHidden = true
+        
+//        errorRefreshBtn.backgroundColor = .ddmDarkColor //test to remove color
+        self.addSubview(errorRefreshBtn)
+        errorRefreshBtn.translatesAutoresizingMaskIntoConstraints = false
+        errorRefreshBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true //ori: 40
+        errorRefreshBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        errorRefreshBtn.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        errorRefreshBtn.topAnchor.constraint(equalTo: errorText.bottomAnchor, constant: 0).isActive = true
+        errorRefreshBtn.layer.cornerRadius = 20
+        errorRefreshBtn.isUserInteractionEnabled = true
+        errorRefreshBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onErrorRefreshClicked)))
+        errorRefreshBtn.isHidden = true
+        
+        let bMiniBtn = UIImageView(image: UIImage(named:"icon_round_refresh")?.withRenderingMode(.alwaysTemplate))
+//        bMiniBtn.tintColor = .black
+        bMiniBtn.tintColor = .white
+        errorRefreshBtn.addSubview(bMiniBtn)
+        bMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        bMiniBtn.centerXAnchor.constraint(equalTo: errorRefreshBtn.centerXAnchor).isActive = true
+        bMiniBtn.centerYAnchor.constraint(equalTo: errorRefreshBtn.centerYAnchor).isActive = true
+        bMiniBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true //26
+        bMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
+        
+        bSpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
+        self.addSubview(bSpinner)
+        bSpinner.translatesAutoresizingMaskIntoConstraints = false
+            bSpinner.centerYAnchor.constraint(equalTo: videoContainer.centerYAnchor).isActive = true
+//        bSpinner.topAnchor.constraint(equalTo: footer.topAnchor, constant: 20).isActive = true
+        bSpinner.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        bSpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        bSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        bSpinner.isHidden = true
         
         //test > shot description
         let vConBottom = UIView()
@@ -1004,61 +1204,6 @@ class PostVideoLoopContentCell: ContentCell {
         moreBtn.trailingAnchor.constraint(equalTo: vConBottom.trailingAnchor, constant: -5).isActive = true
         moreBtn.heightAnchor.constraint(equalToConstant: 22).isActive = true //30, 26, 22
         moreBtn.widthAnchor.constraint(equalToConstant: 22).isActive = true
-        
-        //test > reposition "loop" label to desc
-//        let label = UIView()
-//        vConBottom.addSubview(label)
-//        label.backgroundColor = .clear
-//        label.translatesAutoresizingMaskIntoConstraints = false
-//        label.heightAnchor.constraint(equalToConstant: 26).isActive = true //30
-//        label.centerYAnchor.constraint(equalTo: vConBottom.centerYAnchor, constant: 0).isActive = true
-//        label.leadingAnchor.constraint(equalTo: vConBottom.leadingAnchor, constant: 5).isActive = true
-//        label.layer.cornerRadius = 5
-//        
-//        let labelBg = UIView()
-//        label.addSubview(labelBg)
-//        labelBg.backgroundColor = .ddmDarkColor
-//        labelBg.translatesAutoresizingMaskIntoConstraints = false
-//        labelBg.topAnchor.constraint(equalTo: label.topAnchor, constant: 0).isActive = true
-//        labelBg.leadingAnchor.constraint(equalTo: label.leadingAnchor, constant: 0).isActive = true
-//        labelBg.trailingAnchor.constraint(equalTo: label.trailingAnchor, constant: 0).isActive = true
-//        labelBg.bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 0).isActive = true
-//        labelBg.layer.opacity = 0.3 //0.5
-//        labelBg.layer.cornerRadius = 5
-//        
-//        let e2UserCover = UIView()
-//        e2UserCover.backgroundColor = .clear
-//        label.addSubview(e2UserCover)
-//        e2UserCover.translatesAutoresizingMaskIntoConstraints = false
-//        e2UserCover.centerYAnchor.constraint(equalTo: label.centerYAnchor, constant: 0).isActive = true
-//        e2UserCover.leadingAnchor.constraint(equalTo: label.leadingAnchor, constant: 5).isActive = true
-//        e2UserCover.heightAnchor.constraint(equalToConstant: 20).isActive = true //28
-//        e2UserCover.widthAnchor.constraint(equalToConstant: 20).isActive = true //28
-//        e2UserCover.layer.cornerRadius = 10
-//        e2UserCover.layer.opacity = 1.0 //default 0.3
-//
-////        let a2UserPhoto = SDAnimatedImageView()
-//        label.addSubview(a2UserPhoto)
-//        a2UserPhoto.translatesAutoresizingMaskIntoConstraints = false
-//        a2UserPhoto.widthAnchor.constraint(equalToConstant: 20).isActive = true //36
-//        a2UserPhoto.heightAnchor.constraint(equalToConstant: 20).isActive = true
-//        a2UserPhoto.centerXAnchor.constraint(equalTo: e2UserCover.centerXAnchor).isActive = true
-//        a2UserPhoto.centerYAnchor.constraint(equalTo: e2UserCover.centerYAnchor).isActive = true
-//        a2UserPhoto.contentMode = .scaleAspectFill
-//        a2UserPhoto.layer.masksToBounds = true
-//        a2UserPhoto.layer.cornerRadius = 10
-//        a2UserPhoto.backgroundColor = .ddmDarkColor
-//        
-//        let aGridNameText = UILabel()
-//        aGridNameText.textAlignment = .left
-//        aGridNameText.textColor = .white
-//        aGridNameText.font = .boldSystemFont(ofSize: 12)
-//        label.addSubview(aGridNameText)
-//        aGridNameText.translatesAutoresizingMaskIntoConstraints = false
-//        aGridNameText.centerYAnchor.constraint(equalTo: e2UserCover.centerYAnchor).isActive = true
-//        aGridNameText.trailingAnchor.constraint(equalTo: label.trailingAnchor, constant: -5).isActive = true
-//        aGridNameText.leadingAnchor.constraint(equalTo: e2UserCover.trailingAnchor, constant: 5).isActive = true
-//        aGridNameText.text = "Loop"
         
         //test 2 > just user photo at desc
         let e2UserCover = UIView()
@@ -1091,6 +1236,7 @@ class PostVideoLoopContentCell: ContentCell {
         aaText.font = .boldSystemFont(ofSize: 12)
         aaText.numberOfLines = 1
         vConBottom.addSubview(aaText)
+        aaText.text = "-"
         aaText.translatesAutoresizingMaskIntoConstraints = false
         aaText.centerYAnchor.constraint(equalTo: vConBottom.centerYAnchor, constant: 0).isActive = true
 //        aaText.leadingAnchor.constraint(equalTo: vConBottom.leadingAnchor, constant: 10).isActive = true //5
@@ -1098,45 +1244,149 @@ class PostVideoLoopContentCell: ContentCell {
         aaText.trailingAnchor.constraint(equalTo: moreBtn.leadingAnchor, constant: -5).isActive = true //-30
     }
     
-    func configure(data: String) {
-        var videoURL = ""
-        if(data == "a") {
-            videoURL = "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_video_4.mp4?alt=media"
+    //test > async fetch asset
+    func asyncConfigure(data: String) {
+        
+        let id = "s"
+        DataFetchManager.shared.fetchSoundData(id: id) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    print("pdp api success \(id), \(l)")
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    //UI change
+                    self.bSpinner.stopAnimating()
+                    self.bSpinner.isHidden = true
+                    
+                    self.videoContainer.isHidden = false
+                    self.soundOnBtn.isHidden = false
+                    self.playBtn.isHidden = false
+                    
+                    self.errorText.text = "-"
+                    self.errorText.isHidden = true
+                    self.errorRefreshBtn.isHidden = true
+                    
+                    //populate video
+                    var videoURL = ""
+                    videoURL = "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_video_4.mp4?alt=media"
+                    let url = CacheManager.shared.getCacheUrlFor(videoUrl: videoURL)
+                    
+                    if(self.player != nil && self.player.currentItem != nil) {
+                        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: self.player.currentItem)
+                    }
+                    
+                    let item2 = AVPlayerItem(url: url)
+                    self.player = AVPlayer(playerItem: item2)
+                    let layer2 = AVPlayerLayer(player: self.player)
+                    layer2.frame = self.videoContainer.bounds
+                    layer2.videoGravity = .resizeAspectFill
+                    self.videoContainer.layer.addSublayer(layer2)
+                    
+                    //add timestamp video while playing
+                    self.addTimeObserverVideo()
+                    
+                    //test > for looping
+                    NotificationCenter.default.addObserver(self, selector: #selector(self.playerDidFinishPlaying(_:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: self.player.currentItem)
+                    
+                    //seek to previously viewed state t_s
+                    let seekTime = CMTime(seconds: self.t_s_, preferredTimescale: CMTimeScale(1000)) //1000
+                    self.player?.seek(to: seekTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+                    
+                    //test > populate description text and label
+                    self.aaText.text = self.descTxt
+                    let image2Url = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+                    self.a2UserPhoto.sd_setImage(with: image2Url)
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    self.bSpinner.stopAnimating()
+                    self.bSpinner.isHidden = true
+                    
+                    self.videoContainer.isHidden = true
+                    self.soundOnBtn.isHidden = true
+                    self.playBtn.isHidden = true
+                    
+                    //error handling e.g. refetch button
+                    self.errorText.text = "Error occurs. Retry."
+                    self.errorText.isHidden = false
+                    self.errorRefreshBtn.isHidden = false
+                }
+                break
+            }
         }
-        else {
-            
-        }
-        
-        let url = CacheManager.shared.getCacheUrlFor(videoUrl: videoURL)
-        
-        if(player != nil && player.currentItem != nil) {
-            NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
-        }
-        
-        let item2 = AVPlayerItem(url: url)
-        player = AVPlayer(playerItem: item2)
-        let layer2 = AVPlayerLayer(player: player)
-        layer2.frame = videoContainer.bounds
-        layer2.videoGravity = .resizeAspectFill
-        videoContainer.layer.addSublayer(layer2)
-        
-        //add timestamp video while playing
-        addTimeObserverVideo()
-        
-        //test > for looping
-        NotificationCenter.default.addObserver(self, selector: #selector(playerDidFinishPlaying(_:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
-        
-        //test > populate description text and label
-        aaText.text = descTxt
-        let image2Url = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-        a2UserPhoto.sd_setImage(with: image2Url)
     }
+    
+    //test > async config
+    func configure(data: String) {
+        bSpinner.startAnimating()
+        bSpinner.isHidden = false
+        
+        //error handling e.g. refetch button
+        self.errorText.text = "-"
+        self.errorText.isHidden = true
+        self.errorRefreshBtn.isHidden = true
+        
+        self.videoContainer.isHidden = true
+        self.soundOnBtn.isHidden = true
+        self.playBtn.isHidden = true
+        
+        asyncConfigure(data: "")
+    }
+    
+//    func configure(data: String) {
+//        var videoURL = ""
+//        if(data == "a") {
+//            videoURL = "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_video_4.mp4?alt=media"
+//        }
+//        else {
+//            
+//        }
+//        
+//        let url = CacheManager.shared.getCacheUrlFor(videoUrl: videoURL)
+//        
+//        if(player != nil && player.currentItem != nil) {
+//            NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
+//        }
+//        
+//        let item2 = AVPlayerItem(url: url)
+//        player = AVPlayer(playerItem: item2)
+//        let layer2 = AVPlayerLayer(player: player)
+//        layer2.frame = videoContainer.bounds
+//        layer2.videoGravity = .resizeAspectFill
+//        videoContainer.layer.addSublayer(layer2)
+//        
+//        //add timestamp video while playing
+//        addTimeObserverVideo()
+//        
+//        //test > for looping
+//        NotificationCenter.default.addObserver(self, selector: #selector(playerDidFinishPlaying(_:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
+//        
+//        //test > populate description text and label
+//        aaText.text = descTxt
+//        let image2Url = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//        a2UserPhoto.sd_setImage(with: image2Url)
+//    }
     
     //test > resume to paused timestamp
     func setState(t: Double) {
-        let seekTime = CMTime(seconds: t, preferredTimescale: CMTimeScale(1000)) //1000
-        player?.seek(to: seekTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+        t_s_ = t
     }
+//    func setState(t: Double) {
+//        let seekTime = CMTime(seconds: t, preferredTimescale: CMTimeScale(1000)) //1000
+//        player?.seek(to: seekTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+//    }
     
     func hideCell() {
         videoContainer.isHidden = true
@@ -1154,6 +1404,30 @@ class PostVideoLoopContentCell: ContentCell {
         player = nil
         
         vidPlayStatus = ""
+        
+        t_s_ = 0.0 //reset t_s
+    }
+    @objc func onErrorRefreshClicked(gesture: UITapGestureRecognizer) {
+        refreshFetchData()
+    }
+    
+    func refreshFetchData() {
+        
+        t_s_ = 0.0 //reset t_s
+        
+        self.bSpinner.startAnimating()
+        self.bSpinner.isHidden = false
+        
+        //error handling e.g. refetch button
+        self.errorText.text = "-"
+        self.errorText.isHidden = true
+        self.errorRefreshBtn.isHidden = true
+        
+        self.videoContainer.isHidden = true
+        self.soundOnBtn.isHidden = true
+        self.playBtn.isHidden = true
+        
+        asyncConfigure(data: "")
     }
     
     @objc func onVideoLClicked(gesture: UITapGestureRecognizer) {
@@ -1296,6 +1570,18 @@ class ShotPhotoContentCell: ContentCell {
     }
     
     func redrawUI() {
+        
+        let pConBg = UIView()
+        pConBg.backgroundColor = .ddmDarkColor //.ddmDarkColor
+        self.addSubview(pConBg)
+        pConBg.frame = CGRect(x: 0, y: 0, width: viewWidth, height: viewHeight - bubbleHeight)
+        pConBg.translatesAutoresizingMaskIntoConstraints = false
+        pConBg.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
+        pConBg.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true //0
+        pConBg.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true  //280
+        pConBg.heightAnchor.constraint(equalToConstant: viewHeight - bubbleHeight).isActive = true  //280
+        pConBg.layer.cornerRadius = 10
+        pConBg.layer.opacity = 0.4 //0.2
         
         //carousel of images
 //        let scrollView = UIScrollView()
@@ -1632,7 +1918,8 @@ class ShotSoundContentCell: ContentCell {
     }
     
     func asyncConfigure(data: String) {
-        let id = "s_"
+        
+        let id = "s"
         DataFetchManager.shared.fetchSoundData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -1704,59 +1991,6 @@ class ShotSoundContentCell: ContentCell {
     
     func configure(data: String) {
         //test 2 > try async fetch sound data
-        if(data == "a") {
-            bSpinner.startAnimating()
-            
-            //error handling e.g. refetch button
-            self.errorText.text = "-"
-            self.errorText.isHidden = true
-            self.errorRefreshBtn.isHidden = true
-            
-            self.mText.text = "-"
-            self.mText.isHidden = false
-            self.dMiniCon.isHidden = true
-            
-            asyncConfigure(data: "")
-        }
-        
-        //original
-//        var videoURL = ""
-//        if(data == "a") {
-////            videoURL = "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_audio_4.m4a?alt=media"
-//        }
-//        else {
-//            
-//        }
-//        let audioUrl = CacheManager.shared.getCacheUrlFor(videoUrl: videoURL)
-//        
-//        if(player != nil && player.currentItem != nil) {
-//            NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
-//        }
-//        
-//        let asset2 = AVAsset(url: audioUrl)
-//        let item2 = AVPlayerItem(asset: asset2)
-//        player = AVPlayer(playerItem: item2)
-//        let layer2 = AVPlayerLayer(player: player)
-//        layer2.frame = aaBox.bounds
-//        aaBox.layer.addSublayer(layer2)
-//        
-//        //add timestamp video while playing
-//        addTimeObserverVideo()
-//        
-//        //test > for looping
-//        NotificationCenter.default.addObserver(self, selector: #selector(playerDidFinishPlaying(_:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
-//        
-//        //test > populate description text and label
-//        mText.text = "明知故犯 - HubertWu"
-    }
-    
-    @objc func onSoundClicked(gesture: UITapGestureRecognizer) {
-        print("postphoto click sound btn:")
-
-    }
-    
-    @objc func onErrorRefreshClicked(gesture: UITapGestureRecognizer) {
-        print("postphoto click sound refresh btn:")
         bSpinner.startAnimating()
         
         //error handling e.g. refetch button
@@ -1771,6 +2005,16 @@ class ShotSoundContentCell: ContentCell {
         asyncConfigure(data: "")
     }
     
+    @objc func onSoundClicked(gesture: UITapGestureRecognizer) {
+        print("postphoto click sound btn:")
+        aDelegate?.contentCellDidClickSound()
+    }
+    
+    @objc func onErrorRefreshClicked(gesture: UITapGestureRecognizer) {
+        print("postphoto click sound refresh btn:")
+        refreshFetchData()
+    }
+    
     @objc func onVideoBtnClicked(gesture: UITapGestureRecognizer) {
         print("postphoto click video btn:")
         if(vidPlayStatus == "play") {
@@ -1778,6 +2022,22 @@ class ShotSoundContentCell: ContentCell {
         } else {
             resumeVideo()
         }
+    }
+    
+    func refreshFetchData() {
+        
+        bSpinner.startAnimating()
+        
+        //error handling e.g. refetch button
+        self.errorText.text = "-"
+        self.errorText.isHidden = true
+        self.errorRefreshBtn.isHidden = true
+        
+        self.mText.text = "-"
+        self.mText.isHidden = false
+        self.dMiniCon.isHidden = true
+        
+        asyncConfigure(data: "")
     }
     
     //test > resume to paused timestamp

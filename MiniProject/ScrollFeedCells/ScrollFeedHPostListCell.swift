@@ -105,49 +105,28 @@ class ScrollFeedHPostListCell: ScrollDataFeedCell {
         if(currentPlayingVidIndex > -1) {
             let idxPath = IndexPath(item: currentPlayingVidIndex, section: 0)
             let currentVc = a.cellForItem(at: idxPath)
-            guard let b = currentVc as? HPostListAViewCell else {
-                return
+
+            if let b = currentVc as? HPostListAViewCell {
+                b.resumeVideo()
             }
-            b.resumeVideo()
         }
         print("sfvideo resumeCurrentVideo: \(feedCode), \(currentPlayingVidIndex)")
     }
 
     //test > pause current video for closing
-    func pauseCurrentVideo() -> CGFloat {
+    func pauseCurrentVideo() {
         guard let a = self.vCV else {
-            return 0.0
+            return
         }
         if(currentPlayingVidIndex > -1) {
             let idxPath = IndexPath(item: currentPlayingVidIndex, section: 0)
             let currentVc = a.cellForItem(at: idxPath)
-            guard let b = currentVc as? HPostListAViewCell else {
-                return 0.0
-            }
-            b.pauseVideo()
-//            vDataList[currentPlayingVidIndex].t_s = b.t_s
-            print("sfvideo pauseCurrentVideo: \(feedCode), \(currentPlayingVidIndex)")
             
-//            return b.t_s
-            return 0.0
-        } else {
-            return 0.0
+            if let b = currentVc as? HPostListAViewCell {
+                b.pauseVideo()
+            }
         }
     }
-    
-    //test > seek time
-//    func seekToVideo() {
-//        guard let a = self.vCV else {
-//            return
-//        }
-//
-//        let idxPath = IndexPath(item: 0, section: 0)
-//        let currentVc = a.cellForItem(at: idxPath)
-//        guard let b = currentVc as? HPostListAViewCell else {
-//            return
-//        }
-//        b.seekToV()
-//    }
     
     //test > dehide cell
     func dehideCell() {
@@ -182,39 +161,34 @@ class ScrollFeedHPostListCell: ScrollDataFeedCell {
                     let idxPath = IndexPath(item: intersectedIdx, section: 0)
                     let prevVc = a.cellForItem(at: prevIdxPath)
                     let currentVc = a.cellForItem(at: idxPath)
-                    guard let b = prevVc as? HPostListAViewCell else {
-                        return
+                    
+                    if let b = prevVc as? HPostListAViewCell {
+                        b.pauseVideo()
                     }
-                    guard let c = currentVc as? HPostListAViewCell else {
-                        return
+                    if let c = currentVc as? HPostListAViewCell {
+                        c.resumeVideo()
+                        currentPlayingVidIndex = intersectedIdx
                     }
-                    b.pauseVideo()
-//                    vDataList[currentPlayingVidIndex].t_s = b.t_s
-
-                    c.resumeVideo()
-                    currentPlayingVidIndex = intersectedIdx
                 }
             } else {
                 let idxPath = IndexPath(item: intersectedIdx, section: 0)
                 let currentVc = a.cellForItem(at: idxPath)
-                guard let b = currentVc as? HPostListAViewCell else {
-                    return
+                
+                if let b = currentVc as? HPostListAViewCell {
+                    b.resumeVideo()
+                    currentPlayingVidIndex = intersectedIdx
                 }
-
-                b.resumeVideo()
-                currentPlayingVidIndex = intersectedIdx
             }
         } else {
             //if intersectedIdx == -1, all video should pause/stop
             if(currentPlayingVidIndex > -1) {
                 let idxPath = IndexPath(item: currentPlayingVidIndex, section: 0)
                 let currentVc = a.cellForItem(at: idxPath)
-                guard let b = currentVc as? HPostListAViewCell else {
-                    return
+                
+                if let b = currentVc as? HPostListAViewCell {
+                    b.pauseVideo()
+                    currentPlayingVidIndex = -1
                 }
-                b.pauseVideo()
-//                vDataList[currentPlayingVidIndex].t_s = b.t_s
-                currentPlayingVidIndex = -1
             }
         }
     }
@@ -258,11 +232,15 @@ extension ScrollFeedHPostListCell: UICollectionViewDelegateFlowLayout {
     }
     
     private func estimateHeight(text: String, textWidth: CGFloat, fontSize: CGFloat) -> CGFloat {
-        let size = CGSize(width: textWidth, height: 1000) //1000 height is dummy
-        let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: fontSize)]
-        let estimatedFrame = NSString(string: text).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
-        
-        return estimatedFrame.height
+        if(text == ""){
+            return 0
+        } else {
+            let size = CGSize(width: textWidth, height: 1000) //1000 height is dummy
+            let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: fontSize)]
+            let estimatedFrame = NSString(string: text).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
+            
+            return estimatedFrame.height
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView,
@@ -666,7 +644,6 @@ extension ScrollFeedHPostListCell: HListCellDelegate {
         aDelegate?.sfcDidClickVcvLove()
     }
     func hListDidClickVcvShare(vc: UICollectionViewCell) {
-//        aDelegate?.sfcDidClickVcvShare()
         if let a = vCV {
             for cell in a.visibleCells {
                 
@@ -696,7 +673,6 @@ extension ScrollFeedHPostListCell: HListCellDelegate {
         aDelegate?.sfcDidClickVcvClickPost()
     }
     func hListDidClickVcvClickPhoto(vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
-//        aDelegate?.sfcDidClickVcvClickPhoto()
         
         if let a = vCV {
             for cell in a.visibleCells {

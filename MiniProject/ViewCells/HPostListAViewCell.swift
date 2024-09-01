@@ -1408,6 +1408,9 @@ extension HPostListAViewCell: ContentCellDelegate {
     func contentCellDidDoubleClickPhoto(pointX: CGFloat, pointY: CGFloat){
         
     }
+    func contentCellDidClickSound(){
+        
+    }
 }
 
 extension HPostListAViewCell: CChainCellDelegate {

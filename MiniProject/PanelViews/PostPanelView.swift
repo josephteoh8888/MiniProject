@@ -1374,10 +1374,6 @@ class PostPanelView: PanelView, UIGestureRecognizerDelegate{
     //test
     override func resumeActiveState() {
         print("postpanelview resume active")
-//        resumeCurrentVideo()
-//        
-//        //test > dehide cell
-//        dehideCurrentCell()
         
         //test > only resume video if no comment scrollable view/any other view
         if(pageList.isEmpty) {
@@ -1389,6 +1385,7 @@ class PostPanelView: PanelView, UIGestureRecognizerDelegate{
         else {
             //dehide cell for commment view
             if let c = pageList[pageList.count - 1] as? CommentScrollableView {
+                c.resumeCurrentVideo()
                 c.dehideCell()
             }
         }
@@ -1923,7 +1920,7 @@ extension PostPanelView: CommentScrollableDelegate{
         delegate?.didClickPostPanelVcvClickPhoto(pointX: pointX, pointY: pointY, view: view, mode: mode)
     }
     func didCClickClickVideo(pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
-        
+        delegate?.didClickPostPanelVcvClickVideo(pointX: pointX, pointY: pointY, view: view, mode: mode)
     }
 }
 
@@ -2027,7 +2024,7 @@ extension PostPanelView: ScrollFeedCellDelegate {
     }
     func sfcDidClickVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         //test > pause current playing video when go to user
-        let t_s = pauseCurrentVideo()
+        pauseCurrentVideo()
         
         if(!self.feedList.isEmpty) {
             let b = self.feedList[self.currentIndex]

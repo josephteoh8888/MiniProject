@@ -41,8 +41,8 @@ class CustomImageView: UIView {
     }
     
     func setupViews() {
+//        self.backgroundColor = .black
         self.backgroundColor = .ddmDarkColor
-//        self.backgroundColor = .ddmBlackOverlayColor
         
         bSpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
         self.addSubview(bSpinner)
@@ -84,13 +84,13 @@ class CustomImageView: UIView {
         errorText.numberOfLines = 0
         errorText.isHidden = true
         
-        errorRefreshBtn.backgroundColor = .ddmDarkColor //test to remove color
+//        errorRefreshBtn.backgroundColor = .ddmDarkColor //test to remove color
         self.addSubview(errorRefreshBtn)
         errorRefreshBtn.translatesAutoresizingMaskIntoConstraints = false
         errorRefreshBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true //ori: 40
         errorRefreshBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
         errorRefreshBtn.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
-        errorRefreshBtn.topAnchor.constraint(equalTo: errorText.bottomAnchor, constant: 10).isActive = true
+        errorRefreshBtn.topAnchor.constraint(equalTo: errorText.bottomAnchor, constant: 0).isActive = true
         errorRefreshBtn.layer.cornerRadius = 20
         errorRefreshBtn.isUserInteractionEnabled = true
         errorRefreshBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onErrorRefreshClicked)))
@@ -143,7 +143,7 @@ class CustomImageView: UIView {
     
     //*test > async load photo
     func asyncConfigure(url: String) {
-        let id = "u"
+        let id = "u_"
         DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -218,8 +218,8 @@ class CustomDoubleTapImageView: UIView {
     }
     
     func setupViews() {
-        self.backgroundColor = .ddmDarkColor
 //        self.backgroundColor = .ddmBlackOverlayColor
+        self.backgroundColor = .ddmDarkColor
         
         bSpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
         self.addSubview(bSpinner)
@@ -275,7 +275,7 @@ class CustomDoubleTapImageView: UIView {
         errorRefreshBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true //ori: 40
         errorRefreshBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
         errorRefreshBtn.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
-        errorRefreshBtn.topAnchor.constraint(equalTo: errorText.bottomAnchor, constant: 10).isActive = true
+        errorRefreshBtn.topAnchor.constraint(equalTo: errorText.bottomAnchor, constant: 0).isActive = true
         errorRefreshBtn.layer.cornerRadius = 20
         errorRefreshBtn.isUserInteractionEnabled = true
         errorRefreshBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onErrorRefreshClicked)))
@@ -337,7 +337,7 @@ class CustomDoubleTapImageView: UIView {
     
     //*test > async load photo
     func asyncConfigure(url: String) {
-        let id = "u"
+        let id = "u_"
         DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):

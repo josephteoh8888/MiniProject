@@ -771,30 +771,19 @@ class PostDetailPanelView: PanelView {
     }
     
     //test > stop current video for closing
-    func pauseCurrentVideo() -> CGFloat {
+    func pauseCurrentVideo() {
         guard let a = self.postCV else {
-            return 0.0
+            return
         }
         if(currentPlayingVidIndex > -1) {
             let idxPath = IndexPath(item: currentPlayingVidIndex, section: 0)
             let currentVc = a.cellForItem(at: idxPath)
-//            guard let b = currentVc as? HPostListAViewCell else {
-//                return 0.0
-//            }
+
             if let b = currentVc as? HPostListBViewCell {
                 b.pauseVideo()
-//                vcDataList[currentPlayingVidIndex].t_s = b.t_s
-//                return b.t_s
-                return 0.0
             } else if let b1 = currentVc as? HCommentListViewCell {
-//                b.pauseVideo()
-//                vcDataList[currentPlayingVidIndex].t_s = b.t_s
-                return 0.0
-            } else {
-                return 0.0
+
             }
-        } else {
-            return 0.0
         }
     }
     //test > resume current video
@@ -805,9 +794,6 @@ class PostDetailPanelView: PanelView {
         if(currentPlayingVidIndex > -1) {
             let idxPath = IndexPath(item: currentPlayingVidIndex, section: 0)
             let currentVc = a.cellForItem(at: idxPath)
-//            guard let b = currentVc as? HPostListAViewCell else {
-//                return
-//            }
             
             if let b = currentVc as? HPostListBViewCell {
                 b.resumeVideo()
@@ -825,27 +811,21 @@ class PostDetailPanelView: PanelView {
 
         let idxPath = IndexPath(item: hideCellIndex, section: 0)
         let currentVc = a.cellForItem(at: idxPath)
-//        guard let b = currentVc as? HPostListAViewCell else {
-//            return
-//        }
+
         if let b = currentVc as? HPostListBViewCell {
             b.dehideCell()
+            hideCellIndex = -1
         } else if let b1 = currentVc as? HCommentListViewCell {
             b1.dehideCell()
+            hideCellIndex = -1
         } else {
 
         }
-        
-        hideCellIndex = -1
     }
 
     //test
     override func resumeActiveState() {
         print("postdetailpanelview resume active")
-//        resumeCurrentVideo()
-//
-//        //test > dehide cell
-//        dehideCurrentCell()
         
         //test > only resume video if no comment scrollable view/any other view
         if(pageList.isEmpty) {
@@ -857,6 +837,7 @@ class PostDetailPanelView: PanelView {
         else {
             //dehide cell for commment view
             if let c = pageList[pageList.count - 1] as? CommentScrollableView {
+                c.resumeCurrentVideo()
                 c.dehideCell()
             }
         }
@@ -901,7 +882,29 @@ class PostDetailPanelView: PanelView {
                     }
                 }
                 else if let c = cell as? HCommentListViewCell {
-                    
+                    let cellRect = v.convert(cell.frame, to: self)
+                    let aTestRect = c.aTest.frame
+
+                    if(!c.vidConArray.isEmpty) {
+                        let vidC = c.vidConArray[0]
+                        let vidCFrame = vidC.frame
+                        let convertedVidCOriginY = cellRect.origin.y + aTestRect.origin.y + vidCFrame.origin.y
+                        let convertedVidCRect = CGRect(x: 0, y: convertedVidCOriginY, width: vidCFrame.size.width, height: vidCFrame.size.height)
+                        let dummyView = CGRect(x: 0, y: 200, width: self.frame.width, height: 300) //150
+//                        let dV = UIView(frame: dummyView)
+//                        dV.backgroundColor = .blue
+//                        self.addSubview(dV)
+                        
+                        let isIntersect = dummyView.intersects(convertedVidCRect)
+                        let intersectArea = dummyView.intersection(convertedVidCRect)
+
+                        print("postdetail 3.0 collectionView index: \(indexPath), \(isIntersect), \(intersectArea)")
+                        
+                        //test > play video if intersect
+                        if(isIntersect) {
+                            intersectedIdx = indexPath.item
+                        }
+                    }
                 } else {
                     return -1
                 }
@@ -929,10 +932,10 @@ class PostDetailPanelView: PanelView {
                     //test 2 > include HCommentListViewCell
                     if let b = prevVc as? HPostListBViewCell {
                         b.pauseVideo()
-//                        vcDataList[currentPlayingVidIndex].t_s = b.t_s
+                        currentPlayingVidIndex = -1
                     } else if let b1 = prevVc as? HCommentListViewCell {
-//                        b.pauseVideo()
-//                        vcDataList[currentPlayingVidIndex].t_s = b.t_s
+                        b1.pauseVideo()
+                        currentPlayingVidIndex = -1
                     }
                     
                     if let c = currentVc as? HPostListBViewCell {
@@ -955,8 +958,8 @@ class PostDetailPanelView: PanelView {
                     b.resumeVideo()
                     currentPlayingVidIndex = intersectedIdx
                 } else if let b1 = currentVc as? HCommentListViewCell {
-//                        b1.resumeVideo()
-//                        currentPlayingVidIndex = intersectedIdx
+//                    b1.resumeVideo()
+//                    currentPlayingVidIndex = intersectedIdx
                 }
                 
                 print("postdetail reactToIntersectedVideo B")
@@ -970,12 +973,10 @@ class PostDetailPanelView: PanelView {
                 //test 2 > include HCommentListViewCell
                 if let b = currentVc as? HPostListBViewCell {
                     b.pauseVideo()
-//                    vcDataList[currentPlayingVidIndex].t_s = b.t_s
                     currentPlayingVidIndex = -1
                 } else if let b1 = currentVc as? HCommentListViewCell {
-//                    b1.pauseVideo()
-//                    vcDataList[currentPlayingVidIndex].t_s = b.t_s
-//                    currentPlayingVidIndex = -1
+                    b1.pauseVideo()
+                    currentPlayingVidIndex = -1
                 }
                 
                 print("postdetail reactToIntersectedVideo C")
@@ -1356,15 +1357,7 @@ extension PostDetailPanelView: UICollectionViewDelegateFlowLayout {
                     contentHeight += qHeight
                 }
                 else if(l == "c") {
-//                    let cUserPhotoHeight = 28.0
-//                    let cUserPhotoTopMargin = 20.0 //10
-//                    let cContentTopMargin = 10.0
-//                    let cText = "Worth a visit."
-//                    let cContentHeight = estimateHeight(text: cText, textWidth: collectionView.frame.width - 58.0 - 20.0, fontSize: 14)
-//                    let cActionBtnTopMargin = 10.0
-//                    let cActionBtnHeight = 26.0
-//                    let cHeight = cUserPhotoHeight + cUserPhotoTopMargin + cContentTopMargin + cContentHeight + cActionBtnTopMargin + cActionBtnHeight
-//                    contentHeight += cHeight
+
                 }
             }
             
@@ -1701,7 +1694,7 @@ extension PostDetailPanelView: HListCellDelegate {
     }
     func hListDidClickVcvClickPhoto(vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         
-        let t_s = pauseCurrentVideo()
+        pauseCurrentVideo()
         
         if let a = postCV {
             for cell in a.visibleCells {
@@ -1726,7 +1719,7 @@ extension PostDetailPanelView: HListCellDelegate {
     }
     func hListDidClickVcvClickVideo(vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         
-        let t_s = pauseCurrentVideo()
+        pauseCurrentVideo()
         
         if let a = postCV {
             for cell in a.visibleCells {

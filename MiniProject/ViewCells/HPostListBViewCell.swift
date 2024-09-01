@@ -1377,4 +1377,7 @@ extension HPostListBViewCell: ContentCellDelegate {
     func contentCellDidDoubleClickPhoto(pointX: CGFloat, pointY: CGFloat){
         
     }
+    func contentCellDidClickSound(){
+        
+    }
 }

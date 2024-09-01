@@ -768,6 +768,7 @@ class HPhotoListBViewCell: UICollectionViewCell {
                 aTestArray.append(contentCell)
                 contentCell.redrawUI()
                 contentCell.configure(data: "a")
+                contentCell.aDelegate = self
                 
                 musicConArray.append(contentCell)
                 
@@ -1198,5 +1199,8 @@ extension HPhotoListBViewCell: ContentCellDelegate {
             })
             print("photo content cell double clicked: \(pointX), \(pointY)")
         }
+    }
+    func contentCellDidClickSound(){
+        aDelegate?.hListDidClickVcvClickSound()
     }
 }

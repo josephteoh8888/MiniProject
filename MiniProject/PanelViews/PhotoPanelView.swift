@@ -1391,10 +1391,6 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
     //test
     override func resumeActiveState() {
         print("photopanelview resume active")
-//        resumeCurrentAudio()
-//        
-//        //test > dehide cell
-//        dehideCurrentCell()
         
         //test > only resume video if no comment scrollable view/any other view
         if(pageList.isEmpty) {
@@ -1406,6 +1402,7 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
         else {
             //dehide cell for commment view
             if let c = pageList[pageList.count - 1] as? CommentScrollableView {
+                c.resumeCurrentVideo()
                 c.dehideCell()
             }
         }
@@ -1990,6 +1987,9 @@ extension PhotoPanelView: ScrollFeedCellDelegate {
     func sfcDidClickVcvShare() {
         print("fcDidClickVcvShare ")
         openShareSheet()
+        
+        //test > pause current playing video when go to user
+        pauseCurrentAudio()
     }
 
     func sfcDidClickVcvClickUser() {

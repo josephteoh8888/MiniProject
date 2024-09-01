@@ -782,9 +782,7 @@ class PhotoDetailPanelView: PanelView {
         if(currentPlayingVidIndex > -1) {
             let idxPath = IndexPath(item: currentPlayingVidIndex, section: 0)
             let currentVc = a.cellForItem(at: idxPath)
-//            guard let b = currentVc as? HPhotoListAViewCell else {
-//                return
-//            }
+
             if let b = currentVc as? HPhotoListBViewCell {
                 b.resumeAudio()
             } else if let b1 = currentVc as? HCommentListViewCell {
@@ -802,28 +800,21 @@ class PhotoDetailPanelView: PanelView {
 
         let idxPath = IndexPath(item: hideCellIndex, section: 0)
         let currentVc = a.cellForItem(at: idxPath)
-//        guard let b = currentVc as? HPhotoListBViewCell else {
-//            return
-//        }
-//        b.dehideCell()
+
         if let b = currentVc as? HPhotoListBViewCell {
             b.dehideCell()
+            hideCellIndex = -1
         } else if let b1 = currentVc as? HCommentListViewCell {
             b1.dehideCell()
+            hideCellIndex = -1
         } else {
 
         }
-        
-        hideCellIndex = -1
     }
     
     //test
     override func resumeActiveState() {
         print("photodetailpanelview resume active")
-//        resumeCurrentAudio()
-//        
-//        //test > dehide cell
-//        dehideCell()
         
         //test > only resume video if no comment scrollable view/any other view
         if(pageList.isEmpty) {
@@ -835,6 +826,7 @@ class PhotoDetailPanelView: PanelView {
         else {
             //dehide cell for commment view
             if let c = pageList[pageList.count - 1] as? CommentScrollableView {
+                c.resumeCurrentVideo()
                 c.dehideCell()
             }
         }
@@ -849,9 +841,6 @@ class PhotoDetailPanelView: PanelView {
                 guard let indexPath = v.indexPath(for: cell) else {
                     continue
                 }
-//                guard let b = cell as? HPhotoListAViewCell else {
-//                    return -1
-//                }
 
                 if let b = cell as? HPhotoListBViewCell {
                     let cellRect = v.convert(cell.frame, to: self)
@@ -901,13 +890,6 @@ class PhotoDetailPanelView: PanelView {
                     let idxPath = IndexPath(item: intersectedIdx, section: 0)
                     let prevVc = a.cellForItem(at: prevIdxPath)
                     let currentVc = a.cellForItem(at: idxPath)
-//                    guard let b = prevVc as? HPhotoListAViewCell else {
-//                        return
-//                    }
-//                    guard let c = currentVc as? HPhotoListAViewCell else {
-//                        return
-//                    }
-//                    b.pauseAudio()
                     
                     //test > new method to play sound, not automatic scroll and play
 //                    currentPlayingVidIndex = -1
@@ -917,17 +899,18 @@ class PhotoDetailPanelView: PanelView {
                     //test 2 > include HCommentListViewCell
                     if let b = prevVc as? HPhotoListBViewCell {
                         b.pauseAudio()
+                        currentPlayingVidIndex = -1
                     } else if let b1 = prevVc as? HCommentListViewCell {
-
+                        b1.pauseVideo()
+                        currentPlayingVidIndex = -1
                     }
                     
                     if let c = currentVc as? HPhotoListBViewCell {
 
                     } else if let c1 = currentVc as? HCommentListViewCell {
-
+//                        c1.resumeVideo()
+//                        currentPlayingVidIndex = intersectedIdx
                     }
-                    
-                    currentPlayingVidIndex = -1
                 }
             } else {
                 let idxPath = IndexPath(item: intersectedIdx, section: 0)
@@ -940,18 +923,14 @@ class PhotoDetailPanelView: PanelView {
             if(currentPlayingVidIndex > -1) {
                 let idxPath = IndexPath(item: currentPlayingVidIndex, section: 0)
                 let currentVc = a.cellForItem(at: idxPath)
-//                guard let b = currentVc as? HPhotoListAViewCell else {
-//                    return
-//                }
-//                b.pauseAudio()
-//                currentPlayingVidIndex = -1
                 
                 //test 2 > include HCommentListViewCell
                 if let b = currentVc as? HPhotoListBViewCell {
                     b.pauseAudio()
                     currentPlayingVidIndex = -1
                 } else if let b1 = currentVc as? HCommentListViewCell {
-                    
+                    b1.pauseVideo()
+                    currentPlayingVidIndex = -1
                 }
                 
                 print("reactintersect photo B")
@@ -963,11 +942,15 @@ class PhotoDetailPanelView: PanelView {
 extension PhotoDetailPanelView: UICollectionViewDelegateFlowLayout {
     
     private func estimateHeight(text: String, textWidth: CGFloat, fontSize: CGFloat) -> CGFloat {
-        let size = CGSize(width: textWidth, height: 1000)
-        let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: fontSize)]
-        let estimatedFrame = NSString(string: text).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
-        
-        return estimatedFrame.height
+        if(text == "") {
+            return 0
+        } else {
+            let size = CGSize(width: textWidth, height: 1000)
+            let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: fontSize)]
+            let estimatedFrame = NSString(string: text).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
+            
+            return estimatedFrame.height
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView,
@@ -1025,23 +1008,11 @@ extension PhotoDetailPanelView: UICollectionViewDelegateFlowLayout {
                 if(l == "m") {
                     let soundTopMargin = 10.0
                     let soundHeight = 30.0
-//                    let soundHeight = 16.0
-//                    let pHeight = pTopMargin + pContentHeight + pBubbleTopMargin + pBubbleHeight + tTopMargin + tContentHeight + soundTopMargin + soundHeight
                     let pHeight = soundTopMargin + soundHeight
                     contentHeight += pHeight
                 }
                 else if(l == "p") {
-                    
-//                    let pTopMargin = 0.0
-//                    let pContentHeight = 400.0 //280.0
-//                    let tTopMargin = 10.0
-////                    let tText = "Nice food, nice environment! Worth a visit. \nSo good!"
-//                    let tContentHeight = estimateHeight(text: text, textWidth: collectionView.frame.width - 20.0 - 20.0, fontSize: 14)
-//    //                let pHeight = pTopMargin + pContentHeight
-//                    let pBubbleTopMargin = 7.0
-//                    let pBubbleHeight = 3.0
-//                    let pHeight = pTopMargin + pContentHeight + pBubbleTopMargin + pBubbleHeight + tTopMargin + tContentHeight
-//                    contentHeight += pHeight
+
                 }
             }
             
