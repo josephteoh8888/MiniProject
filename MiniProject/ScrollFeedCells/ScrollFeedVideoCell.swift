@@ -40,7 +40,6 @@ class ScrollFeedVideoCell: UIView {
     var dataFetchState = ""
     var dataPaginateStatus = "" //test
     var pageNumber = 0
-//    var bufferDataList = [VideoData]()
     
     var isInitialized = false
     
@@ -101,7 +100,7 @@ class ScrollFeedVideoCell: UIView {
     }
     
     //test > start play video
-    func startPlayVideo() {
+    func startPlayMedia() {
         guard let a = self.videoCV else {
             return
         }
@@ -110,15 +109,17 @@ class ScrollFeedVideoCell: UIView {
         guard let b = currentVc as? VCViewCell else {
             return
         }
-        if(!vcDataList.isEmpty && currentIndexPath.row < vcDataList.count) {
-            let z = vcDataList[currentIndexPath.row].dataType
-            if(z == "a") {
-                b.playVideo()
+        if(currentIndexPath.row > -1) {
+            if(!vcDataList.isEmpty && currentIndexPath.row < vcDataList.count) {
+                let z = vcDataList[currentIndexPath.row].dataType
+                if(z == "a") {
+                    b.playVideo()
+                }
             }
         }
     }
     //test > resume current video
-    func resumeCurrentVideo() {
+    func resumePlayingMedia() {
         guard let a = self.videoCV else {
             return
         }
@@ -127,15 +128,17 @@ class ScrollFeedVideoCell: UIView {
         guard let b = currentVc as? VCViewCell else {
             return
         }
-        if(!vcDataList.isEmpty && currentIndexPath.row < vcDataList.count) {
-            let z = vcDataList[currentIndexPath.row].dataType
-            if(z == "a") {
-                b.resumeVideo()
+        if(currentIndexPath.row > -1) {
+            if(!vcDataList.isEmpty && currentIndexPath.row < vcDataList.count) {
+                let z = vcDataList[currentIndexPath.row].dataType
+                if(z == "a") {
+                    b.resumeVideo()
+                }
             }
         }
     }
     //test > stop current video for closing
-    func stopCurrentVideo() {
+    func stopPlayingMedia() {
         guard let a = self.videoCV else {
             return
         }
@@ -144,15 +147,17 @@ class ScrollFeedVideoCell: UIView {
         guard let b = currentVc as? VCViewCell else {
             return
         }
-        if(!vcDataList.isEmpty && currentIndexPath.row < vcDataList.count) {
-            let z = vcDataList[currentIndexPath.row].dataType
-            if(z == "a") {
-                b.stopVideo()
+        if(currentIndexPath.row > -1) {
+            if(!vcDataList.isEmpty && currentIndexPath.row < vcDataList.count) {
+                let z = vcDataList[currentIndexPath.row].dataType
+                if(z == "a") {
+                    b.stopVideo()
+                }
             }
         }
     }
     //test > pause current video for closing
-    func pauseCurrentVideo() {
+    func pausePlayingMedia() {
         guard let a = self.videoCV else {
             return
         }
@@ -161,10 +166,23 @@ class ScrollFeedVideoCell: UIView {
         guard let b = currentVc as? VCViewCell else {
             return
         }
-        if(!vcDataList.isEmpty && currentIndexPath.row < vcDataList.count) {
-            let z = vcDataList[currentIndexPath.row].dataType
-            if(z == "a") {
-                b.pauseVideo()
+        if(currentIndexPath.row > -1) {
+            if(!vcDataList.isEmpty && currentIndexPath.row < vcDataList.count) {
+                let z = vcDataList[currentIndexPath.row].dataType
+                if(z == "a") {
+                    b.pauseVideo()
+                }
+            }
+        }
+    }
+    //**test > destroy cell
+    func destroyCell() {
+        guard let a = self.videoCV else {
+            return
+        }
+        for cell in a.visibleCells {
+            if let c = cell as? VCViewCell {
+                c.destroyCell()
             }
         }
     }

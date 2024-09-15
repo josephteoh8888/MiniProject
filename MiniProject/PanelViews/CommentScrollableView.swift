@@ -31,8 +31,6 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
     var scrollablePanelHeight : CGFloat = 600.0 //500
     
     var aView = UIView()
-//    var vDataList = [String]()
-//    var vDataList = [PostData]()
     var vDataList = [CommentData]()
     var vCV : UICollectionView?
     
@@ -53,9 +51,6 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
     
     //test
     let panelView = UIView()
-    
-    //test > record which cell video is playing
-    var currentPlayingVidIndex = -1
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -93,44 +88,7 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
         panelView.heightAnchor.constraint(equalToConstant: scrollablePanelHeight).isActive = true
         panelTopCons = panelView.topAnchor.constraint(equalTo: self.bottomAnchor, constant: -scrollablePanelHeight) //default: 0
         panelTopCons?.isActive = true
-        
-        //test > connection to other panels
-//        let eGrid = UIView()
-//        eGrid.backgroundColor = .red
-//        panelView.addSubview(eGrid)
-//        eGrid.translatesAutoresizingMaskIntoConstraints = false
-//        eGrid.leadingAnchor.constraint(equalTo: panelView.leadingAnchor, constant: 20).isActive = true
-//        eGrid.heightAnchor.constraint(equalToConstant: 50).isActive = true
-//        eGrid.widthAnchor.constraint(equalToConstant: 50).isActive = true
-//        eGrid.topAnchor.constraint(equalTo: panelView.topAnchor, constant: 20).isActive = true
-//        eGrid.layer.cornerRadius = 10
-//        eGrid.isUserInteractionEnabled = true
-//        eGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onAPhotoClicked)))
-//
-//        let fGrid = UIView()
-//        fGrid.backgroundColor = .blue
-//        panelView.addSubview(fGrid)
-//        fGrid.translatesAutoresizingMaskIntoConstraints = false
-//        fGrid.leadingAnchor.constraint(equalTo: eGrid.trailingAnchor, constant: 20).isActive = true
-//        fGrid.heightAnchor.constraint(equalToConstant: 50).isActive = true
-//        fGrid.widthAnchor.constraint(equalToConstant: 50).isActive = true
-//        fGrid.topAnchor.constraint(equalTo: eGrid.topAnchor, constant: 0).isActive = true
-//        fGrid.layer.cornerRadius = 10
-//        fGrid.isUserInteractionEnabled = true
-//        fGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBPhotoClicked)))
-//
-//        let gGrid = UIView()
-//        gGrid.backgroundColor = .yellow
-//        panelView.addSubview(gGrid)
-//        gGrid.translatesAutoresizingMaskIntoConstraints = false
-//        gGrid.leadingAnchor.constraint(equalTo: fGrid.trailingAnchor, constant: 20).isActive = true
-//        gGrid.heightAnchor.constraint(equalToConstant: 50).isActive = true
-//        gGrid.widthAnchor.constraint(equalToConstant: 50).isActive = true
-//        gGrid.topAnchor.constraint(equalTo: fGrid.topAnchor, constant: 0).isActive = true
-//        gGrid.layer.cornerRadius = 10
-//        gGrid.isUserInteractionEnabled = true
-//        gGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onCPhotoClicked)))
-        
+      
         let commentTitleText = UILabel()
         commentTitleText.textAlignment = .center
         commentTitleText.textColor = .white
@@ -200,18 +158,9 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
 //        l1TabArrowBtn.layer.opacity = 0.5
         //*
         
-//        vDataList.append("a")
-//        vDataList.append("a")
-//        vDataList.append("a")
-//        vDataList.append("a")
-//        vDataList.append("a")
-//        vDataList.append("a")
-//        vDataList.append("a")
-//        vDataList.append("a")
-//        vDataList.append("a")
         let vLayout = UICollectionViewFlowLayout()
         vLayout.scrollDirection = .vertical
-        vLayout.minimumLineSpacing = 10 //0 //default: 8 => spacing between rows
+        vLayout.minimumLineSpacing = 10 //10 => spacing between rows
         vLayout.minimumInteritemSpacing = 0 //default: 4 => spacing between columns
         vCV = UICollectionView(frame: .zero, collectionViewLayout: vLayout)
         guard let vCV = vCV else {
@@ -293,7 +242,7 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
             }
 
         } else if(gesture.state == .ended){
-            print("onPan end:")
+            print("onPan end: \(self.currentPanelTopCons - self.panelTopCons!.constant)")
             if(self.currentPanelTopCons - self.panelTopCons!.constant < -150) {
                 UIView.animate(withDuration: 0.2, animations: {
                     self.panelTopCons?.constant = 0
@@ -301,6 +250,11 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
                     
                     self.delegate?.didCClickClosePanel()
                 }, completion: { _ in
+                    //test > stop video before closing panel
+                    print("vcv onPan destroy cell: ")
+                    self.destroyCell()
+//                    self.pausePlayingMedia()
+                    
                     self.removeFromSuperview()
                     
                     //test > trigger finish close panel
@@ -323,6 +277,10 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
             
             self.delegate?.didCClickClosePanel()
         }, completion: { _ in
+            //test > stop video before closing panel
+            self.destroyCell()
+//            self.pausePlayingMedia()
+            
             self.removeFromSuperview()
             
             //test > trigger finish close panel
@@ -349,6 +307,10 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
                     
                     self.delegate?.didCClickClosePanel()
                 }, completion: { _ in
+                    //test > stop video before closing panel
+                    self.destroyCell()
+//                    self.pausePlayingMedia()
+                    
                     self.removeFromSuperview()
                     
                     //test > trigger finish close panel
@@ -421,23 +383,6 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
         selectedItemIdx = -1
     }
     //*
-    
-    //**test > remove one chain comment
-    func removeChainData() {
-        if(!vDataList.isEmpty) {
-            let commentA = vDataList[0]
-            let chainData = commentA.xChainDataArray
-            if(!commentA.xChainDataArray.isEmpty) {
-                vDataList[0].xChainDataArray.remove(at: chainData.count - 1)
-            }
-            
-            var indexPaths = [IndexPath]()
-            let idx = IndexPath(item: 0, section: 0)
-            indexPaths.append(idx)
-            self.vCV?.reloadItems(at: indexPaths)
-        }
-    }
-    //**
     
     //test > fetch data => temp fake data => try refresh data first
     func asyncFetchFeed(id: String) {
@@ -615,22 +560,6 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
         refreshFetchData()
     }
     
-    //test > dehide cell
-    func dehideCell() {
-        guard let a = self.vCV else {
-            return
-        }
-
-        let idxPath = IndexPath(item: hideCellIndex, section: 0)
-        let currentVc = a.cellForItem(at: idxPath)
-        guard let b = currentVc as? HCommentListViewCell else {
-            return
-        }
-        b.dehideCell()
-        
-        hideCellIndex = -1
-    }
-    
     var footerState = ""
     var footerAaText = ""
     func setFooterAaText(text: String) {
@@ -656,143 +585,200 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
         footerState = data
     }
     
-    //test > resume current video
-    func resumeCurrentVideo() {
+    //test > dehide cell
+    func dehideCell() {
         guard let a = self.vCV else {
             return
         }
-        if(currentPlayingVidIndex > -1) {
-            let idxPath = IndexPath(item: currentPlayingVidIndex, section: 0)
+
+        if(hideCellIndex > -1) {
+            let idxPath = IndexPath(item: hideCellIndex, section: 0)
             let currentVc = a.cellForItem(at: idxPath)
-            if let b = currentVc as? HCommentListViewCell {
-                b.resumeVideo()
+            guard let b = currentVc as? HCommentListViewCell else {
+                return
             }
+            b.dehideCell()
+            
+            hideCellIndex = -1
         }
+    }
+    
+    //test > resume current video
+    func resumePlayingMedia() {
+        //test 2 > new method for cell-asset idx
+        resumeMediaAsset(cellAssetIdx: playingCellMediaAssetIdx)
     }
 
     //test > pause current video for closing
-    func pauseCurrentVideo() {
+    func pausePlayingMedia() {
+        //test 2 > new method for cell-asset idx
+        pauseMediaAsset(cellAssetIdx: playingCellMediaAssetIdx)
+        print("comment pauseplaying: \(playingCellMediaAssetIdx)")
+    }
+    
+    //test > destroy cell
+    func destroyCell() {
         guard let a = self.vCV else {
             return
         }
-        if(currentPlayingVidIndex > -1) {
-            let idxPath = IndexPath(item: currentPlayingVidIndex, section: 0)
-            let currentVc = a.cellForItem(at: idxPath)
-            if let b = currentVc as? HCommentListViewCell {
-                b.pauseVideo()
+        print("comment destroy cell \(a.visibleCells)")
+        for cell in a.visibleCells {
+            if let b = cell as? HCommentListViewCell {
+                b.destroyCell()
             }
         }
     }
     
-    //test > check for intersected dummy view with video while user scroll
-    func getIntersectedIdx() -> Int {
-//        let aVc = feedList[currentIndex]
-        var intersectedIdx = -1
-//        print("comment scroll intersected start")
-        if let v = vCV {
-            print("sfvideo ppv start \(v.visibleCells)")
-            for cell in v.visibleCells {
-                guard let indexPath = v.indexPath(for: cell) else {
-                    continue
-                }
-                guard let b = cell as? HCommentListViewCell else {
-                    return -1
-                }
-
-//                print("comment scroll intersected in \(panelView.frame.origin.y)")
-                let cellRect = v.convert(b.frame, to: self)
-                let aTestRect = b.aTest.frame
-                
-                if(!b.vidConArray.isEmpty) {
-                    let vidC = b.vidConArray[0]
-                    let vidCFrame = vidC.frame
-                    let convertedVidCOriginY = vidCFrame.origin.y + aTestRect.origin.y + cellRect.origin.y
-                    let convertedVidCRect = CGRect(x: 0, y: convertedVidCOriginY, width: vidCFrame.size.width, height: vidCFrame.size.height)
-                    
-                    let cY = v.convert(vidCFrame, to: v)
-                    print("comment scroll intersected in: \(convertedVidCOriginY), \(vidCFrame.origin.y), \(cY)")
-                    
-                    //size can be changed
-                    let dummyTopMargin = 70.0
-                    let panelRectY = panelView.frame.origin.y
-                    let vCvRectY = v.frame.origin.y
-                    let dummyOriginY = panelRectY + vCvRectY + dummyTopMargin
-                    let dummyView = CGRect(x: 0, y: dummyOriginY, width: self.frame.width, height: 200)
-//                    let dummyView = CGRect(x: 0, y: dummyOriginY, width: 20, height: 200)
-//                    let dV = UIView(frame: dummyView)
-//                    dV.backgroundColor = .blue
-//                    self.addSubview(dV)
-                    
-//                    print("comment scroll intersected inner: \(dummyOriginY)")
-                    
-                    let isIntersect = dummyView.intersects(convertedVidCRect)
-                    let intersectArea = dummyView.intersection(convertedVidCRect)
-
-                    print("sfvideo x ppv 3.0 collectionView index: \(indexPath), \(isIntersect), \(intersectArea)")
-                    
-                    //test > play video if intersect
-                    if(isIntersect) {
-                        intersectedIdx = indexPath.item
+    //test 2 > new method for pausing video with cell-asset idx
+    func pauseMediaAsset(cellAssetIdx: [Int]) {
+        guard let a = self.vCV else {
+            return
+        }
+        if(cellAssetIdx.count == 2) {
+            let cIdx = cellAssetIdx[0] //cell index
+            let aIdx = cellAssetIdx[1] //asset index
+            if(cIdx > -1 && aIdx > -1) {
+                let cIdxPath = IndexPath(item: cIdx, section: 0)
+                let cell = a.cellForItem(at: cIdxPath)
+                if let c = cell as? HCommentListViewCell {
+                    if(!c.aTestArray.isEmpty && aIdx < c.aTestArray.count) {
+                        c.pauseMedia(aIdx: aIdx)
+//                        playingCellMediaAssetIdx = [-1, -1] //disabled for pauseCurrentVideo() and resume
                     }
                 }
             }
         }
-        print("comment scroll intersected: \(intersectedIdx)")
-        return intersectedIdx
     }
     
-    //test > react to intersected video
-    func reactToIntersectedVideo(intersectedIdx: Int) {
-        guard let a = vCV else {
+    func resumeMediaAsset(cellAssetIdx: [Int]) {
+        guard let a = self.vCV else {
+            return
+        }
+        if(cellAssetIdx.count == 2) {
+            let cIdx = cellAssetIdx[0]
+            let aIdx = cellAssetIdx[1]
+            if(cIdx > -1 && aIdx > -1) {
+                let cIdxPath = IndexPath(item: cIdx, section: 0)
+                let cell = a.cellForItem(at: cIdxPath)
+                if let c = cell as? HCommentListViewCell {
+                    if(!c.aTestArray.isEmpty && aIdx < c.aTestArray.count) {
+                        c.resumeMedia(aIdx: aIdx)
+                    }
+                }
+            }
+        }
+    }
+    
+    //test 2 > new intersect func() for multi-video/audio assets play on/off
+    //try autoplay OFF first, then only autoplay
+    var playingCellMediaAssetIdx = [-1, -1] //none playing initially
+//    var isMediaAutoplayEnabled = true
+    var isMediaAutoplayEnabled = false
+    func getIntersect2() {
+        guard let v = self.vCV else {
             return
         }
         
-        print("comment reactToIntersectedVideo: \(intersectedIdx), \(currentPlayingVidIndex)")
-        if(intersectedIdx > -1) {
-            if(currentPlayingVidIndex > -1) {
-                if(currentPlayingVidIndex != intersectedIdx) {
-                    let prevIdxPath = IndexPath(item: currentPlayingVidIndex, section: 0)
-                    let idxPath = IndexPath(item: intersectedIdx, section: 0)
-                    let prevVc = a.cellForItem(at: prevIdxPath)
-                    let currentVc = a.cellForItem(at: idxPath)
-                    
-                    //test 2 > include HCommentListViewCell
-                    if let b1 = prevVc as? HCommentListViewCell {
-                        b1.pauseVideo()
-                    }
-                    
-                    if let c1 = currentVc as? HCommentListViewCell {
-                        //*test > to be disabled if autoplay turn off
-                        c1.resumeVideo()
-                        currentPlayingVidIndex = intersectedIdx
-                    }
-                    print("comment reactToIntersectedVideo A")
-                }
-            } else {
-                let idxPath = IndexPath(item: intersectedIdx, section: 0)
-                let currentVc = a.cellForItem(at: idxPath)
-                
-                if let b1 = currentVc as? HCommentListViewCell {
-                    //*test > to be disabled if autoplay turn off
-                    b1.resumeVideo()
-                    currentPlayingVidIndex = intersectedIdx
-                }
-                
-                print("comment reactToIntersectedVideo B")
+        //fixed dummy area
+        let dummyTopMargin = 70.0
+        let panelRectY = panelView.frame.origin.y
+        let vCvRectY = v.frame.origin.y
+        let dummyOriginY = panelRectY + vCvRectY + dummyTopMargin
+        let dummyView = CGRect(x: 0, y: dummyOriginY, width: self.frame.width, height: 200)
+//        let dummyView = CGRect(x: 0, y: dummyOriginY, width: 20, height: 200)
+        //*just in case > add view for illustration
+//        let dV = UIView(frame: dummyView)
+//        dV.backgroundColor = .blue
+//        self.addSubview(dV)
+        //*
+        
+        //identify intersected assets
+        var cellAssetIdxArray = [[Int]]() //[cellIdx, assetIdx] => use array for simplicity
+        for cell in v.visibleCells {
+            guard let indexPath = v.indexPath(for: cell) else {
+                return
             }
-        } else {
-            //if intersectedIdx == -1, all video should pause/stop
-            if(currentPlayingVidIndex > -1) {
-                let idxPath = IndexPath(item: currentPlayingVidIndex, section: 0)
-                let currentVc = a.cellForItem(at: idxPath)
-                
-                //test 2 > include HCommentListViewCell
-                if let b1 = currentVc as? HCommentListViewCell {
-                    b1.pauseVideo()
-                    currentPlayingVidIndex = -1
+            guard let b = cell as? HCommentListViewCell else {
+                return
+            }
+            
+            let cellRect = v.convert(b.frame, to: self)
+            let aTestRect = b.aTest.frame
+            
+            let p = b.mediaArray
+            if(!p.isEmpty) {
+                for m in p {
+                    //test > quote
+                    if let q = m as? PostQuoteContentCell {
+                        //for quote content cells only => double loop for inner media
+                        let pp = q.mediaArray
+                        if(!pp.isEmpty) {
+                            for mm in pp {
+                                let mmFrame = mm.frame
+                                let aaTestRect = q.aTest.frame
+                                
+                                let mFrame = m.frame
+                                if let j = b.aTestArray.firstIndex(of: m) {
+                                    let cVidCOriginY = mFrame.origin.y + aTestRect.origin.y + cellRect.origin.y + mmFrame.origin.y + aaTestRect.origin.y
+                                    let cVidCRect = CGRect(x: 0, y: cVidCOriginY, width: mmFrame.size.width, height: mmFrame.size.height)
+                                    
+                                    let isIntersect = dummyView.intersects(cVidCRect)
+                                    if(isIntersect) {
+                                        let idx = [indexPath.row, j]
+                                        cellAssetIdxArray.append(idx)
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        let mFrame = m.frame
+                        if let j = b.aTestArray.firstIndex(of: m) {
+                            let cVidCOriginY = mFrame.origin.y + aTestRect.origin.y + cellRect.origin.y
+                            let cVidCRect = CGRect(x: 0, y: cVidCOriginY, width: mFrame.size.width, height: mFrame.size.height)
+                            
+                            let isIntersect = dummyView.intersects(cVidCRect)
+                            if(isIntersect) {
+                                let idx = [indexPath.row, j]
+                                cellAssetIdxArray.append(idx)
+                            }
+                        }
+                    }
                 }
-                
-                print("comment reactToIntersectedVideo C")
+            }
+        }
+ 
+        print("getintersect2 x: \(cellAssetIdxArray); \(playingCellMediaAssetIdx)")
+        
+        //test > pause media when playingMedia is no longer intersected inside dummy view
+        let t = cellAssetIdxArray.contains(playingCellMediaAssetIdx)
+        if(!t) {
+            pauseMediaAsset(cellAssetIdx: playingCellMediaAssetIdx)
+            playingCellMediaAssetIdx = [-1, -1] //reset state
+        }
+        
+        //test > autoplay video when intersected
+        if(isMediaAutoplayEnabled) {
+            if(!cellAssetIdxArray.isEmpty) {
+                let iCellAssetIdx = cellAssetIdxArray[0]
+                print("getintersect2 x: \(iCellAssetIdx); \(playingCellMediaAssetIdx) => \(iCellAssetIdx == playingCellMediaAssetIdx)")
+                if(iCellAssetIdx != playingCellMediaAssetIdx) {
+                    
+                    //autostop playing media to prevent multi-video playing together
+                    if(playingCellMediaAssetIdx != [-1, -1]) {
+                        pauseMediaAsset(cellAssetIdx: playingCellMediaAssetIdx)
+                        playingCellMediaAssetIdx = [-1, -1]
+                    }
+                    
+                    //autoplay media when intersected
+                    if(iCellAssetIdx.count == 2) {
+                        let cIdx = iCellAssetIdx[0]
+                        let aIdx = iCellAssetIdx[1]
+                        if(cIdx > -1 && aIdx > -1) {
+                            playingCellMediaAssetIdx = [cIdx, aIdx]
+                            resumeMediaAsset(cellAssetIdx: playingCellMediaAssetIdx)
+                        }
+                    }
+                }
             }
         }
     }
@@ -823,12 +809,10 @@ extension CommentScrollableView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                    layout collectionViewLayout: UICollectionViewLayout,
                    sizeForItemAt indexPath: IndexPath) -> CGSize {
-        print("commentpanel collection 2: \(indexPath)")
-        print("commenttxt 1 \(indexPath)")
-//        return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
         
         let text = vDataList[indexPath.row].dataTextString
         let dataL = vDataList[indexPath.row].dataArray
+        let dataCL = vDataList[indexPath.row].contentDataArray
         var contentHeight = 0.0
         
         let photoSize = 28.0
@@ -836,10 +820,12 @@ extension CommentScrollableView: UICollectionViewDelegateFlowLayout {
         let usernameLhsMargin = 5.0
         let indentSize = photoSize + photoLhsMargin + usernameLhsMargin
         
-        for l in dataL {
+        for cl in dataCL {
+            let l = cl.dataType
+//        for l in dataL {
             if(l == "t") {
                 let tTopMargin = 20.0
-                let tContentHeight = estimateHeight(text: text, textWidth: collectionView.frame.width - 53.0 - 30.0, fontSize: 13)
+                let tContentHeight = estimateHeight(text: text, textWidth: collectionView.frame.width - indentSize - 30.0, fontSize: 13)
                 let tHeight = tTopMargin + tContentHeight
                 contentHeight += tHeight
             }
@@ -976,73 +962,166 @@ extension CommentScrollableView: UICollectionViewDelegateFlowLayout {
                 contentHeight += vHeight
             }
             else if(l == "q") {
+                //**test > fake data for quote post
+                var qDataArray = [String]()
+                qDataArray.append("t")
+//                qDataArray.append("p")
+//                qDataArray.append("p_s")
+//                qDataArray.append("v")
+                qDataArray.append("v_l")
+                //**
+
+                let qLhsMargin = indentSize
+                let qRhsMargin = 20.0
+                let quoteWidth = collectionView.frame.width - qLhsMargin - qRhsMargin
+                
+                for i in qDataArray {
+                    if(i == "t") {
+                        let tTopMargin = 20.0
+                        let tContentHeight = estimateHeight(text: text, textWidth: quoteWidth - 20.0 - 20.0, fontSize: 14)
+                        let tHeight = tTopMargin + tContentHeight
+                        contentHeight += tHeight
+                    }
+                    else if(i == "p") {
+                        let lhsMargin = 20.0
+                        let rhsMargin = 20.0
+                        let availableWidth = quoteWidth - lhsMargin - rhsMargin
+                        
+                        let assetSize = CGSize(width: 4, height: 3)//landscape
+//                        let assetSize = CGSize(width: 3, height: 4)
+                        var cSize = CGSize(width: 0, height: 0)
+                        if(assetSize.width > assetSize.height) {
+                            //1 > landscape photo 4:3 w:h
+                            let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                            let cHeight = availableWidth * aRatio.height / aRatio.width
+                            cSize = CGSize(width: availableWidth, height: cHeight)
+                        }
+                        else if (assetSize.width < assetSize.height){
+                            //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                            let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                            let cWidth = availableWidth * 2 / 3
+        //                    let cWidth = availableWidth //test full width for portrait
+                            let cHeight = cWidth * aRatio.height / aRatio.width
+                            cSize = CGSize(width: cWidth, height: cHeight)
+                        } else {
+                            //square
+                            let cWidth = availableWidth
+                            cSize = CGSize(width: cWidth, height: cWidth)
+                        }
+
+                        let pTopMargin = 20.0
+        //                let pContentHeight = 280.0
+                        let pContentHeight = cSize.height
+                        let pHeight = pTopMargin + pContentHeight
+                        contentHeight += pHeight
+                    }
+                    else if(i == "p_s") {
+                        let lhsMargin = 20.0
+                        let rhsMargin = 20.0
+                        let descHeight = 40.0
+                        let availableWidth = quoteWidth - lhsMargin - rhsMargin
+                        
+                        let assetSize = CGSize(width: 4, height: 3)
+                        var cSize = CGSize(width: 0, height: 0)
+                        if(assetSize.width > assetSize.height) {
+                            //1 > landscape photo 4:3 w:h
+                            let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                            let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
+                            cSize = CGSize(width: availableWidth, height: cHeight)
+                        }
+                        else if (assetSize.width < assetSize.height){
+                            //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                            let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                            let cWidth = availableWidth * 2 / 3
+                            let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
+                            cSize = CGSize(width: cWidth, height: cHeight)
+                        } else {
+                            //square
+                            let cWidth = availableWidth
+                            cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                        }
+                        
+                        let pTopMargin = 20.0
+        //                let pContentHeight = 280.0
+                        let pContentHeight = cSize.height
+                        let pHeight = pTopMargin + pContentHeight
+                        contentHeight += pHeight
+                    }
+                    else if(i == "v") {
+                        let lhsMargin = 20.0
+                        let rhsMargin = 20.0
+                        let availableWidth = quoteWidth - lhsMargin - rhsMargin
+                        
+                        let assetSize = CGSize(width: 3, height: 4)
+                        var cSize = CGSize(width: 0, height: 0)
+                        if(assetSize.width > assetSize.height) {
+                            //1 > landscape photo 4:3 w:h
+                            let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                            let cHeight = availableWidth * aRatio.height / aRatio.width
+                            cSize = CGSize(width: availableWidth, height: cHeight)
+                        }
+                        else if (assetSize.width < assetSize.height){
+                            //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                            let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                            let cWidth = availableWidth * 2 / 3
+                            let cHeight = cWidth * aRatio.height / aRatio.width
+                            cSize = CGSize(width: cWidth, height: cHeight)
+                        } else {
+                            //square
+                            let cWidth = availableWidth
+                            cSize = CGSize(width: cWidth, height: cWidth)
+                        }
+                        
+                        let vTopMargin = 20.0
+        //                let vContentHeight = 350.0 //250
+                        let vContentHeight = cSize.height
+                        let vHeight = vTopMargin + vContentHeight
+                        contentHeight += vHeight
+                    }
+                    else if(i == "v_l") {
+                        let lhsMargin = 20.0
+                        let rhsMargin = 20.0
+                        let descHeight = 40.0
+                        let availableWidth = quoteWidth - lhsMargin - rhsMargin
+                        
+                        let assetSize = CGSize(width: 3, height: 4)
+                        var cSize = CGSize(width: 0, height: 0)
+                        if(assetSize.width > assetSize.height) {
+                            //1 > landscape photo 4:3 w:h
+                            let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                            let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
+                            cSize = CGSize(width: availableWidth, height: cHeight)
+                        }
+                        else if (assetSize.width < assetSize.height){
+                            //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                            let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                            let cWidth = availableWidth * 2 / 3
+                            let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
+                            cSize = CGSize(width: cWidth, height: cHeight)
+                        } else {
+                            //square
+                            let cWidth = availableWidth
+                            cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                        }
+                        
+                        let vTopMargin = 20.0
+        //                let vContentHeight = 350.0 //250
+                        let vContentHeight = cSize.height
+                        let vHeight = vTopMargin + vContentHeight
+        //                let vHeight = vTopMargin + vContentHeight + 40.0 //40.0 for bottom container for description
+                        contentHeight += vHeight
+                    }
+                }
                 let qTopMargin = 20.0
                 let qUserPhotoHeight = 28.0
-                let qUserPhotoTopMargin = 10.0 //10
-                let qContentTopMargin = 10.0
-                let qText = "Nice food, nice environment! Worth a visit. \nSo good!\n\n\n\n...\n...\n..."
-                let qContentHeight = estimateHeight(text: qText, textWidth: collectionView.frame.width - 53.0 - 20.0, fontSize: 13)
+                let qUserPhotoTopMargin = 20.0 //10
+//                let qContentTopMargin = 10.0
+//                let qText = "Nice food, nice environment! Worth a visit. \nSo good!\n\n\n\n...\n...\n..."
+//                let qContentHeight = estimateHeight(text: qText, textWidth: collectionView.frame.width - 20.0 - 20.0, fontSize: 14)
                 let qFrameBottomMargin = 20.0 //10
-                let qHeight = qTopMargin + qUserPhotoHeight + qUserPhotoTopMargin + qContentTopMargin + qContentHeight + qFrameBottomMargin
+                let qHeight = qTopMargin + qUserPhotoHeight + qUserPhotoTopMargin + qFrameBottomMargin
                 contentHeight += qHeight
             }
-        }
-        
-        let dataCh = vDataList[indexPath.row].xChainDataArray
-        for l in dataCh {
-            let xText = l.dataTextString
-            let xDataL = l.dataArray
-            var yContentHeight = 0.0
-            for y in xDataL {
-                if(y == "t") {
-                    let xContentTopMargin = 20.0
-                    let xContentHeight = estimateHeight(text: xText, textWidth: collectionView.frame.width - 53.0 - 20.0, fontSize: 13)
-                    let xHeight = xContentTopMargin + xContentHeight
-                    yContentHeight += xHeight
-                }
-                else if(y == "p") {
-                    let pTopMargin = 20.0
-                    let pContentHeight = 280.0
-                    let pHeight = pTopMargin + pContentHeight
-                    yContentHeight += pHeight
-                }
-                else if(y == "p_s") {
-                    let pTopMargin = 20.0
-                    let pContentHeight = 280.0
-                    let pHeight = pTopMargin + pContentHeight + 40.0 //40.0 for bottom container for description
-                    contentHeight += pHeight
-                }
-                else if(y == "v") {
-                    let vTopMargin = 20.0
-                    let vContentHeight = 350.0 //250
-                    let vHeight = vTopMargin + vContentHeight
-                    contentHeight += vHeight
-                }
-                else if(y == "v_l") {
-                    let vTopMargin = 20.0
-                    let vContentHeight = 350.0 //250
-                    let vHeight = vTopMargin + vContentHeight + 40.0 //40.0 for bottom container for description
-                    contentHeight += vHeight
-                }
-                else if(y == "q") {
-                    let qTopMargin = 20.0
-                    let qUserPhotoHeight = 28.0
-                    let qUserPhotoTopMargin = 10.0 //10
-                    let qContentTopMargin = 10.0
-                    let qText = "Nice food, nice environment! Worth a visit. \nSo good!\n\n\n\n...\n...\n..."
-                    let qContentHeight = estimateHeight(text: qText, textWidth: collectionView.frame.width - 53.0 - 20.0, fontSize: 13)
-                    let qFrameBottomMargin = 20.0 //10
-                    let qHeight = qTopMargin + qUserPhotoHeight + qUserPhotoTopMargin + qContentTopMargin + qContentHeight + qFrameBottomMargin
-                    yContentHeight += qHeight
-                }
-            }
-            let cUserPhotoHeight = 28.0
-            let cUserPhotoTopMargin = 10.0 //10
-            let cActionBtnTopMargin = 20.0
-            let cActionBtnHeight = 26.0
-            let cFrameBottomMargin = 10.0 //10
-            let cHeight = cUserPhotoHeight + cUserPhotoTopMargin + yContentHeight + cActionBtnTopMargin + cActionBtnHeight + cFrameBottomMargin
-            contentHeight += cHeight
         }
         
         let userPhotoHeight = 28.0
@@ -1086,11 +1165,6 @@ extension CommentScrollableView: UICollectionViewDelegateFlowLayout {
             aaText.topAnchor.constraint(equalTo: footerView.topAnchor, constant: 20).isActive = true
             aaText.centerXAnchor.constraint(equalTo: footerView.centerXAnchor, constant: 0).isActive = true
             aaText.layer.opacity = 0.5
-//            if(dataPaginateStatus == "end") {
-//                aaText.text = "End"
-//            } else {
-//                aaText.text = ""
-//            }
             
             bSpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
             footer.addSubview(bSpinner)
@@ -1147,10 +1221,8 @@ extension CommentScrollableView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
         print("commentpanel referencesize: \(section)")
         return CGSize(width: collectionView.bounds.size.width, height: 100)
-        
     }
-    
-    
+        
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if indexPath.row == vDataList.count - 1 {
             print("commentpanel willdisplay: \(indexPath.row)")
@@ -1173,14 +1245,16 @@ extension CommentScrollableView: UICollectionViewDelegateFlowLayout {
 //test > try scrollview listener
 extension CommentScrollableView: UICollectionViewDelegate {
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        
-        //UI inside panel
+
         print("scrollview begin: \(scrollView.contentOffset.y)")
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         //test > react to intersected index
-        reactToIntersectedVideo(intersectedIdx: getIntersectedIdx())
+//        reactToIntersectedVideo(intersectedIdx: getIntersectedIdx())
+        
+        //test 2 > try new intersect
+        getIntersect2()
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
@@ -1240,7 +1314,6 @@ extension CommentScrollableView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HCommentListViewCell.identifier, for: indexPath) as! HCommentListViewCell
         cell.aDelegate = self
-        print("commenttxt 2 \(indexPath)")
         
         //test > configure cell
         cell.configure(data: vDataList[indexPath.row])
@@ -1258,16 +1331,16 @@ extension CommentScrollableView: UICollectionViewDataSource {
 
 extension CommentScrollableView: HListCellDelegate {
     func hListDidClickVcvComment(vc: UICollectionViewCell){
-        //temp solution: to be diverted to comment section of post detail
-        delegate?.didCClickPost()
         
-        //test > try pause video when go comment
-        pauseCurrentVideo()
+        pausePlayingMedia()
+        delegate?.didCClickPost()
     }
     func hListDidClickVcvLove(){
         
     }
     func hListDidClickVcvShare(vc: UICollectionViewCell){
+        
+        pausePlayingMedia()
         
         if let a = vCV {
             for cell in a.visibleCells {
@@ -1286,30 +1359,24 @@ extension CommentScrollableView: HListCellDelegate {
         }
     }
     func hListDidClickVcvClickUser(){
+        pausePlayingMedia()
         delegate?.didCClickUser()
-        
-        //test > try pause video when go comment
-        pauseCurrentVideo()
     }
     func hListDidClickVcvClickPlace(){
+        pausePlayingMedia()
         delegate?.didCClickPlace()
-        
-        //test > try pause video when go comment
-        pauseCurrentVideo()
     }
     func hListDidClickVcvClickSound(){
+        pausePlayingMedia()
         delegate?.didCClickSound()
-        
-        //test > try pause video when go comment
-        pauseCurrentVideo()
     }
     func hListDidClickVcvClickPost(){
+        pausePlayingMedia()
         delegate?.didCClickPost()
-        
-        //test > try pause video when go comment
-        pauseCurrentVideo()
     }
     func hListDidClickVcvClickPhoto(vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        
+        pausePlayingMedia()
         
         if let a = vCV {
             for cell in a.visibleCells {
@@ -1331,11 +1398,11 @@ extension CommentScrollableView: HListCellDelegate {
                 }
             }
         }
-        
-        //test > try pause video when go comment
-        pauseCurrentVideo()
     }
     func hListDidClickVcvClickVideo(vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        
+        pausePlayingMedia()
+        
         if let a = vCV {
             for cell in a.visibleCells {
                 
@@ -1356,17 +1423,12 @@ extension CommentScrollableView: HListCellDelegate {
                 }
             }
         }
-        
-        //test > try pause video when go comment
-        pauseCurrentVideo()
     }
     func hListDidClickVcvSortComment(){}
     func hListIsScrollCarousel(isScroll: Bool){}
     
     //test > carousel photo scroll page
-    func hListCarouselIdx(vc: UICollectionViewCell, idx: Int){}
-    
-    func hListVideoStopTime(vc: UICollectionViewCell, ts: Double){
+    func hListCarouselIdx(vc: UICollectionViewCell, aIdx: Int, idx: Int){
         if let a = vCV {
             for cell in a.visibleCells {
                 guard let indexPath = a.indexPath(for: cell) else {
@@ -1374,8 +1436,38 @@ extension CommentScrollableView: HListCellDelegate {
                 }
                 
                 if(cell == vc) {
-                    vDataList[indexPath.row].t_s = ts
+//                    vDataList[indexPath.row].t_s = ts
                     
+                    //test > new method
+                    let data = vDataList[indexPath.row]
+                    let dataCL = data.contentDataArray
+                    if(aIdx > -1 && aIdx < dataCL.count) {
+                        dataCL[aIdx].p_s = idx
+                    }
+
+                    break
+                }
+            }
+        }
+    }
+    
+    func hListVideoStopTime(vc: UICollectionViewCell, aIdx: Int, ts: Double){
+        if let a = vCV {
+            for cell in a.visibleCells {
+                guard let indexPath = a.indexPath(for: cell) else {
+                    continue
+                }
+                
+                if(cell == vc) {
+//                    vDataList[indexPath.row].t_s = ts
+                    
+                    //test > new method
+                    let data = vDataList[indexPath.row]
+                    let dataCL = data.contentDataArray
+                    if(aIdx > -1 && aIdx < dataCL.count) {
+                        dataCL[aIdx].t_s = ts
+                    }
+
                     break
                 }
             }
@@ -1383,6 +1475,36 @@ extension CommentScrollableView: HListCellDelegate {
     }
     
     //test > click play sound
-    func hListDidClickVcvPlayAudio(vc: UICollectionViewCell){}
+    func hListDidClickVcvPlayAudio(vc: UICollectionViewCell){
+        
+    }
+    
+    func hListDidClickVcvClickPlay(vc: UICollectionViewCell, isPlay: Bool){
+        //test > try new method for manual play/stop video
+        if let a = vCV {
+            for cell in a.visibleCells {
+                guard let indexPath = a.indexPath(for: cell) else {
+                    continue
+                }
+                
+                if(cell == vc) {
+                    if let s = cell as? HCommentListViewCell {
+                        let mIdx = s.playingMediaAssetIdx
+                        if(isPlay) {
+                            pauseMediaAsset(cellAssetIdx: playingCellMediaAssetIdx) //test
+                            
+                            playingCellMediaAssetIdx = [indexPath.row, mIdx]
+                        } else {
+                            playingCellMediaAssetIdx = [-1, -1]
+                        }
+                    }
+                    
+                    break
+                }
+            }
+        }
+        
+        print("comment playingCellMediaAssetIdx: \(playingCellMediaAssetIdx)")
+    }
 }
 

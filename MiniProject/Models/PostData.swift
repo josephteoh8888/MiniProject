@@ -11,30 +11,23 @@ class BaseData {
     var dataType: String = ""
     var dataArray = [String]()
     var dataTextString: String = ""
-//    var dataCount = [String: Int]()
     var dataCount : [String: Int] = ["love": 0, "comment": 0, "bookmark": 0, "share": 0]
     
-//    var chainDataArray = [String]() //for comment chaining
-    var xChainDataArray = [ChainData]() //for comment chaining
-    
     //test > to indicate hide/unhide in grid3x panels
-    var isGridHidden = false
-    func setGridHidden(toHide: Bool) {
-        isGridHidden = toHide
-    }
+//    var isGridHidden = false
+//    func setGridHidden(toHide: Bool) {
+//        isGridHidden = toHide
+//    }
     
     //test > t time for video paused timestamp, necessary for resume
     var t_s = 0.0
     //test > p for photo carousel
     var p_s = 0
+    
+    var contentDataArray = [ContentData]()
 }
 
 class PostData: BaseData {
-    
-    //test > t time for video paused timestamp, necessary for resume
-//    var t_s = 0.0
-    //test > p for photo carousel
-//    var p_s = 0
     
     func setDataType(data: String) {
         dataType = data
@@ -45,14 +38,12 @@ class PostData: BaseData {
             dataArray.append("t") //text
 //            dataArray.append("p") //photo
 //            dataArray.append("t") //text
-            dataArray.append("q") //text
+//            dataArray.append("q") //text
 //            dataArray.append("q") //photo
 //            dataArray.append("q") //quote
-            
-//            dataArray.append("c") //comment
-//            dataArray.append("c") //comment
-            
-//            dataArray.append("c") //comment
+            dataArray.append("v") //loop
+            dataArray.append("v") //video
+            dataArray.append("v_l") //loop
         }
         else if(data == "b") {
             dataArray.append("t") //text
@@ -65,43 +56,32 @@ class PostData: BaseData {
             dataArray.append("p") //photo
             dataArray.append("q") //quote
             
-//            dataArray.append("c") //comment
+            dataArray.append("v") //loop
+            dataArray.append("v") //video
         }
         else if(data == "d") {
             dataArray.append("t") //text
-//            dataArray.append("v") //video
+            dataArray.append("v") //video
             dataArray.append("v_l") //loop
             dataArray.append("t") //text
+            
+            dataArray.append("p")
+            dataArray.append("p")
+            dataArray.append("p")
         }
-        
-        //test > populate chaining comments
-//        setXChainData(data: data)
         
         //test > populate data counts too
         setDataCount(data: data)
+        
+        //test > populate content data
+        setContentData()
     }
     
-    func setXChainData(data: String){
-        if(data == "a") {
-            for i in 0...2 {
-                let chainData = ChainData()
-                chainData.setDataType(data: data)
-                chainData.setData(data: data)
-                chainData.setTextString(data: data)
-                xChainDataArray.append(chainData)
-            }
-        }
-        else if(data == "b") {
-            
-        }
-        else if(data == "c") {
-            for i in 0...1 {
-                let chainData = ChainData()
-                chainData.setDataType(data: data)
-                chainData.setData(data: data)
-                chainData.setTextString(data: data)
-                xChainDataArray.append(chainData)
-            }
+    func setContentData() {
+        for i in dataArray {
+            let cData = ContentData()
+            cData.setDataType(data: i)
+            contentDataArray.append(cData)
         }
     }
     
@@ -150,9 +130,6 @@ class PostData: BaseData {
 }
 
 class PhotoData: BaseData {
-//    var dataType: String = ""
-//    var dataArray = [String]()
-//    var dataTextString: String = ""
     
     //test > p for which photo was user scrolled
 //    var p_s = 0
@@ -181,35 +158,19 @@ class PhotoData: BaseData {
             dataArray.append("p") //photo
 //            dataArray.append("t") //text
         }
-        
-        //test > populate chaining comments
-//        setXChainData(data: data)
-        
+
         //test > populate data counts too
         setDataCount(data: data)
+        
+        //test > populate content data
+        setContentData()
     }
     
-    func setXChainData(data: String){
-        if(data == "a") {
-            for i in 0...2 {
-                let chainData = ChainData()
-                chainData.setDataType(data: data)
-                chainData.setData(data: data)
-                chainData.setTextString(data: data)
-                xChainDataArray.append(chainData)
-            }
-        }
-        else if(data == "b") {
-            
-        }
-        else if(data == "c") {
-            for i in 0...1 {
-                let chainData = ChainData()
-                chainData.setDataType(data: data)
-                chainData.setData(data: data)
-                chainData.setTextString(data: data)
-                xChainDataArray.append(chainData)
-            }
+    func setContentData() {
+        for i in dataArray {
+            let cData = ContentData()
+            cData.setDataType(data: i)
+            contentDataArray.append(cData)
         }
     }
     
@@ -357,19 +318,16 @@ class CommentData: BaseData {
             dataArray.append("t") //text
 //            dataArray.append("p") //photo
 //            dataArray.append("t") //text
-//            dataArray.append("q") //text
+            dataArray.append("q") //text
 //            dataArray.append("q") //photo
 //            dataArray.append("q") //quote
-            
-//            dataArray.append("c") //comment
-//            dataArray.append("c") //comment
-            
-//            dataArray.append("c") //comment
+            dataArray.append("v_l")
         }
         else if(data == "b") {
 //            dataArray.append("p") //photo
-            dataArray.append("v") //photo
+            dataArray.append("v") //video
             dataArray.append("t") //photo
+            dataArray.append("v_l") //video
         }
         else if(data == "c") {
             dataArray.append("t")
@@ -377,36 +335,23 @@ class CommentData: BaseData {
 //            dataArray.append("q") //quote
             
 //            dataArray.append("c") //comment
+            dataArray.append("v")
+//            dataArray.append("p") //photo
+//            dataArray.append("p") //photo
         }
-        
-        //test > populate chaining comments
-//        setXChainData(data: data)
         
         //test > populate data counts too
         setDataCount(data: data)
+        
+        //test > populate content data
+        setContentData()
     }
     
-    func setXChainData(data: String){
-        if(data == "a") {
-            for i in 0...2 {
-                let chainData = ChainData()
-                chainData.setDataType(data: data)
-                chainData.setData(data: data)
-                chainData.setTextString(data: data)
-                xChainDataArray.append(chainData)
-            }
-        }
-        else if(data == "b") {
-            
-        }
-        else if(data == "c") {
-            for i in 0...1 {
-                let chainData = ChainData()
-                chainData.setDataType(data: data)
-                chainData.setData(data: data)
-                chainData.setTextString(data: data)
-                xChainDataArray.append(chainData)
-            }
+    func setContentData() {
+        for i in dataArray {
+            let cData = ContentData()
+            cData.setDataType(data: i)
+            contentDataArray.append(cData)
         }
     }
     
@@ -451,76 +396,23 @@ class CommentData: BaseData {
     }
 }
 
-//test > chain data for comments
-class ChainData: BaseData {
+//*test => content data for storing various content cells in posts/videos
+class ContentData {
+//class ContentData: BaseData {
+    var dataType: String = ""
+    var dataArray = [String]()
+    var dataTextString: String = ""
+    
+    //test > t time for video paused timestamp, necessary for resume
+    var t_s = 0.0
+    //test > p for photo carousel
+    var p_s = 0
     
     func setDataType(data: String) {
         dataType = data
     }
-    
-    func setData(data: String) {
-        if(data == "a") {
-            dataArray.append("t") //text
-            dataArray.append("p") //photo
-//            dataArray.append("t") //text
-//            dataArray.append("q") //text
-//            dataArray.append("q") //photo
-//            dataArray.append("q") //quote
-        }
-        else if(data == "b") {
-            dataArray.append("p") //photo
-//            dataArray.append("t") //photo
-        }
-        else if(data == "c") {
-            dataArray.append("t")
-//            dataArray.append("p") //photo
-//            dataArray.append("q") //quote
-        }
-        
-        //test > populate data counts too
-        setDataCount(data: data)
-    }
-    
-    func setTextString(data: String) {
-        if(data == "a") {
-            dataTextString = "iPhone 虽然也是位列销量榜榜首, 只能说这次 11.11 各家给的优惠都太给力了."
-        }
-        else if(data == "b") {
-            dataTextString = "Vđược thực tiễn chứng minh là đúng"
-        }
-        else if(data == "c") {
-            dataTextString = "Worth a visit."
-        }
-    }
-    
-    func setDataCount(data: String) {
-        if(data == "a") {
-            dataCount["love"] = 3796
-            dataCount["comment"] = 209
-            dataCount["bookmark"] = 45
-            dataCount["share"] = 98
-        }
-        else if(data == "b") {
-            dataCount["love"] = 675
-            dataCount["comment"] = 2708
-            dataCount["bookmark"] = 102
-            dataCount["share"] = 719
-        }
-        else if(data == "c") {
-            dataCount["love"] = 74
-            dataCount["comment"] = 921
-            dataCount["bookmark"] = 43
-            dataCount["share"] = 32
-        }
-        else if(data == "d") {
-            dataCount["love"] = 18312
-            dataCount["comment"] = 1309
-            dataCount["bookmark"] = 512
-            dataCount["share"] = 478
-        }
-    }
 }
-
+//*
 
 //class Page {
 //    

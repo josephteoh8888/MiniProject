@@ -276,7 +276,7 @@ class MePhotoListPanelView: PanelView{
         if(!feedList.isEmpty) {
             let feed = self.feedList[currentIndex]
             if let c = feed as? ScrollFeedHResultPhotoListCell {
-                c.dehideCellAt()
+                c.dehideCell()
             }
         }
     }

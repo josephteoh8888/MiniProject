@@ -143,7 +143,7 @@ class CustomImageView: UIView {
     
     //*test > async load photo
     func asyncConfigure(url: String) {
-        let id = "u_"
+        let id = "u"
         DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -337,7 +337,7 @@ class CustomDoubleTapImageView: UIView {
     
     //*test > async load photo
     func asyncConfigure(url: String) {
-        let id = "u_"
+        let id = "u"
         DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):

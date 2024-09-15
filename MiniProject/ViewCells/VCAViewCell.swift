@@ -25,6 +25,9 @@ class VCViewCell: UICollectionViewCell {
     func stopVideo() {}
     func pauseVideo() {}
     func resumeVideo() {}
+    
+    //test > destroy cell
+    func destroyCell() {}
 }
 
 class VCAViewCell: VCViewCell {
@@ -35,16 +38,17 @@ class VCAViewCell: VCViewCell {
     weak var aDelegate : VCViewCellDelegate?
     
     //test > video
-//    var player: AVPlayer?
-    var playerLooper: AVPlayerLooper!
-    var queuePlayer: AVQueuePlayer!
+//    var playerLooper: AVPlayerLooper!
+//    var queuePlayer: AVQueuePlayer!
     let videoContainer = UIView()
+    //test > avplayer instead of looper
+    var player: AVPlayer!
     
     let playBtn = UIImageView()
     let playVideoView = UIView()
     let pauseVideoView = UIView()
     
-    var videoPlayStatus = ""
+    var vidPlayStatus = ""
     
     //test > love btn
     let dMiniBtn = UIImageView()
@@ -159,10 +163,10 @@ class VCAViewCell: VCViewCell {
         aContainer.clipsToBounds = true
         aContainer.layer.cornerRadius = 10
         
-        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
         gifImage.contentMode = .scaleAspectFill
         gifImage.clipsToBounds = true
-        gifImage.sd_setImage(with: imageUrl)
+//        gifImage.sd_setImage(with: imageUrl)
         gifImage.layer.cornerRadius = 10
 //        contentView.addSubview(gifImage)
         aContainer.addSubview(gifImage)
@@ -232,17 +236,6 @@ class VCAViewCell: VCViewCell {
 //        playBtn.isUserInteractionEnabled = true
 //        playBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onResumeVideoClicked)))
 //        playBtn.isHidden = true
-        
-        //test > add spin loader
-//        var spinner = SpinLoader()
-//        contentView.addSubview(spinner)
-//        spinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
-//        spinner.translatesAutoresizingMaskIntoConstraints = false
-//        spinner.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
-//        spinner.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
-//        spinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
-//        spinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
-//        spinner.startAnimating()
         
         //test text design in video panel
 //        let mBtn = UIImageView(image: UIImage(named:"icon_round_music")?.withRenderingMode(.alwaysTemplate))
@@ -443,6 +436,8 @@ class VCAViewCell: VCViewCell {
         bMiniC.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15).isActive = true
         bMiniC.heightAnchor.constraint(equalToConstant: 40).isActive = true //default 44
         bMiniC.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        bMiniC.isUserInteractionEnabled = true
+        bMiniC.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onShareClicked)))
         
         let bMini = UIView()
         bMini.backgroundColor = .ddmBlackOverlayColor
@@ -454,10 +449,6 @@ class VCAViewCell: VCViewCell {
         bMini.topAnchor.constraint(equalTo: bMiniC.topAnchor, constant: 0).isActive = true
         bMini.leadingAnchor.constraint(equalTo: bMiniC.leadingAnchor, constant: 0).isActive = true
         bMini.trailingAnchor.constraint(equalTo: bMiniC.trailingAnchor, constant: 0).isActive = true
-//        bMini.bottomAnchor.constraint(equalTo: mMini.topAnchor, constant: -30).isActive = true
-//        bMini.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15).isActive = true
-//        bMini.heightAnchor.constraint(equalToConstant: 40).isActive = true
-//        bMini.widthAnchor.constraint(equalToConstant: 40).isActive = true
         bMini.layer.cornerRadius = 20
         bMini.layer.opacity = 0.3
         
@@ -472,8 +463,8 @@ class VCAViewCell: VCViewCell {
         bMiniBtn.centerYAnchor.constraint(equalTo: bMini.centerYAnchor, constant: -2).isActive = true
         bMiniBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         bMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        bMiniBtn.isUserInteractionEnabled = true
-        bMiniBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onShareClicked)))
+//        bMiniBtn.isUserInteractionEnabled = true
+//        bMiniBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onShareClicked)))
         
 //        let bText = UILabel()
         bText.textAlignment = .left
@@ -497,6 +488,8 @@ class VCAViewCell: VCViewCell {
         cBMiniC.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15).isActive = true
         cBMiniC.heightAnchor.constraint(equalToConstant: 40).isActive = true //default 44
         cBMiniC.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        cBMiniC.isUserInteractionEnabled = true
+        cBMiniC.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBookmarkClicked)))
         
         let cBMini = UIView()
         cBMini.backgroundColor = .ddmBlackOverlayColor
@@ -508,10 +501,6 @@ class VCAViewCell: VCViewCell {
         cBMini.topAnchor.constraint(equalTo: cBMiniC.topAnchor, constant: 0).isActive = true
         cBMini.leadingAnchor.constraint(equalTo: cBMiniC.leadingAnchor, constant: 0).isActive = true
         cBMini.trailingAnchor.constraint(equalTo: cBMiniC.trailingAnchor, constant: 0).isActive = true
-//        cBMini.bottomAnchor.constraint(equalTo: bMini.topAnchor, constant: -30).isActive = true
-//        cBMini.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15).isActive = true
-//        cBMini.heightAnchor.constraint(equalToConstant: 40).isActive = true
-//        cBMini.widthAnchor.constraint(equalToConstant: 40).isActive = true
         cBMini.layer.cornerRadius = 20
         cBMini.layer.opacity = 0.3
         
@@ -526,8 +515,8 @@ class VCAViewCell: VCViewCell {
         cBMiniBtn.centerYAnchor.constraint(equalTo: cBMini.centerYAnchor).isActive = true
         cBMiniBtn.heightAnchor.constraint(equalToConstant: 22).isActive = true
         cBMiniBtn.widthAnchor.constraint(equalToConstant: 22).isActive = true
-        cBMiniBtn.isUserInteractionEnabled = true
-        cBMiniBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBookmarkClicked)))
+//        cBMiniBtn.isUserInteractionEnabled = true
+//        cBMiniBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBookmarkClicked)))
         
 //        let cBText = UILabel()
         cBText.textAlignment = .left
@@ -547,6 +536,8 @@ class VCAViewCell: VCViewCell {
         cMiniC.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15).isActive = true
         cMiniC.heightAnchor.constraint(equalToConstant: 40).isActive = true //default 44
         cMiniC.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        cMiniC.isUserInteractionEnabled = true
+        cMiniC.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onCommentClicked)))
         
         let cMini = UIView()
         cMini.backgroundColor = .ddmBlackOverlayColor
@@ -558,10 +549,6 @@ class VCAViewCell: VCViewCell {
         cMini.topAnchor.constraint(equalTo: cMiniC.topAnchor, constant: 0).isActive = true
         cMini.leadingAnchor.constraint(equalTo: cMiniC.leadingAnchor, constant: 0).isActive = true
         cMini.trailingAnchor.constraint(equalTo: cMiniC.trailingAnchor, constant: 0).isActive = true
-//        cMini.bottomAnchor.constraint(equalTo: cBMini.topAnchor, constant: -30).isActive = true
-//        cMini.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15).isActive = true
-//        cMini.heightAnchor.constraint(equalToConstant: 40).isActive = true
-//        cMini.widthAnchor.constraint(equalToConstant: 40).isActive = true
         cMini.layer.cornerRadius = 20
         cMini.layer.opacity = 0.3
         
@@ -575,8 +562,8 @@ class VCAViewCell: VCViewCell {
         cMiniBtn.centerYAnchor.constraint(equalTo: cMini.centerYAnchor).isActive = true
         cMiniBtn.heightAnchor.constraint(equalToConstant: 22).isActive = true
         cMiniBtn.widthAnchor.constraint(equalToConstant: 22).isActive = true
-        cMiniBtn.isUserInteractionEnabled = true
-        cMiniBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onCommentClicked)))
+//        cMiniBtn.isUserInteractionEnabled = true
+//        cMiniBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onCommentClicked)))
         
 //        let cText = UILabel()
         cText.textAlignment = .left
@@ -600,6 +587,8 @@ class VCAViewCell: VCViewCell {
         dMiniC.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15).isActive = true
         dMiniC.heightAnchor.constraint(equalToConstant: 40).isActive = true //default 44
         dMiniC.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        dMiniC.isUserInteractionEnabled = true
+        dMiniC.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onLoveClicked)))
         
         let dMini = UIView()
         dMini.backgroundColor = .ddmBlackOverlayColor
@@ -611,10 +600,6 @@ class VCAViewCell: VCViewCell {
         dMini.topAnchor.constraint(equalTo: dMiniC.topAnchor, constant: 0).isActive = true
         dMini.leadingAnchor.constraint(equalTo: dMiniC.leadingAnchor, constant: 0).isActive = true
         dMini.trailingAnchor.constraint(equalTo: dMiniC.trailingAnchor, constant: 0).isActive = true
-//        dMini.bottomAnchor.constraint(equalTo: cMini.topAnchor, constant: -30).isActive = true
-//        dMini.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15).isActive = true
-//        dMini.heightAnchor.constraint(equalToConstant: 40).isActive = true
-//        dMini.widthAnchor.constraint(equalToConstant: 40).isActive = true
         dMini.layer.cornerRadius = 20
         dMini.layer.opacity = 0.3
         
@@ -630,8 +615,8 @@ class VCAViewCell: VCViewCell {
         dMiniBtn.centerYAnchor.constraint(equalTo: dMini.centerYAnchor).isActive = true
         dMiniBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         dMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        dMiniBtn.isUserInteractionEnabled = true
-        dMiniBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onLoveClicked)))
+//        dMiniBtn.isUserInteractionEnabled = true
+//        dMiniBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onLoveClicked)))
         
 //        let dText = UILabel()
         dText.textAlignment = .left
@@ -708,7 +693,6 @@ class VCAViewCell: VCViewCell {
         eAddBtn.centerYAnchor.constraint(equalTo: eAddRing.centerYAnchor).isActive = true
         eAddBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true //22
         eAddBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        
         
         //test dynamic caption/subtitle
 //        let sBox = UIView()
@@ -794,7 +778,17 @@ class VCAViewCell: VCViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        print("videocv prepare for reuse")
+        print("videocv prepare for reuse A")
+        
+        //*test > remove time observer
+        removeTimeObserverVideo()
+        
+        player?.pause()
+        player?.replaceCurrentItem(with: nil)
+        player = nil
+        
+        vidPlayStatus = ""
+        //*
         
         aTitleText.text = "-"
         aNameText.text = "-"
@@ -811,6 +805,8 @@ class VCAViewCell: VCViewCell {
         
         aSpinner.stopAnimating()
         
+        let imageUrl = URL(string: "")
+        gifImage.sd_setImage(with: imageUrl)
         gifImage.isHidden = true
         aContainer.isHidden = true
         aaText.isHidden = true
@@ -818,6 +814,16 @@ class VCAViewCell: VCViewCell {
         errorText.isHidden = true
         errorText.text = ""
         errorRefreshBtn.isHidden = true
+    }
+    
+    //test > destroy view to avoid timeobserver memory leak
+    override func destroyCell() {
+        print("vcAviewcell destroy cell")
+        removeTimeObserverVideo()
+        
+        player?.pause()
+        player?.replaceCurrentItem(with: nil)
+        player = nil
     }
     
     @objc func onErrorRefreshClicked(gesture: UITapGestureRecognizer) {
@@ -828,30 +834,18 @@ class VCAViewCell: VCViewCell {
     @objc func onUserClicked(gesture: UITapGestureRecognizer) {
         print("click open user panel:")
         aDelegate?.didClickUser()
-        
-        //test > try pause video when transition to user panel
-//        pauseVideo()
     }
     @objc func onPlaceClicked(gesture: UITapGestureRecognizer) {
         print("click open place panel:")
         aDelegate?.didClickPlace()
-        
-        //test > try pause video when transition to user panel
-//        pauseVideo()
     }
     @objc func onSoundClicked(gesture: UITapGestureRecognizer) {
         print("click open sound panel:")
         aDelegate?.didClickSound()
-        
-        //test > try pause video when transition to user panel
-//        pauseVideo()
     }
     @objc func onCommentClicked(gesture: UITapGestureRecognizer) {
         print("click open comment panel:")
         aDelegate?.didClickComment()
-        
-        //test > try pause video when transition to user panel
-//        pauseVideo()
     }
     @objc func onShareClicked(gesture: UITapGestureRecognizer) {
         print("click share panel:")
@@ -868,7 +862,6 @@ class VCAViewCell: VCViewCell {
     
     @objc func onPauseVideoClicked(gesture: UITapGestureRecognizer) {
         print("click pause video:")
-//        aDelegate?.didClickPauseVideo()
 
         pauseVideoView.isHidden = true
         playVideoView.isHidden = false
@@ -876,7 +869,6 @@ class VCAViewCell: VCViewCell {
     }
     @objc func onResumeVideoClicked(gesture: UITapGestureRecognizer) {
         print("click resume video:")
-//        aDelegate?.didClickResumeVideo()
 
         pauseVideoView.isHidden = false
         playVideoView.isHidden = true
@@ -944,7 +936,7 @@ class VCAViewCell: VCViewCell {
         })
     }
     
-    //*test > async fetch images/names/videos
+    //*test > async fetch user profile, name, follow status etc
     func asyncConfigure(data: String) {
         let id = "u"
         DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
@@ -985,6 +977,73 @@ class VCAViewCell: VCViewCell {
     }
     //*
     
+    //test > async fetch asset
+    func asyncConfigureVideo(data: VideoData) {
+        
+        let id = "s"
+        DataFetchManager.shared.fetchSoundData(id: id) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    print("pdp api success \(id), \(l)")
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    //test 2 > try video without looper, use conventional avplayer
+                    var videoURL = ""
+                    if(data.dataType == "a") {
+                        videoURL = "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_video_4.mp4?alt=media"
+                    }
+
+                    let url = CacheManager.shared.getCacheUrlFor(videoUrl: videoURL)
+                    
+                    if(self.player != nil && self.player.currentItem != nil) {
+                        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: self.player.currentItem)
+                    }
+                    
+                    let item2 = AVPlayerItem(url: url)
+                    self.player = AVPlayer(playerItem: item2)
+                    let layer2 = AVPlayerLayer(player: self.player)
+                    layer2.frame = self.contentView.bounds //videoContainer.bounds will have problem as vc is not displayed yet
+                    layer2.videoGravity = .resizeAspectFill
+                    self.videoContainer.layer.addSublayer(layer2)
+                    
+                    //test > get duration of video 2
+                    let d = self.getDuration(ofVideoAt: url)
+                    
+                    self.addTimeObserver()
+                    
+                    NotificationCenter.default.addObserver(self, selector: #selector(self.playerDidFinishPlaying(_:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: self.player.currentItem)
+                    
+                    //seek to previously viewed state t_s
+                    self.player?.seek(to: .zero)
+//                    let seekTime = CMTime(seconds: self.t_s_, preferredTimescale: CMTimeScale(1000)) //1000
+//                    self.player?.seek(to: seekTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+                    
+                    //test > autoplay video after video loaded
+                    if(self.vidPlayStatus == "play") {
+                        self.resumeVideo()
+                    }
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    //error handling e.g. refetch button
+                }
+                break
+            }
+        }
+    }
+    
     //test > configure cell
     func configure(data: VideoData) {
         
@@ -1013,7 +1072,6 @@ class VCAViewCell: VCViewCell {
             errorRefreshBtn.isHidden = false
         }
         else if(data.dataType == "a") { // a - video play
-            gifImage.isHidden = false
             aContainer.isHidden = false
             
             asyncConfigure(data: "")
@@ -1039,31 +1097,61 @@ class VCAViewCell: VCViewCell {
             
             //avplayer with loop
     //        video urls: temp_video_1.mp4, temp_video_2.mp4, temp_video_3.mp4, temp_video_4.mp4
-            videoURL = "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_video_4.mp4?alt=media"
-    //        videoURL = "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_audio_4.m4a?alt=media"
+//            videoURL = "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_video_4.mp4?alt=media"
+            
+//            let imageUrl = URL(string: "")
+            let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+            gifImage.sd_setImage(with: imageUrl)
+            gifImage.isHidden = false
         }
 
-        let url = CacheManager.shared.getCacheUrlFor(videoUrl: videoURL)
-        self.queuePlayer = AVQueuePlayer()
-        let playerView = AVPlayerLayer(player: queuePlayer)
-        let playerItem = AVPlayerItem(url: url)
-        playerLooper = AVPlayerLooper(player: queuePlayer, templateItem: playerItem)
-        playerView.frame = contentView.bounds
-        playerView.videoGravity = .resizeAspectFill
-        videoContainer.layer.addSublayer(playerView)
-
-        pauseVideoView.isHidden = false
-        playVideoView.isHidden = true
-
-        stopVideo()
-        print("dummy configure: \(data)")
-
-        //test > get duration of video 2
-        let d = getDuration(ofVideoAt: url)
-        print("vcviewcell duration: \(d)")
-
-        //test > TimeObserver for progresslistener
-        addTimeObserver()
+        //ori => tested OK
+//        let url = CacheManager.shared.getCacheUrlFor(videoUrl: videoURL)
+//        self.queuePlayer = AVQueuePlayer()
+//        let playerView = AVPlayerLayer(player: queuePlayer)
+//        let playerItem = AVPlayerItem(url: url)
+//        playerLooper = AVPlayerLooper(player: queuePlayer, templateItem: playerItem)
+//        playerView.frame = contentView.bounds
+//        playerView.videoGravity = .resizeAspectFill
+//        videoContainer.layer.addSublayer(playerView)
+//
+//        pauseVideoView.isHidden = false
+//        playVideoView.isHidden = true
+//
+//        stopVideo()
+//        print("dummy configure: \(data)")
+//
+//        //test > get duration of video 2
+//        let d = getDuration(ofVideoAt: url)
+//        print("vcviewcell duration: \(d)")
+//
+//        //test > TimeObserver for progresslistener
+//        addTimeObserver()
+        
+        //test 2 > try video without looper, use conventional avplayer
+//        let url = CacheManager.shared.getCacheUrlFor(videoUrl: videoURL)
+//        
+//        if(self.player != nil && self.player.currentItem != nil) {
+//            NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: self.player.currentItem)
+//        }
+//        
+//        let item2 = AVPlayerItem(url: url)
+//        self.player = AVPlayer(playerItem: item2)
+//        let layer2 = AVPlayerLayer(player: self.player)
+//        layer2.frame = contentView.bounds //videoContainer.bounds will have problem as vc is not displayed yet
+//        layer2.videoGravity = .resizeAspectFill
+//        self.videoContainer.layer.addSublayer(layer2)
+//        
+//        self.addTimeObserver()
+//        
+//        NotificationCenter.default.addObserver(self, selector: #selector(self.playerDidFinishPlaying(_:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: self.player.currentItem)
+        
+        //test 3 > async load video
+        asyncConfigureVideo(data: data)
+    }
+    
+    @objc func playerDidFinishPlaying(_ notification: Notification) {
+        playVideo()
     }
     
     func getDuration(ofVideoAt videoURL: URL) -> Double? {
@@ -1084,59 +1172,73 @@ class VCAViewCell: VCViewCell {
     let sText = UILabel()
 //    let sText = UIOutlinedLabel()
     func addTimeObserver() {
+        print("addTimeObserver A: \(timeObserverToken), \(player)")
+        
         //test > time observer
         let timeInterval = CMTime(seconds: 0.02, preferredTimescale: CMTimeScale(1000)) //0.01 sec intervalc
-        timeObserverToken = queuePlayer.addPeriodicTimeObserver(forInterval: timeInterval, queue: DispatchQueue.main) {[weak self] time in
+//        timeObserverToken = queuePlayer.addPeriodicTimeObserver(forInterval: timeInterval, queue: DispatchQueue.main) {[weak self] time in
+        //test > new method
+//        if let tokenV = timeObserverToken {
+//            //check if token exists
+//        } else {
+            timeObserverToken = player.addPeriodicTimeObserver(forInterval: timeInterval, queue: DispatchQueue.main) {[weak self] time in
+                    
+                let currentTime = time.seconds
+                print("Current time A: \(currentTime)")
+                    
+                // Update UI with current time
+                if(currentTime < 0.0) {
+                    self?.sText.text = ""
+                } else if(currentTime < 1.0) {
+    //                self?.sText.text = "LOL....Hahaha✅"
+                    self?.sText.text = "馬克宏稱挺台海"
+                } else if(currentTime < 2.0) {
+    //                self?.sText.text = "😈😈Oopss!!! OMG we gotta GO!!"
+                    self?.sText.text = "被爆料阻援烏"
+                } else if(currentTime < 3.0) {
+                    self?.sText.text = "Bye for now Cya🤖"
+    //                self?.sText.text = "｜宋國誠｜桑普｜"
+    //                self?.sText.text = ""
+                } else if(currentTime < 4.0) {
+                    self?.sText.text = "LOL✌️....Hahaha LOL✌️....Hahaha LOL✌️....Hahaha LOL✌️....Hahaha LOL✌️....Hahaha LOL✌️....Hahaha LOL✌️....Hahaha"
+    //                self?.sText.text = "總統沒什麼好道歉的"
+                } else if(currentTime < 5.0) {
+    //                self?.sText.text = "🤡Oopss!!! OMG we gotta GO!!"
+                    self?.sText.text = "質疑馬克宏阻擋歐盟援助20億!!"
+                } else if(currentTime < 6.0) {
+    //                self?.sText.text = "😻Bye for now Cya"
+    //                self?.sText.text = "另外印度有媒體12日爆料"
+                    self?.sText.text = ""
+                } else if(currentTime < 7.0) {
+    //                self?.sText.text = "LOL..👻..Hahaha"
+                    self?.sText.text = "百萬發砲彈給烏克蘭的進度"
+                } else {
+    //                self?.sText.text = "💩"
+                    self?.sText.text = "#馬克宏 #范德賴恩 #新聞大破解"
+                }
                 
-            let currentTime = time.seconds
-            print("Current time: \(currentTime)")
-                
-            // Update UI with current time
-            if(currentTime < 0.0) {
-                self?.sText.text = ""
-            } else if(currentTime < 1.0) {
-//                self?.sText.text = "LOL....Hahaha✅"
-                self?.sText.text = "馬克宏稱挺台海"
-            } else if(currentTime < 2.0) {
-//                self?.sText.text = "😈😈Oopss!!! OMG we gotta GO!!"
-                self?.sText.text = "被爆料阻援烏"
-            } else if(currentTime < 3.0) {
-                self?.sText.text = "Bye for now Cya🤖"
-//                self?.sText.text = "｜宋國誠｜桑普｜"
-//                self?.sText.text = ""
-            } else if(currentTime < 4.0) {
-                self?.sText.text = "LOL✌️....Hahaha LOL✌️....Hahaha LOL✌️....Hahaha LOL✌️....Hahaha LOL✌️....Hahaha LOL✌️....Hahaha LOL✌️....Hahaha"
-//                self?.sText.text = "總統沒什麼好道歉的"
-            } else if(currentTime < 5.0) {
-//                self?.sText.text = "🤡Oopss!!! OMG we gotta GO!!"
-                self?.sText.text = "質疑馬克宏阻擋歐盟援助20億!!"
-            } else if(currentTime < 6.0) {
-//                self?.sText.text = "😻Bye for now Cya"
-//                self?.sText.text = "另外印度有媒體12日爆料"
-                self?.sText.text = ""
-            } else if(currentTime < 7.0) {
-//                self?.sText.text = "LOL..👻..Hahaha"
-                self?.sText.text = "百萬發砲彈給烏克蘭的進度"
-            } else {
-//                self?.sText.text = "💩"
-                self?.sText.text = "#馬克宏 #范德賴恩 #新聞大破解"
+                if(self?.sText.text == "") {
+                    self?.sBox.isHidden = true
+                } else {
+                    self?.sBox.isHidden = false
+                }
             }
-            
-            if(self?.sText.text == "") {
-                self?.sBox.isHidden = true
-            } else {
-                self?.sBox.isHidden = false
-            }
+//        }
+    }
+    
+    func removeTimeObserverVideo() {
+        //remove video observer
+        if let tokenV = timeObserverToken {
+            player?.removeTimeObserver(tokenV)
+            timeObserverToken = nil
+        }
+        
+        //test > for looping
+        if(player != nil && player.currentItem != nil) {
+            NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
         }
     }
-    //    deinit {
-    //        // Remove observer when view controller is deallocated
-    //        if let token = timeObserverToken {
-    //            queuePlayer.removeTimeObserver(token)
-    //            timeObserverToken = nil
-    //        }
-    //    }
-    //
+
     //example of srt file, start and end time => hours, minutes, seconds, and milliseconds
 //    1
 //    00:00:10,000 --> 00:00:15,000
@@ -1163,65 +1265,43 @@ class VCAViewCell: VCViewCell {
         pauseVideoView.isHidden = false
         playVideoView.isHidden = true
         
-        queuePlayer.seek(to: .zero)
-        queuePlayer.play()
+//        queuePlayer.seek(to: .zero)
+//        queuePlayer.play()
         
-        videoPlayStatus = "playing"
+        player?.seek(to: .zero)
+        player?.play()
+        
+        vidPlayStatus = "play"
     }
     
     override func stopVideo() {
-//        pauseVideoView.isHidden = true
-//        playVideoView.isHidden = false
         
-        queuePlayer.seek(to: .zero)
-        queuePlayer.pause()
+//        queuePlayer.seek(to: .zero)
+//        queuePlayer.pause()
         
-        videoPlayStatus = "stop"
+        player?.seek(to: .zero)
+        player?.pause()
+        
+        vidPlayStatus = "pause"
         
         print("cell stop video")
     }
     
     override func pauseVideo() {
-//        pauseVideoView.isHidden = true
-//        playVideoView.isHidden = false
         
-        queuePlayer.pause()
+//        queuePlayer.pause()
+        player?.pause()
         
-        videoPlayStatus = "pause"
+        vidPlayStatus = "pause"
     }
     
     override func resumeVideo() {
         pauseVideoView.isHidden = false
         playVideoView.isHidden = true
         
-        queuePlayer.play()
+//        queuePlayer.play()
+        player?.play()
         
-        videoPlayStatus = "resume"
+        vidPlayStatus = "play"
     }
 }
-
-//extension VideoPanelView: VCViewCellDelegate{
-//    func didClickUser() {
-//        print("VCViewCellDelegate open user panel:")
-//        delegate?.didClickUser()
-//    }
-//    
-//    func didClickPlace() {
-//        delegate?.didClickPlace()
-//    }
-//    
-//    func didClickSound() {
-//        delegate?.didClickSound()
-//    }
-//    
-//    func didClickComment() {
-//        openComment()
-//    }
-//    func didClickShare() {
-//        //test
-//        openShareSheet()
-//    }
-//    func didClickRefresh() {
-//        
-//    }
-//}

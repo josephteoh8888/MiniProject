@@ -9,12 +9,15 @@ import Foundation
 import UIKit
 import SDWebImage
 
+protocol GridViewCellDelegate : AnyObject {
+    func gridViewClick(vc: UICollectionViewCell)
+}
 //test > grid viewcell for user panel
 class GridVideoViewCell: UICollectionViewCell {
     static let identifier = "GridVideoViewCell"
     var gifImage = SDAnimatedImageView()
     
-//    weak var aDelegate : GridViewCellDelegate?
+    weak var aDelegate : GridViewCellDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -30,13 +33,14 @@ class GridVideoViewCell: UICollectionViewCell {
     }
     
     private func addSubViews() {
-//        contentView.addSubview(videoContainer)
         
-        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
+        self.backgroundColor = .ddmDarkColor
+        self.layer.cornerRadius = 5
+        
+//        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
         gifImage.contentMode = .scaleAspectFill
         gifImage.clipsToBounds = true
-        gifImage.sd_setImage(with: imageUrl)
-//        gifImage.layer.cornerRadius = 10
+//        gifImage.sd_setImage(with: imageUrl)
         gifImage.layer.cornerRadius = 5
         contentView.addSubview(gifImage)
         gifImage.translatesAutoresizingMaskIntoConstraints = false
@@ -44,6 +48,8 @@ class GridVideoViewCell: UICollectionViewCell {
         gifImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
         gifImage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
         gifImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
+        gifImage.isUserInteractionEnabled = true
+        gifImage.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPhotoClicked)))
         
         //stats count
 //        let playBtn = UIImageView()
@@ -73,25 +79,29 @@ class GridVideoViewCell: UICollectionViewCell {
     }
     
     func hideCell() {
-//        aSpinner.startAnimating()
         gifImage.isHidden = true
     }
-//
+
     func dehideCell() {
-//        aSpinner.stopAnimating()
         gifImage.isHidden = false
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
         print("upv gridvideo prepare for reuse")
+        
+        let imageUrl = URL(string: "")
+        gifImage.sd_setImage(with: imageUrl)
     }
     
     func configure(data: PostData) {
-        if(data.isGridHidden) {
-            gifImage.isHidden = true
-        } else{
-            gifImage.isHidden = false
-        }
+        
+        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
+        gifImage.sd_setImage(with: imageUrl)
     }
+    
+    @objc func onPhotoClicked(gesture: UITapGestureRecognizer) {
+        aDelegate?.gridViewClick(vc: self)
+    }
+    
 }

@@ -14,7 +14,7 @@ class ScrollFeedHPhotoListCell: ScrollPhotoDataFeedCell {
 //    weak var aDelegate : ScrollFeedCellDelegate?
     
     //test > record which cell video is playing
-    var currentPlayingVidIndex = -1
+//    var currentPlayingVidIndex = -1
     
     //test > for video autoplay when user opens
     var isFeedDisplayed = false
@@ -22,7 +22,7 @@ class ScrollFeedHPhotoListCell: ScrollPhotoDataFeedCell {
     //test
     var hideCellIndex = -1
     
-    var selectedItemIdx = -1
+//    var selectedItemIdx = -1
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -96,109 +96,90 @@ class ScrollFeedHPhotoListCell: ScrollPhotoDataFeedCell {
         vCV?.showsVerticalScrollIndicator = isShowVertical
     }
     
-    //test > resume current video
-    func resumeCurrentAudio() {
-        guard let a = self.vCV else {
-            return
-        }
-        if(currentPlayingVidIndex > -1) {
-            let idxPath = IndexPath(item: currentPlayingVidIndex, section: 0)
-            let currentVc = a.cellForItem(at: idxPath)
-
-            if let b = currentVc as? HPhotoListAViewCell {
-                b.resumeAudio()
-            }
-        }
-        print("sfvideo resumeCurrentAudio: \(feedCode), \(currentPlayingVidIndex)")
-    }
-
-    //test > pause current video for closing
-    func pauseCurrentAudio() {
-        guard let a = self.vCV else {
-            return
-        }
-        if(currentPlayingVidIndex > -1) {
-            let idxPath = IndexPath(item: currentPlayingVidIndex, section: 0)
-            let currentVc = a.cellForItem(at: idxPath)
-
-            if let b = currentVc as? HPhotoListAViewCell {
-                b.pauseAudio()
-            }
-            
-            //test > new method to play sound, not automatic scroll and play
-            currentPlayingVidIndex = -1
-        }
-        print("sfvideo pauseCurrentAudio: \(feedCode), \(currentPlayingVidIndex)")
-    }
-    
     //test > dehide cell
     func dehideCell() {
         guard let a = self.vCV else {
             return
         }
 
-        let idxPath = IndexPath(item: hideCellIndex, section: 0)
-        let currentVc = a.cellForItem(at: idxPath)
-        guard let b = currentVc as? HPhotoListAViewCell else {
-            return
+        if(hideCellIndex > -1) {
+            let idxPath = IndexPath(item: hideCellIndex, section: 0)
+            let currentVc = a.cellForItem(at: idxPath)
+            guard let b = currentVc as? HPhotoListAViewCell else {
+                return
+            }
+            b.dehideCell()
+            
+            hideCellIndex = -1
         }
-        b.dehideCell()
-        
-        hideCellIndex = -1
     }
     
     //test > selected item for delete etc
-    func unselectItemData(){
-        selectedItemIdx = -1
+//    override func unselectItemData(){
+//        selectedItemIdx = -1
+//    }
+    
+    //test > resume current video
+    func resumePlayingMedia() {
+        //test 2 > new method for cell-asset idx
+        resumeMediaAsset(cellAssetIdx: playingCellMediaAssetIdx)
+    }
+
+    //test > pause current video for closing
+    func pausePlayingMedia() {
+        //test 2 > new method for cell-asset idx
+        pauseMediaAsset(cellAssetIdx: playingCellMediaAssetIdx)
     }
     
-    //test > react to intersected video
-    func reactToIntersectedAudio(intersectedIdx: Int) {
-        guard let a = vCV else {
+    //test > destroy cell
+    func destroyCell() {
+        guard let a = self.vCV else {
             return
         }
-        if(intersectedIdx > -1) {
-            if(currentPlayingVidIndex > -1) {
-                if(currentPlayingVidIndex != intersectedIdx) {
-                    let prevIdxPath = IndexPath(item: currentPlayingVidIndex, section: 0)
-                    let idxPath = IndexPath(item: intersectedIdx, section: 0)
-                    let prevVc = a.cellForItem(at: prevIdxPath)
-                    let currentVc = a.cellForItem(at: idxPath)
-                    
-                    if let b = prevVc as? HPhotoListAViewCell {
-                        b.pauseAudio()
-                        currentPlayingVidIndex = -1
-                    }
-                    if let c = currentVc as? HPhotoListAViewCell {
-//                        c.resumeAudio()
-//                        currentPlayingVidIndex = intersectedIdx
-                    }
-                    
-                    print("reactintersect photo A")
-                }
-            } else {
-                let idxPath = IndexPath(item: intersectedIdx, section: 0)
-                let currentVc = a.cellForItem(at: idxPath)
-
-                if let b = currentVc as? HPhotoListAViewCell {
-//                    b.resumeAudio()
-//                    currentPlayingVidIndex = intersectedIdx
-                }
-                
-                print("reactintersect photo B")
+        for cell in a.visibleCells {
+            if let b = cell as? HPhotoListAViewCell {
+                b.destroyCell()
             }
-        } else {
-            //if intersectedIdx == -1, all video should pause/stop
-            if(currentPlayingVidIndex > -1) {
-                let idxPath = IndexPath(item: currentPlayingVidIndex, section: 0)
-                let currentVc = a.cellForItem(at: idxPath)
-
-                if let b = currentVc as? HPhotoListAViewCell {
-                    b.pauseAudio()
-                    currentPlayingVidIndex = -1
+        }
+    }
+    
+    //test 2 > new method for pausing video with cell-asset idx
+    var playingCellMediaAssetIdx = [-1, -1] //none playing initially
+    func pauseMediaAsset(cellAssetIdx: [Int]) {
+        guard let a = self.vCV else {
+            return
+        }
+        if(cellAssetIdx.count == 2) {
+            let cIdx = cellAssetIdx[0] //cell index
+            let aIdx = cellAssetIdx[1] //asset index
+            if(cIdx > -1 && aIdx > -1) {
+                let cIdxPath = IndexPath(item: cIdx, section: 0)
+                let cell = a.cellForItem(at: cIdxPath)
+                if let c = cell as? HPhotoListAViewCell {
+                    if(!c.aTestArray.isEmpty && aIdx < c.aTestArray.count) {
+                        c.pauseMedia(aIdx: aIdx)
+//                        playingCellMediaAssetIdx = [-1, -1] //disabled for pauseCurrentVideo() and resume
+                    }
                 }
-                
-                print("reactintersect photo B")
+            }
+        }
+    }
+    
+    func resumeMediaAsset(cellAssetIdx: [Int]) {
+        guard let a = self.vCV else {
+            return
+        }
+        if(cellAssetIdx.count == 2) {
+            let cIdx = cellAssetIdx[0]
+            let aIdx = cellAssetIdx[1]
+            if(cIdx > -1 && aIdx > -1) {
+                let cIdxPath = IndexPath(item: cIdx, section: 0)
+                let cell = a.cellForItem(at: cIdxPath)
+                if let c = cell as? HPhotoListAViewCell {
+                    if(!c.aTestArray.isEmpty && aIdx < c.aTestArray.count) {
+                        c.resumeMedia(aIdx: aIdx)
+                    }
+                }
             }
         }
     }
@@ -264,10 +245,12 @@ extension ScrollFeedHPhotoListCell: UICollectionViewDelegateFlowLayout {
         
         let text = vDataList[indexPath.row].dataTextString
         let dataL = vDataList[indexPath.row].dataArray
-//        let xText = "往年的这个时候，iPhone 虽然也是位列销量榜榜首，但那都是上一代的旧机型呀."
+        let dataCL = vDataList[indexPath.row].contentDataArray
         let statText = "1.2m views . 3hr"
         var contentHeight = 0.0
-        for l in dataL {
+        for cl in dataCL {
+            let l = cl.dataType
+//        for l in dataL {
             let availableWidth = self.frame.width
             let bubbleHeight = 3.0
             let bubbleTopMargin = 10.0
@@ -295,10 +278,8 @@ extension ScrollFeedHPhotoListCell: UICollectionViewDelegateFlowLayout {
             }
             
             let pTopMargin = 0.0
-//                let pContentHeight = 400.0 //280.0
             let pContentHeight = cSize.height
             let tTopMargin = 10.0
-//                let tText = "Nice food, nice environment! Worth a visit. \nSo good!"
             let tContentHeight = estimateHeight(text: text, textWidth: collectionView.frame.width - 20.0 - 20.0, fontSize: 14)
             print("photo p text size: \(tContentHeight), \(text)")
             let pHeight = pTopMargin + pContentHeight + tTopMargin + tContentHeight
@@ -317,8 +298,6 @@ extension ScrollFeedHPhotoListCell: UICollectionViewDelegateFlowLayout {
         
         let userPhotoHeight = 40.0
         let userPhotoTopMargin = 10.0 //10
-//        let tTopMargin = 10.0
-//        let tContentHeight = estimateHeight(text: xText, textWidth: collectionView.frame.width - 20.0 - 20.0, fontSize: 14)
         let statTopMargin = 10.0
         let statContentHeight = estimateHeight(text: statText, textWidth: collectionView.frame.width - 20.0 - 20.0, fontSize: 12)
         let actionBtnTopMargin = 10.0
@@ -571,26 +550,7 @@ extension ScrollFeedHPhotoListCell: HListCellDelegate {
         aDelegate?.sfcIsScrollCarousel(isScroll: isScroll)
     }
     
-    func hListCarouselIdx(vc: UICollectionViewCell, idx: Int) {
-        if let a = vCV {
-            for cell in a.visibleCells {
-                guard let indexPath = a.indexPath(for: cell) else {
-                    continue
-                }
-                print("sfphoto idx: \(cell == vc), \(indexPath)")
-                
-                if(cell == vc) {
-                    vDataList[indexPath.row].p_s = idx
-                    break
-                }
-            }
-        }
-    }
-    
-    func hListVideoStopTime(vc: UICollectionViewCell, ts: Double){
-        
-    }
-    func hListDidClickVcvPlayAudio(vc: UICollectionViewCell){
+    func hListCarouselIdx(vc: UICollectionViewCell, aIdx: Int, idx: Int) {
         if let a = vCV {
             for cell in a.visibleCells {
                 guard let indexPath = a.indexPath(for: cell) else {
@@ -598,52 +558,52 @@ extension ScrollFeedHPhotoListCell: HListCellDelegate {
                 }
                 
                 if(cell == vc) {
-                    print("sfphoto play audio: \(cell == vc), \(indexPath)")
-                    let intersectedIdx = indexPath.row
-                    if(currentPlayingVidIndex > -1) {
-                        if(currentPlayingVidIndex != intersectedIdx) {
-                            let prevIdxPath = IndexPath(item: currentPlayingVidIndex, section: 0)
-                            let idxPath = IndexPath(item: intersectedIdx, section: 0)
-                            let prevVc = a.cellForItem(at: prevIdxPath)
-                            let currentVc = a.cellForItem(at: idxPath)
-                            guard let b = prevVc as? HPhotoListAViewCell else {
-                                return
-                            }
-                            guard let c = currentVc as? HPhotoListAViewCell else {
-                                return
-                            }
-                            b.pauseAudio()
-
-                            c.resumeAudio()
-                            currentPlayingVidIndex = intersectedIdx
-                            
-                            print("reactintersect photo play AA")
-                        } else {
-                            let prevIdxPath = IndexPath(item: currentPlayingVidIndex, section: 0)
-                            let prevVc = a.cellForItem(at: prevIdxPath)
-                            guard let b = prevVc as? HPhotoListAViewCell else {
-                                return
-                            }
-
-                            b.pauseAudio()
-                            currentPlayingVidIndex = -1
-                        }
-                    } else {
-                        let idxPath = IndexPath(item: intersectedIdx, section: 0)
-                        let currentVc = a.cellForItem(at: idxPath)
-                        guard let b = currentVc as? HPhotoListAViewCell else {
-                            return
-                        }
-
-                        b.resumeAudio()
-                        currentPlayingVidIndex = intersectedIdx
-                        
-                        print("reactintersect photo play BB")
+//                    vDataList[indexPath.row].p_s = idx
+                    
+                    //test > new method
+                    let data = vDataList[indexPath.row]
+                    let dataCL = data.contentDataArray
+                    if(aIdx > -1 && aIdx < dataCL.count) {
+                        dataCL[aIdx].p_s = idx
                     }
                     
                     break
                 }
             }
         }
+    }
+    
+    func hListVideoStopTime(vc: UICollectionViewCell, aIdx: Int, ts: Double){
+        
+    }
+    func hListDidClickVcvPlayAudio(vc: UICollectionViewCell){
+        
+    }
+    func hListDidClickVcvClickPlay(vc: UICollectionViewCell, isPlay: Bool){
+        //test > try new method for manual play/stop video
+        if let a = vCV {
+            for cell in a.visibleCells {
+                guard let indexPath = a.indexPath(for: cell) else {
+                    continue
+                }
+                
+                if(cell == vc) {
+                    if let s = cell as? HPhotoListAViewCell {
+                        let mIdx = s.playingMediaAssetIdx
+                        if(isPlay) {
+                            pauseMediaAsset(cellAssetIdx: playingCellMediaAssetIdx) //test
+                            
+                            playingCellMediaAssetIdx = [indexPath.row, mIdx]
+                        } else {
+                            playingCellMediaAssetIdx = [-1, -1]
+                        }
+                    }
+                    
+                    break
+                }
+            }
+        }
+        
+        print("comment playingCellMediaAssetIdx: \(playingCellMediaAssetIdx)")
     }
 }

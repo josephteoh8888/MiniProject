@@ -14,7 +14,7 @@ class ScrollFeedHPostListCell: ScrollDataFeedCell {
 //    weak var aDelegate : ScrollFeedCellDelegate?
     
     //test > record which cell video is playing
-    var currentPlayingVidIndex = -1
+//    var currentPlayingVidIndex = -1
     
     //test > for video autoplay when user opens
     var isFeedDisplayed = false
@@ -22,7 +22,7 @@ class ScrollFeedHPostListCell: ScrollDataFeedCell {
     //test
     var hideCellIndex = -1
     
-    var selectedItemIdx = -1
+//    var selectedItemIdx = -1
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -96,37 +96,6 @@ class ScrollFeedHPostListCell: ScrollDataFeedCell {
     override func setShowVerticalScroll(isShowVertical: Bool) {
         vCV?.showsVerticalScrollIndicator = isShowVertical
     }
-
-    //test > resume current video
-    func resumeCurrentVideo() {
-        guard let a = self.vCV else {
-            return
-        }
-        if(currentPlayingVidIndex > -1) {
-            let idxPath = IndexPath(item: currentPlayingVidIndex, section: 0)
-            let currentVc = a.cellForItem(at: idxPath)
-
-            if let b = currentVc as? HPostListAViewCell {
-                b.resumeVideo()
-            }
-        }
-        print("sfvideo resumeCurrentVideo: \(feedCode), \(currentPlayingVidIndex)")
-    }
-
-    //test > pause current video for closing
-    func pauseCurrentVideo() {
-        guard let a = self.vCV else {
-            return
-        }
-        if(currentPlayingVidIndex > -1) {
-            let idxPath = IndexPath(item: currentPlayingVidIndex, section: 0)
-            let currentVc = a.cellForItem(at: idxPath)
-            
-            if let b = currentVc as? HPostListAViewCell {
-                b.pauseVideo()
-            }
-        }
-    }
     
     //test > dehide cell
     func dehideCell() {
@@ -134,60 +103,83 @@ class ScrollFeedHPostListCell: ScrollDataFeedCell {
             return
         }
 
-        let idxPath = IndexPath(item: hideCellIndex, section: 0)
-        let currentVc = a.cellForItem(at: idxPath)
-        guard let b = currentVc as? HPostListAViewCell else {
-            return
+        if(hideCellIndex > -1) {
+            let idxPath = IndexPath(item: hideCellIndex, section: 0)
+            let currentVc = a.cellForItem(at: idxPath)
+            guard let b = currentVc as? HPostListAViewCell else {
+                return
+            }
+            b.dehideCell()
+            
+            hideCellIndex = -1
         }
-        b.dehideCell()
-        
-        hideCellIndex = -1
     }
     
     //test > selected item for delete etc
-    func unselectItemData(){
-        selectedItemIdx = -1
+//    override func unselectItemData(){
+//        selectedItemIdx = -1
+//    }
+    
+    //test > resume current video
+    func resumePlayingMedia() {
+        //test 2 > new method for cell-asset idx
+        resumeMediaAsset(cellAssetIdx: playingCellMediaAssetIdx)
+    }
+
+    //test > pause current video for closing
+    func pausePlayingMedia() {
+        //test 2 > new method for cell-asset idx
+        pauseMediaAsset(cellAssetIdx: playingCellMediaAssetIdx)
     }
     
-    //test > react to intersected video
-    func reactToIntersectedVideo(intersectedIdx: Int) {
-        guard let a = vCV else {
+    //test > destroy cell
+    func destroyCell() {
+        guard let a = self.vCV else {
             return
         }
-        if(intersectedIdx > -1) {
-            if(currentPlayingVidIndex > -1) {
-                if(currentPlayingVidIndex != intersectedIdx) {
-                    let prevIdxPath = IndexPath(item: currentPlayingVidIndex, section: 0)
-                    let idxPath = IndexPath(item: intersectedIdx, section: 0)
-                    let prevVc = a.cellForItem(at: prevIdxPath)
-                    let currentVc = a.cellForItem(at: idxPath)
-                    
-                    if let b = prevVc as? HPostListAViewCell {
-                        b.pauseVideo()
+        for cell in a.visibleCells {
+            if let b = cell as? HPostListAViewCell {
+                b.destroyCell()
+            }
+        }
+    }
+    
+    //test 2 > new method for pausing video with cell-asset idx
+    var playingCellMediaAssetIdx = [-1, -1] //none playing initially
+    func pauseMediaAsset(cellAssetIdx: [Int]) {
+        guard let a = self.vCV else {
+            return
+        }
+        if(cellAssetIdx.count == 2) {
+            let cIdx = cellAssetIdx[0] //cell index
+            let aIdx = cellAssetIdx[1] //asset index
+            if(cIdx > -1 && aIdx > -1) {
+                let cIdxPath = IndexPath(item: cIdx, section: 0)
+                let cell = a.cellForItem(at: cIdxPath)
+                if let c = cell as? HPostListAViewCell {
+                    if(!c.aTestArray.isEmpty && aIdx < c.aTestArray.count) {
+                        c.pauseMedia(aIdx: aIdx)
+//                        playingCellMediaAssetIdx = [-1, -1] //disabled for pauseCurrentVideo() and resume
                     }
-                    if let c = currentVc as? HPostListAViewCell {
-                        c.resumeVideo()
-                        currentPlayingVidIndex = intersectedIdx
-                    }
-                }
-            } else {
-                let idxPath = IndexPath(item: intersectedIdx, section: 0)
-                let currentVc = a.cellForItem(at: idxPath)
-                
-                if let b = currentVc as? HPostListAViewCell {
-                    b.resumeVideo()
-                    currentPlayingVidIndex = intersectedIdx
                 }
             }
-        } else {
-            //if intersectedIdx == -1, all video should pause/stop
-            if(currentPlayingVidIndex > -1) {
-                let idxPath = IndexPath(item: currentPlayingVidIndex, section: 0)
-                let currentVc = a.cellForItem(at: idxPath)
-                
-                if let b = currentVc as? HPostListAViewCell {
-                    b.pauseVideo()
-                    currentPlayingVidIndex = -1
+        }
+    }
+    
+    func resumeMediaAsset(cellAssetIdx: [Int]) {
+        guard let a = self.vCV else {
+            return
+        }
+        if(cellAssetIdx.count == 2) {
+            let cIdx = cellAssetIdx[0]
+            let aIdx = cellAssetIdx[1]
+            if(cIdx > -1 && aIdx > -1) {
+                let cIdxPath = IndexPath(item: cIdx, section: 0)
+                let cell = a.cellForItem(at: cIdxPath)
+                if let c = cell as? HPostListAViewCell {
+                    if(!c.aTestArray.isEmpty && aIdx < c.aTestArray.count) {
+                        c.resumeMedia(aIdx: aIdx)
+                    }
                 }
             }
         }
@@ -246,16 +238,17 @@ extension ScrollFeedHPostListCell: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                    layout collectionViewLayout: UICollectionViewLayout,
                    sizeForItemAt indexPath: IndexPath) -> CGSize {
-        print("placepanel collection 2: \(indexPath)")
-        print("sfvideo autoplay layout: \(indexPath)")
 
         let lay = collectionViewLayout as! UICollectionViewFlowLayout
         let widthPerItem = collectionView.frame.width / 3 - lay.minimumInteritemSpacing
         
         let text = vDataList[indexPath.row].dataTextString
         let dataL = vDataList[indexPath.row].dataArray
+        let dataCL = vDataList[indexPath.row].contentDataArray
         var contentHeight = 0.0
-        for l in dataL {
+        for cl in dataCL {
+            let l = cl.dataType
+//        for l in dataL {
             if(l == "t") {
                 let tTopMargin = 20.0
                 let tContentHeight = estimateHeight(text: text, textWidth: collectionView.frame.width - 20.0 - 30.0, fontSize: 14)
@@ -268,7 +261,8 @@ extension ScrollFeedHPostListCell: UICollectionViewDelegateFlowLayout {
                 let rhsMargin = 20.0
                 let availableWidth = cellWidth - lhsMargin - rhsMargin
                 
-                let assetSize = CGSize(width: 4, height: 3)
+//                let assetSize = CGSize(width: 4, height: 3)//landscape
+                let assetSize = CGSize(width: 3, height: 4)
                 var cSize = CGSize(width: 0, height: 0)
                 if(assetSize.width > assetSize.height) {
                     //1 > landscape photo 4:3 w:h
@@ -280,6 +274,7 @@ extension ScrollFeedHPostListCell: UICollectionViewDelegateFlowLayout {
                     //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
                     let aRatio = CGSize(width: 2, height: 3) //aspect ratio
                     let cWidth = availableWidth * 2 / 3
+//                    let cWidth = availableWidth //test full width for portrait
                     let cHeight = cWidth * aRatio.height / aRatio.width
                     cSize = CGSize(width: cWidth, height: cHeight)
                 } else {
@@ -395,55 +390,166 @@ extension ScrollFeedHPostListCell: UICollectionViewDelegateFlowLayout {
                 contentHeight += vHeight
             }
             else if(l == "q") {
+                //**test > fake data for quote post
+                var qDataArray = [String]()
+                qDataArray.append("t")
+//                qDataArray.append("p")
+//                qDataArray.append("p_s")
+                qDataArray.append("v")
+//                qDataArray.append("v_l")
+                //**
+
+                let qLhsMargin = 20.0
+                let qRhsMargin = 20.0
+                let quoteWidth = collectionView.frame.width - qLhsMargin - qRhsMargin
+                
+                for i in qDataArray {
+                    if(i == "t") {
+                        let tTopMargin = 20.0
+                        let tContentHeight = estimateHeight(text: text, textWidth: quoteWidth - 20.0 - 20.0, fontSize: 14)
+                        let tHeight = tTopMargin + tContentHeight
+                        contentHeight += tHeight
+                    }
+                    else if(i == "p") {
+                        let lhsMargin = 20.0
+                        let rhsMargin = 20.0
+                        let availableWidth = quoteWidth - lhsMargin - rhsMargin
+                        
+                        let assetSize = CGSize(width: 4, height: 3)//landscape
+//                        let assetSize = CGSize(width: 3, height: 4)
+                        var cSize = CGSize(width: 0, height: 0)
+                        if(assetSize.width > assetSize.height) {
+                            //1 > landscape photo 4:3 w:h
+                            let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                            let cHeight = availableWidth * aRatio.height / aRatio.width
+                            cSize = CGSize(width: availableWidth, height: cHeight)
+                        }
+                        else if (assetSize.width < assetSize.height){
+                            //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                            let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                            let cWidth = availableWidth * 2 / 3
+        //                    let cWidth = availableWidth //test full width for portrait
+                            let cHeight = cWidth * aRatio.height / aRatio.width
+                            cSize = CGSize(width: cWidth, height: cHeight)
+                        } else {
+                            //square
+                            let cWidth = availableWidth
+                            cSize = CGSize(width: cWidth, height: cWidth)
+                        }
+
+                        let pTopMargin = 20.0
+        //                let pContentHeight = 280.0
+                        let pContentHeight = cSize.height
+                        let pHeight = pTopMargin + pContentHeight
+                        contentHeight += pHeight
+                    }
+                    else if(i == "p_s") {
+                        let lhsMargin = 20.0
+                        let rhsMargin = 20.0
+                        let descHeight = 40.0
+                        let availableWidth = quoteWidth - lhsMargin - rhsMargin
+                        
+                        let assetSize = CGSize(width: 4, height: 3)
+                        var cSize = CGSize(width: 0, height: 0)
+                        if(assetSize.width > assetSize.height) {
+                            //1 > landscape photo 4:3 w:h
+                            let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                            let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
+                            cSize = CGSize(width: availableWidth, height: cHeight)
+                        }
+                        else if (assetSize.width < assetSize.height){
+                            //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                            let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                            let cWidth = availableWidth * 2 / 3
+                            let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
+                            cSize = CGSize(width: cWidth, height: cHeight)
+                        } else {
+                            //square
+                            let cWidth = availableWidth
+                            cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                        }
+                        
+                        let pTopMargin = 20.0
+        //                let pContentHeight = 280.0
+                        let pContentHeight = cSize.height
+                        let pHeight = pTopMargin + pContentHeight
+                        contentHeight += pHeight
+                    }
+                    else if(i == "v") {
+                        let lhsMargin = 20.0
+                        let rhsMargin = 20.0
+                        let availableWidth = quoteWidth - lhsMargin - rhsMargin
+                        
+                        let assetSize = CGSize(width: 3, height: 4)
+                        var cSize = CGSize(width: 0, height: 0)
+                        if(assetSize.width > assetSize.height) {
+                            //1 > landscape photo 4:3 w:h
+                            let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                            let cHeight = availableWidth * aRatio.height / aRatio.width
+                            cSize = CGSize(width: availableWidth, height: cHeight)
+                        }
+                        else if (assetSize.width < assetSize.height){
+                            //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                            let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                            let cWidth = availableWidth * 2 / 3
+                            let cHeight = cWidth * aRatio.height / aRatio.width
+                            cSize = CGSize(width: cWidth, height: cHeight)
+                        } else {
+                            //square
+                            let cWidth = availableWidth
+                            cSize = CGSize(width: cWidth, height: cWidth)
+                        }
+                        
+                        let vTopMargin = 20.0
+        //                let vContentHeight = 350.0 //250
+                        let vContentHeight = cSize.height
+                        let vHeight = vTopMargin + vContentHeight
+                        contentHeight += vHeight
+                    }
+                    else if(i == "v_l") {
+                        let lhsMargin = 20.0
+                        let rhsMargin = 20.0
+                        let descHeight = 40.0
+                        let availableWidth = quoteWidth - lhsMargin - rhsMargin
+                        
+                        let assetSize = CGSize(width: 3, height: 4)
+                        var cSize = CGSize(width: 0, height: 0)
+                        if(assetSize.width > assetSize.height) {
+                            //1 > landscape photo 4:3 w:h
+                            let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                            let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
+                            cSize = CGSize(width: availableWidth, height: cHeight)
+                        }
+                        else if (assetSize.width < assetSize.height){
+                            //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                            let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                            let cWidth = availableWidth * 2 / 3
+                            let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
+                            cSize = CGSize(width: cWidth, height: cHeight)
+                        } else {
+                            //square
+                            let cWidth = availableWidth
+                            cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                        }
+                        
+                        let vTopMargin = 20.0
+        //                let vContentHeight = 350.0 //250
+                        let vContentHeight = cSize.height
+                        let vHeight = vTopMargin + vContentHeight
+        //                let vHeight = vTopMargin + vContentHeight + 40.0 //40.0 for bottom container for description
+                        contentHeight += vHeight
+                    }
+                }
                 let qTopMargin = 20.0
                 let qUserPhotoHeight = 28.0
-                let qUserPhotoTopMargin = 10.0 //10
-                let qContentTopMargin = 10.0
-                let qText = "Nice food, nice environment! Worth a visit. \nSo good!\n\n\n\n...\n...\n..."
-                let qContentHeight = estimateHeight(text: qText, textWidth: collectionView.frame.width - 20.0 - 20.0, fontSize: 14)
+                let qUserPhotoTopMargin = 20.0 //10
+//                let qContentTopMargin = 10.0
+//                let qText = "Nice food, nice environment! Worth a visit. \nSo good!\n\n\n\n...\n...\n..."
+//                let qContentHeight = estimateHeight(text: qText, textWidth: collectionView.frame.width - 20.0 - 20.0, fontSize: 14)
                 let qFrameBottomMargin = 20.0 //10
-                let qHeight = qTopMargin + qUserPhotoHeight + qUserPhotoTopMargin + qContentTopMargin + qContentHeight + qFrameBottomMargin
+                let qHeight = qTopMargin + qUserPhotoHeight + qUserPhotoTopMargin + qFrameBottomMargin
                 contentHeight += qHeight
             }
-        }
-        
-        let dataCh = vDataList[indexPath.row].xChainDataArray
-        for l in dataCh {
-            let xText = l.dataTextString
-            let xDataL = l.dataArray
-            var yContentHeight = 0.0
-            for y in xDataL {
-                if(y == "t") {
-                    let xContentTopMargin = 20.0
-                    let xContentHeight = estimateHeight(text: xText, textWidth: collectionView.frame.width - 53.0 - 20.0, fontSize: 13)
-                    let xHeight = xContentTopMargin + xContentHeight
-                    yContentHeight += xHeight
-                }
-                else if(y == "p") {
-                    let pTopMargin = 20.0
-                    let pContentHeight = 280.0
-                    let pHeight = pTopMargin + pContentHeight
-                    yContentHeight += pHeight
-                }
-                else if(y == "q") {
-                    let qTopMargin = 20.0
-                    let qUserPhotoHeight = 28.0
-                    let qUserPhotoTopMargin = 10.0 //10
-                    let qContentTopMargin = 10.0
-                    let qText = "Nice food, nice environment! Worth a visit. \nSo good!\n\n\n\n...\n...\n..."
-                    let qContentHeight = estimateHeight(text: qText, textWidth: collectionView.frame.width - 53.0 - 20.0, fontSize: 13)
-                    let qFrameBottomMargin = 20.0 //10
-                    let qHeight = qTopMargin + qUserPhotoHeight + qUserPhotoTopMargin + qContentTopMargin + qContentHeight + qFrameBottomMargin
-                    yContentHeight += qHeight
-                }
-            }
-            let cUserPhotoHeight = 28.0
-            let cUserPhotoTopMargin = 10.0 //10
-            let cActionBtnTopMargin = 20.0
-            let cActionBtnHeight = 26.0
-            let cFrameBottomMargin = 10.0 //10
-            let cHeight = cUserPhotoHeight + cUserPhotoTopMargin + yContentHeight + cActionBtnTopMargin + cActionBtnHeight + cFrameBottomMargin
-            contentHeight += cHeight
         }
         
         let userPhotoHeight = 40.0
@@ -476,11 +582,8 @@ extension ScrollFeedHPostListCell: UICollectionViewDelegateFlowLayout {
             if(indexPath.row == 0) {
                 if let c = cell as? HPostListAViewCell {
                     aDelegate?.sfcAutoplayVideo(cell: self, vCCell: c)
-//                    currentPlayingVidIndex = 0 //test > try method 2 => check for intersected video first
                 }
-
                 isFeedDisplayed = true
-                print("sfvideo autoplay: \(feedCode)")
             }
         }
     }
@@ -683,7 +786,6 @@ extension ScrollFeedHPostListCell: HListCellDelegate {
                     let visibleIndexPath = a.indexPath(for: cell)
                     let pointX1 = originInRootView.x + pointX
                     let pointY1 = originInRootView.y + pointY
-                    print("sfpost idx frame origin p: \(cell.frame.origin), \(originInRootView), \(visibleIndexPath)")
                     
                     aDelegate?.sfcDidClickVcvClickPhoto(pointX: pointX1, pointY: pointY1, view: view, mode: mode)
                     
@@ -706,7 +808,6 @@ extension ScrollFeedHPostListCell: HListCellDelegate {
                     let visibleIndexPath = a.indexPath(for: cell)
                     let pointX1 = originInRootView.x + pointX
                     let pointY1 = originInRootView.y + pointY
-                    print("sfpost idx frame origin v: \(cell.frame.origin), \(originInRootView), \(visibleIndexPath)")
                     
                     aDelegate?.sfcDidClickVcvClickVideo(pointX: pointX1, pointY: pointY1, view: view, mode: mode)
                     
@@ -726,16 +827,22 @@ extension ScrollFeedHPostListCell: HListCellDelegate {
         aDelegate?.sfcIsScrollCarousel(isScroll: isScroll)
     }
     
-    func hListCarouselIdx(vc: UICollectionViewCell, idx: Int) {
+    func hListCarouselIdx(vc: UICollectionViewCell, aIdx: Int, idx: Int) {
         if let a = vCV {
             for cell in a.visibleCells {
                 guard let indexPath = a.indexPath(for: cell) else {
                     continue
                 }
-//                print("sfpost idx: \(cell == vc), \(indexPath)")
                 
                 if(cell == vc) {
-                    vDataList[indexPath.row].p_s = idx
+//                    vDataList[indexPath.row].p_s = idx
+                    
+                    //test > new method
+                    let data = vDataList[indexPath.row]
+                    let dataCL = data.contentDataArray
+                    if(aIdx > -1 && aIdx < dataCL.count) {
+                        dataCL[aIdx].p_s = idx
+                    }
                     
                     break
                 }
@@ -743,7 +850,7 @@ extension ScrollFeedHPostListCell: HListCellDelegate {
         }
     }
     
-    func hListVideoStopTime(vc: UICollectionViewCell, ts: Double){
+    func hListVideoStopTime(vc: UICollectionViewCell, aIdx: Int, ts: Double){
         if let a = vCV {
             for cell in a.visibleCells {
                 guard let indexPath = a.indexPath(for: cell) else {
@@ -751,7 +858,14 @@ extension ScrollFeedHPostListCell: HListCellDelegate {
                 }
                 
                 if(cell == vc) {
-                    vDataList[indexPath.row].t_s = ts
+//                    vDataList[indexPath.row].t_s = ts
+                    
+                    //test > new method
+                    let data = vDataList[indexPath.row]
+                    let dataCL = data.contentDataArray
+                    if(aIdx > -1 && aIdx < dataCL.count) {
+                        dataCL[aIdx].t_s = ts
+                    }
                     
                     break
                 }
@@ -761,5 +875,32 @@ extension ScrollFeedHPostListCell: HListCellDelegate {
     
     func hListDidClickVcvPlayAudio(vc: UICollectionViewCell){
         
+    }
+    
+    func hListDidClickVcvClickPlay(vc: UICollectionViewCell, isPlay: Bool){
+        //test > try new method for manual play/stop video
+        if let a = vCV {
+            for cell in a.visibleCells {
+                guard let indexPath = a.indexPath(for: cell) else {
+                    continue
+                }
+                
+                if(cell == vc) {
+                    if let s = cell as? HPostListAViewCell {
+                        let mIdx = s.playingMediaAssetIdx
+                        if(isPlay) {
+                            pauseMediaAsset(cellAssetIdx: playingCellMediaAssetIdx)
+                            playingCellMediaAssetIdx = [indexPath.row, mIdx]
+                        } else {
+                            playingCellMediaAssetIdx = [-1, -1]
+                        }
+                    }
+                    
+                    break
+                }
+            }
+        }
+        
+        print("hpostA playingCellMediaAssetIdx: \(playingCellMediaAssetIdx)")
     }
 }

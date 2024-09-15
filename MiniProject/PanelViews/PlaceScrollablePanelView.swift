@@ -143,6 +143,9 @@ class PlaceScrollablePanelView: ScrollablePanelView{
     var enableChildViewScroll = false
     var enableFatherViewScroll = true
     
+    //test page transition => track user journey in creating short video
+    var pageList = [PanelView]()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -1056,10 +1059,18 @@ class PlaceScrollablePanelView: ScrollablePanelView{
                 self.scrollABTransition(scrollLevel: self.getScrollLevel())
                 self.superview?.layoutIfNeeded()
             }, completion: { _ in
+                //test > stop video before closing panel
+                self.destroyCell()
+//                self.pauseFeedPlayingMedia()
+                
                 self.delegate?.didClickClosePlaceScrollablePanel()
                 self.removeFromSuperview()
             })
         } else {
+            //test > stop video before closing panel
+            self.destroyCell()
+//            self.pauseFeedPlayingMedia()
+            
             self.delegate?.didClickClosePlaceScrollablePanel()
             self.removeFromSuperview()
         }
@@ -1133,7 +1144,11 @@ class PlaceScrollablePanelView: ScrollablePanelView{
                 guard let b = aVc as? ScrollFeedHPostListCell else {
                     return
                 }
-                b.reactToIntersectedVideo(intersectedIdx: -1)
+//                b.reactToIntersectedVideo(intersectedIdx: -1)
+                
+                //test 2 > new method => pause media if half/empty mode
+                b.pauseMediaAsset(cellAssetIdx: b.playingCellMediaAssetIdx)
+                b.playingCellMediaAssetIdx = [-1, -1] //reset state
             }
         }, completion: { finished in
 
@@ -1147,7 +1162,24 @@ class PlaceScrollablePanelView: ScrollablePanelView{
         sharePanel.translatesAutoresizingMaskIntoConstraints = false
         sharePanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
         sharePanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
-//        sharePanel.delegate = self
+        sharePanel.delegate = self
+        
+        //test > track share scrollable view
+        pageList.append(sharePanel)
+    }
+    //test > add comment panel
+    func openComment() {
+        let commentPanel = CommentScrollableView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
+        panelView.addSubview(commentPanel)
+        commentPanel.translatesAutoresizingMaskIntoConstraints = false
+        commentPanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
+        commentPanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
+        commentPanel.delegate = self
+        commentPanel.initialize()
+        commentPanel.setBackgroundDark()
+        
+        //test > track comment scrollable view
+        pageList.append(commentPanel)
     }
     
     //test > object id for fetching data
@@ -1479,7 +1511,31 @@ class PlaceScrollablePanelView: ScrollablePanelView{
             asyncFetchFeed(cell: feed, id: "post")
         }
     }
-    
+    //**test > remove elements from dataset n uicollectionview
+    func removeData(cell: ScrollDataFeedCell?, idxToRemove: Int) {
+        guard let feed = cell else {
+            return
+        }
+        if(!feed.vDataList.isEmpty) {
+            if(idxToRemove > -1 && idxToRemove < feed.vDataList.count) {
+                var indexPaths = [IndexPath]()
+                let idx = IndexPath(item: idxToRemove, section: 0)
+                indexPaths.append(idx)
+                
+                feed.vDataList.remove(at: idxToRemove)
+                feed.vCV?.deleteItems(at: indexPaths)
+                
+                feed.unselectItemData()
+                
+                //test > footer to show msg when no more data
+                if(feed.vDataList.isEmpty) {
+                    feed.setFooterAaText(text: "Nothing has been posted yet.")
+                    feed.configureFooterUI(data: "na")
+                }
+            }
+        }
+    }
+    //**
     func asyncFetchFeed(cell: ScrollDataFeedCell?, id: String) {
 
         cell?.vDataList.removeAll()
@@ -1620,38 +1676,6 @@ class PlaceScrollablePanelView: ScrollablePanelView{
             }
         }
     }
-    
-    //test > make viewcell image reappear after video panel closes
-//    var selectedVCVFeedIndex = 0
-//    var selectedVCVItemIndex = 0
-    func dehideCurrentCell() {
-        if(!self.feedList.isEmpty) {
-            let feed = self.feedList[currentIndex]
-            if let b = feed as? ScrollFeedGridVideo2xViewCell {
-                b.dehideCellAt()
-            }
-            else if let c = feed as? ScrollFeedGridPhoto2xViewCell {
-                c.dehideCellAt()
-            }
-        }
-    }
-//    func hideViewCell(feedIndex: Int, itemIndex: Int) {
-//        selectedVCVFeedIndex = feedIndex
-//        selectedVCVItemIndex = itemIndex
-//
-//        let feed = self.feedList[self.selectedVCVFeedIndex]
-////        guard let b = feed as? ScrollFeedGridLargeViewCell else {
-////            return
-////        }
-////        b.hideCellAt(itemIndex: selectedVCVItemIndex)
-//
-//        if let b = feed as? ScrollFeedGridVideo2xViewCell {
-//            b.hideCellAt(itemIndex: selectedVCVItemIndex)
-//        }
-//        else if let c = feed as? ScrollFeedGridPhoto2xViewCell {
-//            c.hideCellAt(itemIndex: selectedVCVItemIndex)
-//        }
-//    }
     
     //test > tab section UI Change (hardcoded - to be fixed in future)
     func reactToTabSectionChange(index: Int) {
@@ -1828,80 +1852,181 @@ class PlaceScrollablePanelView: ScrollablePanelView{
         print("a & b heights: \(a.height), \(b)")
     }
     
+    //test
+    override func resumeActiveState() {
+        print("placescrollableview resume active")
+        
+        //test > only resume video if no comment scrollable view/any other view
+        if(pageList.isEmpty) {
+            resumeFeedPlayingMedia()
+            dehideCell()
+        }
+        else {
+            //dehide cell for commment view
+            if let c = pageList[pageList.count - 1] as? CommentScrollableView {
+                c.resumePlayingMedia()
+                c.dehideCell()
+            }
+        }
+    }
+    
+    //test > make viewcell image reappear after video panel closes
+    func dehideCell() {
+        if(!self.feedList.isEmpty) {
+            let feed = self.feedList[currentIndex]
+            if let b = feed as? ScrollFeedGridVideo2xViewCell {
+                b.dehideCell()
+            }
+            else if let c = feed as? ScrollFeedGridPhoto2xViewCell {
+                c.dehideCell()
+            }
+            else if let d = feed as? ScrollFeedHPostListCell {
+                d.dehideCell()
+            }
+        }
+    }
+    
     //test > stop current video for closing
-    func pauseCurrentPostFeedVideo() {
+    func pauseFeedPlayingMedia() {
         if(!feedList.isEmpty) {
             let feed = feedList[currentIndex]
             if let b = feed as? ScrollFeedHPostListCell {
-                b.pauseCurrentVideo()
+                b.pausePlayingMedia()
             }
         }
     }
     //test > resume current video
-    func resumeCurrentPostFeedVideo() {
+    func resumeFeedPlayingMedia() {
         if(!feedList.isEmpty) {
             let feed = feedList[currentIndex]
             if let b = feed as? ScrollFeedHPostListCell {
-                b.resumeCurrentVideo()
+                b.resumePlayingMedia()
             }
         }
     }
     
-    //test
-    override func resumeActiveState() {
-        print("placescrollableview resume active")
-        resumeCurrentPostFeedVideo()
-        
-        //test > dehide cell
-        dehideCurrentCell()
+    //test > destroy cell
+    func destroyCell() {
+        if(!self.feedList.isEmpty) {
+            let feed = feedList[currentIndex]
+            if let b = feed as? ScrollFeedHPostListCell {
+                b.destroyCell()
+            }
+        }
     }
     
-    //test > check for intersected dummy view with video while user scroll
-    func getIntersectedIdx(aVc: ScrollFeedHPostListCell) -> Int {
-//        let aVc = feedList[currentIndex]
-        var intersectedIdx = -1
-        if let v = aVc.vCV {
-            for cell in v.visibleCells {
-                guard let indexPath = v.indexPath(for: cell) else {
-                    continue
-                }
-                guard let b = cell as? HPostListAViewCell else {
-                    return -1
-                }
-
-                let cellRect = v.convert(b.frame, to: aVc)
-                let aTestRect = b.aTest.frame
-                let feedScrollViewRect = feedScrollView.frame
-                let scrollViewY = scrollView.contentOffset.y
-                let feedConvertedY = feedScrollViewRect.origin.y - scrollViewY
-                print("sfvideo uspv getIntersect \(indexPath), \(feedScrollViewRect), \(scrollViewY), \(feedConvertedY)")
-                if(!b.vidConArray.isEmpty) {
-                    let vidC = b.vidConArray[0]
-                    let vidCFrame = vidC.frame
-//                    let convertedVidCOriginY = cellRect.origin.y + aTestRect.origin.y + vidCFrame.origin.y
-                    let convertedVidCOriginY = feedConvertedY + cellRect.origin.y + aTestRect.origin.y + vidCFrame.origin.y
-                    let convertedVidCRect = CGRect(x: 0, y: convertedVidCOriginY, width: vidCFrame.size.width, height: vidCFrame.size.height)
-                    //size can be changed
-//                    let dummyView = CGRect(x: 0, y: 100, width: self.frame.width, height: vidCFrame.size.height)
-                    let dummyView = CGRect(x: 0, y: 200, width: self.frame.width, height: 300)
-//                    let dV = UIView(frame: dummyView)
-//                    dV.backgroundColor = .blue
-//                    self.addSubview(dV)
-                    
-                    let isIntersect = dummyView.intersects(convertedVidCRect)
-                    let intersectArea = dummyView.intersection(convertedVidCRect)
-
-                    print("sfvideo x uspv getIntersect: \(indexPath), \(isIntersect), \(intersectArea)")
-                    
-                    //test > play video if intersect
-                    if(isIntersect) {
-                        intersectedIdx = indexPath.item
+    //test 2 > new intersect func() for multi-video/audio assets play on/off
+    //try autoplay OFF first, then only autoplay
+    var isMediaAutoplayEnabled = true
+//    var isMediaAutoplayEnabled = false
+    func getIntersect2(aVc: ScrollFeedHPostListCell) {
+        guard let v = aVc.vCV else {
+            return
+        }
+        
+        //fixed dummy area
+        let dummyTopMargin = 200.0
+//        let panelRectY = panelView.frame.origin.y
+//        let vCvRectY = v.frame.origin.y //will always be 0
+//        let dummyOriginY = vCvRectY + dummyTopMargin
+        let aStickyHeaderH = aStickyHeader.frame.size.height //try add stickyheader h as vcv origin can't be used
+        let dummyOriginY = dummyTopMargin + aStickyHeaderH
+        let dummyView = CGRect(x: 0, y: dummyOriginY, width: self.frame.width, height: 300)
+        //*just in case > add view for illustration
+//        let dV = UIView(frame: dummyView)
+//        dV.backgroundColor = .blue
+//        self.addSubview(dV)
+        //*
+        
+        //identify intersected assets
+        var cellAssetIdxArray = [[Int]]() //[cellIdx, assetIdx] => use array for simplicity
+        for cell in v.visibleCells {
+            guard let indexPath = v.indexPath(for: cell) else {
+                return
+            }
+            guard let b = cell as? HPostListAViewCell else {
+                return
+            }
+            
+            let cellRect = v.convert(b.frame, to: self)
+            let aTestRect = b.aTest.frame
+            
+            let p = b.mediaArray
+            if(!p.isEmpty) {
+                for m in p {
+                    //test > quote
+                    if let q = m as? PostQuoteContentCell {
+                        //for quote content cells only => double loop for inner media
+                        let pp = q.mediaArray
+                        if(!pp.isEmpty) {
+                            for mm in pp {
+                                let mmFrame = mm.frame
+                                let aaTestRect = q.aTest.frame
+                                
+                                let mFrame = m.frame
+                                if let j = b.aTestArray.firstIndex(of: m) {
+                                    let cVidCOriginY = mFrame.origin.y + aTestRect.origin.y + cellRect.origin.y + mmFrame.origin.y + aaTestRect.origin.y
+                                    let cVidCRect = CGRect(x: 0, y: cVidCOriginY, width: mmFrame.size.width, height: mmFrame.size.height)
+                                    
+                                    let isIntersect = dummyView.intersects(cVidCRect)
+                                    if(isIntersect) {
+                                        let idx = [indexPath.row, j]
+                                        cellAssetIdxArray.append(idx)
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        let mFrame = m.frame
+                        if let j = b.aTestArray.firstIndex(of: m) {
+                            let cVidCOriginY = mFrame.origin.y + aTestRect.origin.y + cellRect.origin.y
+                            let cVidCRect = CGRect(x: 0, y: cVidCOriginY, width: mFrame.size.width, height: mFrame.size.height)
+                            
+                            let isIntersect = dummyView.intersects(cVidCRect)
+                            if(isIntersect) {
+                                let idx = [indexPath.row, j]
+                                cellAssetIdxArray.append(idx)
+                            }
+                        }
                     }
                 }
             }
         }
+ 
+        print("getintersect2 x: \(cellAssetIdxArray); \(aVc.playingCellMediaAssetIdx)")
         
-        return intersectedIdx
+        //test > pause media when playingMedia is no longer intersected inside dummy view
+        let t = cellAssetIdxArray.contains(aVc.playingCellMediaAssetIdx)
+        if(!t) {
+            aVc.pauseMediaAsset(cellAssetIdx: aVc.playingCellMediaAssetIdx)
+            aVc.playingCellMediaAssetIdx = [-1, -1] //reset state
+        }
+        
+        //test > autoplay video when intersected
+        if(isMediaAutoplayEnabled) {
+            if(!cellAssetIdxArray.isEmpty) {
+                let iCellAssetIdx = cellAssetIdxArray[0]
+                print("getintersect2 x: \(iCellAssetIdx); \(aVc.playingCellMediaAssetIdx) => \(iCellAssetIdx == aVc.playingCellMediaAssetIdx)")
+                if(iCellAssetIdx != aVc.playingCellMediaAssetIdx) {
+                    
+                    //autostop playing media to prevent multi-video playing together
+                    if(aVc.playingCellMediaAssetIdx != [-1, -1]) {
+                        aVc.pauseMediaAsset(cellAssetIdx: aVc.playingCellMediaAssetIdx)
+                        aVc.playingCellMediaAssetIdx = [-1, -1]
+                    }
+                    
+                    //autoplay media when intersected
+                    if(iCellAssetIdx.count == 2) {
+                        let cIdx = iCellAssetIdx[0]
+                        let aIdx = iCellAssetIdx[1]
+                        if(cIdx > -1 && aIdx > -1) {
+                            aVc.playingCellMediaAssetIdx = [cIdx, aIdx]
+                            aVc.resumeMediaAsset(cellAssetIdx: aVc.playingCellMediaAssetIdx)
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -2093,13 +2218,20 @@ extension PlaceScrollablePanelView: UIScrollViewDelegate {
                 guard let b = aVc as? ScrollFeedHPostListCell else {
                     return
                 }
-                var idx = -1
+//                var idx = -1
                 if(currentPanelMode == PANEL_MODE_FULL) {
-                    idx = getIntersectedIdx(aVc: b)
+//                    idx = getIntersectedIdx(aVc: b)
+                    
+                    //test 2 > new method
+                    getIntersect2(aVc: b)
                 } else {
                     //for half mode and empty mode
+                    
+                    //test 2 > new method => pause media if half/empty mode
+                    b.pauseMediaAsset(cellAssetIdx: b.playingCellMediaAssetIdx)
+                    b.playingCellMediaAssetIdx = [-1, -1] //reset state
                 }
-                b.reactToIntersectedVideo(intersectedIdx: idx)
+//                b.reactToIntersectedVideo(intersectedIdx: idx)
             }
             print("onPan end xx scrollview: \(scrollView.contentOffset.y), \(currentPanelMode)")
         }
@@ -2111,8 +2243,26 @@ extension PlaceScrollablePanelView: UIScrollViewDelegate {
             let viewWidth = self.frame.width
             print("notifypanel scroll decelerate \(xOffset), \(viewWidth)")
 
-            currentIndex = Int(xOffset/viewWidth)
-
+//            currentIndex = Int(xOffset/viewWidth)
+            let visibleIndex = Int(xOffset/viewWidth)
+            
+            //test > pause video when scroll to next tab
+            if(!self.feedList.isEmpty) {
+                let currentFeed = self.feedList[visibleIndex]
+                let previousFeed = self.feedList[currentIndex]
+                
+                currentIndex = visibleIndex
+                
+                if(currentFeed != previousFeed) {
+                    if let b = currentFeed as? ScrollFeedHPostListCell {
+                        b.resumePlayingMedia()
+                    }
+                    else if let c = previousFeed as? ScrollFeedHPostListCell {
+                        c.pausePlayingMedia()
+                    }
+                }
+            }
+            
             reactToTabSectionChange(index: currentIndex)
         }
     }
@@ -2123,8 +2273,26 @@ extension PlaceScrollablePanelView: UIScrollViewDelegate {
             let viewWidth = self.frame.width
             print("notifypanel scroll decelerate \(xOffset), \(viewWidth)")
 
-            currentIndex = Int(xOffset/viewWidth)
-
+//            currentIndex = Int(xOffset/viewWidth)
+            let visibleIndex = Int(xOffset/viewWidth)
+            
+            //test > pause video when scroll to next tab
+            if(!self.feedList.isEmpty) {
+                let currentFeed = self.feedList[visibleIndex]
+                let previousFeed = self.feedList[currentIndex]
+                
+                currentIndex = visibleIndex
+                
+                if(currentFeed != previousFeed) {
+                    if let b = currentFeed as? ScrollFeedHPostListCell {
+                        b.resumePlayingMedia()
+                    }
+                    else if let c = previousFeed as? ScrollFeedHPostListCell {
+                        c.pausePlayingMedia()
+                    }
+                }
+            }
+            
             reactToTabSectionChange(index: currentIndex)
             
             //test > finalize current index tabselect margin and width
@@ -2224,7 +2392,10 @@ extension PlaceScrollablePanelView: ScrollFeedCellDelegate {
             guard let b = feed as? ScrollFeedHPostListCell else {
                 return
             }
-            b.reactToIntersectedVideo(intersectedIdx: getIntersectedIdx(aVc: b))
+//            b.reactToIntersectedVideo(intersectedIdx: getIntersectedIdx(aVc: b))
+            
+            //test 2 > new method
+            getIntersect2(aVc: b)
         }
     }
     func sfcSrollViewDidEndDecelerating(offsetY: CGFloat) {
@@ -2247,37 +2418,41 @@ extension PlaceScrollablePanelView: ScrollFeedCellDelegate {
     }
 
     func sfcDidClickVcvRefresh(){
-        //test > refresh feed
         refreshFetchData()
     }
     func sfcDidClickVcvComment() {
         print("fcDidClickVcvComment ")
+        pauseFeedPlayingMedia()
+        openComment()
     }
     func sfcDidClickVcvLove() {
         print("fcDidClickVcvLike ")
     }
     func sfcDidClickVcvShare() {
         print("fcDidClickVcvShare ")
+        pauseFeedPlayingMedia()
         openShareSheet()
     }
 
     func sfcDidClickVcvClickUser() {
-//        delegate?.didUClickUserUserScrollable()
+        pauseFeedPlayingMedia()
+        delegate?.didPClickUserPlaceScrollable()
     }
     func sfcDidClickVcvClickPlace() {
-//        delegate?.didUClickPlaceUserScrollable()
+        pauseFeedPlayingMedia()
+        delegate?.didPClickPlacePlaceScrollable()
     }
     func sfcDidClickVcvClickSound() {
 
     }
     func sfcDidClickVcvClickPost() {
+        pauseFeedPlayingMedia()
         delegate?.didPClickPlaceScrollableVcvClickPost()
-        
-        //test > pause current playing video when go to user
-        pauseCurrentPostFeedVideo()
     }
     func sfcDidClickVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
-        //test
+        
+        pauseFeedPlayingMedia()
+        
         if(!self.feedList.isEmpty) {
             let b = self.feedList[self.currentIndex]
             let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
@@ -2287,7 +2462,9 @@ extension PlaceScrollablePanelView: ScrollFeedCellDelegate {
         }
     }
     func sfcDidClickVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
-        //test
+        
+        pauseFeedPlayingMedia()
+        
         if(!self.feedList.isEmpty) {
             let b = self.feedList[self.currentIndex]
             let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
@@ -2297,7 +2474,6 @@ extension PlaceScrollablePanelView: ScrollFeedCellDelegate {
         }
     }
 
-    //test
     func sfcAsyncFetchFeed() {
 
     }
@@ -2377,8 +2553,6 @@ extension ViewController: PlaceScrollablePanelDelegate{
         let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
         
         if(mode == PhotoTypes.P_SHOT) {
-//            openPhotoDetailPanel()
-            
             //test > open photo panel with predetermined datasets
             var dataset = [String]()
     //        dataset.append("a")
@@ -2386,6 +2560,8 @@ extension ViewController: PlaceScrollablePanelDelegate{
             self.openPhotoPanel(offX: offsetX, offY: offsetY, originatorView: view, originatorViewType: OriginatorTypes.UIVIEW, id: 0, originatorViewId: "", preterminedDatasets: dataset)
         } else if(mode == PhotoTypes.P_0){
             openPhotoZoomPanel(offX: offsetX, offY: offsetY)
+        } else if(mode == PhotoTypes.P_SHOT_DETAIL) {
+            openPhotoDetailPanel()
         }
     }
     func didPClickPlaceScrollableVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
@@ -2416,15 +2592,6 @@ extension ViewController: PlaceScrollablePanelDelegate{
     }
     
     func didFinishFetchPlaceScrollableData(pv: ScrollablePanelView, isSuccess: Bool) {
-//        //test > show place marker when scrollable is initialized
-//        showSinglePlacePoint(number: singleNumber, pv: pv)
-//        singleNumber += 1
-//        
-//        //show data on map semi transparent textbox
-//        pSemiTransparentSpinner.stopAnimating()
-//        pSemiGifImageOuter.isHidden = false
-//        pSemiTransparentText.text = "Petronas Twin Tower"
-        
         //test 2 > with error handling
         if(isSuccess) {
             showSinglePlacePoint(number: singleNumber, pv: pv)
@@ -2441,7 +2608,108 @@ extension ViewController: PlaceScrollablePanelDelegate{
         }
     }
 }
+extension PlaceScrollablePanelView: ShareSheetScrollableDelegate{
+    func didShareSheetClick(){
+        //test > for deleting item
+        if(!pageList.isEmpty) {
+            pageList.remove(at: pageList.count - 1)
+            
+            if(pageList.count > 0) {
+                let lastPage = pageList[pageList.count - 1]
+                if let a = lastPage as? CommentScrollableView {
+                    print("lastpagelist e \(a.selectedItemIdx)")
+                    let idx = a.selectedItemIdx
+                    a.removeData(idxToRemove: idx)
+                }
+                else if let b = lastPage as? ShareSheetScrollableView {
+                    print("lastpagelist f")
+                }
+            } else {
+                if(!self.feedList.isEmpty) {
+                    let feed = feedList[currentIndex]
+                    removeData(cell: feed, idxToRemove: feed.selectedItemIdx)
+                }
+            }
+        } else {
 
+        }
+    }
+    func didShareSheetClickClosePanel(){
+        
+    }
+    func didShareSheetFinishClosePanel(){
+        //test > remove scrollable view from pagelist
+        if(!pageList.isEmpty) {
+            pageList.remove(at: pageList.count - 1)
+            
+            if(pageList.count > 0) {
+                let lastPage = pageList[pageList.count - 1]
+                if let a = lastPage as? CommentScrollableView {
+                    print("lastpagelist c")
+                    a.resumePlayingMedia()
+                    a.unselectItemData()
+                }
+                else if let b = lastPage as? ShareSheetScrollableView {
+                    print("lastpagelist d")
+                }
+            } else {
+                resumeFeedPlayingMedia()
+                
+                if(!self.feedList.isEmpty) {
+                    let feed = feedList[currentIndex]
+                    feed.unselectItemData()
+                }
+            }
+        }
+    }
+}
+extension PlaceScrollablePanelView: CommentScrollableDelegate{
+    func didCClickUser(){
+        delegate?.didPClickUserPlaceScrollable()
+    }
+    func didCClickPlace(){
+        delegate?.didPClickPlacePlaceScrollable()
+    }
+    func didCClickSound(){
+        delegate?.didPClickSoundPlaceScrollable()
+    }
+    func didCClickClosePanel(){
+//        bottomBox.isHidden = true
+    }
+    func didCFinishClosePanel() {
+        //test > remove comment scrollable view from pagelist
+        if(!pageList.isEmpty) {
+            pageList.remove(at: pageList.count - 1)
+            
+            if(pageList.count > 0) {
+                let lastPage = pageList[pageList.count - 1]
+                if let a = lastPage as? CommentScrollableView {
+                    print("lastpagelist a")
+                }
+                else if let b = lastPage as? ShareSheetScrollableView {
+                    print("lastpagelist b")
+                }
+            } else {
+                resumeFeedPlayingMedia()
+            }
+        }
+    }
+    func didCClickComment(){
+        
+    }
+    func didCClickShare(){
+        openShareSheet()
+    }
+    func didCClickPost(){
+        delegate?.didPClickPlaceScrollableVcvClickPost()
+    }
+    func didCClickClickPhoto(pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        delegate?.didPClickPlaceScrollableVcvClickPhoto(pointX: pointX, pointY: pointY, view: view, mode: mode)
+    }
+    func didCClickClickVideo(pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        delegate?.didPClickPlaceScrollableVcvClickVideo(pointX: pointX, pointY: pointY, view: view, mode: mode)
+    }
+}
 extension PlaceScrollablePanelView: TabStackDelegate {
     func didClickTabStack(tabCode: String, isSelected: Bool) {
         if let index = vDataList.firstIndex(of: tabCode) {

@@ -50,7 +50,6 @@ class SearchPanelView: PanelView{
 
     //test > tab
     var tabDataList = [String]()
-//    var tabList = [UIView]()
     var tabList = [TabStack]()
     let tabSelect = UIView()
     var tabSelectLeadingCons: NSLayoutConstraint?
@@ -415,37 +414,36 @@ class SearchPanelView: PanelView{
         bbText.isHidden = true
     }
 
-    func dehideCurrentCell() {
-
+    func dehideCell() {
         if(!self.feedList.isEmpty) {
             let feed = self.feedList[currentIndex]
             if let b = feed as? ScrollFeedHResultVideoListCell {
-                b.dehideCellAt()
+                b.dehideCell()
             }
             else if let c = feed as? ScrollFeedHResultPhotoListCell {
-                c.dehideCellAt()
+                c.dehideCell()
             }
         }
     }
     
-    //test > stop current video for closing
-    func pauseCurrentPostFeedVideo() {
-        if(!self.feedList.isEmpty) {
-            let feed = feedList[currentIndex]
-            if let b = feed as? ScrollFeedHResultPostListCell {
-    //            b.pauseCurrentVideo()
-            }
-        }
-    }
-    //test > resume current video
-    func resumeCurrentPostFeedVideo() {
-        if(!self.feedList.isEmpty) {
-            let feed = feedList[currentIndex]
-            if let b = feed as? ScrollFeedHResultPostListCell {
-    //            b.resumeCurrentVideo()
-            }
-        }
-    }
+//    //test > stop current video for closing
+//    func pauseCurrentPostFeedVideo() {
+//        if(!self.feedList.isEmpty) {
+//            let feed = feedList[currentIndex]
+//            if let b = feed as? ScrollFeedHResultPostListCell {
+//    //            b.pauseCurrentVideo()
+//            }
+//        }
+//    }
+//    //test > resume current video
+//    func resumeCurrentPostFeedVideo() {
+//        if(!self.feedList.isEmpty) {
+//            let feed = feedList[currentIndex]
+//            if let b = feed as? ScrollFeedHResultPostListCell {
+//    //            b.resumeCurrentVideo()
+//            }
+//        }
+//    }
     
     //test
     override func resumeActiveState() {
@@ -462,7 +460,7 @@ class SearchPanelView: PanelView{
     
     //test > dehide any cells that was hidden e.g. video or photo
     func revertCellUIState() {
-        dehideCurrentCell()
+        dehideCell()
     }
 
     //test > initialization state
@@ -793,41 +791,6 @@ class SearchPanelView: PanelView{
             self.isUserLoggedIn = isSignedIn
             self.initialize()
         }
-        
-        //old method by fetching
-//        SignInManager.shared.fetchStatus(id: "fetch_status") { [weak self]result in
-//            switch result {
-//                case .success(let l):
-//
-//                //update UI on main thread
-//                DispatchQueue.main.async {
-//                    print("notifypanelview api success: \(l)")
-//                    guard let self = self else {
-//                        return
-//                    }
-//                    
-//                    let isSignedIn = l
-//                    
-//                    if(self.isInitialized) {
-//                        if(self.isUserLoggedIn != isSignedIn) {
-//                            self.isUserLoggedIn = isSignedIn
-//                            
-//                            self.deconfigurePanel()
-//                    
-//                            self.isInitialized = false
-//                            self.initialize()
-//                        }
-//                    } else {
-//                        self.isUserLoggedIn = isSignedIn
-//                        self.initialize()
-//                    }
-//                }
-//
-//                case .failure(_):
-//                    print("api fail")
-//                    break
-//            }
-//        }
     }
 }
 
@@ -1099,14 +1062,12 @@ extension SearchPanelView: TabStackDelegate {
 extension ViewController: SearchPanelDelegate{
 
     func didSearchClickUser() {
-        //test
         openUserPanel()
     }
     func didSearchClickPlace() {
         openPlacePanel()
     }
     func didSearchClickSound() {
-        //test
         openSoundPanel()
     }
     func didSearchClickHashtag() {

@@ -12,17 +12,27 @@ import AVFoundation
 
 protocol ContentCellDelegate : AnyObject {
     func contentCellIsScrollCarousel(isScroll: Bool)
-    func contentCellCarouselIdx(idx: Int)
-    func contentCellVideoStopTime(ts: Double)
+    func contentCellCarouselIdx(cc: UIView,idx: Int)
+    func contentCellVideoStopTime(cc: UIView,ts: Double)
     func contentCellDidClickVcvClickPhoto(cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String)
     func contentCellDidClickVcvClickVideo(cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String)
     func contentCellDidDoubleClickPhoto(pointX: CGFloat, pointY: CGFloat)
     func contentCellDidClickSound()
+    func contentCellDidClickUser()
+    func contentCellDidClickPlace()
+    func contentCellDidClickPost()
+    func contentCellDidClickVcvClickPlay(cc: UIView, isPlay: Bool)
 }
 
 class ContentCell: UIView {
     func dehideCell() {}
     func destroyCell() {}
+}
+class MediaContentCell: ContentCell {
+    func resumeMedia() {}
+    func pauseMedia() {}
+    func playMedia() {}
+    func stopMedia() {}
 }
 class PostPhotoContentCell: ContentCell {
     
@@ -74,15 +84,10 @@ class PostPhotoContentCell: ContentCell {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.topAnchor.constraint(equalTo: pConBg.topAnchor, constant: 0).isActive = true
         scrollView.leadingAnchor.constraint(equalTo: pConBg.leadingAnchor, constant: 0).isActive = true //0
-//        scrollView.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
-//        scrollView.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true //0
-//        scrollView.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
-//        scrollView.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
         scrollView.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true  //280
         scrollView.heightAnchor.constraint(equalToConstant: viewHeight).isActive = true  //280
         scrollView.showsHorizontalScrollIndicator = false
-        scrollView.alwaysBounceHorizontal = true
-//        scrollView.contentSize = CGSize(width: 740, height: 280) //800, 280
+//        scrollView.alwaysBounceHorizontal = true
         scrollView.isPagingEnabled = true //false
         scrollView.delegate = self
         scrollView.layer.cornerRadius = 10 //5
@@ -217,7 +222,7 @@ extension PostPhotoContentCell: UIScrollViewDelegate {
         bubbleBox.setIndicatorSelected(index: tempCurrentIndex)
         
         //test > for carousel page
-        aDelegate?.contentCellCarouselIdx(idx: tempCurrentIndex)
+        aDelegate?.contentCellCarouselIdx(cc: self, idx: tempCurrentIndex)
     }
 
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
@@ -292,8 +297,7 @@ class PostPhotoShotContentCell: ContentCell {
         scrollView.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true  //280
         scrollView.heightAnchor.constraint(equalToConstant: viewHeight - descHeight).isActive = true  //280
         scrollView.showsHorizontalScrollIndicator = false
-        scrollView.alwaysBounceHorizontal = true
-//        scrollView.contentSize = CGSize(width: 740, height: 280) //800, 280
+//        scrollView.alwaysBounceHorizontal = true
         scrollView.isPagingEnabled = true //false
         scrollView.delegate = self
         scrollView.layer.cornerRadius = 10 //5
@@ -609,7 +613,7 @@ extension PostPhotoShotContentCell: UIScrollViewDelegate {
         bubbleBox.setIndicatorSelected(index: tempCurrentIndex)
         
         //test > for carousel page
-        aDelegate?.contentCellCarouselIdx(idx: tempCurrentIndex)
+        aDelegate?.contentCellCarouselIdx(cc: self, idx: tempCurrentIndex)
     }
 
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
@@ -623,7 +627,7 @@ extension PostPhotoShotContentCell: UIScrollViewDelegate {
     }
 }
 
-class PostVideoContentCell: ContentCell {
+class PostVideoContentCell: MediaContentCell {
     
     var viewHeight: CGFloat = 0
     var viewWidth: CGFloat = 0
@@ -830,6 +834,13 @@ class PostVideoContentCell: ContentCell {
                     //seek to previously viewed state t_s
                     let seekTime = CMTime(seconds: self.t_s_, preferredTimescale: CMTimeScale(1000)) //1000
                     self.player?.seek(to: seekTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+                    
+                    //test > autoplay video after video loaded
+                    if(self.vidPlayStatus == "play") {
+                        self.resumeMedia()
+//                        self.aDelegate?.contentCellDidClickVcvClickPlay(cc: self, isPlay: true)
+                        print("getinter ccvideo play: ")
+                    }
                 }
 
                 case .failure(let error):
@@ -877,10 +888,6 @@ class PostVideoContentCell: ContentCell {
     func setState(t: Double) {
         t_s_ = t
     }
-//    func setState(t: Double) {
-//        let seekTime = CMTime(seconds: t, preferredTimescale: CMTimeScale(1000)) //1000
-//        player?.seek(to: seekTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
-//    }
     
     func hideCell() {
         videoContainer.isHidden = true
@@ -891,6 +898,7 @@ class PostVideoContentCell: ContentCell {
     }
     
     override func destroyCell() {
+        print("postvideocc destroy cell")
         removeTimeObserverVideo()
         
         player?.pause()
@@ -937,9 +945,15 @@ class PostVideoContentCell: ContentCell {
     @objc func onVideoBtnClicked(gesture: UITapGestureRecognizer) {
         print("postphoto click video btn:")
         if(vidPlayStatus == "play") {
-            pauseVideo()
+            pauseMedia()
+            
+            //test > new method
+            aDelegate?.contentCellDidClickVcvClickPlay(cc: self, isPlay: false)
         } else {
-            resumeVideo()
+            resumeMedia()
+            
+            //test > new method
+            aDelegate?.contentCellDidClickVcvClickPlay(cc: self, isPlay: true)
         }
     }
     
@@ -961,7 +975,7 @@ class PostVideoContentCell: ContentCell {
                 }
                 print("postvideo time observe videoT:\(currentT)")
 //                s.aDelegate?.hListVideoStopTime(vc: s, ts: currentT)
-                s.aDelegate?.contentCellVideoStopTime(ts: currentT)
+                s.aDelegate?.contentCellVideoStopTime(cc: s, ts: currentT)
             }
         }
     }
@@ -979,32 +993,30 @@ class PostVideoContentCell: ContentCell {
     }
     
     @objc func playerDidFinishPlaying(_ notification: Notification) {
-        playVideo()
+        playMedia()
     }
     
     var vidPlayStatus = ""
-    func playVideo() {
+    override func playMedia() {
         player?.seek(to: .zero)
         player?.play()
 
         reactOnPlayStatus(status: "play")
     }
-    func stopVideo() {
+    override func stopMedia() {
         player?.seek(to: .zero)
         player?.pause()
 
         reactOnPlayStatus(status: "pause")
     }
     
-    func pauseVideo() {
+    override func pauseMedia() {
         player?.pause()
-
         reactOnPlayStatus(status: "pause")
     }
     
-    func resumeVideo() {
+    override func resumeMedia() {
         player?.play()
-
         reactOnPlayStatus(status: "play")
     }
     func reactOnPlayStatus(status: String) {
@@ -1018,7 +1030,7 @@ class PostVideoContentCell: ContentCell {
 
 }
 
-class PostVideoLoopContentCell: ContentCell {
+class PostVideoLoopContentCell: MediaContentCell {
     
     var viewHeight: CGFloat = 0
     var viewWidth: CGFloat = 0
@@ -1247,7 +1259,7 @@ class PostVideoLoopContentCell: ContentCell {
     //test > async fetch asset
     func asyncConfigure(data: String) {
         
-        let id = "s"
+        let id = "s_"
         DataFetchManager.shared.fetchSoundData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -1271,6 +1283,11 @@ class PostVideoLoopContentCell: ContentCell {
                     self.errorText.text = "-"
                     self.errorText.isHidden = true
                     self.errorRefreshBtn.isHidden = true
+                    
+                    //test > populate description text and label
+                    self.aaText.text = self.descTxt
+                    let image2Url = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+                    self.a2UserPhoto.sd_setImage(with: image2Url)
                     
                     //populate video
                     var videoURL = ""
@@ -1298,10 +1315,11 @@ class PostVideoLoopContentCell: ContentCell {
                     let seekTime = CMTime(seconds: self.t_s_, preferredTimescale: CMTimeScale(1000)) //1000
                     self.player?.seek(to: seekTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
                     
-                    //test > populate description text and label
-                    self.aaText.text = self.descTxt
-                    let image2Url = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-                    self.a2UserPhoto.sd_setImage(with: image2Url)
+                    //test > autoplay video after video loaded
+                    if(self.vidPlayStatus == "play") {
+                        self.resumeMedia()
+                        print("getinter ccvideoloop play: ")
+                    }
                 }
 
                 case .failure(let error):
@@ -1345,40 +1363,6 @@ class PostVideoLoopContentCell: ContentCell {
         asyncConfigure(data: "")
     }
     
-//    func configure(data: String) {
-//        var videoURL = ""
-//        if(data == "a") {
-//            videoURL = "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_video_4.mp4?alt=media"
-//        }
-//        else {
-//            
-//        }
-//        
-//        let url = CacheManager.shared.getCacheUrlFor(videoUrl: videoURL)
-//        
-//        if(player != nil && player.currentItem != nil) {
-//            NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
-//        }
-//        
-//        let item2 = AVPlayerItem(url: url)
-//        player = AVPlayer(playerItem: item2)
-//        let layer2 = AVPlayerLayer(player: player)
-//        layer2.frame = videoContainer.bounds
-//        layer2.videoGravity = .resizeAspectFill
-//        videoContainer.layer.addSublayer(layer2)
-//        
-//        //add timestamp video while playing
-//        addTimeObserverVideo()
-//        
-//        //test > for looping
-//        NotificationCenter.default.addObserver(self, selector: #selector(playerDidFinishPlaying(_:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
-//        
-//        //test > populate description text and label
-//        aaText.text = descTxt
-//        let image2Url = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-//        a2UserPhoto.sd_setImage(with: image2Url)
-//    }
-    
     //test > resume to paused timestamp
     func setState(t: Double) {
         t_s_ = t
@@ -1397,6 +1381,7 @@ class PostVideoLoopContentCell: ContentCell {
     }
     
     override func destroyCell() {
+        print("postvideoloopcc destroy cell")
         removeTimeObserverVideo()
         
         player?.pause()
@@ -1438,25 +1423,30 @@ class PostVideoLoopContentCell: ContentCell {
         aDelegate?.contentCellDidClickVcvClickVideo(cc: self, pointX: pointX, pointY: pointY, view: videoContainer, mode: VideoTypes.V_LOOP)
         
         //test > hide photo
-        hideCell()
+//        hideCell() //disabled for testing only
     }
     @objc func onVideoClicked(gesture: UITapGestureRecognizer) {
         print("postphoto click video:")
         let pFrame = videoContainer.frame.origin
         let pointX = pFrame.x
         let pointY = pFrame.y
-//        aDelegate?.contentCellDidClickVcvClickVideo(cc: self, pointX: pointX, pointY: pointY, view: videoContainer, mode: VideoTypes.V_0)
         aDelegate?.contentCellDidClickVcvClickVideo(cc: self, pointX: pointX, pointY: pointY, view: videoContainer, mode: VideoTypes.V_LOOP)
         
         //test > hide photo
-        hideCell()
+//        hideCell() //disabled for testing only
     }
     @objc func onVideoBtnClicked(gesture: UITapGestureRecognizer) {
         print("postphoto click video btn:")
         if(vidPlayStatus == "play") {
-            pauseVideo()
+            pauseMedia()
+            
+            //test > new method
+            aDelegate?.contentCellDidClickVcvClickPlay(cc: self, isPlay: false)
         } else {
-            resumeVideo()
+            resumeMedia()
+            
+            //test > new method
+            aDelegate?.contentCellDidClickVcvClickPlay(cc: self, isPlay: true)
         }
     }
     
@@ -1478,7 +1468,7 @@ class PostVideoLoopContentCell: ContentCell {
                 }
                 print("postvideo time observe videoT:\(currentT)")
 //                s.aDelegate?.hListVideoStopTime(vc: s, ts: currentT)
-                s.aDelegate?.contentCellVideoStopTime(ts: currentT)
+                s.aDelegate?.contentCellVideoStopTime(cc: s, ts: currentT)
             }
         }
     }
@@ -1496,30 +1486,30 @@ class PostVideoLoopContentCell: ContentCell {
     }
     
     @objc func playerDidFinishPlaying(_ notification: Notification) {
-        playVideo()
+        playMedia()
     }
     
     var vidPlayStatus = ""
-    func playVideo() {
+    override func playMedia() {
         player?.seek(to: .zero)
         player?.play()
 
         reactOnPlayStatus(status: "play")
     }
-    func stopVideo() {
+    override func stopMedia() {
         player?.seek(to: .zero)
         player?.pause()
 
         reactOnPlayStatus(status: "pause")
     }
     
-    func pauseVideo() {
+    override func pauseMedia() {
         player?.pause()
 
         reactOnPlayStatus(status: "pause")
     }
     
-    func resumeVideo() {
+    override func resumeMedia() {
         player?.play()
 
         reactOnPlayStatus(status: "play")
@@ -1545,6 +1535,10 @@ class ShotPhotoContentCell: ContentCell {
     var bubbleHeight: CGFloat = 0
     
     weak var aDelegate : ContentCellDelegate?
+    
+    //test
+    var current_p_s = 0
+    var initial_x = 0.0 //test for scrollview x-scroll direction
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -1591,15 +1585,10 @@ class ShotPhotoContentCell: ContentCell {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
         scrollView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true //0
-//        scrollView.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
-//        scrollView.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true //0
-//        scrollView.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
-//        scrollView.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
         scrollView.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true  //280
         scrollView.heightAnchor.constraint(equalToConstant: viewHeight - bubbleHeight).isActive = true  //280
         scrollView.showsHorizontalScrollIndicator = false
-        scrollView.alwaysBounceHorizontal = true
-//        scrollView.contentSize = CGSize(width: 740, height: 280) //800, 280
+//        scrollView.alwaysBounceHorizontal = true
         scrollView.isPagingEnabled = true //false
         scrollView.delegate = self
         scrollView.layer.cornerRadius = 10 //5
@@ -1623,7 +1612,7 @@ class ShotPhotoContentCell: ContentCell {
             vDataList.append("p")
             vDataList.append("p")
             vDataList.append("p")
-//            vDataList.append("p")
+
             for _ in vDataList {
                 
 //                let gifUrl = "https://i3.ytimg.com/vi/2mcGhpbWlyg/maxresdefault.jpg"
@@ -1672,6 +1661,9 @@ class ShotPhotoContentCell: ContentCell {
         
         let xOffset = CGFloat(p) * viewWidth
         scrollView.setContentOffset(CGPoint(x: xOffset, y: 0), animated: false)
+        
+        //test
+        current_p_s = p
     }
     
     func hideCell() {
@@ -1714,13 +1706,32 @@ extension ShotPhotoContentCell: UIScrollViewDelegate {
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         print("postphoto scrollview begin: \(scrollView.contentOffset.y)")
         aDelegate?.contentCellIsScrollCarousel(isScroll: true)
+        
+        //test
+        initial_x = scrollView.contentOffset.x
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let x = scrollView.contentOffset.x
         let y = scrollView.contentOffset.y
-        print("postphoto scrollview scroll: \(x), \(y)")
-        aDelegate?.contentCellIsScrollCarousel(isScroll: true)
+//        print("postphoto scrollview scroll: \(x), \(y)")
+//        aDelegate?.contentCellIsScrollCarousel(isScroll: true)
+        
+        //test
+        let x_diff = x - initial_x
+        print("postphoto scrollview scroll: \(x_diff)")
+        if(vDataList.count > 1) {
+            if(current_p_s == 0) {
+                if(x_diff < 0) {
+                    aDelegate?.contentCellIsScrollCarousel(isScroll: false)
+                }
+            }
+            else if (current_p_s == vDataList.count - 1) {
+                if(x_diff > 0) {
+                    aDelegate?.contentCellIsScrollCarousel(isScroll: false)
+                }
+            }
+        }
     }
 
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
@@ -1737,7 +1748,10 @@ extension ShotPhotoContentCell: UIScrollViewDelegate {
         bubbleBox.setIndicatorSelected(index: tempCurrentIndex)
         
         //test > for carousel page
-        aDelegate?.contentCellCarouselIdx(idx: tempCurrentIndex)
+        aDelegate?.contentCellCarouselIdx(cc: self, idx: tempCurrentIndex)
+        
+        //test
+        current_p_s = tempCurrentIndex
     }
 
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
@@ -1751,7 +1765,7 @@ extension ShotPhotoContentCell: UIScrollViewDelegate {
     }
 }
 
-class ShotSoundContentCell: ContentCell {
+class ShotSoundContentCell: MediaContentCell {
     
     var viewHeight: CGFloat = 0
     var viewWidth: CGFloat = 0
@@ -1767,6 +1781,11 @@ class ShotSoundContentCell: ContentCell {
     let bSpinner = SpinLoader()
     
     weak var aDelegate : ContentCellDelegate?
+    
+    //TODO:
+    //1) setState t_s when asyncconfig
+    var t_s_ = 0.0
+    //2) indicate whether asset is loaded, then only playable
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -1932,6 +1951,18 @@ class ShotSoundContentCell: ContentCell {
                         return
                     }
                     
+                    self.bSpinner.stopAnimating()
+                    
+                    //test > populate description text and label
+                    self.mText.text = "明知故犯 - HubertWu"
+                    self.mText.isHidden = false
+                    self.dMiniCon.isHidden = false
+                    
+                    //error handling e.g. refetch button
+                    self.errorText.text = "-"
+                    self.errorText.isHidden = true
+                    self.errorRefreshBtn.isHidden = true
+                    
                     var videoURL = ""
 //                    videoURL = "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_audio_4.m4a?alt=media"
                     let audioUrl = CacheManager.shared.getCacheUrlFor(videoUrl: videoURL)
@@ -1953,17 +1984,15 @@ class ShotSoundContentCell: ContentCell {
                     //test > for looping
                     NotificationCenter.default.addObserver(self, selector: #selector(self.playerDidFinishPlaying(_:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: self.player.currentItem)
                     
-                    self.bSpinner.stopAnimating()
+                    //seek to previously viewed state t_s
+                    let seekTime = CMTime(seconds: self.t_s_, preferredTimescale: CMTimeScale(1000)) //1000
+                    self.player?.seek(to: seekTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
                     
-                    //test > populate description text and label
-                    self.mText.text = "明知故犯 - HubertWu"
-                    self.mText.isHidden = false
-                    self.dMiniCon.isHidden = false
-                    
-                    //error handling e.g. refetch button
-                    self.errorText.text = "-"
-                    self.errorText.isHidden = true
-                    self.errorRefreshBtn.isHidden = true
+                    //test > autoplay video after video loaded
+                    if(self.vidPlayStatus == "play") {
+                        self.resumeMedia()
+                        print("getinter ccsoundshot play: ")
+                    }
                 }
 
                 case .failure(let error):
@@ -2018,13 +2047,21 @@ class ShotSoundContentCell: ContentCell {
     @objc func onVideoBtnClicked(gesture: UITapGestureRecognizer) {
         print("postphoto click video btn:")
         if(vidPlayStatus == "play") {
-            pauseVideo()
+            pauseMedia()
+            
+            //test > new method
+            aDelegate?.contentCellDidClickVcvClickPlay(cc: self, isPlay: false)
         } else {
-            resumeVideo()
+            resumeMedia()
+            
+            //test > new method
+            aDelegate?.contentCellDidClickVcvClickPlay(cc: self, isPlay: true)
         }
     }
     
     func refreshFetchData() {
+        
+        t_s_ = 0.0 //reset t_s
         
         bSpinner.startAnimating()
         
@@ -2039,12 +2076,15 @@ class ShotSoundContentCell: ContentCell {
         
         asyncConfigure(data: "")
     }
-    
     //test > resume to paused timestamp
     func setState(t: Double) {
-        let seekTime = CMTime(seconds: t, preferredTimescale: CMTimeScale(1000)) //1000
-        player?.seek(to: seekTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+        t_s_ = t
     }
+    //test > resume to paused timestamp
+//    func setState(t: Double) {
+//        let seekTime = CMTime(seconds: t, preferredTimescale: CMTimeScale(1000)) //1000
+//        player?.seek(to: seekTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+//    }
     
     //for video play
     var timeObserverTokenVideo: Any?
@@ -2063,7 +2103,7 @@ class ShotSoundContentCell: ContentCell {
                     return
                 }
                 print("postvideo time observe videoT:\(currentT)")
-                s.aDelegate?.contentCellVideoStopTime(ts: currentT)
+                s.aDelegate?.contentCellVideoStopTime(cc: s, ts: currentT)
             }
         }
     }
@@ -2081,13 +2121,12 @@ class ShotSoundContentCell: ContentCell {
     }
     
     @objc func playerDidFinishPlaying(_ notification: Notification) {
-        playVideo()
+        playMedia()
     }
     
     override func destroyCell() {
-        
+        print("shotsoundcc destroy cell")
         mText.text = "-"
-        stopVideo()
         
         removeTimeObserverVideo()
         
@@ -2096,29 +2135,31 @@ class ShotSoundContentCell: ContentCell {
         player = nil
         
         vidPlayStatus = ""
+        
+        t_s_ = 0.0 //reset t_s
     }
     
     var vidPlayStatus = ""
-    func playVideo() {
+    override func playMedia() {
         player?.seek(to: .zero)
         player?.play()
 
         reactOnPlayStatus(status: "play")
     }
-    func stopVideo() {
+    override func stopMedia() {
         player?.seek(to: .zero)
         player?.pause()
 
         reactOnPlayStatus(status: "pause")
     }
     
-    func pauseVideo() {
+    override func pauseMedia() {
         player?.pause()
 
         reactOnPlayStatus(status: "pause")
     }
     
-    func resumeVideo() {
+    override func resumeMedia() {
         player?.play()
 
         reactOnPlayStatus(status: "play")
@@ -2129,6 +2170,519 @@ class ShotSoundContentCell: ContentCell {
             mPlayBtn.image = UIImage(named:"icon_round_pause")?.withRenderingMode(.alwaysTemplate)
         } else {
             mPlayBtn.image = UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate)
+        }
+    }
+}
+
+//test > try out "quote" only
+class PostQuoteContentCell: MediaContentCell {
+    var viewHeight: CGFloat = 0
+    var viewWidth: CGFloat = 0
+    
+    let aGridNameText = UILabel()
+    let aText = UILabel()
+    let aUserPhoto = SDAnimatedImageView()
+    let vBtn = UIImageView()
+    
+    //test > dynamic method for various cells format
+    let aTest = UIView()
+    var aTestArray = [UIView]()
+    
+    //test > for video container intersection as user scrolls to play/pause
+    var mediaArray = [MediaContentCell]()
+    //test > new method for storing hiding asset
+    var hiddenAssetIdx = -1
+    var playingMediaAssetIdx = -1
+    
+    weak var aDelegate : ContentCellDelegate?
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        viewWidth = frame.width
+        viewHeight = frame.height
+        setupViews()
+        
+    }
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        
+        setupViews()
+    }
+    
+    func setupViews() {
+        let photoSize = 28.0
+        let photoLhsMargin = 20.0 //20
+        let usernameLhsMargin = 5.0
+        let indentSize = photoSize + photoLhsMargin + usernameLhsMargin
+        
+        self.layer.borderWidth = 2.0 //2
+        self.layer.borderColor = UIColor.ddmDarkColor.cgColor
+//        self.layer.borderColor = UIColor.black.cgColor
+        self.layer.cornerRadius = 10
+        self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onQuoteClicked)))
+        
+        let eUserCover = UIView()
+//        eUserCover.backgroundColor = .ddmBlackOverlayColor
+//        eUserCover.backgroundColor = .white
+        eUserCover.backgroundColor = .clear
+        self.addSubview(eUserCover)
+//        aResult.addSubview(eUserCover)
+        eUserCover.translatesAutoresizingMaskIntoConstraints = false
+        eUserCover.topAnchor.constraint(equalTo: self.topAnchor, constant: 20).isActive = true //20
+        eUserCover.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
+        eUserCover.heightAnchor.constraint(equalToConstant: photoSize).isActive = true
+        eUserCover.widthAnchor.constraint(equalToConstant: photoSize).isActive = true
+        eUserCover.layer.cornerRadius = 14
+        eUserCover.layer.opacity = 1.0 //default 0.3
+        
+//        let aUserPhoto = SDAnimatedImageView()
+//        contentView.addSubview(aUserPhoto)
+        self.addSubview(aUserPhoto)
+        aUserPhoto.translatesAutoresizingMaskIntoConstraints = false
+        aUserPhoto.widthAnchor.constraint(equalToConstant: photoSize).isActive = true //24
+        aUserPhoto.heightAnchor.constraint(equalToConstant: photoSize).isActive = true
+        aUserPhoto.centerXAnchor.constraint(equalTo: eUserCover.centerXAnchor).isActive = true
+        aUserPhoto.centerYAnchor.constraint(equalTo: eUserCover.centerYAnchor).isActive = true
+//        aUserPhoto.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10).isActive = true
+//        aUserPhoto.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20).isActive = true
+        aUserPhoto.contentMode = .scaleAspectFill
+        aUserPhoto.layer.masksToBounds = true
+        aUserPhoto.layer.cornerRadius = 14
+//        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//        aUserPhoto.sd_setImage(with: imageUrl)
+        aUserPhoto.backgroundColor = .ddmDarkColor
+        aUserPhoto.isUserInteractionEnabled = true
+//        aUserPhoto.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onUserClicked)))
+
+//        let aGridNameText = UILabel()
+        aGridNameText.textAlignment = .left
+        aGridNameText.textColor = .white
+        aGridNameText.font = .boldSystemFont(ofSize: 13)
+//        contentView.addSubview(aGridNameText)
+        self.addSubview(aGridNameText)
+        aGridNameText.translatesAutoresizingMaskIntoConstraints = false
+//        aGridNameText.topAnchor.constraint(equalTo: aUserPhoto.topAnchor).isActive = true
+        aGridNameText.centerYAnchor.constraint(equalTo: aUserPhoto.centerYAnchor, constant: 0).isActive = true
+        aGridNameText.leadingAnchor.constraint(equalTo: eUserCover.trailingAnchor, constant: usernameLhsMargin).isActive = true
+        aGridNameText.text = "-"
+        
+        //test > verified badge
+//        let vBtn = UIImageView(image: UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate))
+        vBtn.tintColor = .yellow
+//        contentView.addSubview(vBtn)
+        self.addSubview(vBtn)
+        vBtn.translatesAutoresizingMaskIntoConstraints = false
+        vBtn.leadingAnchor.constraint(equalTo: aGridNameText.trailingAnchor, constant: 5).isActive = true
+        vBtn.centerYAnchor.constraint(equalTo: aGridNameText.centerYAnchor, constant: 0).isActive = true
+        vBtn.heightAnchor.constraint(equalToConstant: 14).isActive = true
+        vBtn.widthAnchor.constraint(equalToConstant: 14).isActive = true
+        //
+        
+        self.addSubview(aTest)
+        aTest.translatesAutoresizingMaskIntoConstraints = false
+        aTest.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
+        aTest.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
+        aTest.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -20).isActive = true //-10
+        aTest.topAnchor.constraint(equalTo: eUserCover.bottomAnchor, constant: 0).isActive = true
+    }
+    
+    override func dehideCell() {
+        for e in aTestArray {
+            if let a = e as? ContentCell {
+                a.dehideCell()
+            }
+        }
+    }
+    
+    override func destroyCell() {
+        print("quote destroy cell")
+        for e in aTestArray {
+            //test > destroy inner content cell before removed
+            if let a = e as? ContentCell {
+                a.destroyCell()
+            }
+            
+            e.removeFromSuperview()
+        }
+        aTestArray.removeAll()
+    }
+    
+    func configure(data: String, text: String) {
+        asyncConfigure(data: "")
+        
+        //**test > fake data for quote post
+        var qDataArray = [String]()
+        qDataArray.append("t")
+//        qDataArray.append("p")
+//        qDataArray.append("p_s")
+        qDataArray.append("v")
+//        qDataArray.append("v_l")
+        //**
+        
+        for l in qDataArray {
+            if(l == "t") {
+                let aaText = UILabel()
+                aaText.textAlignment = .left
+                aaText.textColor = .white
+                aaText.font = .systemFont(ofSize: 14)
+                aaText.numberOfLines = 0
+                aTest.addSubview(aaText)
+                aaText.translatesAutoresizingMaskIntoConstraints = false
+                if(aTestArray.isEmpty) {
+                    aaText.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true //20
+                } else {
+                    let lastArrayE = aTestArray[aTestArray.count - 1]
+                    aaText.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
+                }
+                aaText.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
+                aaText.trailingAnchor.constraint(equalTo: aTest.trailingAnchor, constant: -20).isActive = true
+//                aaText.bottomAnchor.constraint(equalTo: aTest.bottomAnchor, constant: 0).isActive = true
+                aaText.text = text
+                aTestArray.append(aaText)
+            }
+            else if(l == "p") {
+                let cellWidth = viewWidth
+                let lhsMargin = 20.0
+                let rhsMargin = 20.0
+                let availableWidth = cellWidth - lhsMargin - rhsMargin
+                
+                let assetSize = CGSize(width: 4, height: 3)//landscape
+//                let assetSize = CGSize(width: 3, height: 4)
+                var cSize = CGSize(width: 0, height: 0)
+                if(assetSize.width > assetSize.height) {
+                    //1 > landscape photo 4:3 w:h
+                    let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                    let cHeight = availableWidth * aRatio.height / aRatio.width
+                    cSize = CGSize(width: availableWidth, height: cHeight)
+                }
+                else if (assetSize.width < assetSize.height){
+                    //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                    let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                    let cWidth = availableWidth * 2 / 3
+//                    let cWidth = availableWidth //test full width for portrait
+                    let cHeight = cWidth * aRatio.height / aRatio.width
+                    cSize = CGSize(width: cWidth, height: cHeight)
+                } else {
+                    //square
+                    let cWidth = availableWidth
+                    cSize = CGSize(width: cWidth, height: cWidth)
+                }
+                
+                //test 2 > reusable custom view
+//                let contentCell = PostPhotoContentCell(frame: CGRect(x: 0, y: 0, width: 370, height: 280))
+                let contentCell = PostPhotoContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
+                aTest.addSubview(contentCell)
+                contentCell.translatesAutoresizingMaskIntoConstraints = false
+                if(aTestArray.isEmpty) {
+                    contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
+                } else {
+                    let lastArrayE = aTestArray[aTestArray.count - 1]
+                    contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
+                }
+                contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
+//                contentCell.widthAnchor.constraint(equalToConstant: 370).isActive = true  //370
+//                contentCell.heightAnchor.constraint(equalToConstant: 280).isActive = true  //280
+                contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //370
+                contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //280
+                contentCell.layer.cornerRadius = 10 //5
+                aTestArray.append(contentCell)
+                contentCell.redrawUI()
+                contentCell.configure(data: "a")
+//                contentCell.setState(p: data.p_s)
+                contentCell.setState(p: 0) //do not revert state for simplicity
+                contentCell.aDelegate = self
+            }
+            else if(l == "p_s") {
+                let cellWidth = viewWidth
+                let lhsMargin = 20.0
+                let rhsMargin = 20.0
+                let descHeight = 40.0
+                let availableWidth = cellWidth - lhsMargin - rhsMargin
+                
+                let assetSize = CGSize(width: 4, height: 3)
+                var cSize = CGSize(width: 0, height: 0)
+                if(assetSize.width > assetSize.height) {
+                    //1 > landscape photo 4:3 w:h
+                    let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                    let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
+                    cSize = CGSize(width: availableWidth, height: cHeight)
+                }
+                else if (assetSize.width < assetSize.height){
+                    //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                    let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                    let cWidth = availableWidth * 2 / 3
+                    let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
+                    cSize = CGSize(width: cWidth, height: cHeight)
+                } else {
+                    //square
+                    let cWidth = availableWidth
+                    cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                }
+                
+                //test 2 > reusable custom view
+//                let contentCell = PostPhotoShotContentCell(frame: CGRect(x: 0, y: 0, width: 370, height: 320))
+                let contentCell = PostPhotoShotContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
+                aTest.addSubview(contentCell)
+                contentCell.translatesAutoresizingMaskIntoConstraints = false
+                if(aTestArray.isEmpty) {
+                    contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
+                } else {
+                    let lastArrayE = aTestArray[aTestArray.count - 1]
+                    contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
+                }
+                contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
+//                contentCell.widthAnchor.constraint(equalToConstant: 370).isActive = true  //370
+//                contentCell.heightAnchor.constraint(equalToConstant: 320).isActive = true  //320
+                contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //370
+                contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //320
+                contentCell.layer.cornerRadius = 10 //5
+                aTestArray.append(contentCell)
+                contentCell.setDescHeight(lHeight: descHeight, txt: text)
+                contentCell.redrawUI()
+                contentCell.configure(data: "a")
+                contentCell.setState(p: 0) //do not revert state for simplicity
+                contentCell.aDelegate = self
+            }
+            else if(l == "v_l") {//loop videos
+                let cellWidth = viewWidth
+                let lhsMargin = 20.0
+                let rhsMargin = 20.0
+                let descHeight = 40.0
+                let availableWidth = cellWidth - lhsMargin - rhsMargin
+                
+                let assetSize = CGSize(width: 3, height: 4)
+                var cSize = CGSize(width: 0, height: 0)
+                if(assetSize.width > assetSize.height) {
+                    //1 > landscape photo 4:3 w:h
+                    let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                    let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
+                    cSize = CGSize(width: availableWidth, height: cHeight)
+                }
+                else if (assetSize.width < assetSize.height){
+                    //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                    let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                    let cWidth = availableWidth * 2 / 3
+                    let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
+                    cSize = CGSize(width: cWidth, height: cHeight)
+                } else {
+                    //square
+                    let cWidth = availableWidth
+                    cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                }
+                
+                //test 2 > reusable custom view
+//                let contentCell = PostVideoLoopContentCell(frame: CGRect(x: 0, y: 0, width: 220, height: 390))
+                let contentCell = PostVideoLoopContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
+                aTest.addSubview(contentCell)
+                contentCell.translatesAutoresizingMaskIntoConstraints = false
+                if(aTestArray.isEmpty) {
+                    contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
+                } else {
+                    let lastArrayE = aTestArray[aTestArray.count - 1]
+                    contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
+                }
+                contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
+//                contentCell.widthAnchor.constraint(equalToConstant: 220).isActive = true  //220
+//                contentCell.heightAnchor.constraint(equalToConstant: 390).isActive = true  //390
+                contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //220
+                contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //390
+                contentCell.layer.cornerRadius = 10 //5
+                aTestArray.append(contentCell)
+                contentCell.setDescHeight(lHeight: descHeight, txt: text)
+                contentCell.redrawUI()
+                contentCell.configure(data: "a")
+                contentCell.setState(t: 0.0)
+                contentCell.aDelegate = self
+            
+                mediaArray.append(contentCell)
+            }
+            else if(l == "v") { //vi
+                let cellWidth = viewWidth
+                let lhsMargin = 20.0
+                let rhsMargin = 20.0
+                let availableWidth = cellWidth - lhsMargin - rhsMargin
+                
+                let assetSize = CGSize(width: 3, height: 4)
+                var cSize = CGSize(width: 0, height: 0)
+                if(assetSize.width > assetSize.height) {
+                    //1 > landscape photo 4:3 w:h
+                    let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                    let cHeight = availableWidth * aRatio.height / aRatio.width
+                    cSize = CGSize(width: availableWidth, height: cHeight)
+                }
+                else if (assetSize.width < assetSize.height){
+                    //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                    let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                    let cWidth = availableWidth * 2 / 3
+                    let cHeight = cWidth * aRatio.height / aRatio.width
+                    cSize = CGSize(width: cWidth, height: cHeight)
+                } else {
+                    //square
+                    let cWidth = availableWidth
+                    cSize = CGSize(width: cWidth, height: cWidth)
+                }
+                
+                //test 2 > reusable custom view
+//                let contentCell = PostVideoContentCell(frame: CGRect(x: 0, y: 0, width: 220, height: 350))
+                let contentCell = PostVideoContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
+                aTest.addSubview(contentCell)
+                contentCell.translatesAutoresizingMaskIntoConstraints = false
+                if(aTestArray.isEmpty) {
+                    contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
+                } else {
+                    let lastArrayE = aTestArray[aTestArray.count - 1]
+                    contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
+                }
+                contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
+//                contentCell.widthAnchor.constraint(equalToConstant: 220).isActive = true  //220
+//                contentCell.heightAnchor.constraint(equalToConstant: 350).isActive = true  //350
+                contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //220
+                contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //350
+                contentCell.layer.cornerRadius = 10 //5
+                aTestArray.append(contentCell)
+                contentCell.redrawUI()
+                contentCell.configure(data: "a")
+                contentCell.setState(t: 0.0)
+                contentCell.aDelegate = self
+                
+                mediaArray.append(contentCell)
+            }
+        }
+        
+        if(!aTestArray.isEmpty) {
+            let lastArrayE = aTestArray[aTestArray.count - 1]
+            lastArrayE.bottomAnchor.constraint(equalTo: aTest.bottomAnchor, constant: 0).isActive = true //-10
+        }
+    }
+    
+    @objc func onQuoteClicked(gesture: UITapGestureRecognizer) {
+        print("quote post clicked")
+        aDelegate?.contentCellDidClickPost()
+    }
+    
+    override func pauseMedia() {
+        if(playingMediaAssetIdx > -1) {
+            if(!aTestArray.isEmpty && playingMediaAssetIdx < aTestArray.count) {
+                let asset = aTestArray[playingMediaAssetIdx]
+                if let a = asset as? MediaContentCell {
+                    a.pauseMedia()
+                    playingMediaAssetIdx = -1
+                }
+            }
+        }
+    }
+    
+    override func resumeMedia() {
+        if(!mediaArray.isEmpty) {
+            let m = mediaArray[0] //for simplicity only the first video
+            if let j = aTestArray.firstIndex(of: m) {
+                playingMediaAssetIdx = j
+                m.resumeMedia()
+            }
+        }
+    }
+    
+    //*test > async fetch images/names/videos
+    func asyncConfigure(data: String) {
+        let id = "u_"
+        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    print("pdp api success \(id), \(l)")
+                    
+                    guard let self = self else {
+                        return
+                    }
+
+                    self.aGridNameText.text = "Michael Kins"
+                    self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
+                    
+                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+                    self.aUserPhoto.sd_setImage(with: imageUrl)
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    self.aGridNameText.text = "-"
+                    self.vBtn.image = nil
+                    
+                    let imageUrl = URL(string: "")
+                    self.aUserPhoto.sd_setImage(with: imageUrl)
+                    
+                }
+                break
+            }
+        }
+    }
+    //*
+}
+
+extension PostQuoteContentCell: ContentCellDelegate {
+    func contentCellIsScrollCarousel(isScroll: Bool){
+        aDelegate?.contentCellIsScrollCarousel(isScroll: isScroll)
+    }
+    
+    func contentCellCarouselIdx(cc: UIView, idx: Int){
+
+    }
+    
+    func contentCellVideoStopTime(cc: UIView, ts: Double){
+        
+    }
+    
+    func contentCellDidClickVcvClickPhoto(cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        let aTestFrame = aTest.frame.origin
+        let ccFrame = cc.frame.origin
+        
+        let pointX1 = pointX + aTestFrame.x + ccFrame.x
+        let pointY1 = pointY + aTestFrame.y + ccFrame.y
+        aDelegate?.contentCellDidClickVcvClickPhoto(cc: self, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
+        
+        //test 2 > new method to store hide asset
+//        if let j = aTestArray.firstIndex(of: cc) {
+//            hiddenAssetIdx = j
+//        }
+    }
+    func contentCellDidClickVcvClickVideo(cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        let aTestFrame = aTest.frame.origin
+        let ccFrame = cc.frame.origin
+        
+        let pointX1 = pointX + aTestFrame.x + ccFrame.x
+        let pointY1 = pointY + aTestFrame.y + ccFrame.y
+        aDelegate?.contentCellDidClickVcvClickVideo(cc: self, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
+        
+        //test 2 > new method to store hide asset
+//        if let j = aTestArray.firstIndex(of: cc) {
+//            hiddenAssetIdx = j
+//        }
+    }
+    func contentCellDidDoubleClickPhoto(pointX: CGFloat, pointY: CGFloat){
+        
+    }
+    func contentCellDidClickSound(){
+        
+    }
+    func contentCellDidClickUser(){
+        
+    }
+    func contentCellDidClickPlace(){
+    }
+    func contentCellDidClickPost(){
+
+    }
+    func contentCellDidClickVcvClickPlay(cc: UIView, isPlay: Bool){
+        if let j = aTestArray.firstIndex(of: cc) {
+            playingMediaAssetIdx = j
+            
+            aDelegate?.contentCellDidClickVcvClickPlay(cc: self, isPlay: isPlay)
         }
     }
 }

@@ -14,7 +14,7 @@ class GridPhotoViewCell: UICollectionViewCell {
     static let identifier = "GridPhotoViewCell"
     var gifImage = SDAnimatedImageView()
     
-//    weak var aDelegate : GridViewCellDelegate?
+    weak var aDelegate : GridViewCellDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -30,12 +30,14 @@ class GridPhotoViewCell: UICollectionViewCell {
     }
     
     private func addSubViews() {
-//        contentView.addSubview(videoContainer)
         
-        let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+        self.backgroundColor = .ddmDarkColor
+        self.layer.cornerRadius = 5
+        
+//        let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
         gifImage.contentMode = .scaleAspectFill
         gifImage.clipsToBounds = true
-        gifImage.sd_setImage(with: imageUrl)
+//        gifImage.sd_setImage(with: imageUrl)
 //        gifImage.layer.cornerRadius = 10
         gifImage.layer.cornerRadius = 5
         contentView.addSubview(gifImage)
@@ -44,7 +46,9 @@ class GridPhotoViewCell: UICollectionViewCell {
         gifImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
         gifImage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
         gifImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
-
+        gifImage.isUserInteractionEnabled = true
+        gifImage.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onGifImageClicked)))
+        
         //stats count
 //        let playBtn = UIImageView()
 ////        playBtn.image = UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate)
@@ -73,25 +77,27 @@ class GridPhotoViewCell: UICollectionViewCell {
     }
     
     func hideCell() {
-//        aSpinner.startAnimating()
         gifImage.isHidden = true
     }
-//
+
     func dehideCell() {
-//        aSpinner.stopAnimating()
         gifImage.isHidden = false
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
         print("upv gridphoto prepare for reuse")
+        
+        let imageUrl = URL(string: "")
+        gifImage.sd_setImage(with: imageUrl)
     }
     
     func configure(data: PostData) {
-        if(data.isGridHidden) {
-            gifImage.isHidden = true
-        } else{
-            gifImage.isHidden = false
-        }
+        let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+        gifImage.sd_setImage(with: imageUrl)
+    }
+    
+    @objc func onGifImageClicked(gesture: UITapGestureRecognizer) {
+        aDelegate?.gridViewClick(vc: self)
     }
 }

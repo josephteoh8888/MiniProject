@@ -9,6 +9,31 @@ import Foundation
 import UIKit
 import SDWebImage
 
+protocol HListCellDelegate : AnyObject {
+    func hListDidClickVcvComment(vc: UICollectionViewCell)
+    func hListDidClickVcvLove()
+    func hListDidClickVcvShare(vc: UICollectionViewCell)
+    func hListDidClickVcvClickUser()
+    func hListDidClickVcvClickPlace()
+    func hListDidClickVcvClickSound()
+    func hListDidClickVcvClickPost()
+    func hListDidClickVcvClickPhoto(vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String)
+    func hListDidClickVcvClickVideo(vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String)
+    func hListDidClickVcvSortComment()
+    func hListIsScrollCarousel(isScroll: Bool)
+    
+    //test > carousel photo scroll page
+    func hListCarouselIdx(vc: UICollectionViewCell, aIdx: Int, idx: Int)
+    
+    //test > video stop time
+    func hListVideoStopTime(vc: UICollectionViewCell, aIdx: Int, ts: Double)
+    
+    //test > click play sound
+    func hListDidClickVcvPlayAudio(vc: UICollectionViewCell)
+    
+    func hListDidClickVcvClickPlay(vc: UICollectionViewCell, isPlay: Bool)
+}
+
 //test > horizontal list viewcell for sound panel
 class HListViewCell: UICollectionViewCell {
     static let identifier = "HListViewCell"

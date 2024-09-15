@@ -656,8 +656,8 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
 
             }, completion: { finished in
                 //test > stop video before closing panel
-                self.pauseCurrentAudio()
-                //
+                self.destroyCell()
+//                self.pausePlayingMedia()
                 
                 self.removeFromSuperview()
 
@@ -665,8 +665,8 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
             })
         } else {
             //test > stop video before closing panel
-            self.pauseCurrentAudio()
-            //
+            self.destroyCell()
+//            self.pausePlayingMedia()
             
             self.removeFromSuperview()
 
@@ -701,9 +701,6 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
 //                }
             }, completion: { finished in
 //                self.delegate?.didFinishOpenVideoPanel()
-
-                //test > play video
-//                self.startPlayVideo()
 
                 //test
                 self.initialize()
@@ -1166,19 +1163,6 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
             }
         }
     }
-//    func removeDataSet(cell: ScrollFeedHPhotoListCell?, idxToRemove: [Int]) {
-//        guard let feed = cell else {
-//            return
-//        }
-//        var indexPaths = [IndexPath]()
-//        for i in idxToRemove {
-//            feed.vDataList.remove(at: i)
-//            
-//            let idx = IndexPath(item: i, section: 0)
-//            indexPaths.append(idx)
-//        }
-//        feed.vCV?.deleteItems(at: indexPaths)
-//    }
     //**
     
     func asyncFetchFeed(cell: ScrollFeedHPhotoListCell?, id: String) {
@@ -1368,91 +1352,139 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
         }
     }
     
-    //test > stop current video for closing
-    func pauseCurrentAudio() {
-        if(!self.feedList.isEmpty) {
-            let b = feedList[currentIndex]
-            b.pauseCurrentAudio()
-        }
-    }
-    //test > resume current video
-    func resumeCurrentAudio() {
-        if(!self.feedList.isEmpty) {
-            let b = feedList[currentIndex]
-            b.resumeCurrentAudio()
-        }
-    }
-    func dehideCurrentCell() {
-        if(!self.feedList.isEmpty) {
-            let b = feedList[currentIndex]
-            b.dehideCell()
-        }
-    }
     //test
     override func resumeActiveState() {
         print("photopanelview resume active")
         
         //test > only resume video if no comment scrollable view/any other view
         if(pageList.isEmpty) {
-            resumeCurrentAudio()
-            
-            //test > dehide cell
-            dehideCurrentCell()
+            resumePlayingMedia()
+            dehideCell()
         }
         else {
             //dehide cell for commment view
             if let c = pageList[pageList.count - 1] as? CommentScrollableView {
-                c.resumeCurrentVideo()
+                c.resumePlayingMedia()
                 c.dehideCell()
             }
         }
     }
+    func dehideCell() {
+        if(!self.feedList.isEmpty) {
+            let b = feedList[currentIndex]
+            b.dehideCell()
+        }
+    }
+
+    //test > stop current video for closing
+    func pausePlayingMedia() {
+        if(!self.feedList.isEmpty) {
+            let b = feedList[currentIndex]
+            b.pausePlayingMedia()
+        }
+    }
+    //test > resume current video
+    func resumePlayingMedia() {
+        if(!self.feedList.isEmpty) {
+            let b = feedList[currentIndex]
+            b.resumePlayingMedia()
+        }
+    }
     
-    //test > check for intersected dummy view with video while user scroll
-    func getIntersectedIdx(aVc: ScrollFeedHPhotoListCell) -> Int {
-//        let aVc = feedList[currentIndex]
-        var intersectedIdx = -1
-        if let v = aVc.vCV {
-            print("sfvideo ppv start \(v.visibleCells)")
-            for cell in v.visibleCells {
-                guard let indexPath = v.indexPath(for: cell) else {
-                    continue
-                }
-                guard let b = cell as? HPhotoListAViewCell else {
-                    return -1
-                }
-
-                let cellRect = v.convert(b.frame, to: aVc)
-                let aTestRect = b.aTest.frame
-                let feedScrollViewRect = feedScrollView.frame
-                print("sfvideo ppv scroll \(indexPath), \(feedScrollViewRect)")
-                if(!b.musicConArray.isEmpty) {
-                    let vidC = b.musicConArray[0]
-                    let vidCFrame = vidC.frame
-//                    let convertedVidCOriginY = cellRect.origin.y + aTestRect.origin.y + vidCFrame.origin.y
-                    let convertedVidCOriginY = feedScrollViewRect.origin.y + cellRect.origin.y + aTestRect.origin.y + vidCFrame.origin.y
-                    let convertedVidCRect = CGRect(x: 0, y: convertedVidCOriginY, width: vidCFrame.size.width, height: vidCFrame.size.height)
-                    //size can be changed
-//                    let dummyView = CGRect(x: 0, y: 100, width: self.frame.width, height: vidCFrame.size.height)
-                    let dummyView = CGRect(x: 0, y: 100, width: self.frame.width, height: 400) //y:200, h:300
-//                    let dV = UIView(frame: dummyView)
-//                    dV.backgroundColor = .blue
-//                    self.addSubview(dV)
-                    
-                    let isIntersect = dummyView.intersects(convertedVidCRect)
-                    let intersectArea = dummyView.intersection(convertedVidCRect)
-
-                    print("sfvideo x ppv 3.0 collectionView index: \(indexPath), \(isIntersect), \(intersectArea)")
-                    
-                    //test > play video if intersect
-                    if(isIntersect) {
-                        intersectedIdx = indexPath.item
+    //test > destroy cell
+    func destroyCell() {
+        if(!self.feedList.isEmpty) {
+            let b = feedList[currentIndex]
+            b.destroyCell()
+        }
+    }
+    
+    //test 2 > new intersect func() for multi-video/audio assets play on/off
+    //try autoplay OFF first, then only autoplay
+//    var isMediaAutoplayEnabled = true
+    var isMediaAutoplayEnabled = false
+    func getIntersect2(aVc: ScrollFeedHPhotoListCell) {
+        guard let v = aVc.vCV else {
+            return
+        }
+        
+        //fixed dummy area
+        let dummyTopMargin = 100.0
+//        let panelRectY = panelView.frame.origin.y
+        let vCvRectY = feedScrollView.frame.origin.y
+        let dummyOriginY = vCvRectY + dummyTopMargin
+        let dummyView = CGRect(x: 0, y: dummyOriginY, width: self.frame.width, height: 500)
+        //*just in case > add view for illustration
+//        let dV = UIView(frame: dummyView)
+//        dV.backgroundColor = .blue
+//        self.addSubview(dV)
+        //*
+        
+        //identify intersected assets
+        var cellAssetIdxArray = [[Int]]() //[cellIdx, assetIdx] => use array for simplicity
+        for cell in v.visibleCells {
+            guard let indexPath = v.indexPath(for: cell) else {
+                return
+            }
+            guard let b = cell as? HPhotoListAViewCell else {
+                return
+            }
+            
+            let cellRect = v.convert(b.frame, to: self)
+            let aTestRect = b.aTest.frame
+            
+            let p = b.mediaArray
+            if(!p.isEmpty) {
+                for m in p {
+                    let mFrame = m.frame
+                    if let j = b.aTestArray.firstIndex(of: m) {
+                        let cVidCOriginY = mFrame.origin.y + aTestRect.origin.y + cellRect.origin.y
+                        let cVidCRect = CGRect(x: 0, y: cVidCOriginY, width: mFrame.size.width, height: mFrame.size.height)
+                        
+                        let isIntersect = dummyView.intersects(cVidCRect)
+                        if(isIntersect) {
+                            let idx = [indexPath.row, j]
+                            cellAssetIdxArray.append(idx)
+                        }
                     }
                 }
             }
         }
-        print("getIntersectedIdx: \(intersectedIdx)")
-        return intersectedIdx
+ 
+        print("getintersect2 x: \(cellAssetIdxArray); \(aVc.playingCellMediaAssetIdx)")
+        
+        //test > pause media when playingMedia is no longer intersected inside dummy view
+        let t = cellAssetIdxArray.contains(aVc.playingCellMediaAssetIdx)
+        if(!t) {
+            aVc.pauseMediaAsset(cellAssetIdx: aVc.playingCellMediaAssetIdx)
+            aVc.playingCellMediaAssetIdx = [-1, -1] //reset state
+        }
+        
+        //test > autoplay video when intersected
+        if(isMediaAutoplayEnabled) {
+            if(!cellAssetIdxArray.isEmpty) {
+                let iCellAssetIdx = cellAssetIdxArray[0]
+                print("getintersect2 x: \(iCellAssetIdx); \(aVc.playingCellMediaAssetIdx) => \(iCellAssetIdx == aVc.playingCellMediaAssetIdx)")
+                if(iCellAssetIdx != aVc.playingCellMediaAssetIdx) {
+                    
+                    //autostop playing media to prevent multi-video playing together
+                    if(aVc.playingCellMediaAssetIdx != [-1, -1]) {
+                        aVc.pauseMediaAsset(cellAssetIdx: aVc.playingCellMediaAssetIdx)
+                        aVc.playingCellMediaAssetIdx = [-1, -1]
+                    }
+                    
+                    //autoplay media when intersected
+                    if(iCellAssetIdx.count == 2) {
+                        let cIdx = iCellAssetIdx[0]
+                        let aIdx = iCellAssetIdx[1]
+                        if(cIdx > -1 && aIdx > -1) {
+                            aVc.playingCellMediaAssetIdx = [cIdx, aIdx]
+                            aVc.resumeMediaAsset(cellAssetIdx: aVc.playingCellMediaAssetIdx)
+                        }
+                    }
+                }
+            }
+        }
     }
     
     func asyncAutoplay(id: String) {
@@ -1468,7 +1500,7 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
                     print("asyncLayoutVc api success \(id), \(l)")
                     if(!self.feedList.isEmpty) {
                         let aVc = self.feedList[self.currentIndex]
-                        aVc.reactToIntersectedAudio(intersectedIdx: self.getIntersectedIdx(aVc: aVc))
+                        self.getIntersect2(aVc: aVc)
                     }
                 }
 
@@ -1588,8 +1620,8 @@ extension PhotoPanelView: UIScrollViewDelegate {
                 currentIndex = visibleIndex
                 
                 if(currentFeed != previousFeed) {
-                    currentFeed.resumeCurrentAudio()
-                    previousFeed.pauseCurrentAudio()
+                    currentFeed.resumePlayingMedia()
+                    previousFeed.pausePlayingMedia()
                 }
             }
             
@@ -1612,8 +1644,8 @@ extension PhotoPanelView: UIScrollViewDelegate {
                 currentIndex = visibleIndex
                 
                 if(currentFeed != previousFeed) {
-                    currentFeed.resumeCurrentAudio()
-                    previousFeed.pauseCurrentAudio()
+                    currentFeed.resumePlayingMedia()
+                    previousFeed.pausePlayingMedia()
                 }
             }
             
@@ -1807,7 +1839,6 @@ extension ViewController: PhotoPanelDelegate{
         openPostDetailPanel()
     }
     func didClickPhotoPanelVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
-//        openPhotoDetailPanel()
         
         let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
         let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
@@ -1858,43 +1889,38 @@ extension PhotoPanelView: ShareSheetScrollableDelegate{
                 let lastPage = pageList[pageList.count - 1]
                 if let a = lastPage as? CommentScrollableView {
                     print("lastpagelist c")
+                    a.resumePlayingMedia()
                     a.unselectItemData()
                 }
                 else if let b = lastPage as? ShareSheetScrollableView {
                     print("lastpagelist d")
                 }
             } else {
-                resumeCurrentAudio()
+                resumePlayingMedia()
                 
                 if(!self.feedList.isEmpty) {
                     let feed = feedList[currentIndex]
                     feed.unselectItemData()
                 }
             }
-        } else {
-//            resumeCurrentAudio()
         }
     }
 }
 
 extension PhotoPanelView: CommentScrollableDelegate{
     func didCClickUser(){
-//        delegate?.didClickUser()
         delegate?.didClickPhotoPanelVcvClickUser()
     }
     func didCClickPlace(){
-//        delegate?.didClickPlace()
         delegate?.didClickPhotoPanelVcvClickPlace()
     }
     func didCClickSound(){
-//        delegate?.didClickSound()
         delegate?.didClickPhotoPanelVcvClickSound()
     }
     func didCClickClosePanel(){
         bottomBox.isHidden = true
     }
     func didCFinishClosePanel() {
-//        resumeCurrentAudio()
         
         //test > remove comment scrollable view from pagelist
         if(!pageList.isEmpty) {
@@ -1909,17 +1935,14 @@ extension PhotoPanelView: CommentScrollableDelegate{
                     print("lastpagelist b")
                 }
             } else {
-                resumeCurrentAudio()
+                resumePlayingMedia()
             }
-        } else {
-//            resumeCurrentAudio()
         }
     }
     func didCClickComment(){
 
     }
     func didCClickShare(){
-        //test
         openShareSheet()
     }
     func didCClickPost(){
@@ -1942,7 +1965,10 @@ extension PhotoPanelView: ScrollFeedCellDelegate {
         //test
         if(!self.feedList.isEmpty) {
             let aVc = feedList[currentIndex]
-            aVc.reactToIntersectedAudio(intersectedIdx: getIntersectedIdx(aVc: aVc))
+//            aVc.reactToIntersectedAudio(intersectedIdx: getIntersectedIdx(aVc: aVc))
+            
+            //test 2 > new method
+            getIntersect2(aVc: aVc)
         }
     }
     func sfcSrollViewDidEndDecelerating(offsetY: CGFloat) {
@@ -1976,66 +2002,39 @@ extension PhotoPanelView: ScrollFeedCellDelegate {
     }
     func sfcDidClickVcvComment() {
         print("fcDidClickVcvComment ")
+
+        pausePlayingMedia()
         openComment()
-        
-        //test > pause current playing video when go to user
-        pauseCurrentAudio()
     }
     func sfcDidClickVcvLove() {
         print("fcDidClickVcvLike ")
     }
     func sfcDidClickVcvShare() {
         print("fcDidClickVcvShare ")
-        openShareSheet()
         
-        //test > pause current playing video when go to user
-        pauseCurrentAudio()
+        pausePlayingMedia()
+        openShareSheet()
     }
 
     func sfcDidClickVcvClickUser() {
-        //test
+        pausePlayingMedia()
         delegate?.didClickPhotoPanelVcvClickUser()
-        
-        //test > pause current playing video when go to user
-        pauseCurrentAudio()
     }
     func sfcDidClickVcvClickPlace() {
+        pausePlayingMedia()
         delegate?.didClickPhotoPanelVcvClickPlace()
-        
-        //test > pause current playing video when go to user
-        pauseCurrentAudio()
     }
     func sfcDidClickVcvClickSound() {
+        pausePlayingMedia()
         delegate?.didClickPhotoPanelVcvClickSound()
-        
-        //test > pause current playing video when go to user
-        pauseCurrentAudio()
     }
     func sfcDidClickVcvClickPost() {
 
     }
     func sfcDidClickVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         print("photopanelview click post")
-//        openPhotoDetail()
-        
         //test > pause current playing video when go to user
-        pauseCurrentAudio()
-        
-        //test > open photo zoom panel
-//        if(mode == PhotoTypes.P_SHOT) {
-////            openPhotoDetail()
-//            delegate?.didClickPhotoPanelVcvClickPhoto()
-//        } else if(mode == PhotoTypes.P_0){
-//            let b = self.feedList[self.currentIndex]
-//            let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
-//
-//            let adjustY = pointY + originInRootView.y
-//
-//            let offsetX = pointX - self.frame.width/2 + view.frame.width/2
-//            let offsetY = adjustY - self.frame.height/2 + view.frame.height/2
-//            print("open photo0: \(self.frame.width), \(view.frame.width), \(view.frame.height)")
-//            openPhotoZoom(offX: offsetX, offY: offsetY)
-//        }
+        pausePlayingMedia()
         
         //test 2
         if(!self.feedList.isEmpty) {
@@ -2074,7 +2073,6 @@ extension PhotoPanelView: ScrollFeedCellDelegate {
     }
     
     func sfcAutoplayVideo(cell: ScrollFeedCell?, vCCell: UICollectionViewCell?) {
-//    func sfcAutoplayVideo(cell: ScrollFeedCell?, vCCell: HPostListAViewCell?) {
         //test > method 3 => add a timer before check for intersected rect first
         asyncAutoplay(id: "search_term")
     }

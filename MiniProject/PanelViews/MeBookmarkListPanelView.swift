@@ -281,10 +281,10 @@ class MeBookmarkListPanelView: PanelView{
         if(!feedList.isEmpty) {
             let feed = self.feedList[currentIndex]
             if let b = feed as? ScrollFeedHResultVideoListCell {
-                b.dehideCellAt()
+                b.dehideCell()
             }
             else if let c = feed as? ScrollFeedHResultPhotoListCell {
-                c.dehideCellAt()
+                c.dehideCell()
             }
         }
     }

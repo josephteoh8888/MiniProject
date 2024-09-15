@@ -57,11 +57,11 @@ class ScrollFeedCell: UIView {
     var footerState = ""
     var footerAaText = ""
     
-    //test
-//    var scrollFeedHeightCons: NSLayoutConstraint?
-    
     //test > code for feed
     var feedCode = ""
+    
+    //test > selectable items
+    var selectedItemIdx = -1
     
     func initialize() {
         
@@ -85,6 +85,9 @@ class ScrollFeedCell: UIView {
     func setFooterAaText(text: String) {
         footerAaText = text
     }
+    func unselectItemData() {
+        selectedItemIdx = -1
+    }
 }
 
 class ScrollDataFeedCell: ScrollFeedCell {
@@ -98,7 +101,6 @@ class ScrollPhotoDataFeedCell: ScrollFeedCell {
 }
 
 class ScrollFeedHResultListCell: ScrollFeedCell {
-//    var vDataList = [String]()
     var vDataList = [PostData]()
     
     //test > additional delegate

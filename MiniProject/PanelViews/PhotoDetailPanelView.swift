@@ -16,7 +16,8 @@ protocol PhotoDetailPanelDelegate : AnyObject {
     func didClickPhotoDetailPanelVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
 }
 
-class PhotoDetailPanelView: PanelView {
+class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
+//class PhotoDetailPanelView: PanelView {
     var panelLeadingCons: NSLayoutConstraint?
     var currentPanelLeadingCons : CGFloat = 0.0
     var panel = UIView()
@@ -50,7 +51,7 @@ class PhotoDetailPanelView: PanelView {
     //test
     var hideCellIndex = -1
     //test > record which cell video is playing
-    var currentPlayingVidIndex = -1
+//    var currentPlayingVidIndex = -1
     //test > for video autoplay when user opens
     var isFeedDisplayed = false
     
@@ -58,6 +59,9 @@ class PhotoDetailPanelView: PanelView {
     var pageList = [PanelView]()
     
     let bottomBox = UIView()
+    
+    //test > scroll view for carousel
+    var isCarouselScrolled = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -317,13 +321,26 @@ class PhotoDetailPanelView: PanelView {
         
         //test > gesture recognizer for dragging user panel
         let panelPanGesture = UIPanGestureRecognizer(target: self, action: #selector(onPanelPanGesture))
+//        self.addGestureRecognizer(panelPanGesture)
+        
+        //test
+        panelPanGesture.delegate = self //for simultaneous pan recognizer for uicollectionview
         self.addGestureRecognizer(panelPanGesture)
+//        photoCV.addGestureRecognizer(panelPanGesture)
+    }
+    
+    //test
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        if (gestureRecognizer is UIPanGestureRecognizer) {
+            return true
+//            return false
+        } else {
+            return false
+        }
     }
     
     @objc func onBackPanelClicked(gesture: UITapGestureRecognizer) {
         closePanel(isAnimated: true)
-        
-//        bSpinner.startAnimating()
     }
     
     @objc func onStickyHeaderClicked(gesture: UITapGestureRecognizer) {
@@ -354,11 +371,20 @@ class PhotoDetailPanelView: PanelView {
                 }
             }
             if(direction == "x") {
-                var newX = self.currentPanelLeadingCons + x
-                if(newX < 0) {
-                    newX = 0
+//                var newX = self.currentPanelLeadingCons + x
+//                if(newX < 0) {
+//                    newX = 0
+//                }
+//                self.panelLeadingCons?.constant = newX
+                
+                //test > avoid accidental close panel
+                if(!isCarouselScrolled) {
+                    var newX = self.currentPanelLeadingCons + x
+                    if(newX < 0) {
+                        newX = 0
+                    }
+                    self.panelLeadingCons?.constant = newX
                 }
-                self.panelLeadingCons?.constant = newX
             }
         } else if(gesture.state == .ended){
             
@@ -398,6 +424,10 @@ class PhotoDetailPanelView: PanelView {
                 self.panelLeadingCons?.constant = self.frame.width
                 self.layoutIfNeeded()
             }, completion: { _ in
+                //test > stop video before closing panel
+                self.destroyCell()
+//                self.pausePlayingMedia()
+                
                 self.removeFromSuperview()
                 
                 //move back to origin
@@ -405,7 +435,12 @@ class PhotoDetailPanelView: PanelView {
                 self.delegate?.didClickPhotoDetailClosePanel()
             })
         } else {
+            //test > stop video before closing panel
+            self.destroyCell()
+//            self.pausePlayingMedia()
+            
             self.removeFromSuperview()
+            
             self.delegate?.didClickPhotoDetailClosePanel()
         }
     }
@@ -460,18 +495,7 @@ class PhotoDetailPanelView: PanelView {
             }
         }
     }
-//    func removeDataSet(idxToRemove: [Int]) {
-//        if(!vDataList.isEmpty) {
-//            var indexPaths = [IndexPath]()
-//            for i in idxToRemove {
-//                vDataList.remove(at: i)
-//
-//                let idx = IndexPath(item: i, section: 0)
-//                indexPaths.append(idx)
-//            }
-//            self.vCV?.deleteItems(at: indexPaths)
-//        }
-//    }
+
     func unselectItemData() {
         selectedItemIdx = -1
     }
@@ -750,190 +774,271 @@ class PhotoDetailPanelView: PanelView {
         pageList.append(commentPanel)
     }
     
-    //test > stop current video for closing
-    func pauseCurrentAudio() {
-        guard let a = self.photoCV else {
-            return
-        }
-        if(currentPlayingVidIndex > -1) {
-            let idxPath = IndexPath(item: currentPlayingVidIndex, section: 0)
-            let currentVc = a.cellForItem(at: idxPath)
-//            guard let b = currentVc as? HPhotoListAViewCell else {
-//                return
-//            }
-//            b.pauseAudio()
-            if let b = currentVc as? HPhotoListBViewCell {
-                b.pauseAudio()
-            } else if let b1 = currentVc as? HCommentListViewCell {
-//                b.resumeVideo()
-            } else {
-
-            }
-            
-            //test > new method to play sound, not automatic scroll and play
-            currentPlayingVidIndex = -1
-        }
-    }
-    //test > resume current video
-    func resumeCurrentAudio() {
-        guard let a = self.photoCV else {
-            return
-        }
-        if(currentPlayingVidIndex > -1) {
-            let idxPath = IndexPath(item: currentPlayingVidIndex, section: 0)
-            let currentVc = a.cellForItem(at: idxPath)
-
-            if let b = currentVc as? HPhotoListBViewCell {
-                b.resumeAudio()
-            } else if let b1 = currentVc as? HCommentListViewCell {
-//                b.resumeVideo()
-            } else {
-
-            }
-        }
-    }
-    //test > dehide cell
-    func dehideCell() {
-        guard let a = self.photoCV else {
-            return
-        }
-
-        let idxPath = IndexPath(item: hideCellIndex, section: 0)
-        let currentVc = a.cellForItem(at: idxPath)
-
-        if let b = currentVc as? HPhotoListBViewCell {
-            b.dehideCell()
-            hideCellIndex = -1
-        } else if let b1 = currentVc as? HCommentListViewCell {
-            b1.dehideCell()
-            hideCellIndex = -1
-        } else {
-
-        }
-    }
-    
     //test
     override func resumeActiveState() {
         print("photodetailpanelview resume active")
         
         //test > only resume video if no comment scrollable view/any other view
         if(pageList.isEmpty) {
-            resumeCurrentAudio()
-            
-            //test > dehide cell
+            resumePlayingMedia()
             dehideCell()
         }
         else {
             //dehide cell for commment view
             if let c = pageList[pageList.count - 1] as? CommentScrollableView {
-                c.resumeCurrentVideo()
+                c.resumePlayingMedia()
                 c.dehideCell()
             }
         }
     }
     
-    //test > check for intersected dummy view with video while user scroll
-    func getIntersectedIdx() -> Int {
-        var intersectedIdx = -1
-        if let v = photoCV {
-            print("sfvideo ppv start \(v.visibleCells)")
-            for cell in v.visibleCells {
-                guard let indexPath = v.indexPath(for: cell) else {
-                    continue
+    //test > dehide cell
+    func dehideCell() {
+        guard let a = self.photoCV else {
+            return
+        }
+
+        if(hideCellIndex > -1){
+            let idxPath = IndexPath(item: hideCellIndex, section: 0)
+            let currentVc = a.cellForItem(at: idxPath)
+
+            if let b = currentVc as? HPhotoListBViewCell {
+                b.dehideCell()
+                hideCellIndex = -1
+            } else if let b1 = currentVc as? HCommentListViewCell {
+                b1.dehideCell()
+                hideCellIndex = -1
+            }
+        }
+    }
+    
+    //test > stop current video for closing
+    func pausePlayingMedia() {
+        //test 2 > new method for cell-asset idx
+        pauseMediaAsset(cellAssetIdx: playingCellMediaAssetIdx)
+    }
+    //test > resume current video
+    func resumePlayingMedia() {
+        //test 2 > new method for cell-asset idx
+        resumeMediaAsset(cellAssetIdx: playingCellMediaAssetIdx)
+    }
+    
+    //test > destroy cell
+    func destroyCell() {
+        guard let a = self.photoCV else {
+            return
+        }
+        for cell in a.visibleCells {
+            if let c = cell as? HCommentListViewCell {
+                c.destroyCell()
+            }
+            else if let b = cell as? HPhotoListBViewCell {
+                b.destroyCell()
+            }
+        }
+    }
+    
+    //test 2 > new method for pausing video with cell-asset idx
+    func pauseMediaAsset(cellAssetIdx: [Int]) {
+        guard let a = self.photoCV else {
+            return
+        }
+        if(cellAssetIdx.count == 2) {
+            let cIdx = cellAssetIdx[0] //cell index
+            let aIdx = cellAssetIdx[1] //asset index
+            if(cIdx > -1 && aIdx > -1) {
+                let cIdxPath = IndexPath(item: cIdx, section: 0)
+                let cell = a.cellForItem(at: cIdxPath)
+                if let c = cell as? HCommentListViewCell {
+                    if(!c.aTestArray.isEmpty && aIdx < c.aTestArray.count) {
+                        c.pauseMedia(aIdx: aIdx)
+//                        playingCellMediaAssetIdx = [-1, -1] //disabled for pauseCurrentVideo() and resume
+                    }
+                } else if let b = cell as? HPhotoListBViewCell {
+                    if(!b.aTestArray.isEmpty && aIdx < b.aTestArray.count) {
+                        b.pauseMedia(aIdx: aIdx)
+//                        playingCellMediaAssetIdx = [-1, -1] //disabled for pauseCurrentVideo() and resume
+                    }
                 }
-
-                if let b = cell as? HPhotoListBViewCell {
-                    let cellRect = v.convert(cell.frame, to: self)
-                    let aTestRect = b.aTest.frame
-
-                    if(!b.musicConArray.isEmpty) {
-                        let vidC = b.musicConArray[0]
-                        let vidCFrame = vidC.frame
-                        let convertedVidCOriginY = cellRect.origin.y + aTestRect.origin.y + vidCFrame.origin.y
-                        let convertedVidCRect = CGRect(x: 0, y: convertedVidCOriginY, width: vidCFrame.size.width, height: vidCFrame.size.height)
-                        let dummyView = CGRect(x: 0, y: 100, width: self.frame.width, height: 400) //y:200, h:300
-    //                    let dV = UIView(frame: dummyView)
-    //                    dV.backgroundColor = .blue
-    //                    self.addSubview(dV)
-                        
-                        let isIntersect = dummyView.intersects(convertedVidCRect)
-                        let intersectArea = dummyView.intersection(convertedVidCRect)
-
-                        print("sfvideo x ppv 3.0 collectionView index: \(indexPath), \(isIntersect), \(intersectArea)")
-                        
-                        //test > play video if intersect
-                        if(isIntersect) {
-                            intersectedIdx = indexPath.item
+            }
+        }
+    }
+    
+    func resumeMediaAsset(cellAssetIdx: [Int]) {
+        guard let a = self.photoCV else {
+            return
+        }
+        if(cellAssetIdx.count == 2) {
+            let cIdx = cellAssetIdx[0]
+            let aIdx = cellAssetIdx[1]
+            if(cIdx > -1 && aIdx > -1) {
+                let cIdxPath = IndexPath(item: cIdx, section: 0)
+                let cell = a.cellForItem(at: cIdxPath)
+                if let c = cell as? HCommentListViewCell {
+                    if(!c.aTestArray.isEmpty && aIdx < c.aTestArray.count) {
+                        c.resumeMedia(aIdx: aIdx)
+                    }
+                } else if let b = cell as? HPhotoListBViewCell {
+                    if(!b.aTestArray.isEmpty && aIdx < b.aTestArray.count) {
+                        b.resumeMedia(aIdx: aIdx)
+                    }
+                }
+            }
+        }
+    }
+    
+    //test 2 > new intersect func() for multi-video/audio assets play on/off
+    //try autoplay OFF first, then only autoplay
+    var playingCellMediaAssetIdx = [-1, -1] //none playing initially
+//    var isMediaAutoplayEnabled = true
+    var isMediaAutoplayEnabled = false
+    func getIntersect2() {
+        guard let v = self.photoCV else {
+            return
+        }
+        
+        //fixed dummy area
+        let dummyTopMargin = 100.0
+//        let panelRectY = panelView.frame.origin.y
+        let vCvRectY = v.frame.origin.y
+        let dummyOriginY = vCvRectY + dummyTopMargin
+        let dummyView = CGRect(x: 0, y: dummyOriginY, width: self.frame.width, height: 500) //400, not tall enough
+        //*just in case > add view for illustration
+//        let dV = UIView(frame: dummyView)
+//        dV.backgroundColor = .blue
+//        self.addSubview(dV)
+        //*
+        
+        //identify intersected assets
+        var cellAssetIdxArray = [[Int]]() //[cellIdx, assetIdx] => use array for simplicity
+        for cell in v.visibleCells {
+            guard let indexPath = v.indexPath(for: cell) else {
+                return
+            }
+            
+            let cellRect = v.convert(cell.frame, to: self)
+            
+            if let b = cell as? HCommentListViewCell {
+                let aTestRect = b.aTest.frame
+                
+                let p = b.mediaArray
+                if(!p.isEmpty) {
+                    for m in p {
+                        //test > quote
+                        if let q = m as? PostQuoteContentCell {
+                            //for quote content cells only => double loop for inner media
+                            let pp = q.mediaArray
+                            if(!pp.isEmpty) {
+                                for mm in pp {
+                                    let mmFrame = mm.frame
+                                    let aaTestRect = q.aTest.frame
+                                    
+                                    let mFrame = m.frame
+                                    if let j = b.aTestArray.firstIndex(of: m) {
+                                        let cVidCOriginY = mFrame.origin.y + aTestRect.origin.y + cellRect.origin.y + mmFrame.origin.y + aaTestRect.origin.y
+                                        let cVidCRect = CGRect(x: 0, y: cVidCOriginY, width: mmFrame.size.width, height: mmFrame.size.height)
+                                        
+                                        let isIntersect = dummyView.intersects(cVidCRect)
+                                        if(isIntersect) {
+                                            let idx = [indexPath.row, j]
+                                            cellAssetIdxArray.append(idx)
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            let mFrame = m.frame
+                            if let j = b.aTestArray.firstIndex(of: m) {
+                                let cVidCOriginY = mFrame.origin.y + aTestRect.origin.y + cellRect.origin.y
+                                let cVidCRect = CGRect(x: 0, y: cVidCOriginY, width: mFrame.size.width, height: mFrame.size.height)
+                                
+                                let isIntersect = dummyView.intersects(cVidCRect)
+                                if(isIntersect) {
+                                    let idx = [indexPath.row, j]
+                                    cellAssetIdxArray.append(idx)
+                                }
+                            }
                         }
                     }
                 }
-                else if let c = cell as? HCommentListViewCell {
-                    
-                } else {
-                    return -1
+            } else if let c = cell as? HPhotoListBViewCell {
+                let aTestRect = c.aTest.frame
+                
+                let p = c.mediaArray
+                if(!p.isEmpty) {
+                    for m in p {
+                        let mFrame = m.frame
+                        if let j = c.aTestArray.firstIndex(of: m) {
+                            let cVidCOriginY = mFrame.origin.y + aTestRect.origin.y + cellRect.origin.y
+                            let cVidCRect = CGRect(x: 0, y: cVidCOriginY, width: mFrame.size.width, height: mFrame.size.height)
+                            
+                            let isIntersect = dummyView.intersects(cVidCRect)
+                            if(isIntersect) {
+                                let idx = [indexPath.row, j]
+                                cellAssetIdxArray.append(idx)
+                            }
+                        }
+                    }
                 }
             }
         }
-
-        return intersectedIdx
+ 
+        print("getintersect2 x: \(cellAssetIdxArray); \(playingCellMediaAssetIdx)")
+        
+        //test > pause media when playingMedia is no longer intersected inside dummy view
+        let t = cellAssetIdxArray.contains(playingCellMediaAssetIdx)
+        if(!t) {
+            pauseMediaAsset(cellAssetIdx: playingCellMediaAssetIdx)
+            playingCellMediaAssetIdx = [-1, -1] //reset state
+        }
+        
+        //test > autoplay video when intersected
+        if(isMediaAutoplayEnabled) {
+            if(!cellAssetIdxArray.isEmpty) {
+                let iCellAssetIdx = cellAssetIdxArray[0]
+                print("getintersect2 x: \(iCellAssetIdx); \(playingCellMediaAssetIdx) => \(iCellAssetIdx == playingCellMediaAssetIdx)")
+                if(iCellAssetIdx != playingCellMediaAssetIdx) {
+                    
+                    //autostop playing media to prevent multi-video playing together
+                    if(playingCellMediaAssetIdx != [-1, -1]) {
+                        pauseMediaAsset(cellAssetIdx: playingCellMediaAssetIdx)
+                        playingCellMediaAssetIdx = [-1, -1]
+                    }
+                    
+                    //autoplay media when intersected
+                    if(iCellAssetIdx.count == 2) {
+                        let cIdx = iCellAssetIdx[0]
+                        let aIdx = iCellAssetIdx[1]
+                        if(cIdx > -1 && aIdx > -1) {
+                            playingCellMediaAssetIdx = [cIdx, aIdx]
+                            resumeMediaAsset(cellAssetIdx: playingCellMediaAssetIdx)
+                        }
+                    }
+                }
+            }
+        }
     }
     
-    //test > react to intersected video
-    func reactToIntersectedAudio(intersectedIdx: Int) {
-        guard let a = photoCV else {
-            return
-        }
-        if(intersectedIdx > -1) {
-            if(currentPlayingVidIndex > -1) {
-                if(currentPlayingVidIndex != intersectedIdx) {
-                    let prevIdxPath = IndexPath(item: currentPlayingVidIndex, section: 0)
-                    let idxPath = IndexPath(item: intersectedIdx, section: 0)
-                    let prevVc = a.cellForItem(at: prevIdxPath)
-                    let currentVc = a.cellForItem(at: idxPath)
-                    
-                    //test > new method to play sound, not automatic scroll and play
-//                    currentPlayingVidIndex = -1
-                    
-                    print("reactintersect photo A")
-                    
-                    //test 2 > include HCommentListViewCell
-                    if let b = prevVc as? HPhotoListBViewCell {
-                        b.pauseAudio()
-                        currentPlayingVidIndex = -1
-                    } else if let b1 = prevVc as? HCommentListViewCell {
-                        b1.pauseVideo()
-                        currentPlayingVidIndex = -1
-                    }
-                    
-                    if let c = currentVc as? HPhotoListBViewCell {
+    //test > add a timer before checking intersected video index
+    func asyncAutoplay(id: String) {
+        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+            switch result {
+                case .success(let l):
 
-                    } else if let c1 = currentVc as? HCommentListViewCell {
-//                        c1.resumeVideo()
-//                        currentPlayingVidIndex = intersectedIdx
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    print("asyncLayoutVc post detail api success \(id), \(l)")
+
+                    guard let self = self else {
+                        return
                     }
+
+                    self.getIntersect2()
                 }
-            } else {
-                let idxPath = IndexPath(item: intersectedIdx, section: 0)
-                let currentVc = a.cellForItem(at: idxPath)
-                
-                print("reactintersect photo B")
-            }
-        } else {
-            //if intersectedIdx == -1, all video should pause/stop
-            if(currentPlayingVidIndex > -1) {
-                let idxPath = IndexPath(item: currentPlayingVidIndex, section: 0)
-                let currentVc = a.cellForItem(at: idxPath)
-                
-                //test 2 > include HCommentListViewCell
-                if let b = currentVc as? HPhotoListBViewCell {
-                    b.pauseAudio()
-                    currentPlayingVidIndex = -1
-                } else if let b1 = currentVc as? HCommentListViewCell {
-                    b1.pauseVideo()
-                    currentPlayingVidIndex = -1
-                }
-                
-                print("reactintersect photo B")
+
+                case .failure(_):
+                    print("api fail")
+                    break
             }
         }
     }
@@ -965,11 +1070,12 @@ extension PhotoDetailPanelView: UICollectionViewDelegateFlowLayout {
             
             let text = vcDataList[indexPath.row].dataTextString
             let dataL = vcDataList[indexPath.row].dataArray
-            
-//            let xText = "往年的这个时候，iPhone 虽然也是位列销量榜榜首，但那都是上一代的旧机型呀."
+            let dataCL = vcDataList[indexPath.row].contentDataArray
             let statText = "1.2m views . 3hr"
             var contentHeight = 0.0
-            for l in dataL {
+            for cl in dataCL {
+                let l = cl.dataType
+//            for l in dataL {
                 let availableWidth = self.frame.width
                 let bubbleHeight = 3.0
                 let bubbleTopMargin = 10.0
@@ -1039,6 +1145,7 @@ extension PhotoDetailPanelView: UICollectionViewDelegateFlowLayout {
             
             let text = vcDataList[indexPath.row].dataTextString
             let dataL = vcDataList[indexPath.row].dataArray
+            let dataCL = vcDataList[indexPath.row].contentDataArray
             var contentHeight = 0.0
             
             let photoSize = 28.0
@@ -1046,7 +1153,9 @@ extension PhotoDetailPanelView: UICollectionViewDelegateFlowLayout {
             let usernameLhsMargin = 5.0
             let indentSize = photoSize + photoLhsMargin + usernameLhsMargin
             
-            for l in dataL {
+            for cl in dataCL {
+                let l = cl.dataType
+//            for l in dataL {
                 if(l == "t") {
                     let tTopMargin = 20.0
                     let tContentHeight = estimateHeight(text: text, textWidth: collectionView.frame.width - indentSize - 30.0, fontSize: 13)
@@ -1180,58 +1289,166 @@ extension PhotoDetailPanelView: UICollectionViewDelegateFlowLayout {
                     contentHeight += vHeight
                 }
                 else if(l == "q") {
+                    //**test > fake data for quote post
+                    var qDataArray = [String]()
+                    qDataArray.append("t")
+    //                qDataArray.append("p")
+    //                qDataArray.append("p_s")
+    //                qDataArray.append("v")
+                    qDataArray.append("v_l")
+                    //**
+
+                    let qLhsMargin = indentSize
+                    let qRhsMargin = 20.0
+                    let quoteWidth = self.frame.width - qLhsMargin - qRhsMargin
+                    
+                    for i in qDataArray {
+                        if(i == "t") {
+                            let tTopMargin = 20.0
+                            let tContentHeight = estimateHeight(text: text, textWidth: quoteWidth - 20.0 - 20.0, fontSize: 14)
+                            let tHeight = tTopMargin + tContentHeight
+                            contentHeight += tHeight
+                        }
+                        else if(i == "p") {
+                            let lhsMargin = 20.0
+                            let rhsMargin = 20.0
+                            let availableWidth = quoteWidth - lhsMargin - rhsMargin
+                            
+                            let assetSize = CGSize(width: 4, height: 3)//landscape
+    //                        let assetSize = CGSize(width: 3, height: 4)
+                            var cSize = CGSize(width: 0, height: 0)
+                            if(assetSize.width > assetSize.height) {
+                                //1 > landscape photo 4:3 w:h
+                                let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                                let cHeight = availableWidth * aRatio.height / aRatio.width
+                                cSize = CGSize(width: availableWidth, height: cHeight)
+                            }
+                            else if (assetSize.width < assetSize.height){
+                                //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                                let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                                let cWidth = availableWidth * 2 / 3
+            //                    let cWidth = availableWidth //test full width for portrait
+                                let cHeight = cWidth * aRatio.height / aRatio.width
+                                cSize = CGSize(width: cWidth, height: cHeight)
+                            } else {
+                                //square
+                                let cWidth = availableWidth
+                                cSize = CGSize(width: cWidth, height: cWidth)
+                            }
+
+                            let pTopMargin = 20.0
+            //                let pContentHeight = 280.0
+                            let pContentHeight = cSize.height
+                            let pHeight = pTopMargin + pContentHeight
+                            contentHeight += pHeight
+                        }
+                        else if(i == "p_s") {
+                            let lhsMargin = 20.0
+                            let rhsMargin = 20.0
+                            let descHeight = 40.0
+                            let availableWidth = quoteWidth - lhsMargin - rhsMargin
+                            
+                            let assetSize = CGSize(width: 4, height: 3)
+                            var cSize = CGSize(width: 0, height: 0)
+                            if(assetSize.width > assetSize.height) {
+                                //1 > landscape photo 4:3 w:h
+                                let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                                let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
+                                cSize = CGSize(width: availableWidth, height: cHeight)
+                            }
+                            else if (assetSize.width < assetSize.height){
+                                //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                                let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                                let cWidth = availableWidth * 2 / 3
+                                let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
+                                cSize = CGSize(width: cWidth, height: cHeight)
+                            } else {
+                                //square
+                                let cWidth = availableWidth
+                                cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                            }
+                            
+                            let pTopMargin = 20.0
+            //                let pContentHeight = 280.0
+                            let pContentHeight = cSize.height
+                            let pHeight = pTopMargin + pContentHeight
+                            contentHeight += pHeight
+                        }
+                        else if(i == "v") {
+                            let lhsMargin = 20.0
+                            let rhsMargin = 20.0
+                            let availableWidth = quoteWidth - lhsMargin - rhsMargin
+                            
+                            let assetSize = CGSize(width: 3, height: 4)
+                            var cSize = CGSize(width: 0, height: 0)
+                            if(assetSize.width > assetSize.height) {
+                                //1 > landscape photo 4:3 w:h
+                                let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                                let cHeight = availableWidth * aRatio.height / aRatio.width
+                                cSize = CGSize(width: availableWidth, height: cHeight)
+                            }
+                            else if (assetSize.width < assetSize.height){
+                                //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                                let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                                let cWidth = availableWidth * 2 / 3
+                                let cHeight = cWidth * aRatio.height / aRatio.width
+                                cSize = CGSize(width: cWidth, height: cHeight)
+                            } else {
+                                //square
+                                let cWidth = availableWidth
+                                cSize = CGSize(width: cWidth, height: cWidth)
+                            }
+                            
+                            let vTopMargin = 20.0
+            //                let vContentHeight = 350.0 //250
+                            let vContentHeight = cSize.height
+                            let vHeight = vTopMargin + vContentHeight
+                            contentHeight += vHeight
+                        }
+                        else if(i == "v_l") {
+                            let lhsMargin = 20.0
+                            let rhsMargin = 20.0
+                            let descHeight = 40.0
+                            let availableWidth = quoteWidth - lhsMargin - rhsMargin
+                            
+                            let assetSize = CGSize(width: 3, height: 4)
+                            var cSize = CGSize(width: 0, height: 0)
+                            if(assetSize.width > assetSize.height) {
+                                //1 > landscape photo 4:3 w:h
+                                let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                                let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
+                                cSize = CGSize(width: availableWidth, height: cHeight)
+                            }
+                            else if (assetSize.width < assetSize.height){
+                                //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                                let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                                let cWidth = availableWidth * 2 / 3
+                                let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
+                                cSize = CGSize(width: cWidth, height: cHeight)
+                            } else {
+                                //square
+                                let cWidth = availableWidth
+                                cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                            }
+                            
+                            let vTopMargin = 20.0
+            //                let vContentHeight = 350.0 //250
+                            let vContentHeight = cSize.height
+                            let vHeight = vTopMargin + vContentHeight
+            //                let vHeight = vTopMargin + vContentHeight + 40.0 //40.0 for bottom container for description
+                            contentHeight += vHeight
+                        }
+                    }
                     let qTopMargin = 20.0
                     let qUserPhotoHeight = 28.0
-                    let qUserPhotoTopMargin = 10.0 //10
-                    let qContentTopMargin = 10.0
-                    let qText = "Nice food, nice environment! Worth a visit. \nSo good!\n\n\n\n...\n...\n..."
-                    let qContentHeight = estimateHeight(text: qText, textWidth: collectionView.frame.width - 53.0 - 20.0, fontSize: 13)
+                    let qUserPhotoTopMargin = 20.0 //10
+    //                let qContentTopMargin = 10.0
+    //                let qText = "Nice food, nice environment! Worth a visit. \nSo good!\n\n\n\n...\n...\n..."
+    //                let qContentHeight = estimateHeight(text: qText, textWidth: collectionView.frame.width - 20.0 - 20.0, fontSize: 14)
                     let qFrameBottomMargin = 20.0 //10
-                    let qHeight = qTopMargin + qUserPhotoHeight + qUserPhotoTopMargin + qContentTopMargin + qContentHeight + qFrameBottomMargin
+                    let qHeight = qTopMargin + qUserPhotoHeight + qUserPhotoTopMargin + qFrameBottomMargin
                     contentHeight += qHeight
                 }
-                else if(l == "c") {
-
-                }
-            }
-            
-            let dataCh = vcDataList[indexPath.row].xChainDataArray
-            for l in dataCh {
-                let xText = l.dataTextString
-                let xDataL = l.dataArray
-                var yContentHeight = 0.0
-                for y in xDataL {
-                    if(y == "t") {
-                        let xContentTopMargin = 20.0
-                        let xContentHeight = estimateHeight(text: xText, textWidth: collectionView.frame.width - 53.0 - 20.0, fontSize: 13)
-                        let xHeight = xContentTopMargin + xContentHeight
-                        yContentHeight += xHeight
-                    }
-                    else if(y == "p") {
-                        let pTopMargin = 20.0
-                        let pContentHeight = 280.0
-                        let pHeight = pTopMargin + pContentHeight
-                        yContentHeight += pHeight
-                    }
-                    else if(y == "q") {
-                        let qTopMargin = 20.0
-                        let qUserPhotoHeight = 28.0
-                        let qUserPhotoTopMargin = 10.0 //10
-                        let qContentTopMargin = 10.0
-                        let qText = "Nice food, nice environment! Worth a visit. \nSo good!\n\n\n\n...\n...\n..."
-                        let qContentHeight = estimateHeight(text: qText, textWidth: collectionView.frame.width - 53.0 - 20.0, fontSize: 13)
-                        let qFrameBottomMargin = 20.0 //10
-                        let qHeight = qTopMargin + qUserPhotoHeight + qUserPhotoTopMargin + qContentTopMargin + qContentHeight + qFrameBottomMargin
-                        yContentHeight += qHeight
-                    }
-                }
-                let cUserPhotoHeight = 28.0
-                let cUserPhotoTopMargin = 10.0 //10
-                let cActionBtnTopMargin = 20.0
-                let cActionBtnHeight = 26.0
-                let cFrameBottomMargin = 10.0 //10
-                let cHeight = cUserPhotoHeight + cUserPhotoTopMargin + yContentHeight + cActionBtnTopMargin + cActionBtnHeight + cFrameBottomMargin
-                contentHeight += cHeight
             }
             
             let userPhotoHeight = 28.0
@@ -1275,11 +1492,6 @@ extension PhotoDetailPanelView: UICollectionViewDelegateFlowLayout {
             aaText.topAnchor.constraint(equalTo: footerView.topAnchor, constant: 20).isActive = true
             aaText.centerXAnchor.constraint(equalTo: footerView.centerXAnchor, constant: 0).isActive = true
             aaText.layer.opacity = 0.5
-//            if(dataPaginateStatus == "end") {
-//                aaText.text = "End"
-//            } else {
-//                aaText.text = ""
-//            }
             
             bSpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
             footer.addSubview(bSpinner)
@@ -1359,7 +1571,7 @@ extension PhotoDetailPanelView: UICollectionViewDelegateFlowLayout {
         if(!isFeedDisplayed) {
             if(indexPath.row == 0) {
                 if let c = cell as? HPhotoListBViewCell {
-//                    asyncAutoplay(id: "search_term")
+                    asyncAutoplay(id: "search_term")
                 }
 
                 isFeedDisplayed = true
@@ -1380,12 +1592,6 @@ extension PhotoDetailPanelView: UICollectionViewDelegate {
 
         let scrollOffsetY = scrollView.contentOffset.y
         let y = scrollViewInitialY - scrollOffsetY
-        
-//        if(y < 0) {
-//            //pullup y
-//        } else {
-//
-//        }
 
         //test > change title to comments when scrolled to comment section
         if(scrollOffsetY < postHeight) {
@@ -1396,7 +1602,10 @@ extension PhotoDetailPanelView: UICollectionViewDelegate {
         print("p scrollview scroll: \(isStickyCommentTitleDisplayed), \(scrollView.contentOffset.y)")
         
         //test > react to intersected index
-        reactToIntersectedAudio(intersectedIdx: getIntersectedIdx())
+//        reactToIntersectedAudio(intersectedIdx: getIntersectedIdx())
+        
+        //test 2 > try new intersect
+        getIntersect2()
     }
 
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
@@ -1412,9 +1621,7 @@ extension PhotoDetailPanelView: UICollectionViewDelegate {
     }
 
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-//        print("p scrollview end drag: \(scrollView.contentOffset.y)")
-        
-        //test
+
         let scrollOffsetY = scrollView.contentOffset.y
         
         //test > refresh dataset
@@ -1444,7 +1651,6 @@ extension PhotoDetailPanelView: UICollectionViewDataSource {
         
         //test
         if(indexPath.item == 0) {
-//            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HPhotoListViewCell.identifier, for: indexPath) as! HPhotoListViewCell
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HPhotoListBViewCell.identifier, for: indexPath) as! HPhotoListBViewCell
             cell.aDelegate = self
             
@@ -1473,11 +1679,11 @@ extension PhotoDetailPanelView: UICollectionViewDataSource {
 extension PhotoDetailPanelView: HListCellDelegate {
     func hListDidClickVcvComment(vc: UICollectionViewCell) {
         print("PostDetailPanelView comment clicked")
-//        photoCV?.setContentOffset(CGPoint(x: 0.0, y: postHeight), animated: true)
-        
+   
         if let b = vc as? HPhotoListBViewCell {
             photoCV?.setContentOffset(CGPoint(x: 0.0, y: postHeight), animated: true)
         } else if let b1 = vc as? HCommentListViewCell {
+            pausePlayingMedia()
             openComment()
         }
     }
@@ -1486,7 +1692,8 @@ extension PhotoDetailPanelView: HListCellDelegate {
     }
     func hListDidClickVcvShare(vc: UICollectionViewCell) {
         print("PostDetailPanelView share clicked")
-//        openShareSheet()
+  
+        pausePlayingMedia()
         
         if let a = photoCV {
             for cell in a.visibleCells {
@@ -1506,6 +1713,8 @@ extension PhotoDetailPanelView: HListCellDelegate {
     }
     func hListDidClickVcvClickUser(){
         print("PostDetailPanelView user clicked")
+        
+        pausePlayingMedia()
         delegate?.didClickPhotoDetailPanelVcvClickUser()
     }
     func hListDidClickVcvClickPlace(){
@@ -1516,12 +1725,13 @@ extension PhotoDetailPanelView: HListCellDelegate {
     }
     func hListDidClickVcvClickPost() {
         print("PostDetailPanelView post clicked")
-//        openPostDetail()
+
+        pausePlayingMedia()
         delegate?.didClickPhotoDetailPanelVcvClickPost()
     }
     func hListDidClickVcvClickPhoto(vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         
-        pauseCurrentAudio()
+        pausePlayingMedia()
         
         if let a = photoCV {
 
@@ -1555,10 +1765,10 @@ extension PhotoDetailPanelView: HListCellDelegate {
     }
     
     func hListIsScrollCarousel(isScroll: Bool) {
-        
+        isCarouselScrolled = isScroll
     }
     
-    func hListCarouselIdx(vc: UICollectionViewCell, idx: Int) {
+    func hListCarouselIdx(vc: UICollectionViewCell, aIdx: Int, idx: Int) {
         if let a = photoCV {
             for cell in a.visibleCells {
                 guard let indexPath = a.indexPath(for: cell) else {
@@ -1567,18 +1777,22 @@ extension PhotoDetailPanelView: HListCellDelegate {
                 print("sfphoto idx: \(cell == vc), \(indexPath)")
                 
                 if(cell == vc) {
-                    vcDataList[indexPath.row].p_s = idx
+//                    vcDataList[indexPath.row].p_s = idx
+                    
+                    //test > new method
+                    let data = vcDataList[indexPath.row]
+                    let dataCL = data.contentDataArray
+                    if(aIdx > -1 && aIdx < dataCL.count) {
+                        dataCL[aIdx].p_s = idx
+                    }
+                    
                     break
                 }
             }
         }
     }
     
-    func hListVideoStopTime(vc: UICollectionViewCell, ts: Double){
-        
-    }
-    
-    func hListDidClickVcvPlayAudio(vc: UICollectionViewCell){
+    func hListVideoStopTime(vc: UICollectionViewCell, aIdx: Int, ts: Double){
         if let a = photoCV {
             for cell in a.visibleCells {
                 guard let indexPath = a.indexPath(for: cell) else {
@@ -1586,64 +1800,52 @@ extension PhotoDetailPanelView: HListCellDelegate {
                 }
                 
                 if(cell == vc) {
-                    print("sfphoto play audio: \(cell == vc), \(indexPath)")
-                    let intersectedIdx = indexPath.row
-                    if(currentPlayingVidIndex > -1) {
-                        if(currentPlayingVidIndex != intersectedIdx) {
-                            let prevIdxPath = IndexPath(item: currentPlayingVidIndex, section: 0)
-                            let idxPath = IndexPath(item: intersectedIdx, section: 0)
-                            let prevVc = a.cellForItem(at: prevIdxPath)
-                            let currentVc = a.cellForItem(at: idxPath)
-//                            guard let b = prevVc as? HPhotoListAViewCell else {
-//                                return
-//                            }
-//                            guard let c = currentVc as? HPhotoListAViewCell else {
-//                                return
-//                            }
-                            
-                            if let b = prevVc as? HPhotoListBViewCell {
-                                b.pauseAudio()
-                            } else if let b1 = prevVc as? HCommentListViewCell {
+//                    vDataList[indexPath.row].t_s = ts
+                    
+                    //test > new method
+                    let data = vcDataList[indexPath.row]
+                    let dataCL = data.contentDataArray
+                    if(aIdx > -1 && aIdx < dataCL.count) {
+                        dataCL[aIdx].t_s = ts
+                    }
 
-                            }
+                    break
+                }
+            }
+        }
+    }
+    
+    func hListDidClickVcvPlayAudio(vc: UICollectionViewCell){
+        
+    }
+    func hListDidClickVcvClickPlay(vc: UICollectionViewCell, isPlay: Bool){
+        //test > try new method for manual play/stop video
+        if let a = photoCV {
+            for cell in a.visibleCells {
+                guard let indexPath = a.indexPath(for: cell) else {
+                    continue
+                }
+                
+                if(cell == vc) {
+                    if let s = cell as? HCommentListViewCell {
+                        let mIdx = s.playingMediaAssetIdx
+                        if(isPlay) {
+                            pauseMediaAsset(cellAssetIdx: playingCellMediaAssetIdx) //test
                             
-                            if let c = currentVc as? HPhotoListBViewCell {
-                                c.resumeAudio()
-                            } else if let c1 = currentVc as? HCommentListViewCell {
-
-                            }
-                            currentPlayingVidIndex = intersectedIdx
-                            
-                            print("reactintersect photo play AA")
+                            playingCellMediaAssetIdx = [indexPath.row, mIdx]
                         } else {
-                            let prevIdxPath = IndexPath(item: currentPlayingVidIndex, section: 0)
-                            let prevVc = a.cellForItem(at: prevIdxPath)
-//                            guard let b = prevVc as? HPhotoListAViewCell else {
-//                                return
-//                            }
-                            if let b = prevVc as? HPhotoListBViewCell {
-                                b.pauseAudio()
-                            } else if let b1 = prevVc as? HCommentListViewCell {
-
-                            }
-
-                            currentPlayingVidIndex = -1
+                            playingCellMediaAssetIdx = [-1, -1]
                         }
-                    } else {
-                        let idxPath = IndexPath(item: intersectedIdx, section: 0)
-                        let currentVc = a.cellForItem(at: idxPath)
-//                        guard let b = currentVc as? HPhotoListAViewCell else {
-//                            return
-//                        }
-                        if let b = currentVc as? HPhotoListBViewCell {
-                            b.resumeAudio()
-                        } else if let b1 = currentVc as? HCommentListViewCell {
-
+                    }
+                    else if let c = cell as? HPhotoListBViewCell {
+                        let mIdx = c.playingMediaAssetIdx
+                        if(isPlay) {
+                            pauseMediaAsset(cellAssetIdx: playingCellMediaAssetIdx) //test
+                            
+                            playingCellMediaAssetIdx = [indexPath.row, mIdx]
+                        } else {
+                            playingCellMediaAssetIdx = [-1, -1]
                         }
-
-                        currentPlayingVidIndex = intersectedIdx
-                        
-                        print("reactintersect photo play BB")
                     }
                     
                     break
@@ -1672,8 +1874,6 @@ extension PhotoDetailPanelView: ShareSheetScrollableDelegate{
             } else {
                 removeData(idxToRemove: selectedItemIdx)
             }
-        } else {
-
         }
     }
     func didShareSheetClickClosePanel(){
@@ -1688,44 +1888,34 @@ extension PhotoDetailPanelView: ShareSheetScrollableDelegate{
                 let lastPage = pageList[pageList.count - 1]
                 if let a = lastPage as? CommentScrollableView {
                     print("lastpagelist c")
+                    a.resumePlayingMedia()
                     a.unselectItemData()
                 }
                 else if let b = lastPage as? ShareSheetScrollableView {
                     print("lastpagelist d")
                 }
             } else {
-//                resumeCurrentVideo()
-                
-//                if(!self.feedList.isEmpty) {
-//                    let feed = feedList[currentIndex]
-//                    feed.unselectItemData()
-//                }
+                resumePlayingMedia()
                 unselectItemData()
             }
-        } else {
-//            resumeCurrentVideo()
         }
     }
 }
 
 extension PhotoDetailPanelView: CommentScrollableDelegate{
     func didCClickUser(){
-//        delegate?.didClickUser()
         delegate?.didClickPhotoDetailPanelVcvClickUser()
     }
     func didCClickPlace(){
-//        delegate?.didClickPlace()
-//        delegate?.didClickPhotoPanelVcvClickPlace()
+
     }
     func didCClickSound(){
-//        delegate?.didClickSound()
-//        delegate?.didClickPhotoPanelVcvClickSound()
+
     }
     func didCClickClosePanel(){
 //        bottomBox.isHidden = true
     }
     func didCFinishClosePanel() {
-//        resumeCurrentAudio()
         
         //test > remove comment scrollable view from pagelist
         if(!pageList.isEmpty) {
@@ -1740,17 +1930,14 @@ extension PhotoDetailPanelView: CommentScrollableDelegate{
                     print("lastpagelist b")
                 }
             } else {
-//                resumeCurrentVideo()
+                resumePlayingMedia()
             }
-        } else {
-//            resumeCurrentVideo()
         }
     }
     func didCClickComment(){
 
     }
     func didCClickShare(){
-        //test
         openShareSheet()
     }
     func didCClickPost(){
@@ -1769,7 +1956,6 @@ extension ViewController: PhotoDetailPanelDelegate{
         openPostDetailPanel()
     }
     func didClickPhotoDetailPanelVcvClickUser() {
-        //test
         openUserPanel()
     }
     func didClickPhotoDetailClosePanel() {

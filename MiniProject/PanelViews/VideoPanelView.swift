@@ -889,9 +889,6 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
 
                 self.isPanelOpen = true
 
-                //test > play video
-//                self.startPlayVideo()
-
                 //test > async fetch data
 //                self.asyncFetchFeed(id: "post_feed")
 
@@ -931,7 +928,9 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
 
             }, completion: { finished in
                 //test > stop video before closing panel
-                self.stopCurrentVideo()
+                print("videopanel close anim")
+//                self.stopPlayingMedia()
+                self.destroyCell()
                 //
 
                 self.removeFromSuperview()
@@ -942,7 +941,9 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
             })
         } else {
             //test > stop video before closing panel
-            self.stopCurrentVideo()
+            print("videopanel close")
+//            self.stopPlayingMedia()
+            self.destroyCell()
             //
 
             self.removeFromSuperview()
@@ -1461,31 +1462,39 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
     }
 
     //test > start play video
-    func startPlayVideo() {
+    func startPlayingMedia() {
         if(!self.feedList.isEmpty) {
             let b = feedList[currentIndex]
-            b.startPlayVideo()
+            b.startPlayMedia()
         }
     }
     //test > resume current video
-    func resumeCurrentVideo() {
+    func resumePlayingMedia() {
         if(!self.feedList.isEmpty) {
             let b = feedList[currentIndex]
-            b.resumeCurrentVideo()
+            b.resumePlayingMedia()
         }
     }
     //test > stop current video for closing
-    func stopCurrentVideo() {
+    func stopPlayingMedia() {
         if(!self.feedList.isEmpty) {
             let b = feedList[currentIndex]
-            b.stopCurrentVideo()
+            b.stopPlayingMedia()
         }
     }
     //test > pause current video for closing
-    func pauseCurrentVideo() {
+    func pausePlayingMedia() {
         if(!self.feedList.isEmpty) {
             let b = feedList[currentIndex]
-            b.pauseCurrentVideo()
+            b.pausePlayingMedia()
+        }
+    }
+    
+    //**test > destroy cell
+    func destroyCell() {
+        if(!self.feedList.isEmpty) {
+            let b = feedList[currentIndex]
+            b.destroyCell()
         }
     }
 
@@ -1494,12 +1503,12 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         
         //test > only resume video if no comment scrollable view/any other view
         if(pageList.isEmpty) {
-            resumeCurrentVideo()
+            resumePlayingMedia()
         }
         else {
             //dehide cell for commment view
             if let c = pageList[pageList.count - 1] as? CommentScrollableView {
-                c.resumeCurrentVideo()
+                c.resumePlayingMedia()
                 c.dehideCell()
             }
         }
@@ -1723,13 +1732,6 @@ extension VideoPanelView: UITextViewDelegate {
 
         print("textviewdelegate: \(estimatedSize), \(textView.contentSize.height)")
 
-        //test 1
-//        if(textView.contentSize.height < 100) {
-//            textPanelHeightCons?.constant = textView.contentSize.height + 50
-//        } else {
-//            textPanelHeightCons?.constant = 100 + 50
-//        }
-
         //tets 2 > check length of textview text
         let currentString: NSString = (textView.text ?? "") as NSString
         print("textviewchange: \(currentString.length)")
@@ -1772,11 +1774,6 @@ extension VideoPanelView: UITextViewDelegate {
 
 extension VideoPanelView: UIScrollViewDelegate {
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-//        let x = scrollView.contentOffset.x
-//        let totalXLength = (viewWidth) * CGFloat(vcDataList.count)
-//        let hOffsetX = x/totalXLength*(stackviewUsableLength)
-////        let hOffsetX = x/totalXLength*(500)
-//        tabSelectLeadingCons?.constant = hOffsetX
         
         //test 3 > new scrollview method
         if(scrollView == feedScrollView) {
@@ -1883,8 +1880,8 @@ extension VideoPanelView: UIScrollViewDelegate {
                 currentIndex = visibleIndex
                 
                 if(currentFeed != previousFeed) {
-                    currentFeed.startPlayVideo()
-                    previousFeed.stopCurrentVideo()
+                    currentFeed.startPlayMedia()
+                    previousFeed.stopPlayingMedia()
                 }
             }
             
@@ -1907,8 +1904,8 @@ extension VideoPanelView: UIScrollViewDelegate {
                 currentIndex = visibleIndex
                 
                 if(currentFeed != previousFeed) {
-                    currentFeed.startPlayVideo()
-                    previousFeed.stopCurrentVideo()
+                    currentFeed.startPlayMedia()
+                    previousFeed.stopPlayingMedia()
                 }
             }
             
@@ -1983,34 +1980,24 @@ extension VideoPanelView: ScrollFeedVideoCellDelegate {
     }
     
     func sfvcDidClickUser() {
+        pausePlayingMedia()
         delegate?.didClickUser()
-        
-        //test > try pause video when transition to user panel
-        pauseCurrentVideo()
     }
     func sfvcDidClickPlace(){
+        pausePlayingMedia()
         delegate?.didClickPlace()
-        
-        //test > try pause video when transition to user panel
-        pauseCurrentVideo()
     }
     func sfvcDidClickSound(){
+        pausePlayingMedia()
         delegate?.didClickSound()
-        
-        //test > try pause video when transition to user panel
-        pauseCurrentVideo()
     }
     func sfvcDidClickComment(){
+        pausePlayingMedia()
         openComment()
-        
-        //test > try pause video when transition to user panel
-        pauseCurrentVideo()
     }
     func sfvcDidClickShare(){
+        pausePlayingMedia()
         openShareSheet()
-        
-        //test > try pause video when transition to user panel
-        pauseCurrentVideo()
     }
     func sfvcDidClickRefresh(){
         //test
@@ -2042,8 +2029,6 @@ extension VideoPanelView: ShareSheetScrollableDelegate{
                     removeData(cell: feed, idxToRemove: feed.selectedItemIdx)
                 }
             }
-        } else {
-
         }
     }
     func didShareSheetClickClosePanel(){
@@ -2058,21 +2043,20 @@ extension VideoPanelView: ShareSheetScrollableDelegate{
                 let lastPage = pageList[pageList.count - 1]
                 if let a = lastPage as? CommentScrollableView {
                     print("lastpagelist c")
+                    a.resumePlayingMedia()
                     a.unselectItemData()
                 }
                 else if let b = lastPage as? ShareSheetScrollableView {
                     print("lastpagelist d")
                 }
             } else {
-                resumeCurrentVideo()
+                resumePlayingMedia()
                 
                 if(!self.feedList.isEmpty) {
                     let feed = feedList[currentIndex]
                     feed.unselectItemData()
                 }
             }
-        } else {
-//            resumeCurrentVideo()
         }
     }
 }
@@ -2091,7 +2075,6 @@ extension VideoPanelView: CommentScrollableDelegate{
         
     }
     func didCFinishClosePanel() {
-//        resumeCurrentVideo()
         
         //test > remove comment scrollable view from pagelist
         if(!pageList.isEmpty) {
@@ -2106,17 +2089,14 @@ extension VideoPanelView: CommentScrollableDelegate{
                     print("lastpagelist b")
                 }
             } else {
-                resumeCurrentVideo()
+                resumePlayingMedia()
             }
-        } else {
-//            resumeCurrentVideo()
         }
     }
     func didCClickComment(){
  
     }
     func didCClickShare(){
-        //test
         openShareSheet()
     }
     func didCClickPost(){

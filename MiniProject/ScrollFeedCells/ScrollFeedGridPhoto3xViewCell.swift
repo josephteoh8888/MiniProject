@@ -17,6 +17,10 @@ class ScrollFeedGridPhoto3xViewCell: ScrollDataFeedCell {
     //test
     var hideCellIndex = -1
     
+    let gLineSpacingHeight = 4.0
+    let gLhsMargin = 20.0
+    let gRhsMargin = 20.0
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -48,7 +52,7 @@ class ScrollFeedGridPhoto3xViewCell: ScrollDataFeedCell {
         let gridLayout = UICollectionViewFlowLayout()
         gridLayout.scrollDirection = .vertical
 //        gridLayout.minimumLineSpacing = 20 //default: 8 => spacing between rows
-        gridLayout.minimumLineSpacing = 4 //default: 8 => spacing between rows
+        gridLayout.minimumLineSpacing = gLineSpacingHeight //default: 8 => spacing between rows
         gridLayout.minimumInteritemSpacing = 0 //default: 4 => spacing between columns
 //        let vCV = UICollectionView(frame: .zero, collectionViewLayout: gridLayout)
         vCV = UICollectionView(frame: .zero, collectionViewLayout: gridLayout)
@@ -86,15 +90,15 @@ class ScrollFeedGridPhoto3xViewCell: ScrollDataFeedCell {
     }
     
     //test > make viewcell image reappear after video panel closes
-    func dehideCellAt(){
-        let vc = vCV?.cellForItem(at: IndexPath(item: hideCellIndex, section: 0))
-        guard let b = vc as? GridPhotoViewCell else {
-            return
+    func dehideCell(){
+        if(hideCellIndex > -1) {
+            let vc = vCV?.cellForItem(at: IndexPath(item: hideCellIndex, section: 0))
+            guard let b = vc as? GridPhotoViewCell else {
+                return
+            }
+            b.dehideCell()
+            hideCellIndex = -1
         }
-        b.dehideCell()
-        
-        vDataList[hideCellIndex].setGridHidden(toHide: false)
-        hideCellIndex = -1
     }
     
     func hideCellAt(itemIndex: Int) {
@@ -104,8 +108,6 @@ class ScrollFeedGridPhoto3xViewCell: ScrollDataFeedCell {
             return
         }
         b.hideCell()
-        
-        vDataList[itemIndex].setGridHidden(toHide: true)
         hideCellIndex = itemIndex
     }
     
@@ -153,34 +155,16 @@ extension ScrollFeedGridPhoto3xViewCell: UICollectionViewDelegateFlowLayout {
                    layout collectionViewLayout: UICollectionViewLayout,
                    sizeForItemAt indexPath: IndexPath) -> CGSize {
         print("placepanel collection 2: \(indexPath)")
-//        return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
-        let lay = collectionViewLayout as! UICollectionViewFlowLayout
-//        let widthPerItem = collectionView.frame.width / 3 - lay.minimumInteritemSpacing
-//        return CGSize(width: 110, height: 110) //default: 110, 160
-        
-        let widthPerItem = (collectionView.frame.width - 20.0*2 - 4.0*2) / 3
-        return CGSize(width: widthPerItem, height: widthPerItem) //default: 110, 160
+        let widthPerItem = (collectionView.frame.width - gLhsMargin - gRhsMargin - gLineSpacingHeight * 2) / 3
+        let heightPerItem = widthPerItem
+        return CGSize(width: widthPerItem, height: heightPerItem) //test
+//        return CGSize(width: widthPerItem, height: widthPerItem) //default: 110, 160
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if indexPath.row == vDataList.count - 1 {
             print("feedgridcell willdisplay: \(indexPath.row)")
-            //            pageNumber += 1
-            //            fetchNextPage()
-            
-            //test > spinner at bottom
-//            bSpinner.startAnimating()
-            
-            //test > paginate fetch
-//            if(dataPaginateStatus != "end") {
-//                if(pageNumber >= 3) {
-//                    asyncPaginateFetchFeed(id: "post_feed_end")
-//                } else {
-//                    asyncPaginateFetchFeed(id: "post_feed")
-//                }
-//
-//            }
-            
+
             //test
             if(dataPaginateStatus != "end") {
                 aDelegate?.sfcAsyncPaginateFeed(cell: self)
@@ -217,11 +201,6 @@ extension ScrollFeedGridPhoto3xViewCell: UICollectionViewDelegateFlowLayout {
             aaText.topAnchor.constraint(equalTo: footerView.topAnchor, constant: 20).isActive = true
             aaText.centerXAnchor.constraint(equalTo: footerView.centerXAnchor, constant: 0).isActive = true
             aaText.layer.opacity = 0.5
-//            if(dataPaginateStatus == "end") {
-//                aaText.text = "End"
-//            } else {
-//                aaText.text = ""
-//            }
 
             bSpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
             footer.addSubview(bSpinner)
@@ -318,7 +297,7 @@ extension ScrollFeedGridPhoto3xViewCell: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: GridPhotoViewCell.identifier, for: indexPath) as! GridPhotoViewCell
-//        cell.aDelegate = self
+        cell.aDelegate = self
         
         cell.configure(data: vDataList[indexPath.row])
         return cell
@@ -329,7 +308,30 @@ extension ScrollFeedGridPhoto3xViewCell: UICollectionViewDataSource {
         let originInRootView = collectionView.convert(cell.frame.origin, to: self)
         print("collectionView index: \(indexPath), \(cell.frame.origin.x), \(cell.frame.origin.y), \(originInRootView)")
 
-        aDelegate?.sfcDidClickVcvClickPhoto(pointX: originInRootView.x, pointY: originInRootView.y, view: cell, mode: PhotoTypes.P_SHOT)
-        hideCellAt(itemIndex: indexPath.row)
+//        aDelegate?.sfcDidClickVcvClickPhoto(pointX: originInRootView.x, pointY: originInRootView.y, view: cell, mode: PhotoTypes.P_SHOT)
+//        hideCellAt(itemIndex: indexPath.row)
      }
+}
+
+extension ScrollFeedGridPhoto3xViewCell: GridViewCellDelegate {
+    func gridViewClick(vc: UICollectionViewCell){
+        print("gridviewclick")
+        if let a = vCV {
+            for cell in a.visibleCells {
+                
+                if(cell == vc) {
+                    
+                    let originInRootView = a.convert(cell.frame.origin, to: self)
+                    let visibleIndexPath = a.indexPath(for: cell)
+                    
+                    if let indexPath = visibleIndexPath {
+                        aDelegate?.sfcDidClickVcvClickPhoto(pointX: originInRootView.x, pointY: originInRootView.y, view: cell, mode: PhotoTypes.P_SHOT)
+                        hideCellAt(itemIndex: indexPath.row)
+                    }
+                    
+                    break
+                }
+            }
+        }
+    }
 }

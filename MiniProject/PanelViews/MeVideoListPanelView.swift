@@ -275,7 +275,7 @@ class MeVideoListPanelView: PanelView{
         if(!self.feedList.isEmpty) {
             let feed = self.feedList[currentIndex]
             if let b = feed as? ScrollFeedHResultVideoListCell {
-                b.dehideCellAt()
+                b.dehideCell()
             }
         }
     }

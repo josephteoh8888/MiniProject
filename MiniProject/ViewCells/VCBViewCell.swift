@@ -15,20 +15,24 @@ class VCBViewCell: VCViewCell {
     static let identifier = "VCBViewCell"
     var gifImage = SDAnimatedImageView()
     
-    var playerLooper: AVPlayerLooper!
-    var queuePlayer: AVQueuePlayer!
+//    var playerLooper: AVPlayerLooper!
+//    var queuePlayer: AVQueuePlayer!
     let videoContainer = UIView()
+    //test > avplayer instead of looper
+    var player: AVPlayer!
     
     let playBtn = UIImageView()
     let playVideoView = UIView()
     let pauseVideoView = UIView()
     
-    var videoPlayStatus = ""
+    var vidPlayStatus = ""
     
     //test > add loading spinner
     var aSpinner = SpinLoader()
     let aContainer = UIView()
     let aaText = UILabel()
+    let errorText = UILabel()
+    let errorRefreshBtn = UIView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -67,8 +71,42 @@ class VCBViewCell: VCViewCell {
         aaText.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 0).isActive = true
         aaText.centerXAnchor.constraint(equalTo: contentView.centerXAnchor, constant: 0).isActive = true
         aaText.layer.opacity = 0.5
-        aaText.text = "End"
+        aaText.text = ""
 //        aaText.isHidden = true
+        
+        //test > error handling
+        errorText.textAlignment = .center //left
+        errorText.textColor = .white
+        errorText.font = .systemFont(ofSize: 13)
+        contentView.addSubview(errorText)
+        errorText.clipsToBounds = true
+        errorText.translatesAutoresizingMaskIntoConstraints = false
+        errorText.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: -20).isActive = true
+//        errorText.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20).isActive = true
+        errorText.centerXAnchor.constraint(equalTo: contentView.centerXAnchor, constant: 0).isActive = true
+        errorText.text = ""
+        
+        errorRefreshBtn.backgroundColor = .ddmDarkColor //test to remove color
+        contentView.addSubview(errorRefreshBtn)
+        errorRefreshBtn.translatesAutoresizingMaskIntoConstraints = false
+        errorRefreshBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true //ori: 40
+        errorRefreshBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        errorRefreshBtn.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
+        errorRefreshBtn.topAnchor.constraint(equalTo: errorText.bottomAnchor, constant: 10).isActive = true
+        errorRefreshBtn.layer.cornerRadius = 20
+        errorRefreshBtn.isUserInteractionEnabled = true
+        errorRefreshBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onErrorRefreshClicked)))
+        errorRefreshBtn.isHidden = true
+        
+        let bMiniRefreshBtn = UIImageView(image: UIImage(named:"icon_round_refresh")?.withRenderingMode(.alwaysTemplate))
+//        bMiniBtn.tintColor = .black
+        bMiniRefreshBtn.tintColor = .white
+        errorRefreshBtn.addSubview(bMiniRefreshBtn)
+        bMiniRefreshBtn.translatesAutoresizingMaskIntoConstraints = false
+        bMiniRefreshBtn.centerXAnchor.constraint(equalTo: errorRefreshBtn.centerXAnchor).isActive = true
+        bMiniRefreshBtn.centerYAnchor.constraint(equalTo: errorRefreshBtn.centerYAnchor).isActive = true
+        bMiniRefreshBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
+        bMiniRefreshBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
         
         //test > add another container for video and like buttons etc
         contentView.addSubview(aContainer)
@@ -161,7 +199,43 @@ class VCBViewCell: VCViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        print("videocv b prepare for reuse")
+        print("videocv prepare for reuse B")
+        
+        //*test > remove time observer
+        removeTimeObserverVideo()
+        
+        player?.pause()
+        player?.replaceCurrentItem(with: nil)
+        player = nil
+        
+        vidPlayStatus = ""
+        //*
+        
+        aSpinner.stopAnimating()
+        
+        let imageUrl = URL(string: "")
+        gifImage.sd_setImage(with: imageUrl)
+        gifImage.isHidden = true
+        aContainer.isHidden = true
+        aaText.isHidden = true
+        aaText.text = ""
+        errorText.isHidden = true
+        errorText.text = ""
+        errorRefreshBtn.isHidden = true
+    }
+    
+    //test > destroy view to avoid timeobserver memory leak
+    override func destroyCell() {
+        print("vcBviewcell destroy cell")
+        removeTimeObserverVideo()
+        
+        player?.pause()
+        player?.replaceCurrentItem(with: nil)
+        player = nil
+    }
+    
+    @objc func onErrorRefreshClicked(gesture: UITapGestureRecognizer) {
+//        aDelegate?.didClickRefresh()
     }
     
     @objc func onPauseVideoClicked(gesture: UITapGestureRecognizer) {
@@ -191,58 +265,139 @@ class VCBViewCell: VCViewCell {
         })
     }
     
+    //test > async fetch asset
+    func asyncConfigureVideo(data: VideoData) {
+        
+        let id = "s"
+        DataFetchManager.shared.fetchSoundData(id: id) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    print("pdp api success \(id), \(l)")
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    //test 2 > try video without looper, use conventional avplayer
+                    var videoURL = ""
+                    if(data.dataType == "a") {
+                        videoURL = "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_video_4.mp4?alt=media"
+                    }
+
+                    let url = CacheManager.shared.getCacheUrlFor(videoUrl: videoURL)
+                    
+                    if(self.player != nil && self.player.currentItem != nil) {
+                        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: self.player.currentItem)
+                    }
+                    
+                    let item2 = AVPlayerItem(url: url)
+                    self.player = AVPlayer(playerItem: item2)
+                    let layer2 = AVPlayerLayer(player: self.player)
+                    layer2.frame = self.contentView.bounds //videoContainer.bounds will have problem as vc is not displayed yet
+                    layer2.videoGravity = .resizeAspectFill
+                    self.videoContainer.layer.addSublayer(layer2)
+                    
+                    //test > get duration of video 2
+                    let d = self.getDuration(ofVideoAt: url)
+                    
+                    self.addTimeObserver()
+                    
+                    NotificationCenter.default.addObserver(self, selector: #selector(self.playerDidFinishPlaying(_:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: self.player.currentItem)
+                    
+                    //seek to previously viewed state t_s
+                    self.player?.seek(to: .zero)
+//                    let seekTime = CMTime(seconds: self.t_s_, preferredTimescale: CMTimeScale(1000)) //1000
+//                    self.player?.seek(to: seekTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+                    
+                    //test > autoplay video after video loaded
+                    if(self.vidPlayStatus == "play") {
+                        self.resumeVideo()
+                    }
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    //error handling e.g. refetch button
+                }
+                break
+            }
+        }
+    }
+    
     func configure(data: VideoData) {
+        //test > change ui with data accordingly
+        aSpinner.stopAnimating()
+        gifImage.isHidden = true
+        aContainer.isHidden = true
+        aaText.isHidden = true
+        errorText.isHidden = true
+        errorRefreshBtn.isHidden = true
+        
+        let dataText = data.dataTextString
+        
+        //test > change ui with data accordingly
+        if(data.dataType == "b") { // b - loading data
+            aSpinner.startAnimating()
+        } else if(data.dataType == "c") { // c - no more data
+            aaText.text = dataText
+            aaText.isHidden = false
+        } else if(data.dataType == "d") { // d - empty data
+            aaText.text = dataText
+            aaText.isHidden = false
+        } else if(data.dataType == "e") { // e - something went wrong
+            errorText.text = dataText
+            errorText.isHidden = false
+            errorRefreshBtn.isHidden = false
+        }
+        else if(data.dataType == "a") { // a - video play
+            aContainer.isHidden = false
+            
+            let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+            gifImage.sd_setImage(with: imageUrl)
+            gifImage.isHidden = false
+        }
+        
         //avplayer with loop
 //        video urls: temp_video_1.mp4, temp_video_2.mp4, temp_video_3.mp4, temp_video_4.mp4
         let videoURL = "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_video_4.mp4?alt=media"
 //        let videoURL = "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_audio_4.m4a?alt=media"
-        let url = CacheManager.shared.getCacheUrlFor(videoUrl: videoURL)
-        self.queuePlayer = AVQueuePlayer()
-        let playerView = AVPlayerLayer(player: queuePlayer)
-        let playerItem = AVPlayerItem(url: url)
-        playerLooper = AVPlayerLooper(player: queuePlayer, templateItem: playerItem)
-        playerView.frame = contentView.bounds
-        playerView.videoGravity = .resizeAspectFill
-        videoContainer.layer.addSublayer(playerView)
-
-        pauseVideoView.isHidden = false
-        playVideoView.isHidden = true
-
-        stopVideo()
-//        playVideo()
-        print("dummy configure: \(data)")
-
-        //test > get duration of video 2
-        let d = getDuration(ofVideoAt: url)
-        print("vcviewcell duration: \(d)")
-
-        //test > TimeObserver for progresslistener
-        addTimeObserver()
+//        let url = CacheManager.shared.getCacheUrlFor(videoUrl: videoURL)
+//        self.queuePlayer = AVQueuePlayer()
+//        let playerView = AVPlayerLayer(player: queuePlayer)
+//        let playerItem = AVPlayerItem(url: url)
+//        playerLooper = AVPlayerLooper(player: queuePlayer, templateItem: playerItem)
+//        playerView.frame = contentView.bounds
+//        playerView.videoGravity = .resizeAspectFill
+//        videoContainer.layer.addSublayer(playerView)
+//
+//        pauseVideoView.isHidden = false
+//        playVideoView.isHidden = true
+//
+//        stopVideo()
+////        playVideo()
+//        print("dummy configure: \(data)")
+//
+//        //test > get duration of video 2
+//        let d = getDuration(ofVideoAt: url)
+//        print("vcviewcell duration: \(d)")
+//
+//        //test > TimeObserver for progresslistener
+//        addTimeObserver()
         
-        //test > change ui with data accordingly
-        if(data.dataType == "a") {
-            //video play
-            gifImage.isHidden = false
-//            gifImage.isHidden = true
-//            videoContainer.isHidden = false
-            aContainer.isHidden = false
-            aSpinner.stopAnimating()
-            aaText.isHidden = true
-        } else if(data.dataType == "b") {
-            //loading data
-            gifImage.isHidden = true
-//            videoContainer.isHidden = true
-            aContainer.isHidden = true
-            aSpinner.startAnimating()
-            aaText.isHidden = true
-        } else if(data.dataType == "c") {
-            //no more data
-            gifImage.isHidden = true
-//            videoContainer.isHidden = true
-            aContainer.isHidden = true
-            aSpinner.stopAnimating()
-            aaText.isHidden = false
-        }
+        //test 3 > async load video
+        asyncConfigureVideo(data: data)
+    }
+    
+    @objc func playerDidFinishPlaying(_ notification: Notification) {
+        playVideo()
     }
     
     func getDuration(ofVideoAt videoURL: URL) -> Double? {
@@ -259,12 +414,27 @@ class VCBViewCell: VCViewCell {
     
     var timeObserverToken: Any?
     func addTimeObserver() {
+        print("addTimeObserver B: \(timeObserverToken), \(player)")
+        
         //test > time observer
         let timeInterval = CMTime(seconds: 0.02, preferredTimescale: CMTimeScale(1000)) //0.01 sec intervalc
-        timeObserverToken = queuePlayer.addPeriodicTimeObserver(forInterval: timeInterval, queue: DispatchQueue.main) {[weak self] time in
+        timeObserverToken = player.addPeriodicTimeObserver(forInterval: timeInterval, queue: DispatchQueue.main) {[weak self] time in
                 
             let currentTime = time.seconds
-            print("Current time: \(currentTime)")
+            print("Current time B: \(currentTime)")
+        }
+    }
+                                                           
+    func removeTimeObserverVideo() {
+        //remove video observer
+        if let tokenV = timeObserverToken {
+            player?.removeTimeObserver(tokenV)
+            timeObserverToken = nil
+        }
+        
+        //test > for looping
+        if(player != nil && player.currentItem != nil) {
+            NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player.currentItem)
         }
     }
     
@@ -272,39 +442,47 @@ class VCBViewCell: VCViewCell {
         pauseVideoView.isHidden = false
         playVideoView.isHidden = true
         
-        queuePlayer.seek(to: .zero)
-        queuePlayer.play()
+//        queuePlayer.seek(to: .zero)
+//        queuePlayer.play()
+        player?.seek(to: .zero)
+        player?.play()
         
-        videoPlayStatus = "playing"
+        vidPlayStatus = "play"
+        
+        print("vcBviewcell play")
     }
     
     override func stopVideo() {
 //        pauseVideoView.isHidden = false
 //        playVideoView.isHidden = true
         
-        queuePlayer.seek(to: .zero)
-        queuePlayer.pause()
+//        queuePlayer.seek(to: .zero)
+//        queuePlayer.pause()
+        player?.seek(to: .zero)
+        player?.pause()
         
-        videoPlayStatus = "stop"
-        
-        print("cell stop video")
+        vidPlayStatus = "pause"
     }
     
     override func pauseVideo() {
 //        pauseVideoView.isHidden = true
 //        playVideoView.isHidden = false
         
-        queuePlayer.pause()
+//        queuePlayer.pause()
+        player?.pause()
         
-        videoPlayStatus = "pause"
+        vidPlayStatus = "pause"
     }
     
     override func resumeVideo() {
         pauseVideoView.isHidden = false
         playVideoView.isHidden = true
         
-        queuePlayer.play()
+//        queuePlayer.play()
+        player?.play()
         
-        videoPlayStatus = "resume"
+        vidPlayStatus = "play"
+        
+        print("vcBviewcell resume")
     }
 }
