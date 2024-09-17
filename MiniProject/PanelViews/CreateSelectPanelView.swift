@@ -70,15 +70,17 @@ class CreateSelectPanelView: PanelView, UIGestureRecognizerDelegate{
     func setupViews() {
         let aBoxUnder = UIView()
         self.addSubview(aBoxUnder)
-        aBoxUnder.backgroundColor = .ddmBlackOverlayColor
+//        aBoxUnder.backgroundColor = .ddmBlackOverlayColor
 //        aBoxUnder.backgroundColor = .clear
         aBoxUnder.translatesAutoresizingMaskIntoConstraints = false
         aBoxUnder.heightAnchor.constraint(equalToConstant: viewHeight).isActive = true
         aBoxUnder.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true
-        aBoxUnder.layer.opacity = 0.3
+//        aBoxUnder.layer.opacity = 0.3
 //        aBoxUnder.isHidden = true
         aBoxUnder.isUserInteractionEnabled = true
         aBoxUnder.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBackPanelClicked)))
+        aBoxUnder.backgroundColor = .black //test
+        aBoxUnder.layer.opacity = 0.4 //0.2
         
         panel.backgroundColor = .ddmBlackOverlayColor
         self.addSubview(panel)
@@ -95,8 +97,8 @@ class CreateSelectPanelView: PanelView, UIGestureRecognizerDelegate{
         panelTopCons?.isActive = true
         
         let exitView = UIView()
-//        exitView.backgroundColor = .black
-        exitView.backgroundColor = .ddmDarkColor
+        exitView.backgroundColor = .ddmBlackDark
+//        exitView.backgroundColor = .ddmDarkColor
         panel.addSubview(exitView)
         exitView.translatesAutoresizingMaskIntoConstraints = false
 //        exitView.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
@@ -104,7 +106,7 @@ class CreateSelectPanelView: PanelView, UIGestureRecognizerDelegate{
         exitView.heightAnchor.constraint(equalToConstant: 45).isActive = true //ori 60
         exitView.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 15).isActive = true
         exitView.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -15).isActive = true
-        exitView.layer.opacity = 0.2 //0.3
+//        exitView.layer.opacity = 0.2 //0.3
         exitView.layer.cornerRadius = 10
         exitView.isUserInteractionEnabled = true
         exitView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onExitViewClicked)))
@@ -119,7 +121,7 @@ class CreateSelectPanelView: PanelView, UIGestureRecognizerDelegate{
         exitViewText.centerXAnchor.constraint(equalTo: exitView.centerXAnchor).isActive = true
         exitViewText.centerYAnchor.constraint(equalTo: exitView.centerYAnchor).isActive = true
         exitViewText.text = "Back" //Cancel
-        exitViewText.layer.opacity = 0.5
+//        exitViewText.layer.opacity = 0.5
 
         let dTextView = UIView()
         panel.addSubview(dTextView)

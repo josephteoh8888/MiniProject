@@ -34,7 +34,8 @@ class VGridColumnViewCell: UICollectionViewCell {
 //        contentView.backgroundColor = .red //test
         
         let aMiniRing = UIView()
-        aMiniRing.backgroundColor = .ddmDarkColor
+//        aMiniRing.backgroundColor = .ddmDarkColor
+        aMiniRing.backgroundColor = .ddmBlackDark
         contentView.addSubview(aMiniRing)
         aMiniRing.translatesAutoresizingMaskIntoConstraints = false
         aMiniRing.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
@@ -42,7 +43,7 @@ class VGridColumnViewCell: UICollectionViewCell {
         aMiniRing.heightAnchor.constraint(equalToConstant: 44).isActive = true //48
         aMiniRing.widthAnchor.constraint(equalToConstant: 44).isActive = true
         aMiniRing.layer.cornerRadius = 22
-        aMiniRing.layer.opacity = 0.4 //0.2
+//        aMiniRing.layer.opacity = 0.4 //0.2
         
         bMiniBtn.tintColor = .white
 //        contentView.addSubview(bMiniBtn)

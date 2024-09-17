@@ -59,7 +59,7 @@ class ShareObjectScrollableView: PanelView, UIGestureRecognizerDelegate{
         aView.backgroundColor = .black //test
         aView.layer.opacity = 0.4 //0.2
         
-        var panelView = UIView()
+        let panelView = UIView()
         panelView.backgroundColor = .ddmBlackOverlayColor
         self.addSubview(panelView)
         panelView.translatesAutoresizingMaskIntoConstraints = false
@@ -72,16 +72,16 @@ class ShareObjectScrollableView: PanelView, UIGestureRecognizerDelegate{
         panelTopCons?.isActive = true
         
         let exitView = UIView()
-//        exitView.backgroundColor = .black
-        exitView.backgroundColor = .ddmDarkColor
+        exitView.backgroundColor = .ddmDarkOverlayBlack
+//        exitView.backgroundColor = .ddmDarkColor
         panelView.addSubview(exitView)
         exitView.translatesAutoresizingMaskIntoConstraints = false
 //        exitView.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
         exitView.bottomAnchor.constraint(equalTo: panelView.bottomAnchor, constant: -50).isActive = true
         exitView.heightAnchor.constraint(equalToConstant: 45).isActive = true //ori 60
-        exitView.leadingAnchor.constraint(equalTo: panelView.leadingAnchor, constant: 15).isActive = true
-        exitView.trailingAnchor.constraint(equalTo: panelView.trailingAnchor, constant: -15).isActive = true
-        exitView.layer.opacity = 0.2 //0.3
+        exitView.leadingAnchor.constraint(equalTo: panelView.leadingAnchor, constant: 20).isActive = true
+        exitView.trailingAnchor.constraint(equalTo: panelView.trailingAnchor, constant: -20).isActive = true
+//        exitView.layer.opacity = 0.2 //0.3
         exitView.layer.cornerRadius = 10
         exitView.isUserInteractionEnabled = true
         exitView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onExitViewClicked)))

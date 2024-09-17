@@ -90,13 +90,13 @@ class UserCreatorConsolePanelView: PanelView{
 //        let topInsetMargin = panel.safeAreaInsets.top + 10
         aBtn.topAnchor.constraint(equalTo: panel.topAnchor, constant: 50).isActive = true
         aBtn.layer.cornerRadius = 20
-        aBtn.layer.opacity = 0.3
+//        aBtn.layer.opacity = 0.3
         aBtn.isUserInteractionEnabled = true
         aBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBackUserCreatorPanelClicked)))
 
 //        let bMiniBtn = UIImageView(image: UIImage(named:"icon_round_arrow_down_a")?.withRenderingMode(.alwaysTemplate))
         let bMiniBtn = UIImageView(image: UIImage(named:"icon_round_close")?.withRenderingMode(.alwaysTemplate))
-        bMiniBtn.tintColor = .white
+        bMiniBtn.tintColor = .ddmDarkGrayColor
 //        aStickyHeader.addSubview(bMiniBtn)
         panel.addSubview(bMiniBtn)
         bMiniBtn.translatesAutoresizingMaskIntoConstraints = false
@@ -104,7 +104,7 @@ class UserCreatorConsolePanelView: PanelView{
         bMiniBtn.centerYAnchor.constraint(equalTo: aBtn.centerYAnchor).isActive = true
         bMiniBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         bMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        bMiniBtn.layer.opacity = 0.3
+//        bMiniBtn.layer.opacity = 0.3
         
         let scrollView = UIScrollView()
         panel.addSubview(scrollView)
@@ -159,7 +159,7 @@ class UserCreatorConsolePanelView: PanelView{
         
         //test 2 > design 2
         let pResult = UIView()
-        pResult.backgroundColor = .ddmDarkColor
+        pResult.backgroundColor = .ddmDarkBlack
         stackView.addSubview(pResult)
         pResult.translatesAutoresizingMaskIntoConstraints = false
 //        pResult.leadingAnchor.constraint(equalTo: pText.leadingAnchor, constant: 0).isActive = true
@@ -170,7 +170,7 @@ class UserCreatorConsolePanelView: PanelView{
         pResult.topAnchor.constraint(equalTo: aPhotoB.bottomAnchor, constant: 20).isActive = true
         pResult.heightAnchor.constraint(equalToConstant: 40).isActive = true
         pResult.layer.cornerRadius = 5
-        pResult.layer.opacity = 0.1 //0.1
+//        pResult.layer.opacity = 0.1 //0.1
 //        pResult.isUserInteractionEnabled = true
 //        pResult.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onAddPTextClicked)))
         
@@ -189,7 +189,7 @@ class UserCreatorConsolePanelView: PanelView{
         
 //        let pHint = UILabel()
         pHint.textAlignment = .left
-        pHint.textColor = .white
+        pHint.textColor = .ddmDarkGrayColor
         pHint.font = .boldSystemFont(ofSize: 14)
         stackView.addSubview(pHint)
         pHint.translatesAutoresizingMaskIntoConstraints = false
@@ -199,11 +199,11 @@ class UserCreatorConsolePanelView: PanelView{
 //        pHint.centerYAnchor.constraint(equalTo: pResult.centerYAnchor, constant: 0).isActive = true
         pHint.topAnchor.constraint(equalTo: pResult.topAnchor, constant: 10).isActive = true
         pHint.text = "@"
-        pHint.layer.opacity = 0.5
+//        pHint.layer.opacity = 0.5
         
         //test > add username
         let ppResult = UIView()
-        ppResult.backgroundColor = .ddmDarkColor
+        ppResult.backgroundColor = .ddmDarkBlack
         stackView.addSubview(ppResult)
         ppResult.translatesAutoresizingMaskIntoConstraints = false
 //        ppResult.leadingAnchor.constraint(equalTo: pText.leadingAnchor, constant: 0).isActive = true
@@ -214,7 +214,7 @@ class UserCreatorConsolePanelView: PanelView{
         ppResult.topAnchor.constraint(equalTo: pResult.bottomAnchor, constant: 10).isActive = true
         ppResult.heightAnchor.constraint(equalToConstant: 40).isActive = true
         ppResult.layer.cornerRadius = 5
-        ppResult.layer.opacity = 0.1 //0.1
+//        ppResult.layer.opacity = 0.1 //0.1
 //        ppResult.isUserInteractionEnabled = true
 //        ppResult.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onAddPPTextClicked)))
         
@@ -230,7 +230,7 @@ class UserCreatorConsolePanelView: PanelView{
 //        ppText.layer.opacity = 0.5
         
         let qResult = UIView()
-        qResult.backgroundColor = .ddmDarkColor
+        qResult.backgroundColor = .ddmDarkBlack
         stackView.addSubview(qResult)
         qResult.translatesAutoresizingMaskIntoConstraints = false
 //        qResult.leadingAnchor.constraint(equalTo: pText.leadingAnchor, constant: 0).isActive = true
@@ -241,7 +241,7 @@ class UserCreatorConsolePanelView: PanelView{
         qResult.topAnchor.constraint(equalTo: ppResult.bottomAnchor, constant: 10).isActive = true
         qResult.heightAnchor.constraint(equalToConstant: 40).isActive = true //80
         qResult.layer.cornerRadius = 5
-        qResult.layer.opacity = 0.1
+//        qResult.layer.opacity = 0.1
 //        qResult.isUserInteractionEnabled = true
 //        qResult.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onAddQTextClicked)))
         
@@ -259,7 +259,7 @@ class UserCreatorConsolePanelView: PanelView{
 //        qText.layer.opacity = 0.5
         
         let rResult = UIView()
-        rResult.backgroundColor = .ddmDarkColor
+        rResult.backgroundColor = .ddmDarkBlack
         stackView.addSubview(rResult)
         rResult.translatesAutoresizingMaskIntoConstraints = false
 //        rResult.leadingAnchor.constraint(equalTo: pText.leadingAnchor, constant: 0).isActive = true
@@ -270,7 +270,7 @@ class UserCreatorConsolePanelView: PanelView{
         rResult.topAnchor.constraint(equalTo: qResult.bottomAnchor, constant: 10).isActive = true
         rResult.heightAnchor.constraint(equalToConstant: 40).isActive = true
         rResult.layer.cornerRadius = 5
-        rResult.layer.opacity = 0.1
+//        rResult.layer.opacity = 0.1
 //        rResult.isUserInteractionEnabled = true
 //        rResult.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onAddRTextClicked)))
         
@@ -326,7 +326,7 @@ class UserCreatorConsolePanelView: PanelView{
 //        bText.layer.opacity = 0.5
         
         let bGrid = UIView()
-        bGrid.backgroundColor = .ddmDarkColor
+        bGrid.backgroundColor = .ddmDarkBlack
         stackView.addSubview(bGrid)
         bGrid.translatesAutoresizingMaskIntoConstraints = false
         bGrid.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 20).isActive = true
@@ -334,7 +334,7 @@ class UserCreatorConsolePanelView: PanelView{
         bGrid.topAnchor.constraint(equalTo: rResult.bottomAnchor, constant: 40).isActive = true //10
         bGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
         bGrid.layer.cornerRadius = 5
-        bGrid.layer.opacity = 0.1
+//        bGrid.layer.opacity = 0.1
         bGrid.bottomAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 0).isActive = true //10
         
         let bGridBG = UIView()
@@ -370,14 +370,14 @@ class UserCreatorConsolePanelView: PanelView{
 //        bText.layer.opacity = 0.5
         
         let bArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
-        bArrowBtn.tintColor = .white
+        bArrowBtn.tintColor = .ddmDarkGrayColor
         stackView.addSubview(bArrowBtn)
         bArrowBtn.translatesAutoresizingMaskIntoConstraints = false
         bArrowBtn.trailingAnchor.constraint(equalTo: bGrid.trailingAnchor).isActive = true
         bArrowBtn.centerYAnchor.constraint(equalTo: bGrid.centerYAnchor).isActive = true
         bArrowBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         bArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        bArrowBtn.layer.opacity = 0.5
+//        bArrowBtn.layer.opacity = 0.5
         
         //test > post upload btn
 //        let aUpload = UIView()
@@ -472,7 +472,7 @@ class UserCreatorConsolePanelView: PanelView{
         
         let qHintText = UILabel()
         qHintText.textAlignment = .left
-        qHintText.textColor = .white
+        qHintText.textColor = .ddmDarkGrayColor
         qHintText.font = .systemFont(ofSize: 14)
 //        panel.addSubview(aUploadText)
         stackView.addSubview(qHintText)
@@ -482,17 +482,17 @@ class UserCreatorConsolePanelView: PanelView{
         qHintText.topAnchor.constraint(equalTo: qResult.topAnchor, constant: 2).isActive = true
         qHintText.bottomAnchor.constraint(equalTo: qResult.bottomAnchor, constant: -2).isActive = true
         qHintText.text = "Select date"
-        qHintText.layer.opacity = 0.3
+//        qHintText.layer.opacity = 0.3
         
         let qArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
-        qArrowBtn.tintColor = .white
+        qArrowBtn.tintColor = .ddmDarkGrayColor
         stackView.addSubview(qArrowBtn)
         qArrowBtn.translatesAutoresizingMaskIntoConstraints = false
         qArrowBtn.trailingAnchor.constraint(equalTo: qResult.trailingAnchor).isActive = true
         qArrowBtn.centerYAnchor.constraint(equalTo: qResult.centerYAnchor).isActive = true
         qArrowBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         qArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        qArrowBtn.layer.opacity = 0.5
+//        qArrowBtn.layer.opacity = 0.5
         
         rTextField.textAlignment = .left
         rTextField.textColor = .white
@@ -515,7 +515,7 @@ class UserCreatorConsolePanelView: PanelView{
         
         let rHintText = UILabel()
         rHintText.textAlignment = .left
-        rHintText.textColor = .white
+        rHintText.textColor = .ddmDarkGrayColor
         rHintText.font = .systemFont(ofSize: 14)
 //        panel.addSubview(aUploadText)
         stackView.addSubview(rHintText)
@@ -525,17 +525,17 @@ class UserCreatorConsolePanelView: PanelView{
         rHintText.topAnchor.constraint(equalTo: rResult.topAnchor, constant: 2).isActive = true
         rHintText.bottomAnchor.constraint(equalTo: rResult.bottomAnchor, constant: -2).isActive = true
         rHintText.text = "Where's your base at..."
-        rHintText.layer.opacity = 0.3
+//        rHintText.layer.opacity = 0.3
         
         let rArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
-        rArrowBtn.tintColor = .white
+        rArrowBtn.tintColor = .ddmDarkGrayColor
         stackView.addSubview(rArrowBtn)
         rArrowBtn.translatesAutoresizingMaskIntoConstraints = false
         rArrowBtn.trailingAnchor.constraint(equalTo: rResult.trailingAnchor).isActive = true
         rArrowBtn.centerYAnchor.constraint(equalTo: rResult.centerYAnchor).isActive = true
         rArrowBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         rArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        rArrowBtn.layer.opacity = 0.5
+//        rArrowBtn.layer.opacity = 0.5
     }
     
     @objc func onBackUserCreatorPanelClicked(gesture: UITapGestureRecognizer) {

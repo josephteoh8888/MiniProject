@@ -42,7 +42,8 @@ class HNotifyChatListViewCell: UICollectionViewCell {
         
         //test > result vertical panel layout
         let aResult = UIView()
-        aResult.backgroundColor = .ddmDarkColor
+//        aResult.backgroundColor = .ddmDarkColor
+        aResult.backgroundColor = .ddmDarkBlack
         contentView.addSubview(aResult)
         aResult.translatesAutoresizingMaskIntoConstraints = false
         aResult.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0).isActive = true
@@ -50,7 +51,7 @@ class HNotifyChatListViewCell: UICollectionViewCell {
         aResult.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0).isActive = true
         aResult.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0).isActive = true
 //        aResult.layer.cornerRadius = 10
-        aResult.layer.opacity = 0.1 //0.3
+//        aResult.layer.opacity = 0.1 //0.3
         
         let eUserCover = UIView()
 //        eUserCover.backgroundColor = .ddmBlackOverlayColor
@@ -62,7 +63,7 @@ class HNotifyChatListViewCell: UICollectionViewCell {
         eUserCover.heightAnchor.constraint(equalToConstant: 50).isActive = true //40
         eUserCover.widthAnchor.constraint(equalToConstant: 50).isActive = true
         eUserCover.layer.cornerRadius = 25
-        eUserCover.layer.opacity = 1.0 //default 0.3
+//        eUserCover.layer.opacity = 1.0 //default 0.3
         
         let aUserPhoto = SDAnimatedImageView()
         contentView.addSubview(aUserPhoto)
@@ -106,7 +107,7 @@ class HNotifyChatListViewCell: UICollectionViewCell {
         
 //        let timeText = UILabel()
         timeText.textAlignment = .left
-        timeText.textColor = .white
+        timeText.textColor = .ddmDarkGrayColor
         timeText.font = .systemFont(ofSize: 13)
         contentView.addSubview(timeText)
         timeText.translatesAutoresizingMaskIntoConstraints = false
@@ -114,7 +115,7 @@ class HNotifyChatListViewCell: UICollectionViewCell {
         timeText.centerYAnchor.constraint(equalTo: aNameText.centerYAnchor, constant: 0).isActive = true //5
         timeText.trailingAnchor.constraint(equalTo: aResult.trailingAnchor, constant: -20).isActive = true
         timeText.text = "-"
-        timeText.layer.opacity = 0.5 //0.5
+//        timeText.layer.opacity = 0.5 //0.5
         
 //        let messageCountBox = UIView()
 //        eUserCover.backgroundColor = .ddmBlackOverlayColor

@@ -35,7 +35,8 @@ class HSingleLocationViewCell: UICollectionViewCell {
 
         //test > result vertical panel layout
         let aResult = UIView()
-        aResult.backgroundColor = .ddmDarkColor
+//        aResult.backgroundColor = .ddmDarkColor
+        aResult.backgroundColor = .ddmDarkBlack
         contentView.addSubview(aResult)
         aResult.translatesAutoresizingMaskIntoConstraints = false
         aResult.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15).isActive = true //20
@@ -43,7 +44,7 @@ class HSingleLocationViewCell: UICollectionViewCell {
         aResult.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0).isActive = true
         aResult.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0).isActive = true
         aResult.layer.cornerRadius = 10
-        aResult.layer.opacity = 0.3 //0.3
+//        aResult.layer.opacity = 0.3 //0.3
         aResult.isUserInteractionEnabled = true
         aResult.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPlaceLocationClicked)))
         ////////////////////
@@ -86,7 +87,7 @@ class HSingleLocationViewCell: UICollectionViewCell {
         
         let aHSubDesc2 = UILabel()
         aHSubDesc2.textAlignment = .left
-        aHSubDesc2.textColor = .white
+        aHSubDesc2.textColor = .ddmDarkGrayColor
         aHSubDesc2.font = .systemFont(ofSize: 12) //11
 //        aHLightSection.addSubview(aHSubDesc2)
         contentView.addSubview(aHSubDesc2)
@@ -97,7 +98,7 @@ class HSingleLocationViewCell: UICollectionViewCell {
 //                aHSubDesc2.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true
 //        aHSubDesc2.text = "87k saves"
         aHSubDesc2.text = "United States"
-        aHSubDesc2.layer.opacity = 0.4
+//        aHSubDesc2.layer.opacity = 0.4
     }
     
     @objc func onPlaceLocationClicked(gesture: UITapGestureRecognizer) {

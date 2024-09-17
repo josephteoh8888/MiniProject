@@ -43,10 +43,11 @@ class JobHighlightCell: UIView {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+//        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+        aHLightRectBG.backgroundColor = .ddmDarkOverlayBlack
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
-        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
@@ -90,17 +91,19 @@ class JobHighlightCell: UIView {
         
         let aHSubDesc = UILabel()
         aHSubDesc.textAlignment = .left
-        aHSubDesc.textColor = .white
+//        aHSubDesc.textColor = .white
+        aHSubDesc.textColor = .ddmDarkGrayColor
         aHSubDesc.font = .systemFont(ofSize: 11)
         aHLightRect1.addSubview(aHSubDesc)
         aHSubDesc.translatesAutoresizingMaskIntoConstraints = false
         aHSubDesc.topAnchor.constraint(equalTo: aHItemTitle.bottomAnchor, constant: 0).isActive = true //20
         aHSubDesc.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 10).isActive = true
         aHSubDesc.text = "$50K - $70K"
-        aHSubDesc.layer.opacity = 0.4
+//        aHSubDesc.layer.opacity = 0.4
         
         let aHItemLocationBox = UIView()
-        aHItemLocationBox.backgroundColor = .ddmDarkColor
+//        aHItemLocationBox.backgroundColor = .ddmDarkColor
+        aHItemLocationBox.backgroundColor = .ddmBlackDark
         aHLightRect1.addSubview(aHItemLocationBox)
         aHItemLocationBox.clipsToBounds = true
         aHItemLocationBox.translatesAutoresizingMaskIntoConstraints = false
@@ -108,10 +111,10 @@ class JobHighlightCell: UIView {
         aHItemLocationBox.topAnchor.constraint(equalTo: aHSubDesc.bottomAnchor, constant: 10).isActive = true //20
         aHItemLocationBox.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 10).isActive = true
         aHItemLocationBox.layer.cornerRadius = 5
-        aHItemLocationBox.layer.opacity = 0.5
+//        aHItemLocationBox.layer.opacity = 0.5
         
         let objectSymbol = UIImageView(image: UIImage(named:"icon_location")?.withRenderingMode(.alwaysTemplate))
-        objectSymbol.tintColor = .white
+        objectSymbol.tintColor = .ddmDarkGrayColor
         aHLightRect1.addSubview(objectSymbol)
         objectSymbol.translatesAutoresizingMaskIntoConstraints = false
 //                objectSymbol.topAnchor.constraint(equalTo: aPhotoB.topAnchor, constant: 10).isActive = true
@@ -120,11 +123,11 @@ class JobHighlightCell: UIView {
         objectSymbol.centerYAnchor.constraint(equalTo: aHItemLocationBox.centerYAnchor).isActive = true
         objectSymbol.heightAnchor.constraint(equalToConstant: 12).isActive = true //18
         objectSymbol.widthAnchor.constraint(equalToConstant: 12).isActive = true
-        objectSymbol.layer.opacity = 0.5
+//        objectSymbol.layer.opacity = 0.5
         
         let aHItemLocation = UILabel()
         aHItemLocation.textAlignment = .left
-        aHItemLocation.textColor = .white
+        aHItemLocation.textColor = .ddmDarkGrayColor
 //                aHItemLocation.font = .systemFont(ofSize: 11) //13
         aHItemLocation.font = .boldSystemFont(ofSize: 11) //13
         aHLightRect1.addSubview(aHItemLocation)
@@ -136,7 +139,7 @@ class JobHighlightCell: UIView {
         aHItemLocation.leadingAnchor.constraint(equalTo: objectSymbol.trailingAnchor, constant: 3).isActive = true
         aHItemLocation.trailingAnchor.constraint(equalTo: aHItemLocationBox.trailingAnchor, constant: -10).isActive = true
         aHItemLocation.text = "Georgetown, Penang"
-        aHItemLocation.layer.opacity = 0.5
+//        aHItemLocation.layer.opacity = 0.5
         
         let aHActionBtn = UIView()
         aHActionBtn.backgroundColor = .ddmRedColor
@@ -174,17 +177,18 @@ class JobHighlightCell: UIView {
         
         let aHSubDesc2 = UILabel()
         aHSubDesc2.textAlignment = .left
-        aHSubDesc2.textColor = .white
+        aHSubDesc2.textColor = .ddmDarkGrayColor
         aHSubDesc2.font = .systemFont(ofSize: 11)
         aHLightRect1.addSubview(aHSubDesc2)
         aHSubDesc2.translatesAutoresizingMaskIntoConstraints = false
         aHSubDesc2.topAnchor.constraint(equalTo: aHItem2Title.bottomAnchor, constant: 0).isActive = true //20
         aHSubDesc2.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 10).isActive = true
         aHSubDesc2.text = "$13K - $15K"
-        aHSubDesc2.layer.opacity = 0.4
+//        aHSubDesc2.layer.opacity = 0.4
         
         let aHItem2LocationBox = UIView()
-        aHItem2LocationBox.backgroundColor = .ddmDarkColor
+//        aHItem2LocationBox.backgroundColor = .ddmDarkColor
+        aHItem2LocationBox.backgroundColor = .ddmBlackDark
         aHLightRect1.addSubview(aHItem2LocationBox)
         aHItem2LocationBox.clipsToBounds = true
         aHItem2LocationBox.translatesAutoresizingMaskIntoConstraints = false
@@ -193,10 +197,10 @@ class JobHighlightCell: UIView {
         aHItem2LocationBox.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 10).isActive = true
         aHItem2LocationBox.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true
         aHItem2LocationBox.layer.cornerRadius = 5
-        aHItem2LocationBox.layer.opacity = 0.5
+//        aHItem2LocationBox.layer.opacity = 0.5
         
         let object2Symbol = UIImageView(image: UIImage(named:"icon_location")?.withRenderingMode(.alwaysTemplate))
-        object2Symbol.tintColor = .white
+        object2Symbol.tintColor = .ddmDarkGrayColor
         aHLightRect1.addSubview(object2Symbol)
         object2Symbol.translatesAutoresizingMaskIntoConstraints = false
 //                objectSymbol.topAnchor.constraint(equalTo: aPhotoB.topAnchor, constant: 10).isActive = true
@@ -205,11 +209,11 @@ class JobHighlightCell: UIView {
         object2Symbol.centerYAnchor.constraint(equalTo: aHItem2LocationBox.centerYAnchor).isActive = true
         object2Symbol.heightAnchor.constraint(equalToConstant: 12).isActive = true //18
         object2Symbol.widthAnchor.constraint(equalToConstant: 12).isActive = true
-        object2Symbol.layer.opacity = 0.5
+//        object2Symbol.layer.opacity = 0.5
         
         let aHItem2Location = UILabel()
         aHItem2Location.textAlignment = .left
-        aHItem2Location.textColor = .white
+        aHItem2Location.textColor = .ddmDarkGrayColor
 //                aHItem2Location.font = .systemFont(ofSize: 11) //13
         aHItem2Location.font = .boldSystemFont(ofSize: 11) //13
         aHLightRect1.addSubview(aHItem2Location)
@@ -218,7 +222,7 @@ class JobHighlightCell: UIView {
         aHItem2Location.leadingAnchor.constraint(equalTo: object2Symbol.trailingAnchor, constant: 3).isActive = true
         aHItem2Location.trailingAnchor.constraint(equalTo: aHItem2LocationBox.trailingAnchor, constant: -10).isActive = true
         aHItem2Location.text = "Remote Location"
-        aHItem2Location.layer.opacity = 0.5
+//        aHItem2Location.layer.opacity = 0.5
         
         let aHActionBtn2 = UIView()
         aHActionBtn2.backgroundColor = .ddmRedColor
@@ -280,10 +284,10 @@ class JobSizeMHighlightCell: UIView {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+        aHLightRectBG.backgroundColor = .ddmDarkOverlayBlack //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
-        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
 //        aHLightRectBG.layer.opacity = 0.0 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
@@ -383,7 +387,8 @@ class JobSizeMHighlightCell: UIView {
         aHSubDesc.layer.opacity = 0.4
         
         let aHItemLocationBox = UIView()
-        aHItemLocationBox.backgroundColor = .ddmDarkColor
+//        aHItemLocationBox.backgroundColor = .ddmDarkColor
+        aHItemLocationBox.backgroundColor = .ddmBlackDark
         aScroll1.addSubview(aHItemLocationBox)
         aHItemLocationBox.clipsToBounds = true
         aHItemLocationBox.translatesAutoresizingMaskIntoConstraints = false
@@ -391,7 +396,7 @@ class JobSizeMHighlightCell: UIView {
         aHItemLocationBox.topAnchor.constraint(equalTo: aHSubDesc.bottomAnchor, constant: 10).isActive = true //20
         aHItemLocationBox.leadingAnchor.constraint(equalTo: aScroll1.leadingAnchor, constant: 10).isActive = true
         aHItemLocationBox.layer.cornerRadius = 5
-        aHItemLocationBox.layer.opacity = 0.5
+//        aHItemLocationBox.layer.opacity = 0.5
         
         let objectSymbol = UIImageView(image: UIImage(named:"icon_location")?.withRenderingMode(.alwaysTemplate))
         objectSymbol.tintColor = .white
@@ -464,7 +469,8 @@ class JobSizeMHighlightCell: UIView {
         aHSubDesc2.layer.opacity = 0.4
         
         let aHItem2LocationBox = UIView()
-        aHItem2LocationBox.backgroundColor = .ddmDarkColor
+//        aHItem2LocationBox.backgroundColor = .ddmDarkColor
+        aHItem2LocationBox.backgroundColor = .ddmBlackDark
         aScroll2.addSubview(aHItem2LocationBox)
         aHItem2LocationBox.clipsToBounds = true
         aHItem2LocationBox.translatesAutoresizingMaskIntoConstraints = false
@@ -473,7 +479,7 @@ class JobSizeMHighlightCell: UIView {
         aHItem2LocationBox.leadingAnchor.constraint(equalTo: aScroll2.leadingAnchor, constant: 10).isActive = true
 //        aHItem2LocationBox.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true
         aHItem2LocationBox.layer.cornerRadius = 5
-        aHItem2LocationBox.layer.opacity = 0.5
+//        aHItem2LocationBox.layer.opacity = 0.5
         
         let object2Symbol = UIImageView(image: UIImage(named:"icon_location")?.withRenderingMode(.alwaysTemplate))
         object2Symbol.tintColor = .white

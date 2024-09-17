@@ -120,18 +120,18 @@ class PlaceSelectPanelView: PanelView, UIGestureRecognizerDelegate{
         
         let aTextSearch = UIImageView()
         aTextSearch.image = UIImage(named:"icon_round_search")?.withRenderingMode(.alwaysTemplate)
-        aTextSearch.tintColor = .white
+        aTextSearch.tintColor = .ddmDarkGrayColor
         aTextBox.addSubview(aTextSearch)
         aTextSearch.translatesAutoresizingMaskIntoConstraints = false
         aTextSearch.leadingAnchor.constraint(equalTo: aTextBox.leadingAnchor, constant: 10).isActive = true
         aTextSearch.centerYAnchor.constraint(equalTo: aTextBox.centerYAnchor).isActive = true
         aTextSearch.heightAnchor.constraint(equalToConstant: 26).isActive = true //ori 30
         aTextSearch.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        aTextSearch.layer.opacity = 0.5
+//        aTextSearch.layer.opacity = 0.5
         
         let aSearchPlaceholderText = UILabel()
         aSearchPlaceholderText.textAlignment = .left
-        aSearchPlaceholderText.textColor = .white
+        aSearchPlaceholderText.textColor = .ddmDarkGrayColor
 //        aSearchPlaceholderText.font = .boldSystemFont(ofSize: 13)
         aSearchPlaceholderText.font = .systemFont(ofSize: 13)
         aTextBox.addSubview(aSearchPlaceholderText)
@@ -140,7 +140,7 @@ class PlaceSelectPanelView: PanelView, UIGestureRecognizerDelegate{
         aSearchPlaceholderText.trailingAnchor.constraint(equalTo: aTextBox.trailingAnchor, constant: -20).isActive = true
         aSearchPlaceholderText.centerYAnchor.constraint(equalTo: aTextBox.centerYAnchor, constant: 0).isActive = true
         aSearchPlaceholderText.text = "Search Place..."
-        aSearchPlaceholderText.layer.opacity = 0.5
+//        aSearchPlaceholderText.layer.opacity = 0.5
         
         //real text field
 //        let bTextBox = UIView()
@@ -157,14 +157,14 @@ class PlaceSelectPanelView: PanelView, UIGestureRecognizerDelegate{
         
         let bTextSearch = UIImageView()
         bTextSearch.image = UIImage(named:"icon_round_search")?.withRenderingMode(.alwaysTemplate)
-        bTextSearch.tintColor = .white
+        bTextSearch.tintColor = .ddmDarkGrayColor
         bTextBox.addSubview(bTextSearch)
         bTextSearch.translatesAutoresizingMaskIntoConstraints = false
         bTextSearch.leadingAnchor.constraint(equalTo: bTextBox.leadingAnchor, constant: 10).isActive = true
         bTextSearch.centerYAnchor.constraint(equalTo: bTextBox.centerYAnchor).isActive = true
         bTextSearch.heightAnchor.constraint(equalToConstant: 26).isActive = true //ori 30
         bTextSearch.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        bTextSearch.layer.opacity = 0.5
+//        bTextSearch.layer.opacity = 0.5
         
 //        let bTextField = UITextField()
         bTextField.textAlignment = .left

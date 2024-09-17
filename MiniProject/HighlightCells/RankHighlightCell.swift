@@ -43,10 +43,10 @@ class RankHighlightCell: UIView {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+        aHLightRectBG.backgroundColor = .ddmDarkOverlayBlack //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
-        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
@@ -172,10 +172,10 @@ class RankSizeMHighlightCell: UIView {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+        aHLightRectBG.backgroundColor = .ddmDarkOverlayBlack //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
-        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
@@ -252,7 +252,7 @@ class RankSizeMHighlightCell: UIView {
 
         let aHSubDesc2 = UILabel()
         aHSubDesc2.textAlignment = .left
-        aHSubDesc2.textColor = .white
+        aHSubDesc2.textColor = .ddmDarkGrayColor
         aHSubDesc2.font = .systemFont(ofSize: 11)
 //        aHLightSection.addSubview(aHSubDesc2)
         aHLightRect1.addSubview(aHSubDesc2)
@@ -262,10 +262,10 @@ class RankSizeMHighlightCell: UIView {
         aHSubDesc2.leadingAnchor.constraint(equalTo: rGridBG.trailingAnchor, constant: 10).isActive = true
 //                aHSubDesc2.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true
         aHSubDesc2.text = "923k streams"
-        aHSubDesc2.layer.opacity = 0.4
+//        aHSubDesc2.layer.opacity = 0.4
 
         let rArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
-        rArrowBtn.tintColor = .white
+        rArrowBtn.tintColor = .ddmDarkGrayColor
 //        aHLightSection.addSubview(rArrowBtn)
         aHLightRect1.addSubview(rArrowBtn)
         rArrowBtn.translatesAutoresizingMaskIntoConstraints = false
@@ -275,6 +275,6 @@ class RankSizeMHighlightCell: UIView {
         rArrowBtn.centerYAnchor.constraint(equalTo: aHLightTitle.centerYAnchor).isActive = true
         rArrowBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         rArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        rArrowBtn.layer.opacity = 0.5
+//        rArrowBtn.layer.opacity = 0.5
     }
 }

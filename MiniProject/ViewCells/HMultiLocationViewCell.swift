@@ -50,7 +50,8 @@ class HMultiLocationViewCell: UICollectionViewCell {
 //        aResult.layer.opacity = 0.3
         
         let aGrid = UIView()
-        aGrid.backgroundColor = .ddmDarkColor
+//        aGrid.backgroundColor = .ddmDarkColor
+        aGrid.backgroundColor = .ddmBlackDark
         contentView.addSubview(aGrid)
         aGrid.translatesAutoresizingMaskIntoConstraints = false
         aGrid.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15).isActive = true
@@ -82,7 +83,8 @@ class HMultiLocationViewCell: UICollectionViewCell {
         aText.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onAroundYouClicked)))
     
         let bGrid = UIView()
-        bGrid.backgroundColor = .ddmDarkColor
+//        bGrid.backgroundColor = .ddmDarkColor
+        bGrid.backgroundColor = .ddmBlackDark
         contentView.addSubview(bGrid)
         bGrid.translatesAutoresizingMaskIntoConstraints = false
         bGrid.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15).isActive = true
@@ -103,7 +105,8 @@ class HMultiLocationViewCell: UICollectionViewCell {
         bText.text = "Malaysia"
         
         let cGrid = UIView()
-        cGrid.backgroundColor = .ddmDarkColor
+//        cGrid.backgroundColor = .ddmDarkColor
+        cGrid.backgroundColor = .ddmBlackDark
         contentView.addSubview(cGrid)
         cGrid.translatesAutoresizingMaskIntoConstraints = false
         cGrid.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15).isActive = true
@@ -124,7 +127,8 @@ class HMultiLocationViewCell: UICollectionViewCell {
         cText.text = "Kuala Lumpur"
         
         let dGrid = UIView()
-        dGrid.backgroundColor = .ddmDarkColor
+//        dGrid.backgroundColor = .ddmDarkColor
+        dGrid.backgroundColor = .ddmBlackDark
         contentView.addSubview(dGrid)
         dGrid.translatesAutoresizingMaskIntoConstraints = false
         dGrid.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15).isActive = true

@@ -59,7 +59,8 @@ class HPhotoListAViewCell: UICollectionViewCell {
 
         //test > result vertical panel layout
 //        let aResult = UIView()
-        aResult.backgroundColor = .ddmDarkColor
+//        aResult.backgroundColor = .ddmDarkColor
+        aResult.backgroundColor = .ddmDarkBlack
         contentView.addSubview(aResult)
         aResult.translatesAutoresizingMaskIntoConstraints = false
         aResult.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0).isActive = true
@@ -67,7 +68,7 @@ class HPhotoListAViewCell: UICollectionViewCell {
         aResult.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0).isActive = true
         aResult.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0).isActive = true
 //        aResult.layer.cornerRadius = 10
-        aResult.layer.opacity = 0.1 //0.3
+//        aResult.layer.opacity = 0.1 //0.3
 //        aResult.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onSingleClicked)))
         
         //test > added double tap for love click shortcut
@@ -128,7 +129,7 @@ class HPhotoListAViewCell: UICollectionViewCell {
         eUserCover.heightAnchor.constraint(equalToConstant: 40).isActive = true
         eUserCover.widthAnchor.constraint(equalToConstant: 40).isActive = true
         eUserCover.layer.cornerRadius = 20
-        eUserCover.layer.opacity = 1.0 //default 0.3
+//        eUserCover.layer.opacity = 1.0 //default 0.3
         
 //        let aUserPhoto = SDAnimatedImageView()
 //        contentView.addSubview(aUserPhoto)
@@ -197,7 +198,7 @@ class HPhotoListAViewCell: UICollectionViewCell {
         
 //        let aUserNameText = UILabel()
         aUserNameText.textAlignment = .left
-        aUserNameText.textColor = .white
+        aUserNameText.textColor = .ddmDarkGrayColor
         aUserNameText.font = .systemFont(ofSize: 12)
 //        contentView.addSubview(aUserNameText)
         aCon.addSubview(aUserNameText)
@@ -206,7 +207,7 @@ class HPhotoListAViewCell: UICollectionViewCell {
 //        aUserNameText.topAnchor.constraint(equalTo: mBtn.bottomAnchor, constant: 10).isActive = true
         aUserNameText.leadingAnchor.constraint(equalTo: aCon.leadingAnchor, constant: 20).isActive = true
         aUserNameText.text = "-"
-        aUserNameText.layer.opacity = 0.3 //0.5
+//        aUserNameText.layer.opacity = 0.3 //0.5
         
         //test > dynamic cell for comment
 //        aCon.addSubview(aTestMusic)
@@ -217,8 +218,8 @@ class HPhotoListAViewCell: UICollectionViewCell {
         
         //test 2 > design location 2
         let aBox = UIView()
-//        aBox.backgroundColor = .ddmBlackOverlayColor
-        aBox.backgroundColor = .ddmDarkColor
+        aBox.backgroundColor = .ddmBlackDark
+//        aBox.backgroundColor = .ddmDarkColor
 //        contentView.addSubview(aBox)
         aCon.addSubview(aBox)
         aBox.clipsToBounds = true
@@ -228,7 +229,7 @@ class HPhotoListAViewCell: UICollectionViewCell {
         aBox.topAnchor.constraint(equalTo: aUserNameText.bottomAnchor, constant: 10).isActive = true
 //        aBox.topAnchor.constraint(equalTo: aTestMusic.bottomAnchor, constant: 10).isActive = true //20
         aBox.layer.cornerRadius = 5
-        aBox.layer.opacity = 0.2 //0.3
+//        aBox.layer.opacity = 0.2 //0.3
         aBox.isUserInteractionEnabled = true
         aBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPlaceClicked)))
 
@@ -287,7 +288,8 @@ class HPhotoListAViewCell: UICollectionViewCell {
         bMiniCon.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onLoveClicked)))
         
         let bMini = UIView()
-        bMini.backgroundColor = .ddmDarkColor
+//        bMini.backgroundColor = .ddmDarkColor
+        bMini.backgroundColor = .ddmBlackDark
 //        contentView.addSubview(bMini)
 //        aCon.addSubview(bMini)
         bMiniCon.addSubview(bMini)
@@ -297,7 +299,7 @@ class HPhotoListAViewCell: UICollectionViewCell {
         bMini.heightAnchor.constraint(equalToConstant: 30).isActive = true //26
         bMini.widthAnchor.constraint(equalToConstant: 30).isActive = true
         bMini.layer.cornerRadius = 15
-        bMini.layer.opacity = 0.4 //0.2
+//        bMini.layer.opacity = 0.4 //0.2
 //        bMini.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onLoveClicked)))
         
 //        let bMiniBtn = UIImageView(image: UIImage(named:"icon_love")?.withRenderingMode(.alwaysTemplate))
@@ -339,7 +341,8 @@ class HPhotoListAViewCell: UICollectionViewCell {
         cMiniCon.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onCommentBtnClicked)))
         
         let cMini = UIView()
-        cMini.backgroundColor = .ddmDarkColor
+//        cMini.backgroundColor = .ddmDarkColor
+        cMini.backgroundColor = .ddmBlackDark
 //        contentView.addSubview(cMini)
 //        aCon.addSubview(cMini)
         cMiniCon.addSubview(cMini)
@@ -349,7 +352,7 @@ class HPhotoListAViewCell: UICollectionViewCell {
         cMini.heightAnchor.constraint(equalToConstant: 30).isActive = true
         cMini.widthAnchor.constraint(equalToConstant: 30).isActive = true
         cMini.layer.cornerRadius = 15
-        cMini.layer.opacity = 0.4 //0.2
+//        cMini.layer.opacity = 0.4 //0.2
 //        cMini.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onCommentBtnClicked)))
         
         let cMiniBtn = UIImageView(image: UIImage(named:"icon_comment")?.withRenderingMode(.alwaysTemplate))
@@ -390,7 +393,8 @@ class HPhotoListAViewCell: UICollectionViewCell {
         dMiniCon.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBookmarkClicked)))
         
         let dMini = UIView()
-        dMini.backgroundColor = .ddmDarkColor
+//        dMini.backgroundColor = .ddmDarkColor
+        dMini.backgroundColor = .ddmBlackDark
 //        contentView.addSubview(dMini)
         dMiniCon.addSubview(dMini)
         dMini.translatesAutoresizingMaskIntoConstraints = false
@@ -399,7 +403,7 @@ class HPhotoListAViewCell: UICollectionViewCell {
         dMini.heightAnchor.constraint(equalToConstant: 30).isActive = true
         dMini.widthAnchor.constraint(equalToConstant: 30).isActive = true
         dMini.layer.cornerRadius = 15
-        dMini.layer.opacity = 0.4 //0.2
+//        dMini.layer.opacity = 0.4 //0.2
 //        dMini.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBookmarkClicked)))
         
 //        let dMiniBtn = UIImageView(image: UIImage(named:"icon_round_bookmark_b")?.withRenderingMode(.alwaysTemplate))
@@ -442,7 +446,8 @@ class HPhotoListAViewCell: UICollectionViewCell {
         eMiniCon.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onShareClicked)))
         
         let eMini = UIView()
-        eMini.backgroundColor = .ddmDarkColor
+//        eMini.backgroundColor = .ddmDarkColor
+        eMini.backgroundColor = .ddmBlackDark
 //        eMini.backgroundColor = .green
 //        contentView.addSubview(eMini)
         eMiniCon.addSubview(eMini)
@@ -452,7 +457,7 @@ class HPhotoListAViewCell: UICollectionViewCell {
         eMini.heightAnchor.constraint(equalToConstant: 30).isActive = true
         eMini.widthAnchor.constraint(equalToConstant: 30).isActive = true
         eMini.layer.cornerRadius = 15
-        eMini.layer.opacity = 0.4 //0.2
+//        eMini.layer.opacity = 0.4 //0.2
 //        eMini.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onShareClicked)))
         
         let eMiniBtn = UIImageView(image: UIImage(named:"icon_round_share")?.withRenderingMode(.alwaysTemplate).withHorizontallyFlippedOrientation())

@@ -372,7 +372,8 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
 ////        addBoxBtn.isHidden = true
         
         //test bottom comment box => fake edittext
-        bottomBox.backgroundColor = .black
+//        bottomBox.backgroundColor = .black
+        bottomBox.backgroundColor = .ddmBlackOverlayColor
         photoPanel.addSubview(bottomBox)
         bottomBox.clipsToBounds = true
         bottomBox.translatesAutoresizingMaskIntoConstraints = false
@@ -388,7 +389,7 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
 
         let bText = UILabel()
         bText.textAlignment = .left
-        bText.textColor = .white
+        bText.textColor = .ddmDarkGrayColor
         bText.font = .boldSystemFont(ofSize: 13)
 //        photoPanel.addSubview(bText)
         bottomBox.addSubview(bText)
@@ -400,12 +401,12 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
         bText.trailingAnchor.constraint(equalTo: bottomBox.trailingAnchor, constant: -60).isActive = true
         bText.topAnchor.constraint(equalTo: bottomBox.topAnchor, constant: 15).isActive = true
         bText.text = "Add comment..."
-        bText.layer.opacity = 0.5
+//        bText.layer.opacity = 0.5
         
 //        let bTextBtn = UIImageView()
         bTextBtn.image = UIImage(named:"icon_round_send")?.withRenderingMode(.alwaysTemplate)
-        bTextBtn.tintColor = .white
-        bTextBtn.layer.opacity = 0.5
+        bTextBtn.tintColor = .ddmDarkGrayColor
+//        bTextBtn.layer.opacity = 0.5
         bottomBox.addSubview(bTextBtn)
         bTextBtn.translatesAutoresizingMaskIntoConstraints = false
         bTextBtn.trailingAnchor.constraint(equalTo: bottomBox.trailingAnchor, constant: -15).isActive = true
@@ -415,8 +416,8 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
         bTextBtn.isHidden = true
         
         lTextBtn.image = UIImage(named:"icon_outline_photo")?.withRenderingMode(.alwaysTemplate)
-        lTextBtn.tintColor = .white
-        lTextBtn.layer.opacity = 0.5
+        lTextBtn.tintColor = .ddmDarkGrayColor
+//        lTextBtn.layer.opacity = 0.5
         bottomBox.addSubview(lTextBtn)
         lTextBtn.translatesAutoresizingMaskIntoConstraints = false
         lTextBtn.trailingAnchor.constraint(equalTo: bottomBox.trailingAnchor, constant: -15).isActive = true
@@ -426,8 +427,8 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
         lTextBtn.isHidden = false
 
         mTextBtn.image = UIImage(named:"icon_round_emoji")?.withRenderingMode(.alwaysTemplate)
-        mTextBtn.tintColor = .white
-        mTextBtn.layer.opacity = 0.5
+        mTextBtn.tintColor = .ddmDarkGrayColor
+//        mTextBtn.layer.opacity = 0.5
         bottomBox.addSubview(mTextBtn)
         mTextBtn.translatesAutoresizingMaskIntoConstraints = false
         mTextBtn.trailingAnchor.constraint(equalTo: lTextBtn.leadingAnchor, constant: -10).isActive = true
@@ -437,8 +438,8 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
         mTextBtn.isHidden = false
 
         nTextBtn.image = UIImage(named:"icon_round_at")?.withRenderingMode(.alwaysTemplate)
-        nTextBtn.tintColor = .white
-        nTextBtn.layer.opacity = 0.5
+        nTextBtn.tintColor = .ddmDarkGrayColor
+//        nTextBtn.layer.opacity = 0.5
         bottomBox.addSubview(nTextBtn)
         nTextBtn.translatesAutoresizingMaskIntoConstraints = false
         nTextBtn.trailingAnchor.constraint(equalTo: mTextBtn.leadingAnchor, constant: -10).isActive = true
@@ -728,7 +729,8 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
     func redrawUI() {
         //test > add sections tab
         if(isMultipleTab) {
-            photoPanel.addSubview(tabScrollView)
+//            photoPanel.addSubview(tabScrollView)
+            aStickyHeader.addSubview(tabScrollView) //test
             tabScrollView.backgroundColor = .clear //clear
             tabScrollView.translatesAutoresizingMaskIntoConstraints = false
             tabScrollView.heightAnchor.constraint(equalToConstant: 40).isActive = true //ori 60
@@ -773,7 +775,8 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
     //        let tabScrollLHSBtn = UIView()
             tabScrollLHSBtn.backgroundColor = .white
     //        tabScrollLHSBtn.backgroundColor = .red
-            photoPanel.addSubview(tabScrollLHSBtn)
+//            photoPanel.addSubview(tabScrollLHSBtn)
+            aStickyHeader.addSubview(tabScrollLHSBtn)
             tabScrollLHSBtn.translatesAutoresizingMaskIntoConstraints = false
             tabScrollLHSBtn.widthAnchor.constraint(equalToConstant: 14).isActive = true //ori: 40
             tabScrollLHSBtn.heightAnchor.constraint(equalToConstant: 14).isActive = true
@@ -797,7 +800,8 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
     //        let tabScrollRHSBtn = UIView()
             tabScrollRHSBtn.backgroundColor = .white
     //        tabScrollRHSBtn.backgroundColor = .red
-            photoPanel.addSubview(tabScrollRHSBtn)
+//            photoPanel.addSubview(tabScrollRHSBtn)
+            aStickyHeader.addSubview(tabScrollRHSBtn)
             tabScrollRHSBtn.translatesAutoresizingMaskIntoConstraints = false
             tabScrollRHSBtn.widthAnchor.constraint(equalToConstant: 14).isActive = true //ori: 40
             tabScrollRHSBtn.heightAnchor.constraint(equalToConstant: 14).isActive = true
@@ -822,7 +826,8 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
             let addFeedBtn = UIView()
             addFeedBtn.backgroundColor = .clear
     //        addFeedBtn.backgroundColor = .red
-            photoPanel.addSubview(addFeedBtn)
+//            photoPanel.addSubview(addFeedBtn)
+            aStickyHeader.addSubview(addFeedBtn)
             addFeedBtn.translatesAutoresizingMaskIntoConstraints = false
             addFeedBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true //ori: 40
             addFeedBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
@@ -846,7 +851,8 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
             let searchFeedBtn = UIView()
             searchFeedBtn.backgroundColor = .clear
     //        addFeedBtn.backgroundColor = .red
-            photoPanel.addSubview(searchFeedBtn)
+//            photoPanel.addSubview(searchFeedBtn)
+            aStickyHeader.addSubview(searchFeedBtn)
             searchFeedBtn.translatesAutoresizingMaskIntoConstraints = false
             searchFeedBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true //ori: 40
             searchFeedBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
@@ -868,7 +874,8 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
     //        addBoxBtn.isHidden = true
         } else {
             let stickyHLight = UIView()
-            photoPanel.addSubview(stickyHLight)
+//            photoPanel.addSubview(stickyHLight)
+            aStickyHeader.addSubview(stickyHLight)
             stickyHLight.translatesAutoresizingMaskIntoConstraints = false
             stickyHLight.centerXAnchor.constraint(equalTo: photoPanel.centerXAnchor, constant: 0).isActive = true
             stickyHLight.heightAnchor.constraint(equalToConstant: 40).isActive = true //30

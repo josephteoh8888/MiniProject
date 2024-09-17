@@ -48,10 +48,10 @@ class ShopHighlightCell: HighlightCell {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+        aHLightRectBG.backgroundColor = .ddmDarkOverlayBlack //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
-        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
@@ -186,14 +186,14 @@ class ShopHighlightCell: HighlightCell {
         
         let aHSubDesc = UILabel()
         aHSubDesc.textAlignment = .left
-        aHSubDesc.textColor = .white
+        aHSubDesc.textColor = .ddmDarkGrayColor
         aHSubDesc.font = .systemFont(ofSize: 11)
         aScroll1.addSubview(aHSubDesc)
         aHSubDesc.translatesAutoresizingMaskIntoConstraints = false
         aHSubDesc.topAnchor.constraint(equalTo: aHItemTitle.bottomAnchor, constant: 0).isActive = true //20
         aHSubDesc.leadingAnchor.constraint(equalTo: aPhoto.trailingAnchor, constant: 10).isActive = true
         aHSubDesc.text = "104 sold"
-        aHSubDesc.layer.opacity = 0.4
+//        aHSubDesc.layer.opacity = 0.4
         
         let aHActionBtn = UIView()
         aHActionBtn.backgroundColor = .ddmRedColor
@@ -249,14 +249,14 @@ class ShopHighlightCell: HighlightCell {
         
         let aHSubDesc1A = UILabel()
         aHSubDesc1A.textAlignment = .left
-        aHSubDesc1A.textColor = .white
+        aHSubDesc1A.textColor = .ddmDarkGrayColor
         aHSubDesc1A.font = .systemFont(ofSize: 11)
         aScroll1.addSubview(aHSubDesc1A)
         aHSubDesc1A.translatesAutoresizingMaskIntoConstraints = false
         aHSubDesc1A.topAnchor.constraint(equalTo: aHItem1ATitle.bottomAnchor, constant: 0).isActive = true //20
         aHSubDesc1A.leadingAnchor.constraint(equalTo: aPhoto1A.trailingAnchor, constant: 10).isActive = true
         aHSubDesc1A.text = "82 sold"
-        aHSubDesc1A.layer.opacity = 0.4
+//        aHSubDesc1A.layer.opacity = 0.4
         
         let aHAction1ABtn = UIView()
         aHAction1ABtn.backgroundColor = .ddmRedColor
@@ -314,14 +314,14 @@ class ShopHighlightCell: HighlightCell {
         
         let aHSubDesc2 = UILabel()
         aHSubDesc2.textAlignment = .left
-        aHSubDesc2.textColor = .white
+        aHSubDesc2.textColor = .ddmDarkGrayColor
         aHSubDesc2.font = .systemFont(ofSize: 11)
         aScroll2.addSubview(aHSubDesc2)
         aHSubDesc2.translatesAutoresizingMaskIntoConstraints = false
         aHSubDesc2.topAnchor.constraint(equalTo: aHItem2Title.bottomAnchor, constant: 0).isActive = true //20
         aHSubDesc2.leadingAnchor.constraint(equalTo: aPhoto2.trailingAnchor, constant: 10).isActive = true
         aHSubDesc2.text = "39 sold"
-        aHSubDesc2.layer.opacity = 0.4
+//        aHSubDesc2.layer.opacity = 0.4
         
         let aHActionBtn2 = UIView()
         aHActionBtn2.backgroundColor = .ddmRedColor

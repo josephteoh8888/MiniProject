@@ -67,12 +67,12 @@ class CreateAccountEmailPanelView: PanelView{
     //        aBtn.topAnchor.constraint(equalTo: userPanel.topAnchor, constant: 30).isActive = true
         aBtn.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
         aBtn.layer.cornerRadius = 20
-        aBtn.layer.opacity = 0.3
+//        aBtn.layer.opacity = 0.3
         aBtn.isUserInteractionEnabled = true
         aBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBackPanelClicked)))
 
         let bMiniBtn = UIImageView(image: UIImage(named:"icon_round_close")?.withRenderingMode(.alwaysTemplate))
-        bMiniBtn.tintColor = .white
+        bMiniBtn.tintColor = .ddmDarkGrayColor
 //        loginPanel.addSubview(bMiniBtn)
         panel.addSubview(bMiniBtn)
         bMiniBtn.translatesAutoresizingMaskIntoConstraints = false
@@ -80,7 +80,7 @@ class CreateAccountEmailPanelView: PanelView{
         bMiniBtn.centerYAnchor.constraint(equalTo: aBtn.centerYAnchor).isActive = true
         bMiniBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         bMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        bMiniBtn.layer.opacity = 0.3
+//        bMiniBtn.layer.opacity = 0.3
         
         let scrollView = UIScrollView()
         panel.addSubview(scrollView)

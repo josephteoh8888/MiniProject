@@ -31,7 +31,8 @@ class HResultPostListViewCell: UICollectionViewCell {
 
         //test > result vertical panel layout
         let aResult = UIView()
-        aResult.backgroundColor = .ddmDarkColor
+//        aResult.backgroundColor = .ddmDarkColor
+        aResult.backgroundColor = .ddmDarkBlack
         contentView.addSubview(aResult)
         aResult.translatesAutoresizingMaskIntoConstraints = false
         aResult.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0).isActive = true
@@ -39,7 +40,7 @@ class HResultPostListViewCell: UICollectionViewCell {
         aResult.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0).isActive = true
         aResult.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0).isActive = true
 //        aResult.layer.cornerRadius = 10
-        aResult.layer.opacity = 0.1 //0.3
+//        aResult.layer.opacity = 0.1 //0.3
         aResult.isUserInteractionEnabled = true
         aResult.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onUserClicked)))
 
@@ -54,7 +55,7 @@ class HResultPostListViewCell: UICollectionViewCell {
         eUserCover.heightAnchor.constraint(equalToConstant: 30).isActive = true
         eUserCover.widthAnchor.constraint(equalToConstant: 30).isActive = true
         eUserCover.layer.cornerRadius = 15
-        eUserCover.layer.opacity = 1.0 //default 0.3
+//        eUserCover.layer.opacity = 1.0 //default 0.3
         
         let aUserPhoto = SDAnimatedImageView()
         contentView.addSubview(aUserPhoto)
@@ -68,9 +69,10 @@ class HResultPostListViewCell: UICollectionViewCell {
         aUserPhoto.contentMode = .scaleAspectFill
         aUserPhoto.layer.masksToBounds = true
         aUserPhoto.layer.cornerRadius = 15
-        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-        aUserPhoto.sd_setImage(with: imageUrl)
-        aUserPhoto.backgroundColor = .ddmDarkGreyColor
+//        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//        aUserPhoto.sd_setImage(with: imageUrl)
+//        aUserPhoto.backgroundColor = .ddmDarkGreyColor
+        aUserPhoto.backgroundColor = .ddmDarkColor
         
 //        let aFollowA = UIView()
 //        aFollowA.backgroundColor = .yellow
@@ -124,7 +126,7 @@ class HResultPostListViewCell: UICollectionViewCell {
         
         let aUserNameText = UILabel()
         aUserNameText.textAlignment = .left
-        aUserNameText.textColor = .white
+        aUserNameText.textColor = .ddmDarkGrayColor
         aUserNameText.font = .systemFont(ofSize: 12)
         contentView.addSubview(aUserNameText)
         aUserNameText.translatesAutoresizingMaskIntoConstraints = false
@@ -132,7 +134,7 @@ class HResultPostListViewCell: UICollectionViewCell {
         aUserNameText.leadingAnchor.constraint(equalTo: aNameText.leadingAnchor, constant: 0).isActive = true
         aUserNameText.text = "2hr"
 //        aUserNameText.text = "@mic1809"
-        aUserNameText.layer.opacity = 0.3 //0.5
+//        aUserNameText.layer.opacity = 0.3 //0.5
         
         let contentPhoto = SDAnimatedImageView()
         contentView.addSubview(contentPhoto)
@@ -146,7 +148,7 @@ class HResultPostListViewCell: UICollectionViewCell {
         contentPhoto.layer.cornerRadius = 5
         let imageUrl1 = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
         contentPhoto.sd_setImage(with: imageUrl1)
-        contentPhoto.backgroundColor = .ddmDarkGreyColor
+        contentPhoto.backgroundColor = .ddmDarkColor
         
         let contentText = UILabel()
         contentText.textAlignment = .left

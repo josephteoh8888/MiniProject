@@ -45,6 +45,8 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
     var offsetX: CGFloat = 0.0
     var offsetY: CGFloat = 0.0
 
+    let aStickyHeader = UIView()
+    
     //test > comment panel
     var panelTopCons: NSLayoutConstraint?
     var currentPanelTopCons : CGFloat = 0.0
@@ -194,7 +196,7 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         videoPanelTopCons?.isActive = true
         videoPanelLeadingCons = videoPanel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0)
         videoPanelLeadingCons?.isActive = true
-
+        
         //test > try uicollectionview instead of static image
 //        vcDataList.append("a")
 //        vcDataList.append("a")//nil
@@ -212,8 +214,18 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         feedScrollView.isPagingEnabled = true
         feedScrollView.delegate = self
         
+        //test > sticky header => for "for you", "following", "subscribing"
+        aStickyHeader.backgroundColor = .clear
+        videoPanel.addSubview(aStickyHeader)
+        aStickyHeader.translatesAutoresizingMaskIntoConstraints = false
+        aStickyHeader.trailingAnchor.constraint(equalTo: videoPanel.trailingAnchor).isActive = true
+        aStickyHeader.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 50).isActive = true
+        aStickyHeader.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
+        aStickyHeader.leadingAnchor.constraint(equalTo: videoPanel.leadingAnchor, constant: 0).isActive = true
+        
         //test bottom comment box => fake edittext
-        bottomBox.backgroundColor = .black
+//        bottomBox.backgroundColor = .black
+        bottomBox.backgroundColor = .ddmBlackOverlayColor
         videoPanel.addSubview(bottomBox)
         bottomBox.clipsToBounds = true
         bottomBox.translatesAutoresizingMaskIntoConstraints = false
@@ -228,7 +240,8 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
 
         let bText = UILabel()
         bText.textAlignment = .left
-        bText.textColor = .white
+//        bText.textColor = .white
+        bText.textColor = .ddmDarkGrayColor
         bText.font = .boldSystemFont(ofSize: 13)
         bottomBox.addSubview(bText)
         bText.clipsToBounds = true
@@ -239,12 +252,13 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         bText.trailingAnchor.constraint(equalTo: bottomBox.trailingAnchor, constant: -60).isActive = true
         bText.topAnchor.constraint(equalTo: bottomBox.topAnchor, constant: 15).isActive = true
         bText.text = "Add comment..."
-        bText.layer.opacity = 0.5
+//        bText.layer.opacity = 0.5
 
 //        let bTextBtn = UIImageView()
         bTextBtn.image = UIImage(named:"icon_round_send")?.withRenderingMode(.alwaysTemplate)
-        bTextBtn.tintColor = .white
-        bTextBtn.layer.opacity = 0.5
+//        bTextBtn.tintColor = .white
+        bTextBtn.tintColor = .ddmDarkGrayColor
+//        bTextBtn.layer.opacity = 0.5
         bottomBox.addSubview(bTextBtn)
         bTextBtn.translatesAutoresizingMaskIntoConstraints = false
         bTextBtn.trailingAnchor.constraint(equalTo: bottomBox.trailingAnchor, constant: -15).isActive = true
@@ -254,8 +268,9 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         bTextBtn.isHidden = true
         
         lTextBtn.image = UIImage(named:"icon_outline_photo")?.withRenderingMode(.alwaysTemplate)
-        lTextBtn.tintColor = .white
-        lTextBtn.layer.opacity = 0.5
+//        lTextBtn.tintColor = .white
+        lTextBtn.tintColor = .ddmDarkGrayColor
+//        lTextBtn.layer.opacity = 0.5
         bottomBox.addSubview(lTextBtn)
         lTextBtn.translatesAutoresizingMaskIntoConstraints = false
         lTextBtn.trailingAnchor.constraint(equalTo: bottomBox.trailingAnchor, constant: -15).isActive = true
@@ -265,8 +280,9 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         lTextBtn.isHidden = false
 
         mTextBtn.image = UIImage(named:"icon_round_emoji")?.withRenderingMode(.alwaysTemplate)
-        mTextBtn.tintColor = .white
-        mTextBtn.layer.opacity = 0.5
+//        mTextBtn.tintColor = .white
+        mTextBtn.tintColor = .ddmDarkGrayColor
+//        mTextBtn.layer.opacity = 0.5
         bottomBox.addSubview(mTextBtn)
         mTextBtn.translatesAutoresizingMaskIntoConstraints = false
         mTextBtn.trailingAnchor.constraint(equalTo: lTextBtn.leadingAnchor, constant: -10).isActive = true
@@ -276,8 +292,9 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         mTextBtn.isHidden = false
 
         nTextBtn.image = UIImage(named:"icon_round_at")?.withRenderingMode(.alwaysTemplate)
-        nTextBtn.tintColor = .white
-        nTextBtn.layer.opacity = 0.5
+//        nTextBtn.tintColor = .white
+        nTextBtn.tintColor = .ddmDarkGrayColor
+//        nTextBtn.layer.opacity = 0.5
         bottomBox.addSubview(nTextBtn)
         nTextBtn.translatesAutoresizingMaskIntoConstraints = false
         nTextBtn.trailingAnchor.constraint(equalTo: mTextBtn.leadingAnchor, constant: -10).isActive = true
@@ -345,9 +362,8 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         sendBoxText.text = "Post"
 
         //**test > try a container for textview
-//        let aView = UIView()
-//        aView.backgroundColor = .blue
-        aaView.backgroundColor = .ddmDarkColor
+//        aaView.backgroundColor = .ddmDarkColor
+        aaView.backgroundColor = .ddmBlackDark
         textPanel.addSubview(aaView)
         aaView.translatesAutoresizingMaskIntoConstraints = false
         aaView.topAnchor.constraint(equalTo: textPanel.topAnchor, constant: 10).isActive = true
@@ -369,7 +385,8 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         zGrid.bottomAnchor.constraint(equalTo: aaView.bottomAnchor, constant: 0).isActive = true
 
         let zGridIcon = UIImageView(image: UIImage(named:"icon_outline_photo")?.withRenderingMode(.alwaysTemplate))
-        zGridIcon.tintColor = .white
+//        zGridIcon.tintColor = .white
+        zGridIcon.tintColor = .ddmDarkGrayColor
         textPanel.addSubview(zGridIcon)
         zGridIcon.translatesAutoresizingMaskIntoConstraints = false
 //        zGridIcon.centerXAnchor.constraint(equalTo: pMini.centerXAnchor, constant: 0).isActive = true
@@ -378,7 +395,7 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         zGridIcon.centerYAnchor.constraint(equalTo: zGrid.centerYAnchor, constant: 0).isActive = true
         zGridIcon.heightAnchor.constraint(equalToConstant: 26).isActive = true //20
         zGridIcon.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        zGridIcon.layer.opacity = 0.5
+//        zGridIcon.layer.opacity = 0.5
         
         let yGrid = UIView()
         textPanel.addSubview(yGrid)
@@ -390,7 +407,8 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         yGrid.bottomAnchor.constraint(equalTo: aaView.bottomAnchor, constant: 0).isActive = true
 
         let yGridIcon = UIImageView(image: UIImage(named:"icon_round_emoji")?.withRenderingMode(.alwaysTemplate))
-        yGridIcon.tintColor = .white
+//        yGridIcon.tintColor = .white
+        yGridIcon.tintColor = .ddmDarkGrayColor
         textPanel.addSubview(yGridIcon)
         yGridIcon.translatesAutoresizingMaskIntoConstraints = false
 //        yGridIcon.centerXAnchor.constraint(equalTo: pMini.centerXAnchor, constant: 0).isActive = true
@@ -399,7 +417,7 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         yGridIcon.centerYAnchor.constraint(equalTo: yGrid.centerYAnchor, constant: 0).isActive = true
         yGridIcon.heightAnchor.constraint(equalToConstant: 26).isActive = true //20
         yGridIcon.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        yGridIcon.layer.opacity = 0.5
+//        yGridIcon.layer.opacity = 0.5
 
 //        let xGrid = UIView()
         textPanel.addSubview(xGrid)
@@ -411,7 +429,7 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         xGrid.bottomAnchor.constraint(equalTo: aaView.bottomAnchor, constant: 0).isActive = true
 
         let xGridIcon = UIImageView(image: UIImage(named:"icon_round_at")?.withRenderingMode(.alwaysTemplate))
-        xGridIcon.tintColor = .white
+        xGridIcon.tintColor = .ddmDarkGrayColor
         textPanel.addSubview(xGridIcon)
         xGridIcon.translatesAutoresizingMaskIntoConstraints = false
 //        xGridIcon.centerXAnchor.constraint(equalTo: pMini.centerXAnchor, constant: 0).isActive = true
@@ -420,7 +438,7 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         xGridIcon.centerYAnchor.constraint(equalTo: xGrid.centerYAnchor, constant: 0).isActive = true
         xGridIcon.heightAnchor.constraint(equalToConstant: 26).isActive = true //20
         xGridIcon.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        xGridIcon.layer.opacity = 0.5
+//        xGridIcon.layer.opacity = 0.5
 
         aTextBox.textAlignment = .left
         aTextBox.textColor = .white
@@ -449,7 +467,8 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
 
 //        let bbText = UILabel()
         bbText.textAlignment = .left
-        bbText.textColor = .white
+//        bbText.textColor = .white
+        bbText.textColor = .ddmDarkGrayColor
         bbText.font = .boldSystemFont(ofSize: 13)
         textPanel.addSubview(bbText)
         bbText.clipsToBounds = true
@@ -458,7 +477,7 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
 //        bbText.trailingAnchor.constraint(equalTo: xGrid.leadingAnchor, constant: -10).isActive = true
         bbText.topAnchor.constraint(equalTo: aTextBox.topAnchor, constant: 8).isActive = true
         bbText.text = "Say something nice..."
-        bbText.layer.opacity = 0.5
+//        bbText.layer.opacity = 0.5
         //**
 
         //test > black out when close
@@ -676,7 +695,8 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
             
             //test ** > uiscrollview
 //            let tabScrollView = UIScrollView()
-            videoPanel.addSubview(tabScrollView)
+//            videoPanel.addSubview(tabScrollView)
+            aStickyHeader.addSubview(tabScrollView)
             tabScrollView.backgroundColor = .clear //clear
             tabScrollView.translatesAutoresizingMaskIntoConstraints = false
             tabScrollView.heightAnchor.constraint(equalToConstant: 40).isActive = true //ori 60
@@ -722,7 +742,8 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
     //        let tabScrollLHSBtn = UIView()
             tabScrollLHSBtn.backgroundColor = .white
     //        tabScrollLHSBtn.backgroundColor = .red
-            videoPanel.addSubview(tabScrollLHSBtn)
+//            videoPanel.addSubview(tabScrollLHSBtn)
+            aStickyHeader.addSubview(tabScrollLHSBtn)
             tabScrollLHSBtn.translatesAutoresizingMaskIntoConstraints = false
             tabScrollLHSBtn.widthAnchor.constraint(equalToConstant: 14).isActive = true //ori: 40
             tabScrollLHSBtn.heightAnchor.constraint(equalToConstant: 14).isActive = true
@@ -750,7 +771,8 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
     //        let tabScrollRHSBtn = UIView()
             tabScrollRHSBtn.backgroundColor = .white
     //        tabScrollRHSBtn.backgroundColor = .red
-            videoPanel.addSubview(tabScrollRHSBtn)
+//            videoPanel.addSubview(tabScrollRHSBtn)
+            aStickyHeader.addSubview(tabScrollRHSBtn)
             tabScrollRHSBtn.translatesAutoresizingMaskIntoConstraints = false
             tabScrollRHSBtn.widthAnchor.constraint(equalToConstant: 14).isActive = true //ori: 40
             tabScrollRHSBtn.heightAnchor.constraint(equalToConstant: 14).isActive = true
@@ -777,7 +799,8 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
             
             let addFeedBtn = UIView()
             addFeedBtn.backgroundColor = .clear
-            videoPanel.addSubview(addFeedBtn)
+//            videoPanel.addSubview(addFeedBtn)
+            aStickyHeader.addSubview(addFeedBtn)
             addFeedBtn.translatesAutoresizingMaskIntoConstraints = false
             addFeedBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true //ori: 40
             addFeedBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true

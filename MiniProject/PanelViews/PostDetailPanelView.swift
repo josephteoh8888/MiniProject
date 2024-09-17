@@ -164,7 +164,7 @@ class PostDetailPanelView: PanelView {
     //        aBtn.topAnchor.constraint(equalTo: userPanel.topAnchor, constant: 30).isActive = true
         aBtn.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
         aBtn.layer.cornerRadius = 20
-        aBtn.layer.opacity = 0.3
+//        aBtn.layer.opacity = 0.3
         aBtn.isUserInteractionEnabled = true
         aBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBackPanelClicked)))
 
@@ -257,7 +257,7 @@ class PostDetailPanelView: PanelView {
         
         let bText = UILabel()
         bText.textAlignment = .left
-        bText.textColor = .white
+        bText.textColor = .ddmDarkGrayColor
         bText.font = .boldSystemFont(ofSize: 13)
         bottomBox.addSubview(bText)
         bText.clipsToBounds = true
@@ -269,12 +269,12 @@ class PostDetailPanelView: PanelView {
         bText.centerYAnchor.constraint(equalTo: aaView.centerYAnchor, constant: 0).isActive = true
 //        bText.text = "Reply to @michaelkins..."
         bText.text = "Add comment..."
-        bText.layer.opacity = 0.5
+//        bText.layer.opacity = 0.5
 
         let bTextBtn = UIImageView()
         bTextBtn.image = UIImage(named:"icon_round_send")?.withRenderingMode(.alwaysTemplate)
-        bTextBtn.tintColor = .white
-        bTextBtn.layer.opacity = 0.5
+        bTextBtn.tintColor = .ddmDarkGrayColor
+//        bTextBtn.layer.opacity = 0.5
         bottomBox.addSubview(bTextBtn)
         bTextBtn.translatesAutoresizingMaskIntoConstraints = false
 //        bTextBtn.trailingAnchor.constraint(equalTo: bottomBox.trailingAnchor, constant: -15).isActive = true
@@ -286,8 +286,8 @@ class PostDetailPanelView: PanelView {
         
         let lTextBtn = UIImageView()
         lTextBtn.image = UIImage(named:"icon_outline_photo")?.withRenderingMode(.alwaysTemplate)
-        lTextBtn.tintColor = .white
-        lTextBtn.layer.opacity = 0.5
+        lTextBtn.tintColor = .ddmDarkGrayColor
+//        lTextBtn.layer.opacity = 0.5
         bottomBox.addSubview(lTextBtn)
         lTextBtn.translatesAutoresizingMaskIntoConstraints = false
 //        lTextBtn.trailingAnchor.constraint(equalTo: bottomBox.trailingAnchor, constant: -15).isActive = true
@@ -299,8 +299,8 @@ class PostDetailPanelView: PanelView {
 
         let mTextBtn = UIImageView()
         mTextBtn.image = UIImage(named:"icon_round_emoji")?.withRenderingMode(.alwaysTemplate)
-        mTextBtn.tintColor = .white
-        mTextBtn.layer.opacity = 0.5
+        mTextBtn.tintColor = .ddmDarkGrayColor
+//        mTextBtn.layer.opacity = 0.5
         bottomBox.addSubview(mTextBtn)
         mTextBtn.translatesAutoresizingMaskIntoConstraints = false
         mTextBtn.trailingAnchor.constraint(equalTo: lTextBtn.leadingAnchor, constant: -10).isActive = true
@@ -311,8 +311,8 @@ class PostDetailPanelView: PanelView {
 
         let nTextBtn = UIImageView()
         nTextBtn.image = UIImage(named:"icon_round_at")?.withRenderingMode(.alwaysTemplate)
-        nTextBtn.tintColor = .white
-        nTextBtn.layer.opacity = 0.5
+        nTextBtn.tintColor = .ddmDarkGrayColor
+//        nTextBtn.layer.opacity = 0.5
         bottomBox.addSubview(nTextBtn)
         nTextBtn.translatesAutoresizingMaskIntoConstraints = false
         nTextBtn.trailingAnchor.constraint(equalTo: mTextBtn.leadingAnchor, constant: -10).isActive = true

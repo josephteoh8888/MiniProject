@@ -104,7 +104,7 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
         
         //pin location
         let xGrid = UIView()
-        xGrid.backgroundColor = .ddmDarkColor
+        xGrid.backgroundColor = .ddmDarkBlack
 //        panel.addSubview(aGrid)
         aPanel.addSubview(xGrid)
         xGrid.translatesAutoresizingMaskIntoConstraints = false
@@ -116,7 +116,7 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
         xGrid.topAnchor.constraint(equalTo: aPanel.topAnchor, constant: 30).isActive = true //10
         xGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true //40
         xGrid.layer.cornerRadius = 10
-        xGrid.layer.opacity = 0.1
+//        xGrid.layer.opacity = 0.1
         xGrid.isUserInteractionEnabled = true
         xGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPinClicked)))
         
@@ -189,7 +189,7 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
         aTextBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onOpenTextBoxClicked)))
         
         let aTextBg = UIView()
-        aTextBg.backgroundColor = .ddmDarkColor
+        aTextBg.backgroundColor = .ddmDarkBlack
 //        panel.addSubview(aGrid)
         aTextBox.addSubview(aTextBg)
         aTextBg.translatesAutoresizingMaskIntoConstraints = false
@@ -198,7 +198,7 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
         aTextBg.bottomAnchor.constraint(equalTo: aTextBox.bottomAnchor, constant: 0).isActive = true //10
         aTextBg.topAnchor.constraint(equalTo: aTextBox.topAnchor, constant: 0).isActive = true //10
         aTextBg.layer.cornerRadius = 10
-        aTextBg.layer.opacity = 0.1
+//        aTextBg.layer.opacity = 0.1
         
         let aGridBG = UIView()
         aGridBG.backgroundColor = .ddmDarkColor
@@ -251,7 +251,7 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
         lGrid.topAnchor.constraint(equalTo: aTextBox.bottomAnchor, constant: 30).isActive = true //20
         lGrid.heightAnchor.constraint(equalToConstant: 30).isActive = true //40
         lGrid.layer.cornerRadius = 10
-        lGrid.layer.opacity = 0.1
+//        lGrid.layer.opacity = 0.1
         
         let lText = UILabel()
         lText.textAlignment = .left
@@ -300,7 +300,7 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
         
         let l1TabText = UILabel()
         l1TabText.textAlignment = .left
-        l1TabText.textColor = .white
+        l1TabText.textColor = .ddmDarkGrayColor
 //        l1TabText.textColor = .ddmDarkColor
         l1TabText.font = .boldSystemFont(ofSize: 12)
 //        l1TabText.font = .systemFont(ofSize: 12)
@@ -313,12 +313,12 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
         l1TabText.leadingAnchor.constraint(equalTo: l1Tab.leadingAnchor, constant: 7).isActive = true //10
 //        l1TabText.trailingAnchor.constraint(equalTo: l1Tab.trailingAnchor, constant: -5).isActive = true
         l1TabText.text = "Bookmarks"
-        l1TabText.layer.opacity = 0.5
+//        l1TabText.layer.opacity = 0.5
         
         let l1TabArrowBtn = UIImageView()
 //        l1TabArrowBtn.image = UIImage(named:"icon_arrow_down")?.withRenderingMode(.alwaysTemplate)
         l1TabArrowBtn.image = UIImage(named:"icon_round_arrow_down")?.withRenderingMode(.alwaysTemplate)
-        l1TabArrowBtn.tintColor = .white
+        l1TabArrowBtn.tintColor = .ddmDarkGrayColor
 //        self.view.addSubview(arrowBtn)
         l1Tab.addSubview(l1TabArrowBtn)
         l1TabArrowBtn.translatesAutoresizingMaskIntoConstraints = false
@@ -327,11 +327,11 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
         l1TabArrowBtn.centerYAnchor.constraint(equalTo: l1TabText.centerYAnchor).isActive = true
         l1TabArrowBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true //ori 26
         l1TabArrowBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        l1TabArrowBtn.layer.opacity = 0.5
+//        l1TabArrowBtn.layer.opacity = 0.5
         
         let l2Tab = UIView()
 //        aBox.backgroundColor = .ddmBlackOverlayColor
-        l2Tab.backgroundColor = .ddmDarkColor
+        l2Tab.backgroundColor = .ddmDarkBlack
         aPanel.addSubview(l2Tab)
         l2Tab.clipsToBounds = true
         l2Tab.translatesAutoresizingMaskIntoConstraints = false
@@ -344,11 +344,11 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
         l2Tab.centerYAnchor.constraint(equalTo: lText.centerYAnchor, constant: 0).isActive = true
 //        l1Tab.leadingAnchor.constraint(equalTo: lText.leadingAnchor, constant: 15).isActive = true
         l2Tab.layer.cornerRadius = 5
-        l2Tab.layer.opacity = 0.2 //0.3
+//        l2Tab.layer.opacity = 0.2 //0.3
         
         let l2TabText = UILabel()
         l2TabText.textAlignment = .left
-        l2TabText.textColor = .white
+        l2TabText.textColor = .ddmDarkGrayColor
 //        l2TabText.textColor = .ddmDarkColor
         l2TabText.font = .boldSystemFont(ofSize: 12)
 //        l2TabText.font = .systemFont(ofSize: 12)
@@ -362,11 +362,11 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
         l2TabText.leadingAnchor.constraint(equalTo: l2Tab.leadingAnchor, constant: 7).isActive = true //10
         l2TabText.trailingAnchor.constraint(equalTo: l2Tab.trailingAnchor, constant: -7).isActive = true
         l2TabText.text = "Near Me"
-        l2TabText.layer.opacity = 0.5
+//        l2TabText.layer.opacity = 0.5
         
         let l3Tab = UIView()
 //        aBox.backgroundColor = .ddmBlackOverlayColor
-        l3Tab.backgroundColor = .ddmDarkColor
+        l3Tab.backgroundColor = .ddmDarkBlack
         aPanel.addSubview(l3Tab)
         l3Tab.clipsToBounds = true
         l3Tab.translatesAutoresizingMaskIntoConstraints = false
@@ -378,11 +378,11 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
 //        l3Tab.topAnchor.constraint(equalTo: lGrid.bottomAnchor, constant: 0).isActive = true
         l3Tab.centerYAnchor.constraint(equalTo: lText.centerYAnchor, constant: 0).isActive = true
         l3Tab.layer.cornerRadius = 5
-        l3Tab.layer.opacity = 0.2 //0.3
+//        l3Tab.layer.opacity = 0.2 //0.3
         
         let l3TabText = UILabel()
         l3TabText.textAlignment = .left
-        l3TabText.textColor = .white
+        l3TabText.textColor = .ddmDarkGrayColor
 //        l3TabText.textColor = .ddmDarkColor
         l3TabText.font = .boldSystemFont(ofSize: 12)
 //        l3TabText.font = .systemFont(ofSize: 12)
@@ -396,11 +396,11 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
         l3TabText.leadingAnchor.constraint(equalTo: l3Tab.leadingAnchor, constant: 7).isActive = true //10
         l3TabText.trailingAnchor.constraint(equalTo: l3Tab.trailingAnchor, constant: -7).isActive = true
         l3TabText.text = "Created"
-        l3TabText.layer.opacity = 0.5
+//        l3TabText.layer.opacity = 0.5
         
         let l1Box = UIView()
 //        aBox.backgroundColor = .ddmBlackOverlayColor
-        l1Box.backgroundColor = .ddmDarkColor
+        l1Box.backgroundColor = .ddmDarkBlack
         aPanel.addSubview(l1Box)
         l1Box.clipsToBounds = true
         l1Box.translatesAutoresizingMaskIntoConstraints = false
@@ -410,7 +410,7 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
 //        l1Box.topAnchor.constraint(equalTo: lGrid.bottomAnchor, constant: 0).isActive = true
         l1Box.topAnchor.constraint(equalTo: l1Tab.bottomAnchor, constant: 10).isActive = true
         l1Box.layer.cornerRadius = 5
-        l1Box.layer.opacity = 0.2 //0.3
+//        l1Box.layer.opacity = 0.2 //0.3
         l1Box.isUserInteractionEnabled = true
         l1Box.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onL1Clicked)))
 
@@ -516,7 +516,7 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
         
         let bTextSearch = UIImageView()
         bTextSearch.image = UIImage(named:"icon_round_search")?.withRenderingMode(.alwaysTemplate)
-        bTextSearch.tintColor = .white
+        bTextSearch.tintColor = .ddmDarkGrayColor
         bTextBox.addSubview(bTextSearch)
 //        panelView.addSubview(bTextSearch)
         bTextSearch.translatesAutoresizingMaskIntoConstraints = false
@@ -524,7 +524,7 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
         bTextSearch.centerYAnchor.constraint(equalTo: bTextBox.centerYAnchor).isActive = true
         bTextSearch.heightAnchor.constraint(equalToConstant: 26).isActive = true //ori 30
         bTextSearch.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        bTextSearch.layer.opacity = 0.5
+//        bTextSearch.layer.opacity = 0.5
         
 //        let bTextField = UITextField()
         bTextField.textAlignment = .left
@@ -617,7 +617,7 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
         
         let exitView = UIView()
 //        exitView.backgroundColor = .black
-        exitView.backgroundColor = .ddmDarkColor
+        exitView.backgroundColor = .ddmDarkBlack
         cPanel.addSubview(exitView)
         exitView.translatesAutoresizingMaskIntoConstraints = false
 //        exitView.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
@@ -625,7 +625,7 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
         exitView.heightAnchor.constraint(equalToConstant: 40).isActive = true //ori 45
         exitView.leadingAnchor.constraint(equalTo: cPanel.leadingAnchor, constant: 40).isActive = true //15
         exitView.trailingAnchor.constraint(equalTo: cPanel.trailingAnchor, constant: -40).isActive = true
-        exitView.layer.opacity = 0.2 //0.3
+//        exitView.layer.opacity = 0.2 //0.3
         exitView.layer.cornerRadius = 10
         exitView.isUserInteractionEnabled = true
         exitView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onExitViewClicked)))
@@ -640,7 +640,7 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
         exitViewText.centerXAnchor.constraint(equalTo: exitView.centerXAnchor).isActive = true
         exitViewText.centerYAnchor.constraint(equalTo: exitView.centerYAnchor).isActive = true
         exitViewText.text = "Cancel"
-        exitViewText.layer.opacity = 0.5
+//        exitViewText.layer.opacity = 0.5
         
         let proceedView = UIView()
 //        proceedView.backgroundColor = .black
@@ -671,7 +671,7 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
         
         let cLBox = UIView()
 //        cLBox.backgroundColor = .ddmBlackOverlayColor
-        cLBox.backgroundColor = .ddmDarkColor
+        cLBox.backgroundColor = .ddmDarkBlack
         cPanel.addSubview(cLBox)
         cLBox.clipsToBounds = true
         cLBox.translatesAutoresizingMaskIntoConstraints = false
@@ -682,7 +682,7 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
 //        cLBox.topAnchor.constraint(equalTo: lGrid.bottomAnchor, constant: 0).isActive = true
         cLBox.bottomAnchor.constraint(equalTo: proceedView.topAnchor, constant: -30).isActive = true
         cLBox.layer.cornerRadius = 5
-        cLBox.layer.opacity = 0.2 //0.3
+//        cLBox.layer.opacity = 0.2 //0.3
         
         //test > gesture recognizer for dragging user panel
         let panelPanGesture = UIPanGestureRecognizer(target: self, action: #selector(onPanelPanGesture))

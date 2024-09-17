@@ -31,7 +31,8 @@ class HResultHashtagListViewCell: UICollectionViewCell {
 
         //test > result vertical panel layout
         let aResult = UIView()
-        aResult.backgroundColor = .ddmDarkColor
+//        aResult.backgroundColor = .ddmDarkColor
+        aResult.backgroundColor = .ddmDarkBlack
         contentView.addSubview(aResult)
         aResult.translatesAutoresizingMaskIntoConstraints = false
         aResult.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0).isActive = true
@@ -39,7 +40,7 @@ class HResultHashtagListViewCell: UICollectionViewCell {
         aResult.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0).isActive = true
         aResult.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0).isActive = true
 //        aResult.layer.cornerRadius = 10
-        aResult.layer.opacity = 0.1 //0.3
+//        aResult.layer.opacity = 0.1 //0.3
         aResult.isUserInteractionEnabled = true
         aResult.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onUserClicked)))
 
@@ -54,7 +55,7 @@ class HResultHashtagListViewCell: UICollectionViewCell {
         eUserCover.heightAnchor.constraint(equalToConstant: 40).isActive = true
         eUserCover.widthAnchor.constraint(equalToConstant: 40).isActive = true
         eUserCover.layer.cornerRadius = 20
-        eUserCover.layer.opacity = 1.0 //default 0.3
+//        eUserCover.layer.opacity = 1.0 //default 0.3
         
         let aUserPhoto = SDAnimatedImageView()
         contentView.addSubview(aUserPhoto)
@@ -140,7 +141,7 @@ class HResultHashtagListViewCell: UICollectionViewCell {
         
         let aUserNameText = UILabel()
         aUserNameText.textAlignment = .left
-        aUserNameText.textColor = .white
+        aUserNameText.textColor = .ddmDarkGrayColor
         aUserNameText.font = .systemFont(ofSize: 12)
         contentView.addSubview(aUserNameText)
         aUserNameText.translatesAutoresizingMaskIntoConstraints = false
@@ -148,7 +149,7 @@ class HResultHashtagListViewCell: UICollectionViewCell {
         aUserNameText.leadingAnchor.constraint(equalTo: aNameText.leadingAnchor, constant: 0).isActive = true
         aUserNameText.text = "130k posts"
 //        aUserNameText.text = "@mic1809"
-        aUserNameText.layer.opacity = 0.3 //0.5
+//        aUserNameText.layer.opacity = 0.3 //0.5
         
     }
     

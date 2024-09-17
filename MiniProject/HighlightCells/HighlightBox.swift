@@ -45,10 +45,10 @@ class DiscoverUserSizeLHighlightCell: HighlightCell {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+        aHLightRectBG.backgroundColor = .ddmDarkOverlayBlack //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
-        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
@@ -94,24 +94,24 @@ class DiscoverUserSizeLHighlightCell: HighlightCell {
         
         let aHSubDesc = UILabel()
         aHSubDesc.textAlignment = .left
-        aHSubDesc.textColor = .white
+        aHSubDesc.textColor = .ddmDarkGrayColor
         aHSubDesc.font = .systemFont(ofSize: 11)
         aHLightRect1.addSubview(aHSubDesc)
         aHSubDesc.translatesAutoresizingMaskIntoConstraints = false
         aHSubDesc.topAnchor.constraint(equalTo: aHItemTitle.bottomAnchor, constant: 0).isActive = true //20
         aHSubDesc.leadingAnchor.constraint(equalTo: aPhoto.trailingAnchor, constant: 10).isActive = true
         aHSubDesc.text = "@vickych"
-        aHSubDesc.layer.opacity = 0.4
+//        aHSubDesc.layer.opacity = 0.4
         
         let rArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
-        rArrowBtn.tintColor = .white
+        rArrowBtn.tintColor = .ddmDarkGrayColor
         aHLightRect1.addSubview(rArrowBtn)
         rArrowBtn.translatesAutoresizingMaskIntoConstraints = false
         rArrowBtn.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true
         rArrowBtn.centerYAnchor.constraint(equalTo: aHItemTitle.centerYAnchor).isActive = true
         rArrowBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         rArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        rArrowBtn.layer.opacity = 0.5
+//        rArrowBtn.layer.opacity = 0.5
         
         let aPhoto1A = SDAnimatedImageView()
         aHLightRect1.addSubview(aPhoto1A)
@@ -138,24 +138,24 @@ class DiscoverUserSizeLHighlightCell: HighlightCell {
         
         let aHSubDesc1A = UILabel()
         aHSubDesc1A.textAlignment = .left
-        aHSubDesc1A.textColor = .white
+        aHSubDesc1A.textColor = .ddmDarkGrayColor
         aHSubDesc1A.font = .systemFont(ofSize: 11)
         aHLightRect1.addSubview(aHSubDesc1A)
         aHSubDesc1A.translatesAutoresizingMaskIntoConstraints = false
         aHSubDesc1A.topAnchor.constraint(equalTo: aHItem1ATitle.bottomAnchor, constant: 0).isActive = true //20
         aHSubDesc1A.leadingAnchor.constraint(equalTo: aPhoto1A.trailingAnchor, constant: 10).isActive = true
         aHSubDesc1A.text = "@micoley"
-        aHSubDesc1A.layer.opacity = 0.4
+//        aHSubDesc1A.layer.opacity = 0.4
         
         let rArrow1ABtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
-        rArrow1ABtn.tintColor = .white
+        rArrow1ABtn.tintColor = .ddmDarkGrayColor
         aHLightRect1.addSubview(rArrow1ABtn)
         rArrow1ABtn.translatesAutoresizingMaskIntoConstraints = false
         rArrow1ABtn.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true
         rArrow1ABtn.centerYAnchor.constraint(equalTo: aHItem1ATitle.centerYAnchor).isActive = true
         rArrow1ABtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         rArrow1ABtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        rArrow1ABtn.layer.opacity = 0.5
+//        rArrow1ABtn.layer.opacity = 0.5
     }
     
     @objc func onUserClicked(gesture: UITapGestureRecognizer) {
@@ -200,10 +200,10 @@ class DiscoverUserSizeMHighlightCell: HighlightCell {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+        aHLightRectBG.backgroundColor = .ddmDarkOverlayBlack //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
-        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
 //        aHLightRectBG.layer.opacity = 0.0 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
@@ -321,7 +321,7 @@ class DiscoverUserSizeMHighlightCell: HighlightCell {
 
         let aHSubDesc = UILabel()
         aHSubDesc.textAlignment = .left
-        aHSubDesc.textColor = .white
+        aHSubDesc.textColor = .ddmDarkGrayColor
         aHSubDesc.font = .systemFont(ofSize: 11)
 //        aHLightRect1.addSubview(aHSubDesc)
         aScroll1.addSubview(aHSubDesc)
@@ -329,7 +329,7 @@ class DiscoverUserSizeMHighlightCell: HighlightCell {
         aHSubDesc.topAnchor.constraint(equalTo: aHItemTitle.bottomAnchor, constant: 0).isActive = true //20
         aHSubDesc.leadingAnchor.constraint(equalTo: aPhoto.trailingAnchor, constant: 10).isActive = true
         aHSubDesc.text = "@vickych"
-        aHSubDesc.layer.opacity = 0.4
+//        aHSubDesc.layer.opacity = 0.4
 
         let aPhoto1A = SDAnimatedImageView()
 //        aHLightRect1.addSubview(aPhoto1A)
@@ -362,7 +362,7 @@ class DiscoverUserSizeMHighlightCell: HighlightCell {
 
         let aHSubDesc1A = UILabel()
         aHSubDesc1A.textAlignment = .left
-        aHSubDesc1A.textColor = .white
+        aHSubDesc1A.textColor = .ddmDarkGrayColor
         aHSubDesc1A.font = .systemFont(ofSize: 11)
 //        aHLightRect1.addSubview(aHSubDesc1A)
 //        aScroll2.addSubview(aHSubDesc1A)
@@ -371,7 +371,7 @@ class DiscoverUserSizeMHighlightCell: HighlightCell {
         aHSubDesc1A.topAnchor.constraint(equalTo: aHItem1ATitle.bottomAnchor, constant: 0).isActive = true //20
         aHSubDesc1A.leadingAnchor.constraint(equalTo: aPhoto1A.trailingAnchor, constant: 10).isActive = true
         aHSubDesc1A.text = "@micoley"
-        aHSubDesc1A.layer.opacity = 0.4
+//        aHSubDesc1A.layer.opacity = 0.4
         
         let aPhoto1B = SDAnimatedImageView()
 //        aHLightRect1.addSubview(aPhoto1A)
@@ -401,7 +401,7 @@ class DiscoverUserSizeMHighlightCell: HighlightCell {
 
         let aHSubDesc1B = UILabel()
         aHSubDesc1B.textAlignment = .left
-        aHSubDesc1B.textColor = .white
+        aHSubDesc1B.textColor = .ddmDarkGrayColor
         aHSubDesc1B.font = .systemFont(ofSize: 11)
 //        aHLightRect1.addSubview(aHSubDesc1A)
         aScroll2.addSubview(aHSubDesc1B)
@@ -409,7 +409,7 @@ class DiscoverUserSizeMHighlightCell: HighlightCell {
         aHSubDesc1B.topAnchor.constraint(equalTo: aHItem1BTitle.bottomAnchor, constant: 0).isActive = true //20
         aHSubDesc1B.leadingAnchor.constraint(equalTo: aPhoto1B.trailingAnchor, constant: 10).isActive = true
         aHSubDesc1B.text = "@paultanorg"
-        aHSubDesc1B.layer.opacity = 0.4
+//        aHSubDesc1B.layer.opacity = 0.4
     }
     
     @objc func onUserClicked(gesture: UITapGestureRecognizer) {
@@ -453,10 +453,10 @@ class DiscoverSoundSizeLHighlightCell: HighlightCell {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+        aHLightRectBG.backgroundColor = .ddmDarkOverlayBlack //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
-        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
@@ -502,24 +502,24 @@ class DiscoverSoundSizeLHighlightCell: HighlightCell {
         
         let aHSubDesc = UILabel()
         aHSubDesc.textAlignment = .left
-        aHSubDesc.textColor = .white
+        aHSubDesc.textColor = .ddmDarkGrayColor
         aHSubDesc.font = .systemFont(ofSize: 11)
         aHLightRect1.addSubview(aHSubDesc)
         aHSubDesc.translatesAutoresizingMaskIntoConstraints = false
         aHSubDesc.topAnchor.constraint(equalTo: aHItemTitle.bottomAnchor, constant: 0).isActive = true //20
         aHSubDesc.leadingAnchor.constraint(equalTo: aPhoto.trailingAnchor, constant: 10).isActive = true
         aHSubDesc.text = "MC 張天賦"
-        aHSubDesc.layer.opacity = 0.4
+//        aHSubDesc.layer.opacity = 0.4
         
         let rArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
-        rArrowBtn.tintColor = .white
+        rArrowBtn.tintColor = .ddmDarkGrayColor
         aHLightRect1.addSubview(rArrowBtn)
         rArrowBtn.translatesAutoresizingMaskIntoConstraints = false
         rArrowBtn.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true
         rArrowBtn.centerYAnchor.constraint(equalTo: aHItemTitle.centerYAnchor).isActive = true
         rArrowBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         rArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        rArrowBtn.layer.opacity = 0.5
+//        rArrowBtn.layer.opacity = 0.5
         
         let aPhoto1A = SDAnimatedImageView()
         aHLightRect1.addSubview(aPhoto1A)
@@ -546,24 +546,24 @@ class DiscoverSoundSizeLHighlightCell: HighlightCell {
         
         let aHSubDesc1A = UILabel()
         aHSubDesc1A.textAlignment = .left
-        aHSubDesc1A.textColor = .white
+        aHSubDesc1A.textColor = .ddmDarkGrayColor
         aHSubDesc1A.font = .systemFont(ofSize: 11)
         aHLightRect1.addSubview(aHSubDesc1A)
         aHSubDesc1A.translatesAutoresizingMaskIntoConstraints = false
         aHSubDesc1A.topAnchor.constraint(equalTo: aHItem1ATitle.bottomAnchor, constant: 0).isActive = true //20
         aHSubDesc1A.leadingAnchor.constraint(equalTo: aPhoto1A.trailingAnchor, constant: 10).isActive = true
         aHSubDesc1A.text = "黎明 卫兰"
-        aHSubDesc1A.layer.opacity = 0.4
+//        aHSubDesc1A.layer.opacity = 0.4
         
         let rArrow1ABtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
-        rArrow1ABtn.tintColor = .white
+        rArrow1ABtn.tintColor = .ddmDarkGrayColor
         aHLightRect1.addSubview(rArrow1ABtn)
         rArrow1ABtn.translatesAutoresizingMaskIntoConstraints = false
         rArrow1ABtn.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true
         rArrow1ABtn.centerYAnchor.constraint(equalTo: aHItem1ATitle.centerYAnchor).isActive = true
         rArrow1ABtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         rArrow1ABtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        rArrow1ABtn.layer.opacity = 0.5
+//        rArrow1ABtn.layer.opacity = 0.5
     }
     
     @objc func onSoundClicked(gesture: UITapGestureRecognizer) {
@@ -607,10 +607,10 @@ class DiscoverSoundSizeMHighlightCell: HighlightCell {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+        aHLightRectBG.backgroundColor = .ddmDarkOverlayBlack //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
-        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
 //        aHLightRectBG.layer.opacity = 0.0 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
@@ -728,7 +728,7 @@ class DiscoverSoundSizeMHighlightCell: HighlightCell {
 
         let aHSubDesc = UILabel()
         aHSubDesc.textAlignment = .left
-        aHSubDesc.textColor = .white
+        aHSubDesc.textColor = .ddmDarkGrayColor
         aHSubDesc.font = .systemFont(ofSize: 11)
 //        aHLightRect1.addSubview(aHSubDesc)
         aScroll1.addSubview(aHSubDesc)
@@ -736,7 +736,7 @@ class DiscoverSoundSizeMHighlightCell: HighlightCell {
         aHSubDesc.topAnchor.constraint(equalTo: aHItemTitle.bottomAnchor, constant: 0).isActive = true //20
         aHSubDesc.leadingAnchor.constraint(equalTo: aPhoto.trailingAnchor, constant: 10).isActive = true
         aHSubDesc.text = "MC 張天賦"
-        aHSubDesc.layer.opacity = 0.4
+//        aHSubDesc.layer.opacity = 0.4
 
         let aPhoto1A = SDAnimatedImageView()
 //        aHLightRect1.addSubview(aPhoto1A)
@@ -769,7 +769,7 @@ class DiscoverSoundSizeMHighlightCell: HighlightCell {
 
         let aHSubDesc1A = UILabel()
         aHSubDesc1A.textAlignment = .left
-        aHSubDesc1A.textColor = .white
+        aHSubDesc1A.textColor = .ddmDarkGrayColor
         aHSubDesc1A.font = .systemFont(ofSize: 11)
 //        aHLightRect1.addSubview(aHSubDesc1A)
 //        aScroll2.addSubview(aHSubDesc1A)
@@ -778,7 +778,7 @@ class DiscoverSoundSizeMHighlightCell: HighlightCell {
         aHSubDesc1A.topAnchor.constraint(equalTo: aHItem1ATitle.bottomAnchor, constant: 0).isActive = true //20
         aHSubDesc1A.leadingAnchor.constraint(equalTo: aPhoto1A.trailingAnchor, constant: 10).isActive = true
         aHSubDesc1A.text = "黎明 卫兰"
-        aHSubDesc1A.layer.opacity = 0.4
+//        aHSubDesc1A.layer.opacity = 0.4
         
         let aPhoto1B = SDAnimatedImageView()
 //        aHLightRect1.addSubview(aPhoto1A)
@@ -808,7 +808,7 @@ class DiscoverSoundSizeMHighlightCell: HighlightCell {
 
         let aHSubDesc1B = UILabel()
         aHSubDesc1B.textAlignment = .left
-        aHSubDesc1B.textColor = .white
+        aHSubDesc1B.textColor = .ddmDarkGrayColor
         aHSubDesc1B.font = .systemFont(ofSize: 11)
 //        aHLightRect1.addSubview(aHSubDesc1A)
         aScroll2.addSubview(aHSubDesc1B)
@@ -816,7 +816,7 @@ class DiscoverSoundSizeMHighlightCell: HighlightCell {
         aHSubDesc1B.topAnchor.constraint(equalTo: aHItem1BTitle.bottomAnchor, constant: 0).isActive = true //20
         aHSubDesc1B.leadingAnchor.constraint(equalTo: aPhoto1B.trailingAnchor, constant: 10).isActive = true
         aHSubDesc1B.text = "Gigi Yim 炎明熹"
-        aHSubDesc1B.layer.opacity = 0.4
+//        aHSubDesc1B.layer.opacity = 0.4
     }
     
     @objc func onSoundClicked(gesture: UITapGestureRecognizer) {
@@ -859,10 +859,10 @@ class DiscoverPlaceSizeLHighlightCell: HighlightCell {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+        aHLightRectBG.backgroundColor = .ddmDarkOverlayBlack //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
-        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
@@ -909,24 +909,24 @@ class DiscoverPlaceSizeLHighlightCell: HighlightCell {
         
         let aHSubDesc = UILabel()
         aHSubDesc.textAlignment = .left
-        aHSubDesc.textColor = .white
+        aHSubDesc.textColor = .ddmDarkGrayColor
         aHSubDesc.font = .systemFont(ofSize: 11)
         aHLightRect1.addSubview(aHSubDesc)
         aHSubDesc.translatesAutoresizingMaskIntoConstraints = false
         aHSubDesc.topAnchor.constraint(equalTo: aHItemTitle.bottomAnchor, constant: 0).isActive = true //20
         aHSubDesc.leadingAnchor.constraint(equalTo: aPhoto.trailingAnchor, constant: 10).isActive = true
         aHSubDesc.text = "KL Ms"
-        aHSubDesc.layer.opacity = 0.4
+//        aHSubDesc.layer.opacity = 0.4
         
         let rArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
-        rArrowBtn.tintColor = .white
+        rArrowBtn.tintColor = .ddmDarkGrayColor
         aHLightRect1.addSubview(rArrowBtn)
         rArrowBtn.translatesAutoresizingMaskIntoConstraints = false
         rArrowBtn.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true
         rArrowBtn.centerYAnchor.constraint(equalTo: aHItemTitle.centerYAnchor).isActive = true
         rArrowBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         rArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        rArrowBtn.layer.opacity = 0.5
+//        rArrowBtn.layer.opacity = 0.5
         
         let aPhoto1A = SDAnimatedImageView()
         aHLightRect1.addSubview(aPhoto1A)
@@ -953,24 +953,24 @@ class DiscoverPlaceSizeLHighlightCell: HighlightCell {
         
         let aHSubDesc1A = UILabel()
         aHSubDesc1A.textAlignment = .left
-        aHSubDesc1A.textColor = .white
+        aHSubDesc1A.textColor = .ddmDarkGrayColor
         aHSubDesc1A.font = .systemFont(ofSize: 11)
         aHLightRect1.addSubview(aHSubDesc1A)
         aHSubDesc1A.translatesAutoresizingMaskIntoConstraints = false
         aHSubDesc1A.topAnchor.constraint(equalTo: aHItem1ATitle.bottomAnchor, constant: 0).isActive = true //20
         aHSubDesc1A.leadingAnchor.constraint(equalTo: aPhoto1A.trailingAnchor, constant: 10).isActive = true
         aHSubDesc1A.text = "CB Team"
-        aHSubDesc1A.layer.opacity = 0.4
+//        aHSubDesc1A.layer.opacity = 0.4
         
         let rArrow1ABtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
-        rArrow1ABtn.tintColor = .white
+        rArrow1ABtn.tintColor = .ddmDarkGrayColor
         aHLightRect1.addSubview(rArrow1ABtn)
         rArrow1ABtn.translatesAutoresizingMaskIntoConstraints = false
         rArrow1ABtn.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true
         rArrow1ABtn.centerYAnchor.constraint(equalTo: aHItem1ATitle.centerYAnchor).isActive = true
         rArrow1ABtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         rArrow1ABtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        rArrow1ABtn.layer.opacity = 0.5
+//        rArrow1ABtn.layer.opacity = 0.5
     }
     
     @objc func onPlaceClicked(gesture: UITapGestureRecognizer) {
@@ -1014,10 +1014,10 @@ class DiscoverPlaceSizeMHighlightCell: HighlightCell {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+        aHLightRectBG.backgroundColor = .ddmDarkOverlayBlack //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
-        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
 //        aHLightRectBG.layer.opacity = 0.0 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
@@ -1136,7 +1136,7 @@ class DiscoverPlaceSizeMHighlightCell: HighlightCell {
 
         let aHSubDesc = UILabel()
         aHSubDesc.textAlignment = .left
-        aHSubDesc.textColor = .white
+        aHSubDesc.textColor = .ddmDarkGrayColor
         aHSubDesc.font = .systemFont(ofSize: 11)
 //        aHLightRect1.addSubview(aHSubDesc)
         aScroll1.addSubview(aHSubDesc)
@@ -1144,7 +1144,7 @@ class DiscoverPlaceSizeMHighlightCell: HighlightCell {
         aHSubDesc.topAnchor.constraint(equalTo: aHItemTitle.bottomAnchor, constant: 0).isActive = true //20
         aHSubDesc.leadingAnchor.constraint(equalTo: aPhoto.trailingAnchor, constant: 10).isActive = true
         aHSubDesc.text = "DBKL"
-        aHSubDesc.layer.opacity = 0.4
+//        aHSubDesc.layer.opacity = 0.4
 
         let aPhoto1A = SDAnimatedImageView()
 //        aHLightRect1.addSubview(aPhoto1A)
@@ -1177,7 +1177,7 @@ class DiscoverPlaceSizeMHighlightCell: HighlightCell {
 
         let aHSubDesc1A = UILabel()
         aHSubDesc1A.textAlignment = .left
-        aHSubDesc1A.textColor = .white
+        aHSubDesc1A.textColor = .ddmDarkGrayColor
         aHSubDesc1A.font = .systemFont(ofSize: 11)
 //        aHLightRect1.addSubview(aHSubDesc1A)
 //        aScroll2.addSubview(aHSubDesc1A)
@@ -1186,7 +1186,7 @@ class DiscoverPlaceSizeMHighlightCell: HighlightCell {
         aHSubDesc1A.topAnchor.constraint(equalTo: aHItem1ATitle.bottomAnchor, constant: 0).isActive = true //20
         aHSubDesc1A.leadingAnchor.constraint(equalTo: aPhoto1A.trailingAnchor, constant: 10).isActive = true
         aHSubDesc1A.text = "CB Team"
-        aHSubDesc1A.layer.opacity = 0.4
+//        aHSubDesc1A.layer.opacity = 0.4
         
         let aPhoto1B = SDAnimatedImageView()
 //        aHLightRect1.addSubview(aPhoto1A)
@@ -1216,7 +1216,7 @@ class DiscoverPlaceSizeMHighlightCell: HighlightCell {
 
         let aHSubDesc1B = UILabel()
         aHSubDesc1B.textAlignment = .left
-        aHSubDesc1B.textColor = .white
+        aHSubDesc1B.textColor = .ddmDarkGrayColor
         aHSubDesc1B.font = .systemFont(ofSize: 11)
 //        aHLightRect1.addSubview(aHSubDesc1A)
         aScroll2.addSubview(aHSubDesc1B)
@@ -1224,7 +1224,7 @@ class DiscoverPlaceSizeMHighlightCell: HighlightCell {
         aHSubDesc1B.topAnchor.constraint(equalTo: aHItem1BTitle.bottomAnchor, constant: 0).isActive = true //20
         aHSubDesc1B.leadingAnchor.constraint(equalTo: aPhoto1B.trailingAnchor, constant: 10).isActive = true
         aHSubDesc1B.text = "Sunway"
-        aHSubDesc1B.layer.opacity = 0.4
+//        aHSubDesc1B.layer.opacity = 0.4
     }
     
     @objc func onPlaceClicked(gesture: UITapGestureRecognizer) {
@@ -1266,10 +1266,10 @@ class LatestMultiLoopsSizeMHighlightCell: UIView {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+        aHLightRectBG.backgroundColor = .ddmDarkOverlayBlack //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
-        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
@@ -1288,7 +1288,7 @@ class LatestMultiLoopsSizeMHighlightCell: UIView {
 //        aHLightTitle.isHidden = true
         
         let rArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
-        rArrowBtn.tintColor = .white
+        rArrowBtn.tintColor = .ddmDarkGrayColor
         aHLightRect1.addSubview(rArrowBtn)
         rArrowBtn.translatesAutoresizingMaskIntoConstraints = false
         rArrowBtn.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true
@@ -1296,7 +1296,7 @@ class LatestMultiLoopsSizeMHighlightCell: UIView {
         rArrowBtn.centerYAnchor.constraint(equalTo: aHLightTitle.centerYAnchor).isActive = true
         rArrowBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         rArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        rArrowBtn.layer.opacity = 0.5
+//        rArrowBtn.layer.opacity = 0.5
         
 //        let scrollViewWidth = viewWidth - 20.0*2
         let aScroll1 = UIView()
@@ -1418,10 +1418,10 @@ class LatestLoopSizeMHighlightCell: UIView {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+        aHLightRectBG.backgroundColor = .ddmDarkOverlayBlack //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
-        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
@@ -1503,24 +1503,24 @@ class LatestLoopSizeMHighlightCell: UIView {
         
         let aHSubDesc1A = UILabel()
         aHSubDesc1A.textAlignment = .left
-        aHSubDesc1A.textColor = .white
+        aHSubDesc1A.textColor = .ddmDarkGrayColor
         aHSubDesc1A.font = .systemFont(ofSize: 12)
         aHLightRect1.addSubview(aHSubDesc1A)
         aHSubDesc1A.translatesAutoresizingMaskIntoConstraints = false
         aHSubDesc1A.topAnchor.constraint(equalTo: aHItem1ATitle.bottomAnchor, constant: 5).isActive = true //0
         aHSubDesc1A.leadingAnchor.constraint(equalTo: aGrid.trailingAnchor, constant: 10).isActive = true
         aHSubDesc1A.text = "105k"
-        aHSubDesc1A.layer.opacity = 0.4
+//        aHSubDesc1A.layer.opacity = 0.4
         
         let rArrowBtn = UIImageView(image: UIImage(named:"icon_love")?.withRenderingMode(.alwaysTemplate))
-        rArrowBtn.tintColor = .white
+        rArrowBtn.tintColor = .ddmDarkGrayColor
         aHLightRect1.addSubview(rArrowBtn)
         rArrowBtn.translatesAutoresizingMaskIntoConstraints = false
         rArrowBtn.leadingAnchor.constraint(equalTo: aHSubDesc1A.trailingAnchor, constant: 5).isActive = true
         rArrowBtn.centerYAnchor.constraint(equalTo: aHSubDesc1A.centerYAnchor).isActive = true
         rArrowBtn.heightAnchor.constraint(equalToConstant: 14).isActive = true
         rArrowBtn.widthAnchor.constraint(equalToConstant: 14).isActive = true
-        rArrowBtn.layer.opacity = 0.4
+//        rArrowBtn.layer.opacity = 0.4
     }
 }
 
@@ -1558,10 +1558,10 @@ class LatestMultiPhotosSizeMHighlightCell: UIView {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+        aHLightRectBG.backgroundColor = .ddmDarkOverlayBlack //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
-        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
@@ -1580,7 +1580,7 @@ class LatestMultiPhotosSizeMHighlightCell: UIView {
 //        aHLightTitle.isHidden = true
         
         let rArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
-        rArrowBtn.tintColor = .white
+        rArrowBtn.tintColor = .ddmDarkGrayColor
         aHLightRect1.addSubview(rArrowBtn)
         rArrowBtn.translatesAutoresizingMaskIntoConstraints = false
         rArrowBtn.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true
@@ -1588,7 +1588,7 @@ class LatestMultiPhotosSizeMHighlightCell: UIView {
         rArrowBtn.centerYAnchor.constraint(equalTo: aHLightTitle.centerYAnchor).isActive = true
         rArrowBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         rArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        rArrowBtn.layer.opacity = 0.5
+//        rArrowBtn.layer.opacity = 0.5
         
 //        let scrollViewWidth = viewWidth - 20.0*2
         let aScroll1 = UIView()
@@ -1710,11 +1710,11 @@ class BaseLocationHighlightBox: UIView {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+//        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
 //        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
-        aHLightRectBG.layer.opacity = 0.0 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.0 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
@@ -1793,7 +1793,7 @@ class BaseLocationHighlightBox: UIView {
 
         let aHSubDesc2 = UILabel()
         aHSubDesc2.textAlignment = .left
-        aHSubDesc2.textColor = .white
+        aHSubDesc2.textColor = .ddmDarkGrayColor
         aHSubDesc2.font = .systemFont(ofSize: 11)
 //        aHLightSection.addSubview(aHSubDesc2)
         aHLightRect1.addSubview(aHSubDesc2)
@@ -1804,10 +1804,10 @@ class BaseLocationHighlightBox: UIView {
 //                aHSubDesc2.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true
 //        aHSubDesc2.text = "87k saves"
         aHSubDesc2.text = "Base"
-        aHSubDesc2.layer.opacity = 0.4
+//        aHSubDesc2.layer.opacity = 0.4
 
         let rArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
-        rArrowBtn.tintColor = .white
+        rArrowBtn.tintColor = .ddmDarkGrayColor
 //        aHLightSection.addSubview(rArrowBtn)
         aHLightRect1.addSubview(rArrowBtn)
         rArrowBtn.translatesAutoresizingMaskIntoConstraints = false
@@ -1817,7 +1817,7 @@ class BaseLocationHighlightBox: UIView {
         rArrowBtn.centerYAnchor.constraint(equalTo: aHSubDesc.centerYAnchor).isActive = true
         rArrowBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true
         rArrowBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        rArrowBtn.layer.opacity = 0.5
+//        rArrowBtn.layer.opacity = 0.5
     }
 }
 
@@ -1856,11 +1856,11 @@ class AboutUserHighlightBox: UIView {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+//        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
 //        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
-        aHLightRectBG.layer.opacity = 0.0 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.0 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
@@ -1893,7 +1893,7 @@ class AboutUserHighlightBox: UIView {
         
         let linkBtn = UIImageView()
         linkBtn.image = UIImage(named:"icon_round_link")?.withRenderingMode(.alwaysTemplate)
-        linkBtn.tintColor = .white
+        linkBtn.tintColor = .ddmDarkGrayColor
         aHLightRect1.addSubview(linkBtn)
         linkBtn.translatesAutoresizingMaskIntoConstraints = false
         linkBtn.topAnchor.constraint(equalTo: aHSubDesc.bottomAnchor, constant: 5).isActive = true //10
@@ -1901,11 +1901,11 @@ class AboutUserHighlightBox: UIView {
         linkBtn.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true
         linkBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true
         linkBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        linkBtn.layer.opacity = 0.4
+//        linkBtn.layer.opacity = 0.4
 
         let aHSubDesc2 = UILabel()
         aHSubDesc2.textAlignment = .left
-        aHSubDesc2.textColor = .white
+        aHSubDesc2.textColor = .ddmDarkGrayColor
         aHSubDesc2.font = .boldSystemFont(ofSize: 13)
 //        aHLightSection.addSubview(aHSubDesc2)
         aHLightRect1.addSubview(aHSubDesc2)
@@ -1916,10 +1916,10 @@ class AboutUserHighlightBox: UIView {
 //        aHSubDesc2.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 10).isActive = true
 //        aHSubDesc2.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true
         aHSubDesc2.text = "youtube.com/@courtneyryan"
-        aHSubDesc2.layer.opacity = 0.4
+//        aHSubDesc2.layer.opacity = 0.4
 
         let rArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
-        rArrowBtn.tintColor = .white
+        rArrowBtn.tintColor = .ddmDarkGrayColor
 //        aHLightSection.addSubview(rArrowBtn)
         aHLightRect1.addSubview(rArrowBtn)
         rArrowBtn.translatesAutoresizingMaskIntoConstraints = false
@@ -1929,7 +1929,7 @@ class AboutUserHighlightBox: UIView {
         rArrowBtn.centerYAnchor.constraint(equalTo: aHSubDesc.centerYAnchor).isActive = true
         rArrowBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         rArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        rArrowBtn.layer.opacity = 0.5
+//        rArrowBtn.layer.opacity = 0.5
     }
 }
 
@@ -1968,11 +1968,11 @@ class AboutSoundHighlightBox: UIView {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+//        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
 //        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
-        aHLightRectBG.layer.opacity = 0.0 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.0 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
@@ -2025,7 +2025,7 @@ class AboutSoundHighlightBox: UIView {
         
         let linkBtn = UIImageView()
         linkBtn.image = UIImage(named:"icon_round_link")?.withRenderingMode(.alwaysTemplate)
-        linkBtn.tintColor = .white
+        linkBtn.tintColor = .ddmDarkGrayColor
         aHLightRect1.addSubview(linkBtn)
         linkBtn.translatesAutoresizingMaskIntoConstraints = false
         linkBtn.topAnchor.constraint(equalTo: aHSubDesc.bottomAnchor, constant: 5).isActive = true //10
@@ -2033,11 +2033,11 @@ class AboutSoundHighlightBox: UIView {
         linkBtn.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true
         linkBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true
         linkBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        linkBtn.layer.opacity = 0.4
+//        linkBtn.layer.opacity = 0.4
 
         let aHSubDesc2 = UILabel()
         aHSubDesc2.textAlignment = .left
-        aHSubDesc2.textColor = .white
+        aHSubDesc2.textColor = .ddmDarkGrayColor
         aHSubDesc2.font = .boldSystemFont(ofSize: 13)
 //        aHLightSection.addSubview(aHSubDesc2)
         aHLightRect1.addSubview(aHSubDesc2)
@@ -2048,10 +2048,10 @@ class AboutSoundHighlightBox: UIView {
 //        aHSubDesc2.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 10).isActive = true
 //        aHSubDesc2.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true
         aHSubDesc2.text = "youtube.com/@courtneyryan"
-        aHSubDesc2.layer.opacity = 0.4
+//        aHSubDesc2.layer.opacity = 0.4
 
         let rArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
-        rArrowBtn.tintColor = .white
+        rArrowBtn.tintColor = .ddmDarkGrayColor
 //        aHLightSection.addSubview(rArrowBtn)
         aHLightRect1.addSubview(rArrowBtn)
         rArrowBtn.translatesAutoresizingMaskIntoConstraints = false
@@ -2061,7 +2061,7 @@ class AboutSoundHighlightBox: UIView {
         rArrowBtn.centerYAnchor.constraint(equalTo: aHSubDesc.centerYAnchor).isActive = true
         rArrowBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         rArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        rArrowBtn.layer.opacity = 0.5
+//        rArrowBtn.layer.opacity = 0.5
     }
 }
 
@@ -2100,11 +2100,11 @@ class UserEmptyPostHighlightBox: UIView {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+//        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
 //        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
-        aHLightRectBG.layer.opacity = 0.0 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.0 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
@@ -2174,11 +2174,11 @@ class SoundEmptyPostHighlightBox: UIView {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+//        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
 //        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
-        aHLightRectBG.layer.opacity = 0.0 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.0 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
@@ -2267,11 +2267,11 @@ class UserPrivateAccountHighlightBox: UIView {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+//        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
 //        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
-        aHLightRectBG.layer.opacity = 0.0 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.0 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
@@ -2356,11 +2356,11 @@ class FetchErrorHighlightBox: HighlightCell {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+//        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
 //        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
-        aHLightRectBG.layer.opacity = 0.0 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.0 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
@@ -2459,11 +2459,11 @@ class UserSuspendedHighlightBox: UIView {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+//        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
 //        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
-        aHLightRectBG.layer.opacity = 0.0 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.0 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
@@ -2534,11 +2534,11 @@ class UserNotFoundHighlightBox: UIView {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+//        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
 //        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
-        aHLightRectBG.layer.opacity = 0.0 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.0 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
@@ -2609,11 +2609,11 @@ class PlaceNotFoundHighlightBox: UIView {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+//        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
 //        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
-        aHLightRectBG.layer.opacity = 0.0 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.0 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
@@ -2684,11 +2684,11 @@ class PlaceSuspendedHighlightBox: UIView {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+//        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
 //        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
-        aHLightRectBG.layer.opacity = 0.0 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.0 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
@@ -2759,11 +2759,11 @@ class SoundNotFoundHighlightBox: UIView {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+//        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
 //        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
-        aHLightRectBG.layer.opacity = 0.0 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.0 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
@@ -2834,11 +2834,11 @@ class SoundSuspendedHighlightBox: UIView {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+//        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
 //        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
-        aHLightRectBG.layer.opacity = 0.0 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.0 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5

@@ -967,8 +967,8 @@ extension CommentScrollableView: UICollectionViewDelegateFlowLayout {
                 qDataArray.append("t")
 //                qDataArray.append("p")
 //                qDataArray.append("p_s")
-//                qDataArray.append("v")
-                qDataArray.append("v_l")
+                qDataArray.append("v")
+//                qDataArray.append("v_l")
                 //**
 
                 let qLhsMargin = indentSize

@@ -65,10 +65,10 @@ class MultiPhotosMeCell: MeCell {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+        aHLightRectBG.backgroundColor = .ddmDarkBlack //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
-        aHLightRectBG.layer.opacity = 0.1 //0.2
+//        aHLightRectBG.layer.opacity = 0.1 //0.2
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
@@ -89,7 +89,7 @@ class MultiPhotosMeCell: MeCell {
 //        aHLightTitle.isHidden = true
         
         let rArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
-        rArrowBtn.tintColor = .white
+        rArrowBtn.tintColor = .ddmDarkGrayColor
         aHLightRect1.addSubview(rArrowBtn)
         rArrowBtn.translatesAutoresizingMaskIntoConstraints = false
         rArrowBtn.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true
@@ -97,7 +97,7 @@ class MultiPhotosMeCell: MeCell {
         rArrowBtn.centerYAnchor.constraint(equalTo: aHLightTitle.centerYAnchor).isActive = true
         rArrowBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         rArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        rArrowBtn.layer.opacity = 0.5
+//        rArrowBtn.layer.opacity = 0.5
         
 //        let scrollViewWidth = viewWidth - 20.0*2
         let aScroll1 = UIView()
@@ -222,10 +222,10 @@ class MultiLoopsMeCell: MeCell {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+        aHLightRectBG.backgroundColor = .ddmDarkBlack //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
-        aHLightRectBG.layer.opacity = 0.1 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.1 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
@@ -246,7 +246,7 @@ class MultiLoopsMeCell: MeCell {
 //        aHLightTitle.isHidden = true
         
         let rArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
-        rArrowBtn.tintColor = .white
+        rArrowBtn.tintColor = .ddmDarkGrayColor
         aHLightRect1.addSubview(rArrowBtn)
         rArrowBtn.translatesAutoresizingMaskIntoConstraints = false
         rArrowBtn.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true
@@ -254,7 +254,7 @@ class MultiLoopsMeCell: MeCell {
         rArrowBtn.centerYAnchor.constraint(equalTo: aHLightTitle.centerYAnchor).isActive = true
         rArrowBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         rArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        rArrowBtn.layer.opacity = 0.5
+//        rArrowBtn.layer.opacity = 0.5
         
 //        let scrollViewWidth = viewWidth - 20.0*2
         let aScroll1 = UIView()
@@ -379,10 +379,10 @@ class MultiPostsMeCell: MeCell {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+        aHLightRectBG.backgroundColor = .ddmDarkBlack //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
-        aHLightRectBG.layer.opacity = 0.1 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.1 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
@@ -403,7 +403,7 @@ class MultiPostsMeCell: MeCell {
 //        aHLightTitle.isHidden = true
         
         let rArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
-        rArrowBtn.tintColor = .white
+        rArrowBtn.tintColor = .ddmDarkGrayColor
         aHLightRect1.addSubview(rArrowBtn)
         rArrowBtn.translatesAutoresizingMaskIntoConstraints = false
         rArrowBtn.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true
@@ -411,7 +411,7 @@ class MultiPostsMeCell: MeCell {
         rArrowBtn.centerYAnchor.constraint(equalTo: aHLightTitle.centerYAnchor).isActive = true
         rArrowBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         rArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        rArrowBtn.layer.opacity = 0.5
+//        rArrowBtn.layer.opacity = 0.5
         
 //        let scrollViewWidth = viewWidth - 20.0*2
         let aScroll1 = UIView()
@@ -507,10 +507,10 @@ class MultiCommentsMeCell: MeCell {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+        aHLightRectBG.backgroundColor = .ddmDarkBlack //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
-        aHLightRectBG.layer.opacity = 0.1 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.1 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
@@ -531,7 +531,7 @@ class MultiCommentsMeCell: MeCell {
 //        aHLightTitle.isHidden = true
         
         let rArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
-        rArrowBtn.tintColor = .white
+        rArrowBtn.tintColor = .ddmDarkGrayColor
         aHLightRect1.addSubview(rArrowBtn)
         rArrowBtn.translatesAutoresizingMaskIntoConstraints = false
         rArrowBtn.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true
@@ -539,7 +539,7 @@ class MultiCommentsMeCell: MeCell {
         rArrowBtn.centerYAnchor.constraint(equalTo: aHLightTitle.centerYAnchor).isActive = true
         rArrowBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         rArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        rArrowBtn.layer.opacity = 0.5
+//        rArrowBtn.layer.opacity = 0.5
         
 //        let scrollViewWidth = viewWidth - 20.0*2
         let aScroll1 = UIView()
@@ -605,10 +605,10 @@ class HistoryMeCell: MeCell {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+        aHLightRectBG.backgroundColor = .ddmDarkBlack //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
-        aHLightRectBG.layer.opacity = 0.1 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.1 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
@@ -630,7 +630,7 @@ class HistoryMeCell: MeCell {
         aHLightTitle.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true
         
         let rArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
-        rArrowBtn.tintColor = .white
+        rArrowBtn.tintColor = .ddmDarkGrayColor
         aHLightRect1.addSubview(rArrowBtn)
         rArrowBtn.translatesAutoresizingMaskIntoConstraints = false
         rArrowBtn.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true
@@ -638,7 +638,7 @@ class HistoryMeCell: MeCell {
         rArrowBtn.centerYAnchor.constraint(equalTo: aHLightTitle.centerYAnchor).isActive = true
         rArrowBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         rArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        rArrowBtn.layer.opacity = 0.5
+//        rArrowBtn.layer.opacity = 0.5
     }
     
     @objc func onRectClicked(gesture: UITapGestureRecognizer) {
@@ -680,10 +680,10 @@ class LikeMeCell: MeCell {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+        aHLightRectBG.backgroundColor = .ddmDarkBlack //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
-        aHLightRectBG.layer.opacity = 0.1 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.1 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
@@ -705,7 +705,7 @@ class LikeMeCell: MeCell {
         aHLightTitle.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true
         
         let rArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
-        rArrowBtn.tintColor = .white
+        rArrowBtn.tintColor = .ddmDarkGrayColor
         aHLightRect1.addSubview(rArrowBtn)
         rArrowBtn.translatesAutoresizingMaskIntoConstraints = false
         rArrowBtn.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true
@@ -713,7 +713,7 @@ class LikeMeCell: MeCell {
         rArrowBtn.centerYAnchor.constraint(equalTo: aHLightTitle.centerYAnchor).isActive = true
         rArrowBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         rArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        rArrowBtn.layer.opacity = 0.5
+//        rArrowBtn.layer.opacity = 0.5
     }
     
     @objc func onRectClicked(gesture: UITapGestureRecognizer) {
@@ -755,10 +755,10 @@ class BookmarkMeCell: MeCell {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+        aHLightRectBG.backgroundColor = .ddmDarkBlack //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
-        aHLightRectBG.layer.opacity = 0.1 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.1 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
@@ -780,7 +780,7 @@ class BookmarkMeCell: MeCell {
         aHLightTitle.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true
         
         let rArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
-        rArrowBtn.tintColor = .white
+        rArrowBtn.tintColor = .ddmDarkGrayColor
         aHLightRect1.addSubview(rArrowBtn)
         rArrowBtn.translatesAutoresizingMaskIntoConstraints = false
         rArrowBtn.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true
@@ -788,7 +788,7 @@ class BookmarkMeCell: MeCell {
         rArrowBtn.centerYAnchor.constraint(equalTo: aHLightTitle.centerYAnchor).isActive = true
         rArrowBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         rArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        rArrowBtn.layer.opacity = 0.5
+//        rArrowBtn.layer.opacity = 0.5
     }
     
     @objc func onRectClicked(gesture: UITapGestureRecognizer) {
@@ -830,10 +830,10 @@ class AccountMeCell: MeCell {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+        aHLightRectBG.backgroundColor = .ddmDarkBlack //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
-        aHLightRectBG.layer.opacity = 0.1 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.1 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
@@ -855,7 +855,7 @@ class AccountMeCell: MeCell {
         aHLightTitle.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true
         
         let rArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
-        rArrowBtn.tintColor = .white
+        rArrowBtn.tintColor = .ddmDarkGrayColor
         aHLightRect1.addSubview(rArrowBtn)
         rArrowBtn.translatesAutoresizingMaskIntoConstraints = false
         rArrowBtn.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true
@@ -863,7 +863,7 @@ class AccountMeCell: MeCell {
         rArrowBtn.centerYAnchor.constraint(equalTo: aHLightTitle.centerYAnchor).isActive = true
         rArrowBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         rArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        rArrowBtn.layer.opacity = 0.5
+//        rArrowBtn.layer.opacity = 0.5
         
         let notifiedBox = UIView()
 //        eUserCover.backgroundColor = .ddmBlackOverlayColor
@@ -916,10 +916,10 @@ class EditProfileMeCell: MeCell {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+        aHLightRectBG.backgroundColor = .ddmDarkBlack //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
-        aHLightRectBG.layer.opacity = 0.1 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.1 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
@@ -941,7 +941,7 @@ class EditProfileMeCell: MeCell {
         aHLightTitle.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true
         
         let rArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
-        rArrowBtn.tintColor = .white
+        rArrowBtn.tintColor = .ddmDarkGrayColor
         aHLightRect1.addSubview(rArrowBtn)
         rArrowBtn.translatesAutoresizingMaskIntoConstraints = false
         rArrowBtn.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true
@@ -949,7 +949,7 @@ class EditProfileMeCell: MeCell {
         rArrowBtn.centerYAnchor.constraint(equalTo: aHLightTitle.centerYAnchor).isActive = true
         rArrowBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         rArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        rArrowBtn.layer.opacity = 0.5
+//        rArrowBtn.layer.opacity = 0.5
         
 //        let notifiedBox = UIView()
 ////        eUserCover.backgroundColor = .ddmBlackOverlayColor
@@ -1072,10 +1072,10 @@ class FollowerMeCell: MeCell {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+        aHLightRectBG.backgroundColor = .ddmDarkBlack //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
-        aHLightRectBG.layer.opacity = 0.1 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.1 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
@@ -1098,7 +1098,7 @@ class FollowerMeCell: MeCell {
         aHLightTitle.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true
         
         let rArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
-        rArrowBtn.tintColor = .white
+        rArrowBtn.tintColor = .ddmDarkGrayColor
         aHLightRect1.addSubview(rArrowBtn)
         rArrowBtn.translatesAutoresizingMaskIntoConstraints = false
         rArrowBtn.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true
@@ -1106,7 +1106,7 @@ class FollowerMeCell: MeCell {
         rArrowBtn.centerYAnchor.constraint(equalTo: aHLightTitle.centerYAnchor).isActive = true
         rArrowBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         rArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        rArrowBtn.layer.opacity = 0.5
+//        rArrowBtn.layer.opacity = 0.5
     }
     
     @objc func onRectClicked(gesture: UITapGestureRecognizer) {
@@ -1148,10 +1148,10 @@ class BaseMeCell: MeCell {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+        aHLightRectBG.backgroundColor = .ddmDarkBlack //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
-        aHLightRectBG.layer.opacity = 0.1 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.1 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
@@ -1173,7 +1173,7 @@ class BaseMeCell: MeCell {
 //        aHLightTitle.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true
         
         let rArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
-        rArrowBtn.tintColor = .white
+        rArrowBtn.tintColor = .ddmDarkGrayColor
         aHLightRect1.addSubview(rArrowBtn)
         rArrowBtn.translatesAutoresizingMaskIntoConstraints = false
         rArrowBtn.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true
@@ -1181,7 +1181,7 @@ class BaseMeCell: MeCell {
         rArrowBtn.centerYAnchor.constraint(equalTo: aHLightTitle.centerYAnchor).isActive = true
         rArrowBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         rArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        rArrowBtn.layer.opacity = 0.5
+//        rArrowBtn.layer.opacity = 0.5
         
         let rGridBG = SDAnimatedImageView()
 //        aHLightSection.addSubview(rGridBG)
@@ -1220,7 +1220,7 @@ class BaseMeCell: MeCell {
         
         let aHSubDesc2 = UILabel()
         aHSubDesc2.textAlignment = .left
-        aHSubDesc2.textColor = .white
+        aHSubDesc2.textColor = .ddmDarkGrayColor
         aHSubDesc2.font = .systemFont(ofSize: 11)
 //        aHLightSection.addSubview(aHSubDesc2)
         aHLightRect1.addSubview(aHSubDesc2)
@@ -1231,7 +1231,7 @@ class BaseMeCell: MeCell {
 //                aHSubDesc2.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true
 //        aHSubDesc2.text = "87k saves"
         aHSubDesc2.text = "Malaysia"
-        aHSubDesc2.layer.opacity = 0.4
+//        aHSubDesc2.layer.opacity = 0.4
     }
     
     @objc func onRectClicked(gesture: UITapGestureRecognizer) {
@@ -1273,10 +1273,10 @@ class LocationMeCell: MeCell {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+        aHLightRectBG.backgroundColor = .ddmDarkBlack //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
-        aHLightRectBG.layer.opacity = 0.1 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.1 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
@@ -1298,7 +1298,7 @@ class LocationMeCell: MeCell {
 //        aHLightTitle.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true
         
         let rArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
-        rArrowBtn.tintColor = .white
+        rArrowBtn.tintColor = .ddmDarkGrayColor
         aHLightRect1.addSubview(rArrowBtn)
         rArrowBtn.translatesAutoresizingMaskIntoConstraints = false
         rArrowBtn.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true
@@ -1306,7 +1306,7 @@ class LocationMeCell: MeCell {
         rArrowBtn.centerYAnchor.constraint(equalTo: aHLightTitle.centerYAnchor).isActive = true
         rArrowBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         rArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        rArrowBtn.layer.opacity = 0.5
+//        rArrowBtn.layer.opacity = 0.5
         
         let rGridBG = SDAnimatedImageView()
 //        aHLightSection.addSubview(rGridBG)
@@ -1345,7 +1345,7 @@ class LocationMeCell: MeCell {
         
         let aHSubDesc2 = UILabel()
         aHSubDesc2.textAlignment = .left
-        aHSubDesc2.textColor = .white
+        aHSubDesc2.textColor = .ddmDarkGrayColor
         aHSubDesc2.font = .systemFont(ofSize: 11)
 //        aHLightSection.addSubview(aHSubDesc2)
         aHLightRect1.addSubview(aHSubDesc2)
@@ -1356,7 +1356,7 @@ class LocationMeCell: MeCell {
 //                aHSubDesc2.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true
 //        aHSubDesc2.text = "87k saves"
         aHSubDesc2.text = "United States"
-        aHSubDesc2.layer.opacity = 0.4
+//        aHSubDesc2.layer.opacity = 0.4
     }
     
     @objc func onRectClicked(gesture: UITapGestureRecognizer) {
@@ -1525,10 +1525,10 @@ class SignoutMeCell: MeCell {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkColor //.ddmDarkColor
+        aHLightRectBG.backgroundColor = .ddmDarkBlack //.ddmDarkColor
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
-        aHLightRectBG.layer.opacity = 0.1 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.1 //0.2, 0.1
         aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
         aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5

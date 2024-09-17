@@ -700,7 +700,7 @@ class SoundScrollablePanelView: ScrollablePanelView{
     //        aBtn.topAnchor.constraint(equalTo: userPanel.topAnchor, constant: 30).isActive = true
         aBtn.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
         aBtn.layer.cornerRadius = 20
-        aBtn.layer.opacity = 0.3
+//        aBtn.layer.opacity = 0.3
         aBtn.isUserInteractionEnabled = true
         aBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onCloseClicked)))
 
@@ -733,7 +733,7 @@ class SoundScrollablePanelView: ScrollablePanelView{
         aStickyGridBG.widthAnchor.constraint(equalToConstant: 30).isActive = true
         aStickyGridBG.centerYAnchor.constraint(equalTo: stickyHLight.centerYAnchor, constant: 0).isActive = true
         aStickyGridBG.layer.cornerRadius = 5 //20
-        aStickyGridBG.layer.opacity = 0.5
+//        aStickyGridBG.layer.opacity = 0.5
         
         let objectSymbolC = UIImageView(image: UIImage(named:"icon_round_music")?.withRenderingMode(.alwaysTemplate))
         objectSymbolC.tintColor = .white

@@ -646,7 +646,7 @@ class PlaceScrollablePanelView: ScrollablePanelView{
     //        aBtn.topAnchor.constraint(equalTo: userPanel.topAnchor, constant: 30).isActive = true
         aBtn.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
         aBtn.layer.cornerRadius = 20
-        aBtn.layer.opacity = 0.3
+//        aBtn.layer.opacity = 0.3
         aBtn.isUserInteractionEnabled = true
         aBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onCloseClicked)))
 
@@ -672,6 +672,7 @@ class PlaceScrollablePanelView: ScrollablePanelView{
         //test *object symbol
         let aStickyGridBG = UIView()
         aStickyGridBG.backgroundColor = .ddmDarkColor
+//        aStickyGridBG.backgroundColor = .ddmBlackDark
         stickyHLight.addSubview(aStickyGridBG)
         aStickyGridBG.translatesAutoresizingMaskIntoConstraints = false
         aStickyGridBG.leadingAnchor.constraint(equalTo: stickyHLight.leadingAnchor, constant: 0).isActive = true
@@ -679,7 +680,7 @@ class PlaceScrollablePanelView: ScrollablePanelView{
         aStickyGridBG.widthAnchor.constraint(equalToConstant: 30).isActive = true
         aStickyGridBG.centerYAnchor.constraint(equalTo: stickyHLight.centerYAnchor, constant: 0).isActive = true
         aStickyGridBG.layer.cornerRadius = 5 //20
-        aStickyGridBG.layer.opacity = 0.5
+//        aStickyGridBG.layer.opacity = 0.5
         
         let objectSymbolC = UIImageView(image: UIImage(named:"icon_location")?.withRenderingMode(.alwaysTemplate))
         objectSymbolC.tintColor = .white

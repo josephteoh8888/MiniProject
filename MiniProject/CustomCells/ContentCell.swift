@@ -65,7 +65,8 @@ class PostPhotoContentCell: ContentCell {
     func redrawUI() {
         
         let pConBg = UIView()
-        pConBg.backgroundColor = .ddmDarkColor //.ddmDarkColor
+//        pConBg.backgroundColor = .ddmDarkColor //.ddmDarkColor
+        pConBg.backgroundColor = .ddmBlackDark
         self.addSubview(pConBg)
         pConBg.frame = CGRect(x: 0, y: 0, width: viewWidth, height: viewHeight)
         pConBg.translatesAutoresizingMaskIntoConstraints = false
@@ -74,7 +75,7 @@ class PostPhotoContentCell: ContentCell {
         pConBg.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true  //280
         pConBg.heightAnchor.constraint(equalToConstant: viewHeight).isActive = true  //280
         pConBg.layer.cornerRadius = 10
-        pConBg.layer.opacity = 0.4 //0.2
+//        pConBg.layer.opacity = 0.4 //0.2
         
         //carousel of images
 //        let scrollView = UIScrollView()
@@ -142,7 +143,7 @@ class PostPhotoContentCell: ContentCell {
             
             let dataCount = vDataList.count
             if(dataCount > 1) {
-                bubbleBox.setConfiguration(number: dataCount, color: .yellow)
+                bubbleBox.setConfiguration(number: dataCount, color: .white)//yellow
                 bubbleBox.isHidden = false
             }
             
@@ -277,7 +278,8 @@ class PostPhotoShotContentCell: ContentCell {
     func redrawUI() {
         
         let pConBg = UIView()
-        pConBg.backgroundColor = .ddmDarkColor //.ddmDarkColor
+//        pConBg.backgroundColor = .ddmDarkColor //.ddmDarkColor
+        pConBg.backgroundColor = .ddmBlackDark
         self.addSubview(pConBg)
         pConBg.frame = CGRect(x: 0, y: 0, width: viewWidth, height: viewHeight)
         pConBg.translatesAutoresizingMaskIntoConstraints = false
@@ -286,7 +288,7 @@ class PostPhotoShotContentCell: ContentCell {
         pConBg.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true  //280
         pConBg.heightAnchor.constraint(equalToConstant: viewHeight).isActive = true  //280
         pConBg.layer.cornerRadius = 10
-        pConBg.layer.opacity = 0.4 //0.2
+//        pConBg.layer.opacity = 0.4 //0.2
         
         //carousel of images
         self.addSubview(scrollView)
@@ -519,7 +521,7 @@ class PostPhotoShotContentCell: ContentCell {
             
             let dataCount = vDataList.count
             if(dataCount > 1) {
-                bubbleBox.setConfiguration(number: dataCount, color: .yellow)
+                bubbleBox.setConfiguration(number: dataCount, color: .white) //yellow
                 bubbleBox.isHidden = false
             }
             
@@ -668,7 +670,8 @@ class PostVideoContentCell: MediaContentCell {
     
     func redrawUI() {
         let vConBg = UIView()
-        vConBg.backgroundColor = .ddmDarkColor //.ddmDarkColor
+//        vConBg.backgroundColor = .ddmDarkColor //.ddmDarkColor
+        vConBg.backgroundColor = .ddmBlackDark
         self.addSubview(vConBg)
         vConBg.frame = CGRect(x: 0, y: 0, width: viewWidth, height: viewHeight) //150, 250
         vConBg.translatesAutoresizingMaskIntoConstraints = false
@@ -677,7 +680,7 @@ class PostVideoContentCell: MediaContentCell {
         vConBg.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true  //280
         vConBg.heightAnchor.constraint(equalToConstant: viewHeight).isActive = true  //280
         vConBg.layer.cornerRadius = 10
-        vConBg.layer.opacity = 0.4 //0.2
+//        vConBg.layer.opacity = 0.4 //0.2
         
         let videoContainerBg = UIView()
         self.addSubview(videoContainerBg)
@@ -1081,7 +1084,8 @@ class PostVideoLoopContentCell: MediaContentCell {
     
     func redrawUI() {
         let vConBg = UIView()
-        vConBg.backgroundColor = .ddmDarkColor //.ddmDarkColor
+//        vConBg.backgroundColor = .ddmDarkColor //.ddmDarkColor
+        vConBg.backgroundColor = .ddmBlackDark
         self.addSubview(vConBg)
         vConBg.frame = CGRect(x: 0, y: 0, width: viewWidth, height: viewHeight) //150, 250
         vConBg.translatesAutoresizingMaskIntoConstraints = false
@@ -1090,7 +1094,7 @@ class PostVideoLoopContentCell: MediaContentCell {
         vConBg.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true  //280
         vConBg.heightAnchor.constraint(equalToConstant: viewHeight).isActive = true  //280
         vConBg.layer.cornerRadius = 10
-        vConBg.layer.opacity = 0.4 //0.2
+//        vConBg.layer.opacity = 0.4 //0.2
         
         let videoContainerBg = UIView()
         self.addSubview(videoContainerBg)
@@ -1566,7 +1570,8 @@ class ShotPhotoContentCell: ContentCell {
     func redrawUI() {
         
         let pConBg = UIView()
-        pConBg.backgroundColor = .ddmDarkColor //.ddmDarkColor
+//        pConBg.backgroundColor = .ddmDarkColor //.ddmDarkColor
+        pConBg.backgroundColor = .ddmBlackDark
         self.addSubview(pConBg)
         pConBg.frame = CGRect(x: 0, y: 0, width: viewWidth, height: viewHeight - bubbleHeight)
         pConBg.translatesAutoresizingMaskIntoConstraints = false
@@ -1575,7 +1580,7 @@ class ShotPhotoContentCell: ContentCell {
         pConBg.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true  //280
         pConBg.heightAnchor.constraint(equalToConstant: viewHeight - bubbleHeight).isActive = true  //280
         pConBg.layer.cornerRadius = 10
-        pConBg.layer.opacity = 0.4 //0.2
+//        pConBg.layer.opacity = 0.4 //0.2
         
         //carousel of images
 //        let scrollView = UIScrollView()
@@ -1646,7 +1651,7 @@ class ShotPhotoContentCell: ContentCell {
             
             let dataCount = vDataList.count
             if(dataCount > 1) {
-                bubbleBox.setConfiguration(number: dataCount, color: .yellow)
+                bubbleBox.setConfiguration(number: dataCount, color: .white) //yellow
                 bubbleBox.isHidden = false
             }
             
@@ -1824,8 +1829,8 @@ class ShotSoundContentCell: MediaContentCell {
         aaBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onSoundClicked)))
         
         let aBox = UIView()
-//        aBox.backgroundColor = .ddmBlackOverlayColor
-        aBox.backgroundColor = .ddmDarkColor
+        aBox.backgroundColor = .ddmBlackDark
+//        aBox.backgroundColor = .ddmDarkColor
 //        contentView.addSubview(aBox)
         aaBox.addSubview(aBox)
         aBox.clipsToBounds = true
@@ -1835,7 +1840,7 @@ class ShotSoundContentCell: MediaContentCell {
         aBox.trailingAnchor.constraint(equalTo: aaBox.trailingAnchor, constant: 0).isActive = true //20
         aBox.bottomAnchor.constraint(equalTo: aaBox.bottomAnchor, constant: 0).isActive = true //test
         aBox.layer.cornerRadius = 5
-        aBox.layer.opacity = 0.2 //0.3
+//        aBox.layer.opacity = 0.2 //0.3
         
         let mBtn = UIImageView(image: UIImage(named:"icon_round_music")?.withRenderingMode(.alwaysTemplate))
 //        mBtn.tintColor = .black
@@ -2217,8 +2222,8 @@ class PostQuoteContentCell: MediaContentCell {
         let indentSize = photoSize + photoLhsMargin + usernameLhsMargin
         
         self.layer.borderWidth = 2.0 //2
-        self.layer.borderColor = UIColor.ddmDarkColor.cgColor
-//        self.layer.borderColor = UIColor.black.cgColor
+        self.layer.borderColor = UIColor.ddmDarkColor.cgColor //default
+//        self.layer.borderColor = UIColor.ddmBlackDark.cgColor
         self.layer.cornerRadius = 10
         self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onQuoteClicked)))
         

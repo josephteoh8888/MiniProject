@@ -59,7 +59,8 @@ class HPostListAViewCell: UICollectionViewCell {
 
         //test > result vertical panel layout
         let aResult = UIView()
-        aResult.backgroundColor = .ddmDarkColor
+//        aResult.backgroundColor = .ddmDarkColor
+        aResult.backgroundColor = .ddmDarkBlack
         contentView.addSubview(aResult)
         aResult.translatesAutoresizingMaskIntoConstraints = false
         aResult.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0).isActive = true
@@ -67,7 +68,7 @@ class HPostListAViewCell: UICollectionViewCell {
         aResult.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0).isActive = true
         aResult.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0).isActive = true
 //        aResult.layer.cornerRadius = 10
-        aResult.layer.opacity = 0.1 //0.3
+//        aResult.layer.opacity = 0.1 //0.3
 //        aResult.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onSingleClicked)))
         
         //test > added double tap for love click shortcut
@@ -110,7 +111,6 @@ class HPostListAViewCell: UICollectionViewCell {
         eUserCover.heightAnchor.constraint(equalToConstant: 40).isActive = true
         eUserCover.widthAnchor.constraint(equalToConstant: 40).isActive = true
         eUserCover.layer.cornerRadius = 20
-        eUserCover.layer.opacity = 1.0 //default 0.3
         
 //        let aUserPhoto = SDAnimatedImageView()
 //        contentView.addSubview(aUserPhoto)
@@ -164,7 +164,7 @@ class HPostListAViewCell: UICollectionViewCell {
         
 //        let aUserNameText = UILabel()
         aUserNameText.textAlignment = .left
-        aUserNameText.textColor = .white
+        aUserNameText.textColor = .ddmDarkGrayColor
         aUserNameText.font = .systemFont(ofSize: 12)
 //        contentView.addSubview(aUserNameText)
         aCon.addSubview(aUserNameText)
@@ -173,7 +173,7 @@ class HPostListAViewCell: UICollectionViewCell {
         aUserNameText.leadingAnchor.constraint(equalTo: aGridNameText.leadingAnchor, constant: 0).isActive = true
         aUserNameText.text = "-"
 //        aUserNameText.text = "@mic1809"
-        aUserNameText.layer.opacity = 0.3 //0.5
+//        aUserNameText.layer.opacity = 0.3 //0.5
         
 //        let aTest = UIView()
 //        contentView.addSubview(aTest)
@@ -186,18 +186,10 @@ class HPostListAViewCell: UICollectionViewCell {
         //test > click on aTest for click post
 //        aTest.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onSingleClicked)))
         
-//        let atapGR = UITapGestureRecognizer(target: self, action: #selector(onSingleClicked))
-//        atapGR.numberOfTapsRequired = 1
-//        aTest.addGestureRecognizer(atapGR)
-//        let tapGR = UITapGestureRecognizer(target: self, action: #selector(onDoubleClicked))
-//        tapGR.numberOfTapsRequired = 2
-//        aTest.addGestureRecognizer(tapGR)
-//        atapGR.require(toFail: tapGR) //enable double tap
-        
         //test 2 > design location 2
         let aBox = UIView()
-//        aBox.backgroundColor = .ddmBlackOverlayColor
-        aBox.backgroundColor = .ddmDarkColor
+        aBox.backgroundColor = .ddmBlackDark
+//        aBox.backgroundColor = .ddmDarkColor
 //        contentView.addSubview(aBox)
         aCon.addSubview(aBox)
         aBox.clipsToBounds = true
@@ -210,7 +202,7 @@ class HPostListAViewCell: UICollectionViewCell {
 //        aBox.topAnchor.constraint(equalTo: aQuotePost.bottomAnchor, constant: 20).isActive = true
         aBox.topAnchor.constraint(equalTo: aTest.bottomAnchor, constant: 20).isActive = true
         aBox.layer.cornerRadius = 5
-        aBox.layer.opacity = 0.2 //0.3
+//        aBox.layer.opacity = 0.2 //0.3
         aBox.isUserInteractionEnabled = true
         aBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPlaceClicked)))
 
@@ -269,7 +261,8 @@ class HPostListAViewCell: UICollectionViewCell {
         bMiniCon.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onLoveClicked)))
         
         let bMini = UIView()
-        bMini.backgroundColor = .ddmDarkColor
+//        bMini.backgroundColor = .ddmDarkColor
+        bMini.backgroundColor = .ddmBlackDark
 //        contentView.addSubview(bMini)
 //        aCon.addSubview(bMini)
         bMiniCon.addSubview(bMini)
@@ -279,7 +272,7 @@ class HPostListAViewCell: UICollectionViewCell {
         bMini.heightAnchor.constraint(equalToConstant: 30).isActive = true //26
         bMini.widthAnchor.constraint(equalToConstant: 30).isActive = true
         bMini.layer.cornerRadius = 15
-        bMini.layer.opacity = 0.4 //0.2
+//        bMini.layer.opacity = 0.4
 //        bMini.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onLoveClicked)))
         
 //        let bMiniBtn = UIImageView(image: UIImage(named:"icon_love")?.withRenderingMode(.alwaysTemplate))
@@ -322,7 +315,8 @@ class HPostListAViewCell: UICollectionViewCell {
         cMiniCon.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onCommentBtnClicked)))
         
         let cMini = UIView()
-        cMini.backgroundColor = .ddmDarkColor
+//        cMini.backgroundColor = .ddmDarkColor
+        cMini.backgroundColor = .ddmBlackDark
 //        contentView.addSubview(cMini)
 //        aCon.addSubview(cMini)
         cMiniCon.addSubview(cMini)
@@ -332,7 +326,7 @@ class HPostListAViewCell: UICollectionViewCell {
         cMini.heightAnchor.constraint(equalToConstant: 30).isActive = true
         cMini.widthAnchor.constraint(equalToConstant: 30).isActive = true
         cMini.layer.cornerRadius = 15
-        cMini.layer.opacity = 0.4 //0.2
+//        cMini.layer.opacity = 0.4 //0.2
 //        cMini.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onCommentBtnClicked)))
         
         let cMiniBtn = UIImageView(image: UIImage(named:"icon_comment")?.withRenderingMode(.alwaysTemplate))
@@ -374,7 +368,8 @@ class HPostListAViewCell: UICollectionViewCell {
         dMiniCon.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBookmarkClicked)))
         
         let dMini = UIView()
-        dMini.backgroundColor = .ddmDarkColor
+//        dMini.backgroundColor = .ddmDarkColor
+        dMini.backgroundColor = .ddmBlackDark
 //        contentView.addSubview(dMini)
         dMiniCon.addSubview(dMini)
         dMini.translatesAutoresizingMaskIntoConstraints = false
@@ -383,7 +378,7 @@ class HPostListAViewCell: UICollectionViewCell {
         dMini.heightAnchor.constraint(equalToConstant: 30).isActive = true
         dMini.widthAnchor.constraint(equalToConstant: 30).isActive = true
         dMini.layer.cornerRadius = 15
-        dMini.layer.opacity = 0.4 //0.2
+//        dMini.layer.opacity = 0.4 //0.2
 //        dMini.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBookmarkClicked)))
         
 //        let dMiniBtn = UIImageView(image: UIImage(named:"icon_round_bookmark_b")?.withRenderingMode(.alwaysTemplate))
@@ -426,7 +421,8 @@ class HPostListAViewCell: UICollectionViewCell {
         eMiniCon.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onShareClicked)))
         
         let eMini = UIView()
-        eMini.backgroundColor = .ddmDarkColor
+//        eMini.backgroundColor = .ddmDarkColor
+        eMini.backgroundColor = .ddmBlackDark
 //        eMini.backgroundColor = .green
 //        contentView.addSubview(eMini)
         eMiniCon.addSubview(eMini)
@@ -436,7 +432,7 @@ class HPostListAViewCell: UICollectionViewCell {
         eMini.heightAnchor.constraint(equalToConstant: 30).isActive = true
         eMini.widthAnchor.constraint(equalToConstant: 30).isActive = true
         eMini.layer.cornerRadius = 15
-        eMini.layer.opacity = 0.4 //0.2
+//        eMini.layer.opacity = 0.4 //0.2
 //        eMini.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onShareClicked)))
         
         let eMiniBtn = UIImageView(image: UIImage(named:"icon_round_share")?.withRenderingMode(.alwaysTemplate).withHorizontallyFlippedOrientation())

@@ -70,7 +70,7 @@ class LoginPanelView: PanelView{
         aBoxUnder.translatesAutoresizingMaskIntoConstraints = false
         aBoxUnder.heightAnchor.constraint(equalToConstant: viewHeight).isActive = true
         aBoxUnder.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true
-        aBoxUnder.layer.opacity = 0.5 //0.3
+//        aBoxUnder.layer.opacity = 0.5 //0.3
 //        aBoxUnder.isHidden = true
 //        aBoxUnder.isUserInteractionEnabled = true
 //        aBoxUnder.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBackPanelClicked)))
@@ -103,14 +103,14 @@ class LoginPanelView: PanelView{
         aBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBackLoginPanelClicked)))
 
         let bMiniBtn = UIImageView(image: UIImage(named:"icon_round_close")?.withRenderingMode(.alwaysTemplate))
-        bMiniBtn.tintColor = .white
+        bMiniBtn.tintColor = .ddmDarkGrayColor
         aPanel.addSubview(bMiniBtn)
         bMiniBtn.translatesAutoresizingMaskIntoConstraints = false
         bMiniBtn.centerXAnchor.constraint(equalTo: aBtn.centerXAnchor).isActive = true
         bMiniBtn.centerYAnchor.constraint(equalTo: aBtn.centerYAnchor).isActive = true
         bMiniBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         bMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        bMiniBtn.layer.opacity = 0.3
+//        bMiniBtn.layer.opacity = 0.3
         
         let aLoginText = UILabel()
         aLoginText.textAlignment = .center
@@ -143,7 +143,7 @@ class LoginPanelView: PanelView{
         let gBtn = UIView()
 //        aPanel.addSubview(gBtn)
         aContainer.addSubview(gBtn)
-        gBtn.backgroundColor = .ddmDarkColor
+        gBtn.backgroundColor = .ddmBlackDark
 //        gBtn.backgroundColor = .yellow
         gBtn.translatesAutoresizingMaskIntoConstraints = false
 //        gBtn.leadingAnchor.constraint(equalTo: aPanel.leadingAnchor, constant: 40).isActive = true //70
@@ -156,7 +156,7 @@ class LoginPanelView: PanelView{
         gBtn.layer.cornerRadius = 10
         gBtn.isUserInteractionEnabled = true
         gBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onLoginGProceedClicked)))
-        gBtn.layer.opacity = 0.3 //0.3
+//        gBtn.layer.opacity = 0.3 //0.3
         
         let gBtnText = UILabel()
         gBtnText.textAlignment = .center
@@ -199,7 +199,7 @@ class LoginPanelView: PanelView{
         let hBtn = UIView()
 //        aPanel.addSubview(hBtn)
         aContainer.addSubview(hBtn)
-        hBtn.backgroundColor = .ddmDarkColor
+        hBtn.backgroundColor = .ddmBlackDark
 //        hBtn.backgroundColor = .yellow
         hBtn.translatesAutoresizingMaskIntoConstraints = false
 //        hBtn.leadingAnchor.constraint(equalTo: aPanel.leadingAnchor, constant: 40).isActive = true
@@ -211,7 +211,7 @@ class LoginPanelView: PanelView{
         hBtn.layer.cornerRadius = 10
         hBtn.isUserInteractionEnabled = true
         hBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onLoginHProceedClicked)))
-        hBtn.layer.opacity = 0.3 //0.3
+//        hBtn.layer.opacity = 0.3 //0.3
         
         let hBtnText = UILabel()
         hBtnText.textAlignment = .center
@@ -254,7 +254,7 @@ class LoginPanelView: PanelView{
         let iBtn = UIView()
 //        aPanel.addSubview(iBtn)
         aContainer.addSubview(iBtn)
-        iBtn.backgroundColor = .ddmDarkColor
+        iBtn.backgroundColor = .ddmBlackDark
 //        iBtn.backgroundColor = .yellow
         iBtn.translatesAutoresizingMaskIntoConstraints = false
 //        iBtn.leadingAnchor.constraint(equalTo: aPanel.leadingAnchor, constant: 40).isActive = true
@@ -266,7 +266,7 @@ class LoginPanelView: PanelView{
         iBtn.layer.cornerRadius = 10
         iBtn.isUserInteractionEnabled = true
         iBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onLoginIProceedClicked)))
-        iBtn.layer.opacity = 0.3 //0.3
+//        iBtn.layer.opacity = 0.3 //0.3
         
         let iBtnText = UILabel()
         iBtnText.textAlignment = .center
@@ -386,14 +386,14 @@ class LoginPanelView: PanelView{
         aABtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBackSignupPanelClicked)))
 
         let bBMiniBtn = UIImageView(image: UIImage(named:"icon_round_close")?.withRenderingMode(.alwaysTemplate))
-        bBMiniBtn.tintColor = .white
+        bBMiniBtn.tintColor = .ddmDarkGrayColor
         bPanel.addSubview(bBMiniBtn)
         bBMiniBtn.translatesAutoresizingMaskIntoConstraints = false
         bBMiniBtn.centerXAnchor.constraint(equalTo: aABtn.centerXAnchor).isActive = true
         bBMiniBtn.centerYAnchor.constraint(equalTo: aABtn.centerYAnchor).isActive = true
         bBMiniBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         bBMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        bBMiniBtn.layer.opacity = 0.3
+//        bBMiniBtn.layer.opacity = 0.3
         
         let aALoginText = UILabel()
         aALoginText.textAlignment = .center
@@ -492,7 +492,7 @@ class LoginPanelView: PanelView{
         
         let iContinueText = UILabel()
         iContinueText.textAlignment = .center
-        iContinueText.textColor = .white
+        iContinueText.textColor = .ddmDarkGrayColor
 //        iContinueText.textColor = .ddmBlackOverlayColor
         iContinueText.font = .systemFont(ofSize: 14)
 //        bPanel.addSubview(iContinueText)
@@ -502,7 +502,7 @@ class LoginPanelView: PanelView{
 //        iContinueText.centerXAnchor.constraint(equalTo: bPanel.centerXAnchor, constant: 0).isActive = true
         iContinueText.centerXAnchor.constraint(equalTo: rContainer.centerXAnchor, constant: 0).isActive = true
         iContinueText.text = "Or continue with"
-        iContinueText.layer.opacity = 0.5
+//        iContinueText.layer.opacity = 0.5
         
         let aBtnContainer = UIView()
 //        bPanel.addSubview(aBtnContainer)
@@ -708,14 +708,14 @@ class LoginPanelView: PanelView{
         aCBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBackCPanelClicked)))
 
         let bCMiniBtn = UIImageView(image: UIImage(named:"icon_round_close")?.withRenderingMode(.alwaysTemplate))
-        bCMiniBtn.tintColor = .white
+        bCMiniBtn.tintColor = .ddmDarkGrayColor
         cPanel.addSubview(bCMiniBtn)
         bCMiniBtn.translatesAutoresizingMaskIntoConstraints = false
         bCMiniBtn.centerXAnchor.constraint(equalTo: aCBtn.centerXAnchor).isActive = true
         bCMiniBtn.centerYAnchor.constraint(equalTo: aCBtn.centerYAnchor).isActive = true
         bCMiniBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         bCMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        bCMiniBtn.layer.opacity = 0.3
+//        bCMiniBtn.layer.opacity = 0.3
         
         let aCLoginText = UILabel()
         aCLoginText.textAlignment = .center

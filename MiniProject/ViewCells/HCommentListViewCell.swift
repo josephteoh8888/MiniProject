@@ -56,7 +56,8 @@ class HCommentListViewCell: UICollectionViewCell {
     private func addSubViews() {
         //test > result vertical panel layout
         let aResult = UIView()
-        aResult.backgroundColor = .ddmDarkColor
+//        aResult.backgroundColor = .ddmDarkColor
+        aResult.backgroundColor = .ddmDarkBlack
         contentView.addSubview(aResult)
         aResult.translatesAutoresizingMaskIntoConstraints = false
         aResult.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0).isActive = true
@@ -64,7 +65,7 @@ class HCommentListViewCell: UICollectionViewCell {
         aResult.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0).isActive = true
         aResult.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0).isActive = true
 //        aResult.layer.cornerRadius = 10
-        aResult.layer.opacity = 0.1 //0.3
+//        aResult.layer.opacity = 0.1 //0.3
 //        let atapGR = UITapGestureRecognizer(target: self, action: #selector(onSingleClicked))
 //        aResult.addGestureRecognizer(atapGR)
         
@@ -125,7 +126,7 @@ class HCommentListViewCell: UICollectionViewCell {
         eUserCover.heightAnchor.constraint(equalToConstant: photoSize).isActive = true
         eUserCover.widthAnchor.constraint(equalToConstant: photoSize).isActive = true
         eUserCover.layer.cornerRadius = 14
-        eUserCover.layer.opacity = 1.0 //default 0.3
+//        eUserCover.layer.opacity = 1.0 //default 0.3
         
 //        let aUserPhoto = SDAnimatedImageView()
 //        contentView.addSubview(aUserPhoto)
@@ -186,7 +187,7 @@ class HCommentListViewCell: UICollectionViewCell {
         
 //        let aUserNameText = UILabel()
         aUserNameText.textAlignment = .left
-        aUserNameText.textColor = .white
+        aUserNameText.textColor = .ddmDarkGrayColor
         aUserNameText.font = .systemFont(ofSize: 12)
 //        contentView.addSubview(aUserNameText)
         aCon.addSubview(aUserNameText)
@@ -194,7 +195,7 @@ class HCommentListViewCell: UICollectionViewCell {
         aUserNameText.topAnchor.constraint(equalTo: aGridNameText.bottomAnchor).isActive = true
         aUserNameText.leadingAnchor.constraint(equalTo: aGridNameText.leadingAnchor, constant: 0).isActive = true
         aUserNameText.text = "-"
-        aUserNameText.layer.opacity = 0.3 //0.5
+//        aUserNameText.layer.opacity = 0.3 //0.5
 
 //        contentView.addSubview(aTest)
         aCon.addSubview(aTest)
@@ -211,14 +212,15 @@ class HCommentListViewCell: UICollectionViewCell {
         bMiniCon.translatesAutoresizingMaskIntoConstraints = false
         bMiniCon.bottomAnchor.constraint(equalTo: aCon.bottomAnchor, constant: -20).isActive = true //0
         bMiniCon.topAnchor.constraint(equalTo: aTest.bottomAnchor, constant: 20).isActive = true
-        bMiniCon.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 53).isActive = true
+        bMiniCon.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: indentSize).isActive = true
         bMiniCon.heightAnchor.constraint(equalToConstant: 28).isActive = true //26
         bMiniCon.widthAnchor.constraint(equalToConstant: 28).isActive = true
         bMiniCon.isUserInteractionEnabled = true
         bMiniCon.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onLoveClicked)))
         
         let bMini = UIView()
-        bMini.backgroundColor = .ddmDarkColor
+//        bMini.backgroundColor = .ddmDarkColor
+        bMini.backgroundColor = .ddmBlackDark
 //        contentView.addSubview(bMini)
 //        aCon.addSubview(bMini)
         bMiniCon.addSubview(bMini)
@@ -231,7 +233,7 @@ class HCommentListViewCell: UICollectionViewCell {
         bMini.heightAnchor.constraint(equalToConstant: 28).isActive = true //26
         bMini.widthAnchor.constraint(equalToConstant: 28).isActive = true
         bMini.layer.cornerRadius = 14
-        bMini.layer.opacity = 0.4 //0.2
+//        bMini.layer.opacity = 0.4 //0.2
 //        bMini.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onLoveClicked)))
         
 //        let bMiniBtn = UIImageView(image: UIImage(named:"icon_love")?.withRenderingMode(.alwaysTemplate))
@@ -276,7 +278,8 @@ class HCommentListViewCell: UICollectionViewCell {
         cMiniCon.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onCommentClicked)))
         
         let cMini = UIView()
-        cMini.backgroundColor = .ddmDarkColor
+//        cMini.backgroundColor = .ddmDarkColor
+        cMini.backgroundColor = .ddmBlackDark
 //        contentView.addSubview(cMini)
 //        aCon.addSubview(cMini)
         cMiniCon.addSubview(cMini)
@@ -288,7 +291,7 @@ class HCommentListViewCell: UICollectionViewCell {
         cMini.heightAnchor.constraint(equalToConstant: 28).isActive = true //26
         cMini.widthAnchor.constraint(equalToConstant: 28).isActive = true
         cMini.layer.cornerRadius = 14
-        cMini.layer.opacity = 0.4 //0.2
+//        cMini.layer.opacity = 0.4 //0.2
 //        cMini.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onCommentClicked)))
         
         let cMiniBtn = UIImageView(image: UIImage(named:"icon_comment")?.withRenderingMode(.alwaysTemplate))
@@ -332,7 +335,8 @@ class HCommentListViewCell: UICollectionViewCell {
         dMiniCon.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBookmarkClicked)))
         
         let dMini = UIView()
-        dMini.backgroundColor = .ddmDarkColor
+//        dMini.backgroundColor = .ddmDarkColor
+        dMini.backgroundColor = .ddmBlackDark
 //        contentView.addSubview(dMini)
 //        aCon.addSubview(dMini)
         dMiniCon.addSubview(dMini)
@@ -344,7 +348,7 @@ class HCommentListViewCell: UICollectionViewCell {
         dMini.heightAnchor.constraint(equalToConstant: 28).isActive = true//26
         dMini.widthAnchor.constraint(equalToConstant: 28).isActive = true
         dMini.layer.cornerRadius = 14
-        dMini.layer.opacity = 0.4 //0.2
+//        dMini.layer.opacity = 0.4 //0.2
 //        dMini.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBookmarkClicked)))
         
 //        let dMiniBtn = UIImageView(image: UIImage(named:"icon_round_bookmark_b")?.withRenderingMode(.alwaysTemplate))
@@ -390,7 +394,8 @@ class HCommentListViewCell: UICollectionViewCell {
         eMiniCon.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onShareClicked)))
         
         let eMini = UIView()
-        eMini.backgroundColor = .ddmDarkColor
+//        eMini.backgroundColor = .ddmDarkColor
+        eMini.backgroundColor = .ddmBlackDark
 //        eMini.backgroundColor = .green
 //        contentView.addSubview(eMini)
 //        aCon.addSubview(eMini)
@@ -403,7 +408,7 @@ class HCommentListViewCell: UICollectionViewCell {
         eMini.heightAnchor.constraint(equalToConstant: 28).isActive = true //26
         eMini.widthAnchor.constraint(equalToConstant: 28).isActive = true
         eMini.layer.cornerRadius = 14
-        eMini.layer.opacity = 0.4 //0.2
+//        eMini.layer.opacity = 0.4 //0.2
 //        eMini.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onShareClicked)))
         
         let eMiniBtn = UIImageView(image: UIImage(named:"icon_round_share")?.withRenderingMode(.alwaysTemplate).withHorizontallyFlippedOrientation())

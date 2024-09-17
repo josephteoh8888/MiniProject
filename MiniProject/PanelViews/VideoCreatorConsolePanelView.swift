@@ -104,7 +104,7 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
 //        let topInsetMargin = panel.safeAreaInsets.top + 10
         aBtn.topAnchor.constraint(equalTo: panel.topAnchor, constant: 50).isActive = true
         aBtn.layer.cornerRadius = 20
-        aBtn.layer.opacity = 0.3
+//        aBtn.layer.opacity = 0.3
         aBtn.isUserInteractionEnabled = true
         aBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBackVideoCreatorPanelClicked)))
 
