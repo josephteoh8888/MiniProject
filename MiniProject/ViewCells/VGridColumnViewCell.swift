@@ -122,6 +122,9 @@ class VGridColumnViewCell: UICollectionViewCell {
         } else if(data == "de") {
             bMiniBtn.image = UIImage(named:"icon_round_delete")?.withRenderingMode(.alwaysTemplate)
             aMiniText.text = "Delete"
+        } else if(data == "sa") {
+            bMiniBtn.image = UIImage(named:"icon_round_bookmark_b")?.withRenderingMode(.alwaysTemplate)
+            aMiniText.text = "Save"
         }
     }
 

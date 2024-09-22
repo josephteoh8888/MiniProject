@@ -835,7 +835,7 @@ extension PlaceSelectPanelView: UICollectionViewDelegateFlowLayout {
 //        return CGSize(width: collectionView.frame.width - 30, height: 120)
         
         if(indexPath.item == 0) {
-            return CGSize(width: collectionView.frame.width, height: 200)
+            return CGSize(width: collectionView.frame.width, height: 210) //200
         } else {
 //            return CGSize(width: collectionView.frame.width - 30, height: 120)
             return CGSize(width: collectionView.frame.width, height: 60)
@@ -970,6 +970,7 @@ extension PlaceSelectPanelView: UICollectionViewDataSource {
 //            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HListViewCell.identifier, for: indexPath) as! HListViewCell
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HSingleLocationViewCell.identifier, for: indexPath) as! HSingleLocationViewCell
             cell.aDelegate = self
+            cell.configure(data: vDataList[indexPath.row])
             return cell
         }
     }

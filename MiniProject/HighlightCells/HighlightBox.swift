@@ -200,7 +200,8 @@ class DiscoverUserSizeMHighlightCell: HighlightCell {
         aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
         
         let aHLightRectBG = UIView()
-        aHLightRectBG.backgroundColor = .ddmDarkOverlayBlack //.ddmDarkColor
+        aHLightRectBG.backgroundColor = .ddmDarkOverlayBlack
+//        aHLightRectBG.backgroundColor = .ddmBlackDark
         aHLightRect1.addSubview(aHLightRectBG)
         aHLightRectBG.layer.cornerRadius = 10 //10
 //        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1

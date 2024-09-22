@@ -34,19 +34,15 @@ class HMultiLocationViewCell: UICollectionViewCell {
     }
     
     private func addSubViews() {
-//        let aResult = UIView()
-//        aResult.backgroundColor = .ddmDarkColor
-//        contentView.addSubview(aResult)
-//        aResult.translatesAutoresizingMaskIntoConstraints = false
-////        aResult.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15).isActive = true
-////        aResult.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15).isActive = true
-////        aResult.heightAnchor.constraint(equalToConstant: 120).isActive = true
-////        aResult.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15).isActive = true
-//        aResult.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0).isActive = true
-//        aResult.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 0).isActive = true
-//        aResult.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0).isActive = true
-//        aResult.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0).isActive = true
-//        aResult.layer.cornerRadius = 10
+        let aResult = UIView()
+        aResult.backgroundColor = .ddmDarkBlack
+        contentView.addSubview(aResult)
+        aResult.translatesAutoresizingMaskIntoConstraints = false
+        aResult.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15).isActive = true
+        aResult.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15).isActive = true
+        aResult.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0).isActive = true
+        aResult.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0).isActive = true
+        aResult.layer.cornerRadius = 10
 //        aResult.layer.opacity = 0.3
         
         let aGrid = UIView()
@@ -54,10 +50,12 @@ class HMultiLocationViewCell: UICollectionViewCell {
         aGrid.backgroundColor = .ddmBlackDark
         contentView.addSubview(aGrid)
         aGrid.translatesAutoresizingMaskIntoConstraints = false
-        aGrid.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15).isActive = true
+//        aGrid.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15).isActive = true
+//        aGrid.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0).isActive = true
+        aGrid.leadingAnchor.constraint(equalTo: aResult.leadingAnchor, constant: 10).isActive = true
+        aGrid.topAnchor.constraint(equalTo: aResult.topAnchor, constant: 10).isActive = true
         aGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
         aGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        aGrid.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0).isActive = true
         aGrid.layer.cornerRadius = 10
         
         let aGridIcon = UIImageView(image: UIImage(named:"icon_round_near_me")?.withRenderingMode(.alwaysTemplate))
@@ -87,11 +85,21 @@ class HMultiLocationViewCell: UICollectionViewCell {
         bGrid.backgroundColor = .ddmBlackDark
         contentView.addSubview(bGrid)
         bGrid.translatesAutoresizingMaskIntoConstraints = false
-        bGrid.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15).isActive = true
+//        bGrid.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15).isActive = true
+        bGrid.leadingAnchor.constraint(equalTo: aResult.leadingAnchor, constant: 10).isActive = true
         bGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
         bGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
         bGrid.topAnchor.constraint(equalTo: aGrid.bottomAnchor, constant: 10).isActive = true
         bGrid.layer.cornerRadius = 10
+        
+        let bGridIcon = UIImageView(image: UIImage(named:"icon_location")?.withRenderingMode(.alwaysTemplate))
+        bGridIcon.tintColor = .white
+        bGrid.addSubview(bGridIcon)
+        bGridIcon.translatesAutoresizingMaskIntoConstraints = false
+        bGridIcon.centerXAnchor.constraint(equalTo: bGrid.centerXAnchor).isActive = true
+        bGridIcon.centerYAnchor.constraint(equalTo: bGrid.centerYAnchor).isActive = true
+        bGridIcon.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        bGridIcon.widthAnchor.constraint(equalToConstant: 20).isActive = true
         
         let bText = UILabel()
         bText.textAlignment = .left
@@ -109,7 +117,8 @@ class HMultiLocationViewCell: UICollectionViewCell {
         cGrid.backgroundColor = .ddmBlackDark
         contentView.addSubview(cGrid)
         cGrid.translatesAutoresizingMaskIntoConstraints = false
-        cGrid.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15).isActive = true
+//        cGrid.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15).isActive = true
+        cGrid.leadingAnchor.constraint(equalTo: aResult.leadingAnchor, constant: 10).isActive = true
         cGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
         cGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
         cGrid.topAnchor.constraint(equalTo: bGrid.bottomAnchor, constant: 10).isActive = true
@@ -131,7 +140,8 @@ class HMultiLocationViewCell: UICollectionViewCell {
         dGrid.backgroundColor = .ddmBlackDark
         contentView.addSubview(dGrid)
         dGrid.translatesAutoresizingMaskIntoConstraints = false
-        dGrid.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15).isActive = true
+//        dGrid.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15).isActive = true
+        dGrid.leadingAnchor.constraint(equalTo: aResult.leadingAnchor, constant: 10).isActive = true
         dGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
         dGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
         dGrid.topAnchor.constraint(equalTo: cGrid.bottomAnchor, constant: 10).isActive = true

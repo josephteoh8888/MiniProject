@@ -50,6 +50,7 @@ class GridVideoViewCell: UICollectionViewCell {
         gifImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
         gifImage.isUserInteractionEnabled = true
         gifImage.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPhotoClicked)))
+        gifImage.backgroundColor = .ddmDarkColor
         
         //stats count
 //        let playBtn = UIImageView()
@@ -92,12 +93,45 @@ class GridVideoViewCell: UICollectionViewCell {
         
         let imageUrl = URL(string: "")
         gifImage.sd_setImage(with: imageUrl)
+        
+        gifImage.isHidden = false
     }
     
     func configure(data: PostData) {
-        
-        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
-        gifImage.sd_setImage(with: imageUrl)
+       asyncConfigure(data: data)
+    }
+    func asyncConfigure(data: PostData) {
+        let id = "u"
+        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    print("pdp api success \(id), \(l)")
+                    
+                    guard let self = self else {
+                        return
+                    }
+
+                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
+                    self.gifImage.sd_setImage(with: imageUrl)
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    let imageUrl = URL(string: "")
+                    self.gifImage.sd_setImage(with: imageUrl)
+                    
+                }
+                break
+            }
+        }
     }
     
     @objc func onPhotoClicked(gesture: UITapGestureRecognizer) {

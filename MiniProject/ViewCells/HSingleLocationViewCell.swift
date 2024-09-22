@@ -14,7 +14,11 @@ protocol HSingleLocationDelegate : AnyObject {
 }
 class HSingleLocationViewCell: UICollectionViewCell {
     static let identifier = "HSingleLocationViewCell"
-    var gifImage = SDAnimatedImageView()
+//    var gifImage = SDAnimatedImageView()
+    
+    let rGridBG = SDAnimatedImageView()
+    let aHSubDesc = UILabel()
+    let aHSubDesc2 = UILabel()
     
     weak var aDelegate : HSingleLocationDelegate?
     
@@ -50,7 +54,7 @@ class HSingleLocationViewCell: UICollectionViewCell {
         ////////////////////
         ///
 
-        let rGridBG = SDAnimatedImageView()
+//        let rGridBG = SDAnimatedImageView()
 //        aHLightSection.addSubview(rGridBG)
         contentView.addSubview(rGridBG)
         rGridBG.translatesAutoresizingMaskIntoConstraints = false
@@ -59,20 +63,15 @@ class HSingleLocationViewCell: UICollectionViewCell {
         rGridBG.heightAnchor.constraint(equalToConstant: 40).isActive = true //30
         rGridBG.widthAnchor.constraint(equalToConstant: 40).isActive = true
         rGridBG.topAnchor.constraint(equalTo: aResult.topAnchor, constant: 10).isActive = true //20
-//        rGridBG.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -20).isActive = true //-10
-//        rGridBG.topAnchor.constraint(equalTo: self.topAnchor, constant: 10).isActive = true //5
-//        rGridBG.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10).isActive = true
         rGridBG.layer.cornerRadius = 5 //20
-//        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-        let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
-//                let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
         rGridBG.contentMode = .scaleAspectFill
         rGridBG.layer.masksToBounds = true
         rGridBG.layer.cornerRadius = 5
-        rGridBG.sd_setImage(with: imageUrl)
+//        rGridBG.sd_setImage(with: imageUrl)
         rGridBG.bottomAnchor.constraint(equalTo: aResult.bottomAnchor, constant: -10).isActive = true
+        rGridBG.backgroundColor = .ddmDarkColor
         
-        let aHSubDesc = UILabel()
+//        let aHSubDesc = UILabel()
         aHSubDesc.textAlignment = .left
         aHSubDesc.textColor = .white //white
 //        aHSubDesc.font = .boldSystemFont(ofSize: 13)
@@ -83,9 +82,9 @@ class HSingleLocationViewCell: UICollectionViewCell {
         aHSubDesc.topAnchor.constraint(equalTo: rGridBG.topAnchor, constant: 5).isActive = true //0
 //        aHSubDesc.centerYAnchor.constraint(equalTo: rGridBG.centerYAnchor, constant: 0).isActive = true //20
         aHSubDesc.leadingAnchor.constraint(equalTo: rGridBG.trailingAnchor, constant: 10).isActive = true
-        aHSubDesc.text = "DinoDreamTgX"
+        aHSubDesc.text = "-"
         
-        let aHSubDesc2 = UILabel()
+//        let aHSubDesc2 = UILabel()
         aHSubDesc2.textAlignment = .left
         aHSubDesc2.textColor = .ddmDarkGrayColor
         aHSubDesc2.font = .systemFont(ofSize: 12) //11
@@ -97,9 +96,65 @@ class HSingleLocationViewCell: UICollectionViewCell {
         aHSubDesc2.leadingAnchor.constraint(equalTo: rGridBG.trailingAnchor, constant: 10).isActive = true
 //                aHSubDesc2.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true
 //        aHSubDesc2.text = "87k saves"
-        aHSubDesc2.text = "United States"
+        aHSubDesc2.text = "-"
 //        aHSubDesc2.layer.opacity = 0.4
     }
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        print("sfvideo prepare for reuse")
+        
+        aHSubDesc.text = "-"
+        aHSubDesc2.text = "-"
+        
+        let imageUrl = URL(string: "")
+        rGridBG.sd_setImage(with: imageUrl)
+    }
+    
+    func configure(data: String) {
+        asyncConfigure(data: "")
+    }
+    
+    //*test > async fetch images/names/videos
+    func asyncConfigure(data: String) {
+        let id = "p"
+        DataFetchManager.shared.fetchPlaceData(id: id) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    print("pdp api success \(id), \(l)")
+                    
+                    guard let self = self else {
+                        return
+                    }
+
+                    self.aHSubDesc.text = "DinoDreamTgX"
+                    self.aHSubDesc2.text = "United States"
+                    
+                    let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+                    self.rGridBG.sd_setImage(with: imageUrl)
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    self.aHSubDesc.text = "-"
+                    self.aHSubDesc2.text = "-"
+                    
+                    let imageUrl = URL(string: "")
+                    self.rGridBG.sd_setImage(with: imageUrl)
+                    
+                }
+                break
+            }
+        }
+    }
+    //*
     
     @objc func onPlaceLocationClicked(gesture: UITapGestureRecognizer) {
         aDelegate?.didClickSinglePlaceLocation()

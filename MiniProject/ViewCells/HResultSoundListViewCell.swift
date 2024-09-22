@@ -93,9 +93,9 @@ class HResultSoundListViewCell: UICollectionViewCell {
         aUserPhoto.layer.masksToBounds = true
         aUserPhoto.layer.cornerRadius = 5
 //        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-        let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
-        aUserPhoto.sd_setImage(with: imageUrl)
-        aUserPhoto.backgroundColor = .ddmDarkGreyColor
+//        let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+//        aUserPhoto.sd_setImage(with: imageUrl)
+        aUserPhoto.backgroundColor = .ddmDarkColor
         
 //        let aFollowA = UIView()
 //        aFollowA.backgroundColor = .yellow
@@ -147,11 +147,11 @@ class HResultSoundListViewCell: UICollectionViewCell {
 //        aNameText.topAnchor.constraint(equalTo: aResult.topAnchor, constant: 10).isActive = true
         aNameText.topAnchor.constraint(equalTo: eUserCover.topAnchor, constant: 5).isActive = true
         aNameText.leadingAnchor.constraint(equalTo: aUserPhoto.trailingAnchor, constant: 10).isActive = true
-        aNameText.text = "明知故犯"
+        aNameText.text = "-"
         
         //test > verified badge
 //        let vBtn = UIImageView(image: UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate))
-        vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
+//        vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
 //        vBtn.tintColor = .yellow //ddmGoldenYellowColor
         vBtn.tintColor = .ddmGoldenYellowColor
 //        vBtn.tintColor = .white //darkGray
@@ -171,11 +171,71 @@ class HResultSoundListViewCell: UICollectionViewCell {
         aUserNameText.translatesAutoresizingMaskIntoConstraints = false
         aUserNameText.topAnchor.constraint(equalTo: aNameText.bottomAnchor).isActive = true
         aUserNameText.leadingAnchor.constraint(equalTo: aNameText.leadingAnchor, constant: 0).isActive = true
-        aUserNameText.text = "Hubert Wu"
+        aUserNameText.text = "-"
 //        aUserNameText.text = "@mic1809"
 //        aUserNameText.layer.opacity = 0.3 //0.5
         
     }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        print("sfvideo prepare for reuse")
+        
+        vBtn.image = nil
+        aNameText.text = "-"
+        aUserNameText.text = "-"
+        
+        let imageUrl = URL(string: "")
+        aUserPhoto.sd_setImage(with: imageUrl)
+    }
+    
+    func configure(data: PostData) {
+        asyncConfigure(data: "")
+    }
+    
+    //*test > async fetch images/names/videos
+    func asyncConfigure(data: String) {
+        let id = "s_"
+        DataFetchManager.shared.fetchSoundData(id: id) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    print("pdp api success \(id), \(l)")
+                    
+                    guard let self = self else {
+                        return
+                    }
+
+                    self.aNameText.text = "明知故犯"
+                    self.aUserNameText.text = "Hubert Wu"
+                    self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
+                    
+                    let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+                    self.aUserPhoto.sd_setImage(with: imageUrl)
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    self.aNameText.text = "-"
+                    self.aUserNameText.text = "-"
+                    self.vBtn.image = nil
+                    
+                    let imageUrl = URL(string: "")
+                    self.aUserPhoto.sd_setImage(with: imageUrl)
+                    
+                }
+                break
+            }
+        }
+    }
+    //*
     
     @objc func onUserClicked(gesture: UITapGestureRecognizer) {
         aDelegate?.didHResultClickSound()

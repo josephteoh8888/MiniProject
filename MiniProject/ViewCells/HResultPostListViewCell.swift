@@ -14,6 +14,13 @@ class HResultPostListViewCell: UICollectionViewCell {
     
     weak var aDelegate : HResultListViewDelegate?
     
+    let aUserPhoto = SDAnimatedImageView()
+    let aNameText = UILabel()
+    let vBtn = UIImageView()
+    let aUserNameText = UILabel()
+    let contentPhoto = SDAnimatedImageView()
+    let contentText = UILabel()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -57,7 +64,7 @@ class HResultPostListViewCell: UICollectionViewCell {
         eUserCover.layer.cornerRadius = 15
 //        eUserCover.layer.opacity = 1.0 //default 0.3
         
-        let aUserPhoto = SDAnimatedImageView()
+//        let aUserPhoto = SDAnimatedImageView()
         contentView.addSubview(aUserPhoto)
         aUserPhoto.translatesAutoresizingMaskIntoConstraints = false
         aUserPhoto.widthAnchor.constraint(equalToConstant: 30).isActive = true //36
@@ -100,7 +107,7 @@ class HResultPostListViewCell: UICollectionViewCell {
 //        aFollowAText.centerYAnchor.constraint(equalTo: aFollowA.centerYAnchor).isActive = true
 //        aFollowAText.text = "Follow"
         
-        let aNameText = UILabel()
+//        let aNameText = UILabel()
         aNameText.textAlignment = .left
         aNameText.textColor = .white
         aNameText.font = .boldSystemFont(ofSize: 13)
@@ -109,10 +116,9 @@ class HResultPostListViewCell: UICollectionViewCell {
 //        aNameText.topAnchor.constraint(equalTo: aResult.topAnchor, constant: 10).isActive = true
         aNameText.topAnchor.constraint(equalTo: eUserCover.topAnchor, constant: 0).isActive = true
         aNameText.leadingAnchor.constraint(equalTo: aUserPhoto.trailingAnchor, constant: 10).isActive = true
-        aNameText.text = "Michael Kins"
+        aNameText.text = "-"
         
         //test > verified badge
-        let vBtn = UIImageView(image: UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate))
 //        vBtn.tintColor = .yellow //ddmGoldenYellowColor
         vBtn.tintColor = .ddmGoldenYellowColor
 //        vBtn.tintColor = .white //darkGray
@@ -124,7 +130,7 @@ class HResultPostListViewCell: UICollectionViewCell {
         vBtn.widthAnchor.constraint(equalToConstant: 14).isActive = true
         //
         
-        let aUserNameText = UILabel()
+//        let aUserNameText = UILabel()
         aUserNameText.textAlignment = .left
         aUserNameText.textColor = .ddmDarkGrayColor
         aUserNameText.font = .systemFont(ofSize: 12)
@@ -132,11 +138,11 @@ class HResultPostListViewCell: UICollectionViewCell {
         aUserNameText.translatesAutoresizingMaskIntoConstraints = false
         aUserNameText.topAnchor.constraint(equalTo: aNameText.bottomAnchor).isActive = true
         aUserNameText.leadingAnchor.constraint(equalTo: aNameText.leadingAnchor, constant: 0).isActive = true
-        aUserNameText.text = "2hr"
+        aUserNameText.text = "-"
 //        aUserNameText.text = "@mic1809"
 //        aUserNameText.layer.opacity = 0.3 //0.5
         
-        let contentPhoto = SDAnimatedImageView()
+//        let contentPhoto = SDAnimatedImageView()
         contentView.addSubview(contentPhoto)
         contentPhoto.translatesAutoresizingMaskIntoConstraints = false
         contentPhoto.widthAnchor.constraint(equalToConstant: 50).isActive = true //36
@@ -146,11 +152,11 @@ class HResultPostListViewCell: UICollectionViewCell {
         contentPhoto.contentMode = .scaleAspectFill
         contentPhoto.layer.masksToBounds = true
         contentPhoto.layer.cornerRadius = 5
-        let imageUrl1 = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
-        contentPhoto.sd_setImage(with: imageUrl1)
+//        let imageUrl1 = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+//        contentPhoto.sd_setImage(with: imageUrl1)
         contentPhoto.backgroundColor = .ddmDarkColor
         
-        let contentText = UILabel()
+//        let contentText = UILabel()
         contentText.textAlignment = .left
         contentText.textColor = .white
         contentText.font = .systemFont(ofSize: 14)
@@ -160,10 +166,77 @@ class HResultPostListViewCell: UICollectionViewCell {
         contentText.leadingAnchor.constraint(equalTo: eUserCover.leadingAnchor, constant: 0).isActive = true
 //        contentText.trailingAnchor.constraint(equalTo: aResult.trailingAnchor, constant: -20).isActive = true //-30
         contentText.trailingAnchor.constraint(equalTo: contentPhoto.leadingAnchor, constant: -20).isActive = true //-30
-        contentText.text = "A defiant Vladimir Putin said Russia won’t be stopped from pursuing its goals after he swept to a record victory in a presidential election whose outcome was pre-determined."
+//        contentText.text = "A defiant Vladimir Putin said Russia won’t be stopped from pursuing its goals after he swept to a record victory in a presidential election whose outcome was pre-determined."
         contentText.numberOfLines = 3 //0
     }
-    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        print("HResultUserListViewCell prepare for reuse")
+        
+        let imageUrl = URL(string: "")
+        aUserPhoto.sd_setImage(with: imageUrl)
+        let imageUrl1 = URL(string: "")
+        contentPhoto.sd_setImage(with: imageUrl1)
+        
+        aNameText.text = "-"
+        aUserNameText.text = "-"
+        vBtn.image = nil
+
+        contentText.text = "-"
+    }
+    func configure(data: PostData) {
+        asyncConfigure(data: "")
+    }
+    //*test > async fetch images/names/videos
+    func asyncConfigure(data: String) {
+        let id = "p"
+        DataFetchManager.shared.fetchPlaceData(id: id) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    print("pdp api success \(id), \(l)")
+                    
+                    guard let self = self else {
+                        return
+                    }
+
+                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+                    self.aUserPhoto.sd_setImage(with: imageUrl)
+                    let imageUrl1 = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+                    self.contentPhoto.sd_setImage(with: imageUrl1)
+                    
+                    self.aNameText.text = "Michael Kins"
+                    self.aUserNameText.text = "2hr"
+                    self.contentText.text = "A defiant Vladimir Putin said Russia won’t be stopped from pursuing its goals after he swept to a record victory in a presidential election whose outcome was pre-determined."
+                    
+                    self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    self.aNameText.text = "-"
+                    self.aUserNameText.text = "-"
+                    self.vBtn.image = nil
+                    self.contentText.text = "-"
+                    
+                    let imageUrl = URL(string: "")
+                    self.aUserPhoto.sd_setImage(with: imageUrl)
+                    
+                    let imageUrl1 = URL(string: "")
+                    self.contentPhoto.sd_setImage(with: imageUrl1)
+                }
+                break
+            }
+        }
+    }
+    //*
     @objc func onUserClicked(gesture: UITapGestureRecognizer) {
         aDelegate?.didHResultClickPost()
     }

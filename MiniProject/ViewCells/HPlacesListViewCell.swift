@@ -17,6 +17,7 @@ class HPlacesListViewCell: UICollectionViewCell {
     static let identifier = "HPlacesListViewCell"
     
     weak var aDelegate : HPlacesListDelegate?
+    let aNameText = UILabel()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -48,7 +49,7 @@ class HPlacesListViewCell: UICollectionViewCell {
         aResult.isUserInteractionEnabled = true
         aResult.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPlaceClicked)))
 
-        let aNameText = UILabel()
+//        let aNameText = UILabel()
         aNameText.textAlignment = .left
         aNameText.textColor = .white
         aNameText.font = .boldSystemFont(ofSize: 13)
@@ -56,7 +57,7 @@ class HPlacesListViewCell: UICollectionViewCell {
         aNameText.translatesAutoresizingMaskIntoConstraints = false
         aNameText.topAnchor.constraint(equalTo: aResult.topAnchor, constant: 10).isActive = true
         aNameText.leadingAnchor.constraint(equalTo: aResult.leadingAnchor, constant: 20).isActive = true
-        aNameText.text = "Canary Wharf"
+        aNameText.text = "-"
         
         let aGrid = UIView()
         aGrid.backgroundColor = .ddmDarkColor
@@ -103,6 +104,47 @@ class HPlacesListViewCell: UICollectionViewCell {
 //        cGrid.bottomAnchor.constraint(equalTo: aPanelView.bottomAnchor).isActive = true //
         cGrid.layer.cornerRadius = 10
         
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        print("HResultUserListViewCell prepare for reuse")
+        
+        aNameText.text = "-"
+    }
+    
+    func configure(data: String) {
+        asyncConfigure(data: "")
+    }
+    func asyncConfigure(data: String) {
+        let id = "p_"
+        DataFetchManager.shared.fetchPlaceData(id: id) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    print("pdp api success \(id), \(l)")
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    self.aNameText.text = "Petronas Twin Towers"
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    self.aNameText.text = "-"
+                }
+                break
+            }
+        }
     }
     
     @objc func onPlaceClicked(gesture: UITapGestureRecognizer) {

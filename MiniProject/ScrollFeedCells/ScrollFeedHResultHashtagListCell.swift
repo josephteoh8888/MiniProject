@@ -296,9 +296,9 @@ extension ScrollFeedHResultHashtagListCell: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HResultHashtagListViewCell.identifier, for: indexPath) as! HResultHashtagListViewCell
-//        cell.aDelegate = self
+        cell.aDelegate = self
         //test > configure cell
-//        cell.configure(data: vDataList[indexPath.row])
+        cell.configure(data: vDataList[indexPath.row])
         
         return cell
     }
@@ -317,7 +317,7 @@ extension ScrollFeedHResultHashtagListCell: HResultListViewDelegate{
         
     }
     func didHResultClickSound(){
-//        aDelegate?.sfcDidClickVcvClickSound()
+        
     }
     func didHResultClickHashtag() {
         

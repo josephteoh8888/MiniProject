@@ -18,6 +18,11 @@ class HUsersListViewCell: UICollectionViewCell {
     
     weak var aDelegate : HUsersListDelegate?
     
+    let aUserPhoto = SDAnimatedImageView()
+    let aNameText = UILabel()
+    let aUserNameText = UILabel()
+    let vBtn = UIImageView()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -61,7 +66,7 @@ class HUsersListViewCell: UICollectionViewCell {
         eUserCover.layer.cornerRadius = 20
 //        eUserCover.layer.opacity = 1.0 //default 0.3
         
-        let aUserPhoto = SDAnimatedImageView()
+//        let aUserPhoto = SDAnimatedImageView()
         contentView.addSubview(aUserPhoto)
         aUserPhoto.translatesAutoresizingMaskIntoConstraints = false
         aUserPhoto.widthAnchor.constraint(equalToConstant: 40).isActive = true //36
@@ -73,11 +78,11 @@ class HUsersListViewCell: UICollectionViewCell {
         aUserPhoto.contentMode = .scaleAspectFill
         aUserPhoto.layer.masksToBounds = true
         aUserPhoto.layer.cornerRadius = 20
-        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-        aUserPhoto.sd_setImage(with: imageUrl)
-        aUserPhoto.backgroundColor = .ddmDarkGreyColor
+//        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//        aUserPhoto.sd_setImage(with: imageUrl)
+        aUserPhoto.backgroundColor = .ddmDarkColor
         
-        let aNameText = UILabel()
+//        let aNameText = UILabel()
         aNameText.textAlignment = .left
         aNameText.textColor = .white
         aNameText.font = .boldSystemFont(ofSize: 13)
@@ -85,10 +90,10 @@ class HUsersListViewCell: UICollectionViewCell {
         aNameText.translatesAutoresizingMaskIntoConstraints = false
         aNameText.topAnchor.constraint(equalTo: aResult.topAnchor, constant: 10).isActive = true
         aNameText.leadingAnchor.constraint(equalTo: aUserPhoto.trailingAnchor, constant: 10).isActive = true
-        aNameText.text = "Michael Kins"
+        aNameText.text = "-"
         
         //test > verified badge
-        let vBtn = UIImageView(image: UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate))
+//        let vBtn = UIImageView(image: UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate))
 //        vBtn.tintColor = .yellow //ddmGoldenYellowColor
         vBtn.tintColor = .ddmGoldenYellowColor
 //        vBtn.tintColor = .white //darkGray
@@ -100,7 +105,7 @@ class HUsersListViewCell: UICollectionViewCell {
         vBtn.widthAnchor.constraint(equalToConstant: 14).isActive = true
         //
         
-        let aUserNameText = UILabel()
+//        let aUserNameText = UILabel()
         aUserNameText.textAlignment = .left
         aUserNameText.textColor = .ddmDarkGrayColor
         aUserNameText.font = .systemFont(ofSize: 12)
@@ -108,7 +113,7 @@ class HUsersListViewCell: UICollectionViewCell {
         aUserNameText.translatesAutoresizingMaskIntoConstraints = false
         aUserNameText.topAnchor.constraint(equalTo: aNameText.bottomAnchor).isActive = true
         aUserNameText.leadingAnchor.constraint(equalTo: aNameText.leadingAnchor, constant: 0).isActive = true
-        aUserNameText.text = "140k followers"
+        aUserNameText.text = "-"
 //        aUserNameText.text = "@mic1809"
 //        aUserNameText.layer.opacity = 0.3 //0.5
         
@@ -157,6 +162,65 @@ class HUsersListViewCell: UICollectionViewCell {
 //        cGrid.bottomAnchor.constraint(equalTo: aPanelView.bottomAnchor).isActive = true //
         cGrid.layer.cornerRadius = 10
         
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        print("HResultUserListViewCell prepare for reuse")
+        
+        let imageUrl = URL(string: "")
+        aUserPhoto.sd_setImage(with: imageUrl)
+        
+        aNameText.text = "-"
+        aUserNameText.text = "-"
+        vBtn.image = nil
+    }
+    
+    func configure(data: String) {
+        asyncConfigure(data: "")
+    }
+    
+    func asyncConfigure(data: String) {
+        let id = "u_"
+        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    print("pdp api success \(id), \(l)")
+                    
+                    guard let self = self else {
+                        return
+                    }
+
+                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+                    self.aUserPhoto.sd_setImage(with: imageUrl)
+                    
+                    self.aNameText.text = "Michael Kins"
+                    self.aUserNameText.text = "140k followers" //"@mic1809"
+                    
+                    self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    self.aNameText.text = "-"
+                    self.aUserNameText.text = "-"
+                    self.vBtn.image = nil
+                    
+                    let imageUrl = URL(string: "")
+                    self.aUserPhoto.sd_setImage(with: imageUrl)
+                    
+                }
+                break
+            }
+        }
     }
     
     @objc func onUserClicked(gesture: UITapGestureRecognizer) {

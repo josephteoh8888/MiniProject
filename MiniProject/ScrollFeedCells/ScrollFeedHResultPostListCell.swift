@@ -301,7 +301,7 @@ extension ScrollFeedHResultPostListCell: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HResultPostListViewCell.identifier, for: indexPath) as! HResultPostListViewCell
         cell.aDelegate = self
         //test > configure cell
-//        cell.configure(data: vDataList[indexPath.row])
+        cell.configure(data: vDataList[indexPath.row])
         
         return cell
     }

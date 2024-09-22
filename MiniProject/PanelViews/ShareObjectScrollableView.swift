@@ -96,7 +96,7 @@ class ShareObjectScrollableView: PanelView, UIGestureRecognizerDelegate{
         exitViewText.centerXAnchor.constraint(equalTo: exitView.centerXAnchor).isActive = true
         exitViewText.centerYAnchor.constraint(equalTo: exitView.centerYAnchor).isActive = true
         exitViewText.text = "Cancel"
-        exitViewText.layer.opacity = 0.5
+//        exitViewText.layer.opacity = 0.5
         
         //test > horizontal vcv for sharing functions
 //        aVDataList.append("sg") //send gift
@@ -177,6 +177,7 @@ class ShareObjectScrollableView: PanelView, UIGestureRecognizerDelegate{
             aVDataList.append("rp")//report post
             aVDataList.append("d") //dislike
             
+//            bVDataList.append("f")//follow
             bVDataList.append("r")//repost
             bVDataList.append("s")//share to
             bVDataList.append("c")//copy link
@@ -184,6 +185,7 @@ class ShareObjectScrollableView: PanelView, UIGestureRecognizerDelegate{
             aVDataList.append("rp")//report post
             aVDataList.append("d") //dislike
             
+//            bVDataList.append("sa")//save
             bVDataList.append("r")//repost
             bVDataList.append("s")//share to
             bVDataList.append("c")//copy link
@@ -191,6 +193,7 @@ class ShareObjectScrollableView: PanelView, UIGestureRecognizerDelegate{
             aVDataList.append("rp")//report post
             aVDataList.append("d") //dislike
             
+//            bVDataList.append("sa")//save
             bVDataList.append("r")//repost
             bVDataList.append("s")//share to
             bVDataList.append("c")//copy link
@@ -341,5 +344,19 @@ extension ShareObjectScrollableView: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         
+    }
+}
+
+extension ViewController: ShareObjectScrollableDelegate{
+
+    func didShareObjectClick() {
+
+    }
+    func didShareObjectClickClosePanel() {
+        
+    }
+    func didShareObjectFinishClosePanel(){
+        //test 1 > as not scrollable
+//        backPage(isCurrentPageScrollable: false)
     }
 }

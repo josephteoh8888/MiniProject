@@ -992,6 +992,7 @@ extension PlacesMiniScrollablePanelView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HPlacesListViewCell.identifier, for: indexPath) as! HPlacesListViewCell
         cell.aDelegate = self
+        cell.configure(data: vDataList[indexPath.row])
         return cell
     }
     

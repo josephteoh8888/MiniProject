@@ -89,13 +89,6 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
     let tabScrollLHSBtn = UIView()
     let tabScrollRHSBtn = UIView()
     
-    let bottomBox = UIView()
-    //test > comment textbox
-    let bTextBtn = UIImageView()
-    let lTextBtn = UIImageView()
-    let mTextBtn = UIImageView()
-    let nTextBtn = UIImageView()
-    
     //test page transition => track user journey in creating short video
     var pageList = [PanelView]()
     
@@ -370,83 +363,6 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
 //        searchBoxBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
 //        searchBoxBtn.layer.opacity = 0.5
 ////        addBoxBtn.isHidden = true
-        
-        //test bottom comment box => fake edittext
-//        bottomBox.backgroundColor = .black
-        bottomBox.backgroundColor = .ddmBlackOverlayColor
-        photoPanel.addSubview(bottomBox)
-        bottomBox.clipsToBounds = true
-        bottomBox.translatesAutoresizingMaskIntoConstraints = false
-        bottomBox.leadingAnchor.constraint(equalTo: photoPanel.leadingAnchor, constant: 0).isActive = true
-        bottomBox.trailingAnchor.constraint(equalTo: photoPanel.trailingAnchor, constant: 0).isActive = true
-        bottomBox.heightAnchor.constraint(equalToConstant: 94).isActive = true //default: 50
-        bottomBox.bottomAnchor.constraint(equalTo: photoPanel.bottomAnchor, constant: 0).isActive = true
-        bottomBox.isUserInteractionEnabled = true
-//        let aPanelPanGesture = UIPanGestureRecognizer(target: self, action: #selector(onTextViewPanGesture))
-//        bottomBox.addGestureRecognizer(aPanelPanGesture)
-//        bottomBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onOpenTextBoxClicked)))
-        bottomBox.isHidden = true
-
-        let bText = UILabel()
-        bText.textAlignment = .left
-        bText.textColor = .ddmDarkGrayColor
-        bText.font = .boldSystemFont(ofSize: 13)
-//        photoPanel.addSubview(bText)
-        bottomBox.addSubview(bText)
-        bText.clipsToBounds = true
-        bText.translatesAutoresizingMaskIntoConstraints = false
-//        bText.bottomAnchor.constraint(equalTo: bottomBox.bottomAnchor, constant: -30).isActive = true
-//        bText.leadingAnchor.constraint(equalTo: mImage.trailingAnchor, constant: 10).isActive = true
-        bText.leadingAnchor.constraint(equalTo: bottomBox.leadingAnchor, constant: 15).isActive = true
-        bText.trailingAnchor.constraint(equalTo: bottomBox.trailingAnchor, constant: -60).isActive = true
-        bText.topAnchor.constraint(equalTo: bottomBox.topAnchor, constant: 15).isActive = true
-        bText.text = "Add comment..."
-//        bText.layer.opacity = 0.5
-        
-//        let bTextBtn = UIImageView()
-        bTextBtn.image = UIImage(named:"icon_round_send")?.withRenderingMode(.alwaysTemplate)
-        bTextBtn.tintColor = .ddmDarkGrayColor
-//        bTextBtn.layer.opacity = 0.5
-        bottomBox.addSubview(bTextBtn)
-        bTextBtn.translatesAutoresizingMaskIntoConstraints = false
-        bTextBtn.trailingAnchor.constraint(equalTo: bottomBox.trailingAnchor, constant: -15).isActive = true
-        bTextBtn.centerYAnchor.constraint(equalTo: bText.centerYAnchor).isActive = true
-        bTextBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
-        bTextBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        bTextBtn.isHidden = true
-        
-        lTextBtn.image = UIImage(named:"icon_outline_photo")?.withRenderingMode(.alwaysTemplate)
-        lTextBtn.tintColor = .ddmDarkGrayColor
-//        lTextBtn.layer.opacity = 0.5
-        bottomBox.addSubview(lTextBtn)
-        lTextBtn.translatesAutoresizingMaskIntoConstraints = false
-        lTextBtn.trailingAnchor.constraint(equalTo: bottomBox.trailingAnchor, constant: -15).isActive = true
-        lTextBtn.centerYAnchor.constraint(equalTo: bText.centerYAnchor).isActive = true
-        lTextBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
-        lTextBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        lTextBtn.isHidden = false
-
-        mTextBtn.image = UIImage(named:"icon_round_emoji")?.withRenderingMode(.alwaysTemplate)
-        mTextBtn.tintColor = .ddmDarkGrayColor
-//        mTextBtn.layer.opacity = 0.5
-        bottomBox.addSubview(mTextBtn)
-        mTextBtn.translatesAutoresizingMaskIntoConstraints = false
-        mTextBtn.trailingAnchor.constraint(equalTo: lTextBtn.leadingAnchor, constant: -10).isActive = true
-        mTextBtn.centerYAnchor.constraint(equalTo: bText.centerYAnchor).isActive = true
-        mTextBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
-        mTextBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        mTextBtn.isHidden = false
-
-        nTextBtn.image = UIImage(named:"icon_round_at")?.withRenderingMode(.alwaysTemplate)
-        nTextBtn.tintColor = .ddmDarkGrayColor
-//        nTextBtn.layer.opacity = 0.5
-        bottomBox.addSubview(nTextBtn)
-        nTextBtn.translatesAutoresizingMaskIntoConstraints = false
-        nTextBtn.trailingAnchor.constraint(equalTo: mTextBtn.leadingAnchor, constant: -10).isActive = true
-        nTextBtn.centerYAnchor.constraint(equalTo: bText.centerYAnchor).isActive = true
-        nTextBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
-        nTextBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        nTextBtn.isHidden = false
         
         //test > gesture recognizer for dragging user panel
 //        let panelPanGesture = UIPanGestureRecognizer(target: self, action: #selector(onPostPanelPanGesture))
@@ -1328,8 +1244,8 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
     //test > add comment panel
     func openComment() {
         let commentPanel = CommentScrollableView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
-//        self.addSubview(commentPanel)
-        photoPanel.insertSubview(commentPanel, belowSubview: bottomBox)
+        photoPanel.addSubview(commentPanel)
+//        photoPanel.insertSubview(commentPanel, belowSubview: bottomBox)
         commentPanel.translatesAutoresizingMaskIntoConstraints = false
         commentPanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
         commentPanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
@@ -1337,7 +1253,7 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
         commentPanel.initialize()
         commentPanel.setBackgroundDark()
         
-        bottomBox.isHidden = false
+//        bottomBox.isHidden = false
         
         //test > track comment scrollable view
         pageList.append(commentPanel)
@@ -1515,6 +1431,17 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
                     print("api fail")
                     break
             }
+        }
+    }
+    
+    override func keyboardUp(margin: CGFloat) {
+        
+        //test 2 > check pagelist first
+        if(pageList.isEmpty) {
+        }
+        else {
+            let c = pageList[pageList.count - 1]
+            c.keyboardUp(margin: margin)
         }
     }
 }
@@ -1925,7 +1852,7 @@ extension PhotoPanelView: CommentScrollableDelegate{
         delegate?.didClickPhotoPanelVcvClickSound()
     }
     func didCClickClosePanel(){
-        bottomBox.isHidden = true
+//        bottomBox.isHidden = true
     }
     func didCFinishClosePanel() {
         

@@ -279,7 +279,7 @@ extension ScrollFeedHNotifyInboxListCell: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HNotifyInboxListViewCell.identifier, for: indexPath) as! HNotifyInboxListViewCell
         cell.aDelegate = self
         //test > configure cell
-//        cell.configure(data: vDataList[indexPath.row])
+        cell.configure(data: vDataList[indexPath.row])
         
         return cell
     }

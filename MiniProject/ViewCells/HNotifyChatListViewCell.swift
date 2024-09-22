@@ -23,6 +23,9 @@ class HNotifyChatListViewCell: UICollectionViewCell {
     
     weak var aDelegate : NotifyHListCellDelegate?
     
+    let aUserPhoto = SDAnimatedImageView()
+    let vBtn = UIImageView()
+    let aNameText = UILabel()
     let messageText = UILabel()
     let messageCountBox = UIView()
     let timeText = UILabel()
@@ -55,7 +58,7 @@ class HNotifyChatListViewCell: UICollectionViewCell {
         
         let eUserCover = UIView()
 //        eUserCover.backgroundColor = .ddmBlackOverlayColor
-        eUserCover.backgroundColor = .white
+        eUserCover.backgroundColor = .clear
         contentView.addSubview(eUserCover)
         eUserCover.translatesAutoresizingMaskIntoConstraints = false
         eUserCover.topAnchor.constraint(equalTo: aResult.topAnchor, constant: 10).isActive = true
@@ -65,7 +68,7 @@ class HNotifyChatListViewCell: UICollectionViewCell {
         eUserCover.layer.cornerRadius = 25
 //        eUserCover.layer.opacity = 1.0 //default 0.3
         
-        let aUserPhoto = SDAnimatedImageView()
+//        let aUserPhoto = SDAnimatedImageView()
         contentView.addSubview(aUserPhoto)
         aUserPhoto.translatesAutoresizingMaskIntoConstraints = false
         aUserPhoto.widthAnchor.constraint(equalToConstant: 50).isActive = true //ori: 24
@@ -77,12 +80,13 @@ class HNotifyChatListViewCell: UICollectionViewCell {
         aUserPhoto.contentMode = .scaleAspectFill
         aUserPhoto.layer.masksToBounds = true
         aUserPhoto.layer.cornerRadius = 25
-        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-        aUserPhoto.sd_setImage(with: imageUrl)
+//        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//        aUserPhoto.sd_setImage(with: imageUrl)
+        aUserPhoto.backgroundColor = .ddmDarkColor
         aUserPhoto.isUserInteractionEnabled = true
         aUserPhoto.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onUserClicked)))
 
-        let aNameText = UILabel()
+//        let aNameText = UILabel()
         aNameText.textAlignment = .left
         aNameText.textColor = .white
         aNameText.font = .boldSystemFont(ofSize: 13)
@@ -91,10 +95,10 @@ class HNotifyChatListViewCell: UICollectionViewCell {
 //        aNameText.topAnchor.constraint(equalTo: aResult.topAnchor, constant: 10).isActive = true
         aNameText.topAnchor.constraint(equalTo: eUserCover.topAnchor, constant: 0).isActive = true //5
         aNameText.leadingAnchor.constraint(equalTo: aUserPhoto.trailingAnchor, constant: 10).isActive = true
-        aNameText.text = "Michael Kins"
+        aNameText.text = "-"
         
         //test > verified badge
-        let vBtn = UIImageView(image: UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate))
+//        let vBtn = UIImageView(image: UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate))
 //        vBtn.tintColor = .yellow //ddmGoldenYellowColor
         vBtn.tintColor = .ddmGoldenYellowColor
 //        vBtn.tintColor = .white //darkGray
@@ -157,7 +161,21 @@ class HNotifyChatListViewCell: UICollectionViewCell {
         aDelegate?.fcNotifyHListDidClickVcvClickPost()
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        print("sfvideo prepare for reuse")
+        
+        aNameText.text = "-"
+        vBtn.image = nil
+        
+        let imageUrl = URL(string: "")
+        aUserPhoto.sd_setImage(with: imageUrl)
+    }
+    
     func configure(data: String) {
+        
+        asyncConfigure(data: "")
+        
         if(data == "a") {
             messageText.text = "Happy Birthday!!"
             messageText.layer.opacity = 1.0 //0.5
@@ -176,8 +194,68 @@ class HNotifyChatListViewCell: UICollectionViewCell {
             timeText.text = "3h"
             timeText.textColor = .white
             timeText.layer.opacity = 0.5 //0.5
+        } else if(data == "c") {
+            messageText.text = "OMG!"
+            messageText.layer.opacity = 0.6 //0.5
+            messageText.font = .systemFont(ofSize: 13)
+            messageCountBox.isHidden = true
+            
+            timeText.text = "10m"
+            timeText.textColor = .white
+            timeText.layer.opacity = 0.5 //0.5
+        } else if(data == "d") {
+            messageText.text = "Thanks. See ya"
+            messageText.layer.opacity = 0.6 //0.5
+            messageText.font = .systemFont(ofSize: 13)
+            messageCountBox.isHidden = true
+            
+            timeText.text = "5d"
+            timeText.textColor = .white
+            timeText.layer.opacity = 0.5 //0.5
         }
     }
+    //*test > async fetch images/names/videos
+    func asyncConfigure(data: String) {
+        let id = "u"
+        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    print("pdp api success \(id), \(l)")
+                    
+                    guard let self = self else {
+                        return
+                    }
+
+                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+                    self.aUserPhoto.sd_setImage(with: imageUrl)
+                    
+                    self.aNameText.text = "Michael Kins"
+                    
+                    self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    self.aNameText.text = "-"
+                    self.vBtn.image = nil
+                    
+                    let imageUrl = URL(string: "")
+                    self.aUserPhoto.sd_setImage(with: imageUrl)
+                    
+                }
+                break
+            }
+        }
+    }
+    //*
 }
 
 extension NotifyPanelView: NotifyHListCellDelegate {

@@ -28,6 +28,7 @@ protocol UserScrollablePanelDelegate : AnyObject {
     func didUClickUserScrollableVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     func didUClickUserScrollableVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     func didUClickUserSignIn()
+    func didUClickUserShare()
     
     //test > initialize
     func didFinishInitializeUserScrollable(pv: ScrollablePanelView)
@@ -66,6 +67,7 @@ class UserScrollablePanelView: ScrollablePanelView{
     let aFollowCText = UILabel()
     let aFollowerCountAText = UILabel()
     let aFollowerAText = UILabel()
+    let aMoreBtn = UIView()
 
     var aPhotoHeightCons: NSLayoutConstraint?
     var aPhotoWidthCons: NSLayoutConstraint?
@@ -270,9 +272,6 @@ class UserScrollablePanelView: ScrollablePanelView{
         aPhoto.layer.cornerRadius = 100/2
 //        aPhoto.sd_setImage(with: aImageUrl)
         aPhoto.backgroundColor = .ddmDarkColor
-        //test > for error handling
-//        aPhoto.isUserInteractionEnabled = true
-//        aPhoto.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onAClicked)))
         
 //        let aNameText = UILabel()
         aNameText.textAlignment = .left
@@ -326,14 +325,38 @@ class UserScrollablePanelView: ScrollablePanelView{
         aFollowerAText.text = ""
 //        aFollowerAText.text = "Followers"
         
+        //test > more action btn
+//        let aMoreBtn = UIView()
+        aMoreBtn.backgroundColor = .ddmBlackDark
+        aPanelView.addSubview(aMoreBtn)
+        aMoreBtn.translatesAutoresizingMaskIntoConstraints = false
+        aMoreBtn.trailingAnchor.constraint(equalTo: aPanelView.trailingAnchor, constant: -20).isActive = true
+        aMoreBtn.heightAnchor.constraint(equalToConstant: 30).isActive = true //30
+        aMoreBtn.widthAnchor.constraint(equalToConstant: 30).isActive = true //30
+        aMoreBtn.centerYAnchor.constraint(equalTo: aFollowerCountAText.centerYAnchor, constant: 0).isActive = true
+        aMoreBtn.layer.cornerRadius = 10
+        //test > for sharing
+        aMoreBtn.isUserInteractionEnabled = true
+        aMoreBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onAClicked)))
+        aMoreBtn.isHidden = true
+        
+        let eMiniBtn = UIImageView(image: UIImage(named:"icon_round_share")?.withRenderingMode(.alwaysTemplate).withHorizontallyFlippedOrientation())
+        eMiniBtn.tintColor = .white
+//        eMiniBtn.tintColor = .ddmDarkGrayColor
+        aMoreBtn.addSubview(eMiniBtn)
+        eMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        eMiniBtn.centerXAnchor.constraint(equalTo: aMoreBtn.centerXAnchor).isActive = true
+        eMiniBtn.centerYAnchor.constraint(equalTo: aMoreBtn.centerYAnchor, constant: -2).isActive = true //-2
+        eMiniBtn.heightAnchor.constraint(equalToConstant: 22).isActive = true //22
+        eMiniBtn.widthAnchor.constraint(equalToConstant: 22).isActive = true
+        
 //        let aFollowA = UIView()
         aFollowA.backgroundColor = .yellow
         aPanelView.addSubview(aFollowA)
         aFollowA.translatesAutoresizingMaskIntoConstraints = false
-//        aFollowA.leadingAnchor.constraint(equalTo: aPanelView.leadingAnchor, constant: 20).isActive = true
-        aFollowA.trailingAnchor.constraint(equalTo: aPanelView.trailingAnchor, constant: -20).isActive = true
+        aFollowA.trailingAnchor.constraint(equalTo: aMoreBtn.leadingAnchor, constant: -10).isActive = true //-10
+//        aFollowA.trailingAnchor.constraint(equalTo: aPanelView.trailingAnchor, constant: -20).isActive = true
         aFollowA.heightAnchor.constraint(equalToConstant: 30).isActive = true //30
-//        aFollowA.bottomAnchor.constraint(equalTo: aPhoto.bottomAnchor, constant: 0).isActive = true
         aFollowA.centerYAnchor.constraint(equalTo: aFollowerCountAText.centerYAnchor, constant: 0).isActive = true
         aFollowA.layer.cornerRadius = 10
         aFollowA.isUserInteractionEnabled = true
@@ -418,9 +441,9 @@ class UserScrollablePanelView: ScrollablePanelView{
         aPhotoB.layer.cornerRadius = 10
 //        aPhotoB.sd_setImage(with: bImageUrl)
         aPhotoB.backgroundColor = .ddmDarkColor
-        //test > for error handling
+        //test > for sharing
 //        aPhotoB.isUserInteractionEnabled = true
-//        aPhotoB.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBClicked)))
+//        aPhotoB.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onAClicked)))
 
         let aLikeCountContainer = UIView()
         bPanelView.addSubview(aLikeCountContainer)
@@ -767,12 +790,37 @@ class UserScrollablePanelView: ScrollablePanelView{
         bMiniBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         bMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
 
+        //test > more action btn
+        let aMoreCBtn = UIView()
+//        aMoreCBtn.backgroundColor = .ddmBlackDark
+        aStickyHeader.addSubview(aMoreCBtn)
+        aMoreCBtn.translatesAutoresizingMaskIntoConstraints = false
+        aMoreCBtn.trailingAnchor.constraint(equalTo: aStickyHeader.trailingAnchor, constant: -10).isActive = true
+        aMoreCBtn.heightAnchor.constraint(equalToConstant: 30).isActive = true //30
+        aMoreCBtn.widthAnchor.constraint(equalToConstant: 30).isActive = true //30
+        aMoreCBtn.centerYAnchor.constraint(equalTo: aBtn.centerYAnchor, constant: 0).isActive = true
+        aMoreCBtn.layer.cornerRadius = 10
+        //test > for sharing
+        aMoreCBtn.isUserInteractionEnabled = true
+        aMoreCBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onAClicked)))
+  
+        let eMiniCBtn = UIImageView(image: UIImage(named:"icon_round_share")?.withRenderingMode(.alwaysTemplate).withHorizontallyFlippedOrientation())
+        eMiniCBtn.tintColor = .white
+//        eMiniBtn.tintColor = .ddmDarkGrayColor
+        aMoreCBtn.addSubview(eMiniCBtn)
+        eMiniCBtn.translatesAutoresizingMaskIntoConstraints = false
+        eMiniCBtn.centerXAnchor.constraint(equalTo: aMoreCBtn.centerXAnchor).isActive = true
+        eMiniCBtn.centerYAnchor.constraint(equalTo: aMoreCBtn.centerYAnchor, constant: -2).isActive = true //-2
+        eMiniCBtn.heightAnchor.constraint(equalToConstant: 22).isActive = true //22
+        eMiniCBtn.widthAnchor.constraint(equalToConstant: 22).isActive = true
+        
         let stickyHLight = UIView()
 //        stickyHLight.backgroundColor = .ddmDarkColor
         aStickyHeader.addSubview(stickyHLight)
         stickyHLight.translatesAutoresizingMaskIntoConstraints = false
         stickyHLight.leadingAnchor.constraint(equalTo: aBtn.trailingAnchor, constant: 10).isActive = true //20
-        stickyHLight.trailingAnchor.constraint(equalTo: aStickyHeader.trailingAnchor, constant: -30).isActive = true //20
+        stickyHLight.trailingAnchor.constraint(equalTo: aMoreCBtn.leadingAnchor, constant: -10).isActive = true //20
+//        stickyHLight.trailingAnchor.constraint(equalTo: aStickyHeader.trailingAnchor, constant: -30).isActive = true //20
         stickyHLight.heightAnchor.constraint(equalToConstant: 40).isActive = true //30
         cNameTextCenterYCons = stickyHLight.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 50)
         cNameTextCenterYCons?.isActive = true
@@ -1320,13 +1368,16 @@ class UserScrollablePanelView: ScrollablePanelView{
     
     func actionUI(doneState: Bool) {
         if(doneState) {
-            aFollowA.backgroundColor = .ddmDarkColor
+//            aFollowA.backgroundColor = .ddmDarkColor
+            aFollowA.backgroundColor = .ddmBlackDark
             aFollowAText.text = "Following"
             aFollowAText.textColor = .white
-            aFollow.backgroundColor = .ddmDarkColor
+//            aFollow.backgroundColor = .ddmDarkColor
+            aFollow.backgroundColor = .ddmBlackDark
             aFollowText.text = "Following"
             aFollowText.textColor = .white
-            aFollowC.backgroundColor = .ddmDarkColor
+//            aFollowC.backgroundColor = .ddmDarkColor
+            aFollowC.backgroundColor = .ddmBlackDark
             aFollowCText.text = "Following"
             aFollowCText.textColor = .white
         }
@@ -1388,6 +1439,7 @@ class UserScrollablePanelView: ScrollablePanelView{
             self.aFollowA.isHidden = false
             self.aFollow.isHidden = false
             self.aFollowC.isHidden = false
+            self.aMoreBtn.isHidden = false
             
             let stickyImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
             aStickyPhoto.sd_setImage(with: stickyImageUrl)
@@ -1440,6 +1492,7 @@ class UserScrollablePanelView: ScrollablePanelView{
         self.aFollowA.isHidden = true
         self.aFollow.isHidden = true
         self.aFollowC.isHidden = true
+        self.aMoreBtn.isHidden = true
         
         let stickyImageUrl = URL(string: "")
         aStickyPhoto.sd_setImage(with: stickyImageUrl)
@@ -2157,6 +2210,24 @@ class UserScrollablePanelView: ScrollablePanelView{
             }
         }
     }
+    
+    //*test > add comment textbox
+    override func keyboardUp(margin: CGFloat) {
+        //test 2 > check pagelist first
+        if(pageList.isEmpty) {
+            
+        }
+        else {
+            let c = pageList[pageList.count - 1]
+            c.keyboardUp(margin: margin)
+        }
+    }
+    //*
+    
+    //test > share object sheet
+    @objc func onAClicked(gesture: UITapGestureRecognizer) {
+        delegate?.didUClickUserShare()
+    }
 }
 
 //test > highlightbox
@@ -2705,6 +2776,9 @@ extension ViewController: UserScrollablePanelDelegate{
     
     func didUClickUserSignIn(){
         openLoginPanel()
+    }
+    func didUClickUserShare(){
+        openShareObjectPanel(data: "u")
     }
 
     func didFinishInitializeUserScrollable(pv: ScrollablePanelView){

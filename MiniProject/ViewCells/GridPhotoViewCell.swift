@@ -48,6 +48,7 @@ class GridPhotoViewCell: UICollectionViewCell {
         gifImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
         gifImage.isUserInteractionEnabled = true
         gifImage.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onGifImageClicked)))
+        gifImage.backgroundColor = .ddmDarkColor
         
         //stats count
 //        let playBtn = UIImageView()
@@ -90,13 +91,46 @@ class GridPhotoViewCell: UICollectionViewCell {
         
         let imageUrl = URL(string: "")
         gifImage.sd_setImage(with: imageUrl)
+        
+        gifImage.isHidden = false
     }
     
     func configure(data: PostData) {
-        let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
-        gifImage.sd_setImage(with: imageUrl)
+        asyncConfigure(data: data)
     }
-    
+    func asyncConfigure(data: PostData) {
+        let id = "u"
+        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    print("pdp api success \(id), \(l)")
+                    
+                    guard let self = self else {
+                        return
+                    }
+
+                    let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+                    self.gifImage.sd_setImage(with: imageUrl)
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    let imageUrl = URL(string: "")
+                    self.gifImage.sd_setImage(with: imageUrl)
+                    
+                }
+                break
+            }
+        }
+    }
     @objc func onGifImageClicked(gesture: UITapGestureRecognizer) {
         aDelegate?.gridViewClick(vc: self)
     }

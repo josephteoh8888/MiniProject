@@ -14,6 +14,15 @@ class HResultHashtagListViewCell: UICollectionViewCell {
     
     weak var aDelegate : HResultListViewDelegate?
     
+    let aFollowA = UIView()
+    let aFollowAText = UILabel()
+    let vBtn = UIImageView()
+    let aUserPhoto = SDAnimatedImageView()
+    let aNameText = UILabel()
+    let aUserNameText = UILabel()
+    
+    var isAction = false
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -57,7 +66,7 @@ class HResultHashtagListViewCell: UICollectionViewCell {
         eUserCover.layer.cornerRadius = 20
 //        eUserCover.layer.opacity = 1.0 //default 0.3
         
-        let aUserPhoto = SDAnimatedImageView()
+//        let aUserPhoto = SDAnimatedImageView()
         contentView.addSubview(aUserPhoto)
         aUserPhoto.translatesAutoresizingMaskIntoConstraints = false
         aUserPhoto.widthAnchor.constraint(equalToConstant: 40).isActive = true //36
@@ -70,11 +79,11 @@ class HResultHashtagListViewCell: UICollectionViewCell {
         aUserPhoto.layer.masksToBounds = true
         aUserPhoto.layer.cornerRadius = 20
 //        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-        let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+//        let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
 //        aUserPhoto.sd_setImage(with: imageUrl)
-        aUserPhoto.backgroundColor = .black //ddmDarkGreyColor
+        aUserPhoto.backgroundColor = .ddmDarkColor //ddmDarkGreyColor
         
-        let aFollowA = UIView()
+//        let aFollowA = UIView()
         aFollowA.backgroundColor = .yellow
         contentView.addSubview(aFollowA)
         aFollowA.translatesAutoresizingMaskIntoConstraints = false
@@ -85,10 +94,10 @@ class HResultHashtagListViewCell: UICollectionViewCell {
         aFollowA.topAnchor.constraint(equalTo: eUserCover.topAnchor, constant: 5).isActive = true
         aFollowA.layer.cornerRadius = 10
         aFollowA.isUserInteractionEnabled = true
-//        aFollowA.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onFollowClicked)))
+        aFollowA.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onFollowClicked)))
 //        aFollowA.isHidden = true
 
-        let aFollowAText = UILabel()
+//        let aFollowAText = UILabel()
         aFollowAText.textAlignment = .center
         aFollowAText.textColor = .black
         aFollowAText.font = .boldSystemFont(ofSize: 13) //default 14
@@ -115,7 +124,7 @@ class HResultHashtagListViewCell: UICollectionViewCell {
 //        playBtn.isUserInteractionEnabled = true
 //        playBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onResumeAudioClicked)))
         
-        let aNameText = UILabel()
+//        let aNameText = UILabel()
         aNameText.textAlignment = .left
         aNameText.textColor = .white
         aNameText.font = .boldSystemFont(ofSize: 13)
@@ -124,10 +133,10 @@ class HResultHashtagListViewCell: UICollectionViewCell {
 //        aNameText.topAnchor.constraint(equalTo: aResult.topAnchor, constant: 10).isActive = true
         aNameText.topAnchor.constraint(equalTo: eUserCover.topAnchor, constant: 5).isActive = true
         aNameText.leadingAnchor.constraint(equalTo: aUserPhoto.trailingAnchor, constant: 10).isActive = true
-        aNameText.text = "#wemeetyou"
+        aNameText.text = "-"
         
         //test > verified badge
-        let vBtn = UIImageView(image: UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate))
+//        let vBtn = UIImageView(image: UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate))
 //        vBtn.tintColor = .yellow //ddmGoldenYellowColor
         vBtn.tintColor = .ddmGoldenYellowColor
 //        vBtn.tintColor = .white //darkGray
@@ -139,7 +148,7 @@ class HResultHashtagListViewCell: UICollectionViewCell {
         vBtn.widthAnchor.constraint(equalToConstant: 14).isActive = true
         //
         
-        let aUserNameText = UILabel()
+//        let aUserNameText = UILabel()
         aUserNameText.textAlignment = .left
         aUserNameText.textColor = .ddmDarkGrayColor
         aUserNameText.font = .systemFont(ofSize: 12)
@@ -147,13 +156,106 @@ class HResultHashtagListViewCell: UICollectionViewCell {
         aUserNameText.translatesAutoresizingMaskIntoConstraints = false
         aUserNameText.topAnchor.constraint(equalTo: aNameText.bottomAnchor).isActive = true
         aUserNameText.leadingAnchor.constraint(equalTo: aNameText.leadingAnchor, constant: 0).isActive = true
-        aUserNameText.text = "130k posts"
+        aUserNameText.text = "-"
 //        aUserNameText.text = "@mic1809"
 //        aUserNameText.layer.opacity = 0.3 //0.5
         
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        print("HResultUserListViewCell prepare for reuse")
+        
+        let imageUrl = URL(string: "")
+        aUserPhoto.sd_setImage(with: imageUrl)
+        
+        aNameText.text = "-"
+        aUserNameText.text = "-"
+        vBtn.image = nil
+        //test
+        aFollowA.isHidden = true
+        
+        actionUI(doneState: false)
+    }
+    func configure(data: PostData) {
+        
+        asyncConfigure(data: "")
+        //test
+        aFollowA.isHidden = false
+        
+        actionUI(doneState: isAction)
+    }
+    //*test > async fetch images/names/videos
+    func asyncConfigure(data: String) {
+        let id = "p_"
+        DataFetchManager.shared.fetchPlaceData(id: id) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    print("pdp api success \(id), \(l)")
+                    
+                    guard let self = self else {
+                        return
+                    }
+
+//                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//                    self.aUserPhoto.sd_setImage(with: imageUrl)
+                    self.aNameText.text = "#wemeetyou"
+                    self.aUserNameText.text = "130k posts"
+                    
+                    self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    self.aNameText.text = "-"
+                    self.aUserNameText.text = "-"
+                    self.vBtn.image = nil
+                    
+//                    let imageUrl = URL(string: "")
+//                    self.aUserPhoto.sd_setImage(with: imageUrl)
+                    
+                }
+                break
+            }
+        }
+    }
+    //*
     @objc func onUserClicked(gesture: UITapGestureRecognizer) {
         aDelegate?.didHResultClickHashtag()
+    }
+    func actionUI(doneState: Bool) {
+        if(doneState) {
+            aFollowA.backgroundColor = .ddmDarkColor
+            aFollowAText.text = "Saved"
+            aFollowAText.textColor = .white
+        }
+        else {
+            aFollowA.backgroundColor = .yellow
+            aFollowAText.text = "Save"
+            aFollowAText.textColor = .black
+        }
+    }
+    @objc func onFollowClicked(gesture: UITapGestureRecognizer) {
+        let isSignedIn = SignInManager.shared.getStatus()
+        if(isSignedIn) {
+            if(isAction) {
+                actionUI(doneState: false)
+                isAction = false
+            } else {
+                actionUI(doneState: true)
+                isAction = true
+            }
+        }
+        else {
+            aDelegate?.didHResultClickSignIn()
+        }
     }
 }

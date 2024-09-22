@@ -4604,6 +4604,23 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         
         pageList.append(panel)
     }
+    //test > share object panel for more actions on user, place etc
+    func openShareObjectPanel(data: String) {
+        
+        //test 1 > as not scrollable panel
+//        nextPage(isNextPageScrollable: false) //ori
+
+        //test > use reusable method
+        let panel = ShareObjectScrollableView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
+        self.view.addSubview(panel)
+        panel.translatesAutoresizingMaskIntoConstraints = false
+        panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
+        panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
+        panel.setObjectType(t: data)
+        panel.delegate = self
+        
+//        pageList.append(panel)
+    }
     
     func generateRandomId() -> Int{
         //10 million as base to avoid duplicate

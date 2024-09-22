@@ -395,6 +395,8 @@ class VCAViewCell: VCViewCell {
         mMiniC.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15).isActive = true
         mMiniC.heightAnchor.constraint(equalToConstant: 40).isActive = true //default 44
         mMiniC.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        mMiniC.isUserInteractionEnabled = true
+        mMiniC.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onSoundClicked)))
         
         let mMini = UIView()
         mMini.backgroundColor = .ddmBlackOverlayColor

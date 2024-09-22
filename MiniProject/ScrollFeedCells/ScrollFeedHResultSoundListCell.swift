@@ -298,7 +298,7 @@ extension ScrollFeedHResultSoundListCell: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HResultSoundListViewCell.identifier, for: indexPath) as! HResultSoundListViewCell
         cell.aDelegate = self
         //test > configure cell
-//        cell.configure(data: vDataList[indexPath.row])
+        cell.configure(data: vDataList[indexPath.row])
         
         return cell
     }
