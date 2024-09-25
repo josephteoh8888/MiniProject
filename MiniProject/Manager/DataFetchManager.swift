@@ -165,6 +165,19 @@ class DataFetchManager {
         })
     }
     
+    func fetchPostData(id: String, completion: @escaping (Result<[String], Error>) -> Void) {
+        DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s
+            var newData = [String]()
+            if(id == "post_") {
+                newData.append("a")
+                completion(.success(newData))
+            }
+            else {
+                completion(.failure(FetchDataError.invalidResponse))
+            }
+        })
+    }
+    
     func fetchFeedData(id: String, isPaginate: Bool, completion: @escaping (Result<[String], Error>) -> Void) {
         DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s
             var newData = [String]()

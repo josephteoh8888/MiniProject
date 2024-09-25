@@ -132,7 +132,7 @@ class HResultUserListViewCell: UICollectionViewCell {
         vBtn.centerYAnchor.constraint(equalTo: aNameText.centerYAnchor, constant: 0).isActive = true
         vBtn.heightAnchor.constraint(equalToConstant: 14).isActive = true
         vBtn.widthAnchor.constraint(equalToConstant: 14).isActive = true
-        vBtn.isHidden = true
+//        vBtn.isHidden = true
         //
         
 //        let aUserNameText = UILabel()
@@ -179,8 +179,33 @@ class HResultUserListViewCell: UICollectionViewCell {
     func configure(data: PostData) {
         asyncConfigure(data: "")
         
-        //test
-//        aFollowA.isHidden = false
+        let l = data.dataType
+        
+        if(l == "a") {
+            self.aNameText.text = "Michael Kins"
+            self.aBioText.text = "cars/tech/content creator"
+            self.aUserNameText.text = "140k followers" //"@mic1809"
+            
+            self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
+        } else if(l == "b") {
+            self.aNameText.text = "JennyBaby"
+            self.aBioText.text = "*.*"
+            self.aUserNameText.text = "541 followers" //"@mic1809"
+            
+            self.vBtn.image = nil
+        } else if(l == "c") {
+            self.aNameText.text = "YikCai"
+            self.aBioText.text = ".....WTF...."
+            self.aUserNameText.text = "978 followers" //"@mic1809"
+            
+            self.vBtn.image = nil
+        } else if(l == "d") {
+            self.aNameText.text = "IshowSpeed"
+            self.aBioText.text = "SIU!"
+            self.aUserNameText.text = "32.9m followers" //"@mic1809"
+            
+            self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
+        }
         
         actionUI(doneState: isAction)
     }
@@ -203,12 +228,6 @@ class HResultUserListViewCell: UICollectionViewCell {
                     let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
                     self.aUserPhoto.sd_setImage(with: imageUrl)
                     
-                    self.aNameText.text = "Michael Kins"
-                    self.aBioText.text = "I am just a normal girl"
-                    self.aUserNameText.text = "140k followers" //"@mic1809"
-                    
-                    self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
-                    
                     self.aFollowA.isHidden = false
                 }
 
@@ -219,10 +238,10 @@ class HResultUserListViewCell: UICollectionViewCell {
                         return
                     }
                     
-                    self.aNameText.text = "-"
-                    self.aBioText.text = "-"
-                    self.aUserNameText.text = "-"
-                    self.vBtn.image = nil
+//                    self.aNameText.text = "-"
+//                    self.aBioText.text = "-"
+//                    self.aUserNameText.text = "-"
+//                    self.vBtn.image = nil
                     
                     self.aFollowA.isHidden = true
                     

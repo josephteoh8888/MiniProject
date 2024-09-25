@@ -53,7 +53,6 @@ class ScrollFeedHResultPostListCell: ScrollFeedHResultListCell {
         }
 
         vCV.register(HResultPostListViewCell.self, forCellWithReuseIdentifier: HResultPostListViewCell.identifier)
-//        vCV.register(HResultPhotoListViewCell.self, forCellWithReuseIdentifier: HResultPhotoListViewCell.identifier)
         vCV.dataSource = self
         vCV.delegate = self
         vCV.showsVerticalScrollIndicator = false
@@ -137,27 +136,58 @@ extension ScrollFeedHResultPostListCell: UICollectionViewDelegateFlowLayout {
                    layout collectionViewLayout: UICollectionViewLayout,
                    sizeForItemAt indexPath: IndexPath) -> CGSize {
         print("placepanel collection 2: \(indexPath)")
-//        return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
+
         let lay = collectionViewLayout as! UICollectionViewFlowLayout
         let widthPerItem = collectionView.frame.width / 3 - lay.minimumInteritemSpacing
         
-//        return CGSize(width: collectionView.frame.width, height: 150)
-        
-        let userPhotoHeight = 30.0
+        let userPhotoHeight = 24.0
         let userPhotoTopMargin = 10.0 //10
-        let frameBottomMargin = 10.0 //10
-        let bioText = "A defiant Vladimir Putin said Russia won’t be stopped from pursuing its goals after he swept to a record victory in a presidential election whose outcome was pre-determined."
-        let bioContentHeight = estimateHeight(text: bioText, textWidth: collectionView.frame.width - 60.0 - 20.0, fontSize: 14)
-        let bioContentTopMargin = 20.0 //10
+        let frameBottomMargin = 20.0 //10
+        let availTextWidth = collectionView.frame.width - 20.0 - 20.0
+        
+        var contentHeight = 0.0
+        let contentTopMargin = 10.0
+        let l = vDataList[indexPath.row].dataType
+        let s = vDataList[indexPath.row].dataTextString
+        
+        let maxContentDummyText = "\n\n\n\n" //4 lines of text
+        let maxContentHeight = estimateHeight(text: maxContentDummyText, textWidth: availTextWidth, fontSize: 14)
+        if(l == "a") {
+            var tContentHeight = estimateHeight(text: s, textWidth: availTextWidth, fontSize: 14)
+            if(tContentHeight > maxContentHeight) {
+                tContentHeight = maxContentHeight
+            }
+            let tHeight = contentTopMargin + tContentHeight
+            contentHeight += tHeight
+        } else if(l == "b") {
+            var tContentHeight = estimateHeight(text: s, textWidth: availTextWidth, fontSize: 14)
+            if(tContentHeight > maxContentHeight) {
+                tContentHeight = maxContentHeight
+            }
+            let tHeight = contentTopMargin + tContentHeight
+            contentHeight += tHeight
+        } else if(l == "c") {
+            let contentText = "....WTF.....ELON!"
+            var tContentHeight = estimateHeight(text: contentText, textWidth: availTextWidth, fontSize: 14)
+            if(tContentHeight > maxContentHeight) {
+                tContentHeight = maxContentHeight
+            }
+            let tHeight = contentTopMargin + tContentHeight
+            contentHeight += tHeight
+        } else if(l == "d") {
+            let contentText = "Breaking News: TSLA up 10%!"
+            var tContentHeight = estimateHeight(text: contentText, textWidth: availTextWidth, fontSize: 14)
+            if(tContentHeight > maxContentHeight) {
+                tContentHeight = maxContentHeight
+            }
+            let tHeight = contentTopMargin + tContentHeight
+            contentHeight += tHeight
+        }
         
         let miscHeight = userPhotoHeight + userPhotoTopMargin + frameBottomMargin
-        let contentHeight = bioContentHeight + bioContentTopMargin
-//        let contentHeight = 0.0
         let totalHeight = contentHeight + miscHeight
         
         return CGSize(width: collectionView.frame.width, height: totalHeight)
-        
-//        return CGSize(width: collectionView.frame.width, height: 110)
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
@@ -314,7 +344,7 @@ extension ScrollFeedHResultPostListCell: UICollectionViewDataSource {
 extension ScrollFeedHResultPostListCell: HResultListViewDelegate{
 
     func didHResultClickUser(){
-
+        aDelegate?.sfcDidClickVcvClickUser()
     }
     func didHResultClickPlace(){
         

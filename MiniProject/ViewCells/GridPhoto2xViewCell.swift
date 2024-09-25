@@ -1,5 +1,5 @@
 //
-//  GridVideo2xViewCell.swift
+//  GridPhoto2xViewCell.swift
 //  MiniProject
 //
 //  Created by Joseph Teoh on 30/06/2024.
@@ -9,14 +9,13 @@ import Foundation
 import UIKit
 import SDWebImage
 
-//test > new kind of gridvideo2x with description and creator profile
-class GridVideo2xViewCell: UICollectionViewCell {
-    static let identifier = "GridVideo2xViewCell"
+//test > grid viewcell for user panel
+class GridPhoto2xViewCell: UICollectionViewCell {
+    static let identifier = "GridPhoto2xViewCell"
     var gifImage = SDAnimatedImageView()
     
-    var descHeight: CGFloat = 70.0
+    var descHeight: CGFloat = 60.0 //70
     let aUserPhoto = SDAnimatedImageView()
-    
     let aUserNameText = UILabel()
     let aaText = UILabel()
     
@@ -44,7 +43,7 @@ class GridVideo2xViewCell: UICollectionViewCell {
 //        self.layer.cornerRadius = 5
         
         let vConBg = UIView()
-//        vConBg.backgroundColor = .ddmDarkBlack //ddmBlackDark 
+//        vConBg.backgroundColor = .ddmDarkBlack //ddmBlackDark
         self.addSubview(vConBg)
         vConBg.translatesAutoresizingMaskIntoConstraints = false
         vConBg.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
@@ -108,8 +107,8 @@ class GridVideo2xViewCell: UICollectionViewCell {
 //        bMiniBtn.translatesAutoresizingMaskIntoConstraints = false
 //        bMiniBtn.trailingAnchor.constraint(equalTo: aCountText.leadingAnchor, constant: -2).isActive = true
 //        bMiniBtn.centerYAnchor.constraint(equalTo: aCountText.centerYAnchor).isActive = true
-//        bMiniBtn.heightAnchor.constraint(equalToConstant: 16).isActive = true //16
-//        bMiniBtn.widthAnchor.constraint(equalToConstant: 16).isActive = true
+//        bMiniBtn.heightAnchor.constraint(equalToConstant: 12).isActive = true //14
+//        bMiniBtn.widthAnchor.constraint(equalToConstant: 12).isActive = true
 //        //*
         
         let vConBottom = UIView()
@@ -126,7 +125,7 @@ class GridVideo2xViewCell: UICollectionViewCell {
         aaText.textColor = .white
         aaText.font = .systemFont(ofSize: 13)
 //        aaText.font = .boldSystemFont(ofSize: 12)
-        aaText.numberOfLines = 2
+        aaText.numberOfLines = 1 //2
         vConBottom.addSubview(aaText)
         aaText.text = "-"
         aaText.translatesAutoresizingMaskIntoConstraints = false
@@ -181,11 +180,11 @@ class GridVideo2xViewCell: UICollectionViewCell {
 //        aCon.addSubview(bMiniBtn)
         vConBottom.addSubview(bMiniBtn)
         bMiniBtn.translatesAutoresizingMaskIntoConstraints = false
-        bMiniBtn.trailingAnchor.constraint(equalTo: aCountText.leadingAnchor, constant: 0).isActive = true
+        bMiniBtn.trailingAnchor.constraint(equalTo: aCountText.leadingAnchor, constant: -2).isActive = true
         bMiniBtn.centerYAnchor.constraint(equalTo: aCountText.centerYAnchor).isActive = true
-        bMiniBtn.heightAnchor.constraint(equalToConstant: 16).isActive = true //14
-        bMiniBtn.widthAnchor.constraint(equalToConstant: 16).isActive = true
-
+        bMiniBtn.heightAnchor.constraint(equalToConstant: 12).isActive = true //16
+        bMiniBtn.widthAnchor.constraint(equalToConstant: 12).isActive = true
+        
 //        let aUserNameText = UILabel()
         aUserNameText.textAlignment = .left
 //        aUserNameText.textColor = .white
@@ -203,8 +202,8 @@ class GridVideo2xViewCell: UICollectionViewCell {
         bCountText.textAlignment = .left
 //        bCountText.textColor = .white
         bCountText.textColor = .ddmDarkGrayColor
-//        bCountText.font = .systemFont(ofSize: 12)
-        bCountText.font = .boldSystemFont(ofSize: 10)
+        bCountText.font = .systemFont(ofSize: 12)
+//        bCountText.font = .boldSystemFont(ofSize: 12)
         bCountText.numberOfLines = 1
         vConBottom.addSubview(bCountText)
         bCountText.text = ""
@@ -213,10 +212,6 @@ class GridVideo2xViewCell: UICollectionViewCell {
         bCountText.trailingAnchor.constraint(equalTo: vConBottom.trailingAnchor, constant: -5).isActive = true
     }
     
-//    @objc func onGifImageClicked(gesture: UITapGestureRecognizer) {
-//        startAnimateSpinner()
-//    }
-//
     func hideCell() {
         gifImage.isHidden = true
     }
@@ -227,7 +222,7 @@ class GridVideo2xViewCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        print("upv gridvideo2x prepare for reuse")
+        print("upv gridphoto prepare for reuse")
         
         let imageUrl = URL(string: "")
         gifImage.sd_setImage(with: imageUrl)
@@ -253,21 +248,21 @@ class GridVideo2xViewCell: UICollectionViewCell {
         let s = data.dataTextString
         
         if(l == "a") {
-            aaText.text = "What a wonderful day in Tokyo"
+            aaText.text = "#Tokyo trip"
             aUserNameText.text = "JennyBaby"
         } else if(l == "b") {
             aaText.text = s
             aUserNameText.text = "Michael Kins"
         } else if(l == "c") {
-            aaText.text = ".....WTF...."
+            aaText.text = "=.="
             aUserNameText.text = "YikCai"
         } else if(l == "d") {
             aaText.text = s
             aUserNameText.text = "THXY"
         }
         
-        aCountText.text = "3.9m"
-        bMiniBtn.image = UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate) //icon_round_play
+        aCountText.text = "52"
+        bMiniBtn.image = UIImage(named:"icon_love")?.withRenderingMode(.alwaysTemplate) //icon_round_play
         
 //        bCountText.text = "2hr"
     }
@@ -285,10 +280,10 @@ class GridVideo2xViewCell: UICollectionViewCell {
                         return
                     }
 
-                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+                    let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
                     self.gifImage.sd_setImage(with: imageUrl)
                     
-                    let imageUrl2 = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+                    let imageUrl2 = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
                     self.aUserPhoto.sd_setImage(with: imageUrl2)
                 }
 
@@ -313,9 +308,8 @@ class GridVideo2xViewCell: UICollectionViewCell {
         let pFrame = gifImage.frame.origin
         let pointX = pFrame.x
         let pointY = pFrame.y
-        aDelegate?.gridViewClick(vc: self, pointX: pointX, pointY: pointY, view: gifImage, mode:VideoTypes.V_LOOP)
+        aDelegate?.gridViewClick(vc: self, pointX: pointX, pointY: pointY, view: gifImage, mode:PhotoTypes.P_SHOT)
     }
-    
     @objc func onUserImageClicked(gesture: UITapGestureRecognizer) {
         aDelegate?.gridViewClickUser()
     }

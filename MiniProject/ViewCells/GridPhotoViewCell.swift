@@ -14,6 +14,10 @@ class GridPhotoViewCell: UICollectionViewCell {
     static let identifier = "GridPhotoViewCell"
     var gifImage = SDAnimatedImageView()
     
+    let aCountText = UILabel()
+    let bMiniBtn = UIImageView()
+    let cMiniBtn = UIImageView()
+    
     weak var aDelegate : GridViewCellDelegate?
     
     override init(frame: CGRect) {
@@ -50,31 +54,46 @@ class GridPhotoViewCell: UICollectionViewCell {
         gifImage.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onGifImageClicked)))
         gifImage.backgroundColor = .ddmDarkColor
         
-        //stats count
-//        let playBtn = UIImageView()
-////        playBtn.image = UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate)
-//        playBtn.image = UIImage(named:"icon_love")?.withRenderingMode(.alwaysTemplate)
-//        playBtn.tintColor = .white
-//        contentView.addSubview(playBtn)
-//        playBtn.translatesAutoresizingMaskIntoConstraints = false
-//        playBtn.bottomAnchor.constraint(equalTo: gifImage.bottomAnchor, constant: -5).isActive = true
-//        playBtn.trailingAnchor.constraint(equalTo: gifImage.trailingAnchor, constant: -5).isActive = true
-////                playBtn.leadingAnchor.constraint(equalTo: videoContainer.trailingAnchor, constant: -5).isActive = true
-//        playBtn.heightAnchor.constraint(equalToConstant: 12).isActive = true //12
-//        playBtn.widthAnchor.constraint(equalToConstant: 12).isActive = true
-//
-//        let aaText = UILabel()
-//        aaText.textAlignment = .left
-//        aaText.textColor = .white
-////        aaText.font = .systemFont(ofSize: 12)
-//        aaText.font = .boldSystemFont(ofSize: 10)
-//        aaText.numberOfLines = 1
-//        contentView.addSubview(aaText)
-//        aaText.translatesAutoresizingMaskIntoConstraints = false
-//        aaText.centerYAnchor.constraint(equalTo: playBtn.centerYAnchor, constant: 0).isActive = true
-//        aaText.trailingAnchor.constraint(equalTo: playBtn.leadingAnchor, constant: -2).isActive = true //0
-////        aaText.trailingAnchor.constraint(equalTo: playBtn.leadingAnchor, constant: 0).isActive = true //0
-//        aaText.text = "49"
+//        let aCountText = UILabel()
+        aCountText.textAlignment = .left
+        aCountText.textColor = .white
+//        aCountText.textColor = .ddmDarkGrayColor
+//        aCountText.font = .systemFont(ofSize: 11) //12
+        aCountText.font = .boldSystemFont(ofSize: 10)
+        aCountText.numberOfLines = 1
+        contentView.addSubview(aCountText)
+        aCountText.text = ""
+        aCountText.translatesAutoresizingMaskIntoConstraints = false
+        aCountText.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5).isActive = true
+        aCountText.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5).isActive = true
+        
+//        let bMiniBtn = UIImageView(image: UIImage(named:"icon_love")?.withRenderingMode(.alwaysTemplate))
+//        bMiniBtn.image = UIImage(named:"icon_love")?.withRenderingMode(.alwaysTemplate)
+        bMiniBtn.tintColor = .white
+//        bMiniBtn.tintColor = .ddmDarkGrayColor
+//        bMiniBtn.tintColor = .red
+//        contentView.addSubview(bMiniBtn)
+//        aCon.addSubview(bMiniBtn)
+        contentView.addSubview(bMiniBtn)
+        bMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        bMiniBtn.trailingAnchor.constraint(equalTo: aCountText.leadingAnchor, constant: -2).isActive = true
+        bMiniBtn.centerYAnchor.constraint(equalTo: aCountText.centerYAnchor).isActive = true
+        bMiniBtn.heightAnchor.constraint(equalToConstant: 12).isActive = true //14
+        bMiniBtn.widthAnchor.constraint(equalToConstant: 12).isActive = true
+        
+//        let cMiniBtn = UIImageView(image: UIImage(named:"icon_round_folder_close")?.withRenderingMode(.alwaysTemplate))
+//        cMiniBtn.image = UIImage(named:"icon_love")?.withRenderingMode(.alwaysTemplate)
+        cMiniBtn.tintColor = .white
+//        bMiniBtn.tintColor = .ddmDarkGrayColor
+//        bMiniBtn.tintColor = .red
+//        contentView.addSubview(bMiniBtn)
+//        aCon.addSubview(bMiniBtn)
+        contentView.addSubview(cMiniBtn)
+        cMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        cMiniBtn.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5).isActive = true //-2
+        cMiniBtn.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5).isActive = true
+        cMiniBtn.heightAnchor.constraint(equalToConstant: 14).isActive = true //14
+        cMiniBtn.widthAnchor.constraint(equalToConstant: 14).isActive = true
     }
     
     func hideCell() {
@@ -93,10 +112,40 @@ class GridPhotoViewCell: UICollectionViewCell {
         gifImage.sd_setImage(with: imageUrl)
         
         gifImage.isHidden = false
+        
+        aCountText.text = ""
+        bMiniBtn.image = nil
+        
+        cMiniBtn.image = nil
     }
     
     func configure(data: PostData) {
         asyncConfigure(data: data)
+        
+        let l = data.dataType
+        let s = data.dataTextString
+        
+        if(l == "a") {
+//            cMiniBtn.image = UIImage(named:"icon_round_folder_close")?.withRenderingMode(.alwaysTemplate)
+            
+            aCountText.text = "54"
+            bMiniBtn.image = UIImage(named:"icon_love")?.withRenderingMode(.alwaysTemplate)
+        } else if(l == "b") {
+//            cMiniBtn.image = UIImage(named:"icon_round_folder_close")?.withRenderingMode(.alwaysTemplate)
+            
+            aCountText.text = "398"
+            bMiniBtn.image = UIImage(named:"icon_love")?.withRenderingMode(.alwaysTemplate)
+        } else if(l == "c") {
+//            cMiniBtn.image = nil
+            
+            aCountText.text = "101k"
+            bMiniBtn.image = UIImage(named:"icon_love")?.withRenderingMode(.alwaysTemplate)
+        } else if(l == "d") {
+//            cMiniBtn.image = nil
+            
+            aCountText.text = "5.4k"
+            bMiniBtn.image = UIImage(named:"icon_love")?.withRenderingMode(.alwaysTemplate)
+        }
     }
     func asyncConfigure(data: PostData) {
         let id = "u"
@@ -132,6 +181,9 @@ class GridPhotoViewCell: UICollectionViewCell {
         }
     }
     @objc func onGifImageClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.gridViewClick(vc: self)
+        let pFrame = gifImage.frame.origin
+        let pointX = pFrame.x
+        let pointY = pFrame.y
+        aDelegate?.gridViewClick(vc: self, pointX: pointX, pointY: pointY, view: gifImage, mode:PhotoTypes.P_SHOT)
     }
 }

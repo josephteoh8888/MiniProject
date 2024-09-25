@@ -68,6 +68,7 @@ class UserScrollablePanelView: ScrollablePanelView{
     let aFollowerCountAText = UILabel()
     let aFollowerAText = UILabel()
     let aMoreBtn = UIView()
+    let aMoreCBtn = UIView()
 
     var aPhotoHeightCons: NSLayoutConstraint?
     var aPhotoWidthCons: NSLayoutConstraint?
@@ -791,7 +792,7 @@ class UserScrollablePanelView: ScrollablePanelView{
         bMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
 
         //test > more action btn
-        let aMoreCBtn = UIView()
+//        let aMoreCBtn = UIView()
 //        aMoreCBtn.backgroundColor = .ddmBlackDark
         aStickyHeader.addSubview(aMoreCBtn)
         aMoreCBtn.translatesAutoresizingMaskIntoConstraints = false
@@ -1001,6 +1002,15 @@ class UserScrollablePanelView: ScrollablePanelView{
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
                 cell.redrawUI()
                 cell.delegate = self
+            } else if(l == "np") {
+                let cell = UserEmptyPostHighlightBox(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
+                aHLightRect1.addSubview(cell)
+                cell.translatesAutoresizingMaskIntoConstraints = false
+                cell.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
+                cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
+                cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
+                cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
+                cell.redrawUI()
             }
             //test > error handling
             else if(l == "na") {
@@ -1440,6 +1450,7 @@ class UserScrollablePanelView: ScrollablePanelView{
             self.aFollow.isHidden = false
             self.aFollowC.isHidden = false
             self.aMoreBtn.isHidden = false
+            self.aMoreCBtn.isHidden = false
             
             let stickyImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
             aStickyPhoto.sd_setImage(with: stickyImageUrl)
@@ -1493,6 +1504,7 @@ class UserScrollablePanelView: ScrollablePanelView{
         self.aFollow.isHidden = true
         self.aFollowC.isHidden = true
         self.aMoreBtn.isHidden = true
+        self.aMoreCBtn.isHidden = true
         
         let stickyImageUrl = URL(string: "")
         aStickyPhoto.sd_setImage(with: stickyImageUrl)
@@ -1589,7 +1601,8 @@ class UserScrollablePanelView: ScrollablePanelView{
                             self.isFetchFeedAllowed = true
                             
                             //test > lay out halfmode highlight box
-                            self.aHLightBoxArray.append("a") //about user
+//                            self.aHLightBoxArray.append("a") //about user
+                            self.aHLightBoxArray.append("np") //about user
                             self.aHLightBoxArray.append("d_u") //discover more creators
                             
                             //test > lay out highlight section

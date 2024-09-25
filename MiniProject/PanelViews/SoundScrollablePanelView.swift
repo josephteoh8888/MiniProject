@@ -66,6 +66,7 @@ class SoundScrollablePanelView: ScrollablePanelView{
     let aFollowC = UIView()
     let aFollowCText = UILabel()
     let aMoreBtn = UIView()
+    let aMoreCBtn = UIView()
 
     var aPhotoHeightCons: NSLayoutConstraint?
     var aPhotoWidthCons: NSLayoutConstraint?
@@ -743,7 +744,7 @@ class SoundScrollablePanelView: ScrollablePanelView{
         bMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
         
         //test > more action btn
-        let aMoreCBtn = UIView()
+//        let aMoreCBtn = UIView()
 //        aMoreCBtn.backgroundColor = .ddmBlackDark
         aStickyHeader.addSubview(aMoreCBtn)
         aMoreCBtn.translatesAutoresizingMaskIntoConstraints = false
@@ -1418,6 +1419,7 @@ class SoundScrollablePanelView: ScrollablePanelView{
             self.aFollow.isHidden = false
             self.aFollowC.isHidden = false
             self.aMoreBtn.isHidden = false
+            self.aMoreCBtn.isHidden = false
             
             let aImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
             aPhoto.sd_setImage(with: aImageUrl)
@@ -1466,6 +1468,7 @@ class SoundScrollablePanelView: ScrollablePanelView{
         self.aFollow.isHidden = true
         self.aFollowC.isHidden = true
         self.aMoreBtn.isHidden = true
+        self.aMoreCBtn.isHidden = true
         
         let aImageUrl = URL(string: "")
         aPhoto.sd_setImage(with: aImageUrl)

@@ -55,7 +55,7 @@ class ScrollFeedGridPhoto2xViewCell: ScrollDataFeedCell {
         guard let vCV = vCV else {
             return
         }
-        vCV.register(GridPhotoViewCell.self, forCellWithReuseIdentifier: GridPhotoViewCell.identifier)
+        vCV.register(GridPhoto2xViewCell.self, forCellWithReuseIdentifier: GridPhoto2xViewCell.identifier)
         vCV.dataSource = self
         vCV.delegate = self
 //        vCV.showsVerticalScrollIndicator = true //false
@@ -89,7 +89,7 @@ class ScrollFeedGridPhoto2xViewCell: ScrollDataFeedCell {
     func dehideCell(){
         if(hideCellIndex > -1) {
             let vc = vCV?.cellForItem(at: IndexPath(item: hideCellIndex, section: 0))
-            guard let b = vc as? GridPhotoViewCell else {
+            guard let b = vc as? GridPhoto2xViewCell else {
                 return
             }
             b.dehideCell()
@@ -99,7 +99,7 @@ class ScrollFeedGridPhoto2xViewCell: ScrollDataFeedCell {
     
     func hideCellAt(itemIndex: Int) {
         let vc = vCV?.cellForItem(at: IndexPath(item: itemIndex, section: 0))
-        guard let b = vc as? GridPhotoViewCell else {
+        guard let b = vc as? GridPhoto2xViewCell else {
             return
         }
         b.hideCell()
@@ -154,7 +154,9 @@ extension ScrollFeedGridPhoto2xViewCell: UICollectionViewDelegateFlowLayout {
 //        let widthPerItem = collectionView.frame.width / 3 - lay.minimumInteritemSpacing
 
         let widthPerItem = (collectionView.frame.width - gLhsMargin - gRhsMargin - gLineSpacingHeight) / 2
-        let heightPerItem = widthPerItem
+//        let heightPerItem = widthPerItem
+        let descHeight = 60.0 //70
+        let heightPerItem = widthPerItem + descHeight
         return CGSize(width: widthPerItem, height: heightPerItem) //test
         
 //        return CGSize(width: 175, height: 175) //ori
@@ -296,7 +298,7 @@ extension ScrollFeedGridPhoto2xViewCell: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: GridPhotoViewCell.identifier, for: indexPath) as! GridPhotoViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: GridPhoto2xViewCell.identifier, for: indexPath) as! GridPhoto2xViewCell
         cell.aDelegate = self
         
         cell.configure(data: vDataList[indexPath.row])
@@ -304,7 +306,7 @@ extension ScrollFeedGridPhoto2xViewCell: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: GridPhotoViewCell.identifier, for: indexPath) as! GridPhotoViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: GridPhoto2xViewCell.identifier, for: indexPath) as! GridPhoto2xViewCell
         let originInRootView = collectionView.convert(cell.frame.origin, to: self)
         print("collectionView index: \(indexPath), \(cell.frame.origin.x), \(cell.frame.origin.y), \(originInRootView)")
 
@@ -314,7 +316,7 @@ extension ScrollFeedGridPhoto2xViewCell: UICollectionViewDataSource {
 }
 
 extension ScrollFeedGridPhoto2xViewCell: GridViewCellDelegate {
-    func gridViewClick(vc: UICollectionViewCell){
+    func gridViewClick(vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         print("gridviewclick")
         if let a = vCV {
             for cell in a.visibleCells {
@@ -324,8 +326,11 @@ extension ScrollFeedGridPhoto2xViewCell: GridViewCellDelegate {
                     let originInRootView = a.convert(cell.frame.origin, to: self)
                     let visibleIndexPath = a.indexPath(for: cell)
                     
+                    let pointX1 = originInRootView.x + pointX
+                    let pointY1 = originInRootView.y + pointY
+                    
                     if let indexPath = visibleIndexPath {
-                        aDelegate?.sfcDidClickVcvClickPhoto(pointX: originInRootView.x, pointY: originInRootView.y, view: cell, mode: PhotoTypes.P_SHOT)
+                        aDelegate?.sfcDidClickVcvClickPhoto(pointX: pointX1, pointY: pointY1, view: view, mode: mode)
                         hideCellAt(itemIndex: indexPath.row)
                     }
                     
@@ -333,5 +338,8 @@ extension ScrollFeedGridPhoto2xViewCell: GridViewCellDelegate {
                 }
             }
         }
+    }
+    func gridViewClickUser(){
+        aDelegate?.sfcDidClickVcvClickUser()
     }
 }

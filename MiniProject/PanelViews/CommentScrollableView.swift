@@ -72,6 +72,7 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
     let sendCommentContainer = UIView()
     let sendASpinner = SpinLoader()
     let sendBText = UILabel()
+    let sendBBox = UIView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -317,6 +318,7 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
         sendAaView.trailingAnchor.constraint(equalTo: sendCommentContainer.trailingAnchor, constant: -50).isActive = true
         sendAaView.heightAnchor.constraint(equalToConstant: 36).isActive = true
         sendAaView.layer.cornerRadius = 10
+        sendAaView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onOpenTextBoxClicked)))
         
 //        let sendBText = UILabel()
         sendBText.textAlignment = .left
@@ -340,6 +342,36 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
         sendASpinner.centerYAnchor.constraint(equalTo: sendAaView.centerYAnchor).isActive = true
         sendASpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
         sendASpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        
+        sendCommentContainer.addSubview(sendBBox)
+        sendBBox.translatesAutoresizingMaskIntoConstraints = false
+        sendBBox.widthAnchor.constraint(equalToConstant: 30).isActive = true //20
+        sendBBox.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        sendBBox.centerYAnchor.constraint(equalTo: sendAaView.centerYAnchor).isActive = true
+        sendBBox.centerXAnchor.constraint(equalTo: sendASpinner.centerXAnchor).isActive = true
+        sendBBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onClearTextBoxClicked)))
+        sendBBox.isHidden = true
+        
+        let sendBBoxBg = UIView()
+        sendBBoxBg.backgroundColor = .white
+        sendBBox.addSubview(sendBBoxBg)
+        sendBBoxBg.clipsToBounds = true
+        sendBBoxBg.translatesAutoresizingMaskIntoConstraints = false
+        sendBBoxBg.widthAnchor.constraint(equalToConstant: 20).isActive = true //20
+        sendBBoxBg.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        sendBBoxBg.centerYAnchor.constraint(equalTo: sendBBox.centerYAnchor).isActive = true
+        sendBBoxBg.centerXAnchor.constraint(equalTo: sendBBox.centerXAnchor).isActive = true
+//        sendBBox.trailingAnchor.constraint(equalTo: sendCommentContainer.trailingAnchor, constant: -15).isActive = true
+        sendBBoxBg.layer.cornerRadius = 10
+
+        let aBtn = UIImageView(image: UIImage(named:"icon_round_close")?.withRenderingMode(.alwaysTemplate))
+        aBtn.tintColor = .ddmDarkColor
+        sendBBox.addSubview(aBtn)
+        aBtn.translatesAutoresizingMaskIntoConstraints = false
+        aBtn.centerXAnchor.constraint(equalTo: sendBBox.centerXAnchor).isActive = true
+        aBtn.centerYAnchor.constraint(equalTo: sendBBox.centerYAnchor).isActive = true
+        aBtn.heightAnchor.constraint(equalToConstant: 16).isActive = true
+        aBtn.widthAnchor.constraint(equalToConstant: 16).isActive = true
 
         //test > real textview edittext for comment
         self.addSubview(bView)
@@ -554,13 +586,40 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
         }
     }
     @objc func onOpenTextBoxClicked(gesture: UITapGestureRecognizer) {
-        setFirstResponder(textView: aTextBox)
+//        setFirstResponder(textView: aTextBox)
+        
+        if(!isStatusUploading) {
+            setFirstResponder(textView: aTextBox)
+        }
     }
 
     @objc func onCloseTextBoxClicked(gesture: UITapGestureRecognizer) {
+        //test > check if textbox is empty
+        if(aTextBox.text != "") {
+            sendBText.text = aTextBox.text
+            addCommentContainer.isHidden = true
+            sendCommentContainer.isHidden = false
+            sendBBox.isHidden = false
+        } else {
+            sendBText.text = ""
+            addCommentContainer.isHidden = false
+            sendCommentContainer.isHidden = true
+            sendBBox.isHidden = true
+            
+            clearTextbox()
+        }
+        
         resignResponder()
 
         self.textPanel.transform = CGAffineTransform(translationX: 0, y: 0)
+    }
+    @objc func onClearTextBoxClicked(gesture: UITapGestureRecognizer) {
+        
+        sendBBox.isHidden = true
+        addCommentContainer.isHidden = false
+        sendCommentContainer.isHidden = true
+        
+        clearTextbox()
     }
     
     @objc func onSendBtnClicked(gesture: UITapGestureRecognizer) {
@@ -586,13 +645,17 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
         bView.isHidden = true
     }
     
+    var isStatusUploading = false
     func asyncSendNewData() {
         addCommentContainer.isHidden = true
         sendCommentContainer.isHidden = false
         
         sendASpinner.startAnimating()
+        sendBBox.isHidden = true
         
-        let id = "c"
+        isStatusUploading = true
+        
+        let id = "c_"
         DataFetchManager.shared.sendCommentData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -610,6 +673,8 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
                     self.scrollToTop(isAnimated: false)
                     self.addData()
                     self.clearTextbox()
+                    
+                    self.isStatusUploading = false
                 }
 
                 case .failure(let error):
@@ -617,6 +682,12 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
                     guard let self = self else {
                         return
                     }
+                    
+                    self.sendASpinner.stopAnimating()
+                    self.sendBBox.isHidden = false
+                    self.openErrorUploadMsg()
+                    
+                    self.isStatusUploading = false
                 }
                 break
             }
@@ -656,6 +727,15 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
     
     func scrollToTop(isAnimated: Bool) {
         vCV?.setContentOffset(CGPoint(x: 0.0, y: 0.0), animated: isAnimated)
+    }
+    
+    func openErrorUploadMsg() {
+        let errorPanel = ErrorUploadCommentMsgView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
+        self.addSubview(errorPanel)
+        errorPanel.translatesAutoresizingMaskIntoConstraints = false
+        errorPanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
+        errorPanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
+        errorPanel.delegate = self
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -1901,7 +1981,15 @@ extension CommentScrollableView: UITextViewDelegate {
         }
     }
 }
-
+extension CommentScrollableView: ErrorUploadCommentMsgDelegate {
+    func didEUCommentClickProceed() {
+        asyncSendNewData()
+    }
+    func didEUCommentClickDeny(){
+        //test
+//        setFirstResponder(textView: aTextBox)
+    }
+}
 extension CommentScrollableView: HListCellDelegate {
     func hListDidClickVcvComment(vc: UICollectionViewCell){
         

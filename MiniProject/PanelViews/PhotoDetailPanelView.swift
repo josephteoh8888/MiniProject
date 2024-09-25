@@ -26,6 +26,7 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
     var viewWidth: CGFloat = 0
     
     let aStickyHeader = UIView()
+    let aMoreCBtn = UIView()
     var photoCV : UICollectionView?
 //    var vcDataList = [PhotoData]()
     var vcDataList = [BaseData]()
@@ -78,6 +79,7 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
     let sendCommentContainer = UIView()
     let sendASpinner = SpinLoader()
     let sendBText = UILabel()
+    let sendBBox = UIView()
     
     //test > scroll view for carousel
     var isCarouselScrolled = false
@@ -194,6 +196,31 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
         bMiniBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         bMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
         
+        //test > more action btn
+//        let aMoreCBtn = UIView()
+//        aMoreCBtn.backgroundColor = .ddmBlackDark
+        aStickyHeader.addSubview(aMoreCBtn)
+        aMoreCBtn.translatesAutoresizingMaskIntoConstraints = false
+        aMoreCBtn.trailingAnchor.constraint(equalTo: aStickyHeader.trailingAnchor, constant: -10).isActive = true
+        aMoreCBtn.heightAnchor.constraint(equalToConstant: 30).isActive = true //30
+        aMoreCBtn.widthAnchor.constraint(equalToConstant: 30).isActive = true //30
+        aMoreCBtn.centerYAnchor.constraint(equalTo: aBtn.centerYAnchor, constant: 0).isActive = true
+        aMoreCBtn.layer.cornerRadius = 10
+        //test > for sharing
+        aMoreCBtn.isUserInteractionEnabled = true
+        aMoreCBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onAClicked)))
+        aMoreCBtn.isHidden = true
+        
+        let eMiniCBtn = UIImageView(image: UIImage(named:"icon_round_share")?.withRenderingMode(.alwaysTemplate).withHorizontallyFlippedOrientation())
+        eMiniCBtn.tintColor = .white
+//        eMiniBtn.tintColor = .ddmDarkGrayColor
+        aMoreCBtn.addSubview(eMiniCBtn)
+        eMiniCBtn.translatesAutoresizingMaskIntoConstraints = false
+        eMiniCBtn.centerXAnchor.constraint(equalTo: aMoreCBtn.centerXAnchor).isActive = true
+        eMiniCBtn.centerYAnchor.constraint(equalTo: aMoreCBtn.centerYAnchor, constant: -2).isActive = true //-2
+        eMiniCBtn.heightAnchor.constraint(equalToConstant: 22).isActive = true //22
+        eMiniCBtn.widthAnchor.constraint(equalToConstant: 22).isActive = true
+        
         let stickyHLight = UIView()
 //        stickyHLight.backgroundColor = .ddmDarkColor
         aStickyHeader.addSubview(stickyHLight)
@@ -271,7 +298,14 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
     @objc func onBackPanelClicked(gesture: UITapGestureRecognizer) {
         closePanel(isAnimated: true)
     }
-    
+    @objc func onAClicked(gesture: UITapGestureRecognizer) {
+        pausePlayingMedia()
+        
+        if let a = photoCV {
+            openShareSheet()
+            selectedItemIdx = 0
+        }
+    }
     @objc func onStickyHeaderClicked(gesture: UITapGestureRecognizer) {
         print("sticky header clicked")
         
@@ -437,6 +471,7 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
         sendAaView.trailingAnchor.constraint(equalTo: sendCommentContainer.trailingAnchor, constant: -50).isActive = true
         sendAaView.heightAnchor.constraint(equalToConstant: 36).isActive = true
         sendAaView.layer.cornerRadius = 10
+        sendAaView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onOpenTextBoxClicked)))
         
 //        let sendBText = UILabel()
         sendBText.textAlignment = .left
@@ -461,6 +496,36 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
         sendASpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
         sendASpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
 
+        sendCommentContainer.addSubview(sendBBox)
+        sendBBox.translatesAutoresizingMaskIntoConstraints = false
+        sendBBox.widthAnchor.constraint(equalToConstant: 30).isActive = true //20
+        sendBBox.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        sendBBox.centerYAnchor.constraint(equalTo: sendAaView.centerYAnchor).isActive = true
+        sendBBox.centerXAnchor.constraint(equalTo: sendASpinner.centerXAnchor).isActive = true
+        sendBBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onClearTextBoxClicked)))
+        sendBBox.isHidden = true
+        
+        let sendBBoxBg = UIView()
+        sendBBoxBg.backgroundColor = .white
+        sendBBox.addSubview(sendBBoxBg)
+        sendBBoxBg.clipsToBounds = true
+        sendBBoxBg.translatesAutoresizingMaskIntoConstraints = false
+        sendBBoxBg.widthAnchor.constraint(equalToConstant: 20).isActive = true //20
+        sendBBoxBg.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        sendBBoxBg.centerYAnchor.constraint(equalTo: sendBBox.centerYAnchor).isActive = true
+        sendBBoxBg.centerXAnchor.constraint(equalTo: sendBBox.centerXAnchor).isActive = true
+//        sendBBox.trailingAnchor.constraint(equalTo: sendCommentContainer.trailingAnchor, constant: -15).isActive = true
+        sendBBoxBg.layer.cornerRadius = 10
+
+        let aBtn = UIImageView(image: UIImage(named:"icon_round_close")?.withRenderingMode(.alwaysTemplate))
+        aBtn.tintColor = .ddmDarkColor
+        sendBBox.addSubview(aBtn)
+        aBtn.translatesAutoresizingMaskIntoConstraints = false
+        aBtn.centerXAnchor.constraint(equalTo: sendBBox.centerXAnchor).isActive = true
+        aBtn.centerYAnchor.constraint(equalTo: sendBBox.centerYAnchor).isActive = true
+        aBtn.heightAnchor.constraint(equalToConstant: 16).isActive = true
+        aBtn.widthAnchor.constraint(equalToConstant: 16).isActive = true
+        
         //test > real textview edittext for comment
         panel.addSubview(aView)
         aView.translatesAutoresizingMaskIntoConstraints = false
@@ -742,11 +807,22 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
     }
     //*
     
+    func configureUI(data: String) {
+        if(data == "a") {
+            aMoreCBtn.isHidden = false
+        } else {
+            deconfigureUI()
+        }
+    }
+    func deconfigureUI(){
+        aMoreCBtn.isHidden = true
+    }
+    
     //test > fetch post before comments
     func asyncFetchPost(id: String) {
         aSpinner.startAnimating()
         
-        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+        DataFetchManager.shared.fetchPostData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -758,6 +834,8 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
                         return
                     }
                     
+                    self.aSpinner.stopAnimating()
+                    
                     //test 2 > new append method
 //                    let postData = PostData()
                     let postData = PhotoData()
@@ -767,14 +845,23 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
                     self.vcDataList.append(postData)
                     self.photoCV?.reloadData()
                     
-                    self.aSpinner.stopAnimating()
-
+                    //test
+                    self.configureUI(data: "a")
+                    
                     self.asyncFetchFeed(id: "comment_feed")
                 }
 
-                case .failure(_):
-                    print("api fail")
-                    break
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    print("api fail \(error)")
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    //test
+                    self.configureUI(data: "e")
+                }
+                break
             }
         }
     }
@@ -1013,6 +1100,16 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
         
         //test > track comment scrollable view
         pageList.append(commentPanel)
+    }
+    
+    //test > upload comment error
+    func openErrorUploadMsg() {
+        let errorPanel = ErrorUploadCommentMsgView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
+        self.addSubview(errorPanel)
+        errorPanel.translatesAutoresizingMaskIntoConstraints = false
+        errorPanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
+        errorPanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
+        errorPanel.delegate = self
     }
     
     //test
@@ -1318,12 +1415,38 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
     }
 
     @objc func onOpenTextBoxClicked(gesture: UITapGestureRecognizer) {
-        setFirstResponder(textView: aTextBox)
+//        setFirstResponder(textView: aTextBox)
+        if(!isStatusUploading) {
+            setFirstResponder(textView: aTextBox)
+        }
     }
     @objc func onCloseTextBoxClicked(gesture: UITapGestureRecognizer) {
+        //test > check if textbox is empty
+        if(aTextBox.text != "") {
+            sendBText.text = aTextBox.text
+            addCommentContainer.isHidden = true
+            sendCommentContainer.isHidden = false
+            sendBBox.isHidden = false
+        } else {
+            sendBText.text = ""
+            addCommentContainer.isHidden = false
+            sendCommentContainer.isHidden = true
+            sendBBox.isHidden = true
+            
+            clearTextbox()
+        }
+        
         resignResponder()
 
         self.textPanel.transform = CGAffineTransform(translationX: 0, y: 0)
+    }
+    @objc func onClearTextBoxClicked(gesture: UITapGestureRecognizer) {
+        
+        sendBBox.isHidden = true
+        addCommentContainer.isHidden = false
+        sendCommentContainer.isHidden = true
+        
+        clearTextbox()
     }
     @objc func onSendBtnClicked(gesture: UITapGestureRecognizer) {
         
@@ -1334,7 +1457,6 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
         
         self.textPanel.transform = CGAffineTransform(translationX: 0, y: 0)
     }
-
 
     func setFirstResponder(textView: UITextView) {
         currentFirstResponder = textView
@@ -1349,13 +1471,18 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
         textPanel.isHidden = true
         aView.isHidden = true
     }
+    
+    var isStatusUploading = false
     func asyncSendNewData() {
         addCommentContainer.isHidden = true
         sendCommentContainer.isHidden = false
         
         sendASpinner.startAnimating()
+        sendBBox.isHidden = true
         
-        let id = "c"
+        isStatusUploading = true
+        
+        let id = "c_"
         DataFetchManager.shared.sendCommentData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -1373,6 +1500,8 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
                     self.addData()
                     self.photoCV?.setContentOffset(CGPoint(x: 0.0, y: self.postHeight), animated: false)
                     self.clearTextbox()
+                    
+                    self.isStatusUploading = false
                 }
 
                 case .failure(let error):
@@ -1380,6 +1509,12 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
                     guard let self = self else {
                         return
                     }
+                    
+                    self.sendASpinner.stopAnimating()
+                    self.sendBBox.isHidden = false
+                    self.openErrorUploadMsg()
+                    
+                    self.isStatusUploading = false
                 }
                 break
             }
@@ -2317,6 +2452,16 @@ extension PhotoDetailPanelView: CommentScrollableDelegate{
     }
     func didCClickClickVideo(pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         
+    }
+}
+
+extension PhotoDetailPanelView: ErrorUploadCommentMsgDelegate {
+    func didEUCommentClickProceed() {
+        asyncSendNewData()
+    }
+    func didEUCommentClickDeny(){
+        //test
+//        setFirstResponder(textView: aTextBox)
     }
 }
 

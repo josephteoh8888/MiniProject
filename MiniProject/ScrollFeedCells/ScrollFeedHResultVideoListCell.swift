@@ -13,6 +13,10 @@ class ScrollFeedHResultVideoListCell: ScrollFeedHResultListCell {
     //test
     var hideCellIndex = -1
     
+    let gLineSpacingHeight = 20.0
+    let gLhsMargin = 20.0
+    let gRhsMargin = 20.0
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -156,11 +160,17 @@ extension ScrollFeedHResultVideoListCell: UICollectionViewDelegateFlowLayout {
                    layout collectionViewLayout: UICollectionViewLayout,
                    sizeForItemAt indexPath: IndexPath) -> CGSize {
         print("placepanel collection 2: \(indexPath)")
-//        return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
-        let lay = collectionViewLayout as! UICollectionViewFlowLayout
-        let widthPerItem = collectionView.frame.width / 3 - lay.minimumInteritemSpacing
+
+//        let lay = collectionViewLayout as! UICollectionViewFlowLayout
+//        let widthPerItem = collectionView.frame.width / 3 - lay.minimumInteritemSpacing
+//        
+//        return CGSize(width: 175, height: 220)
         
-        return CGSize(width: 175, height: 220)
+        let widthPerItem = (collectionView.frame.width - gLhsMargin - gRhsMargin - gLineSpacingHeight) / 2
+//        let heightPerItem = widthPerItem * 3 / 2
+        let descHeight = 70.0
+        let heightPerItem = widthPerItem * 3 / 2 + descHeight //desc height
+        return CGSize(width: widthPerItem, height: heightPerItem) //test
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
@@ -315,7 +325,7 @@ extension ScrollFeedHResultVideoListCell: UICollectionViewDataSource {
 }
 
 extension ScrollFeedHResultVideoListCell: GridViewCellDelegate {
-    func gridViewClick(vc: UICollectionViewCell){
+    func gridViewClick(vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         print("gridviewclick")
         if let a = vCV {
             for cell in a.visibleCells {
@@ -325,8 +335,11 @@ extension ScrollFeedHResultVideoListCell: GridViewCellDelegate {
                     let originInRootView = a.convert(cell.frame.origin, to: self)
                     let visibleIndexPath = a.indexPath(for: cell)
                     
+                    let pointX1 = originInRootView.x + pointX
+                    let pointY1 = originInRootView.y + pointY
+                    
                     if let indexPath = visibleIndexPath {
-                        aDelegate?.sfcDidClickVcvClickVideo(pointX: originInRootView.x, pointY: originInRootView.y, view: cell, mode: VideoTypes.V_LOOP)
+                        aDelegate?.sfcDidClickVcvClickVideo(pointX: pointX1, pointY: pointY1, view: view, mode: mode)
                         hideCellAt(itemIndex: indexPath.row)
                     }
                     
@@ -334,6 +347,9 @@ extension ScrollFeedHResultVideoListCell: GridViewCellDelegate {
                 }
             }
         }
+    }
+    func gridViewClickUser(){
+        aDelegate?.sfcDidClickVcvClickUser()
     }
 }
 

@@ -82,7 +82,8 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
     let sendCommentContainer = UIView()
     let sendASpinner = SpinLoader()
     let sendBText = UILabel()
-
+    let sendBBox = UIView()
+    
     //test > circle mask
     var cView = UIView()
     
@@ -518,6 +519,7 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         sendAaView.trailingAnchor.constraint(equalTo: sendCommentContainer.trailingAnchor, constant: -50).isActive = true
         sendAaView.heightAnchor.constraint(equalToConstant: 36).isActive = true
         sendAaView.layer.cornerRadius = 10
+        sendAaView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onOpenTextBoxClicked)))
         
 //        let sendBText = UILabel()
         sendBText.textAlignment = .left
@@ -542,6 +544,36 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         sendASpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
         sendASpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
 
+        sendCommentContainer.addSubview(sendBBox)
+        sendBBox.translatesAutoresizingMaskIntoConstraints = false
+        sendBBox.widthAnchor.constraint(equalToConstant: 30).isActive = true //20
+        sendBBox.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        sendBBox.centerYAnchor.constraint(equalTo: sendAaView.centerYAnchor).isActive = true
+        sendBBox.centerXAnchor.constraint(equalTo: sendASpinner.centerXAnchor).isActive = true
+        sendBBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onClearTextBoxClicked)))
+        sendBBox.isHidden = true
+        
+        let sendBBoxBg = UIView()
+        sendBBoxBg.backgroundColor = .white
+        sendBBox.addSubview(sendBBoxBg)
+        sendBBoxBg.clipsToBounds = true
+        sendBBoxBg.translatesAutoresizingMaskIntoConstraints = false
+        sendBBoxBg.widthAnchor.constraint(equalToConstant: 20).isActive = true //20
+        sendBBoxBg.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        sendBBoxBg.centerYAnchor.constraint(equalTo: sendBBox.centerYAnchor).isActive = true
+        sendBBoxBg.centerXAnchor.constraint(equalTo: sendBBox.centerXAnchor).isActive = true
+//        sendBBox.trailingAnchor.constraint(equalTo: sendCommentContainer.trailingAnchor, constant: -15).isActive = true
+        sendBBoxBg.layer.cornerRadius = 10
+
+        let aBtn = UIImageView(image: UIImage(named:"icon_round_close")?.withRenderingMode(.alwaysTemplate))
+        aBtn.tintColor = .ddmDarkColor
+        sendBBox.addSubview(aBtn)
+        aBtn.translatesAutoresizingMaskIntoConstraints = false
+        aBtn.centerXAnchor.constraint(equalTo: sendBBox.centerXAnchor).isActive = true
+        aBtn.centerYAnchor.constraint(equalTo: sendBBox.centerYAnchor).isActive = true
+        aBtn.heightAnchor.constraint(equalToConstant: 16).isActive = true
+        aBtn.widthAnchor.constraint(equalToConstant: 16).isActive = true
+        
         //test > real textview edittext for comment
         videoPanel.addSubview(aView)
         aView.translatesAutoresizingMaskIntoConstraints = false
@@ -1238,6 +1270,9 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
             feed.pageNumber = 0
 
             asyncFetchFeed(cell: feed, id: "video_feed")
+            
+            //test > clear comment textbox when scroll to another video
+            clearBottomCommentBox()
         }
     }
 
@@ -1549,6 +1584,16 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         //test > track comment scrollable view
         pageList.append(sharePanel)
     }
+    
+    //test > upload comment error
+    func openErrorUploadMsg() {
+        let errorPanel = ErrorUploadCommentMsgView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
+        self.addSubview(errorPanel)
+        errorPanel.translatesAutoresizingMaskIntoConstraints = false
+        errorPanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
+        errorPanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
+        errorPanel.delegate = self
+    }
 
     //test > tab section UI Change (hardcoded - to be fixed in future)
     func reactToTabSectionChange(index: Int) {
@@ -1600,12 +1645,43 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
     }
     
     @objc func onOpenTextBoxClicked(gesture: UITapGestureRecognizer) {
-        setFirstResponder(textView: aTextBox)
+//        setFirstResponder(textView: aTextBox)
+        
+        if(!isStatusUploading) {
+            setFirstResponder(textView: aTextBox)
+        }
     }
     @objc func onCloseTextBoxClicked(gesture: UITapGestureRecognizer) {
+        //test > check if textbox is empty
+        if(aTextBox.text != "") {
+            sendBText.text = aTextBox.text
+            addCommentContainer.isHidden = true
+            sendCommentContainer.isHidden = false
+            sendBBox.isHidden = false
+        } else {
+            sendBText.text = ""
+            addCommentContainer.isHidden = false
+            sendCommentContainer.isHidden = true
+            sendBBox.isHidden = true
+            
+            clearTextbox()
+        }
+        
         resignResponder()
 
         self.textPanel.transform = CGAffineTransform(translationX: 0, y: 0)
+    }
+    @objc func onClearTextBoxClicked(gesture: UITapGestureRecognizer) {
+        clearBottomCommentBox()
+    }
+    
+    func clearBottomCommentBox() {
+        
+        sendBBox.isHidden = true
+        addCommentContainer.isHidden = false
+        sendCommentContainer.isHidden = true
+        
+        clearTextbox()
     }
 
     @objc func onSendBtnClicked(gesture: UITapGestureRecognizer) {
@@ -1632,13 +1708,17 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         aView.isHidden = true
     }
 
+    var isStatusUploading = false
     func asyncSendNewData() {
         addCommentContainer.isHidden = true
         sendCommentContainer.isHidden = false
         
         sendASpinner.startAnimating()
+        sendBBox.isHidden = true
         
-        let id = "c"
+        isStatusUploading = true
+        
+        let id = "c_"
         DataFetchManager.shared.sendCommentData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -1654,6 +1734,8 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
                     self.sendASpinner.stopAnimating()
                     
                     self.clearTextbox()
+                    
+                    self.isStatusUploading = false
                 }
 
                 case .failure(let error):
@@ -1661,6 +1743,12 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
                     guard let self = self else {
                         return
                     }
+                    
+                    self.sendASpinner.stopAnimating()
+                    self.sendBBox.isHidden = false
+                    self.openErrorUploadMsg()
+                    
+                    self.isStatusUploading = false
                 }
                 break
             }
@@ -1851,6 +1939,16 @@ extension ViewController: VideoPanelDelegate{
 //        dataset.append("a")
         dataset.append("a")
         self.openVideoPanel(offX: offsetX, offY: offsetY, originatorView: view, originatorViewType: OriginatorTypes.UIVIEW, id: 0, originatorViewId: "", preterminedDatasets: dataset, mode: mode)
+    }
+}
+
+extension VideoPanelView: ErrorUploadCommentMsgDelegate {
+    func didEUCommentClickProceed() {
+        asyncSendNewData()
+    }
+    func didEUCommentClickDeny(){
+        //test
+//        setFirstResponder(textView: aTextBox)
     }
 }
 
@@ -2075,6 +2173,9 @@ extension VideoPanelView: UIScrollViewDelegate {
             
             //test > change tab title font opacity when scrolled
             reactToTabSectionChange(index: currentIndex)
+            
+            //test > clear comment textbox when scroll to another video
+            clearBottomCommentBox()
         }
     }
     
@@ -2130,12 +2231,10 @@ extension VideoPanelView: ScrollFeedVideoCellDelegate {
 
     }
     func sfvcSrollViewDidEndDecelerating(offsetY: CGFloat){
-
+        //test > clear comment textbox when scroll to another video
+        clearBottomCommentBox()
     }
     func sfvcScrollViewDidEndDragging(offsetY: CGFloat, decelerate: Bool){
-//        if(offsetY < -100) {
-//            self.refreshFetchData()
-//        }
         
         //test > open single video
         if(offsetY < -100) {

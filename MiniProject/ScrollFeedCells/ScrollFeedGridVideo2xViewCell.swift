@@ -154,7 +154,9 @@ extension ScrollFeedGridVideo2xViewCell: UICollectionViewDelegateFlowLayout {
 //        let widthPerItem = collectionView.frame.width / 3 - lay.minimumInteritemSpacing
         
         let widthPerItem = (collectionView.frame.width - gLhsMargin - gRhsMargin - gLineSpacingHeight) / 2
-        let heightPerItem = widthPerItem * 3 / 2
+//        let heightPerItem = widthPerItem * 3 / 2
+        let descHeight = 70.0
+        let heightPerItem = widthPerItem * 3 / 2 + descHeight //desc height
         return CGSize(width: widthPerItem, height: heightPerItem) //test
         
 //        return CGSize(width: 175, height: 220) //ori
@@ -314,7 +316,7 @@ extension ScrollFeedGridVideo2xViewCell: UICollectionViewDataSource {
 }
 
 extension ScrollFeedGridVideo2xViewCell: GridViewCellDelegate {
-    func gridViewClick(vc: UICollectionViewCell){
+    func gridViewClick(vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         print("gridviewclick")
         if let a = vCV {
             for cell in a.visibleCells {
@@ -324,8 +326,11 @@ extension ScrollFeedGridVideo2xViewCell: GridViewCellDelegate {
                     let originInRootView = a.convert(cell.frame.origin, to: self)
                     let visibleIndexPath = a.indexPath(for: cell)
                     
+                    let pointX1 = originInRootView.x + pointX
+                    let pointY1 = originInRootView.y + pointY
+                    
                     if let indexPath = visibleIndexPath {
-                        aDelegate?.sfcDidClickVcvClickVideo(pointX: originInRootView.x, pointY: originInRootView.y, view: cell, mode: VideoTypes.V_LOOP)
+                        aDelegate?.sfcDidClickVcvClickVideo(pointX: pointX1, pointY: pointY1, view: view, mode: mode)
                         hideCellAt(itemIndex: indexPath.row)
                     }
                     
@@ -333,5 +338,8 @@ extension ScrollFeedGridVideo2xViewCell: GridViewCellDelegate {
                 }
             }
         }
+    }
+    func gridViewClickUser(){
+        aDelegate?.sfcDidClickVcvClickUser()
     }
 }

@@ -53,8 +53,6 @@ class ScrollFeedHResultMainListCell: ScrollFeedHResultListCell {
         }
 
         vCV.register(HResultPostListViewCell.self, forCellWithReuseIdentifier: HResultPostListViewCell.identifier)
-        vCV.register(HResultPhotoListViewCell.self, forCellWithReuseIdentifier: HResultPhotoListViewCell.identifier)
-        vCV.register(HResultVideoListViewCell.self, forCellWithReuseIdentifier: HResultVideoListViewCell.identifier)
         vCV.register(HResultUserListViewCell.self, forCellWithReuseIdentifier: HResultUserListViewCell.identifier)
         vCV.register(HResultSoundListViewCell.self, forCellWithReuseIdentifier: HResultSoundListViewCell.identifier)
         vCV.register(HResultLocationListViewCell.self, forCellWithReuseIdentifier: HResultLocationListViewCell.identifier)
@@ -281,9 +279,6 @@ extension ScrollFeedHResultMainListCell: UICollectionViewDataSource {
             return cell
         } else if (data == "b") {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HResultPostListViewCell.identifier, for: indexPath) as! HResultPostListViewCell
-            return cell
-        } else if (data == "c") {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HResultVideoListViewCell.identifier, for: indexPath) as! HResultVideoListViewCell
             return cell
         } else if (data == "d") {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HResultLocationListViewCell.identifier, for: indexPath) as! HResultLocationListViewCell

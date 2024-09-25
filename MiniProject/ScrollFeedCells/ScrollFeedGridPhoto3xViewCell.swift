@@ -314,7 +314,7 @@ extension ScrollFeedGridPhoto3xViewCell: UICollectionViewDataSource {
 }
 
 extension ScrollFeedGridPhoto3xViewCell: GridViewCellDelegate {
-    func gridViewClick(vc: UICollectionViewCell){
+    func gridViewClick(vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         print("gridviewclick")
         if let a = vCV {
             for cell in a.visibleCells {
@@ -324,8 +324,11 @@ extension ScrollFeedGridPhoto3xViewCell: GridViewCellDelegate {
                     let originInRootView = a.convert(cell.frame.origin, to: self)
                     let visibleIndexPath = a.indexPath(for: cell)
                     
+                    let pointX1 = originInRootView.x + pointX
+                    let pointY1 = originInRootView.y + pointY
+                    
                     if let indexPath = visibleIndexPath {
-                        aDelegate?.sfcDidClickVcvClickPhoto(pointX: originInRootView.x, pointY: originInRootView.y, view: cell, mode: PhotoTypes.P_SHOT)
+                        aDelegate?.sfcDidClickVcvClickPhoto(pointX: pointX1, pointY: pointY1, view: view, mode: mode)
                         hideCellAt(itemIndex: indexPath.row)
                     }
                     
@@ -333,5 +336,8 @@ extension ScrollFeedGridPhoto3xViewCell: GridViewCellDelegate {
                 }
             }
         }
+    }
+    func gridViewClickUser(){
+        
     }
 }

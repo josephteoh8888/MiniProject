@@ -1263,7 +1263,7 @@ class PostVideoLoopContentCell: MediaContentCell {
     //test > async fetch asset
     func asyncConfigure(data: String) {
         
-        let id = "s_"
+        let id = "s"
         DataFetchManager.shared.fetchSoundData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):

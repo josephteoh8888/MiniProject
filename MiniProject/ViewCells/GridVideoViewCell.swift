@@ -10,12 +10,16 @@ import UIKit
 import SDWebImage
 
 protocol GridViewCellDelegate : AnyObject {
-    func gridViewClick(vc: UICollectionViewCell)
+    func gridViewClick(vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String)
+    func gridViewClickUser()
 }
 //test > grid viewcell for user panel
 class GridVideoViewCell: UICollectionViewCell {
     static let identifier = "GridVideoViewCell"
     var gifImage = SDAnimatedImageView()
+    
+    let aCountText = UILabel()
+    let bMiniBtn = UIImageView()
     
     weak var aDelegate : GridViewCellDelegate?
     
@@ -52,31 +56,32 @@ class GridVideoViewCell: UICollectionViewCell {
         gifImage.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPhotoClicked)))
         gifImage.backgroundColor = .ddmDarkColor
         
-        //stats count
-//        let playBtn = UIImageView()
-//        playBtn.image = UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate)
-////        playBtn.image = UIImage(named:"icon_love")?.withRenderingMode(.alwaysTemplate)
-//        playBtn.tintColor = .white
-//        contentView.addSubview(playBtn)
-//        playBtn.translatesAutoresizingMaskIntoConstraints = false
-//        playBtn.bottomAnchor.constraint(equalTo: gifImage.bottomAnchor, constant: -5).isActive = true
-//        playBtn.trailingAnchor.constraint(equalTo: gifImage.trailingAnchor, constant: -5).isActive = true
-////                playBtn.leadingAnchor.constraint(equalTo: videoContainer.trailingAnchor, constant: -5).isActive = true
-//        playBtn.heightAnchor.constraint(equalToConstant: 14).isActive = true //12
-//        playBtn.widthAnchor.constraint(equalToConstant: 14).isActive = true
-//
-//        let aaText = UILabel()
-//        aaText.textAlignment = .left
-//        aaText.textColor = .white
-////        aaText.font = .systemFont(ofSize: 12)
-//        aaText.font = .boldSystemFont(ofSize: 10)
-//        aaText.numberOfLines = 1
-//        contentView.addSubview(aaText)
-//        aaText.translatesAutoresizingMaskIntoConstraints = false
-//        aaText.centerYAnchor.constraint(equalTo: playBtn.centerYAnchor, constant: 0).isActive = true
-////        aaText.trailingAnchor.constraint(equalTo: playBtn.leadingAnchor, constant: -2).isActive = true //0
-//        aaText.trailingAnchor.constraint(equalTo: playBtn.leadingAnchor, constant: 0).isActive = true //0
-//        aaText.text = "313"
+//        let aCountText = UILabel()
+        aCountText.textAlignment = .left
+        aCountText.textColor = .white
+//        aCountText.textColor = .ddmDarkGrayColor
+//        aCountText.font = .systemFont(ofSize: 11) //12
+        aCountText.font = .boldSystemFont(ofSize: 10)
+        aCountText.numberOfLines = 1
+        contentView.addSubview(aCountText)
+        aCountText.text = ""
+        aCountText.translatesAutoresizingMaskIntoConstraints = false
+        aCountText.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5).isActive = true
+        aCountText.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5).isActive = true
+        
+//        let bMiniBtn = UIImageView(image: UIImage(named:"icon_love")?.withRenderingMode(.alwaysTemplate))
+//        bMiniBtn.image = UIImage(named:"icon_love")?.withRenderingMode(.alwaysTemplate)
+        bMiniBtn.tintColor = .white
+//        bMiniBtn.tintColor = .ddmDarkGrayColor
+//        bMiniBtn.tintColor = .red
+//        contentView.addSubview(bMiniBtn)
+//        aCon.addSubview(bMiniBtn)
+        contentView.addSubview(bMiniBtn)
+        bMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        bMiniBtn.trailingAnchor.constraint(equalTo: aCountText.leadingAnchor, constant: 0).isActive = true //-2
+        bMiniBtn.centerYAnchor.constraint(equalTo: aCountText.centerYAnchor).isActive = true
+        bMiniBtn.heightAnchor.constraint(equalToConstant: 16).isActive = true //14
+        bMiniBtn.widthAnchor.constraint(equalToConstant: 16).isActive = true
     }
     
     func hideCell() {
@@ -95,11 +100,34 @@ class GridVideoViewCell: UICollectionViewCell {
         gifImage.sd_setImage(with: imageUrl)
         
         gifImage.isHidden = false
+        
+        aCountText.text = ""
+        bMiniBtn.image = nil
     }
     
     func configure(data: PostData) {
-       asyncConfigure(data: data)
+        asyncConfigure(data: data)
+        
+//        aCountText.text = "395" //3.9m
+//        bMiniBtn.image = UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate) //icon_round_play
+        let l = data.dataType
+        let s = data.dataTextString
+        
+        if(l == "a") {
+            aCountText.text = "395"
+            bMiniBtn.image = UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate)
+        } else if(l == "b") {
+            aCountText.text = "7.8m"
+            bMiniBtn.image = UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate)
+        } else if(l == "c") {
+            aCountText.text = "34k"
+            bMiniBtn.image = UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate)
+        } else if(l == "d") {
+            aCountText.text = "981"
+            bMiniBtn.image = UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate)
+        }
     }
+    
     func asyncConfigure(data: PostData) {
         let id = "u"
         DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
@@ -135,7 +163,10 @@ class GridVideoViewCell: UICollectionViewCell {
     }
     
     @objc func onPhotoClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.gridViewClick(vc: self)
+        let pFrame = gifImage.frame.origin
+        let pointX = pFrame.x
+        let pointY = pFrame.y
+        aDelegate?.gridViewClick(vc: self, pointX: pointX, pointY: pointY, view: gifImage, mode:VideoTypes.V_LOOP)
     }
     
 }

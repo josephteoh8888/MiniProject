@@ -13,6 +13,10 @@ class ScrollFeedHResultPhotoListCell: ScrollFeedHResultListCell {
     //test
     var hideCellIndex = -1
     
+    let gLineSpacingHeight = 20.0
+    let gLhsMargin = 20.0
+    let gRhsMargin = 20.0
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -51,7 +55,7 @@ class ScrollFeedHResultPhotoListCell: ScrollFeedHResultListCell {
             return
         }
 
-        vCV.register(GridPhotoViewCell.self, forCellWithReuseIdentifier: GridPhotoViewCell.identifier)
+        vCV.register(GridPhoto2xViewCell.self, forCellWithReuseIdentifier: GridPhoto2xViewCell.identifier)
         vCV.dataSource = self
         vCV.delegate = self
         vCV.showsVerticalScrollIndicator = false
@@ -85,7 +89,7 @@ class ScrollFeedHResultPhotoListCell: ScrollFeedHResultListCell {
     func dehideCell(){
         if(hideCellIndex > -1) {
             let vc = vCV?.cellForItem(at: IndexPath(item: hideCellIndex, section: 0))
-            guard let b = vc as? GridPhotoViewCell else {
+            guard let b = vc as? GridPhoto2xViewCell else {
                 return
             }
             b.dehideCell()
@@ -96,7 +100,7 @@ class ScrollFeedHResultPhotoListCell: ScrollFeedHResultListCell {
     func hideCellAt(itemIndex: Int) {
         print("upv scroll3xphoto hide \(itemIndex)")
         let vc = vCV?.cellForItem(at: IndexPath(item: itemIndex, section: 0))
-        guard let b = vc as? GridPhotoViewCell else {
+        guard let b = vc as? GridPhoto2xViewCell else {
             return
         }
         b.hideCell()
@@ -157,11 +161,16 @@ extension ScrollFeedHResultPhotoListCell: UICollectionViewDelegateFlowLayout {
                    layout collectionViewLayout: UICollectionViewLayout,
                    sizeForItemAt indexPath: IndexPath) -> CGSize {
         print("placepanel collection 2: \(indexPath)")
-//        return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
-        let lay = collectionViewLayout as! UICollectionViewFlowLayout
-        let widthPerItem = collectionView.frame.width / 3 - lay.minimumInteritemSpacing
+//        let lay = collectionViewLayout as! UICollectionViewFlowLayout
+//        let widthPerItem = collectionView.frame.width / 3 - lay.minimumInteritemSpacing
+//        
+//        return CGSize(width: 175, height: 175)
         
-        return CGSize(width: 175, height: 175)
+        let widthPerItem = (collectionView.frame.width - gLhsMargin - gRhsMargin - gLineSpacingHeight) / 2
+//        let heightPerItem = widthPerItem
+        let descHeight = 60.0 //70
+        let heightPerItem = widthPerItem + descHeight
+        return CGSize(width: widthPerItem, height: heightPerItem) //test
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
@@ -297,7 +306,7 @@ extension ScrollFeedHResultPhotoListCell: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: GridPhotoViewCell.identifier, for: indexPath) as! GridPhotoViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: GridPhoto2xViewCell.identifier, for: indexPath) as! GridPhoto2xViewCell
         cell.aDelegate = self
         //test > configure cell
         cell.configure(data: vDataList[indexPath.row])
@@ -306,7 +315,7 @@ extension ScrollFeedHResultPhotoListCell: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: GridPhotoViewCell.identifier, for: indexPath) as! GridPhotoViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: GridPhoto2xViewCell.identifier, for: indexPath) as! GridPhoto2xViewCell
         let originInRootView = collectionView.convert(cell.frame.origin, to: self)
         print("collectionView index: \(indexPath), \(cell.frame.origin.x), \(cell.frame.origin.y), \(originInRootView)")
 
@@ -317,7 +326,7 @@ extension ScrollFeedHResultPhotoListCell: UICollectionViewDataSource {
 }
 
 extension ScrollFeedHResultPhotoListCell: GridViewCellDelegate {
-    func gridViewClick(vc: UICollectionViewCell){
+    func gridViewClick(vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         print("gridviewclick")
         if let a = vCV {
             for cell in a.visibleCells {
@@ -327,8 +336,11 @@ extension ScrollFeedHResultPhotoListCell: GridViewCellDelegate {
                     let originInRootView = a.convert(cell.frame.origin, to: self)
                     let visibleIndexPath = a.indexPath(for: cell)
                     
+                    let pointX1 = originInRootView.x + pointX
+                    let pointY1 = originInRootView.y + pointY
+                    
                     if let indexPath = visibleIndexPath {
-                        aDelegate?.sfcDidClickVcvClickPhoto(pointX: originInRootView.x, pointY: originInRootView.y, view: cell, mode: PhotoTypes.P_SHOT)
+                        aDelegate?.sfcDidClickVcvClickPhoto(pointX: pointX1, pointY: pointY1, view: view, mode: mode)
                         hideCellAt(itemIndex: indexPath.row)
                     }
                     
@@ -336,6 +348,9 @@ extension ScrollFeedHResultPhotoListCell: GridViewCellDelegate {
                 }
             }
         }
+    }
+    func gridViewClickUser(){
+        aDelegate?.sfcDidClickVcvClickUser()
     }
 }
 
