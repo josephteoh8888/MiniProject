@@ -340,8 +340,13 @@ extension ScrollFeedHResultPhotoListCell: GridViewCellDelegate {
                     let pointY1 = originInRootView.y + pointY
                     
                     if let indexPath = visibleIndexPath {
-                        aDelegate?.sfcDidClickVcvClickPhoto(pointX: pointX1, pointY: pointY1, view: view, mode: mode)
-                        hideCellAt(itemIndex: indexPath.row)
+                        //ori
+//                        aDelegate?.sfcDidClickVcvClickPhoto(pointX: pointX1, pointY: pointY1, view: view, mode: mode)
+//                        hideCellAt(itemIndex: indexPath.row)
+                        
+                        //test 2 > override mode of phototype
+                        let o_mode = PhotoTypes.P_SHOT_DETAIL
+                        aDelegate?.sfcDidClickVcvClickPhoto(pointX: pointX1, pointY: pointY1, view: view, mode: o_mode)
                     }
                     
                     break

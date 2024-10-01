@@ -128,12 +128,12 @@ class HUsersListViewCell: UICollectionViewCell {
 //        aGrid.topAnchor.constraint(equalTo: aNameText.bottomAnchor, constant: 20).isActive = true
         aGrid.layer.cornerRadius = 10
 
-        let aImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
+//        let aImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
         let gifImage = SDAnimatedImageView()
         gifImage.contentMode = .scaleAspectFill
         gifImage.layer.masksToBounds = true
         gifImage.layer.cornerRadius = 10
-        gifImage.sd_setImage(with: aImageUrl)
+//        gifImage.sd_setImage(with: aImageUrl)
         aGrid.addSubview(gifImage)
         gifImage.translatesAutoresizingMaskIntoConstraints = false
         gifImage.topAnchor.constraint(equalTo: aGrid.topAnchor).isActive = true
@@ -177,11 +177,22 @@ class HUsersListViewCell: UICollectionViewCell {
     }
     
     func configure(data: String) {
-        asyncConfigure(data: "")
+
+        if(data == "a") {
+            asyncConfigure(data: "")
+            
+            self.aNameText.text = "Michael Kins"
+        }
+        else if(data == "na") {
+            
+        }
+        else if(data == "us") {
+            
+        }
     }
     
     func asyncConfigure(data: String) {
-        let id = "u_"
+        let id = "u"
         DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -197,7 +208,7 @@ class HUsersListViewCell: UICollectionViewCell {
                     let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
                     self.aUserPhoto.sd_setImage(with: imageUrl)
                     
-                    self.aNameText.text = "Michael Kins"
+//                    self.aNameText.text = "Michael Kins"
                     self.aUserNameText.text = "140k followers" //"@mic1809"
                     
                     self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
@@ -210,7 +221,7 @@ class HUsersListViewCell: UICollectionViewCell {
                         return
                     }
                     
-                    self.aNameText.text = "-"
+//                    self.aNameText.text = "-"
                     self.aUserNameText.text = "-"
                     self.vBtn.image = nil
                     

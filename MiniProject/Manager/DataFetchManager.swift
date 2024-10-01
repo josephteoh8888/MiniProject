@@ -168,7 +168,7 @@ class DataFetchManager {
     func fetchPostData(id: String, completion: @escaping (Result<[String], Error>) -> Void) {
         DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s
             var newData = [String]()
-            if(id == "post_") {
+            if(id == "post") {
                 newData.append("a")
                 completion(.success(newData))
             }
@@ -186,9 +186,9 @@ class DataFetchManager {
                 if(isPaginate == false) {
         
                     newData.append("a")
-                    newData.append("b") //a
-                    newData.append("d") //a
-                    newData.append("c") //a
+                    newData.append("na") //a
+                    newData.append("us") //a
+                    newData.append("a") //a
                 } else  {
                     //post_feed_end
                 }
@@ -231,7 +231,7 @@ class DataFetchManager {
                 if(isPaginate == false) {
         
                     newData.append("a")
-                    newData.append("a") //a
+                    newData.append("na") //a
                     newData.append("a") //a
                     newData.append("a") //a
                 } else  {

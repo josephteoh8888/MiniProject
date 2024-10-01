@@ -88,7 +88,7 @@
 		2E670B162C31098B00EBA6D3 /* HResultUserListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B152C31098B00EBA6D3 /* HResultUserListViewCell.swift */; };
 		2E670B182C3109AA00EBA6D3 /* HPhotoListAViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B172C3109AA00EBA6D3 /* HPhotoListAViewCell.swift */; };
 		2E670B1A2C3109C600EBA6D3 /* GridPhotoViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B192C3109C600EBA6D3 /* GridPhotoViewCell.swift */; };
-		2E670B1C2C3109EC00EBA6D3 /* HResultVideoListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B1B2C3109EC00EBA6D3 /* HResultVideoListViewCell.swift */; };
+		2E670B1C2C3109EC00EBA6D3 /* DiscoverColumnViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B1B2C3109EC00EBA6D3 /* DiscoverColumnViewCell.swift */; };
 		2E670B1E2C310A1400EBA6D3 /* GridPhoto2xViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B1D2C310A1400EBA6D3 /* GridPhoto2xViewCell.swift */; };
 		2E670B202C310A3500EBA6D3 /* HNotifyChatListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B1F2C310A3500EBA6D3 /* HNotifyChatListViewCell.swift */; };
 		2E670B242C31203300EBA6D3 /* SpinLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B232C31203300EBA6D3 /* SpinLoader.swift */; };
@@ -251,7 +251,7 @@
 		2E670B152C31098B00EBA6D3 /* HResultUserListViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HResultUserListViewCell.swift; sourceTree = "<group>"; };
 		2E670B172C3109AA00EBA6D3 /* HPhotoListAViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HPhotoListAViewCell.swift; sourceTree = "<group>"; };
 		2E670B192C3109C600EBA6D3 /* GridPhotoViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridPhotoViewCell.swift; sourceTree = "<group>"; };
-		2E670B1B2C3109EC00EBA6D3 /* HResultVideoListViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HResultVideoListViewCell.swift; sourceTree = "<group>"; };
+		2E670B1B2C3109EC00EBA6D3 /* DiscoverColumnViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverColumnViewCell.swift; sourceTree = "<group>"; };
 		2E670B1D2C310A1400EBA6D3 /* GridPhoto2xViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridPhoto2xViewCell.swift; sourceTree = "<group>"; };
 		2E670B1F2C310A3500EBA6D3 /* HNotifyChatListViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HNotifyChatListViewCell.swift; sourceTree = "<group>"; };
 		2E670B232C31203300EBA6D3 /* SpinLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinLoader.swift; sourceTree = "<group>"; };
@@ -459,11 +459,9 @@
 				2E670B012C31085B00EBA6D3 /* GridVideo2xViewCell.swift */,
 				2E670B192C3109C600EBA6D3 /* GridPhotoViewCell.swift */,
 				2E670B1D2C310A1400EBA6D3 /* GridPhoto2xViewCell.swift */,
-				2E670AFD2C31080E00EBA6D3 /* VGridColumnViewCell.swift */,
 				2E670AED2C3106AA00EBA6D3 /* HResultSoundListViewCell.swift */,
 				2E670B152C31098B00EBA6D3 /* HResultUserListViewCell.swift */,
 				2E670AF32C31071300EBA6D3 /* HResultLocationListViewCell.swift */,
-				2E670B1B2C3109EC00EBA6D3 /* HResultVideoListViewCell.swift */,
 				2E670B092C3108D600EBA6D3 /* HResultHashtagListViewCell.swift */,
 				2E670AFF2C31082B00EBA6D3 /* HResultPostListViewCell.swift */,
 				2E670B112C31094A00EBA6D3 /* VCAViewCell.swift */,
@@ -545,7 +543,10 @@
 			isa = PBXGroup;
 			children = (
 				2E670B762C3126C900EBA6D3 /* PostClipPhotoCell.swift */,
+				2E670AFD2C31080E00EBA6D3 /* VGridColumnViewCell.swift */,
+				2E670B1B2C3109EC00EBA6D3 /* DiscoverColumnViewCell.swift */,
 				2EBFCBA42C7B260600EA9169 /* ContentCell.swift */,
+				2E670B8E2C31288100EBA6D3 /* MeCell.swift */,
 			);
 			path = CustomCells;
 			sourceTree = "<group>";
@@ -567,7 +568,6 @@
 				2E670B822C3127CA00EBA6D3 /* JobHighlightCell.swift */,
 				2E670B862C31280E00EBA6D3 /* BookHighlightCell.swift */,
 				2E670B882C31282800EBA6D3 /* HighlightBox.swift */,
-				2E670B8E2C31288100EBA6D3 /* MeCell.swift */,
 				2E670B8C2C31286500EBA6D3 /* HighlightCell.swift */,
 				2E670B8A2C31284800EBA6D3 /* RankHighlightCell.swift */,
 				2E670B842C3127F100EBA6D3 /* ShopHighlightCell.swift */,
@@ -755,7 +755,7 @@
 				2E670B3C2C31224900EBA6D3 /* GetStorageMsg.swift in Sources */,
 				2E670B462C3122E300EBA6D3 /* UserMarker.swift in Sources */,
 				2E670AC72C3101AE00EBA6D3 /* CameraPhotoRollPanelView.swift in Sources */,
-				2E670B1C2C3109EC00EBA6D3 /* HResultVideoListViewCell.swift in Sources */,
+				2E670B1C2C3109EC00EBA6D3 /* DiscoverColumnViewCell.swift in Sources */,
 				2E670B8B2C31284800EBA6D3 /* RankHighlightCell.swift in Sources */,
 				2E670B622C31250100EBA6D3 /* ScrollFeedHPostListCell.swift in Sources */,
 				2E670B872C31280E00EBA6D3 /* BookHighlightCell.swift in Sources */,

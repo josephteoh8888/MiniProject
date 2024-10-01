@@ -64,13 +64,14 @@ class VCBViewCell: VCViewCell {
         //test > indicate when there is no more data
         aaText.textAlignment = .left
         aaText.textColor = .white
-        aaText.font = .systemFont(ofSize: 12)
+//        aaText.font = .systemFont(ofSize: 12)
+        aaText.font = .systemFont(ofSize: 13)
         contentView.addSubview(aaText)
         aaText.clipsToBounds = true
         aaText.translatesAutoresizingMaskIntoConstraints = false
         aaText.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 0).isActive = true
         aaText.centerXAnchor.constraint(equalTo: contentView.centerXAnchor, constant: 0).isActive = true
-        aaText.layer.opacity = 0.5
+//        aaText.layer.opacity = 0.5
         aaText.text = ""
 //        aaText.isHidden = true
         
@@ -356,6 +357,15 @@ class VCBViewCell: VCViewCell {
             errorText.text = dataText
             errorText.isHidden = false
             errorRefreshBtn.isHidden = false
+        }
+        //*test > post suspended and not found
+        else if(data.dataType == "na") { // na - not found
+            aaText.text = "Video does not exist."
+            aaText.isHidden = false
+        }
+        else if(data.dataType == "us") { // us - suspended
+            aaText.text = "Video violated community rules."
+            aaText.isHidden = false
         }
         else if(data.dataType == "a") { // a - video play
             aContainer.isHidden = false

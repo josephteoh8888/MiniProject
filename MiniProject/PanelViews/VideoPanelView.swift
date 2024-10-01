@@ -1645,10 +1645,11 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
     }
     
     @objc func onOpenTextBoxClicked(gesture: UITapGestureRecognizer) {
-//        setFirstResponder(textView: aTextBox)
-        
-        if(!isStatusUploading) {
-            setFirstResponder(textView: aTextBox)
+
+        if(getVCDataType() == "a") {
+            if(!isStatusUploading) {
+                setFirstResponder(textView: aTextBox)
+            }
         }
     }
     @objc func onCloseTextBoxClicked(gesture: UITapGestureRecognizer) {
@@ -1780,6 +1781,18 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
     //test > view pan gesture to prevent video panel move by panning textview
     @objc func onTextViewPanGesture(gesture: UIPanGestureRecognizer) {
         print("onPan start A: ")
+    }
+    
+    //test > helper function to get current viewcell datatype
+    func getVCDataType() -> String {
+        if(!self.feedList.isEmpty) {
+            let feed = feedList[currentIndex]
+            if(!feed.vcDataList.isEmpty) {
+                let d = feed.vcDataList[feed.currentIndexPath.row].dataType
+                return d
+            }
+        }
+        return ""
     }
 }
 

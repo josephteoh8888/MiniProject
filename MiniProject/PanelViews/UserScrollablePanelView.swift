@@ -990,7 +990,9 @@ class UserScrollablePanelView: ScrollablePanelView{
                 cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-                cell.redrawUI()
+//                cell.redrawUI()
+                cell.initialize()
+                cell.delegate = self
             } else if(l == "d_u") {
                 let cell = DiscoverUserSizeMHighlightCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
 //                let cell = LatestMultiLoopsSizeMHighlightCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
@@ -1000,7 +1002,8 @@ class UserScrollablePanelView: ScrollablePanelView{
                 cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-                cell.redrawUI()
+//                cell.redrawUI()
+                cell.initialize()
                 cell.delegate = self
             } else if(l == "np") {
                 let cell = UserEmptyPostHighlightBox(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
@@ -1010,7 +1013,30 @@ class UserScrollablePanelView: ScrollablePanelView{
                 cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-                cell.redrawUI()
+//                cell.redrawUI()
+                cell.initialize()
+            } else if(l == "m_l") {
+                let cell = LatestMultiLoopsSizeMHighlightCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
+                aHLightRect1.addSubview(cell)
+                cell.translatesAutoresizingMaskIntoConstraints = false
+                cell.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
+                cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
+                cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
+                cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
+//                cell.redrawUI()
+                cell.initialize()
+                cell.delegate = self
+            } else if(l == "m_s") {
+                let cell = LatestMultiPhotosSizeMHighlightCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
+                aHLightRect1.addSubview(cell)
+                cell.translatesAutoresizingMaskIntoConstraints = false
+                cell.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
+                cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
+                cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
+                cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
+//                cell.redrawUI()
+                cell.initialize()
+                cell.delegate = self
             }
             //test > error handling
             else if(l == "na") {
@@ -1021,7 +1047,8 @@ class UserScrollablePanelView: ScrollablePanelView{
                 cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-                cell.redrawUI()
+//                cell.redrawUI()
+                cell.initialize()
             } else if(l == "e") {
                 let cell = FetchErrorHighlightBox(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
                 aHLightRect1.addSubview(cell)
@@ -1030,7 +1057,8 @@ class UserScrollablePanelView: ScrollablePanelView{
                 cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-                cell.redrawUI()
+//                cell.redrawUI()
+                cell.initialize()
                 cell.delegate = self
             } else if(l == "us") {
                 let cell = UserSuspendedHighlightBox(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
@@ -1040,7 +1068,8 @@ class UserScrollablePanelView: ScrollablePanelView{
                 cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-                cell.redrawUI()
+//                cell.redrawUI()
+                cell.initialize()
             }
         }
         
@@ -1601,12 +1630,14 @@ class UserScrollablePanelView: ScrollablePanelView{
                             self.isFetchFeedAllowed = true
                             
                             //test > lay out halfmode highlight box
-//                            self.aHLightBoxArray.append("a") //about user
-                            self.aHLightBoxArray.append("np") //about user
+                            self.aHLightBoxArray.append("a") //about user
+//                            self.aHLightBoxArray.append("np") //no post
                             self.aHLightBoxArray.append("d_u") //discover more creators
+//                            self.aHLightBoxArray.append("m_l") //multi loops
+//                            self.aHLightBoxArray.append("m_s") //multi shots
                             
                             //test > lay out highlight section
-                            self.aHLightDataArray.append("j") //job //*
+//                            self.aHLightDataArray.append("j") //job //*
                             
                             self.configureUI(data: "a")
                         }

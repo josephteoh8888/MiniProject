@@ -178,16 +178,26 @@ class HResultHashtagListViewCell: UICollectionViewCell {
         actionUI(doneState: false)
     }
     func configure(data: PostData) {
+
+        let l = data.dataType
         
-        asyncConfigure(data: "")
-        //test
-        aFollowA.isHidden = false
+        if(l == "a") {
+            asyncConfigure(data: "")
+            
+            self.aNameText.text = "#wemeetyou"
+        }
+        else if(l == "na") {
+            
+        }
+        else if(l == "us") {
+            
+        }
         
         actionUI(doneState: isAction)
     }
     //*test > async fetch images/names/videos
     func asyncConfigure(data: String) {
-        let id = "p_"
+        let id = "p"
         DataFetchManager.shared.fetchPlaceData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -202,10 +212,12 @@ class HResultHashtagListViewCell: UICollectionViewCell {
 
 //                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
 //                    self.aUserPhoto.sd_setImage(with: imageUrl)
-                    self.aNameText.text = "#wemeetyou"
+//                    self.aNameText.text = "#wemeetyou"
                     self.aUserNameText.text = "130k posts"
                     
                     self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
+                    
+                    self.aFollowA.isHidden = false
                 }
 
                 case .failure(let error):
@@ -215,13 +227,10 @@ class HResultHashtagListViewCell: UICollectionViewCell {
                         return
                     }
                     
-                    self.aNameText.text = "-"
+//                    self.aNameText.text = "-"
                     self.aUserNameText.text = "-"
                     self.vBtn.image = nil
-                    
-//                    let imageUrl = URL(string: "")
-//                    self.aUserPhoto.sd_setImage(with: imageUrl)
-                    
+                    self.aFollowA.isHidden = true
                 }
                 break
             }

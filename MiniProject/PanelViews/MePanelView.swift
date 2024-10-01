@@ -400,7 +400,8 @@ class MePanelView: PanelView{
                 cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-                cell.redrawUI()
+//                cell.redrawUI()
+                cell.initialize()
                 cell.aDelegate = self
             } else if(l == "b") {
                 let cell = MultiLoopsMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
@@ -410,7 +411,8 @@ class MePanelView: PanelView{
                 cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-                cell.redrawUI()
+//                cell.redrawUI()
+                cell.initialize()
                 cell.aDelegate = self
             } else if(l == "c") {
                 let cell = MultiPostsMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
@@ -420,7 +422,8 @@ class MePanelView: PanelView{
                 cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-                cell.redrawUI()
+//                cell.redrawUI()
+                cell.initialize()
                 cell.aDelegate = self
             } else if(l == "co") {
                 let cell = MultiCommentsMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
@@ -430,7 +433,8 @@ class MePanelView: PanelView{
                 cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-                cell.redrawUI()
+//                cell.redrawUI()
+                cell.initialize()
                 cell.aDelegate = self
             } else if(l == "h") {
                 let cell = HistoryMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
@@ -440,7 +444,8 @@ class MePanelView: PanelView{
                 cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-                cell.redrawUI()
+//                cell.redrawUI()
+                cell.initialize()
                 cell.aDelegate = self
             } else if(l == "l") {
                 let cell = LikeMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
@@ -450,7 +455,8 @@ class MePanelView: PanelView{
                 cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-                cell.redrawUI()
+//                cell.redrawUI()
+                cell.initialize()
                 cell.aDelegate = self
             } else if(l == "s") {
                 let cell = BookmarkMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
@@ -460,7 +466,8 @@ class MePanelView: PanelView{
                 cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-                cell.redrawUI()
+//                cell.redrawUI()
+                cell.initialize()
                 cell.aDelegate = self
             } else if(l == "as") {
                 let cell = AccountMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
@@ -470,7 +477,8 @@ class MePanelView: PanelView{
                 cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-                cell.redrawUI()
+//                cell.redrawUI()
+                cell.initialize()
                 cell.aDelegate = self
             } else if(l == "ba") {
                 let cell = BaseMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
@@ -480,7 +488,8 @@ class MePanelView: PanelView{
                 cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-                cell.redrawUI()
+//                cell.redrawUI()
+                cell.initialize()
                 cell.aDelegate = self
             } else if(l == "ep") {
                 let cell = EditProfileMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
@@ -490,7 +499,8 @@ class MePanelView: PanelView{
                 cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-                cell.redrawUI()
+//                cell.redrawUI()
+                cell.initialize()
                 cell.aDelegate = self
             } else if(l == "fr") {
                 let cell = FollowerMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
@@ -500,7 +510,8 @@ class MePanelView: PanelView{
                 cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-                cell.redrawUI()
+//                cell.redrawUI()
+                cell.initialize()
                 cell.aDelegate = self
             } else if(l == "lo") {
                 let cell = LocationMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
@@ -510,7 +521,8 @@ class MePanelView: PanelView{
                 cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-                cell.redrawUI()
+//                cell.redrawUI()
+                cell.initialize()
                 cell.aDelegate = self
             } else if(l == "pme") {
                 let cell = ProfileMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
@@ -520,7 +532,8 @@ class MePanelView: PanelView{
                 cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-                cell.redrawUI()
+//                cell.redrawUI()
+                cell.initialize()
                 cell.aDelegate = self
             } else if(l == "so") {
                 let cell = SignoutMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
@@ -530,7 +543,8 @@ class MePanelView: PanelView{
                 cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-                cell.redrawUI()
+//                cell.redrawUI()
+                cell.initialize()
                 cell.aDelegate = self
             }
         }

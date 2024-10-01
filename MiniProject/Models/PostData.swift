@@ -50,6 +50,9 @@ class PostData: BaseData {
 //            dataArray.append("p") //photo
             dataArray.append("p_s") //video
             dataArray.append("t") //text
+            
+//            //test > error handling
+//            dataArray.append("us")
         }
         else if(data == "c") {
 //            dataArray.append("t")
@@ -68,6 +71,9 @@ class PostData: BaseData {
             dataArray.append("p")
             dataArray.append("p")
             dataArray.append("p")
+            
+//            //test > error handling
+//            dataArray.append("us")
         }
         
         //test > populate data counts too
@@ -144,10 +150,16 @@ class PhotoData: BaseData {
 //            dataArray.append("t") //text
 //            dataArray.append("c") //comment
 //            dataArray.append("c") //comment
+            
+//            //test > error handling
+//            dataArray.append("na")
         }
         else if(data == "b") {
             dataArray.append("p") //photo
 //            dataArray.append("t") //text
+
+//            //test > error handling
+//            dataArray.append("na")
         }
         else if(data == "c") {
             dataArray.append("m") //photo
@@ -157,6 +169,9 @@ class PhotoData: BaseData {
         else if(data == "d") {
             dataArray.append("p") //photo
 //            dataArray.append("t") //text
+            
+//            //test > error handling
+//            dataArray.append("na")
         }
 
         //test > populate data counts too
@@ -324,10 +339,13 @@ class CommentData: BaseData {
             dataArray.append("v_l")
         }
         else if(data == "b") {
-//            dataArray.append("p") //photo
-            dataArray.append("v") //video
-            dataArray.append("t") //photo
-            dataArray.append("v_l") //video
+////            dataArray.append("p") //photo
+//            dataArray.append("v") //video
+//            dataArray.append("t") //photo
+//            dataArray.append("v_l") //video
+            
+            //test > error handling
+            dataArray.append("us")
         }
         else if(data == "c") {
             dataArray.append("t")

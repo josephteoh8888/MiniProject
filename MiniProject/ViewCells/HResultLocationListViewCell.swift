@@ -165,15 +165,25 @@ class HResultLocationListViewCell: UICollectionViewCell {
     
     func configure(data: PostData) {
         
-        asyncConfigure(data: "")
-        //test
-//        aFollowA.isHidden = false
+        let l = data.dataType
+        
+        if(l == "a") {
+            asyncConfigure(data: "")
+            
+            self.aNameText.text = "Petronas Twin Tower"
+        }
+        else if(l == "na") {
+            
+        }
+        else if(l == "us") {
+            
+        }
         
         actionUI(doneState: isAction)
     }
     //*test > async fetch images/names/videos
     func asyncConfigure(data: String) {
-        let id = "p_"
+        let id = "p"
         DataFetchManager.shared.fetchPlaceData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -188,7 +198,7 @@ class HResultLocationListViewCell: UICollectionViewCell {
 
                     let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
                     self.aUserPhoto.sd_setImage(with: imageUrl)
-                    self.aNameText.text = "Petronas Twin Tower"
+//                    self.aNameText.text = "Petronas Twin Tower"
                     self.aUserNameText.text = "101 posts"
                     
                     self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
@@ -203,7 +213,7 @@ class HResultLocationListViewCell: UICollectionViewCell {
                         return
                     }
                     
-                    self.aNameText.text = "-"
+//                    self.aNameText.text = "-"
                     self.aUserNameText.text = "-"
                     self.vBtn.image = nil
                     

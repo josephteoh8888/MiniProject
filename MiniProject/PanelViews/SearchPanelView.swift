@@ -1093,6 +1093,10 @@ extension ViewController: SearchPanelDelegate{
         } else if(mode == PhotoTypes.P_0){
             openPhotoZoomPanel(offX: offsetX, offY: offsetY)
         }
+        //test
+        else if(mode == PhotoTypes.P_SHOT_DETAIL) {
+            openPhotoDetailPanel()
+        }
     }
     func didSearchClickClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
         let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2

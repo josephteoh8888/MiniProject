@@ -177,35 +177,43 @@ class HResultUserListViewCell: UICollectionViewCell {
     }
     
     func configure(data: PostData) {
-        asyncConfigure(data: "")
         
         let l = data.dataType
         
         if(l == "a") {
+            asyncConfigure(data: "")
+            
             self.aNameText.text = "Michael Kins"
             self.aBioText.text = "cars/tech/content creator"
             self.aUserNameText.text = "140k followers" //"@mic1809"
             
             self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
-        } else if(l == "b") {
-            self.aNameText.text = "JennyBaby"
-            self.aBioText.text = "*.*"
-            self.aUserNameText.text = "541 followers" //"@mic1809"
+        } 
+        else if(l == "na") {
             
-            self.vBtn.image = nil
-        } else if(l == "c") {
-            self.aNameText.text = "YikCai"
-            self.aBioText.text = ".....WTF...."
-            self.aUserNameText.text = "978 followers" //"@mic1809"
-            
-            self.vBtn.image = nil
-        } else if(l == "d") {
-            self.aNameText.text = "IshowSpeed"
-            self.aBioText.text = "SIU!"
-            self.aUserNameText.text = "32.9m followers" //"@mic1809"
-            
-            self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
         }
+        else if(l == "us") {
+            
+        }
+//        else if(l == "b") {
+//            self.aNameText.text = "JennyBaby"
+//            self.aBioText.text = "*.*"
+//            self.aUserNameText.text = "541 followers" //"@mic1809"
+//            
+//            self.vBtn.image = nil
+//        } else if(l == "c") {
+//            self.aNameText.text = "YikCai"
+//            self.aBioText.text = ".....WTF...."
+//            self.aUserNameText.text = "978 followers" //"@mic1809"
+//            
+//            self.vBtn.image = nil
+//        } else if(l == "d") {
+//            self.aNameText.text = "IshowSpeed"
+//            self.aBioText.text = "SIU!"
+//            self.aUserNameText.text = "32.9m followers" //"@mic1809"
+//            
+//            self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
+//        }
         
         actionUI(doneState: isAction)
     }
@@ -237,11 +245,6 @@ class HResultUserListViewCell: UICollectionViewCell {
                     guard let self = self else {
                         return
                     }
-                    
-//                    self.aNameText.text = "-"
-//                    self.aBioText.text = "-"
-//                    self.aUserNameText.text = "-"
-//                    self.vBtn.image = nil
                     
                     self.aFollowA.isHidden = true
                     

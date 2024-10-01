@@ -590,8 +590,8 @@ class HPostListBViewCell: UICollectionViewCell {
     func configure(data: PostData) {
         asyncConfigure(data: "")
         
-        aUserNameText.text = "3hr . 1.2m views"
-        aaText.text = "Petronas Twin Tower"
+        aUserNameText.text = "-"
+        aaText.text = "-"
         
 //        let attributedText = NSMutableAttributedString(string: "Michael ")
 ////        let linkText = "www.example.com"
@@ -607,267 +607,316 @@ class HPostListBViewCell: UICollectionViewCell {
 //        aGridNameText.attributedText = attributedText
         
         //test > dynamic create ui for various data types in sequence
-        let dataL = data.dataArray
-        let dataCL = data.contentDataArray
-        for cl in dataCL {
-            let l = cl.dataType
-//        for l in dataL {
-            if(l == "t") {
-                let aaText = UILabel()
-                aaText.textAlignment = .left
-                aaText.textColor = .white
-                aaText.font = .systemFont(ofSize: 14)
-                aaText.numberOfLines = 0
-                aTest.addSubview(aaText)
-                aaText.translatesAutoresizingMaskIntoConstraints = false
-                if(aTestArray.isEmpty) {
-                    aaText.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
-                } else {
-                    let lastArrayE = aTestArray[aTestArray.count - 1]
-                    aaText.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
+        let d = data.dataType
+        if(d == "a") {
+            aUserNameText.text = "3hr . 1.2m views"
+            aaText.text = "Petronas Twin Tower"
+            
+            let dataCL = data.contentDataArray
+            for cl in dataCL {
+                let l = cl.dataType
+
+                if(l == "t") {
+                    let aaText = UILabel()
+                    aaText.textAlignment = .left
+                    aaText.textColor = .white
+                    aaText.font = .systemFont(ofSize: 14)
+                    aaText.numberOfLines = 0
+                    aTest.addSubview(aaText)
+                    aaText.translatesAutoresizingMaskIntoConstraints = false
+                    if(aTestArray.isEmpty) {
+                        aaText.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
+                    } else {
+                        let lastArrayE = aTestArray[aTestArray.count - 1]
+                        aaText.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
+                    }
+                    aaText.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
+                    aaText.trailingAnchor.constraint(equalTo: aTest.trailingAnchor, constant: -20).isActive = true //-30
+    //                aaText.bottomAnchor.constraint(equalTo: aTest.bottomAnchor, constant: 0).isActive = true
+                    aaText.text = data.dataTextString
+                    aTestArray.append(aaText)
                 }
-                aaText.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
-                aaText.trailingAnchor.constraint(equalTo: aTest.trailingAnchor, constant: -20).isActive = true //-30
-//                aaText.bottomAnchor.constraint(equalTo: aTest.bottomAnchor, constant: 0).isActive = true
-                aaText.text = data.dataTextString
-                aTestArray.append(aaText)
+                else if(l == "p") {
+                    let cellWidth = self.frame.width
+                    let lhsMargin = 20.0
+                    let rhsMargin = 20.0
+                    let availableWidth = cellWidth - lhsMargin - rhsMargin
+                    
+                    let assetSize = CGSize(width: 4, height: 3)
+                    var cSize = CGSize(width: 0, height: 0)
+                    if(assetSize.width > assetSize.height) {
+                        //1 > landscape photo 4:3 w:h
+                        let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                        let cHeight = availableWidth * aRatio.height / aRatio.width
+                        cSize = CGSize(width: availableWidth, height: cHeight)
+                    }
+                    else if (assetSize.width < assetSize.height){
+                        //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                        let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                        let cWidth = availableWidth * 2 / 3
+                        let cHeight = cWidth * aRatio.height / aRatio.width
+                        cSize = CGSize(width: cWidth, height: cHeight)
+                    } else {
+                        //square
+                        let cWidth = availableWidth
+                        cSize = CGSize(width: cWidth, height: cWidth)
+                    }
+                    
+                    //test 2 > reusable custom view
+    //                let contentCell = PostPhotoContentCell(frame: CGRect(x: 0, y: 0, width: 370, height: 280))
+                    let contentCell = PostPhotoContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
+                    aTest.addSubview(contentCell)
+                    contentCell.translatesAutoresizingMaskIntoConstraints = false
+                    if(aTestArray.isEmpty) {
+                        contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
+                    } else {
+                        let lastArrayE = aTestArray[aTestArray.count - 1]
+                        contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
+                    }
+                    contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
+    //                contentCell.widthAnchor.constraint(equalToConstant: 370).isActive = true  //370
+    //                contentCell.heightAnchor.constraint(equalToConstant: 280).isActive = true  //280
+                    contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //370
+                    contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //280
+                    contentCell.layer.cornerRadius = 10 //5
+                    aTestArray.append(contentCell)
+                    contentCell.redrawUI()
+                    contentCell.configure(data: "a")
+    //                contentCell.setState(p: data.p_s)
+                    contentCell.setState(p: cl.p_s)
+                    contentCell.aDelegate = self
+                }
+                else if(l == "p_s") {
+                    let cellWidth = self.frame.width
+                    let lhsMargin = 20.0
+                    let rhsMargin = 20.0
+                    let descHeight = 40.0
+                    let availableWidth = cellWidth - lhsMargin - rhsMargin
+                    
+                    let assetSize = CGSize(width: 4, height: 3)
+                    var cSize = CGSize(width: 0, height: 0)
+                    if(assetSize.width > assetSize.height) {
+                        //1 > landscape photo 4:3 w:h
+                        let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                        let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
+                        cSize = CGSize(width: availableWidth, height: cHeight)
+                    }
+                    else if (assetSize.width < assetSize.height){
+                        //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                        let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                        let cWidth = availableWidth * 2 / 3
+                        let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
+                        cSize = CGSize(width: cWidth, height: cHeight)
+                    } else {
+                        //square
+                        let cWidth = availableWidth
+                        cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                    }
+                    
+                    //test 2 > reusable custom view
+    //                let contentCell = PostPhotoShotContentCell(frame: CGRect(x: 0, y: 0, width: 370, height: 320))
+                    let contentCell = PostPhotoShotContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
+                    aTest.addSubview(contentCell)
+                    contentCell.translatesAutoresizingMaskIntoConstraints = false
+                    if(aTestArray.isEmpty) {
+                        contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
+                    } else {
+                        let lastArrayE = aTestArray[aTestArray.count - 1]
+                        contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
+                    }
+                    contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
+    //                contentCell.widthAnchor.constraint(equalToConstant: 370).isActive = true  //370
+    //                contentCell.heightAnchor.constraint(equalToConstant: 320).isActive = true  //320
+                    contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //370
+                    contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //320
+                    contentCell.layer.cornerRadius = 10 //5
+                    aTestArray.append(contentCell)
+                    contentCell.setDescHeight(lHeight: 40, txt: data.dataTextString)
+                    contentCell.redrawUI()
+                    contentCell.configure(data: "a")
+    //                contentCell.setState(p: data.p_s)
+                    contentCell.setState(p: cl.p_s)
+                    contentCell.aDelegate = self
+                }
+                else if(l == "v_l") {//loop videos
+                    let cellWidth = self.frame.width
+                    let lhsMargin = 20.0
+                    let rhsMargin = 20.0
+                    let descHeight = 40.0
+                    let availableWidth = cellWidth - lhsMargin - rhsMargin
+                    
+                    let assetSize = CGSize(width: 3, height: 4)
+                    var cSize = CGSize(width: 0, height: 0)
+                    if(assetSize.width > assetSize.height) {
+                        //1 > landscape photo 4:3 w:h
+                        let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                        let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
+                        cSize = CGSize(width: availableWidth, height: cHeight)
+                    }
+                    else if (assetSize.width < assetSize.height){
+                        //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                        let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                        let cWidth = availableWidth * 2 / 3
+                        let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
+                        cSize = CGSize(width: cWidth, height: cHeight)
+                    } else {
+                        //square
+                        let cWidth = availableWidth
+                        cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                    }
+                    
+                    //test 2 > reusable custom view
+    //                let contentCell = PostVideoLoopContentCell(frame: CGRect(x: 0, y: 0, width: 220, height: 390))
+                    let contentCell = PostVideoLoopContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
+                    aTest.addSubview(contentCell)
+                    contentCell.translatesAutoresizingMaskIntoConstraints = false
+                    if(aTestArray.isEmpty) {
+                        contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
+                    } else {
+                        let lastArrayE = aTestArray[aTestArray.count - 1]
+                        contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
+                    }
+                    contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
+    //                contentCell.widthAnchor.constraint(equalToConstant: 220).isActive = true  //220
+    //                contentCell.heightAnchor.constraint(equalToConstant: 390).isActive = true  //390
+                    contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //220
+                    contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //390
+                    contentCell.layer.cornerRadius = 10 //5
+                    aTestArray.append(contentCell)
+                    contentCell.setDescHeight(lHeight: 40, txt: data.dataTextString)
+                    contentCell.redrawUI()
+                    contentCell.configure(data: "a")
+    //                contentCell.setState(t: data.t_s)
+                    contentCell.setState(t: cl.t_s)
+                    contentCell.aDelegate = self
+                    
+                    mediaArray.append(contentCell)
+                }
+                else if(l == "v") { //vi
+                    let cellWidth = self.frame.width
+                    let lhsMargin = 20.0
+                    let rhsMargin = 20.0
+                    let availableWidth = cellWidth - lhsMargin - rhsMargin
+                    
+                    let assetSize = CGSize(width: 3, height: 4)
+                    var cSize = CGSize(width: 0, height: 0)
+                    if(assetSize.width > assetSize.height) {
+                        //1 > landscape photo 4:3 w:h
+                        let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                        let cHeight = availableWidth * aRatio.height / aRatio.width
+                        cSize = CGSize(width: availableWidth, height: cHeight)
+                    }
+                    else if (assetSize.width < assetSize.height){
+                        //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                        let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                        let cWidth = availableWidth * 2 / 3
+                        let cHeight = cWidth * aRatio.height / aRatio.width
+                        cSize = CGSize(width: cWidth, height: cHeight)
+                    } else {
+                        //square
+                        let cWidth = availableWidth
+                        cSize = CGSize(width: cWidth, height: cWidth)
+                    }
+                    
+                    //test 2 > reusable custom view
+    //                let contentCell = PostVideoContentCell(frame: CGRect(x: 0, y: 0, width: 220, height: 350))
+                    let contentCell = PostVideoContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
+                    aTest.addSubview(contentCell)
+                    contentCell.translatesAutoresizingMaskIntoConstraints = false
+                    if(aTestArray.isEmpty) {
+                        contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
+                    } else {
+                        let lastArrayE = aTestArray[aTestArray.count - 1]
+                        contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
+                    }
+                    contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
+    //                contentCell.widthAnchor.constraint(equalToConstant: 220).isActive = true  //220
+    //                contentCell.heightAnchor.constraint(equalToConstant: 350).isActive = true  //350
+                    contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //220
+                    contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //350
+                    contentCell.layer.cornerRadius = 10 //5
+                    aTestArray.append(contentCell)
+                    contentCell.redrawUI()
+                    contentCell.configure(data: "a")
+    //                contentCell.setState(t: data.t_s)
+                    contentCell.setState(t: cl.t_s)
+                    contentCell.aDelegate = self
+                    
+                    mediaArray.append(contentCell)
+                }
+                else if(l == "q") {
+                    //test 2 > new reusable view
+                    let cellWidth = self.frame.width
+                    let lhsMargin = 20.0
+                    let rhsMargin = 20.0
+                    let availableWidth = cellWidth - lhsMargin - rhsMargin
+                    
+                    let contentCell = PostQuoteContentCell(frame: CGRect(x: 0, y: 0, width: availableWidth, height: 120.0))
+    //                let contentCell = PostQuoteContentCell()
+                    aTest.addSubview(contentCell)
+                    contentCell.translatesAutoresizingMaskIntoConstraints = false
+                    if(aTestArray.isEmpty) {
+                        contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
+                    } else {
+                        let lastArrayE = aTestArray[aTestArray.count - 1]
+                        contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
+                    }
+                    contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
+                    contentCell.trailingAnchor.constraint(equalTo: aTest.trailingAnchor, constant: -20).isActive = true
+    //                contentCell.heightAnchor.constraint(equalToConstant: 120).isActive = true  //350
+                    contentCell.layer.cornerRadius = 10 //5
+                    aTestArray.append(contentCell)
+                    contentCell.configure(data: "a", text: data.dataTextString)
+                    contentCell.aDelegate = self //test
+                    
+                    //test
+                    mediaArray.append(contentCell)
+                }
             }
-            else if(l == "p") {
-                let cellWidth = self.frame.width
-                let lhsMargin = 20.0
-                let rhsMargin = 20.0
-                let availableWidth = cellWidth - lhsMargin - rhsMargin
-                
-                let assetSize = CGSize(width: 4, height: 3)
-                var cSize = CGSize(width: 0, height: 0)
-                if(assetSize.width > assetSize.height) {
-                    //1 > landscape photo 4:3 w:h
-                    let aRatio = CGSize(width: 4, height: 3) //aspect ratio
-                    let cHeight = availableWidth * aRatio.height / aRatio.width
-                    cSize = CGSize(width: availableWidth, height: cHeight)
-                }
-                else if (assetSize.width < assetSize.height){
-                    //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
-                    let aRatio = CGSize(width: 2, height: 3) //aspect ratio
-                    let cWidth = availableWidth * 2 / 3
-                    let cHeight = cWidth * aRatio.height / aRatio.width
-                    cSize = CGSize(width: cWidth, height: cHeight)
-                } else {
-                    //square
-                    let cWidth = availableWidth
-                    cSize = CGSize(width: cWidth, height: cWidth)
-                }
-                
-                //test 2 > reusable custom view
-//                let contentCell = PostPhotoContentCell(frame: CGRect(x: 0, y: 0, width: 370, height: 280))
-                let contentCell = PostPhotoContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
-                aTest.addSubview(contentCell)
-                contentCell.translatesAutoresizingMaskIntoConstraints = false
-                if(aTestArray.isEmpty) {
-                    contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
-                } else {
-                    let lastArrayE = aTestArray[aTestArray.count - 1]
-                    contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
-                }
-                contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
-//                contentCell.widthAnchor.constraint(equalToConstant: 370).isActive = true  //370
-//                contentCell.heightAnchor.constraint(equalToConstant: 280).isActive = true  //280
-                contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //370
-                contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //280
-                contentCell.layer.cornerRadius = 10 //5
-                aTestArray.append(contentCell)
-                contentCell.redrawUI()
-                contentCell.configure(data: "a")
-//                contentCell.setState(p: data.p_s)
-                contentCell.setState(p: cl.p_s)
-                contentCell.aDelegate = self
+        }
+        else if(d == "na") {
+            let cellWidth = self.frame.width
+            let lhsMargin = 20.0
+            let rhsMargin = 20.0
+            let availableWidth = cellWidth - lhsMargin - rhsMargin
+            
+            let contentCell = PostNotFoundContentCell(frame: CGRect(x: 0, y: 0, width: availableWidth, height: 120.0))
+            aTest.addSubview(contentCell)
+            contentCell.translatesAutoresizingMaskIntoConstraints = false
+            if(aTestArray.isEmpty) {
+                contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
+            } else {
+                let lastArrayE = aTestArray[aTestArray.count - 1]
+                contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
             }
-            else if(l == "p_s") {
-                let cellWidth = self.frame.width
-                let lhsMargin = 20.0
-                let rhsMargin = 20.0
-                let descHeight = 40.0
-                let availableWidth = cellWidth - lhsMargin - rhsMargin
-                
-                let assetSize = CGSize(width: 4, height: 3)
-                var cSize = CGSize(width: 0, height: 0)
-                if(assetSize.width > assetSize.height) {
-                    //1 > landscape photo 4:3 w:h
-                    let aRatio = CGSize(width: 4, height: 3) //aspect ratio
-                    let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
-                    cSize = CGSize(width: availableWidth, height: cHeight)
-                }
-                else if (assetSize.width < assetSize.height){
-                    //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
-                    let aRatio = CGSize(width: 2, height: 3) //aspect ratio
-                    let cWidth = availableWidth * 2 / 3
-                    let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
-                    cSize = CGSize(width: cWidth, height: cHeight)
-                } else {
-                    //square
-                    let cWidth = availableWidth
-                    cSize = CGSize(width: cWidth, height: cWidth + descHeight)
-                }
-                
-                //test 2 > reusable custom view
-//                let contentCell = PostPhotoShotContentCell(frame: CGRect(x: 0, y: 0, width: 370, height: 320))
-                let contentCell = PostPhotoShotContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
-                aTest.addSubview(contentCell)
-                contentCell.translatesAutoresizingMaskIntoConstraints = false
-                if(aTestArray.isEmpty) {
-                    contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
-                } else {
-                    let lastArrayE = aTestArray[aTestArray.count - 1]
-                    contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
-                }
-                contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
-//                contentCell.widthAnchor.constraint(equalToConstant: 370).isActive = true  //370
-//                contentCell.heightAnchor.constraint(equalToConstant: 320).isActive = true  //320
-                contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //370
-                contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //320
-                contentCell.layer.cornerRadius = 10 //5
-                aTestArray.append(contentCell)
-                contentCell.setDescHeight(lHeight: 40, txt: data.dataTextString)
-                contentCell.redrawUI()
-                contentCell.configure(data: "a")
-//                contentCell.setState(p: data.p_s)
-                contentCell.setState(p: cl.p_s)
-                contentCell.aDelegate = self
-            }
-            else if(l == "v_l") {//loop videos
-                let cellWidth = self.frame.width
-                let lhsMargin = 20.0
-                let rhsMargin = 20.0
-                let descHeight = 40.0
-                let availableWidth = cellWidth - lhsMargin - rhsMargin
-                
-                let assetSize = CGSize(width: 3, height: 4)
-                var cSize = CGSize(width: 0, height: 0)
-                if(assetSize.width > assetSize.height) {
-                    //1 > landscape photo 4:3 w:h
-                    let aRatio = CGSize(width: 4, height: 3) //aspect ratio
-                    let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
-                    cSize = CGSize(width: availableWidth, height: cHeight)
-                }
-                else if (assetSize.width < assetSize.height){
-                    //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
-                    let aRatio = CGSize(width: 2, height: 3) //aspect ratio
-                    let cWidth = availableWidth * 2 / 3
-                    let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
-                    cSize = CGSize(width: cWidth, height: cHeight)
-                } else {
-                    //square
-                    let cWidth = availableWidth
-                    cSize = CGSize(width: cWidth, height: cWidth + descHeight)
-                }
-                
-                //test 2 > reusable custom view
-//                let contentCell = PostVideoLoopContentCell(frame: CGRect(x: 0, y: 0, width: 220, height: 390))
-                let contentCell = PostVideoLoopContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
-                aTest.addSubview(contentCell)
-                contentCell.translatesAutoresizingMaskIntoConstraints = false
-                if(aTestArray.isEmpty) {
-                    contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
-                } else {
-                    let lastArrayE = aTestArray[aTestArray.count - 1]
-                    contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
-                }
-                contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
-//                contentCell.widthAnchor.constraint(equalToConstant: 220).isActive = true  //220
-//                contentCell.heightAnchor.constraint(equalToConstant: 390).isActive = true  //390
-                contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //220
-                contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //390
-                contentCell.layer.cornerRadius = 10 //5
-                aTestArray.append(contentCell)
-                contentCell.setDescHeight(lHeight: 40, txt: data.dataTextString)
-                contentCell.redrawUI()
-                contentCell.configure(data: "a")
-//                contentCell.setState(t: data.t_s)
-                contentCell.setState(t: cl.t_s)
-                contentCell.aDelegate = self
-                
-                mediaArray.append(contentCell)
-            }
-            else if(l == "v") { //vi
-                let cellWidth = self.frame.width
-                let lhsMargin = 20.0
-                let rhsMargin = 20.0
-                let availableWidth = cellWidth - lhsMargin - rhsMargin
-                
-                let assetSize = CGSize(width: 3, height: 4)
-                var cSize = CGSize(width: 0, height: 0)
-                if(assetSize.width > assetSize.height) {
-                    //1 > landscape photo 4:3 w:h
-                    let aRatio = CGSize(width: 4, height: 3) //aspect ratio
-                    let cHeight = availableWidth * aRatio.height / aRatio.width
-                    cSize = CGSize(width: availableWidth, height: cHeight)
-                }
-                else if (assetSize.width < assetSize.height){
-                    //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
-                    let aRatio = CGSize(width: 2, height: 3) //aspect ratio
-                    let cWidth = availableWidth * 2 / 3
-                    let cHeight = cWidth * aRatio.height / aRatio.width
-                    cSize = CGSize(width: cWidth, height: cHeight)
-                } else {
-                    //square
-                    let cWidth = availableWidth
-                    cSize = CGSize(width: cWidth, height: cWidth)
-                }
-                
-                //test 2 > reusable custom view
-//                let contentCell = PostVideoContentCell(frame: CGRect(x: 0, y: 0, width: 220, height: 350))
-                let contentCell = PostVideoContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
-                aTest.addSubview(contentCell)
-                contentCell.translatesAutoresizingMaskIntoConstraints = false
-                if(aTestArray.isEmpty) {
-                    contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
-                } else {
-                    let lastArrayE = aTestArray[aTestArray.count - 1]
-                    contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
-                }
-                contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
-//                contentCell.widthAnchor.constraint(equalToConstant: 220).isActive = true  //220
-//                contentCell.heightAnchor.constraint(equalToConstant: 350).isActive = true  //350
-                contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //220
-                contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //350
-                contentCell.layer.cornerRadius = 10 //5
-                aTestArray.append(contentCell)
-                contentCell.redrawUI()
-                contentCell.configure(data: "a")
-//                contentCell.setState(t: data.t_s)
-                contentCell.setState(t: cl.t_s)
-                contentCell.aDelegate = self
-                
-                mediaArray.append(contentCell)
-            }
-            else if(l == "q") {
-                //test 2 > new reusable view
-                let cellWidth = self.frame.width
-                let lhsMargin = 20.0
-                let rhsMargin = 20.0
-                let availableWidth = cellWidth - lhsMargin - rhsMargin
-                
-                let contentCell = PostQuoteContentCell(frame: CGRect(x: 0, y: 0, width: availableWidth, height: 120.0))
-//                let contentCell = PostQuoteContentCell()
-                aTest.addSubview(contentCell)
-                contentCell.translatesAutoresizingMaskIntoConstraints = false
-                if(aTestArray.isEmpty) {
-                    contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
-                } else {
-                    let lastArrayE = aTestArray[aTestArray.count - 1]
-                    contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
-                }
-                contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
-                contentCell.trailingAnchor.constraint(equalTo: aTest.trailingAnchor, constant: -20).isActive = true
+            contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
+            contentCell.trailingAnchor.constraint(equalTo: aTest.trailingAnchor, constant: -20).isActive = true
 //                contentCell.heightAnchor.constraint(equalToConstant: 120).isActive = true  //350
-                contentCell.layer.cornerRadius = 10 //5
-                aTestArray.append(contentCell)
-                contentCell.configure(data: "a", text: data.dataTextString)
-                contentCell.aDelegate = self //test
-                
-                //test
-                mediaArray.append(contentCell)
+            contentCell.layer.cornerRadius = 10 //5
+            aTestArray.append(contentCell)
+            contentCell.redrawUI()
+        }
+        else if(d == "us") {
+            let cellWidth = self.frame.width
+            let lhsMargin = 20.0
+            let rhsMargin = 20.0
+            let availableWidth = cellWidth - lhsMargin - rhsMargin
+            
+            let contentCell = PostSuspendedContentCell(frame: CGRect(x: 0, y: 0, width: availableWidth, height: 120.0))
+            aTest.addSubview(contentCell)
+            contentCell.translatesAutoresizingMaskIntoConstraints = false
+            if(aTestArray.isEmpty) {
+                contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
+            } else {
+                let lastArrayE = aTestArray[aTestArray.count - 1]
+                contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
             }
+            contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
+            contentCell.trailingAnchor.constraint(equalTo: aTest.trailingAnchor, constant: -20).isActive = true
+//                contentCell.heightAnchor.constraint(equalToConstant: 120).isActive = true  //350
+            contentCell.layer.cornerRadius = 10 //5
+            aTestArray.append(contentCell)
+            contentCell.redrawUI()
         }
         
         if(!aTestArray.isEmpty) {

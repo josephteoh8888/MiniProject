@@ -32,7 +32,7 @@ class HResultSoundListViewCell: UICollectionViewCell {
     let aFollowAText = UILabel()
     let aNameText = UILabel()
     let aUserNameText = UILabel()
-//    let aBioText = UILabel()
+    let playBtn = UIImageView()
     let vBtn = UIImageView()
     
     var isAction = false
@@ -123,8 +123,8 @@ class HResultSoundListViewCell: UICollectionViewCell {
 //        aFollowAText.centerYAnchor.constraint(equalTo: aFollowA.centerYAnchor).isActive = true
 //        aFollowAText.text = "Save"
         
-        let playBtn = UIImageView(image: UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate))
-//        playBtn.image = UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate)
+//        let playBtn = UIImageView(image: UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate))
+        playBtn.image = UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate)
         playBtn.tintColor = .white
         contentView.addSubview(playBtn)
         playBtn.translatesAutoresizingMaskIntoConstraints = false
@@ -134,7 +134,7 @@ class HResultSoundListViewCell: UICollectionViewCell {
         playBtn.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20).isActive = true
         playBtn.heightAnchor.constraint(equalToConstant: 22).isActive = true //20
         playBtn.widthAnchor.constraint(equalToConstant: 22).isActive = true
-//        playBtn.isHidden = true
+        playBtn.isHidden = true
 //        playBtn.isUserInteractionEnabled = true
 //        playBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onResumeAudioClicked)))
         
@@ -187,15 +187,30 @@ class HResultSoundListViewCell: UICollectionViewCell {
         
         let imageUrl = URL(string: "")
         aUserPhoto.sd_setImage(with: imageUrl)
+        
+        playBtn.isHidden = true
     }
     
     func configure(data: PostData) {
-        asyncConfigure(data: "")
+        
+        let l = data.dataType
+        
+        if(l == "a") {
+            asyncConfigure(data: "")
+            
+            self.aNameText.text = "明知故犯"
+        }
+        else if(l == "na") {
+            
+        }
+        else if(l == "us") {
+            
+        }
     }
     
     //*test > async fetch images/names/videos
     func asyncConfigure(data: String) {
-        let id = "s_"
+        let id = "s"
         DataFetchManager.shared.fetchSoundData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -208,12 +223,13 @@ class HResultSoundListViewCell: UICollectionViewCell {
                         return
                     }
 
-                    self.aNameText.text = "明知故犯"
                     self.aUserNameText.text = "Hubert Wu"
                     self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
                     
                     let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
                     self.aUserPhoto.sd_setImage(with: imageUrl)
+                    
+                    self.playBtn.isHidden = false
                 }
 
                 case .failure(let error):
@@ -223,13 +239,14 @@ class HResultSoundListViewCell: UICollectionViewCell {
                         return
                     }
                     
-                    self.aNameText.text = "-"
+//                    self.aNameText.text = "-"
                     self.aUserNameText.text = "-"
                     self.vBtn.image = nil
                     
                     let imageUrl = URL(string: "")
                     self.aUserPhoto.sd_setImage(with: imageUrl)
                     
+                    self.playBtn.isHidden = true
                 }
                 break
             }

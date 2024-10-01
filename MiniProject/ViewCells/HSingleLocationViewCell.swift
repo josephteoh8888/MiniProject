@@ -111,7 +111,18 @@ class HSingleLocationViewCell: UICollectionViewCell {
     }
     
     func configure(data: String) {
-        asyncConfigure(data: "")
+        
+        if(data == "a") {
+            asyncConfigure(data: "")
+            
+            self.aHSubDesc.text = "DinoDreamTgX"
+        }
+        else if(data == "na") {
+            
+        }
+        else if(data == "us") {
+            
+        }
     }
     
     //*test > async fetch images/names/videos
@@ -129,7 +140,7 @@ class HSingleLocationViewCell: UICollectionViewCell {
                         return
                     }
 
-                    self.aHSubDesc.text = "DinoDreamTgX"
+//                    self.aHSubDesc.text = "DinoDreamTgX"
                     self.aHSubDesc2.text = "United States"
                     
                     let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
@@ -143,7 +154,7 @@ class HSingleLocationViewCell: UICollectionViewCell {
                         return
                     }
                     
-                    self.aHSubDesc.text = "-"
+//                    self.aHSubDesc.text = "-"
                     self.aHSubDesc2.text = "-"
                     
                     let imageUrl = URL(string: "")

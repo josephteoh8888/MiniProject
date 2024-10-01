@@ -242,27 +242,35 @@ class GridPhoto2xViewCell: UICollectionViewCell {
     }
     
     func configure(data: PostData) {
-        asyncConfigure(data: data)
         
         let l = data.dataType
         let s = data.dataTextString
         
         if(l == "a") {
+            asyncConfigure(data: data)
+            
             aaText.text = "#Tokyo trip"
             aUserNameText.text = "JennyBaby"
-        } else if(l == "b") {
-            aaText.text = s
-            aUserNameText.text = "Michael Kins"
-        } else if(l == "c") {
-            aaText.text = "=.="
-            aUserNameText.text = "YikCai"
-        } else if(l == "d") {
-            aaText.text = s
-            aUserNameText.text = "THXY"
+            
+            aCountText.text = "52"
+            bMiniBtn.image = UIImage(named:"icon_love")?.withRenderingMode(.alwaysTemplate) //icon_round_play
         }
-        
-        aCountText.text = "52"
-        bMiniBtn.image = UIImage(named:"icon_love")?.withRenderingMode(.alwaysTemplate) //icon_round_play
+        else if(l == "na") {
+            
+        }
+        else if(l == "us") {
+            
+        }
+//        else if(l == "b") {
+//            aaText.text = s
+//            aUserNameText.text = "Michael Kins"
+//        } else if(l == "c") {
+//            aaText.text = "=.="
+//            aUserNameText.text = "YikCai"
+//        } else if(l == "d") {
+//            aaText.text = s
+//            aUserNameText.text = "THXY"
+//        }
         
 //        bCountText.text = "2hr"
     }

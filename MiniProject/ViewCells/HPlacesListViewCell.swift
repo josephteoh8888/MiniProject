@@ -70,12 +70,12 @@ class HPlacesListViewCell: UICollectionViewCell {
         aGrid.topAnchor.constraint(equalTo: aNameText.bottomAnchor, constant: 20).isActive = true
         aGrid.layer.cornerRadius = 10
 
-        let aImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
+//        let aImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
         let gifImage = SDAnimatedImageView()
         gifImage.contentMode = .scaleAspectFill
         gifImage.layer.masksToBounds = true
         gifImage.layer.cornerRadius = 10
-        gifImage.sd_setImage(with: aImageUrl)
+//        gifImage.sd_setImage(with: aImageUrl)
         aGrid.addSubview(gifImage)
         gifImage.translatesAutoresizingMaskIntoConstraints = false
         gifImage.topAnchor.constraint(equalTo: aGrid.topAnchor).isActive = true
@@ -114,10 +114,21 @@ class HPlacesListViewCell: UICollectionViewCell {
     }
     
     func configure(data: String) {
-        asyncConfigure(data: "")
+
+        if(data == "a") {
+            asyncConfigure(data: "")
+            
+            self.aNameText.text = "Petronas Twin Towers"
+        }
+        else if(data == "na") {
+            
+        }
+        else if(data == "us") {
+            
+        }
     }
     func asyncConfigure(data: String) {
-        let id = "p_"
+        let id = "p"
         DataFetchManager.shared.fetchPlaceData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -130,7 +141,7 @@ class HPlacesListViewCell: UICollectionViewCell {
                         return
                     }
                     
-                    self.aNameText.text = "Petronas Twin Towers"
+//                    self.aNameText.text = "Petronas Twin Towers"
                 }
 
                 case .failure(let error):
@@ -140,7 +151,7 @@ class HPlacesListViewCell: UICollectionViewCell {
                         return
                     }
                     
-                    self.aNameText.text = "-"
+//                    self.aNameText.text = "-"
                 }
                 break
             }

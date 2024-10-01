@@ -132,6 +132,7 @@ class HNotifyChatListViewCell: UICollectionViewCell {
         messageCountBox.widthAnchor.constraint(equalToConstant: 10).isActive = true
         messageCountBox.layer.cornerRadius = 5
 //        messageCountBox.layer.opacity = 0.7 //0.5
+        messageCountBox.isHidden = true
         
 //        let messageText = UILabel()
         messageText.textAlignment = .left
@@ -170,13 +171,22 @@ class HNotifyChatListViewCell: UICollectionViewCell {
         
         let imageUrl = URL(string: "")
         aUserPhoto.sd_setImage(with: imageUrl)
+        
+        messageText.text = "-"
+        messageText.layer.opacity = 0.6 //0.5
+        messageText.font = .systemFont(ofSize: 13)
+        messageCountBox.isHidden = true
+        
+        timeText.text = "-"
+        timeText.textColor = .white
+        timeText.layer.opacity = 0.5 //0.5
     }
     
     func configure(data: String) {
         
-        asyncConfigure(data: "")
-        
         if(data == "a") {
+            asyncConfigure(data: "")
+            
             messageText.text = "Happy Birthday!!"
             messageText.layer.opacity = 1.0 //0.5
             messageText.font = .boldSystemFont(ofSize: 13)
@@ -185,34 +195,41 @@ class HNotifyChatListViewCell: UICollectionViewCell {
             timeText.text = "5s"
             timeText.textColor = .white
             timeText.layer.opacity = 1.0 //0.5
-        } else if(data == "b") {
-            messageText.text = "Honey, wanna come over tonight?"
-            messageText.layer.opacity = 0.6 //0.5
-            messageText.font = .systemFont(ofSize: 13)
-            messageCountBox.isHidden = true
+        } 
+        else if(data == "na") {
             
-            timeText.text = "3h"
-            timeText.textColor = .white
-            timeText.layer.opacity = 0.5 //0.5
-        } else if(data == "c") {
-            messageText.text = "OMG!"
-            messageText.layer.opacity = 0.6 //0.5
-            messageText.font = .systemFont(ofSize: 13)
-            messageCountBox.isHidden = true
-            
-            timeText.text = "10m"
-            timeText.textColor = .white
-            timeText.layer.opacity = 0.5 //0.5
-        } else if(data == "d") {
-            messageText.text = "Thanks. See ya"
-            messageText.layer.opacity = 0.6 //0.5
-            messageText.font = .systemFont(ofSize: 13)
-            messageCountBox.isHidden = true
-            
-            timeText.text = "5d"
-            timeText.textColor = .white
-            timeText.layer.opacity = 0.5 //0.5
         }
+        else if(data == "us") {
+            
+        }
+//        else if(data == "b") {
+//            messageText.text = "Honey, wanna come over tonight?"
+//            messageText.layer.opacity = 0.6 //0.5
+//            messageText.font = .systemFont(ofSize: 13)
+//            messageCountBox.isHidden = true
+//            
+//            timeText.text = "3h"
+//            timeText.textColor = .white
+//            timeText.layer.opacity = 0.5 //0.5
+//        } else if(data == "c") {
+//            messageText.text = "OMG!"
+//            messageText.layer.opacity = 0.6 //0.5
+//            messageText.font = .systemFont(ofSize: 13)
+//            messageCountBox.isHidden = true
+//            
+//            timeText.text = "10m"
+//            timeText.textColor = .white
+//            timeText.layer.opacity = 0.5 //0.5
+//        } else if(data == "d") {
+//            messageText.text = "Thanks. See ya"
+//            messageText.layer.opacity = 0.6 //0.5
+//            messageText.font = .systemFont(ofSize: 13)
+//            messageCountBox.isHidden = true
+//            
+//            timeText.text = "5d"
+//            timeText.textColor = .white
+//            timeText.layer.opacity = 0.5 //0.5
+//        }
     }
     //*test > async fetch images/names/videos
     func asyncConfigure(data: String) {

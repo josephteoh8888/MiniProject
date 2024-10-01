@@ -197,21 +197,28 @@ class HNotifyInboxListViewCell: UICollectionViewCell {
     }
     func configure(data: String) {
         
-        asyncConfigure(data: "")
-        
         if(data == "a") {
+            asyncConfigure(data: "")
+            
             aNameText.text = "YikCai"
             contentText.text = "started following you."
-        } else if(data == "b") {
-            aNameText.text = "Evelyn"
-            contentText.text = "liked your recent comment."
-        } else if(data == "c") {
-            aNameText.text = "Teacher Isa"
-            contentText.text = "shared a loop 5s ago."
-        } else if(data == "d") {
-            aNameText.text = "Sis Ning"
-            contentText.text = "just commented on your post."
+        } 
+        else if(data == "na") {
+            
         }
+        else if(data == "us") {
+            
+        }
+//        else if(data == "b") {
+//            aNameText.text = "Evelyn"
+//            contentText.text = "liked your recent comment."
+//        } else if(data == "c") {
+//            aNameText.text = "Teacher Isa"
+//            contentText.text = "shared a loop 5s ago."
+//        } else if(data == "d") {
+//            aNameText.text = "Sis Ning"
+//            contentText.text = "just commented on your post."
+//        }
         
         actionUI(doneState: isAction)
     }

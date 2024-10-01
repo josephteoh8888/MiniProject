@@ -159,24 +159,19 @@ extension ScrollFeedHResultPostListCell: UICollectionViewDelegateFlowLayout {
             }
             let tHeight = contentTopMargin + tContentHeight
             contentHeight += tHeight
-        } else if(l == "b") {
-            var tContentHeight = estimateHeight(text: s, textWidth: availTextWidth, fontSize: 14)
+        } 
+        else if(l == "na") {
+            let npText = "Post does not exist."
+            var tContentHeight = estimateHeight(text: npText, textWidth: availTextWidth, fontSize: 14)
             if(tContentHeight > maxContentHeight) {
                 tContentHeight = maxContentHeight
             }
             let tHeight = contentTopMargin + tContentHeight
             contentHeight += tHeight
-        } else if(l == "c") {
-            let contentText = "....WTF.....ELON!"
-            var tContentHeight = estimateHeight(text: contentText, textWidth: availTextWidth, fontSize: 14)
-            if(tContentHeight > maxContentHeight) {
-                tContentHeight = maxContentHeight
-            }
-            let tHeight = contentTopMargin + tContentHeight
-            contentHeight += tHeight
-        } else if(l == "d") {
-            let contentText = "Breaking News: TSLA up 10%!"
-            var tContentHeight = estimateHeight(text: contentText, textWidth: availTextWidth, fontSize: 14)
+        }
+        else if(l == "us") {
+            let npText = "Post violated community rules."
+            var tContentHeight = estimateHeight(text: npText, textWidth: availTextWidth, fontSize: 14)
             if(tContentHeight > maxContentHeight) {
                 tContentHeight = maxContentHeight
             }

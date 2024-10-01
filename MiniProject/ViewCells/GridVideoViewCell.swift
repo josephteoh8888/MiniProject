@@ -106,26 +106,34 @@ class GridVideoViewCell: UICollectionViewCell {
     }
     
     func configure(data: PostData) {
-        asyncConfigure(data: data)
         
 //        aCountText.text = "395" //3.9m
 //        bMiniBtn.image = UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate) //icon_round_play
         let l = data.dataType
-        let s = data.dataTextString
+//        let s = data.dataTextString
         
         if(l == "a") {
+            asyncConfigure(data: data)
+            
             aCountText.text = "395"
             bMiniBtn.image = UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate)
-        } else if(l == "b") {
-            aCountText.text = "7.8m"
-            bMiniBtn.image = UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate)
-        } else if(l == "c") {
-            aCountText.text = "34k"
-            bMiniBtn.image = UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate)
-        } else if(l == "d") {
-            aCountText.text = "981"
-            bMiniBtn.image = UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate)
+        } 
+        else if(l == "na") {
+            
         }
+        else if(l == "us") {
+            
+        }
+//        else if(l == "b") {
+//            aCountText.text = "7.8m"
+//            bMiniBtn.image = UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate)
+//        } else if(l == "c") {
+//            aCountText.text = "34k"
+//            bMiniBtn.image = UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate)
+//        } else if(l == "d") {
+//            aCountText.text = "981"
+//            bMiniBtn.image = UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate)
+//        }
     }
     
     func asyncConfigure(data: PostData) {

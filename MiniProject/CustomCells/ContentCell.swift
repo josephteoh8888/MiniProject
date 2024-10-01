@@ -2691,3 +2691,311 @@ extension PostQuoteContentCell: ContentCellDelegate {
         }
     }
 }
+
+//test > post not avail
+class PostNotFoundContentCell: ContentCell {
+    
+    let aHLightRect1 = UIView()
+    var viewHeight: CGFloat = 0
+    var viewWidth: CGFloat = 0
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        viewWidth = frame.width
+        viewHeight = frame.height
+        setupViews()
+        
+    }
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        
+        setupViews()
+    }
+    
+    func setupViews() {
+        //move to redrawUI()
+    }
+    
+    func redrawUI() {
+        
+        self.addSubview(aHLightRect1)
+        aHLightRect1.translatesAutoresizingMaskIntoConstraints = false
+        aHLightRect1.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
+        aHLightRect1.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true //5
+        aHLightRect1.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0).isActive = true
+        aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
+        
+        let aHLightRectBG = UIView()
+        aHLightRectBG.backgroundColor = .ddmBlackDark
+//        aHLightRectBG.layer.borderWidth = 2.0 //2
+//        aHLightRectBG.layer.borderColor = UIColor.ddmDarkColor.cgColor //default
+        aHLightRect1.addSubview(aHLightRectBG)
+        aHLightRectBG.layer.cornerRadius = 10 //10
+//        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.0 //0.2, 0.1
+        aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
+        aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
+        aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
+        aHLightRectBG.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
+        aHLightRectBG.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
+        
+//        let aHLightTitle = UILabel()
+//        aHLightTitle.textAlignment = .center
+//        aHLightTitle.textColor = .white
+//        aHLightTitle.font = .boldSystemFont(ofSize: 14)
+//        aHLightRect1.addSubview(aHLightTitle)
+//        aHLightTitle.translatesAutoresizingMaskIntoConstraints = false
+//        aHLightTitle.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 40).isActive = true //10
+////        aHLightTitle.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 10).isActive = true //10
+//        aHLightTitle.centerXAnchor.constraint(equalTo: aHLightRect1.centerXAnchor, constant: 0).isActive = true //10
+////        aHLightTitle.text = "Post Status"
+//        aHLightTitle.text = "Post Not Found"
+
+        let aHSubDesc = UILabel()
+        aHSubDesc.textAlignment = .center
+        aHSubDesc.textColor = .white //white
+        aHSubDesc.font = .systemFont(ofSize: 13)
+//        aHSubDesc.font = .boldSystemFont(ofSize: 12)
+//        aHLightSection.addSubview(aHSubDesc)
+        aHLightRect1.addSubview(aHSubDesc)
+        aHSubDesc.translatesAutoresizingMaskIntoConstraints = false
+        aHSubDesc.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 10).isActive = true //10
+        aHSubDesc.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 10).isActive = true //10
+//        aHSubDesc.topAnchor.constraint(equalTo: aHLightTitle.bottomAnchor, constant: 10).isActive = true
+        aHSubDesc.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true //-40
+        aHSubDesc.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true
+        aHSubDesc.text = "Post does not exist."
+//                aHSubDesc.layer.opacity = 0.7
+    }
+}
+
+class PostSuspendedContentCell: ContentCell {
+    
+    let aHLightRect1 = UIView()
+    var viewHeight: CGFloat = 0
+    var viewWidth: CGFloat = 0
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        viewWidth = frame.width
+        viewHeight = frame.height
+        setupViews()
+        
+    }
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        
+        setupViews()
+    }
+    
+    func setupViews() {
+        //move to redrawUI()
+    }
+    
+    func redrawUI() {
+        
+        self.addSubview(aHLightRect1)
+        aHLightRect1.translatesAutoresizingMaskIntoConstraints = false
+        aHLightRect1.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
+        aHLightRect1.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true //5
+        aHLightRect1.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0).isActive = true
+        aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
+        
+        let aHLightRectBG = UIView()
+        aHLightRectBG.backgroundColor = .ddmBlackDark
+//        aHLightRectBG.layer.borderWidth = 2.0 //2
+//        aHLightRectBG.layer.borderColor = UIColor.ddmDarkColor.cgColor //default
+        aHLightRect1.addSubview(aHLightRectBG)
+        aHLightRectBG.layer.cornerRadius = 10 //10
+//        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.0 //0.2, 0.1
+        aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
+        aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
+        aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
+        aHLightRectBG.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
+        aHLightRectBG.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
+        
+//        let aHLightTitle = UILabel()
+//        aHLightTitle.textAlignment = .center
+//        aHLightTitle.textColor = .white
+//        aHLightTitle.font = .boldSystemFont(ofSize: 14)
+//        aHLightRect1.addSubview(aHLightTitle)
+//        aHLightTitle.translatesAutoresizingMaskIntoConstraints = false
+//        aHLightTitle.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 40).isActive = true //10
+////        aHLightTitle.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 10).isActive = true //10
+//        aHLightTitle.centerXAnchor.constraint(equalTo: aHLightRect1.centerXAnchor, constant: 0).isActive = true //10
+////        aHLightTitle.text = "Post Status"
+//        aHLightTitle.text = "Post Not Found"
+
+        let aHSubDesc = UILabel()
+        aHSubDesc.textAlignment = .center
+        aHSubDesc.textColor = .white //white
+        aHSubDesc.font = .systemFont(ofSize: 13)
+//        aHSubDesc.font = .boldSystemFont(ofSize: 12)
+//        aHLightSection.addSubview(aHSubDesc)
+        aHLightRect1.addSubview(aHSubDesc)
+        aHSubDesc.translatesAutoresizingMaskIntoConstraints = false
+        aHSubDesc.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 10).isActive = true //10
+        aHSubDesc.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 10).isActive = true //10
+//        aHSubDesc.topAnchor.constraint(equalTo: aHLightTitle.bottomAnchor, constant: 10).isActive = true
+        aHSubDesc.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true //-40
+        aHSubDesc.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true
+        aHSubDesc.text = "Post violated community rules."
+//                aHSubDesc.layer.opacity = 0.7
+    }
+}
+
+//test > shot not avail
+class ShotNotFoundContentCell: ContentCell {
+    
+    let aHLightRect1 = UIView()
+    var viewHeight: CGFloat = 0
+    var viewWidth: CGFloat = 0
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        viewWidth = frame.width
+        viewHeight = frame.height
+        setupViews()
+        
+    }
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        
+        setupViews()
+    }
+    
+    func setupViews() {
+        //move to redrawUI()
+    }
+    
+    func redrawUI() {
+        
+        self.addSubview(aHLightRect1)
+        aHLightRect1.translatesAutoresizingMaskIntoConstraints = false
+        aHLightRect1.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
+        aHLightRect1.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true //5
+        aHLightRect1.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0).isActive = true
+        aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
+        
+        let aHLightRectBG = UIView()
+        aHLightRectBG.backgroundColor = .ddmBlackDark
+//        aHLightRectBG.layer.borderWidth = 2.0 //2
+//        aHLightRectBG.layer.borderColor = UIColor.ddmDarkColor.cgColor //default
+        aHLightRect1.addSubview(aHLightRectBG)
+        aHLightRectBG.layer.cornerRadius = 10 //10
+//        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.0 //0.2, 0.1
+        aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
+        aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
+        aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
+        aHLightRectBG.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
+        aHLightRectBG.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
+        
+//        let aHLightTitle = UILabel()
+//        aHLightTitle.textAlignment = .center
+//        aHLightTitle.textColor = .white
+//        aHLightTitle.font = .boldSystemFont(ofSize: 14)
+//        aHLightRect1.addSubview(aHLightTitle)
+//        aHLightTitle.translatesAutoresizingMaskIntoConstraints = false
+//        aHLightTitle.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 40).isActive = true //10
+////        aHLightTitle.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 10).isActive = true //10
+//        aHLightTitle.centerXAnchor.constraint(equalTo: aHLightRect1.centerXAnchor, constant: 0).isActive = true //10
+////        aHLightTitle.text = "Post Status"
+//        aHLightTitle.text = "Post Not Found"
+
+        let aHSubDesc = UILabel()
+        aHSubDesc.textAlignment = .center
+        aHSubDesc.textColor = .white //white
+        aHSubDesc.font = .systemFont(ofSize: 13)
+//        aHSubDesc.font = .boldSystemFont(ofSize: 12)
+//        aHLightSection.addSubview(aHSubDesc)
+        aHLightRect1.addSubview(aHSubDesc)
+        aHSubDesc.translatesAutoresizingMaskIntoConstraints = false
+        aHSubDesc.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 10).isActive = true //10
+        aHSubDesc.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 20).isActive = true //10
+        aHSubDesc.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -20).isActive = true //-10
+        aHSubDesc.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true
+        aHSubDesc.text = "Shot does not exist."
+//                aHSubDesc.layer.opacity = 0.7
+    }
+}
+
+class ShotSuspendedContentCell: ContentCell {
+    
+    let aHLightRect1 = UIView()
+    var viewHeight: CGFloat = 0
+    var viewWidth: CGFloat = 0
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        viewWidth = frame.width
+        viewHeight = frame.height
+        setupViews()
+        
+    }
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        
+        setupViews()
+    }
+    
+    func setupViews() {
+        //move to redrawUI()
+    }
+    
+    func redrawUI() {
+        
+        self.addSubview(aHLightRect1)
+        aHLightRect1.translatesAutoresizingMaskIntoConstraints = false
+        aHLightRect1.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
+        aHLightRect1.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true //5
+        aHLightRect1.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0).isActive = true
+        aHLightRect1.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
+        
+        let aHLightRectBG = UIView()
+        aHLightRectBG.backgroundColor = .ddmBlackDark
+//        aHLightRectBG.layer.borderWidth = 2.0 //2
+//        aHLightRectBG.layer.borderColor = UIColor.ddmDarkColor.cgColor //default
+        aHLightRect1.addSubview(aHLightRectBG)
+        aHLightRectBG.layer.cornerRadius = 10 //10
+//        aHLightRectBG.layer.opacity = 0.2 //0.2, 0.1
+//        aHLightRectBG.layer.opacity = 0.0 //0.2, 0.1
+        aHLightRectBG.translatesAutoresizingMaskIntoConstraints = false
+        aHLightRectBG.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
+        aHLightRectBG.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //5
+        aHLightRectBG.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
+        aHLightRectBG.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
+        
+//        let aHLightTitle = UILabel()
+//        aHLightTitle.textAlignment = .center
+//        aHLightTitle.textColor = .white
+//        aHLightTitle.font = .boldSystemFont(ofSize: 14)
+//        aHLightRect1.addSubview(aHLightTitle)
+//        aHLightTitle.translatesAutoresizingMaskIntoConstraints = false
+//        aHLightTitle.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 40).isActive = true //10
+////        aHLightTitle.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 10).isActive = true //10
+//        aHLightTitle.centerXAnchor.constraint(equalTo: aHLightRect1.centerXAnchor, constant: 0).isActive = true //10
+////        aHLightTitle.text = "Post Status"
+//        aHLightTitle.text = "Post Not Found"
+
+        let aHSubDesc = UILabel()
+        aHSubDesc.textAlignment = .center
+        aHSubDesc.textColor = .white //white
+        aHSubDesc.font = .systemFont(ofSize: 13)
+//        aHSubDesc.font = .boldSystemFont(ofSize: 12)
+//        aHLightSection.addSubview(aHSubDesc)
+        aHLightRect1.addSubview(aHSubDesc)
+        aHSubDesc.translatesAutoresizingMaskIntoConstraints = false
+        aHSubDesc.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 10).isActive = true //10
+        aHSubDesc.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 20).isActive = true //10
+        aHSubDesc.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -20).isActive = true //-40
+        aHSubDesc.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true
+        aHSubDesc.text = "Shot violated community rules."
+//                aHSubDesc.layer.opacity = 0.7
+    }
+}

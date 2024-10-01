@@ -968,7 +968,8 @@ class SoundScrollablePanelView: ScrollablePanelView{
                 cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-                cell.redrawUI()
+//                cell.redrawUI()
+                cell.initialize()
             } else if(l == "d_s") {
                 let cell = DiscoverSoundSizeMHighlightCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
                 aHLightRect1.addSubview(cell)
@@ -977,7 +978,8 @@ class SoundScrollablePanelView: ScrollablePanelView{
                 cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-                cell.redrawUI()
+//                cell.redrawUI()
+                cell.initialize()
                 cell.delegate = self
             }
             //test > error handling
@@ -989,7 +991,8 @@ class SoundScrollablePanelView: ScrollablePanelView{
                 cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-                cell.redrawUI()
+//                cell.redrawUI()
+                cell.initialize()
             } else if(l == "e") {
                 let cell = FetchErrorHighlightBox(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
                 aHLightRect1.addSubview(cell)
@@ -998,7 +1001,8 @@ class SoundScrollablePanelView: ScrollablePanelView{
                 cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-                cell.redrawUI()
+//                cell.redrawUI()
+                cell.initialize()
                 cell.delegate = self
             } else if(l == "us") {
                 let cell = SoundSuspendedHighlightBox(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
@@ -1008,7 +1012,8 @@ class SoundScrollablePanelView: ScrollablePanelView{
                 cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-                cell.redrawUI()
+//                cell.redrawUI()
+                cell.initialize()
             }
         }
         
@@ -1568,7 +1573,7 @@ class SoundScrollablePanelView: ScrollablePanelView{
                             self.aHLightBoxArray.append("d_s") //discover more places
                             
                             //test > lay out highlight section
-                            self.aHLightDataArray.append("r") //ranking *
+//                            self.aHLightDataArray.append("r") //ranking *
                             
                             self.configureUI(data: "a")
                         }

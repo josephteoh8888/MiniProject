@@ -120,32 +120,40 @@ class GridPhotoViewCell: UICollectionViewCell {
     }
     
     func configure(data: PostData) {
-        asyncConfigure(data: data)
         
         let l = data.dataType
-        let s = data.dataTextString
+//        let s = data.dataTextString
         
         if(l == "a") {
+            asyncConfigure(data: data)
+            
 //            cMiniBtn.image = UIImage(named:"icon_round_folder_close")?.withRenderingMode(.alwaysTemplate)
             
             aCountText.text = "54"
             bMiniBtn.image = UIImage(named:"icon_love")?.withRenderingMode(.alwaysTemplate)
-        } else if(l == "b") {
-//            cMiniBtn.image = UIImage(named:"icon_round_folder_close")?.withRenderingMode(.alwaysTemplate)
+        } 
+        else if(l == "na") {
             
-            aCountText.text = "398"
-            bMiniBtn.image = UIImage(named:"icon_love")?.withRenderingMode(.alwaysTemplate)
-        } else if(l == "c") {
-//            cMiniBtn.image = nil
-            
-            aCountText.text = "101k"
-            bMiniBtn.image = UIImage(named:"icon_love")?.withRenderingMode(.alwaysTemplate)
-        } else if(l == "d") {
-//            cMiniBtn.image = nil
-            
-            aCountText.text = "5.4k"
-            bMiniBtn.image = UIImage(named:"icon_love")?.withRenderingMode(.alwaysTemplate)
         }
+        else if(l == "us") {
+            
+        }
+//        else if(l == "b") {
+////            cMiniBtn.image = UIImage(named:"icon_round_folder_close")?.withRenderingMode(.alwaysTemplate)
+//            
+//            aCountText.text = "398"
+//            bMiniBtn.image = UIImage(named:"icon_love")?.withRenderingMode(.alwaysTemplate)
+//        } else if(l == "c") {
+////            cMiniBtn.image = nil
+//            
+//            aCountText.text = "101k"
+//            bMiniBtn.image = UIImage(named:"icon_love")?.withRenderingMode(.alwaysTemplate)
+//        } else if(l == "d") {
+////            cMiniBtn.image = nil
+//            
+//            aCountText.text = "5.4k"
+//            bMiniBtn.image = UIImage(named:"icon_love")?.withRenderingMode(.alwaysTemplate)
+//        }
     }
     func asyncConfigure(data: PostData) {
         let id = "u"

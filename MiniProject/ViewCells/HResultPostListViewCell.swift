@@ -214,41 +214,36 @@ class HResultPostListViewCell: UICollectionViewCell {
         bMiniBtn.image = nil
     }
     func configure(data: PostData) {
-        asyncConfigure(data: "")
         
         let l = data.dataType
         let s = data.dataTextString
 
         if(l == "a") {
+            asyncConfigure(data: "")
+            
+            self.aNameText.text = "Michael Kins"
+            self.contentText.text = s
+            
+            aCountText.text = "43" //43
+            bMiniBtn.image = UIImage(named:"icon_comment")?.withRenderingMode(.alwaysTemplate) //icon_round_play
+            
 //            let imageUrl1 = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
 //            self.contentPhoto.sd_setImage(with: imageUrl1)
 //            contentPhoto.isHidden = false
+        } 
+        else if(l == "na") {
             
-            self.contentText.text = s
-        } else if(l == "b") {
-//            let imageUrl1 = URL(string: "")
-//            self.contentPhoto.sd_setImage(with: imageUrl1)
-//            contentPhoto.isHidden = true
-            
-            self.contentText.text = s
-        } else if(l == "c") {
-//            let imageUrl1 = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
-//            self.contentPhoto.sd_setImage(with: imageUrl1)
-//            contentPhoto.isHidden = false
-            
-            self.contentText.text = "....WTF.....ELON!"
-        } else if(l == "d") {
-//            let imageUrl1 = URL(string: "")
-//            self.contentPhoto.sd_setImage(with: imageUrl1)
-//            contentPhoto.isHidden = true
-//            
-            self.contentText.text = "Breaking News: TSLA up 10%!"
         }
-        
-//        aCountText.text = "3hr" //43
-        aCountText.text = "43" //43
-        bMiniBtn.image = UIImage(named:"icon_comment")?.withRenderingMode(.alwaysTemplate) //icon_round_play
-    
+        else if(l == "us") {
+            
+        }
+//        else if(l == "b") {
+//            self.contentText.text = s
+//        } else if(l == "c") {
+//            self.contentText.text = "....WTF.....ELON!"
+//        } else if(l == "d") {
+//            self.contentText.text = "Breaking News: TSLA up 10%!"
+//        }
     }
     //*test > async fetch images/names/videos
     func asyncConfigure(data: String) {
@@ -270,7 +265,7 @@ class HResultPostListViewCell: UICollectionViewCell {
 //                    let imageUrl1 = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
 //                    self.contentPhoto.sd_setImage(with: imageUrl1)
                     
-                    self.aNameText.text = "Michael Kins"
+//                    self.aNameText.text = "Michael Kins"
 //                    self.aUserNameText.text = "2hr"
                     
 //                    self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
@@ -283,7 +278,7 @@ class HResultPostListViewCell: UICollectionViewCell {
                         return
                     }
                     
-                    self.aNameText.text = "-"
+//                    self.aNameText.text = "-"
 //                    self.aUserNameText.text = "-"
 //                    self.vBtn.image = nil
                     

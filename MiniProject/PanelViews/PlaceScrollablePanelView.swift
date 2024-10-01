@@ -881,7 +881,9 @@ class PlaceScrollablePanelView: ScrollablePanelView{
                 cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-                cell.redrawUI()
+//                cell.redrawUI()
+                cell.initialize()
+                cell.delegate = self
             } else if(l == "d_p") {
                 let cell = DiscoverPlaceSizeMHighlightCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
 //                let cell = LatestMultiLoopsSizeMHighlightCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
@@ -891,7 +893,8 @@ class PlaceScrollablePanelView: ScrollablePanelView{
                 cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-                cell.redrawUI()
+//                cell.redrawUI()
+                cell.initialize()
                 cell.delegate = self
             }
             //test > error handling
@@ -903,7 +906,8 @@ class PlaceScrollablePanelView: ScrollablePanelView{
                 cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-                cell.redrawUI()
+//                cell.redrawUI()
+                cell.initialize()
             } else if(l == "e") {
                 let cell = FetchErrorHighlightBox(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
                 aHLightRect1.addSubview(cell)
@@ -912,7 +916,8 @@ class PlaceScrollablePanelView: ScrollablePanelView{
                 cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-                cell.redrawUI()
+//                cell.redrawUI()
+                cell.initialize()
                 cell.delegate = self
             } else if(l == "us") {
                 let cell = PlaceSuspendedHighlightBox(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
@@ -922,7 +927,8 @@ class PlaceScrollablePanelView: ScrollablePanelView{
                 cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
                 cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
                 cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-                cell.redrawUI()
+//                cell.redrawUI()
+                cell.initialize()
             }
         }
         
@@ -1479,7 +1485,7 @@ class PlaceScrollablePanelView: ScrollablePanelView{
                             self.aHLightBoxArray.append("d_p") //discover more places
                             
                             //test > lay out highlight section
-                            self.aHLightDataArray.append("b") //booking *
+//                            self.aHLightDataArray.append("b") //booking *
                             
                             self.configureUI(data: "a")
                         }
