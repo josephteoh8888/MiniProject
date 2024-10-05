@@ -128,9 +128,13 @@ class PostPanelView: PanelView, UIGestureRecognizerDelegate{
         //isSubLayerSet is to prevent repeated calling of layoutSublayers()
         if(!isSubLayerSet) {
             let width = viewWidth
-            let height = viewHeight + 100
-    //        let height = 200.0
+//            let height = viewHeight + 100 //ori => 100 is arbitrary
+//            let height = viewHeight //circle is too small, cannot fully cover phone screen
 
+            let sum2 = pow(width, 2) + pow(viewHeight, 2)
+            let height = sqrt(sum2)
+            print("sumsqrt: \(height), \(viewHeight)")
+            
             let oriX = width/2 - height/2 //default 200
     //        let oriY = height/2 - height/2
             let oriY = viewHeight/2 - height/2

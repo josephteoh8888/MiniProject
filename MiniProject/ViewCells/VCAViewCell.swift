@@ -79,6 +79,9 @@ class VCAViewCell: VCViewCell {
     let cBMiniC = UIView()
     let dMiniC = UIView()
     
+    //test > flash loader
+    let fLoader = FlashLoader()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -188,6 +191,20 @@ class VCAViewCell: VCViewCell {
         videoContainer.clipsToBounds = true
         videoContainer.layer.cornerRadius = 10
 //        videoContainer.isHidden = true
+        
+        //test > flash loader for video loading
+//        let fLoader = FlashLoader()
+//        fLoader.setConfiguration(size: viewWidth - 20, lineWidth: 2, color: .white)
+        aContainer.addSubview(fLoader)
+        fLoader.translatesAutoresizingMaskIntoConstraints = false
+//        fLoader.centerXAnchor.constraint(equalTo: contentView.centerXAnchor, constant: 0).isActive = true
+//        fLoader.centerYAnchor.constraint(equalTo: bottomBox.centerYAnchor, constant: 0).isActive = true
+        fLoader.heightAnchor.constraint(equalToConstant: 3).isActive = true
+//        fLoader.widthAnchor.constraint(equalToConstant: viewWidth - 20).isActive = true
+        fLoader.bottomAnchor.constraint(equalTo: aContainer.bottomAnchor, constant: 0).isActive = true
+        fLoader.leadingAnchor.constraint(equalTo: aContainer.leadingAnchor, constant: 10).isActive = true
+        fLoader.trailingAnchor.constraint(equalTo: aContainer.trailingAnchor, constant: -10).isActive = true
+//        fLoader.startAnimating()
         
         //video control buttons
 //        contentView.addSubview(pauseVideoView)
@@ -980,9 +997,21 @@ class VCAViewCell: VCViewCell {
     }
     //*
     
+    func startFlashLoaderAnimation() {
+        let vWidth = contentView.frame.size.width
+        let vidConCornerRadius = 10.0
+        fLoader.setConfiguration(size: vWidth - vidConCornerRadius * 2, lineWidth: 3, color: .white)
+        fLoader.startAnimating()
+    }
+    func stopFlashLoaderAnimation() {
+        fLoader.stopAnimating()
+    }
+    
     //test > async fetch asset
-    //TODO: add a horizontal flashing loader for loading video & a warning text for error
+    //TODO: a warning text for error
     func asyncConfigureVideo(data: VideoData) {
+        
+        startFlashLoaderAnimation()
         
         let id = "s"
         DataFetchManager.shared.fetchSoundData(id: id) { [weak self]result in
@@ -996,6 +1025,8 @@ class VCAViewCell: VCViewCell {
                     guard let self = self else {
                         return
                     }
+                    
+                    self.stopFlashLoaderAnimation()
                     
                     //test 2 > try video without looper, use conventional avplayer
                     var videoURL = ""

@@ -24,7 +24,8 @@ protocol PhotoPanelDelegate : AnyObject {
     func didClickPhotoPanelVcvClickSound() //try
     func didClickPhotoPanelVcvClickPost() //try
     func didClickPhotoPanelVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) //try
-
+    func didClickPhotoPanelVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) //try
+    
     //test > for marker animation after video closes
     func didStartPhotoPanGesture(ppv : PhotoPanelView)
     func didEndPhotoPanGesture(ppv : PhotoPanelView)
@@ -129,8 +130,12 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
         //isSubLayerSet is to prevent repeated calling of layoutSublayers()
         if(!isSubLayerSet) {
             let width = viewWidth
-            let height = viewHeight + 100
-    //        let height = 200.0
+//            let height = viewHeight + 100 //ori => 100 is arbitrary
+//            let height = viewHeight //circle is too small, cannot fully cover phone screen
+
+            let sum2 = pow(width, 2) + pow(viewHeight, 2)
+            let height = sqrt(sum2)
+            print("sumsqrt: \(height), \(viewHeight)")
 
             let oriX = width/2 - height/2 //default 200
     //        let oriY = height/2 - height/2
@@ -1783,6 +1788,17 @@ extension ViewController: PhotoPanelDelegate{
             openPhotoZoomPanel(offX: offsetX, offY: offsetY)
         }
     }
+    
+    func didClickPhotoPanelVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+        let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
+        let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
+
+        //test 1 > for video only
+        var dataset = [String]()
+//        dataset.append("a")
+        dataset.append("a")
+        self.openVideoPanel(offX: offsetX, offY: offsetY, originatorView: view, originatorViewType: OriginatorTypes.UIVIEW, id: 0, originatorViewId: "", preterminedDatasets: dataset, mode: mode)
+    }
 }
 
 extension PhotoPanelView: ShareSheetScrollableDelegate{
@@ -1886,7 +1902,7 @@ extension PhotoPanelView: CommentScrollableDelegate{
         delegate?.didClickPhotoPanelVcvClickPhoto(pointX: pointX, pointY: pointY, view: view, mode: mode)
     }
     func didCClickClickVideo(pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
-        
+        delegate?.didClickPhotoPanelVcvClickVideo(pointX: pointX, pointY: pointY, view: view, mode: mode)
     }
 }
 

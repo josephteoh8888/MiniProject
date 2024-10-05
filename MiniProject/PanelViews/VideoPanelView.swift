@@ -154,8 +154,12 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         //isSubLayerSet is to prevent repeated calling of layoutSublayers()
         if(!isSubLayerSet) {
             let width = viewWidth
-            let height = viewHeight + 100
-    //        let height = 200.0
+//            let height = viewHeight + 100 //ori => 100 is arbitrary
+//            let height = viewHeight //circle is too small, cannot fully cover phone screen
+            
+            let sum2 = pow(width, 2) + pow(viewHeight, 2)
+            let height = sqrt(sum2)
+            print("sumsqrt: \(height), \(viewHeight)")
 
             let oriX = width/2 - height/2 //default 200
     //        let oriY = height/2 - height/2
@@ -178,8 +182,8 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         cView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true //default 0
         cView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
 
-        videoPanel.backgroundColor = .black
-//        videoPanel.backgroundColor = .ddmBlackOverlayColor
+//        videoPanel.backgroundColor = .black
+        videoPanel.backgroundColor = .ddmBlackOverlayColor
         self.addSubview(videoPanel)
         videoPanel.translatesAutoresizingMaskIntoConstraints = false
 //        videoPanel.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
@@ -202,9 +206,11 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         
         videoPanel.addSubview(feedScrollView)
         feedScrollView.backgroundColor = .ddmBlackOverlayColor
+//        feedScrollView.backgroundColor = .black
         feedScrollView.translatesAutoresizingMaskIntoConstraints = false
         feedScrollView.topAnchor.constraint(equalTo: videoPanel.topAnchor).isActive = true
-        feedScrollView.bottomAnchor.constraint(equalTo: videoPanel.bottomAnchor, constant: -94).isActive = true
+//        feedScrollView.bottomAnchor.constraint(equalTo: videoPanel.bottomAnchor, constant: -94).isActive = true
+        feedScrollView.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -60).isActive = true //60 is bottom container for entering comment etc
         feedScrollView.leadingAnchor.constraint(equalTo: videoPanel.leadingAnchor, constant: 0).isActive = true
         feedScrollView.trailingAnchor.constraint(equalTo: videoPanel.trailingAnchor, constant: 0).isActive = true
         feedScrollView.showsHorizontalScrollIndicator = false
@@ -417,20 +423,22 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
     
     //test > setup comment textbox
     func setupCommentTextboxUI() {
-//        bottomBox.backgroundColor = .black
+//        bottomBox.backgroundColor = .red
         bottomBox.backgroundColor = .ddmBlackOverlayColor
         videoPanel.addSubview(bottomBox)
         bottomBox.clipsToBounds = true
         bottomBox.translatesAutoresizingMaskIntoConstraints = false
         bottomBox.leadingAnchor.constraint(equalTo: videoPanel.leadingAnchor, constant: 0).isActive = true
         bottomBox.trailingAnchor.constraint(equalTo: videoPanel.trailingAnchor, constant: 0).isActive = true
-        bottomBox.heightAnchor.constraint(equalToConstant: 94).isActive = true //default: 50
-        bottomBox.bottomAnchor.constraint(equalTo: videoPanel.bottomAnchor, constant: 0).isActive = true
+//        bottomBox.heightAnchor.constraint(equalToConstant: 94).isActive = true //default: 50
+//        bottomBox.bottomAnchor.constraint(equalTo: videoPanel.bottomAnchor, constant: 0).isActive = true
+        bottomBox.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
+        bottomBox.heightAnchor.constraint(equalToConstant: 60).isActive = true //default: 50
         bottomBox.isUserInteractionEnabled = true
         let aPanelPanGesture = UIPanGestureRecognizer(target: self, action: #selector(onTextViewPanGesture))
         bottomBox.addGestureRecognizer(aPanelPanGesture)
 //        bottomBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onOpenTextBoxClicked)))
-
+        
 //        let addCommentContainer = UIView()
         bottomBox.addSubview(addCommentContainer)
         addCommentContainer.translatesAutoresizingMaskIntoConstraints = false
@@ -452,8 +460,8 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         bText.translatesAutoresizingMaskIntoConstraints = false
         bText.leadingAnchor.constraint(equalTo: addCommentContainer.leadingAnchor, constant: 15).isActive = true
         bText.trailingAnchor.constraint(equalTo: addCommentContainer.trailingAnchor, constant: -60).isActive = true
-        bText.topAnchor.constraint(equalTo: addCommentContainer.topAnchor, constant: 15).isActive = true
-//        bText.leadingAnchor.constraint(equalTo: bottomBox.leadingAnchor, constant: 15).isActive = true
+//        bText.topAnchor.constraint(equalTo: addCommentContainer.topAnchor, constant: 15).isActive = true
+        bText.centerYAnchor.constraint(equalTo: addCommentContainer.centerYAnchor, constant: 0).isActive = true
 //        bText.trailingAnchor.constraint(equalTo: bottomBox.trailingAnchor, constant: -60).isActive = true
 //        bText.topAnchor.constraint(equalTo: bottomBox.topAnchor, constant: 15).isActive = true
         bText.text = "Add comment..."
@@ -513,11 +521,11 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         sendAaView.backgroundColor = .ddmBlackDark
         sendCommentContainer.addSubview(sendAaView)
         sendAaView.translatesAutoresizingMaskIntoConstraints = false
-        sendAaView.topAnchor.constraint(equalTo: sendCommentContainer.topAnchor, constant: 10).isActive = true
-//        sendAaView.bottomAnchor.constraint(equalTo: sendCommentContainer.bottomAnchor, constant: -10).isActive = true //-10
+//        sendAaView.topAnchor.constraint(equalTo: sendCommentContainer.topAnchor, constant: 10).isActive = true
+        sendAaView.centerYAnchor.constraint(equalTo: sendCommentContainer.centerYAnchor, constant: 0).isActive = true //-10
         sendAaView.leadingAnchor.constraint(equalTo: sendCommentContainer.leadingAnchor, constant: 15).isActive = true
         sendAaView.trailingAnchor.constraint(equalTo: sendCommentContainer.trailingAnchor, constant: -50).isActive = true
-        sendAaView.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        sendAaView.heightAnchor.constraint(equalToConstant: 40).isActive = true //36
         sendAaView.layer.cornerRadius = 10
         sendAaView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onOpenTextBoxClicked)))
         
@@ -1110,8 +1118,11 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
     }
     
     func redrawScrollFeedUI() {
+        let bottomInset = self.safeAreaInsets.bottom
+        print("vpanel bottominset: \(bottomInset)")
+        
         let viewWidth = viewWidth
-        let feedHeight = viewHeight - 94
+        let feedHeight = viewHeight - bottomInset - 60 //60 is bottom box for entering comment
         for _ in vcDataList {
             
             let stack = ScrollFeedVideoCell()

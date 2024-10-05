@@ -36,13 +36,14 @@ class PostData: BaseData {
     func setData(data: String) {
         if(data == "a") {
             dataArray.append("t") //text
-//            dataArray.append("p") //photo
+            dataArray.append("p") //photo
+            dataArray.append("p_s") //video
 //            dataArray.append("t") //text
 //            dataArray.append("q") //text
 //            dataArray.append("q") //photo
 //            dataArray.append("q") //quote
             dataArray.append("v") //loop
-            dataArray.append("v") //video
+//            dataArray.append("v") //video
             dataArray.append("v_l") //loop
         }
         else if(data == "b") {

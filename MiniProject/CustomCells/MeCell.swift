@@ -1877,7 +1877,7 @@ class LocationMeCell: MeCell {
     }
     
     func asyncConfigure(data: String) {
-        let id = "u_"
+        let id = "u"
         DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -1947,7 +1947,13 @@ class ProfileMeCell: MeCell {
     var viewHeight: CGFloat = 0
     var viewWidth: CGFloat = 0
     
-//    weak var aDelegate : MeCellDelegate?
+    let bSpinner = SpinLoader()
+    let errorText = UILabel()
+    let errorRefreshBtn = UIView()
+    
+    let aPhoto = SDAnimatedImageView()
+    let aNameText = UILabel()
+    let aFollowAText = UILabel()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -2002,7 +2008,7 @@ class ProfileMeCell: MeCell {
 ////        aHLightTitle.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true
         
         
-        let aPhoto = SDAnimatedImageView()
+//        let aPhoto = SDAnimatedImageView()
         aHLightRect1.addSubview(aPhoto)
         aPhoto.translatesAutoresizingMaskIntoConstraints = false
         aPhoto.widthAnchor.constraint(equalToConstant: 100).isActive = true //ori: 80
@@ -2010,13 +2016,13 @@ class ProfileMeCell: MeCell {
         aPhoto.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
         aPhoto.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 10).isActive = true
         aPhoto.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true
-        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
         aPhoto.contentMode = .scaleAspectFill
         aPhoto.layer.masksToBounds = true
         aPhoto.layer.cornerRadius = 50
-        aPhoto.sd_setImage(with: imageUrl)
+//        aPhoto.sd_setImage(with: imageUrl)
         
-        let aNameText = UILabel()
+//        let aNameText = UILabel()
         aNameText.textAlignment = .left
         aNameText.textColor = .white
         aNameText.font = .boldSystemFont(ofSize: 16)
@@ -2025,13 +2031,13 @@ class ProfileMeCell: MeCell {
 //        aNameText.topAnchor.constraint(equalTo: aPhoto.topAnchor, constant: 10).isActive = true
 //        aNameText.leadingAnchor.constraint(equalTo: aPanelView.leadingAnchor, constant: 20).isActive = true
         aNameText.leadingAnchor.constraint(equalTo: aPhoto.trailingAnchor, constant: 10).isActive = true
-        aNameText.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
+        aNameText.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -40).isActive = true
         aNameText.centerYAnchor.constraint(equalTo: aPhoto.centerYAnchor, constant: -15).isActive = true //0
 //        aNameText.numberOfLines = 0
-        aNameText.text = "Michelle Lee"
+        aNameText.text = ""
 //        aNameText.text = ""
         
-        let aFollowAText = UILabel()
+//        let aFollowAText = UILabel()
         aFollowAText.textAlignment = .center
 //        aFollowAText.textColor = .white
         aFollowAText.textColor = .ddmDarkGrayColor
@@ -2042,20 +2048,82 @@ class ProfileMeCell: MeCell {
         aFollowAText.leadingAnchor.constraint(equalTo: aNameText.leadingAnchor, constant: 0).isActive = true //20
 //        aFollowAText.trailingAnchor.constraint(equalTo: aFollowA.trailingAnchor, constant: -15).isActive = true
         aFollowAText.topAnchor.constraint(equalTo: aNameText.bottomAnchor, constant: 5).isActive = true //10
-        aFollowAText.text = "@mic809" //Go to Profile
+        aFollowAText.text = "" //Go to Profile
+        
+//        let rArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
+//        rArrowBtn.tintColor = .ddmDarkGrayColor
+////        aHLightSection.addSubview(rArrowBtn)
+//        aHLightRect1.addSubview(rArrowBtn)
+//        rArrowBtn.translatesAutoresizingMaskIntoConstraints = false
+//        rArrowBtn.leadingAnchor.constraint(equalTo: aFollowAText.trailingAnchor, constant: 3).isActive = true
+////        rArrowBtn.centerYAnchor.constraint(equalTo: aHLightRect1.centerYAnchor).isActive = true
+////                rArrowBtn.centerYAnchor.constraint(equalTo: rGridBG.centerYAnchor).isActive = true
+//        rArrowBtn.centerYAnchor.constraint(equalTo: aFollowAText.centerYAnchor).isActive = true
+//        rArrowBtn.heightAnchor.constraint(equalToConstant: 18).isActive = true
+//        rArrowBtn.widthAnchor.constraint(equalToConstant: 18).isActive = true
+////        rArrowBtn.layer.opacity = 0.5
+//        rArrowBtn.isHidden = true
         
         let rArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
         rArrowBtn.tintColor = .ddmDarkGrayColor
-//        aHLightSection.addSubview(rArrowBtn)
         aHLightRect1.addSubview(rArrowBtn)
         rArrowBtn.translatesAutoresizingMaskIntoConstraints = false
-        rArrowBtn.leadingAnchor.constraint(equalTo: aFollowAText.trailingAnchor, constant: 3).isActive = true
+        rArrowBtn.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true
 //        rArrowBtn.centerYAnchor.constraint(equalTo: aHLightRect1.centerYAnchor).isActive = true
-//                rArrowBtn.centerYAnchor.constraint(equalTo: rGridBG.centerYAnchor).isActive = true
-        rArrowBtn.centerYAnchor.constraint(equalTo: aFollowAText.centerYAnchor).isActive = true
-        rArrowBtn.heightAnchor.constraint(equalToConstant: 18).isActive = true
-        rArrowBtn.widthAnchor.constraint(equalToConstant: 18).isActive = true
-//        rArrowBtn.layer.opacity = 0.5
+        rArrowBtn.centerYAnchor.constraint(equalTo: aNameText.centerYAnchor).isActive = true
+        rArrowBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
+        rArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
+        
+        bSpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
+        self.addSubview(bSpinner)
+        bSpinner.translatesAutoresizingMaskIntoConstraints = false
+        bSpinner.centerYAnchor.constraint(equalTo: aHLightRect1.centerYAnchor).isActive = true
+//        bSpinner.topAnchor.constraint(equalTo: aHLightTitle.bottomAnchor, constant: 10).isActive = true //20
+//        bSpinner.topAnchor.constraint(equalTo: footer.topAnchor, constant: 20).isActive = true
+        bSpinner.centerXAnchor.constraint(equalTo: aHLightRect1.centerXAnchor).isActive = true
+        bSpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        bSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        
+        //test > error handling
+        errorText.textAlignment = .center //left
+        errorText.textColor = .white
+        errorText.font = .systemFont(ofSize: 13)
+        aHLightRect1.addSubview(errorText)
+        errorText.clipsToBounds = true
+        errorText.translatesAutoresizingMaskIntoConstraints = false
+        errorText.centerYAnchor.constraint(equalTo: aHLightRect1.centerYAnchor, constant: -20).isActive = true
+//        errorText.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 10).isActive = true //test
+//        errorText.topAnchor.constraint(equalTo: aHLightTitle.bottomAnchor, constant: 10).isActive = true
+//        errorText.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 20).isActive = true
+//        errorText.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -20).isActive = true
+        errorText.centerXAnchor.constraint(equalTo: aHLightRect1.centerXAnchor, constant: 0).isActive = true
+        errorText.text = ""
+        errorText.numberOfLines = 0
+        errorText.isHidden = true
+        
+//        errorRefreshBtn.backgroundColor = .ddmDarkColor //test to remove color
+        aHLightRect1.addSubview(errorRefreshBtn)
+        errorRefreshBtn.translatesAutoresizingMaskIntoConstraints = false
+        errorRefreshBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true //ori: 40
+        errorRefreshBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        errorRefreshBtn.centerXAnchor.constraint(equalTo: aHLightRect1.centerXAnchor).isActive = true
+        errorRefreshBtn.topAnchor.constraint(equalTo: errorText.bottomAnchor, constant: 0).isActive = true
+//        errorRefreshBtn.centerYAnchor.constraint(equalTo: errorText.centerYAnchor, constant: 0).isActive = true //test
+//        errorRefreshBtn.leadingAnchor.constraint(equalTo: errorText.trailingAnchor).isActive = true
+        errorRefreshBtn.layer.cornerRadius = 20
+        errorRefreshBtn.isUserInteractionEnabled = true
+        errorRefreshBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onErrorRefreshClicked)))
+        errorRefreshBtn.isHidden = true
+        
+        let bMiniBtn = UIImageView(image: UIImage(named:"icon_round_refresh")?.withRenderingMode(.alwaysTemplate))
+//        bMiniBtn.tintColor = .black
+        bMiniBtn.tintColor = .white
+        errorRefreshBtn.addSubview(bMiniBtn)
+        bMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        bMiniBtn.centerXAnchor.constraint(equalTo: errorRefreshBtn.centerXAnchor).isActive = true
+        bMiniBtn.centerYAnchor.constraint(equalTo: errorRefreshBtn.centerYAnchor).isActive = true
+        bMiniBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true //26
+        bMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
     }
     
     //test > initialization state
@@ -2063,15 +2131,71 @@ class ProfileMeCell: MeCell {
     func initialize() {
         if(!isInitialized) {
             redrawUI()
-//            asyncConfigure(data: "")
+            
+            bSpinner.startAnimating()
+            asyncConfigure(data: "")
         }
 
         isInitialized = true
     }
     
+    func asyncConfigure(data: String) {
+        let id = "u"
+        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    print("pdp api success \(id), \(l)")
+                    
+                    guard let self = self else {
+                        return
+                    }
+
+                    self.bSpinner.stopAnimating()
+                    
+                    self.aNameText.text = "Michelle Lee"
+                    self.aFollowAText.text = "@mic809"
+                    
+                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+                    self.aPhoto.sd_setImage(with: imageUrl)
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    self.bSpinner.stopAnimating()
+                    
+                    self.aNameText.text = ""
+                    self.aFollowAText.text = ""
+                    
+                    let imageUrl = URL(string: "")
+                    self.aPhoto.sd_setImage(with: imageUrl)
+                    
+                    //error handling e.g. refetch button
+                    self.errorText.text = "Unable to load. Retry."
+                    self.errorText.isHidden = false
+                    self.errorRefreshBtn.isHidden = false
+                }
+                break
+            }
+        }
+    }
+    
     @objc func onProfileClicked(gesture: UITapGestureRecognizer) {
-        
         aDelegate?.didMeCellClickUser()
+    }
+    @objc func onErrorRefreshClicked(gesture: UITapGestureRecognizer) {
+        self.errorText.isHidden = true
+        self.errorRefreshBtn.isHidden = true
+        
+        bSpinner.startAnimating()
+        asyncConfigure(data: "")
     }
 }
 

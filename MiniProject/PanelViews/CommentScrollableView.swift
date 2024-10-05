@@ -216,6 +216,15 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
         aSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
         
         //test bottom comment box => fake edittext
+        let coverBottomCon = UIView()
+        coverBottomCon.backgroundColor = .ddmBlackOverlayColor
+        self.addSubview(coverBottomCon)
+        coverBottomCon.translatesAutoresizingMaskIntoConstraints = false
+        coverBottomCon.leadingAnchor.constraint(equalTo: panelView.leadingAnchor, constant: 0).isActive = true
+        coverBottomCon.trailingAnchor.constraint(equalTo: panelView.trailingAnchor, constant: 0).isActive = true
+        coverBottomCon.bottomAnchor.constraint(equalTo: panelView.bottomAnchor, constant: 0).isActive = true
+        coverBottomCon.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
+        
 //        bottomBox.backgroundColor = .black
         bottomBox.backgroundColor = .ddmBlackOverlayColor
         self.addSubview(bottomBox)
@@ -223,8 +232,10 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
         bottomBox.translatesAutoresizingMaskIntoConstraints = false
         bottomBox.leadingAnchor.constraint(equalTo: panelView.leadingAnchor, constant: 0).isActive = true
         bottomBox.trailingAnchor.constraint(equalTo: panelView.trailingAnchor, constant: 0).isActive = true
-        bottomBox.heightAnchor.constraint(equalToConstant: 94).isActive = true //default: 50
-        bottomBox.bottomAnchor.constraint(equalTo: panelView.bottomAnchor, constant: 0).isActive = true
+//        bottomBox.heightAnchor.constraint(equalToConstant: 94).isActive = true //default: 50
+//        bottomBox.bottomAnchor.constraint(equalTo: panelView.bottomAnchor, constant: 0).isActive = true
+        bottomBox.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
+        bottomBox.heightAnchor.constraint(equalToConstant: 60).isActive = true //default: 50
         bottomBox.isUserInteractionEnabled = true
         let dPanelPanGesture = UIPanGestureRecognizer(target: self, action: #selector(onTextViewPanGesture))
         bottomBox.addGestureRecognizer(dPanelPanGesture)
@@ -251,7 +262,8 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
         bText.translatesAutoresizingMaskIntoConstraints = false
         bText.leadingAnchor.constraint(equalTo: addCommentContainer.leadingAnchor, constant: 15).isActive = true
         bText.trailingAnchor.constraint(equalTo: addCommentContainer.trailingAnchor, constant: -60).isActive = true
-        bText.topAnchor.constraint(equalTo: addCommentContainer.topAnchor, constant: 15).isActive = true
+//        bText.topAnchor.constraint(equalTo: addCommentContainer.topAnchor, constant: 15).isActive = true
+        bText.centerYAnchor.constraint(equalTo: addCommentContainer.centerYAnchor, constant: 0).isActive = true
 //        bText.leadingAnchor.constraint(equalTo: bottomBox.leadingAnchor, constant: 15).isActive = true
 //        bText.trailingAnchor.constraint(equalTo: bottomBox.trailingAnchor, constant: -60).isActive = true
 //        bText.topAnchor.constraint(equalTo: bottomBox.topAnchor, constant: 15).isActive = true
@@ -316,7 +328,7 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
 //        sendAaView.bottomAnchor.constraint(equalTo: sendCommentContainer.bottomAnchor, constant: -10).isActive = true //-10
         sendAaView.leadingAnchor.constraint(equalTo: sendCommentContainer.leadingAnchor, constant: 15).isActive = true
         sendAaView.trailingAnchor.constraint(equalTo: sendCommentContainer.trailingAnchor, constant: -50).isActive = true
-        sendAaView.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        sendAaView.heightAnchor.constraint(equalToConstant: 40).isActive = true //36
         sendAaView.layer.cornerRadius = 10
         sendAaView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onOpenTextBoxClicked)))
         

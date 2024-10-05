@@ -168,16 +168,16 @@ class PostPhotoContentCell: ContentCell {
         scrollView.isHidden = false
     }
     
-    @objc func onPhotoClicked(gesture: UITapGestureRecognizer) {
-        print("postphoto click photo:")
-        let pFrame = scrollView.frame.origin
-        let pointX = pFrame.x
-        let pointY = pFrame.y
-        aDelegate?.contentCellDidClickVcvClickPhoto(cc: self, pointX: pointX, pointY: pointY, view: scrollView, mode: PhotoTypes.P_0)
-        
-        //test > hide photo
-        hideCell()
-    }
+//    @objc func onPhotoClicked(gesture: UITapGestureRecognizer) {
+//        print("postphoto click photo:")
+//        let pFrame = scrollView.frame.origin
+//        let pointX = pFrame.x
+//        let pointY = pFrame.y
+//        aDelegate?.contentCellDidClickVcvClickPhoto(cc: self, pointX: pointX, pointY: pointY, view: scrollView, mode: PhotoTypes.P_0)
+//        
+//        //test > hide photo
+//        hideCell()
+//    }
 }
 
 extension PostPhotoContentCell: CustomImageViewDelegate {
@@ -551,17 +551,17 @@ class PostPhotoShotContentCell: ContentCell {
         scrollView.isHidden = false
     }
     
-    @objc func onPhotoClicked(gesture: UITapGestureRecognizer) {
-        print("postphoto click photo:")
-        let pFrame = scrollView.frame.origin
-        let pointX = pFrame.x
-        let pointY = pFrame.y
-//        aDelegate?.contentCellDidClickVcvClickPhoto(cc: self, pointX: pointX, pointY: pointY, view: scrollView, mode: PhotoTypes.P_0)
-        aDelegate?.contentCellDidClickVcvClickPhoto(cc: self, pointX: pointX, pointY: pointY, view: scrollView, mode: PhotoTypes.P_SHOT_DETAIL)
-        
-        //test > hide photo
-//        hideCell()
-    }
+//    @objc func onPhotoClicked(gesture: UITapGestureRecognizer) {
+//        print("postphoto click photo:")
+//        let pFrame = scrollView.frame.origin
+//        let pointX = pFrame.x
+//        let pointY = pFrame.y
+////        aDelegate?.contentCellDidClickVcvClickPhoto(cc: self, pointX: pointX, pointY: pointY, view: scrollView, mode: PhotoTypes.P_0)
+//        aDelegate?.contentCellDidClickVcvClickPhoto(cc: self, pointX: pointX, pointY: pointY, view: scrollView, mode: PhotoTypes.P_SHOT_DETAIL)
+//        
+//        //test > hide photo
+////        hideCell()
+//    }
     
     @objc func onPhotoSClicked(gesture: UITapGestureRecognizer) {
         print("postphoto click photo shot:")
@@ -943,7 +943,7 @@ class PostVideoContentCell: MediaContentCell {
         aDelegate?.contentCellDidClickVcvClickVideo(cc: self, pointX: pointX, pointY: pointY, view: videoContainer, mode: VideoTypes.V_0)
         
         //test > hide photo
-//        hideCell() //disabled for testing only
+        hideCell() //disabled for testing only
     }
     @objc func onVideoBtnClicked(gesture: UITapGestureRecognizer) {
         print("postphoto click video btn:")
@@ -1427,7 +1427,7 @@ class PostVideoLoopContentCell: MediaContentCell {
         aDelegate?.contentCellDidClickVcvClickVideo(cc: self, pointX: pointX, pointY: pointY, view: videoContainer, mode: VideoTypes.V_LOOP)
         
         //test > hide photo
-//        hideCell() //disabled for testing only
+        hideCell() //disabled for testing only
     }
     @objc func onVideoClicked(gesture: UITapGestureRecognizer) {
         print("postphoto click video:")
@@ -1437,7 +1437,7 @@ class PostVideoLoopContentCell: MediaContentCell {
         aDelegate?.contentCellDidClickVcvClickVideo(cc: self, pointX: pointX, pointY: pointY, view: videoContainer, mode: VideoTypes.V_LOOP)
         
         //test > hide photo
-//        hideCell() //disabled for testing only
+        hideCell() //disabled for testing only
     }
     @objc func onVideoBtnClicked(gesture: UITapGestureRecognizer) {
         print("postphoto click video btn:")
@@ -1679,16 +1679,16 @@ class ShotPhotoContentCell: ContentCell {
         scrollView.isHidden = false
     }
     
-    @objc func onPhotoClicked(gesture: UITapGestureRecognizer) {
-        print("postphoto click photo:")
-        let pFrame = scrollView.frame.origin
-        let pointX = pFrame.x
-        let pointY = pFrame.y
-        aDelegate?.contentCellDidClickVcvClickPhoto(cc: self, pointX: pointX, pointY: pointY, view: scrollView, mode: PhotoTypes.P_0)
-        
-        //test > hide photo
-        hideCell()
-    }
+//    @objc func onPhotoClicked(gesture: UITapGestureRecognizer) {
+//        print("postphoto click photo:")
+//        let pFrame = scrollView.frame.origin
+//        let pointX = pFrame.x
+//        let pointY = pFrame.y
+//        aDelegate?.contentCellDidClickVcvClickPhoto(cc: self, pointX: pointX, pointY: pointY, view: scrollView, mode: PhotoTypes.P_0)
+//        
+//        //test > hide photo
+//        hideCell()
+//    }
 }
 
 extension ShotPhotoContentCell: CustomImageViewDelegate {

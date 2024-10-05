@@ -145,3 +145,100 @@ class SpinLoader: UIView {
         isAnimating = false //test
     }
 }
+
+//test > flash loader for video loading
+class FlashLoader: UIView {
+    var viewSize: CGFloat = 0
+    var viewLineWidth: CGFloat = 0
+    var viewLineColor: UIColor = .white
+    
+    var isAnimating = false
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        viewSize = frame.width
+    }
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    func setConfiguration(size: CGFloat, lineWidth: CGFloat, color: UIColor) {
+        viewSize = size
+        viewLineWidth = lineWidth
+        viewLineColor = color
+    }
+    
+    func layerWith(size: CGSize, color: UIColor) -> CALayer {
+        let layer: CAShapeLayer = CAShapeLayer()
+        var path: UIBezierPath = UIBezierPath()
+//        let lineWidth: CGFloat = 2
+        
+        path.move(to: CGPoint(x: 0, y: size.height))
+        path.addLine(to: CGPoint(x: size.width, y: size.height))
+        layer.fillColor = nil
+        layer.strokeColor = color.cgColor
+        layer.lineWidth = viewLineWidth
+        
+        layer.backgroundColor = nil
+        layer.path = path.cgPath
+        layer.frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+
+        return layer
+    }
+    
+    func setupAnimation() {
+        layer.sublayers = nil
+        
+        //        let duration: CFTimeInterval = 0.75 //default 0.75
+        let duration: CFTimeInterval = 0.6 //default 0.75
+        // scale animation
+        let rotateAnimation = CAKeyframeAnimation(keyPath: "transform.scale")
+        
+        rotateAnimation.keyTimes = [0, 0.5, 1]
+        rotateAnimation.values = [0, 1, 0]
+        
+        // Animation
+        let animation = CAAnimationGroup()
+        
+        animation.animations = [rotateAnimation]
+        animation.timingFunction = CAMediaTimingFunction(name: .linear)
+        animation.duration = duration
+        animation.repeatCount = HUGE
+        animation.isRemovedOnCompletion = false
+        
+        // Draw line
+        let line = layerWith(size: CGSize(width: viewSize, height: viewLineWidth), color: viewLineColor)
+        let frame = CGRect(x: 0,
+                           y: 0,
+                           width: viewSize,
+                           height: viewLineWidth)
+        
+        line.frame = frame
+        line.add(animation, forKey: "animation")
+        layer.addSublayer(line)
+    }
+    
+    func startAnimating() {
+//        layer.speed = 1
+//        setupAnimation()
+        
+        //test
+        if(!isAnimating) {
+            layer.speed = 1
+            setupAnimation()
+        }
+        isAnimating = true //test
+    }
+    
+    func stopAnimating() {
+        
+//        layer.sublayers?.removeAll()
+        
+        //test
+        if(isAnimating) {
+            layer.sublayers?.removeAll()
+        }
+        isAnimating = false //test
+    }
+}
