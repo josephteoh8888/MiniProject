@@ -387,15 +387,16 @@ class VideoEditorPanelView: PanelView{
         audioMiniText.text = "Tap to Add Sound"
         
         
-        
+        //tools panel
         //test > various functionality for video edit
 //        let mainBtnContainer = UIView()
         panel.addSubview(mainBtnContainer)
         mainBtnContainer.translatesAutoresizingMaskIntoConstraints = false
         mainBtnContainer.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 0).isActive = true
-        mainBtnContainer.heightAnchor.constraint(equalToConstant: 120).isActive = true
+        mainBtnContainer.heightAnchor.constraint(equalToConstant: 90).isActive = true //120
         mainBtnContainer.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: 0).isActive = true
-        mainBtnContainer.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: 0).isActive = true
+//        mainBtnContainer.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: 0).isActive = true
+        mainBtnContainer.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
 //        mainBtnContainer.isHidden = true
         
         //test > timeline center
@@ -746,13 +747,15 @@ class VideoEditorPanelView: PanelView{
         vMiniText.centerXAnchor.constraint(equalTo: vGrid.centerXAnchor).isActive = true
         vMiniText.text = "Delete"
         
+        //audio tools panel
 //        let acBtnContainer = UIView()
         panel.addSubview(acBtnContainer)
         acBtnContainer.translatesAutoresizingMaskIntoConstraints = false
         acBtnContainer.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 0).isActive = true
-        acBtnContainer.heightAnchor.constraint(equalToConstant: 120).isActive = true
+        acBtnContainer.heightAnchor.constraint(equalToConstant: 90).isActive = true //120
         acBtnContainer.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: 0).isActive = true
-        acBtnContainer.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: 0).isActive = true
+//        acBtnContainer.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: 0).isActive = true
+        acBtnContainer.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
         acBtnContainer.isHidden = true
         
         let backAcGrid = UIView() //edit ac
@@ -846,12 +849,14 @@ class VideoEditorPanelView: PanelView{
         acVMiniText.centerXAnchor.constraint(equalTo: acVGrid.centerXAnchor).isActive = true
         acVMiniText.text = "Delete"
         
+        //subtitle tools panel
         panel.addSubview(scBtnContainer)
         scBtnContainer.translatesAutoresizingMaskIntoConstraints = false
         scBtnContainer.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 0).isActive = true
-        scBtnContainer.heightAnchor.constraint(equalToConstant: 120).isActive = true
+        scBtnContainer.heightAnchor.constraint(equalToConstant: 90).isActive = true //120
         scBtnContainer.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: 0).isActive = true
-        scBtnContainer.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: 0).isActive = true
+//        scBtnContainer.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: 0).isActive = true
+        scBtnContainer.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
         scBtnContainer.isHidden = true
         
         let backScGrid = UIView() //edit ac
@@ -1813,8 +1818,8 @@ class VideoEditorPanelView: PanelView{
         layer2.frame = audioContainer.bounds
         audioContainer.layer.addSublayer(layer2)
         
-//        let d = getDuration(ofVideoAt: url2)
-//        print("audio d: \(d)")
+        let d = getDuration(ofVideoAt: url2)
+        print("audio d: \(d)")
         
         let seekTime = CMTime(seconds: 30.0, preferredTimescale: CMTimeScale(1000)) //1000
         item2.forwardPlaybackEndTime = seekTime
@@ -1845,6 +1850,7 @@ class VideoEditorPanelView: PanelView{
     }
     
     func preloadVideo(strVUrl: String) {
+        print("audio v: \(totalVDuration)")
 //        let asset = AVAsset(url: videoUrl)
 //        let item = AVPlayerItem(asset: asset)
 //        itemList.append(item)
@@ -2984,6 +2990,7 @@ class VideoEditorPanelView: PanelView{
             s.bTimePlayText.text = s.timePlayText.text
             
             let newVal = CGFloat((currentT) / (s.totalVDuration)) * (s.viewWidth - 120)
+            print("audio d x: \(newVal), \(s.totalVDuration)")
             self?.progressCenterXCons?.constant = newVal
 
             //test > video change when audio play simultaneously
@@ -3035,6 +3042,7 @@ class VideoEditorPanelView: PanelView{
             }
             print("observe videoT:\(currentT)")
             
+            print("audio v x: \(s.totalVDuration)")
         }
     }
     func removeTimeObserverAudio() {
@@ -4230,10 +4238,22 @@ extension VideoEditorPanelView: UIScrollViewDelegate {
     }
 }
 
+extension VideoEditorPanelView: ExitVideoEditorMsgDelegate{
+    func didSVDClickProceed() {
+        closeVideoEditorPanel(isAnimated: true)
+    }
+    func didSVDClickDeny() {
+        delegate?.didDenyExitVideoEditor()
+    }
+    func didSVDInitialize() {
+        delegate?.didPromptExitVideoEditor()
+    }
+}
+
 extension VideoCreatorConsolePanelView: VideoEditorPanelDelegate{
     func didInitializeVideoEditor() {
         //test > turn off camera
-        self.session?.stopRunning()
+//        self.session?.stopRunning()
     }
     func didClickFinishVideoEditor() {
         backPage()
@@ -4248,14 +4268,14 @@ extension VideoCreatorConsolePanelView: VideoEditorPanelDelegate{
     
     func didPromptExitVideoEditor() {
         //test > resume camera
-        DispatchQueue.main.async {
-            self.session?.startRunning()
-        }
+//        DispatchQueue.main.async {
+//            self.session?.startRunning()
+//        }
     }
     
     func didDenyExitVideoEditor() {
         //test > turn off camera
-        self.session?.stopRunning()
+//        self.session?.stopRunning()
     }
     
     func didClickAddVideoClip() {

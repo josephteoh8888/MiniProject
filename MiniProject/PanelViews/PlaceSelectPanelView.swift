@@ -89,11 +89,12 @@ class PlaceSelectPanelView: PanelView, UIGestureRecognizerDelegate{
         panel.layer.cornerRadius = 10 //10
         //test
 //        panel.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true
-        panel.heightAnchor.constraint(equalToConstant: viewHeight).isActive = true
+//        panel.heightAnchor.constraint(equalToConstant: viewHeight).isActive = true
 //        soundPanelLeadingCons = soundPanel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0)
         let gap = viewHeight - 150
         panelTopCons = panel.topAnchor.constraint(equalTo: self.bottomAnchor, constant: -gap)
         panelTopCons?.isActive = true
+        panel.heightAnchor.constraint(equalToConstant: gap).isActive = true //viewHeight
         
 //        let tText = UILabel()
 //        tText.textAlignment = .left
@@ -216,134 +217,6 @@ class PlaceSelectPanelView: PanelView, UIGestureRecognizerDelegate{
         aBtn.centerYAnchor.constraint(equalTo: bBox.centerYAnchor).isActive = true
         aBtn.heightAnchor.constraint(equalToConstant: 16).isActive = true
         aBtn.widthAnchor.constraint(equalToConstant: 16).isActive = true
-        
-//        let aGrid = UIView()
-//        aGrid.backgroundColor = .ddmDarkColor
-//        panel.addSubview(aGrid)
-//        aGrid.translatesAutoresizingMaskIntoConstraints = false
-//        aGrid.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 15).isActive = true
-//        aGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
-//        aGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
-//        aGrid.topAnchor.constraint(equalTo: aTextBox.bottomAnchor, constant: 20).isActive = true
-//        aGrid.layer.cornerRadius = 10
-//
-//        let aGridIcon = UIImageView(image: UIImage(named:"icon_round_near_me")?.withRenderingMode(.alwaysTemplate))
-//        aGridIcon.tintColor = .white
-//        aGrid.addSubview(aGridIcon)
-//        aGridIcon.translatesAutoresizingMaskIntoConstraints = false
-//        aGridIcon.centerXAnchor.constraint(equalTo: aGrid.centerXAnchor).isActive = true
-//        aGridIcon.centerYAnchor.constraint(equalTo: aGrid.centerYAnchor).isActive = true
-//        aGridIcon.heightAnchor.constraint(equalToConstant: 20).isActive = true
-//        aGridIcon.widthAnchor.constraint(equalToConstant: 20).isActive = true
-//
-//        let aText = UILabel()
-//        aText.textAlignment = .left
-//        aText.textColor = .white
-//        aText.font = .systemFont(ofSize: 14)
-//        panel.addSubview(aText)
-//        aText.translatesAutoresizingMaskIntoConstraints = false
-//        aText.centerYAnchor.constraint(equalTo: aGrid.centerYAnchor, constant: 0).isActive = true
-////        aText.topAnchor.constraint(equalTo: aTextBox.bottomAnchor, constant: 30).isActive = true
-//        aText.leadingAnchor.constraint(equalTo: aGrid.trailingAnchor, constant: 10).isActive = true
-//        aText.text = "Around You"
-//        aText.isUserInteractionEnabled = true
-//        aText.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onAroundYouClicked)))
-//
-//        let bGrid = UIView()
-//        bGrid.backgroundColor = .ddmDarkColor
-//        panel.addSubview(bGrid)
-//        bGrid.translatesAutoresizingMaskIntoConstraints = false
-//        bGrid.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 15).isActive = true
-//        bGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
-//        bGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
-//        bGrid.topAnchor.constraint(equalTo: aGrid.bottomAnchor, constant: 10).isActive = true
-//        bGrid.layer.cornerRadius = 10
-//
-//        let bText = UILabel()
-//        bText.textAlignment = .left
-//        bText.textColor = .white
-//        bText.font = .systemFont(ofSize: 14)
-//        panel.addSubview(bText)
-//        bText.translatesAutoresizingMaskIntoConstraints = false
-//        bText.centerYAnchor.constraint(equalTo: bGrid.centerYAnchor, constant: 0).isActive = true
-////        bText.topAnchor.constraint(equalTo: aText.bottomAnchor, constant: 15).isActive = true
-//        bText.leadingAnchor.constraint(equalTo: bGrid.trailingAnchor, constant: 10).isActive = true
-//        bText.text = "Malaysia"
-//
-//        let cGrid = UIView()
-//        cGrid.backgroundColor = .ddmDarkColor
-//        panel.addSubview(cGrid)
-//        cGrid.translatesAutoresizingMaskIntoConstraints = false
-//        cGrid.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 15).isActive = true
-//        cGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
-//        cGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
-//        cGrid.topAnchor.constraint(equalTo: bGrid.bottomAnchor, constant: 10).isActive = true
-//        cGrid.layer.cornerRadius = 10
-//
-//        let cText = UILabel()
-//        cText.textAlignment = .left
-//        cText.textColor = .white
-//        cText.font = .systemFont(ofSize: 14)
-//        panel.addSubview(cText)
-//        cText.translatesAutoresizingMaskIntoConstraints = false
-//        cText.centerYAnchor.constraint(equalTo: cGrid.centerYAnchor, constant: 0).isActive = true
-////        bText.topAnchor.constraint(equalTo: aText.bottomAnchor, constant: 15).isActive = true
-//        cText.leadingAnchor.constraint(equalTo: cGrid.trailingAnchor, constant: 10).isActive = true
-//        cText.text = "Kuala Lumpur"
-//
-//        let dGrid = UIView()
-//        dGrid.backgroundColor = .ddmDarkColor
-//        panel.addSubview(dGrid)
-//        dGrid.translatesAutoresizingMaskIntoConstraints = false
-//        dGrid.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 15).isActive = true
-//        dGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
-//        dGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
-//        dGrid.topAnchor.constraint(equalTo: cGrid.bottomAnchor, constant: 10).isActive = true
-//        dGrid.layer.cornerRadius = 10
-//
-//        let dText = UILabel()
-//        dText.textAlignment = .left
-//        dText.textColor = .white
-//        dText.font = .systemFont(ofSize: 14)
-//        panel.addSubview(dText)
-//        dText.translatesAutoresizingMaskIntoConstraints = false
-//        dText.centerYAnchor.constraint(equalTo: dGrid.centerYAnchor, constant: 0).isActive = true
-////        bText.topAnchor.constraint(equalTo: aText.bottomAnchor, constant: 15).isActive = true
-//        dText.leadingAnchor.constraint(equalTo: dGrid.trailingAnchor, constant: 10).isActive = true
-//        dText.text = "World"
-        
-//        let aResult = UIView()
-//        aResult.backgroundColor = .ddmDarkColor
-//        panel.addSubview(aResult)
-//        aResult.translatesAutoresizingMaskIntoConstraints = false
-//        aResult.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 15).isActive = true
-//        aResult.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -15).isActive = true
-//        aResult.heightAnchor.constraint(equalToConstant: 120).isActive = true
-//        aResult.topAnchor.constraint(equalTo: cGrid.bottomAnchor, constant: 30).isActive = true
-//        aResult.layer.cornerRadius = 10
-//        aResult.layer.opacity = 0.3
-//
-//        let bResult = UIView()
-//        bResult.backgroundColor = .ddmDarkColor
-//        panel.addSubview(bResult)
-//        bResult.translatesAutoresizingMaskIntoConstraints = false
-//        bResult.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 15).isActive = true
-//        bResult.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -15).isActive = true
-//        bResult.heightAnchor.constraint(equalToConstant: 120).isActive = true
-//        bResult.topAnchor.constraint(equalTo: aResult.bottomAnchor, constant: 15).isActive = true
-//        bResult.layer.cornerRadius = 10
-//        bResult.layer.opacity = 0.3
-//
-//        let cResult = UIView()
-//        cResult.backgroundColor = .ddmDarkColor
-//        panel.addSubview(cResult)
-//        cResult.translatesAutoresizingMaskIntoConstraints = false
-//        cResult.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 15).isActive = true
-//        cResult.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -15).isActive = true
-//        cResult.heightAnchor.constraint(equalToConstant: 120).isActive = true
-//        cResult.topAnchor.constraint(equalTo: bResult.bottomAnchor, constant: 15).isActive = true
-//        cResult.layer.cornerRadius = 10
-//        cResult.layer.opacity = 0.3
         
 //        vDataList.append("a")
 //        vDataList.append("a")

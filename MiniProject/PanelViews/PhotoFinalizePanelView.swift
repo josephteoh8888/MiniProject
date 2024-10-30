@@ -10,6 +10,11 @@ import UIKit
 import SDWebImage
 import AVFoundation
 
+protocol PhotoFinalizePanelDelegate : AnyObject {
+    func didInitializePhotoFinalize()
+    func didClickFinishPhotoFinalize()
+    func didPhotoFinalizeClickUploadSuccess()
+}
 class PhotoFinalizePanelView: PanelView{
     var panel = UIView()
     var currentPanelTopCons : CGFloat = 0.0
@@ -18,7 +23,7 @@ class PhotoFinalizePanelView: PanelView{
     var viewHeight: CGFloat = 0
     var viewWidth: CGFloat = 0
     
-//    weak var delegate : VideoFinalizePanelDelegate?
+    weak var delegate : PhotoFinalizePanelDelegate?
     
     let bTextView = UITextView()
     let pText = UILabel()
@@ -72,11 +77,11 @@ class PhotoFinalizePanelView: PanelView{
 //        aBtn.leadingAnchor.constraint(equalTo: aStickyHeader.leadingAnchor, constant: 10).isActive = true
         aBtn.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 10).isActive = true
     //        aBtn.topAnchor.constraint(equalTo: userPanel.topAnchor, constant: 30).isActive = true
-//        aBtn.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
+        aBtn.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
 //        let topInsetMargin = panel.safeAreaInsets.top + 10
-        aBtn.topAnchor.constraint(equalTo: panel.topAnchor, constant: 50).isActive = true
+//        aBtn.topAnchor.constraint(equalTo: panel.topAnchor, constant: 50).isActive = true
         aBtn.layer.cornerRadius = 20
-        aBtn.layer.opacity = 0.3
+//        aBtn.layer.opacity = 0.3
         aBtn.isUserInteractionEnabled = true
         aBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBackPhotoFinalizePanelClicked)))
 
@@ -104,6 +109,8 @@ class PhotoFinalizePanelView: PanelView{
         scrollView.delegate = self
         scrollView.alwaysBounceVertical = true
         scrollView.centerXAnchor.constraint(equalTo: panel.centerXAnchor).isActive = true
+        scrollView.isUserInteractionEnabled = true
+        scrollView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBoxUnderClicked)))
         
         let stackView = UIView()
         stackView.backgroundColor = .clear
@@ -134,25 +141,26 @@ class PhotoFinalizePanelView: PanelView{
         gifImage.widthAnchor.constraint(equalToConstant: 90).isActive = true
         gifImage.layer.cornerRadius = 10
         gifImage.isUserInteractionEnabled = true
-        gifImage.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPreviewPhotoClicked)))
+//        gifImage.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPreviewPhotoClicked)))
         
         let vPreviewBox = UIView()
-        vPreviewBox.backgroundColor = .ddmDarkColor
+//        vPreviewBox.backgroundColor = .ddmDarkColor
         stackView.addSubview(vPreviewBox)
         vPreviewBox.clipsToBounds = true
         vPreviewBox.translatesAutoresizingMaskIntoConstraints = false
         vPreviewBox.centerXAnchor.constraint(equalTo: gifImage.centerXAnchor, constant: 0).isActive = true
         vPreviewBox.topAnchor.constraint(equalTo: gifImage.bottomAnchor, constant: 10).isActive = true
         vPreviewBox.layer.cornerRadius = 5 //10
-        vPreviewBox.layer.opacity = 0.3
+//        vPreviewBox.layer.opacity = 0.3
         vPreviewBox.isUserInteractionEnabled = true
-        vPreviewBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPreviewPhotoClicked)))
+//        vPreviewBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPreviewPhotoClicked)))
+        vPreviewBox.isHidden = true
         
         let vPreviewText = UILabel()
         vPreviewText.textAlignment = .left
         vPreviewText.textColor = .white
         vPreviewText.font = .systemFont(ofSize: 10) //14
-        stackView.addSubview(vPreviewText)
+        vPreviewBox.addSubview(vPreviewText)
         vPreviewText.clipsToBounds = true
         vPreviewText.translatesAutoresizingMaskIntoConstraints = false
         vPreviewText.leadingAnchor.constraint(equalTo: vPreviewBox.leadingAnchor, constant: 10).isActive = true
@@ -182,7 +190,8 @@ class PhotoFinalizePanelView: PanelView{
         
 //        let pText = UILabel()
         pText.textAlignment = .left
-        pText.textColor = .white
+//        pText.textColor = .white
+        pText.textColor = .ddmDarkGrayColor
         pText.font = .boldSystemFont(ofSize: 14)
 //        panel.addSubview(pText)
         stackView.addSubview(pText)
@@ -192,11 +201,11 @@ class PhotoFinalizePanelView: PanelView{
         pText.trailingAnchor.constraint(equalTo: gifImage.leadingAnchor, constant: -20).isActive = true
         pText.topAnchor.constraint(equalTo: gifImage.topAnchor, constant: 8).isActive = true
         pText.text = "Caption your Shot..."
-        pText.layer.opacity = 0.5
+//        pText.layer.opacity = 0.5
         
         //test > line divider for different sections
         let divider = UIView()
-        divider.backgroundColor = .ddmDarkColor
+        divider.backgroundColor = .ddmDarkGrayColor //.ddmDarkColor
 //        panel.addSubview(divider)
         stackView.addSubview(divider)
         divider.translatesAutoresizingMaskIntoConstraints = false
@@ -207,7 +216,7 @@ class PhotoFinalizePanelView: PanelView{
         divider.trailingAnchor.constraint(equalTo: stackView.trailingAnchor, constant: -20).isActive = true
         divider.topAnchor.constraint(equalTo: gifImage.bottomAnchor, constant: 50).isActive = true
 //        divider.layer.cornerRadius = 20
-        divider.layer.opacity = 0.3
+//        divider.layer.opacity = 0.3
         divider.isHidden = true
         
         //**test > add photo, @, # functions for writing post
@@ -222,7 +231,8 @@ class PhotoFinalizePanelView: PanelView{
         xGrid.topAnchor.constraint(equalTo: gifImage.bottomAnchor, constant: 10).isActive = true
         
         let xGridIcon = UIImageView(image: UIImage(named:"icon_round_at")?.withRenderingMode(.alwaysTemplate))
-        xGridIcon.tintColor = .white
+//        xGridIcon.tintColor = .white
+        xGridIcon.tintColor = .ddmDarkGrayColor
 //        panel.addSubview(xGridIcon)
         stackView.addSubview(xGridIcon)
         xGridIcon.translatesAutoresizingMaskIntoConstraints = false
@@ -230,7 +240,7 @@ class PhotoFinalizePanelView: PanelView{
         xGridIcon.centerYAnchor.constraint(equalTo: xGrid.centerYAnchor, constant: 0).isActive = true
         xGridIcon.heightAnchor.constraint(equalToConstant: 26).isActive = true //20
         xGridIcon.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        xGridIcon.layer.opacity = 0.5
+//        xGridIcon.layer.opacity = 0.5
         
         let yGrid = UIView()
 //        panel.addSubview(yGrid)
@@ -242,7 +252,8 @@ class PhotoFinalizePanelView: PanelView{
         yGrid.centerYAnchor.constraint(equalTo: xGrid.centerYAnchor, constant: 0).isActive = true
         
         let yGridIcon = UIImageView(image: UIImage(named:"icon_round_hashtag")?.withRenderingMode(.alwaysTemplate))
-        yGridIcon.tintColor = .white
+//        yGridIcon.tintColor = .white
+        yGridIcon.tintColor = .ddmDarkGrayColor
 //        panel.addSubview(yGridIcon)
         stackView.addSubview(yGridIcon)
         yGridIcon.translatesAutoresizingMaskIntoConstraints = false
@@ -252,11 +263,12 @@ class PhotoFinalizePanelView: PanelView{
         yGridIcon.centerYAnchor.constraint(equalTo: yGrid.centerYAnchor, constant: 0).isActive = true
         yGridIcon.heightAnchor.constraint(equalToConstant: 26).isActive = true
         yGridIcon.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        yGridIcon.layer.opacity = 0.5
+//        yGridIcon.layer.opacity = 0.5
         
         //test > setting for video upload
         let aGrid = UIView()
-        aGrid.backgroundColor = .ddmDarkColor
+//        aGrid.backgroundColor = .ddmDarkColor
+        aGrid.backgroundColor = .ddmDarkBlack
 //        panel.addSubview(aGrid)
         stackView.addSubview(aGrid)
         aGrid.translatesAutoresizingMaskIntoConstraints = false
@@ -267,12 +279,12 @@ class PhotoFinalizePanelView: PanelView{
         aGrid.topAnchor.constraint(equalTo: divider.bottomAnchor, constant: 20).isActive = true //10
         aGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
         aGrid.layer.cornerRadius = 5
-        aGrid.layer.opacity = 0.1
+//        aGrid.layer.opacity = 0.1
         aGrid.isUserInteractionEnabled = true
         aGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onAGridClicked)))
         
         let aGridBG = UIView()
-        aGridBG.backgroundColor = .ddmDarkColor
+//        aGridBG.backgroundColor = .ddmDarkColor
 //        panel.addSubview(aGridBG)
         stackView.addSubview(aGridBG)
         aGridBG.translatesAutoresizingMaskIntoConstraints = false
@@ -295,8 +307,8 @@ class PhotoFinalizePanelView: PanelView{
 //        let aText = UILabel()
         aText.textAlignment = .left
         aText.textColor = .white
-        aText.font = .boldSystemFont(ofSize: 14)
-//        aText.font = .systemFont(ofSize: 14)
+//        aText.font = .boldSystemFont(ofSize: 14)
+        aText.font = .systemFont(ofSize: 14)
 //        panel.addSubview(aText)
         stackView.addSubview(aText)
         aText.translatesAutoresizingMaskIntoConstraints = false
@@ -307,7 +319,8 @@ class PhotoFinalizePanelView: PanelView{
 //        aText.layer.opacity = 0.5
         
         let aArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
-        aArrowBtn.tintColor = .white
+//        aArrowBtn.tintColor = .white
+        aArrowBtn.tintColor = .ddmDarkGrayColor
 //        panel.addSubview(aArrowBtn)
         stackView.addSubview(aArrowBtn)
         aArrowBtn.translatesAutoresizingMaskIntoConstraints = false
@@ -315,10 +328,10 @@ class PhotoFinalizePanelView: PanelView{
         aArrowBtn.centerYAnchor.constraint(equalTo: aGrid.centerYAnchor).isActive = true
         aArrowBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         aArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        aArrowBtn.layer.opacity = 0.5
+//        aArrowBtn.layer.opacity = 0.5
         
         let bGrid = UIView()
-        bGrid.backgroundColor = .ddmDarkColor
+        bGrid.backgroundColor = .ddmDarkBlack //.ddmDarkColor
 //        panel.addSubview(bGrid)
         stackView.addSubview(bGrid)
         bGrid.translatesAutoresizingMaskIntoConstraints = false
@@ -329,11 +342,11 @@ class PhotoFinalizePanelView: PanelView{
         bGrid.topAnchor.constraint(equalTo: aGrid.bottomAnchor, constant: 10).isActive = true //10
         bGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
         bGrid.layer.cornerRadius = 5
-        bGrid.layer.opacity = 0.1
+//        bGrid.layer.opacity = 0.1
         bGrid.bottomAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 0).isActive = true //10
         
         let bGridBG = UIView()
-        bGridBG.backgroundColor = .ddmDarkColor
+//        bGridBG.backgroundColor = .ddmDarkColor
 //        panel.addSubview(bGridBG)
         stackView.addSubview(bGridBG)
         bGridBG.translatesAutoresizingMaskIntoConstraints = false
@@ -356,19 +369,20 @@ class PhotoFinalizePanelView: PanelView{
         let bText = UILabel()
         bText.textAlignment = .left
         bText.textColor = .white
-        bText.font = .boldSystemFont(ofSize: 14)
-//        bText.font = .systemFont(ofSize: 14)
+//        bText.font = .boldSystemFont(ofSize: 14)
+        bText.font = .systemFont(ofSize: 14)
 //        panel.addSubview(bText)
         stackView.addSubview(bText)
         bText.translatesAutoresizingMaskIntoConstraints = false
         bText.centerYAnchor.constraint(equalTo: bGrid.centerYAnchor, constant: 0).isActive = true
         bText.leadingAnchor.constraint(equalTo: bGridBG.trailingAnchor, constant: 10).isActive = true
 //        bText.text = "Everyone Can See"
-        bText.text = "Everyone can see"
+        bText.text = "Public"
 //        bText.layer.opacity = 0.5
         
         let bArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
-        bArrowBtn.tintColor = .white
+//        bArrowBtn.tintColor = .white
+        bArrowBtn.tintColor = .ddmDarkGrayColor
 //        panel.addSubview(bArrowBtn)
         stackView.addSubview(bArrowBtn)
         bArrowBtn.translatesAutoresizingMaskIntoConstraints = false
@@ -376,7 +390,7 @@ class PhotoFinalizePanelView: PanelView{
         bArrowBtn.centerYAnchor.constraint(equalTo: bGrid.centerYAnchor).isActive = true
         bArrowBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         bArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        bArrowBtn.layer.opacity = 0.5
+//        bArrowBtn.layer.opacity = 0.5
         
         //test > upload button/save draft btn
         let draftBox = UIView()
@@ -384,10 +398,11 @@ class PhotoFinalizePanelView: PanelView{
         panel.addSubview(draftBox)
 //        stack1.addSubview(aSaveDraft)
         draftBox.translatesAutoresizingMaskIntoConstraints = false
-        draftBox.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        draftBox.heightAnchor.constraint(equalToConstant: 40).isActive = true //40
 //        draftBox.trailingAnchor.constraint(equalTo: aSaveDraft.leadingAnchor, constant: -10).isActive = true
 //        draftBox.centerYAnchor.constraint(equalTo: aSaveDraft.centerYAnchor).isActive = true
-        draftBox.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: -60).isActive = true
+//        draftBox.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: -60).isActive = true
+        draftBox.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -20).isActive = true
         draftBox.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 20).isActive = true
 //        draftBox.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -20).isActive = true
         draftBox.layer.cornerRadius = 10
@@ -429,7 +444,7 @@ class PhotoFinalizePanelView: PanelView{
 //        panel.addSubview(aSaveDraft)
         stack1.addSubview(aSaveDraft)
         aSaveDraft.translatesAutoresizingMaskIntoConstraints = false
-        aSaveDraft.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        aSaveDraft.heightAnchor.constraint(equalToConstant: 40).isActive = true //40
 //        aSaveDraft.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 20).isActive = true
 //        aSaveDraft.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: -50).isActive = true
         aSaveDraft.leadingAnchor.constraint(equalTo: stack1.leadingAnchor, constant: 0).isActive = true
@@ -457,7 +472,7 @@ class PhotoFinalizePanelView: PanelView{
 //        panel.addSubview(aUpload)
         stack2.addSubview(aUpload)
         aUpload.translatesAutoresizingMaskIntoConstraints = false
-        aUpload.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        aUpload.heightAnchor.constraint(equalToConstant: 40).isActive = true //40
 //        aUpload.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -20).isActive = true
 //        aUpload.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: -50).isActive = true
         aUpload.leadingAnchor.constraint(equalTo: stack2.leadingAnchor, constant: 10).isActive = true
@@ -492,7 +507,8 @@ class PhotoFinalizePanelView: PanelView{
         stack1View.distribution = .fillEqually
         panel.addSubview(stack1View)
         stack1View.translatesAutoresizingMaskIntoConstraints = false
-        stack1View.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: -60).isActive = true //-50
+//        stack1View.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: -60).isActive = true //-50
+        stack1View.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -20).isActive = true
         stack1View.heightAnchor.constraint(equalToConstant: 40).isActive = true //ori 60
         stack1View.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 20).isActive = true
         stack1View.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -20).isActive = true
@@ -501,7 +517,7 @@ class PhotoFinalizePanelView: PanelView{
 
     @objc func onPreviewPhotoClicked(gesture: UITapGestureRecognizer) {
         //test > video preview
-        openPhotoPreviewPanel()
+//        openPhotoPreviewPanel()
     }
     
     @objc func onBackPhotoFinalizePanelClicked(gesture: UITapGestureRecognizer) {
@@ -510,26 +526,36 @@ class PhotoFinalizePanelView: PanelView{
     
     @objc func onPhotoUploadNextClicked(gesture: UITapGestureRecognizer) {
         resignResponder()
-        aUpload.isHidden = true
-        aSpinner.startAnimating()
         
-        //test > close panel
-//        closeVideoFinalizePanel(isAnimated: true)
-        
-        DataFetchManager.shared.sendData(id: "u") { [weak self]result in
-            switch result {
-                case .success(let l):
+        let isSignedIn = SignInManager.shared.getStatus()
+        if(isSignedIn) {
+            aUpload.isHidden = true
+            aSpinner.startAnimating()
+            
+            //test > close panel
+    //        closeVideoFinalizePanel(isAnimated: true)
+            
+            DataFetchManager.shared.sendData(id: "u") { [weak self]result in
+                switch result {
+                    case .success(let l):
 
-                //update UI on main thread
-                DispatchQueue.main.async {
+                    //update UI on main thread
+                    DispatchQueue.main.async {
 
-                    self?.closePhotoFinalizePanel(isAnimated: true)
+    //                    self?.closePhotoFinalizePanel(isAnimated: true)
+                        
+                        //test
+                        self?.delegate?.didPhotoFinalizeClickUploadSuccess()
+                    }
+
+                    case .failure(_):
+                        print("api fail")
+                        break
                 }
-
-                case .failure(_):
-                    print("api fail")
-                    break
             }
+        }
+        else {
+//            delegate?.didVideoCreatorClickSignIn()
         }
     }
     
@@ -549,7 +575,6 @@ class PhotoFinalizePanelView: PanelView{
     @objc func onDraftBoxClicked(gesture: UITapGestureRecognizer) {
         resignResponder()
 //        openPhotoDraftPanel()
-
     }
     
     @objc func onAGridClicked(gesture: UITapGestureRecognizer) {
@@ -586,25 +611,25 @@ class PhotoFinalizePanelView: PanelView{
         self.endEditing(true)
     }
     
-    func openPhotoDraftPanel() {
-        let draftPanel = PhotoDraftPanelView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
-        panel.addSubview(draftPanel)
-        draftPanel.translatesAutoresizingMaskIntoConstraints = false
-        draftPanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
-        draftPanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
-        draftPanel.delegate = self
-        draftPanel.initialize()
-    }
+//    func openPhotoDraftPanel() {
+//        let draftPanel = PhotoDraftPanelView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
+//        panel.addSubview(draftPanel)
+//        draftPanel.translatesAutoresizingMaskIntoConstraints = false
+//        draftPanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
+//        draftPanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
+//        draftPanel.delegate = self
+//        draftPanel.initialize()
+//    }
 
-    func openPhotoPreviewPanel() {
-        let previewPanel = PhotoPreviewPanelView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
-        panel.addSubview(previewPanel)
-        previewPanel.translatesAutoresizingMaskIntoConstraints = false
-        previewPanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
-        previewPanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
-        previewPanel.delegate = self
-        previewPanel.initialize()
-    }
+//    func openPhotoPreviewPanel() {
+//        let previewPanel = PhotoPreviewPanelView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
+//        panel.addSubview(previewPanel)
+//        previewPanel.translatesAutoresizingMaskIntoConstraints = false
+//        previewPanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
+//        previewPanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
+//        previewPanel.delegate = self
+//        previewPanel.initialize()
+//    }
     
     //test > location select ui change
     func showLocationSelected(l : String) {
@@ -666,9 +691,9 @@ extension PhotoFinalizePanelView: UITextViewDelegate {
     }
 }
 
-extension PhotoFinalizePanelView: PhotoDraftPanelDelegate{
-    func didClickClosePhotoDraftPanel() {
-        
-//        backPage(isCurrentPageScrollable: false)
-    }
-}
+//extension PhotoFinalizePanelView: PhotoDraftPanelDelegate{
+//    func didClickClosePhotoDraftPanel() {
+//        
+////        backPage(isCurrentPageScrollable: false)
+//    }
+//}

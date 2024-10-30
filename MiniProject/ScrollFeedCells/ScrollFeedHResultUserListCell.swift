@@ -11,6 +11,7 @@ import UIKit
 protocol ScrollFeedHResultListCellDelegate : AnyObject {
     
     func didScrollFeedHResultClickSignIn()
+    func didScrollFeedHResultResignKeyboard()
 }
 class ScrollFeedHResultUserListCell: ScrollFeedHResultListCell {
     
@@ -314,6 +315,9 @@ extension ScrollFeedHResultUserListCell: UICollectionViewDataSource {
 extension ScrollFeedHResultUserListCell: HResultListViewDelegate{
 
     func didHResultClickUser(){
+        //test > additional delegate
+        bDelegate?.didScrollFeedHResultResignKeyboard()
+        
         aDelegate?.sfcDidClickVcvClickUser()
     }
     func didHResultClickPlace(){

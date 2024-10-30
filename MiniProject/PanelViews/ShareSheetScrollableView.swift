@@ -10,7 +10,8 @@ import UIKit
 import SDWebImage
 
 protocol ShareSheetScrollableDelegate : AnyObject {
-    func didShareSheetClick()
+    func didShareSheetClickCreate(type: String)
+    func didShareSheetClickDelete()
     func didShareSheetClickClosePanel()
     func didShareSheetFinishClosePanel()
 }
@@ -300,14 +301,14 @@ extension ShareSheetScrollableView: UICollectionViewDataSource {
             
             //close panel for more actions like delete item
             self.removeFromSuperview()
-            delegate?.didShareSheetClick()
+            delegate?.didShareSheetClickDelete()
             
         } else if collectionView == bVCV {
             print("vgrid b selected: \(bVDataList[indexPath.row])")
             
             //close panel for more actions like delete item
             self.removeFromSuperview()
-            delegate?.didShareSheetClick()
+            delegate?.didShareSheetClickCreate(type: "post")
         }
      }
     

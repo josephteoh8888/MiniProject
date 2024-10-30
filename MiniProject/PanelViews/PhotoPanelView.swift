@@ -1802,7 +1802,38 @@ extension ViewController: PhotoPanelDelegate{
 }
 
 extension PhotoPanelView: ShareSheetScrollableDelegate{
-    func didShareSheetClick(){
+    func didShareSheetClickCreate(type: String){
+        //test > for deleting item
+        if(!pageList.isEmpty) {
+            pageList.remove(at: pageList.count - 1)
+            
+            if(pageList.count > 0) {
+                let lastPage = pageList[pageList.count - 1]
+                if let a = lastPage as? CommentScrollableView {
+                    print("lastpagelist e \(a.selectedItemIdx)")
+                    let idx = a.selectedItemIdx
+                    
+                    //test > create new post
+                    if(type == "post") {
+//                        delegate?.didClickPostPanelVcvClickCreatePost()
+                    }
+                }
+                else if let b = lastPage as? ShareSheetScrollableView {
+                    print("lastpagelist f")
+                }
+            } else {
+                if(!self.feedList.isEmpty) {
+                    let feed = feedList[currentIndex]
+                    
+                    //test > create new post
+                    if(type == "post") {
+//                        delegate?.didClickPostPanelVcvClickCreatePost()
+                    }
+                }
+            }
+        }
+    }
+    func didShareSheetClickDelete(){
         //test > for deleting item
         if(!pageList.isEmpty) {
             pageList.remove(at: pageList.count - 1)

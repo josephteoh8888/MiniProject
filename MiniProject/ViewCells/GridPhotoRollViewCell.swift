@@ -10,13 +10,20 @@ import UIKit
 import SDWebImage
 import Photos
 
+protocol GridAssetDelegate : AnyObject {
+    func gridAssetCellDidClickAsset(vc: UICollectionViewCell)
+}
+
 class GridPhotoRollViewCell: UICollectionViewCell {
     static let identifier = "GridPhotoRollViewCell"
     var gifImage = SDAnimatedImageView()
     
     //test
     var photoImage = UIImageView()
-//    weak var aDelegate : GridViewCellDelegate?
+    weak var aDelegate : GridAssetDelegate?
+    
+    let selector = UIView()
+    let aSelectorNumber = UILabel()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -32,20 +39,6 @@ class GridPhotoRollViewCell: UICollectionViewCell {
     }
     
     private func addSubViews() {
-//        contentView.addSubview(videoContainer)
-        
-//        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
-//        gifImage.contentMode = .scaleAspectFill
-//        gifImage.clipsToBounds = true
-//        gifImage.sd_setImage(with: imageUrl)
-//        gifImage.layer.cornerRadius = 5
-//        contentView.addSubview(gifImage)
-//        gifImage.translatesAutoresizingMaskIntoConstraints = false
-//        gifImage.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-//        gifImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
-//        gifImage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
-//        gifImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
-
         contentView.addSubview(photoImage)
         photoImage.contentMode = .scaleAspectFill
         photoImage.clipsToBounds = true
@@ -55,18 +48,82 @@ class GridPhotoRollViewCell: UICollectionViewCell {
         photoImage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
         photoImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
         photoImage.layer.cornerRadius = 5
-//        videoImage.isUserInteractionEnabled = true
-//        videoImage.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onVideoSelectClicked)))
+        photoImage.backgroundColor = .ddmDarkColor
+        photoImage.isUserInteractionEnabled = true
+        photoImage.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onVideoSelectClicked)))
+        
+//        let selector = UIView()
+        selector.backgroundColor = .yellow
+        contentView.addSubview(selector)
+        selector.translatesAutoresizingMaskIntoConstraints = false
+//        selector.leadingAnchor.constraint(equalTo: photoImage.leadingAnchor, constant: 20).isActive = true
+        selector.trailingAnchor.constraint(equalTo: photoImage.trailingAnchor, constant: -5).isActive = true
+        selector.topAnchor.constraint(equalTo: photoImage.topAnchor, constant: 5).isActive = true //10
+        selector.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        selector.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        selector.layer.cornerRadius = 10
+//        selector.layer.opacity = 0.5
+//        selector.layer.borderWidth = 1.0 //2
+//        selector.layer.borderColor = UIColor.white.cgColor //default
+        selector.isHidden = true
+        
+//        let aSelectorNumber = UILabel()
+        aSelectorNumber.textAlignment = .center
+//        aSelectorNumber.textColor = .white
+        aSelectorNumber.textColor = .black
+        aSelectorNumber.font = .boldSystemFont(ofSize: 11) //12
+//        aSelectorNumber.font = .systemFont(ofSize: 12)
+        selector.addSubview(aSelectorNumber)
+        aSelectorNumber.translatesAutoresizingMaskIntoConstraints = false
+        aSelectorNumber.centerXAnchor.constraint(equalTo: selector.centerXAnchor, constant: 0).isActive = true
+        aSelectorNumber.centerYAnchor.constraint(equalTo: selector.centerYAnchor, constant: 0).isActive = true
+        aSelectorNumber.text = ""
     }
-//
-//    @objc func onVideoSelectClicked(gesture: UITapGestureRecognizer) {
-//
+
+    @objc func onVideoSelectClicked(gesture: UITapGestureRecognizer) {
+        aDelegate?.gridAssetCellDidClickAsset(vc: self)
+    }
+    
+    func refreshSelectorOrder(gridAsset: GridAssetData) {
+        if(gridAsset.selectedOrder > -1) {
+            self.selector.isHidden = false
+            let order = gridAsset.selectedOrder + 1
+            self.aSelectorNumber.text = String(order)
+        }
+        else {
+            selector.isHidden = true
+            self.aSelectorNumber.text = ""
+        }
+    }
+    
+//    func configure(with model: PHAsset) {
+//        PHCachingImageManager.default().requestImage(for: model, targetSize: CGSize(width: 200, height: 200), contentMode: .aspectFill, options: nil) { (photo, _) in
+//            self.photoImage.image = photo
+//        }
 //    }
     
-    func configure(with model: PHAsset) {
-        PHCachingImageManager.default().requestImage(for: model, targetSize: CGSize(width: 200, height: 200), contentMode: .aspectFill, options: nil) { (photo, _) in
-            self.photoImage.image = photo
+    //test 2 > new data model for asset to include selection order
+    func configure(with gridAsset: GridAssetData) {
+        if let m = gridAsset.model {
+            PHCachingImageManager.default().requestImage(for: m, targetSize: CGSize(width: 200, height: 200), contentMode: .aspectFill, options: nil) { (photo, _) in
+                self.photoImage.image = photo
+                
+                if(gridAsset.selectedOrder > -1) {
+                    self.selector.isHidden = false
+                    let order = gridAsset.selectedOrder + 1
+                    self.aSelectorNumber.text = String(order)
+                }
+            }
         }
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        self.photoImage.image = nil
+        
+        self.selector.isHidden = true
+        self.aSelectorNumber.text = ""
     }
 }
 

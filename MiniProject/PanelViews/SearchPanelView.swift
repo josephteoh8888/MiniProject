@@ -822,6 +822,9 @@ extension SearchPanelView: UIScrollViewDelegate {
                 }
             }
             currentTabSelectLeadingCons = xWidth
+            
+            //test > remove keyboard when user scroll off
+            resignResponder()
         }
         //*
     }
@@ -932,7 +935,8 @@ extension SearchPanelView: UIScrollViewDelegate {
 
 extension SearchPanelView: ScrollFeedCellDelegate {
     func sfcWillBeginDragging(offsetY: CGFloat) {
-
+        //test > remove keyboard when user scroll off
+        resignResponder()
     }
     func sfcScrollViewDidScroll(offsetY: CGFloat) {
 
@@ -974,21 +978,26 @@ extension SearchPanelView: ScrollFeedCellDelegate {
     }
 
     func sfcDidClickVcvClickUser() {
+        
         //test
         delegate?.didSearchClickUser()
     }
     func sfcDidClickVcvClickPlace() {
+        
         //test
         delegate?.didSearchClickPlace()
     }
     func sfcDidClickVcvClickSound() {
+        
         //test
         delegate?.didSearchClickSound()
     }
     func sfcDidClickVcvClickPost() {
+        
         delegate?.didSearchClickPost()
     }
     func sfcDidClickVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+        
         //test
         if(!self.feedList.isEmpty) {
             let b = self.feedList[self.currentIndex]
@@ -1000,6 +1009,7 @@ extension SearchPanelView: ScrollFeedCellDelegate {
         }
     }
     func sfcDidClickVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+        
         //test
         if(!self.feedList.isEmpty) {
             let b = self.feedList[self.currentIndex]
@@ -1040,7 +1050,13 @@ extension SearchPanelView: ScrollFeedCellDelegate {
 //test > additional delegate
 extension SearchPanelView: ScrollFeedHResultListCellDelegate {
     func didScrollFeedHResultClickSignIn() {
+        resignResponder()
+        
         delegate?.didSearchClickSignIn()
+    }
+    
+    func didScrollFeedHResultResignKeyboard(){
+        resignResponder()
     }
 }
 

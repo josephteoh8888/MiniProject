@@ -44,6 +44,10 @@ class PostPhotoContentCell: ContentCell {
     
     weak var aDelegate : ContentCellDelegate?
     
+    //test
+    var current_p_s = 0
+    var initial_x = 0.0 //test for scrollview x-scroll direction
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -158,6 +162,9 @@ class PostPhotoContentCell: ContentCell {
         
         let xOffset = CGFloat(p) * viewWidth
         scrollView.setContentOffset(CGPoint(x: xOffset, y: 0), animated: false)
+        
+        //test
+        current_p_s = p
     }
     
     func hideCell() {
@@ -200,13 +207,32 @@ extension PostPhotoContentCell: UIScrollViewDelegate {
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         print("postphoto scrollview begin: \(scrollView.contentOffset.y)")
         aDelegate?.contentCellIsScrollCarousel(isScroll: true)
+        
+        //test
+        initial_x = scrollView.contentOffset.x
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let x = scrollView.contentOffset.x
         let y = scrollView.contentOffset.y
         print("postphoto scrollview scroll: \(x), \(y)")
-        aDelegate?.contentCellIsScrollCarousel(isScroll: true)
+//        aDelegate?.contentCellIsScrollCarousel(isScroll: true)
+        
+        //test
+        let x_diff = x - initial_x
+        print("postphoto scrollview scroll: \(x_diff)")
+        if(vDataList.count > 1) {
+            if(current_p_s == 0) {
+                if(x_diff < 0) {
+                    aDelegate?.contentCellIsScrollCarousel(isScroll: false)
+                }
+            }
+            else if (current_p_s == vDataList.count - 1) {
+                if(x_diff > 0) {
+                    aDelegate?.contentCellIsScrollCarousel(isScroll: false)
+                }
+            }
+        }
     }
 
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
@@ -224,6 +250,9 @@ extension PostPhotoContentCell: UIScrollViewDelegate {
         
         //test > for carousel page
         aDelegate?.contentCellCarouselIdx(cc: self, idx: tempCurrentIndex)
+        
+        //test
+        current_p_s = tempCurrentIndex
     }
 
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
@@ -250,6 +279,10 @@ class PostPhotoShotContentCell: ContentCell {
     let a2UserPhoto = SDAnimatedImageView()
     
     weak var aDelegate : ContentCellDelegate?
+    
+    //test
+    var current_p_s = 0
+    var initial_x = 0.0 //test for scrollview x-scroll direction
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -541,6 +574,9 @@ class PostPhotoShotContentCell: ContentCell {
         
         let xOffset = CGFloat(p) * viewWidth
         scrollView.setContentOffset(CGPoint(x: xOffset, y: 0), animated: false)
+        
+        //test
+        current_p_s = p
     }
     
     func hideCell() {
@@ -592,13 +628,32 @@ extension PostPhotoShotContentCell: UIScrollViewDelegate {
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         print("postphoto scrollview begin: \(scrollView.contentOffset.y)")
         aDelegate?.contentCellIsScrollCarousel(isScroll: true)
+        
+        //test
+        initial_x = scrollView.contentOffset.x
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let x = scrollView.contentOffset.x
         let y = scrollView.contentOffset.y
         print("postphoto scrollview scroll: \(x), \(y)")
-        aDelegate?.contentCellIsScrollCarousel(isScroll: true)
+//        aDelegate?.contentCellIsScrollCarousel(isScroll: true)
+        
+        //test
+        let x_diff = x - initial_x
+        print("postphoto scrollview scroll: \(x_diff)")
+        if(vDataList.count > 1) {
+            if(current_p_s == 0) {
+                if(x_diff < 0) {
+                    aDelegate?.contentCellIsScrollCarousel(isScroll: false)
+                }
+            }
+            else if (current_p_s == vDataList.count - 1) {
+                if(x_diff > 0) {
+                    aDelegate?.contentCellIsScrollCarousel(isScroll: false)
+                }
+            }
+        }
     }
 
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
@@ -616,6 +671,9 @@ extension PostPhotoShotContentCell: UIScrollViewDelegate {
         
         //test > for carousel page
         aDelegate?.contentCellCarouselIdx(cc: self, idx: tempCurrentIndex)
+        
+        //test
+        current_p_s = tempCurrentIndex
     }
 
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {

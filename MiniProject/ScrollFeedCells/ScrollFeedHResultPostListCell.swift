@@ -339,6 +339,9 @@ extension ScrollFeedHResultPostListCell: UICollectionViewDataSource {
 extension ScrollFeedHResultPostListCell: HResultListViewDelegate{
 
     func didHResultClickUser(){
+        //test > additional delegate
+        bDelegate?.didScrollFeedHResultResignKeyboard()
+        
         aDelegate?.sfcDidClickVcvClickUser()
     }
     func didHResultClickPlace(){
@@ -357,6 +360,9 @@ extension ScrollFeedHResultPostListCell: HResultListViewDelegate{
         
     }
     func didHResultClickPost(){
+        //test > additional delegate
+        bDelegate?.didScrollFeedHResultResignKeyboard()
+        
         aDelegate?.sfcDidClickVcvClickPost()
     }
     func didHResultClickSignIn(){

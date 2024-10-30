@@ -97,7 +97,8 @@ class LoginPanelView: PanelView{
         aBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true //ori: 40
         aBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
         aBtn.leadingAnchor.constraint(equalTo: aPanel.leadingAnchor, constant: 10).isActive = true
-        aBtn.topAnchor.constraint(equalTo: aPanel.topAnchor, constant: 50).isActive = true
+//        aBtn.topAnchor.constraint(equalTo: aPanel.topAnchor, constant: 50).isActive = true
+        aBtn.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
         aBtn.layer.cornerRadius = 20
         aBtn.isUserInteractionEnabled = true
         aBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBackLoginPanelClicked)))
@@ -112,19 +113,31 @@ class LoginPanelView: PanelView{
         bMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
 //        bMiniBtn.layer.opacity = 0.3
         
+        //test
+        let aLoggedBox = UIView()
+        aPanel.addSubview(aLoggedBox)
+        aLoggedBox.translatesAutoresizingMaskIntoConstraints = false
+//        aLoggedBox.topAnchor.constraint(equalTo: aSemiTransparentTextBox.topAnchor, constant: 0).isActive = true
+        aLoggedBox.centerYAnchor.constraint(equalTo: aPanel.centerYAnchor, constant: -60).isActive = true //-90
+        aLoggedBox.leadingAnchor.constraint(equalTo: aPanel.leadingAnchor).isActive = true
+        aLoggedBox.trailingAnchor.constraint(equalTo: aPanel.trailingAnchor).isActive = true
+        
         let aLoginText = UILabel()
         aLoginText.textAlignment = .center
         aLoginText.textColor = .white
 //        aLoginText.textColor = .ddmBlackOverlayColor
         aLoginText.font = .boldSystemFont(ofSize: 18)
-        aPanel.addSubview(aLoginText)
+//        aPanel.addSubview(aLoginText)
+        aLoggedBox.addSubview(aLoginText)
         aLoginText.translatesAutoresizingMaskIntoConstraints = false
-        aLoginText.topAnchor.constraint(equalTo: aPanel.topAnchor, constant: 250).isActive = true
+//        aLoginText.topAnchor.constraint(equalTo: aPanel.topAnchor, constant: 250).isActive = true
+        aLoginText.topAnchor.constraint(equalTo: aLoggedBox.topAnchor).isActive = true //test
         aLoginText.centerXAnchor.constraint(equalTo: aPanel.centerXAnchor, constant: 0).isActive = true
         aLoginText.text = "Log in to Mini" //default: Around You
         
         //test > add spinner when login with fb/google
-        aPanel.addSubview(aSpinner)
+//        aPanel.addSubview(aSpinner)
+        aLoggedBox.addSubview(aSpinner)
         aSpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
         aSpinner.translatesAutoresizingMaskIntoConstraints = false
         aSpinner.topAnchor.constraint(equalTo: aLoginText.bottomAnchor, constant: 40).isActive = true  //0
@@ -133,12 +146,14 @@ class LoginPanelView: PanelView{
         aSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
         
 //        let rContainer = UIView()
-        aPanel.addSubview(aContainer)
+//        aPanel.addSubview(aContainer)
+        aLoggedBox.addSubview(aContainer)
+//        aContainer.backgroundColor = .red //test
         aContainer.translatesAutoresizingMaskIntoConstraints = false
         aContainer.leadingAnchor.constraint(equalTo: aPanel.leadingAnchor, constant: 0).isActive = true
         aContainer.trailingAnchor.constraint(equalTo: aPanel.trailingAnchor, constant: 0).isActive = true
         aContainer.topAnchor.constraint(equalTo: aLoginText.bottomAnchor, constant: 40).isActive = true
-        aContainer.bottomAnchor.constraint(equalTo: aPanel.bottomAnchor, constant: 0).isActive = true
+        aContainer.bottomAnchor.constraint(equalTo: aLoggedBox.bottomAnchor, constant: 0).isActive = true
         
         let gBtn = UIView()
 //        aPanel.addSubview(gBtn)
@@ -346,6 +361,7 @@ class LoginPanelView: PanelView{
         aFollow.layer.cornerRadius = 10
         aFollow.isUserInteractionEnabled = true
         aFollow.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onLoginDenyClicked)))
+        aFollow.bottomAnchor.constraint(equalTo: aContainer.bottomAnchor, constant: 0).isActive = true
 
         let aFollowText = UILabel()
         aFollowText.textAlignment = .center
@@ -380,7 +396,8 @@ class LoginPanelView: PanelView{
         aABtn.widthAnchor.constraint(equalToConstant: 40).isActive = true //ori: 40
         aABtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
         aABtn.leadingAnchor.constraint(equalTo: bPanel.leadingAnchor, constant: 10).isActive = true
-        aABtn.topAnchor.constraint(equalTo: bPanel.topAnchor, constant: 50).isActive = true
+//        aABtn.topAnchor.constraint(equalTo: bPanel.topAnchor, constant: 50).isActive = true
+        aABtn.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
         aABtn.layer.cornerRadius = 20
         aABtn.isUserInteractionEnabled = true
         aABtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBackSignupPanelClicked)))
@@ -395,19 +412,31 @@ class LoginPanelView: PanelView{
         bBMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
 //        bBMiniBtn.layer.opacity = 0.3
         
+        //test
+        let bLoggedBox = UIView()
+        bPanel.addSubview(bLoggedBox)
+        bLoggedBox.translatesAutoresizingMaskIntoConstraints = false
+//        bLoggedBox.topAnchor.constraint(equalTo: aSemiTransparentTextBox.topAnchor, constant: 0).isActive = true
+        bLoggedBox.centerYAnchor.constraint(equalTo: bPanel.centerYAnchor, constant: -60).isActive = true //-90
+        bLoggedBox.leadingAnchor.constraint(equalTo: bPanel.leadingAnchor).isActive = true
+        bLoggedBox.trailingAnchor.constraint(equalTo: bPanel.trailingAnchor).isActive = true
+        
         let aALoginText = UILabel()
         aALoginText.textAlignment = .center
         aALoginText.textColor = .white
 //        aLoginText.textColor = .ddmBlackOverlayColor
         aALoginText.font = .boldSystemFont(ofSize: 18)
-        bPanel.addSubview(aALoginText)
+//        bPanel.addSubview(aALoginText)
+        bLoggedBox.addSubview(aALoginText)
         aALoginText.translatesAutoresizingMaskIntoConstraints = false
-        aALoginText.topAnchor.constraint(equalTo: bPanel.topAnchor, constant: 250).isActive = true
+//        aALoginText.topAnchor.constraint(equalTo: bPanel.topAnchor, constant: 250).isActive = true
+        aALoginText.topAnchor.constraint(equalTo: bLoggedBox.topAnchor).isActive = true //test
         aALoginText.centerXAnchor.constraint(equalTo: bPanel.centerXAnchor, constant: 0).isActive = true
         aALoginText.text = "Sign up for Mini" //default: Around You
         
         let gGBtn = UIView()
-        bPanel.addSubview(gGBtn)
+//        bPanel.addSubview(gGBtn)
+        bLoggedBox.addSubview(gGBtn)
         gGBtn.backgroundColor = .ddmDarkColor
 //        gBtn.backgroundColor = .yellow
         gGBtn.translatesAutoresizingMaskIntoConstraints = false
@@ -424,7 +453,8 @@ class LoginPanelView: PanelView{
 //        gGrid.backgroundColor = .ddmDarkColor
 //        gGrid.backgroundColor = .blue
         gGGrid.image = UIImage(named:"icon_round_mail")?.withRenderingMode(.alwaysTemplate)
-        bPanel.addSubview(gGGrid)
+//        bPanel.addSubview(gGGrid)
+        bLoggedBox.addSubview(gGGrid)
         gGGrid.translatesAutoresizingMaskIntoConstraints = false
         gGGrid.leadingAnchor.constraint(equalTo: gGBtn.leadingAnchor, constant: 15).isActive = true
         gGGrid.heightAnchor.constraint(equalToConstant: 24).isActive = true
@@ -439,7 +469,8 @@ class LoginPanelView: PanelView{
         pTextField.backgroundColor = .clear
 //        pTextField.backgroundColor = .red
         pTextField.font = .systemFont(ofSize: 14)
-        bPanel.addSubview(pTextField)
+//        bPanel.addSubview(pTextField)
+        bLoggedBox.addSubview(pTextField)
         pTextField.translatesAutoresizingMaskIntoConstraints = false
         pTextField.leadingAnchor.constraint(equalTo: gGBtn.leadingAnchor, constant: 70).isActive = true //10
         pTextField.trailingAnchor.constraint(equalTo: gGBtn.trailingAnchor, constant: -10).isActive = true
@@ -451,12 +482,15 @@ class LoginPanelView: PanelView{
         pTextField.placeholder = "Enter email address"
         
 //        let rContainer = UIView()
-        bPanel.addSubview(rContainer)
+//        bPanel.addSubview(rContainer)
+        bLoggedBox.addSubview(rContainer)
+//        rContainer.backgroundColor = .yellow
         rContainer.translatesAutoresizingMaskIntoConstraints = false
         rContainer.leadingAnchor.constraint(equalTo: bPanel.leadingAnchor, constant: 0).isActive = true
         rContainer.trailingAnchor.constraint(equalTo: bPanel.trailingAnchor, constant: 0).isActive = true
         rContainer.topAnchor.constraint(equalTo: gGBtn.bottomAnchor, constant: 30).isActive = true
-        rContainer.bottomAnchor.constraint(equalTo: bPanel.bottomAnchor, constant: 0).isActive = true
+//        rContainer.bottomAnchor.constraint(equalTo: bPanel.bottomAnchor, constant: 0).isActive = true
+        rContainer.bottomAnchor.constraint(equalTo: bLoggedBox.bottomAnchor, constant: 0).isActive = true
         
         let hHBtn = UIView()
 //        bPanel.addSubview(hHBtn)
@@ -464,10 +498,9 @@ class LoginPanelView: PanelView{
         hHBtn.backgroundColor = .yellow
 //        hHBtn.backgroundColor = .yellow
         hHBtn.translatesAutoresizingMaskIntoConstraints = false
-//        hHBtn.leadingAnchor.constraint(equalTo: bPanel.leadingAnchor, constant: 40).isActive = true
-//        hHBtn.trailingAnchor.constraint(equalTo: bPanel.trailingAnchor, constant: -40).isActive = true
         hHBtn.leadingAnchor.constraint(equalTo: rContainer.leadingAnchor, constant: 40).isActive = true
         hHBtn.trailingAnchor.constraint(equalTo: rContainer.trailingAnchor, constant: -40).isActive = true
+//        hHBtn.centerXAnchor.constraint(equalTo: rContainer.centerXAnchor).isActive = true
         hHBtn.topAnchor.constraint(equalTo: gGBtn.bottomAnchor, constant: 30).isActive = true
         hHBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
         hHBtn.layer.cornerRadius = 10
@@ -597,6 +630,7 @@ class LoginPanelView: PanelView{
         fDenyText.text = "Login"
         fDenyText.isUserInteractionEnabled = true
         fDenyText.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onSignupDenyClicked)))
+        fDenyText.bottomAnchor.constraint(equalTo: rContainer.bottomAnchor, constant: 0).isActive = true
         
 //        let qContainer = UIView()
         bPanel.addSubview(qContainer)
@@ -702,7 +736,8 @@ class LoginPanelView: PanelView{
         aCBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true //ori: 40
         aCBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
         aCBtn.leadingAnchor.constraint(equalTo: cPanel.leadingAnchor, constant: 10).isActive = true
-        aCBtn.topAnchor.constraint(equalTo: cPanel.topAnchor, constant: 50).isActive = true
+//        aCBtn.topAnchor.constraint(equalTo: cPanel.topAnchor, constant: 50).isActive = true
+        aCBtn.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
         aCBtn.layer.cornerRadius = 20
         aCBtn.isUserInteractionEnabled = true
         aCBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBackCPanelClicked)))
@@ -717,19 +752,32 @@ class LoginPanelView: PanelView{
         bCMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
 //        bCMiniBtn.layer.opacity = 0.3
         
+        //test
+        let cLoggedBox = UIView()
+//        cLoggedBox.backgroundColor = .red
+        cPanel.addSubview(cLoggedBox)
+        cLoggedBox.translatesAutoresizingMaskIntoConstraints = false
+//        cLoggedBox.topAnchor.constraint(equalTo: aSemiTransparentTextBox.topAnchor, constant: 0).isActive = true
+        cLoggedBox.centerYAnchor.constraint(equalTo: cPanel.centerYAnchor, constant: -90).isActive = true 
+        cLoggedBox.leadingAnchor.constraint(equalTo: cPanel.leadingAnchor).isActive = true
+        cLoggedBox.trailingAnchor.constraint(equalTo: cPanel.trailingAnchor).isActive = true
+        
         let aCLoginText = UILabel()
         aCLoginText.textAlignment = .center
         aCLoginText.textColor = .white
 //        aCLoginText.textColor = .ddmBlackOverlayColor
         aCLoginText.font = .boldSystemFont(ofSize: 18)
-        cPanel.addSubview(aCLoginText)
+//        cPanel.addSubview(aCLoginText)
+        cLoggedBox.addSubview(aCLoginText)
         aCLoginText.translatesAutoresizingMaskIntoConstraints = false
-        aCLoginText.topAnchor.constraint(equalTo: cPanel.topAnchor, constant: 250).isActive = true
+//        aCLoginText.topAnchor.constraint(equalTo: cPanel.topAnchor, constant: 250).isActive = true
+        aCLoginText.topAnchor.constraint(equalTo: cLoggedBox.topAnchor, constant: 0).isActive = true
         aCLoginText.centerXAnchor.constraint(equalTo: cPanel.centerXAnchor, constant: 0).isActive = true
         aCLoginText.text = "Login with Email"
         
         let gCBtn = UIView()
-        cPanel.addSubview(gCBtn)
+//        cPanel.addSubview(gCBtn)
+        cLoggedBox.addSubview(gCBtn)
         gCBtn.backgroundColor = .ddmDarkColor
 //        gCBtn.backgroundColor = .yellow
         gCBtn.translatesAutoresizingMaskIntoConstraints = false
@@ -746,7 +794,8 @@ class LoginPanelView: PanelView{
 //        gGrid.backgroundColor = .ddmDarkColor
 //        gGrid.backgroundColor = .blue
         gCGrid.image = UIImage(named:"icon_round_mail")?.withRenderingMode(.alwaysTemplate)
-        cPanel.addSubview(gCGrid)
+//        cPanel.addSubview(gCGrid)
+        cLoggedBox.addSubview(gCGrid)
         gCGrid.translatesAutoresizingMaskIntoConstraints = false
         gCGrid.leadingAnchor.constraint(equalTo: gCBtn.leadingAnchor, constant: 15).isActive = true
         gCGrid.heightAnchor.constraint(equalToConstant: 24).isActive = true
@@ -761,7 +810,8 @@ class LoginPanelView: PanelView{
         sTextField.backgroundColor = .clear
 //        pTextField.backgroundColor = .red
         sTextField.font = .systemFont(ofSize: 14)
-        cPanel.addSubview(sTextField)
+//        cPanel.addSubview(sTextField)
+        cLoggedBox.addSubview(sTextField)
         sTextField.translatesAutoresizingMaskIntoConstraints = false
         sTextField.leadingAnchor.constraint(equalTo: gCBtn.leadingAnchor, constant: 70).isActive = true //10
         sTextField.trailingAnchor.constraint(equalTo: gCBtn.trailingAnchor, constant: -10).isActive = true
@@ -773,7 +823,8 @@ class LoginPanelView: PanelView{
         sTextField.placeholder = "Enter email address"
         
         let gCHBtn = UIView()
-        cPanel.addSubview(gCHBtn)
+//        cPanel.addSubview(gCHBtn)
+        cLoggedBox.addSubview(gCHBtn)
         gCHBtn.backgroundColor = .ddmDarkColor
 //        gCHBtn.backgroundColor = .yellow
         gCHBtn.translatesAutoresizingMaskIntoConstraints = false
@@ -789,7 +840,8 @@ class LoginPanelView: PanelView{
 //        gCHGrid.backgroundColor = .ddmDarkColor
 //        gCHGrid.backgroundColor = .blue
         gCHGrid.image = UIImage(named:"icon_round_key")?.withRenderingMode(.alwaysTemplate)
-        cPanel.addSubview(gCHGrid)
+//        cPanel.addSubview(gCHGrid)
+        cLoggedBox.addSubview(gCHGrid)
         gCHGrid.translatesAutoresizingMaskIntoConstraints = false
         gCHGrid.leadingAnchor.constraint(equalTo: gCHBtn.leadingAnchor, constant: 15).isActive = true
         gCHGrid.heightAnchor.constraint(equalToConstant: 24).isActive = true
@@ -804,7 +856,8 @@ class LoginPanelView: PanelView{
         tTextField.backgroundColor = .clear
 //        tTextField.backgroundColor = .red
         tTextField.font = .systemFont(ofSize: 14)
-        cPanel.addSubview(tTextField)
+//        cPanel.addSubview(tTextField)
+        cLoggedBox.addSubview(tTextField)
         tTextField.translatesAutoresizingMaskIntoConstraints = false
         tTextField.leadingAnchor.constraint(equalTo: gCHBtn.leadingAnchor, constant: 70).isActive = true //10
         tTextField.trailingAnchor.constraint(equalTo: gCHBtn.trailingAnchor, constant: -10).isActive = true
@@ -817,7 +870,8 @@ class LoginPanelView: PanelView{
         
 //        let qCHHBtn = UIView()
 //        bPanel.addSubview(hHBtn)
-        cPanel.addSubview(qCHHBtn)
+//        cPanel.addSubview(qCHHBtn)
+        cLoggedBox.addSubview(qCHHBtn)
         qCHHBtn.backgroundColor = .yellow
 //        qHHBtn.backgroundColor = .yellow
         qCHHBtn.translatesAutoresizingMaskIntoConstraints = false
@@ -829,6 +883,7 @@ class LoginPanelView: PanelView{
         qCHHBtn.isUserInteractionEnabled = true
         qCHHBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onSignupCQHProceedClicked)))
 //        qHHBtn.layer.opacity = 0.3 //0.3
+        qCHHBtn.bottomAnchor.constraint(equalTo: cLoggedBox.bottomAnchor, constant: 0).isActive = true
 
         let qCHHBtnText = UILabel()
         qCHHBtnText.textAlignment = .center
@@ -836,7 +891,8 @@ class LoginPanelView: PanelView{
 //        hHBtnText.textColor = .ddmBlackOverlayColor
         qCHHBtnText.font = .boldSystemFont(ofSize: 13)
 //        bPanel.addSubview(hHBtnText)
-        qCHHBtn.addSubview(qCHHBtnText)
+//        qCHHBtn.addSubview(qCHHBtnText)
+        cLoggedBox.addSubview(qCHHBtnText)
         qCHHBtnText.translatesAutoresizingMaskIntoConstraints = false
 //        qHHBtnText.topAnchor.constraint(equalTo: gBtn.topAnchor, constant: 10).isActive = true
 //        qHHBtnText.bottomAnchor.constraint(equalTo: gBtn.bottomAnchor, constant: -10).isActive = true
@@ -846,7 +902,8 @@ class LoginPanelView: PanelView{
         qCHHBtnText.text = "Login"
         
         //test > add spinner when login with fb/google
-        cPanel.addSubview(bSpinner)
+//        cPanel.addSubview(bSpinner)
+        cLoggedBox.addSubview(bSpinner)
         bSpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
         bSpinner.translatesAutoresizingMaskIntoConstraints = false
         bSpinner.topAnchor.constraint(equalTo: gCHBtn.bottomAnchor, constant: 30).isActive = true  //0

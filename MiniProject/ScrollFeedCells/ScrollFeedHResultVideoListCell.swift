@@ -341,6 +341,9 @@ extension ScrollFeedHResultVideoListCell: GridViewCellDelegate {
                     if let indexPath = visibleIndexPath {
                         aDelegate?.sfcDidClickVcvClickVideo(pointX: pointX1, pointY: pointY1, view: view, mode: mode)
                         hideCellAt(itemIndex: indexPath.row)
+                        
+                        //test > additional delegate
+                        bDelegate?.didScrollFeedHResultResignKeyboard()
                     }
                     
                     break
@@ -349,6 +352,9 @@ extension ScrollFeedHResultVideoListCell: GridViewCellDelegate {
         }
     }
     func gridViewClickUser(){
+        //test > additional delegate
+        bDelegate?.didScrollFeedHResultResignKeyboard()
+        
         aDelegate?.sfcDidClickVcvClickUser()
     }
 }

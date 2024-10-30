@@ -45,7 +45,7 @@
 		2E670ABF2C31010A00EBA6D3 /* VideoCreatorConsolePanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670ABE2C31010A00EBA6D3 /* VideoCreatorConsolePanelView.swift */; };
 		2E670AC12C31013F00EBA6D3 /* CameraVideoRollPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670AC02C31013F00EBA6D3 /* CameraVideoRollPanelView.swift */; };
 		2E670AC32C31016400EBA6D3 /* PostPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670AC22C31016400EBA6D3 /* PostPanelView.swift */; };
-		2E670AC52C31018B00EBA6D3 /* PhotoPreviewPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670AC42C31018B00EBA6D3 /* PhotoPreviewPanelView.swift */; };
+		2E670AC52C31018B00EBA6D3 /* MultiSelectedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670AC42C31018B00EBA6D3 /* MultiSelectedCell.swift */; };
 		2E670AC72C3101AE00EBA6D3 /* CameraPhotoRollPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670AC62C3101AE00EBA6D3 /* CameraPhotoRollPanelView.swift */; };
 		2E670AC92C3101CD00EBA6D3 /* PlacesMiniScrollablePanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670AC82C3101CD00EBA6D3 /* PlacesMiniScrollablePanelView.swift */; };
 		2E670ACB2C31021300EBA6D3 /* SoundScrollablePanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670ACA2C31021300EBA6D3 /* SoundScrollablePanelView.swift */; };
@@ -208,7 +208,7 @@
 		2E670ABE2C31010A00EBA6D3 /* VideoCreatorConsolePanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCreatorConsolePanelView.swift; sourceTree = "<group>"; };
 		2E670AC02C31013F00EBA6D3 /* CameraVideoRollPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraVideoRollPanelView.swift; sourceTree = "<group>"; };
 		2E670AC22C31016400EBA6D3 /* PostPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostPanelView.swift; sourceTree = "<group>"; };
-		2E670AC42C31018B00EBA6D3 /* PhotoPreviewPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPreviewPanelView.swift; sourceTree = "<group>"; };
+		2E670AC42C31018B00EBA6D3 /* MultiSelectedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiSelectedCell.swift; sourceTree = "<group>"; };
 		2E670AC62C3101AE00EBA6D3 /* CameraPhotoRollPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPhotoRollPanelView.swift; sourceTree = "<group>"; };
 		2E670AC82C3101CD00EBA6D3 /* PlacesMiniScrollablePanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesMiniScrollablePanelView.swift; sourceTree = "<group>"; };
 		2E670ACA2C31021300EBA6D3 /* SoundScrollablePanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundScrollablePanelView.swift; sourceTree = "<group>"; };
@@ -435,7 +435,6 @@
 				2E670AB02C30FFBE00EBA6D3 /* VideoFinalizePanelView.swift */,
 				2E670AAC2C30FF5000EBA6D3 /* PhotoCreatorConsolePanelView.swift */,
 				2E670AA82C30FEF900EBA6D3 /* PhotoEditorPanelView.swift */,
-				2E670AC42C31018B00EBA6D3 /* PhotoPreviewPanelView.swift */,
 				2E670AB82C31008400EBA6D3 /* PhotoDraftPanelView.swift */,
 				2E670ADA2C31033300EBA6D3 /* PhotoFinalizePanelView.swift */,
 				2E670ACE2C31026100EBA6D3 /* PostCreatorConsolePanelView.swift */,
@@ -542,6 +541,7 @@
 		2E670B752C3126A900EBA6D3 /* CustomCells */ = {
 			isa = PBXGroup;
 			children = (
+				2E670AC42C31018B00EBA6D3 /* MultiSelectedCell.swift */,
 				2E670B762C3126C900EBA6D3 /* PostClipPhotoCell.swift */,
 				2E670AFD2C31080E00EBA6D3 /* VGridColumnViewCell.swift */,
 				2E670B1B2C3109EC00EBA6D3 /* DiscoverColumnViewCell.swift */,
@@ -817,7 +817,7 @@
 				2E670AF62C31073200EBA6D3 /* HPhotoListBViewCell.swift in Sources */,
 				2E670B642C31255C00EBA6D3 /* ScrollFeedHNotifyChatListCell.swift in Sources */,
 				2E670B702C31260F00EBA6D3 /* ScrollFeedGridVideo2xViewCell.swift in Sources */,
-				2E670AC52C31018B00EBA6D3 /* PhotoPreviewPanelView.swift in Sources */,
+				2E670AC52C31018B00EBA6D3 /* MultiSelectedCell.swift in Sources */,
 				2E670ABF2C31010A00EBA6D3 /* VideoCreatorConsolePanelView.swift in Sources */,
 				2E670ACB2C31021300EBA6D3 /* SoundScrollablePanelView.swift in Sources */,
 				2E670ADF2C3103A200EBA6D3 /* LoginPanelView.swift in Sources */,

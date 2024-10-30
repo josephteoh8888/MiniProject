@@ -259,7 +259,7 @@ class MePanelView: PanelView{
         panel.addSubview(aLoggedOutBox)
         aLoggedOutBox.translatesAutoresizingMaskIntoConstraints = false
 //        aLoggedOutBox.topAnchor.constraint(equalTo: aSemiTransparentTextBox.topAnchor, constant: 0).isActive = true
-        aLoggedOutBox.centerYAnchor.constraint(equalTo: panel.centerYAnchor, constant: -90).isActive = true
+        aLoggedOutBox.centerYAnchor.constraint(equalTo: panel.centerYAnchor, constant: -60).isActive = true //-90
         aLoggedOutBox.leadingAnchor.constraint(equalTo: panel.leadingAnchor).isActive = true
         aLoggedOutBox.trailingAnchor.constraint(equalTo: panel.trailingAnchor).isActive = true
         aLoggedOutBox.isHidden = false
@@ -291,8 +291,9 @@ class MePanelView: PanelView{
         aFollow.backgroundColor = .yellow
         aLoggedOutBox.addSubview(aFollow)
         aFollow.translatesAutoresizingMaskIntoConstraints = false
-        aFollow.leadingAnchor.constraint(equalTo: aLoggedOutBox.leadingAnchor, constant: 100).isActive = true
-        aFollow.trailingAnchor.constraint(equalTo: aLoggedOutBox.trailingAnchor, constant: -100).isActive = true
+//        aFollow.leadingAnchor.constraint(equalTo: aLoggedOutBox.leadingAnchor, constant: 100).isActive = true
+//        aFollow.trailingAnchor.constraint(equalTo: aLoggedOutBox.trailingAnchor, constant: -100).isActive = true
+        aFollow.centerXAnchor.constraint(equalTo: aLoggedOutBox.centerXAnchor).isActive = true
         aFollow.heightAnchor.constraint(equalToConstant: 40).isActive = true //30
         aFollow.topAnchor.constraint(equalTo: aLoginText.bottomAnchor, constant: 20).isActive = true
         aFollow.bottomAnchor.constraint(equalTo: aLoggedOutBox.bottomAnchor, constant: 0).isActive = true
@@ -306,7 +307,9 @@ class MePanelView: PanelView{
         aFollowText.font = .boldSystemFont(ofSize: 13) //default 14
         aFollow.addSubview(aFollowText)
         aFollowText.translatesAutoresizingMaskIntoConstraints = false
-        aFollowText.centerXAnchor.constraint(equalTo: aFollow.centerXAnchor).isActive = true
+//        aFollowText.centerXAnchor.constraint(equalTo: aFollow.centerXAnchor).isActive = true
+        aFollowText.leadingAnchor.constraint(equalTo: aFollow.leadingAnchor, constant: 60).isActive = true
+        aFollowText.trailingAnchor.constraint(equalTo: aFollow.trailingAnchor, constant: -60).isActive = true
         aFollowText.centerYAnchor.constraint(equalTo: aFollow.centerYAnchor).isActive = true
         aFollowText.text = "Login"
     }
@@ -345,10 +348,6 @@ class MePanelView: PanelView{
                 aLoggedOutBox.isHidden = false
             }
         }
-        //test > check signin status
-//        else {
-//            asyncFetchSigninStatus()
-//        }
         
         isInitialized = true
     }
@@ -707,49 +706,6 @@ class MePanelView: PanelView{
             self.isUserLoggedIn = isSignedIn
             self.initialize()
         }
-        
-        //old method by fetching
-//        SignInManager.shared.fetchStatus(id: "fetch_status") { [weak self]result in
-//            switch result {
-//                case .success(let l):
-//
-//                //update UI on main thread
-//                DispatchQueue.main.async {
-//                    print("mepanelview api success: \(l)")
-//                    guard let self = self else {
-//                        return
-//                    }
-//                    
-//                    let isSignedIn = l
-//                    
-//                    if(self.isInitialized) {
-//                        if(self.isUserLoggedIn != isSignedIn) {
-//                            self.isUserLoggedIn = isSignedIn
-//                            
-//                            self.deconfigureMeCell()
-//                    
-//                            self.isInitialized = false
-//                            self.initialize()
-//                        } 
-//                        //test > recheck UI for aLoggedOut
-//                        else {
-//                            if(self.isUserLoggedIn) {
-//                                self.aLoggedOutBox.isHidden = true
-//                            } else {
-//                                self.aLoggedOutBox.isHidden = false
-//                            }
-//                        }
-//                    } else {
-//                        self.isUserLoggedIn = isSignedIn
-//                        self.initialize()
-//                    }
-//                }
-//
-//                case .failure(_):
-//                    print("api fail")
-//                    break
-//            }
-//        }
     }
 }
 

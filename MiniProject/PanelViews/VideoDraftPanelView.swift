@@ -13,7 +13,7 @@ protocol VideoDraftPanelDelegate : AnyObject {
     func didClickCloseVideoDraftPanel()
 }
 
-class VideoDraftPanelView: PanelView{
+class VideoDraftPanelView: PanelView, UIGestureRecognizerDelegate{
     
     var panel = UIView()
     var vDataList = [String]()
@@ -32,8 +32,10 @@ class VideoDraftPanelView: PanelView{
     var viewHeight: CGFloat = 0
     var viewWidth: CGFloat = 0
     
-    var panelLeadingCons: NSLayoutConstraint?
-    var currentPanelLeadingCons : CGFloat = 0.0
+//    var panelLeadingCons: NSLayoutConstraint?
+//    var currentPanelLeadingCons : CGFloat = 0.0
+    var currentPanelTopCons : CGFloat = 0.0
+    var panelTopCons: NSLayoutConstraint?
     
     weak var delegate : VideoDraftPanelDelegate?
     
@@ -55,16 +57,55 @@ class VideoDraftPanelView: PanelView{
         panel.backgroundColor = .ddmBlackOverlayColor
         self.addSubview(panel)
         panel.translatesAutoresizingMaskIntoConstraints = false
-        panel.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
-        panel.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true //default 0
+//        panel.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+//        panel.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true //default 0
         panel.layer.masksToBounds = true
         panel.layer.cornerRadius = 10 //10
 //        panel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
 //        panel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
         //test
         panel.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true
-        panelLeadingCons = panel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0)
-        panelLeadingCons?.isActive = true
+        let gap = viewHeight - 0 //150
+        panelTopCons = panel.topAnchor.constraint(equalTo: self.bottomAnchor, constant: -gap)
+        panelTopCons?.isActive = true
+        panel.heightAnchor.constraint(equalToConstant: gap).isActive = true
+        
+        let aBtn = UIView()
+//        aBtn.backgroundColor = .ddmDarkColor
+        panel.addSubview(aBtn)
+        aBtn.translatesAutoresizingMaskIntoConstraints = false
+        aBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true //ori: 40
+        aBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        aBtn.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 10).isActive = true
+//        aBtn.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
+        aBtn.topAnchor.constraint(equalTo: panel.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
+        aBtn.layer.cornerRadius = 20
+//        aBtn.layer.opacity = 0.3
+        aBtn.isUserInteractionEnabled = true
+        aBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBackPanelClicked)))
+
+        let bMiniBtn = UIImageView(image: UIImage(named:"icon_round_arrow_down_a")?.withRenderingMode(.alwaysTemplate))
+        bMiniBtn.tintColor = .white
+        panel.addSubview(bMiniBtn)
+        bMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        bMiniBtn.centerXAnchor.constraint(equalTo: aBtn.centerXAnchor).isActive = true
+        bMiniBtn.centerYAnchor.constraint(equalTo: aBtn.centerYAnchor).isActive = true
+        bMiniBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
+        bMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
+        
+        let panelTitleText = UILabel()
+        panelTitleText.textAlignment = .center
+        panelTitleText.textColor = .white
+//        panelTitleText.font = .systemFont(ofSize: 14) //default 14
+        panelTitleText.font = .boldSystemFont(ofSize: 13) //default 14
+        panelTitleText.text = "Loop Drafts"
+        panel.addSubview(panelTitleText)
+        panelTitleText.translatesAutoresizingMaskIntoConstraints = false
+//        panelTitleText.leadingAnchor.constraint(equalTo: panelView.leadingAnchor, constant: 20).isActive = true
+//        panelTitleText.trailingAnchor.constraint(equalTo: panelView.trailingAnchor, constant: 0).isActive = true
+        panelTitleText.centerXAnchor.constraint(equalTo: panel.centerXAnchor, constant: 0).isActive = true
+        panelTitleText.centerYAnchor.constraint(equalTo: aBtn.centerYAnchor, constant: 0).isActive = true
+        panelTitleText.isUserInteractionEnabled = true
         
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -86,110 +127,113 @@ class VideoDraftPanelView: PanelView{
         vCV.backgroundColor = .clear
         panel.addSubview(vCV)
         vCV.translatesAutoresizingMaskIntoConstraints = false
-        vCV.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 50).isActive = true
+//        vCV.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 50).isActive = true
 //        vCV.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
+        vCV.topAnchor.constraint(equalTo: panelTitleText.bottomAnchor, constant: 20).isActive = true //test
         vCV.leadingAnchor.constraint(equalTo: panel.leadingAnchor).isActive = true
         vCV.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: 0).isActive = true
         vCV.trailingAnchor.constraint(equalTo: panel.trailingAnchor).isActive = true
         vCV.contentInsetAdjustmentBehavior = .never
+        let vcvPanGesture = UIPanGestureRecognizer(target: self, action: #selector(onVCVPanGesture))
+        vcvPanGesture.delegate = self //for simultaneous pan recognizer for uicollectionview
+        vCV.addGestureRecognizer(vcvPanGesture)
         
         //test > add footer ***
         vCV.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "footer")
         //***
         
-        //test > top spinner
-        vCV.addSubview(aSpinner)
-        aSpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
-        aSpinner.translatesAutoresizingMaskIntoConstraints = false
-        aSpinner.topAnchor.constraint(equalTo: vCV.topAnchor, constant: CGFloat(-35)).isActive = true
-        aSpinner.centerXAnchor.constraint(equalTo: vCV.centerXAnchor).isActive = true
-        aSpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        aSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        
-        //test > sticky header => for "for you", "following", "subscribing"
-        aStickyHeader.backgroundColor = .ddmBlackOverlayColor
-        panel.addSubview(aStickyHeader)
-        aStickyHeader.translatesAutoresizingMaskIntoConstraints = false
-        aStickyHeader.trailingAnchor.constraint(equalTo: panel.trailingAnchor).isActive = true
-        aStickyHeader.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 50).isActive = true
-        aStickyHeader.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
-        aStickyHeader.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 0).isActive = true
-
-        let aBtn = UIView()
-//        aBtn.backgroundColor = .ddmDarkColor
-//        aBtn.backgroundColor = .red
-        aStickyHeader.addSubview(aBtn)
-        aBtn.translatesAutoresizingMaskIntoConstraints = false
-        aBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true //ori: 40
-        aBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        aBtn.leadingAnchor.constraint(equalTo: aStickyHeader.leadingAnchor, constant: 10).isActive = true
-    //        aBtn.topAnchor.constraint(equalTo: userPanel.topAnchor, constant: 30).isActive = true
-        aBtn.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
-        aBtn.layer.cornerRadius = 20
-        aBtn.layer.opacity = 0.3
-        aBtn.isUserInteractionEnabled = true
-        aBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBackPanelClicked)))
-
-        let bMiniBtn = UIImageView(image: UIImage(named:"icon_round_arrow_left")?.withRenderingMode(.alwaysTemplate))
-        bMiniBtn.tintColor = .white
-        aStickyHeader.addSubview(bMiniBtn)
-        bMiniBtn.translatesAutoresizingMaskIntoConstraints = false
-        bMiniBtn.centerXAnchor.constraint(equalTo: aBtn.centerXAnchor).isActive = true
-        bMiniBtn.centerYAnchor.constraint(equalTo: aBtn.centerYAnchor).isActive = true
-        bMiniBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
-        bMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        
         //test > gesture recognizer for dragging user panel
         let panelPanGesture = UIPanGestureRecognizer(target: self, action: #selector(onPanelPanGesture))
-        self.addGestureRecognizer(panelPanGesture)
+        panel.addGestureRecognizer(panelPanGesture)
     }
     
     @objc func onBackPanelClicked(gesture: UITapGestureRecognizer) {
         closePanel(isAnimated: true)
     }
     
-    var direction = "na"
-    @objc func onPanelPanGesture(gesture: UIPanGestureRecognizer) {
+    @objc func onVCVPanGesture(gesture: UIPanGestureRecognizer) {
         if(gesture.state == .began) {
-            
-            print("t1 onSoundPanelPanGesture begin: ")
-            self.currentPanelLeadingCons = self.panelLeadingCons!.constant
+            print("onPan began top constraint: ")
+            currentPanelTopCons = panelTopCons!.constant
         } else if(gesture.state == .changed) {
             let translation = gesture.translation(in: self)
             let x = translation.x
-            let y = translation.y
+            var y = translation.y
+
+            let velocity = gesture.velocity(in: self)
             
-            //test > determine direction of scroll
-//            print("t1 onSoundPanelPanGesture changed: \(x), \(self.soundPanelLeadingCons!.constant)")
-            if(direction == "na") {
-                if(abs(x) > abs(y)) {
-                    direction = "x"
-                } else {
-                    direction = "y"
+            print("onPan changed: \(x), \(y)")
+            if(y > 0) {
+                if(isScrollViewAtTop) {
+                    panelTopCons?.constant = currentPanelTopCons + y
                 }
+            } else {
+                //test
+                isScrollViewAtTop = false
             }
-            if(direction == "x") {
-                var newX = self.currentPanelLeadingCons + x
-                if(newX < 0) {
-                    newX = 0
-                }
-                self.panelLeadingCons?.constant = newX
-            }
+
         } else if(gesture.state == .ended){
-            
-            print("t1 onSoundPanelPanGesture ended: ")
-            if(self.panelLeadingCons!.constant - self.currentPanelLeadingCons < 75) {
+            print("onPan end:")
+            if(self.currentPanelTopCons - self.panelTopCons!.constant < -150) {
                 UIView.animate(withDuration: 0.2, animations: {
-                    self.panelLeadingCons?.constant = 0
+                    self.panelTopCons?.constant = 0
+                    self.layoutIfNeeded()
+                }, completion: { _ in
+                    self.removeFromSuperview()
+                    
+                    //test > trigger finish close panel
+                    self.delegate?.didClickCloseVideoDraftPanel()
+                })
+            } else {
+                UIView.animate(withDuration: 0.2, animations: {
+                    let gap = self.viewHeight - 0 //150
+                    self.panelTopCons?.constant = -gap
                     self.layoutIfNeeded()
                 }, completion: { _ in
                 })
-            } else {
-                closePanel(isAnimated: true)
             }
-            
-            //test > determine direction of scroll
-            direction = "na"
+        }
+    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        if (gestureRecognizer is UIPanGestureRecognizer) {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+//    var direction = "na"
+    @objc func onPanelPanGesture(gesture: UIPanGestureRecognizer) {
+        if(gesture.state == .began) {
+            self.currentPanelTopCons = self.panelTopCons!.constant
+        } else if(gesture.state == .changed) {
+            let translation = gesture.translation(in: self)
+//            let x = translation.x
+            let y = translation.y
+            if(y > 0) {
+                self.panelTopCons?.constant = self.currentPanelTopCons + y
+            }
+        } else if(gesture.state == .ended){
+            print("commentpanel: \(self.currentPanelTopCons - self.panelTopCons!.constant)")
+            if(self.currentPanelTopCons - self.panelTopCons!.constant < -150) {
+                
+                UIView.animate(withDuration: 0.2, animations: {
+                    self.panelTopCons?.constant = 0
+                    self.layoutIfNeeded()
+                }, completion: { _ in
+                    self.removeFromSuperview()
+                    
+                    //test > trigger finish close panel
+                    self.delegate?.didClickCloseVideoDraftPanel()
+                })
+            } else {
+                UIView.animate(withDuration: 0.2, animations: {
+                    let gap = self.viewHeight - 0 //150
+                    self.panelTopCons?.constant = -gap
+                    self.layoutIfNeeded()
+                })
+            }
         }
     }
     
@@ -209,13 +253,10 @@ class VideoDraftPanelView: PanelView{
     func closePanel(isAnimated: Bool) {
         if(isAnimated) {
             UIView.animate(withDuration: 0.2, animations: {
-                self.panelLeadingCons?.constant = self.frame.width
+                self.panelTopCons?.constant = 0
                 self.layoutIfNeeded()
             }, completion: { _ in
                 self.removeFromSuperview()
-                
-                //move back to origin
-                self.panelLeadingCons?.constant = 0
                 self.delegate?.didClickCloseVideoDraftPanel()
             })
         } else {
@@ -250,7 +291,7 @@ class VideoDraftPanelView: PanelView{
         aSpinner.startAnimating()
         
         //test > adjust contentInset to y = 50 to move cv downward to accomodate spinner
-        self.adjustContentInset(topInset: CGFloat(50), bottomInset: CGFloat(50))
+//        self.adjustContentInset(topInset: CGFloat(50), bottomInset: CGFloat(50))
 //        self.adjustContentInset(topInset: CGFloat(50), bottomInset: CGFloat(120)) //50 bottominset
         
         DataFetchManager.shared.fetchData(id: id) { [weak self]result in
@@ -274,7 +315,7 @@ class VideoDraftPanelView: PanelView{
                     self.aSpinner.stopAnimating()
                     
                     //test > animate cv back to y = 0 by contentOffset then only adjust contentInset after animate
-                    self.adjustContentOffset(x: 0, y: 0, animated: true)
+//                    self.adjustContentOffset(x: 0, y: 0, animated: true)
                     
                     self.dataFetchState = "end"
                 }
@@ -452,72 +493,41 @@ extension VideoDraftPanelView: UICollectionViewDataSource {
 
 extension VideoDraftPanelView: UICollectionViewDelegate {
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        print("p scrollview begin: \(scrollView.contentOffset.y)")
-        let scrollOffsetY = scrollView.contentOffset.y
-        scrollViewInitialY = scrollOffsetY
+
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        print("p scrollview scroll: \(scrollView.contentOffset.y)")
-
-        let scrollOffsetY = scrollView.contentOffset.y
-        let y = scrollViewInitialY - scrollOffsetY
-        
-        if(y < 0) {
-            //pullup y
-        } else {
-            
-        }
 
     }
 
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        print("p scrollview end: \(scrollView.contentOffset.y)")
+        print("scrollview end: \(scrollView.contentOffset.y)")
         
         //test
-        let scrollOffsetY = scrollView.contentOffset.y
-        if(scrollOffsetY == 0) {
+        if(scrollView.contentOffset.y == 0) {
             isScrollViewAtTop = true
         } else {
             isScrollViewAtTop = false
         }
+        print("scrollview end: \(scrollView.contentOffset.y), \(isScrollViewAtTop)")
     }
 
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-//        print("p scrollview end drag: \(scrollView.contentOffset.y)")
-        
-        //test
-        let scrollOffsetY = scrollView.contentOffset.y
-        
-        //test > refresh dataset
-        if(isScrollViewAtTop) {
-            if(scrollOffsetY < -80) {
-                //test > clear data for regenerate feed => not great
-//                vcDataList.removeAll()
-//                postCV?.reloadData()
-                //**
-                
-//                self.asyncFetchFeed(id: "post_feed")
-                self.refreshFetchData()
+        print("scrollview end drag: \(scrollView.contentOffset.y), \(decelerate)")
+        if(!decelerate) {
+            
+            //test
+            if(scrollView.contentOffset.y == 0) {
+                isScrollViewAtTop = true
+            } else {
+                isScrollViewAtTop = false
             }
-        }
-        
-        //test > bottom checker
-        if scrollView == vCV {
-            guard let vCV = vCV else {
-                return
-            }
-//            let a = isCollectionViewAtBottom(collectionView: vCV)
-//            print("p scrollview bottom end drag: \(a), \(scrollOffsetY)")
+            print("scrollview end drag check: \(isScrollViewAtTop)")
         }
     }
     
     func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
 
-        print("p scrollview animation ended")
-        
-        //test > reset contentInset to origin of y = 0
-        self.adjustContentInset(topInset: CGFloat(0), bottomInset: CGFloat(50)) //50 bottominset
     }
 }
 

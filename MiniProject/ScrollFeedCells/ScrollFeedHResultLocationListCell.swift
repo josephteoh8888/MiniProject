@@ -314,6 +314,9 @@ extension ScrollFeedHResultLocationListCell: HResultListViewDelegate{
 
     }
     func didHResultClickPlace(){
+        //test > additional delegate
+        bDelegate?.didScrollFeedHResultResignKeyboard()
+        
         aDelegate?.sfcDidClickVcvClickPlace()
     }
     func didHResultClickSound(){

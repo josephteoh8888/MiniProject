@@ -10,7 +10,9 @@ import UIKit
 import SDWebImage
 
 protocol ShareObjectScrollableDelegate : AnyObject {
-    func didShareObjectClick()
+//    func didShareObjectClick()
+    func didShareObjectClickCreate(type: String)
+    func didShareObjectClickDelete()
     func didShareObjectClickClosePanel()
     func didShareObjectFinishClosePanel()
 }
@@ -331,14 +333,14 @@ extension ShareObjectScrollableView: UICollectionViewDataSource {
             
             //close panel for more actions like delete item
             self.removeFromSuperview()
-            delegate?.didShareObjectClick()
+            delegate?.didShareObjectClickCreate(type: "p")
             
         } else if collectionView == bVCV {
             print("vgrid b selected: \(bVDataList[indexPath.row])")
             
             //close panel for more actions like delete item
             self.removeFromSuperview()
-            delegate?.didShareObjectClick()
+            delegate?.didShareObjectClickCreate(type: "video")
         }
      }
     
@@ -349,8 +351,22 @@ extension ShareObjectScrollableView: UICollectionViewDataSource {
 
 extension ViewController: ShareObjectScrollableDelegate{
 
-    func didShareObjectClick() {
-
+    func didShareObjectClickCreate(type: String){
+        if(type == "p") {
+            openPlaceCreatorPanel()
+        } 
+        else if(type == "post") {
+            openPostCreatorPanel()
+        }
+        else if(type == "video") {
+            openVideoCreatorPanel()
+        }
+        else if(type == "photo") {
+            openPhotoCreatorPanel()
+        }
+    }
+    func didShareObjectClickDelete(){
+        
     }
     func didShareObjectClickClosePanel() {
         

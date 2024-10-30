@@ -992,6 +992,9 @@ extension MeFollowListPanelView: ScrollFeedHResultListCellDelegate {
     func didScrollFeedHResultClickSignIn() {
         delegate?.didMeFollowClickSignIn()
     }
+    
+    func didScrollFeedHResultResignKeyboard(){
+    }
 }
 
 extension MeFollowListPanelView: TabStackDelegate {

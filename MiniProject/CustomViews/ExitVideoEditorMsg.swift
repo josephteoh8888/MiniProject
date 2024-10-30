@@ -147,15 +147,3 @@ class ExitVideoEditorMsgView: UIView{
         delegate?.didSVDClickDeny()
     }
 }
-
-extension VideoEditorPanelView: ExitVideoEditorMsgDelegate{
-    func didSVDClickProceed() {
-        closeVideoEditorPanel(isAnimated: true)
-    }
-    func didSVDClickDeny() {
-        delegate?.didDenyExitVideoEditor()
-    }
-    func didSVDInitialize() {
-        delegate?.didPromptExitVideoEditor()
-    }
-}

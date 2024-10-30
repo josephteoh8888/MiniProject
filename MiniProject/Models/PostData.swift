@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import PhotosUI
+import Photos
 
 class BaseData {
     var dataType: String = ""
@@ -432,6 +434,24 @@ class ContentData {
     }
 }
 //*
+
+class GridAssetData {
+    var model: PHAsset?
+    var isSelected = false
+    var selectedOrder = -1
+    
+    func setModel(data: PHAsset) {
+        model = data
+    }
+    
+    func setSelected(isS: Bool) {
+        isSelected = isS
+    }
+    
+    func setSelectedOrder(i: Int) {
+        selectedOrder = i
+    }
+}
 
 //class Page {
 //    

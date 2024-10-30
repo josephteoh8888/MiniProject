@@ -180,7 +180,7 @@ class NotifyPanelView: PanelView{
         notifyPanel.addSubview(aLoggedOutBox)
         aLoggedOutBox.translatesAutoresizingMaskIntoConstraints = false
 //        aLoggedOutBox.topAnchor.constraint(equalTo: aSemiTransparentTextBox.topAnchor, constant: 0).isActive = true
-        aLoggedOutBox.centerYAnchor.constraint(equalTo: notifyPanel.centerYAnchor, constant: -90).isActive = true
+        aLoggedOutBox.centerYAnchor.constraint(equalTo: notifyPanel.centerYAnchor, constant: -60).isActive = true //-90
         aLoggedOutBox.leadingAnchor.constraint(equalTo: notifyPanel.leadingAnchor).isActive = true
         aLoggedOutBox.trailingAnchor.constraint(equalTo: notifyPanel.trailingAnchor).isActive = true
         aLoggedOutBox.isHidden = false
@@ -212,8 +212,9 @@ class NotifyPanelView: PanelView{
         aFollow.backgroundColor = .yellow
         aLoggedOutBox.addSubview(aFollow)
         aFollow.translatesAutoresizingMaskIntoConstraints = false
-        aFollow.leadingAnchor.constraint(equalTo: aLoggedOutBox.leadingAnchor, constant: 100).isActive = true
-        aFollow.trailingAnchor.constraint(equalTo: aLoggedOutBox.trailingAnchor, constant: -100).isActive = true
+//        aFollow.leadingAnchor.constraint(equalTo: aLoggedOutBox.leadingAnchor, constant: 100).isActive = true
+//        aFollow.trailingAnchor.constraint(equalTo: aLoggedOutBox.trailingAnchor, constant: -100).isActive = true
+        aFollow.centerXAnchor.constraint(equalTo: aLoggedOutBox.centerXAnchor).isActive = true
         aFollow.heightAnchor.constraint(equalToConstant: 40).isActive = true //30
         aFollow.topAnchor.constraint(equalTo: aLoginText.bottomAnchor, constant: 20).isActive = true
         aFollow.bottomAnchor.constraint(equalTo: aLoggedOutBox.bottomAnchor, constant: 0).isActive = true
@@ -227,7 +228,9 @@ class NotifyPanelView: PanelView{
         aFollowText.font = .boldSystemFont(ofSize: 13) //default 14
         aFollow.addSubview(aFollowText)
         aFollowText.translatesAutoresizingMaskIntoConstraints = false
-        aFollowText.centerXAnchor.constraint(equalTo: aFollow.centerXAnchor).isActive = true
+//        aFollowText.centerXAnchor.constraint(equalTo: aFollow.centerXAnchor).isActive = true
+        aFollowText.leadingAnchor.constraint(equalTo: aFollow.leadingAnchor, constant: 60).isActive = true
+        aFollowText.trailingAnchor.constraint(equalTo: aFollow.trailingAnchor, constant: -60).isActive = true
         aFollowText.centerYAnchor.constraint(equalTo: aFollow.centerYAnchor).isActive = true
         aFollowText.text = "Login"
     }

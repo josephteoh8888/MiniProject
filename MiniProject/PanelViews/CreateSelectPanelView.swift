@@ -196,50 +196,75 @@ class CreateSelectPanelView: PanelView, UIGestureRecognizerDelegate{
         dView.trailingAnchor.constraint(equalTo: dArrowBtn.leadingAnchor, constant: 0).isActive = true
         dView.centerYAnchor.constraint(equalTo: dGrid.centerYAnchor).isActive = true
         dView.heightAnchor.constraint(equalToConstant: 40).isActive = true //ori 30
-        dView.widthAnchor.constraint(equalToConstant: 40).isActive = true
+//        dView.widthAnchor.constraint(equalToConstant: 40).isActive = true
         dView.isUserInteractionEnabled = true
         dView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onDraftPhotoClicked)))
         dView.isHidden = true
         
-        let dDraftBtn = UIImageView()
-//        dDraftBtn.image = UIImage(named:"icon_round_folder_open")?.withRenderingMode(.alwaysTemplate)
-        dDraftBtn.image = UIImage(named:"icon_round_folder_close")?.withRenderingMode(.alwaysTemplate)
-        dDraftBtn.tintColor = .white
-//        panel.addSubview(dDraftBtn)
-        dView.addSubview(dDraftBtn)
-        dDraftBtn.translatesAutoresizingMaskIntoConstraints = false
-//        dDraftBtn.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -20).isActive = true
-//        dDraftBtn.centerYAnchor.constraint(equalTo: bGrid.centerYAnchor).isActive = true
-        dDraftBtn.trailingAnchor.constraint(equalTo: dView.trailingAnchor, constant: -10).isActive = true
-        dDraftBtn.centerYAnchor.constraint(equalTo: dView.centerYAnchor).isActive = true
-        dDraftBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true //ori 30
-        dDraftBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
+//        let dDraftBtn = UIImageView()
+////        dDraftBtn.image = UIImage(named:"icon_round_folder_open")?.withRenderingMode(.alwaysTemplate)
+//        dDraftBtn.image = UIImage(named:"icon_round_folder_close")?.withRenderingMode(.alwaysTemplate)
+//        dDraftBtn.tintColor = .white
+////        panel.addSubview(dDraftBtn)
+//        dView.addSubview(dDraftBtn)
+//        dDraftBtn.translatesAutoresizingMaskIntoConstraints = false
+////        dDraftBtn.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -20).isActive = true
+////        dDraftBtn.centerYAnchor.constraint(equalTo: bGrid.centerYAnchor).isActive = true
+//        dDraftBtn.trailingAnchor.constraint(equalTo: dView.trailingAnchor, constant: -10).isActive = true
+//        dDraftBtn.centerYAnchor.constraint(equalTo: dView.centerYAnchor).isActive = true
+//        dDraftBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true //ori 30
+//        dDraftBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
+//        
+//        let dDraftQView = UIView()
+////        dDraftQView.backgroundColor = .red
+//        dDraftQView.backgroundColor = .yellow
+////        panel.addSubview(dDraftQView)
+//        dView.addSubview(dDraftQView)
+//        dDraftQView.translatesAutoresizingMaskIntoConstraints = false
+//        dDraftQView.trailingAnchor.constraint(equalTo: dDraftBtn.leadingAnchor, constant: -5).isActive = true
+////        dDraftQView.centerYAnchor.constraint(equalTo: bGrid.centerYAnchor).isActive = true
+//        dDraftQView.centerYAnchor.constraint(equalTo: dView.centerYAnchor).isActive = true
+//        dDraftQView.heightAnchor.constraint(equalToConstant: 20).isActive = true
+//        dDraftQView.widthAnchor.constraint(equalToConstant: 20).isActive = true
+//        dDraftQView.layer.cornerRadius = 10
+////        dDraftQView.isHidden = true
+//        
+//        let dDraftQText = UILabel()
+//        dDraftQText.textAlignment = .center
+////        dDraftQText.textColor = .white
+//        dDraftQText.textColor = .black
+//        dDraftQText.font = .boldSystemFont(ofSize: 12)
+////        panel.addSubview(dDraftQText)
+//        dView.addSubview(dDraftQText)
+//        dDraftQText.translatesAutoresizingMaskIntoConstraints = false
+//        dDraftQText.centerYAnchor.constraint(equalTo: dDraftQView.centerYAnchor, constant: 0).isActive = true
+//        dDraftQText.centerXAnchor.constraint(equalTo: dDraftQView.centerXAnchor, constant: 0).isActive = true //10
+//        dDraftQText.text = "5"
         
-        let dDraftQView = UIView()
-//        dDraftQView.backgroundColor = .red
-        dDraftQView.backgroundColor = .yellow
-//        panel.addSubview(dDraftQView)
-        dView.addSubview(dDraftQView)
-        dDraftQView.translatesAutoresizingMaskIntoConstraints = false
-        dDraftQView.trailingAnchor.constraint(equalTo: dDraftBtn.leadingAnchor, constant: -5).isActive = true
-//        dDraftQView.centerYAnchor.constraint(equalTo: bGrid.centerYAnchor).isActive = true
-        dDraftQView.centerYAnchor.constraint(equalTo: dView.centerYAnchor).isActive = true
-        dDraftQView.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        dDraftQView.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        dDraftQView.layer.cornerRadius = 10
-//        dDraftQView.isHidden = true
+        let dNotifiedBox = UIView()
+//        eUserCover.backgroundColor = .ddmBlackOverlayColor
+        dNotifiedBox.backgroundColor = .red
+        dView.addSubview(dNotifiedBox)
+        dNotifiedBox.translatesAutoresizingMaskIntoConstraints = false
+        dNotifiedBox.centerYAnchor.constraint(equalTo: dView.centerYAnchor, constant: 0).isActive = true
+        dNotifiedBox.trailingAnchor.constraint(equalTo: dView.trailingAnchor, constant: 0).isActive = true
+        dNotifiedBox.heightAnchor.constraint(equalToConstant: 10).isActive = true //40
+        dNotifiedBox.widthAnchor.constraint(equalToConstant: 10).isActive = true
+        dNotifiedBox.layer.cornerRadius = 5
         
         let dDraftQText = UILabel()
         dDraftQText.textAlignment = .center
-//        dDraftQText.textColor = .white
-        dDraftQText.textColor = .black
+        dDraftQText.textColor = .white
+//        dDraftQText.textColor = .black
         dDraftQText.font = .boldSystemFont(ofSize: 12)
+//        dDraftQText.font = .systemFont(ofSize: 12)
 //        panel.addSubview(dDraftQText)
         dView.addSubview(dDraftQText)
         dDraftQText.translatesAutoresizingMaskIntoConstraints = false
-        dDraftQText.centerYAnchor.constraint(equalTo: dDraftQView.centerYAnchor, constant: 0).isActive = true
-        dDraftQText.centerXAnchor.constraint(equalTo: dDraftQView.centerXAnchor, constant: 0).isActive = true //10
-        dDraftQText.text = "5"
+        dDraftQText.leadingAnchor.constraint(equalTo: dView.leadingAnchor, constant: 10).isActive = true
+        dDraftQText.trailingAnchor.constraint(equalTo: dNotifiedBox.leadingAnchor, constant: -5).isActive = true
+        dDraftQText.centerYAnchor.constraint(equalTo: dView.centerYAnchor).isActive = true
+        dDraftQText.text = "5 Drafts"
         
         let cTextView = UIView()
         panel.addSubview(cTextView)
@@ -311,53 +336,78 @@ class CreateSelectPanelView: PanelView, UIGestureRecognizerDelegate{
         panel.addSubview(cView)
         cView.translatesAutoresizingMaskIntoConstraints = false
 //        cView.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -20).isActive = true
-        cView.trailingAnchor.constraint(equalTo: cArrowBtn.leadingAnchor, constant: -10).isActive = true
+        cView.trailingAnchor.constraint(equalTo: cArrowBtn.leadingAnchor, constant: 0).isActive = true
         cView.centerYAnchor.constraint(equalTo: cGrid.centerYAnchor).isActive = true
         cView.heightAnchor.constraint(equalToConstant: 40).isActive = true //ori 30
-        cView.widthAnchor.constraint(equalToConstant: 40).isActive = true
+//        cView.widthAnchor.constraint(equalToConstant: 40).isActive = true
         cView.isUserInteractionEnabled = true
         cView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onDraftShortPostClicked)))
         cView.isHidden = true
         
-        let cDraftBtn = UIImageView()
-//        cDraftBtn.image = UIImage(named:"icon_round_folder_open")?.withRenderingMode(.alwaysTemplate)
-        cDraftBtn.image = UIImage(named:"icon_round_folder_close")?.withRenderingMode(.alwaysTemplate)
-        cDraftBtn.tintColor = .white
-//        panel.addSubview(cDraftBtn)
-        cView.addSubview(cDraftBtn)
-        cDraftBtn.translatesAutoresizingMaskIntoConstraints = false
-//        cDraftBtn.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -20).isActive = true
-//        cDraftBtn.centerYAnchor.constraint(equalTo: bGrid.centerYAnchor).isActive = true
-        cDraftBtn.trailingAnchor.constraint(equalTo: cView.trailingAnchor, constant: 0).isActive = true
-        cDraftBtn.centerYAnchor.constraint(equalTo: cView.centerYAnchor).isActive = true
-        cDraftBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true //ori 30
-        cDraftBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
+//        let cDraftBtn = UIImageView()
+////        cDraftBtn.image = UIImage(named:"icon_round_folder_open")?.withRenderingMode(.alwaysTemplate)
+//        cDraftBtn.image = UIImage(named:"icon_round_folder_close")?.withRenderingMode(.alwaysTemplate)
+//        cDraftBtn.tintColor = .white
+////        panel.addSubview(cDraftBtn)
+//        cView.addSubview(cDraftBtn)
+//        cDraftBtn.translatesAutoresizingMaskIntoConstraints = false
+////        cDraftBtn.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -20).isActive = true
+////        cDraftBtn.centerYAnchor.constraint(equalTo: bGrid.centerYAnchor).isActive = true
+//        cDraftBtn.trailingAnchor.constraint(equalTo: cView.trailingAnchor, constant: 0).isActive = true
+//        cDraftBtn.centerYAnchor.constraint(equalTo: cView.centerYAnchor).isActive = true
+//        cDraftBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true //ori 30
+//        cDraftBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
+//        
+//        let cDraftQView = UIView()
+////        cDraftQView.backgroundColor = .red
+//        cDraftQView.backgroundColor = .yellow
+////        panel.addSubview(cDraftQView)
+//        cView.addSubview(cDraftQView)
+//        cDraftQView.translatesAutoresizingMaskIntoConstraints = false
+//        cDraftQView.trailingAnchor.constraint(equalTo: cDraftBtn.leadingAnchor, constant: -5).isActive = true
+////        cDraftQView.centerYAnchor.constraint(equalTo: bGrid.centerYAnchor).isActive = true
+//        cDraftQView.centerYAnchor.constraint(equalTo: cView.centerYAnchor).isActive = true
+//        cDraftQView.heightAnchor.constraint(equalToConstant: 20).isActive = true
+//        cDraftQView.widthAnchor.constraint(equalToConstant: 20).isActive = true
+//        cDraftQView.layer.cornerRadius = 10
+////        cDraftQView.isHidden = true
+//        
+//        let cDraftQText = UILabel()
+//        cDraftQText.textAlignment = .center
+////        cDraftQText.textColor = .white
+//        cDraftQText.textColor = .black
+//        cDraftQText.font = .boldSystemFont(ofSize: 12)
+////        panel.addSubview(cDraftQText)
+//        cView.addSubview(cDraftQText)
+//        cDraftQText.translatesAutoresizingMaskIntoConstraints = false
+//        cDraftQText.centerYAnchor.constraint(equalTo: cDraftQView.centerYAnchor, constant: 0).isActive = true
+//        cDraftQText.centerXAnchor.constraint(equalTo: cDraftQView.centerXAnchor, constant: 0).isActive = true //10
+//        cDraftQText.text = "2"
         
-        let cDraftQView = UIView()
-//        cDraftQView.backgroundColor = .red
-        cDraftQView.backgroundColor = .yellow
-//        panel.addSubview(cDraftQView)
-        cView.addSubview(cDraftQView)
-        cDraftQView.translatesAutoresizingMaskIntoConstraints = false
-        cDraftQView.trailingAnchor.constraint(equalTo: cDraftBtn.leadingAnchor, constant: -5).isActive = true
-//        cDraftQView.centerYAnchor.constraint(equalTo: bGrid.centerYAnchor).isActive = true
-        cDraftQView.centerYAnchor.constraint(equalTo: cView.centerYAnchor).isActive = true
-        cDraftQView.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        cDraftQView.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        cDraftQView.layer.cornerRadius = 10
-//        cDraftQView.isHidden = true
+        let cNotifiedBox = UIView()
+//        eUserCover.backgroundColor = .ddmBlackOverlayColor
+        cNotifiedBox.backgroundColor = .red
+        cView.addSubview(cNotifiedBox)
+        cNotifiedBox.translatesAutoresizingMaskIntoConstraints = false
+        cNotifiedBox.centerYAnchor.constraint(equalTo: cView.centerYAnchor, constant: 0).isActive = true
+        cNotifiedBox.trailingAnchor.constraint(equalTo: cView.trailingAnchor, constant: 0).isActive = true
+        cNotifiedBox.heightAnchor.constraint(equalToConstant: 10).isActive = true //40
+        cNotifiedBox.widthAnchor.constraint(equalToConstant: 10).isActive = true
+        cNotifiedBox.layer.cornerRadius = 5
         
         let cDraftQText = UILabel()
         cDraftQText.textAlignment = .center
-//        cDraftQText.textColor = .white
-        cDraftQText.textColor = .black
+        cDraftQText.textColor = .white
+//        cDraftQText.textColor = .black
         cDraftQText.font = .boldSystemFont(ofSize: 12)
+//        cDraftQText.font = .systemFont(ofSize: 12)
 //        panel.addSubview(cDraftQText)
         cView.addSubview(cDraftQText)
         cDraftQText.translatesAutoresizingMaskIntoConstraints = false
-        cDraftQText.centerYAnchor.constraint(equalTo: cDraftQView.centerYAnchor, constant: 0).isActive = true
-        cDraftQText.centerXAnchor.constraint(equalTo: cDraftQView.centerXAnchor, constant: 0).isActive = true //10
-        cDraftQText.text = "2"
+        cDraftQText.leadingAnchor.constraint(equalTo: cView.leadingAnchor, constant: 10).isActive = true
+        cDraftQText.trailingAnchor.constraint(equalTo: cNotifiedBox.leadingAnchor, constant: -5).isActive = true
+        cDraftQText.centerYAnchor.constraint(equalTo: cView.centerYAnchor).isActive = true
+        cDraftQText.text = "2 Drafts"
 
         let bTextView = UIView()
         panel.addSubview(bTextView)
@@ -434,53 +484,78 @@ class CreateSelectPanelView: PanelView, UIGestureRecognizerDelegate{
         panel.addSubview(bView)
         bView.translatesAutoresizingMaskIntoConstraints = false
 //        bView.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -20).isActive = true
-        bView.trailingAnchor.constraint(equalTo: bArrowBtn.leadingAnchor, constant: -10).isActive = true
+        bView.trailingAnchor.constraint(equalTo: bArrowBtn.leadingAnchor, constant: 0).isActive = true
         bView.centerYAnchor.constraint(equalTo: bGrid.centerYAnchor).isActive = true
         bView.heightAnchor.constraint(equalToConstant: 40).isActive = true //ori 30
-        bView.widthAnchor.constraint(equalToConstant: 40).isActive = true
+//        bView.widthAnchor.constraint(equalToConstant: 40).isActive = true
         bView.isUserInteractionEnabled = true
         bView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onDraftShortVideoClicked)))
         bView.isHidden = true
         
-        let bDraftBtn = UIImageView()
-//        bDraftBtn.image = UIImage(named:"icon_round_folder_open")?.withRenderingMode(.alwaysTemplate)
-        bDraftBtn.image = UIImage(named:"icon_round_folder_close")?.withRenderingMode(.alwaysTemplate)
-        bDraftBtn.tintColor = .white
-//        panel.addSubview(bDraftBtn)
-        bView.addSubview(bDraftBtn)
-        bDraftBtn.translatesAutoresizingMaskIntoConstraints = false
-//        bDraftBtn.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -20).isActive = true
-//        bDraftBtn.centerYAnchor.constraint(equalTo: bGrid.centerYAnchor).isActive = true
-        bDraftBtn.trailingAnchor.constraint(equalTo: bView.trailingAnchor, constant: 0).isActive = true
-        bDraftBtn.centerYAnchor.constraint(equalTo: bView.centerYAnchor).isActive = true
-        bDraftBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true //ori 30
-        bDraftBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
+//        let bDraftBtn = UIImageView()
+////        bDraftBtn.image = UIImage(named:"icon_round_folder_open")?.withRenderingMode(.alwaysTemplate)
+//        bDraftBtn.image = UIImage(named:"icon_round_folder_close")?.withRenderingMode(.alwaysTemplate)
+//        bDraftBtn.tintColor = .white
+////        panel.addSubview(bDraftBtn)
+//        bView.addSubview(bDraftBtn)
+//        bDraftBtn.translatesAutoresizingMaskIntoConstraints = false
+////        bDraftBtn.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -20).isActive = true
+////        bDraftBtn.centerYAnchor.constraint(equalTo: bGrid.centerYAnchor).isActive = true
+//        bDraftBtn.trailingAnchor.constraint(equalTo: bView.trailingAnchor, constant: 0).isActive = true
+//        bDraftBtn.centerYAnchor.constraint(equalTo: bView.centerYAnchor).isActive = true
+//        bDraftBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true //ori 30
+//        bDraftBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
+//        
+//        let bDraftQView = UIView()
+////        bDraftQView.backgroundColor = .red
+//        bDraftQView.backgroundColor = .yellow
+////        panel.addSubview(bDraftQView)
+//        bView.addSubview(bDraftQView)
+//        bDraftQView.translatesAutoresizingMaskIntoConstraints = false
+//        bDraftQView.trailingAnchor.constraint(equalTo: bDraftBtn.leadingAnchor, constant: -5).isActive = true
+////        bDraftQView.centerYAnchor.constraint(equalTo: bGrid.centerYAnchor).isActive = true
+//        bDraftQView.centerYAnchor.constraint(equalTo: bView.centerYAnchor).isActive = true
+//        bDraftQView.heightAnchor.constraint(equalToConstant: 20).isActive = true
+//        bDraftQView.widthAnchor.constraint(equalToConstant: 20).isActive = true
+//        bDraftQView.layer.cornerRadius = 10
+////        bDraftQView.isHidden = true
+//        
+//        let bDraftQText = UILabel()
+//        bDraftQText.textAlignment = .center
+////        bDraftQText.textColor = .white
+//        bDraftQText.textColor = .black
+//        bDraftQText.font = .boldSystemFont(ofSize: 12)
+////        panel.addSubview(bDraftQText)
+//        bView.addSubview(bDraftQText)
+//        bDraftQText.translatesAutoresizingMaskIntoConstraints = false
+//        bDraftQText.centerYAnchor.constraint(equalTo: bDraftQView.centerYAnchor, constant: 0).isActive = true
+//        bDraftQText.centerXAnchor.constraint(equalTo: bDraftQView.centerXAnchor, constant: 0).isActive = true //10
+//        bDraftQText.text = "3"
         
-        let bDraftQView = UIView()
-//        bDraftQView.backgroundColor = .red
-        bDraftQView.backgroundColor = .yellow
-//        panel.addSubview(bDraftQView)
-        bView.addSubview(bDraftQView)
-        bDraftQView.translatesAutoresizingMaskIntoConstraints = false
-        bDraftQView.trailingAnchor.constraint(equalTo: bDraftBtn.leadingAnchor, constant: -5).isActive = true
-//        bDraftQView.centerYAnchor.constraint(equalTo: bGrid.centerYAnchor).isActive = true
-        bDraftQView.centerYAnchor.constraint(equalTo: bView.centerYAnchor).isActive = true
-        bDraftQView.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        bDraftQView.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        bDraftQView.layer.cornerRadius = 10
-//        bDraftQView.isHidden = true
+        let bNotifiedBox = UIView()
+//        eUserCover.backgroundColor = .ddmBlackOverlayColor
+        bNotifiedBox.backgroundColor = .red
+        bView.addSubview(bNotifiedBox)
+        bNotifiedBox.translatesAutoresizingMaskIntoConstraints = false
+        bNotifiedBox.centerYAnchor.constraint(equalTo: bView.centerYAnchor, constant: 0).isActive = true
+        bNotifiedBox.trailingAnchor.constraint(equalTo: bView.trailingAnchor, constant: 0).isActive = true
+        bNotifiedBox.heightAnchor.constraint(equalToConstant: 10).isActive = true //40
+        bNotifiedBox.widthAnchor.constraint(equalToConstant: 10).isActive = true
+        bNotifiedBox.layer.cornerRadius = 5
         
         let bDraftQText = UILabel()
         bDraftQText.textAlignment = .center
-//        bDraftQText.textColor = .white
-        bDraftQText.textColor = .black
+        bDraftQText.textColor = .white
+//        cDraftQText.textColor = .black
         bDraftQText.font = .boldSystemFont(ofSize: 12)
-//        panel.addSubview(bDraftQText)
+//        cDraftQText.font = .systemFont(ofSize: 12)
+//        panel.addSubview(cDraftQText)
         bView.addSubview(bDraftQText)
         bDraftQText.translatesAutoresizingMaskIntoConstraints = false
-        bDraftQText.centerYAnchor.constraint(equalTo: bDraftQView.centerYAnchor, constant: 0).isActive = true
-        bDraftQText.centerXAnchor.constraint(equalTo: bDraftQView.centerXAnchor, constant: 0).isActive = true //10
-        bDraftQText.text = "3"
+        bDraftQText.leadingAnchor.constraint(equalTo: bView.leadingAnchor, constant: 10).isActive = true
+        bDraftQText.trailingAnchor.constraint(equalTo: bNotifiedBox.leadingAnchor, constant: -5).isActive = true
+        bDraftQText.centerYAnchor.constraint(equalTo: bView.centerYAnchor).isActive = true
+        bDraftQText.text = "2 Drafts"
 
         let aTextView = UIView()
         panel.addSubview(aTextView)
@@ -551,53 +626,78 @@ class CreateSelectPanelView: PanelView, UIGestureRecognizerDelegate{
         panel.addSubview(aView)
         aView.translatesAutoresizingMaskIntoConstraints = false
 //        aView.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -20).isActive = true
-        aView.trailingAnchor.constraint(equalTo: aArrowBtn.leadingAnchor, constant: -10).isActive = true
+        aView.trailingAnchor.constraint(equalTo: aArrowBtn.leadingAnchor, constant: 0).isActive = true
         aView.centerYAnchor.constraint(equalTo: aGrid.centerYAnchor).isActive = true
         aView.heightAnchor.constraint(equalToConstant: 40).isActive = true //ori 30
-        aView.widthAnchor.constraint(equalToConstant: 40).isActive = true
+//        aView.widthAnchor.constraint(equalToConstant: 40).isActive = true
         aView.isUserInteractionEnabled = true
         aView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onDraftPlaceClicked)))
         aView.isHidden = true
         
-        let aDraftBtn = UIImageView()
-//        aDraftBtn.image = UIImage(named:"icon_round_folder_open")?.withRenderingMode(.alwaysTemplate)
-        aDraftBtn.image = UIImage(named:"icon_round_folder_close")?.withRenderingMode(.alwaysTemplate)
-        aDraftBtn.tintColor = .white
-//        panel.addSubview(aDraftBtn)
-        aView.addSubview(aDraftBtn)
-        aDraftBtn.translatesAutoresizingMaskIntoConstraints = false
-//        aDraftBtn.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -20).isActive = true
-//        aDraftBtn.centerYAnchor.constraint(equalTo: bGrid.centerYAnchor).isActive = true
-        aDraftBtn.trailingAnchor.constraint(equalTo: aView.trailingAnchor, constant: 0).isActive = true
-        aDraftBtn.centerYAnchor.constraint(equalTo: aView.centerYAnchor).isActive = true
-        aDraftBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true //ori 30
-        aDraftBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
+//        let aDraftBtn = UIImageView()
+////        aDraftBtn.image = UIImage(named:"icon_round_folder_open")?.withRenderingMode(.alwaysTemplate)
+//        aDraftBtn.image = UIImage(named:"icon_round_folder_close")?.withRenderingMode(.alwaysTemplate)
+//        aDraftBtn.tintColor = .white
+////        panel.addSubview(aDraftBtn)
+//        aView.addSubview(aDraftBtn)
+//        aDraftBtn.translatesAutoresizingMaskIntoConstraints = false
+////        aDraftBtn.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -20).isActive = true
+////        aDraftBtn.centerYAnchor.constraint(equalTo: bGrid.centerYAnchor).isActive = true
+//        aDraftBtn.trailingAnchor.constraint(equalTo: aView.trailingAnchor, constant: 0).isActive = true
+//        aDraftBtn.centerYAnchor.constraint(equalTo: aView.centerYAnchor).isActive = true
+//        aDraftBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true //ori 30
+//        aDraftBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
+//        
+//        let aDraftQView = UIView()
+////        aDraftQView.backgroundColor = .red
+//        aDraftQView.backgroundColor = .yellow
+////        panel.addSubview(aDraftQView)
+//        aView.addSubview(aDraftQView)
+//        aDraftQView.translatesAutoresizingMaskIntoConstraints = false
+//        aDraftQView.trailingAnchor.constraint(equalTo: aDraftBtn.leadingAnchor, constant: -5).isActive = true
+////        aDraftQView.centerYAnchor.constraint(equalTo: bGrid.centerYAnchor).isActive = true
+//        aDraftQView.centerYAnchor.constraint(equalTo: aView.centerYAnchor).isActive = true
+//        aDraftQView.heightAnchor.constraint(equalToConstant: 20).isActive = true
+//        aDraftQView.widthAnchor.constraint(equalToConstant: 20).isActive = true
+//        aDraftQView.layer.cornerRadius = 10
+////        aDraftQView.isHidden = true
+//        
+//        let aDraftQText = UILabel()
+//        aDraftQText.textAlignment = .center
+////        aDraftQText.textColor = .white
+//        aDraftQText.textColor = .black
+//        aDraftQText.font = .boldSystemFont(ofSize: 12)
+////        panel.addSubview(aDraftQText)
+//        aView.addSubview(aDraftQText)
+//        aDraftQText.translatesAutoresizingMaskIntoConstraints = false
+//        aDraftQText.centerYAnchor.constraint(equalTo: aDraftQView.centerYAnchor, constant: 0).isActive = true
+//        aDraftQText.centerXAnchor.constraint(equalTo: aDraftQView.centerXAnchor, constant: 0).isActive = true //10
+//        aDraftQText.text = "1"
         
-        let aDraftQView = UIView()
-//        aDraftQView.backgroundColor = .red
-        aDraftQView.backgroundColor = .yellow
-//        panel.addSubview(aDraftQView)
-        aView.addSubview(aDraftQView)
-        aDraftQView.translatesAutoresizingMaskIntoConstraints = false
-        aDraftQView.trailingAnchor.constraint(equalTo: aDraftBtn.leadingAnchor, constant: -5).isActive = true
-//        aDraftQView.centerYAnchor.constraint(equalTo: bGrid.centerYAnchor).isActive = true
-        aDraftQView.centerYAnchor.constraint(equalTo: aView.centerYAnchor).isActive = true
-        aDraftQView.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        aDraftQView.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        aDraftQView.layer.cornerRadius = 10
-//        aDraftQView.isHidden = true
+        let aNotifiedBox = UIView()
+//        eUserCover.backgroundColor = .ddmBlackOverlayColor
+        aNotifiedBox.backgroundColor = .red
+        aView.addSubview(aNotifiedBox)
+        aNotifiedBox.translatesAutoresizingMaskIntoConstraints = false
+        aNotifiedBox.centerYAnchor.constraint(equalTo: aView.centerYAnchor, constant: 0).isActive = true
+        aNotifiedBox.trailingAnchor.constraint(equalTo: aView.trailingAnchor, constant: 0).isActive = true
+        aNotifiedBox.heightAnchor.constraint(equalToConstant: 10).isActive = true //40
+        aNotifiedBox.widthAnchor.constraint(equalToConstant: 10).isActive = true
+        aNotifiedBox.layer.cornerRadius = 5
         
         let aDraftQText = UILabel()
         aDraftQText.textAlignment = .center
-//        aDraftQText.textColor = .white
-        aDraftQText.textColor = .black
+        aDraftQText.textColor = .white
+//        cDraftQText.textColor = .black
         aDraftQText.font = .boldSystemFont(ofSize: 12)
-//        panel.addSubview(aDraftQText)
+//        cDraftQText.font = .systemFont(ofSize: 12)
+//        panel.addSubview(cDraftQText)
         aView.addSubview(aDraftQText)
         aDraftQText.translatesAutoresizingMaskIntoConstraints = false
-        aDraftQText.centerYAnchor.constraint(equalTo: aDraftQView.centerYAnchor, constant: 0).isActive = true
-        aDraftQText.centerXAnchor.constraint(equalTo: aDraftQView.centerXAnchor, constant: 0).isActive = true //10
-        aDraftQText.text = "1"
+        aDraftQText.leadingAnchor.constraint(equalTo: aView.leadingAnchor, constant: 10).isActive = true
+        aDraftQText.trailingAnchor.constraint(equalTo: aNotifiedBox.leadingAnchor, constant: -5).isActive = true
+        aDraftQText.centerYAnchor.constraint(equalTo: aView.centerYAnchor).isActive = true
+        aDraftQText.text = "1 Draft"
         
         //test > gesture recognizer for dragging user panel
         let panelPanGesture = UIPanGestureRecognizer(target: self, action: #selector(onPanelPanGesture))
@@ -610,72 +710,56 @@ class CreateSelectPanelView: PanelView, UIGestureRecognizerDelegate{
     
     @objc func onCreatePlaceClicked(gesture: UITapGestureRecognizer) {
         
-//        delegate?.didClickCreatePlace()
-//
-//        //test > close panel
-//        closePanel(isAnimated: true)
+        delegate?.didClickCreatePlace()
+        closePanel(isAnimated: true)
         
         //test > check sign in status
-        if(isUserLoggedIn) {
-            delegate?.didClickCreatePlace()
-
-            //test > close panel
-            closePanel(isAnimated: true)
-        } else {
-            delegate?.didClickOpenLogin()
-        }
+//        if(isUserLoggedIn) {
+//            delegate?.didClickCreatePlace()
+//
+//            //test > close panel
+//            closePanel(isAnimated: true)
+//        } else {
+//            delegate?.didClickOpenLogin()
+//        }
     }
     
     @objc func onCreateShortPostClicked(gesture: UITapGestureRecognizer) {
         
         delegate?.didClickCreateShortPost()
-        
-        //test > close panel
         closePanel(isAnimated: true)
     }
     
     @objc func onCreateShortVideoClicked(gesture: UITapGestureRecognizer) {
         
         delegate?.didClickCreateShortVideo()
-        
-        //test > close panel after transition to camera
         closePanel(isAnimated: true)
     }
     
     @objc func onCreatePhotoClicked(gesture: UITapGestureRecognizer) {
         
         delegate?.didClickCreatePhoto()
-
-        //test > close panel
         closePanel(isAnimated: true)
     }
     
     @objc func onDraftShortVideoClicked(gesture: UITapGestureRecognizer) {
         
         delegate?.didClickShortVideoDraft()
-        
-        //test > close panel after transition to camera
         closePanel(isAnimated: true)
     }
     
     @objc func onDraftShortPostClicked(gesture: UITapGestureRecognizer) {
         
         delegate?.didClickShortPostDraft()
-        
-        //test > close panel after transition to camera
         closePanel(isAnimated: true)
     }
     @objc func onDraftPhotoClicked(gesture: UITapGestureRecognizer) {
         delegate?.didClickPhotoDraft()
-        
-        //test > close panel after transition to camera
         closePanel(isAnimated: true)
     }
     @objc func onDraftPlaceClicked(gesture: UITapGestureRecognizer) {
         
         delegate?.didClickPlaceDraft()
-        
-        //test > close panel after transition to camera
         closePanel(isAnimated: true)
     }
     
@@ -773,37 +857,65 @@ class CreateSelectPanelView: PanelView, UIGestureRecognizerDelegate{
     }
     
     func asyncFetchSigninStatus() {
-        SignInManager.shared.fetchStatus(id: "fetch_status") { [weak self]result in
-            switch result {
-                case .success(let l):
+        //test > simple get method
+        let isSignedIn = SignInManager.shared.getStatus()
+        if(self.isInitialized) {
+            if(self.isUserLoggedIn != isSignedIn) {
+                self.isUserLoggedIn = isSignedIn
 
-                //update UI on main thread
-                DispatchQueue.main.async {
-                    print("createselectpanelview api success: \(l)")
-                    guard let self = self else {
-                        return
-                    }
-                    
-                    let isSignedIn = l
-                    
-                    if(self.isInitialized) {
-                        if(self.isUserLoggedIn != isSignedIn) {
-                            self.isUserLoggedIn = isSignedIn
-                    
-                            self.isInitialized = false
-                            self.initialize()
-                        }
-                    } else {
-                        self.isUserLoggedIn = isSignedIn
-                        self.initialize()
-                    }
-                }
-
-                case .failure(_):
-                    print("api fail")
-                    break
+                self.isInitialized = false
+                self.initialize()
             }
+            //test > recheck UI for aLoggedOut
+            else {
+                if(isUserLoggedIn) {
+                    aView.isHidden = false
+                    bView.isHidden = false
+                    cView.isHidden = false
+                    dView.isHidden = false
+                } else {
+                    aView.isHidden = true
+                    bView.isHidden = true
+                    cView.isHidden = true
+                    dView.isHidden = true
+                }
+            }
+        } else {
+            self.isUserLoggedIn = isSignedIn
+            self.initialize()
         }
+        
+//        SignInManager.shared.fetchStatus(id: "fetch_status") { [weak self]result in
+//            switch result {
+//                case .success(let l):
+//
+//                //update UI on main thread
+//                DispatchQueue.main.async {
+//                    print("createselectpanelview api success: \(l)")
+//                    guard let self = self else {
+//                        return
+//                    }
+//                    
+//                    let isSignedIn = l
+//                    
+//                    if(self.isInitialized) {
+//                        if(self.isUserLoggedIn != isSignedIn) {
+//                            self.isUserLoggedIn = isSignedIn
+//                    
+//                            self.isInitialized = false
+//                            self.initialize()
+//                        }
+//                    } else {
+//                        self.isUserLoggedIn = isSignedIn
+//                        self.initialize()
+//                    }
+//                }
+//
+//                case .failure(_):
+//                    print("api fail")
+//                    break
+//            }
+//        }
     }
     
     @objc func onPanelPanGesture(gesture: UIPanGestureRecognizer) {

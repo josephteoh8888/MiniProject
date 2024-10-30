@@ -2019,8 +2019,9 @@ class ProfileMeCell: MeCell {
 //        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
         aPhoto.contentMode = .scaleAspectFill
         aPhoto.layer.masksToBounds = true
-        aPhoto.layer.cornerRadius = 50
+        aPhoto.layer.cornerRadius = 100/2
 //        aPhoto.sd_setImage(with: imageUrl)
+        aPhoto.backgroundColor = .ddmDarkColor
         
 //        let aNameText = UILabel()
         aNameText.textAlignment = .left

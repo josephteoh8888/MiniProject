@@ -136,52 +136,6 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
         commentTitleBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true //ori 26
         commentTitleBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
         
-        //test * > select order
-//        let l1Tab = UIView()
-////        aBox.backgroundColor = .ddmBlackOverlayColor
-//        l1Tab.backgroundColor = .ddmDarkColor
-//        panelView.addSubview(l1Tab)
-//        l1Tab.clipsToBounds = true
-//        l1Tab.translatesAutoresizingMaskIntoConstraints = false
-//        l1Tab.leadingAnchor.constraint(equalTo: panelView.leadingAnchor, constant: 20).isActive = true
-//        l1Tab.heightAnchor.constraint(equalToConstant: 30).isActive = true //default: 50
-//        l1Tab.topAnchor.constraint(equalTo: commentTitleText.bottomAnchor, constant: 10).isActive = true
-////        l1Tab.centerYAnchor.constraint(equalTo: commentTitleText.centerYAnchor, constant: 0).isActive = true
-//        l1Tab.layer.cornerRadius = 5
-////        l1Tab.layer.opacity = 0.2 //0.3
-//
-//        let l1TabText = UILabel()
-//        l1TabText.textAlignment = .left
-//        l1TabText.textColor = .white
-////        l1TabText.textColor = .ddmDarkColor
-//        l1TabText.font = .boldSystemFont(ofSize: 12)
-////        l1TabText.font = .systemFont(ofSize: 12)
-//        l1Tab.addSubview(l1TabText)
-//        l1TabText.clipsToBounds = true
-//        l1TabText.translatesAutoresizingMaskIntoConstraints = false
-//        l1TabText.centerYAnchor.constraint(equalTo: l1Tab.centerYAnchor).isActive = true
-////        l1TabText.topAnchor.constraint(equalTo: l1Tab.topAnchor, constant: 5).isActive = true
-////        l1TabText.bottomAnchor.constraint(equalTo: l1Tab.bottomAnchor, constant: -5).isActive = true
-//        l1TabText.leadingAnchor.constraint(equalTo: l1Tab.leadingAnchor, constant: 7).isActive = true //10
-////        l1TabText.trailingAnchor.constraint(equalTo: l1Tab.trailingAnchor, constant: -5).isActive = true
-//        l1TabText.text = "Auto"
-//        l1TabText.layer.opacity = 0.5
-//
-//        let l1TabArrowBtn = UIImageView()
-////        l1TabArrowBtn.image = UIImage(named:"icon_arrow_down")?.withRenderingMode(.alwaysTemplate)
-//        l1TabArrowBtn.image = UIImage(named:"icon_round_arrow_down")?.withRenderingMode(.alwaysTemplate)
-//        l1TabArrowBtn.tintColor = .white
-////        self.view.addSubview(arrowBtn)
-//        l1Tab.addSubview(l1TabArrowBtn)
-//        l1TabArrowBtn.translatesAutoresizingMaskIntoConstraints = false
-//        l1TabArrowBtn.leadingAnchor.constraint(equalTo: l1TabText.trailingAnchor, constant: 0).isActive = true
-//        l1TabArrowBtn.trailingAnchor.constraint(equalTo: l1Tab.trailingAnchor, constant: 0).isActive = true //-5
-//        l1TabArrowBtn.centerYAnchor.constraint(equalTo: l1TabText.centerYAnchor).isActive = true
-//        l1TabArrowBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true //ori 26
-//        l1TabArrowBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
-//        l1TabArrowBtn.layer.opacity = 0.5
-        //*
-        
         let vLayout = UICollectionViewFlowLayout()
         vLayout.scrollDirection = .vertical
         vLayout.minimumLineSpacing = 10 //10 => spacing between rows

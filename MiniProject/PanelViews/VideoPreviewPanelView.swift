@@ -80,9 +80,10 @@ class VideoPreviewPanelView: PanelView{
         pBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true //ori: 40
         pBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
         pBtn.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 10).isActive = true
-        pBtn.topAnchor.constraint(equalTo: panel.topAnchor, constant: 50).isActive = true
+//        pBtn.topAnchor.constraint(equalTo: panel.topAnchor, constant: 50).isActive = true
+        pBtn.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
         pBtn.layer.cornerRadius = 20
-        pBtn.layer.opacity = 0.3
+//        pBtn.layer.opacity = 0.3
         pBtn.isUserInteractionEnabled = true
         pBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBackVideoPreviewPanelClicked)))
         

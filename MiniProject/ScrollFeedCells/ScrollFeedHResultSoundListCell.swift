@@ -317,6 +317,9 @@ extension ScrollFeedHResultSoundListCell: HResultListViewDelegate{
         
     }
     func didHResultClickSound(){
+        //test > additional delegate
+        bDelegate?.didScrollFeedHResultResignKeyboard()
+        
         aDelegate?.sfcDidClickVcvClickSound()
     }
     func didHResultClickHashtag() {

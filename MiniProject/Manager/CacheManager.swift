@@ -24,7 +24,7 @@ class CacheManager {
     }()
     
     let CACHE_VIDEO_FILES_FOLDER_NAME = "DdmAppCache"
-    let USER_DEFAULT_VID_CACHE_URLS = "VidUrlCacheArray"
+    let USER_DEFAULT_VID_CACHE_URLS = "VidUrlCacheArray" //simple LRU (Least Recently Used)
 
     func cacheVideoFile(stringUrl: String, completionHandler: @escaping (CResult<URL>) -> Void ) {
         let file = getCacheUrlFor(videoUrl: stringUrl)

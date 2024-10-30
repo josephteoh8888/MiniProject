@@ -17,9 +17,11 @@ protocol PlaceCreatorPanelDelegate : AnyObject {
     
     //test > select location with map
     func didPlaceCreatorClickLocationSelectScrollable()
+    
+    func didPlaceCreatorClickSignIn()
 }
+
 class PlaceCreatorConsolePanelView: CreatorPanelView{
-//class PlaceCreatorConsolePanelView: PanelView{
     
     var panel = UIView()
     var currentPanelTopCons : CGFloat = 0.0
@@ -30,6 +32,7 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
     
     weak var delegate : PlaceCreatorPanelDelegate?
     
+    let aPhotoB = SDAnimatedImageView()
 //    let pTextField = UITextView()
     let pTextField = UITextField()
     let qTextField = UITextView()
@@ -47,6 +50,9 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
     let bSpinner = SpinLoader()
     
     let rHintText = UILabel()
+    
+    //test > user login/out status
+    var isUserLoggedIn = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -87,22 +93,36 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
     //        aBtn.topAnchor.constraint(equalTo: userPanel.topAnchor, constant: 30).isActive = true
 //        aBtn.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
 //        let topInsetMargin = panel.safeAreaInsets.top + 10
-        aBtn.topAnchor.constraint(equalTo: panel.topAnchor, constant: 50).isActive = true
+//        aBtn.topAnchor.constraint(equalTo: panel.topAnchor, constant: 50).isActive = true
+        aBtn.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
         aBtn.layer.cornerRadius = 20
-        aBtn.layer.opacity = 0.3
+//        aBtn.layer.opacity = 0.3
         aBtn.isUserInteractionEnabled = true
         aBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBackPlaceCreatorPanelClicked)))
 
 //        let bMiniBtn = UIImageView(image: UIImage(named:"icon_round_arrow_down_a")?.withRenderingMode(.alwaysTemplate))
         let bMiniBtn = UIImageView(image: UIImage(named:"icon_round_close")?.withRenderingMode(.alwaysTemplate))
-        bMiniBtn.tintColor = .white
+        bMiniBtn.tintColor = .ddmDarkGrayColor
+//        bMiniBtn.tintColor = .ddmBlackDark
 //        aStickyHeader.addSubview(bMiniBtn)
         panel.addSubview(bMiniBtn)
         bMiniBtn.translatesAutoresizingMaskIntoConstraints = false
         bMiniBtn.centerXAnchor.constraint(equalTo: aBtn.centerXAnchor).isActive = true
         bMiniBtn.centerYAnchor.constraint(equalTo: aBtn.centerYAnchor).isActive = true
-        bMiniBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
+        bMiniBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true //26
         bMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
+        
+        //test
+        let aCreateTitleText = UILabel()
+        aCreateTitleText.textAlignment = .center
+        aCreateTitleText.textColor = .white
+//        aCreateTitleText.textColor = .ddmBlackOverlayColor
+        aCreateTitleText.font = .boldSystemFont(ofSize: 14) //16
+        panel.addSubview(aCreateTitleText)
+        aCreateTitleText.translatesAutoresizingMaskIntoConstraints = false
+        aCreateTitleText.centerYAnchor.constraint(equalTo: aBtn.centerYAnchor, constant: 0).isActive = true
+        aCreateTitleText.centerXAnchor.constraint(equalTo: panel.centerXAnchor, constant: 0).isActive = true
+        aCreateTitleText.text = "New Location"
         
         let scrollView = UIScrollView()
         panel.addSubview(scrollView)
@@ -117,6 +137,9 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
         scrollView.delegate = self
         scrollView.alwaysBounceVertical = true
         scrollView.centerXAnchor.constraint(equalTo: panel.centerXAnchor).isActive = true
+        //test
+        scrollView.isUserInteractionEnabled = true
+        scrollView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBoxUnderClicked)))
         
         let stackView = UIView()
         stackView.backgroundColor = .clear
@@ -126,25 +149,52 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
         stackView.topAnchor.constraint(equalTo: scrollView.topAnchor).isActive = true
         stackView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
         stackView.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true
+//        stackView.isUserInteractionEnabled = true
+//        stackView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBoxUnderClicked)))
         
-        let aPhotoB = SDAnimatedImageView()
+//        let aCreateTitleText = UILabel()
+//        aCreateTitleText.textAlignment = .center
+//        aCreateTitleText.textColor = .white
+////        aCreateTitleText.textColor = .ddmBlackOverlayColor
+//        aCreateTitleText.font = .boldSystemFont(ofSize: 14) //16
+//        stackView.addSubview(aCreateTitleText)
+//        aCreateTitleText.translatesAutoresizingMaskIntoConstraints = false
+//        aCreateTitleText.topAnchor.constraint(equalTo: stackView.topAnchor, constant: 30).isActive = true
+//        aCreateTitleText.centerXAnchor.constraint(equalTo: stackView.centerXAnchor, constant: 0).isActive = true
+//        aCreateTitleText.text = "New Location"
+        
+//        let aPhotoB = SDAnimatedImageView()
         stackView.addSubview(aPhotoB)
         aPhotoB.translatesAutoresizingMaskIntoConstraints = false
         aPhotoB.widthAnchor.constraint(equalToConstant: 100).isActive = true
         aPhotoB.heightAnchor.constraint(equalToConstant: 100).isActive = true
         aPhotoB.topAnchor.constraint(equalTo: stackView.topAnchor, constant: 40).isActive = true
-        aPhotoB.leadingAnchor.constraint(equalTo: aBtn.leadingAnchor, constant: 10).isActive = true //default: 100
-        let bImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//        aPhotoB.topAnchor.constraint(equalTo: aCreateTitleText.topAnchor, constant: 30).isActive = true //test
+        aPhotoB.centerXAnchor.constraint(equalTo: stackView.centerXAnchor, constant: 0).isActive = true
+//        let bImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
         aPhotoB.contentMode = .scaleAspectFill
         aPhotoB.layer.masksToBounds = true
         aPhotoB.layer.cornerRadius = 10
-        aPhotoB.sd_setImage(with: bImageUrl)
+//        aPhotoB.sd_setImage(with: bImageUrl)
+        aPhotoB.backgroundColor = .ddmDarkColor
         aPhotoB.isUserInteractionEnabled = true
         aPhotoB.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onAddPhotoClicked)))
         
+        let lhsAddBtn = UIImageView(image: UIImage(named:"icon_round_add_circle")?.withRenderingMode(.alwaysTemplate))
+        lhsAddBtn.tintColor = .white //.ddmBlackOverlayColor
+        stackView.addSubview(lhsAddBtn)
+        lhsAddBtn.translatesAutoresizingMaskIntoConstraints = false
+        lhsAddBtn.leadingAnchor.constraint(equalTo: aPhotoB.trailingAnchor, constant: -10).isActive = true
+        lhsAddBtn.bottomAnchor.constraint(equalTo: aPhotoB.bottomAnchor, constant: 10).isActive = true
+        lhsAddBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true //ori 30
+        lhsAddBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        lhsAddBtn.isUserInteractionEnabled = true
+        lhsAddBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onAddPhotoClicked)))
+        
         //test 2 > design 2
         let pResult = UIView()
-        pResult.backgroundColor = .ddmDarkColor
+//        pResult.backgroundColor = .ddmDarkColor
+        pResult.backgroundColor = .ddmDarkBlack
         stackView.addSubview(pResult)
         pResult.translatesAutoresizingMaskIntoConstraints = false
 //        pResult.leadingAnchor.constraint(equalTo: pText.leadingAnchor, constant: 0).isActive = true
@@ -156,7 +206,7 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
         pResult.topAnchor.constraint(equalTo: aPhotoB.bottomAnchor, constant: 20).isActive = true
         pResult.heightAnchor.constraint(equalToConstant: 40).isActive = true
         pResult.layer.cornerRadius = 5
-        pResult.layer.opacity = 0.1 //0.1
+//        pResult.layer.opacity = 0.1 //0.1
         pResult.isUserInteractionEnabled = true
         pResult.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onAddPTextClicked)))
         
@@ -174,7 +224,8 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
 //        pText.layer.opacity = 0.5
         
         let qResult = UIView()
-        qResult.backgroundColor = .ddmDarkColor
+//        qResult.backgroundColor = .ddmDarkColor
+        qResult.backgroundColor = .ddmDarkBlack
         stackView.addSubview(qResult)
         qResult.translatesAutoresizingMaskIntoConstraints = false
 //        qResult.leadingAnchor.constraint(equalTo: pText.leadingAnchor, constant: 0).isActive = true
@@ -186,7 +237,7 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
         qResult.topAnchor.constraint(equalTo: pResult.bottomAnchor, constant: 10).isActive = true
         qResult.heightAnchor.constraint(equalToConstant: 80).isActive = true //40
         qResult.layer.cornerRadius = 5
-        qResult.layer.opacity = 0.1
+//        qResult.layer.opacity = 0.1
         qResult.isUserInteractionEnabled = true
         qResult.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onAddQTextClicked)))
         qResult.isHidden = true
@@ -206,7 +257,8 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
         qText.isHidden = true
         
         let rResult = UIView()
-        rResult.backgroundColor = .ddmDarkColor
+//        rResult.backgroundColor = .ddmDarkColor
+        rResult.backgroundColor = .ddmDarkBlack
         stackView.addSubview(rResult)
         rResult.translatesAutoresizingMaskIntoConstraints = false
 //        rResult.leadingAnchor.constraint(equalTo: pText.leadingAnchor, constant: 0).isActive = true
@@ -218,7 +270,7 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
         rResult.topAnchor.constraint(equalTo: pResult.bottomAnchor, constant: 10).isActive = true
         rResult.heightAnchor.constraint(equalToConstant: 40).isActive = true
         rResult.layer.cornerRadius = 5
-        rResult.layer.opacity = 0.1
+//        rResult.layer.opacity = 0.1
         rResult.isUserInteractionEnabled = true
         rResult.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onAddRTextClicked)))
         
@@ -232,48 +284,13 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
 //        rText.trailingAnchor.constraint(equalTo: pResult.trailingAnchor, constant: -20).isActive = true
         rText.centerYAnchor.constraint(equalTo: rResult.centerYAnchor, constant: 0).isActive = true
 //        rText.topAnchor.constraint(equalTo: pResult.bottomAnchor, constant: 20).isActive = true
-        rText.text = "Location"
+//        rText.text = "Location"
+        rText.text = "Where"
 //        rText.layer.opacity = 0.5
         
-//        let bGrid = UIView()
-//        bGrid.backgroundColor = .ddmDarkColor
-////        panel.addSubview(bGrid)
-//        stackView.addSubview(bGrid)
-//        bGrid.translatesAutoresizingMaskIntoConstraints = false
-//        bGrid.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 20).isActive = true
-////        bGrid.leadingAnchor.constraint(equalTo: aPhotoB.leadingAnchor, constant: 0).isActive = true
-//        bGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
-//        bGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
-//        bGrid.topAnchor.constraint(equalTo: rResult.bottomAnchor, constant: 40).isActive = true //10
-////        bGrid.layer.cornerRadius = 10
-//        bGrid.layer.cornerRadius = 20
-//        bGrid.layer.opacity = 0.4 //0.4
-//        bGrid.bottomAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 0).isActive = true //10
-//
-//        let bGridIcon = UIImageView(image: UIImage(named:"icon_round_lock_open")?.withRenderingMode(.alwaysTemplate))
-//        bGridIcon.tintColor = .white
-//        bGrid.addSubview(bGridIcon)
-//        bGridIcon.translatesAutoresizingMaskIntoConstraints = false
-//        bGridIcon.centerXAnchor.constraint(equalTo: bGrid.centerXAnchor).isActive = true
-//        bGridIcon.centerYAnchor.constraint(equalTo: bGrid.centerYAnchor).isActive = true
-//        bGridIcon.heightAnchor.constraint(equalToConstant: 20).isActive = true
-//        bGridIcon.widthAnchor.constraint(equalToConstant: 20).isActive = true
-//
-//        let bText = UILabel()
-//        bText.textAlignment = .left
-//        bText.textColor = .white
-//        bText.font = .boldSystemFont(ofSize: 14)
-////        panel.addSubview(bText)
-//        stackView.addSubview(bText)
-//        bText.translatesAutoresizingMaskIntoConstraints = false
-//        bText.centerYAnchor.constraint(equalTo: bGrid.centerYAnchor, constant: 0).isActive = true
-//        bText.leadingAnchor.constraint(equalTo: bGrid.trailingAnchor, constant: 10).isActive = true
-////        bText.text = "Everyone Can See"
-//        bText.text = "Public Location"
-//        bText.layer.opacity = 0.5
-        
         let bGrid = UIView()
-        bGrid.backgroundColor = .ddmDarkColor
+//        bGrid.backgroundColor = .ddmDarkColor
+        bGrid.backgroundColor = .ddmDarkBlack
         stackView.addSubview(bGrid)
         bGrid.translatesAutoresizingMaskIntoConstraints = false
         bGrid.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 20).isActive = true
@@ -281,11 +298,11 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
         bGrid.topAnchor.constraint(equalTo: rResult.bottomAnchor, constant: 40).isActive = true //10
         bGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
         bGrid.layer.cornerRadius = 5
-        bGrid.layer.opacity = 0.1
+//        bGrid.layer.opacity = 0.1
         bGrid.bottomAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 0).isActive = true //10
         
         let bGridBG = UIView()
-        bGridBG.backgroundColor = .ddmDarkColor
+//        bGridBG.backgroundColor = .ddmDarkColor
         stackView.addSubview(bGridBG)
         bGridBG.translatesAutoresizingMaskIntoConstraints = false
         bGridBG.leadingAnchor.constraint(equalTo: bGrid.leadingAnchor, constant: 10).isActive = true
@@ -306,25 +323,27 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
         let bText = UILabel()
         bText.textAlignment = .left
         bText.textColor = .white
-        bText.font = .boldSystemFont(ofSize: 14)
-//        bText.font = .systemFont(ofSize: 14)
+//        bText.font = .boldSystemFont(ofSize: 13)
+        bText.font = .systemFont(ofSize: 14)
         stackView.addSubview(bText)
         bText.translatesAutoresizingMaskIntoConstraints = false
         bText.centerYAnchor.constraint(equalTo: bGrid.centerYAnchor, constant: 0).isActive = true
         bText.leadingAnchor.constraint(equalTo: bGridBG.trailingAnchor, constant: 10).isActive = true
-        bText.text = "Everyone Can See"
+//        bText.text = "Everyone Can See"
 //        bText.text = "Public Location"
 //        bText.layer.opacity = 0.5
+        bText.text = "Public"
         
         let bArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
-        bArrowBtn.tintColor = .white
+//        bArrowBtn.tintColor = .white
+        bArrowBtn.tintColor = .ddmDarkGrayColor
         stackView.addSubview(bArrowBtn)
         bArrowBtn.translatesAutoresizingMaskIntoConstraints = false
         bArrowBtn.trailingAnchor.constraint(equalTo: bGrid.trailingAnchor).isActive = true
         bArrowBtn.centerYAnchor.constraint(equalTo: bGrid.centerYAnchor).isActive = true
         bArrowBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         bArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        bArrowBtn.layer.opacity = 0.5
+//        bArrowBtn.layer.opacity = 0.5
         
         //test > upload button/save draft btn
         let draftBox = UIView()
@@ -332,15 +351,15 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
         panel.addSubview(draftBox)
 //        stack1.addSubview(aSaveDraft)
         draftBox.translatesAutoresizingMaskIntoConstraints = false
-        draftBox.heightAnchor.constraint(equalToConstant: 40).isActive = true
-//        draftBox.trailingAnchor.constraint(equalTo: aSaveDraft.leadingAnchor, constant: -10).isActive = true
-//        draftBox.centerYAnchor.constraint(equalTo: aSaveDraft.centerYAnchor).isActive = true
-        draftBox.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: -60).isActive = true
+        draftBox.heightAnchor.constraint(equalToConstant: 40).isActive = true //40
+//        draftBox.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: -60).isActive = true
+        draftBox.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -20).isActive = true
         draftBox.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 20).isActive = true
 //        draftBox.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -20).isActive = true
         draftBox.layer.cornerRadius = 10
         draftBox.isUserInteractionEnabled = true
         draftBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onDraftBoxClicked)))
+        draftBox.isHidden = true
         
         let draftBoxText = UILabel()
         draftBoxText.textAlignment = .center
@@ -376,7 +395,7 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
 //        panel.addSubview(aSaveDraft)
         stack1.addSubview(aSaveDraft)
         aSaveDraft.translatesAutoresizingMaskIntoConstraints = false
-        aSaveDraft.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        aSaveDraft.heightAnchor.constraint(equalToConstant: 40).isActive = true //40
 //        aSaveDraft.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 20).isActive = true
 //        aSaveDraft.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: -50).isActive = true
         aSaveDraft.leadingAnchor.constraint(equalTo: stack1.leadingAnchor, constant: 0).isActive = true
@@ -412,7 +431,7 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
 //        panel.addSubview(aUpload)
         stack2.addSubview(aUpload)
         aUpload.translatesAutoresizingMaskIntoConstraints = false
-        aUpload.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        aUpload.heightAnchor.constraint(equalToConstant: 40).isActive = true //40
 //        aUpload.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -20).isActive = true
 //        aUpload.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: -50).isActive = true
         aUpload.leadingAnchor.constraint(equalTo: stack2.leadingAnchor, constant: 10).isActive = true
@@ -449,10 +468,11 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
 //        stackViewA.backgroundColor = .blue
         panel.addSubview(stackViewA)
         stackViewA.translatesAutoresizingMaskIntoConstraints = false
-        stackViewA.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: -60).isActive = true //-50
-        stackViewA.heightAnchor.constraint(equalToConstant: 40).isActive = true //ori 60
-//        stackViewA.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 20).isActive = true
-        stackViewA.leadingAnchor.constraint(equalTo: draftBox.trailingAnchor, constant: 20).isActive = true
+//        stackViewA.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: -60).isActive = true //-50
+        stackViewA.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -20).isActive = true
+        stackViewA.heightAnchor.constraint(equalToConstant: 40).isActive = true //ori 40
+        stackViewA.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 20).isActive = true
+//        stackViewA.leadingAnchor.constraint(equalTo: draftBox.trailingAnchor, constant: 20).isActive = true
         stackViewA.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -20).isActive = true
         
         pTextField.textAlignment = .left
@@ -506,7 +526,7 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
 //        rTextField.heightAnchor.constraint(equalToConstant: 40).isActive = true
         rTextField.text = ""
         rTextField.tintColor = .yellow
-        rTextField.placeholder = "Where's your new place at..."
+        rTextField.placeholder = "Where's your new place..."
         rTextField.isHidden = true
         
 //        let rHintText = UILabel()
@@ -520,8 +540,9 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
         rHintText.trailingAnchor.constraint(equalTo: rResult.trailingAnchor, constant: -10).isActive = true
         rHintText.topAnchor.constraint(equalTo: rResult.topAnchor, constant: 2).isActive = true
         rHintText.bottomAnchor.constraint(equalTo: rResult.bottomAnchor, constant: -2).isActive = true
-        rHintText.text = "Where's your new place at..."
+        rHintText.text = "Locate your new place..."
         rHintText.layer.opacity = 0.3
+//        rHintText.textColor = .ddmDarkBlack
         
         let rArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
         rArrowBtn.tintColor = .white
@@ -543,54 +564,117 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
     
     @objc func onPlaceUploadNextClicked(gesture: UITapGestureRecognizer) {
         resignResponder()
-        aUpload.isHidden = true
-        aSpinner.startAnimating()
         
-        //test > close panel when upload
-//        closePlaceCreatorPanel(isAnimated: true)
-        
-        DataFetchManager.shared.sendData(id: "u") { [weak self]result in
-            switch result {
-                case .success(let l):
+        let isSignedIn = SignInManager.shared.getStatus()
+        if(isSignedIn) {
+            aUpload.isHidden = true
+            aSpinner.startAnimating()
+            
+            //test > close panel when upload
+    //        closePlaceCreatorPanel(isAnimated: true)
+            
+            DataFetchManager.shared.sendData(id: "u") { [weak self]result in
+                switch result {
+                    case .success(let l):
 
-                //update UI on main thread
-                DispatchQueue.main.async {
+                    //update UI on main thread
+                    DispatchQueue.main.async {
 
-                    self?.closePlaceCreatorPanel(isAnimated: true)
+                        self?.closePlaceCreatorPanel(isAnimated: true)
+                    }
+
+                    case .failure(_):
+                        print("api fail")
+                        break
                 }
-
-                case .failure(_):
-                    print("api fail")
-                    break
             }
+        }
+        else {
+            delegate?.didPlaceCreatorClickSignIn()
         }
     }
     
     @objc func onSaveDraftNextClicked(gesture: UITapGestureRecognizer) {
         resignResponder()
-        aSaveDraft.isHidden = true
-        bSpinner.startAnimating()
         
-        DataFetchManager.shared.sendData(id: "u") { [weak self]result in
-            switch result {
-                case .success(let l):
+        let isSignedIn = SignInManager.shared.getStatus()
+        if(isSignedIn) {
+            aSaveDraft.isHidden = true
+            bSpinner.startAnimating()
+            
+            DataFetchManager.shared.sendData(id: "u") { [weak self]result in
+                switch result {
+                    case .success(let l):
 
-                //update UI on main thread
-                DispatchQueue.main.async {
+                    //update UI on main thread
+                    DispatchQueue.main.async {
 
-                    self?.closePlaceCreatorPanel(isAnimated: true)
+                        self?.closePlaceCreatorPanel(isAnimated: true)
+                    }
+
+                    case .failure(_):
+                        print("api fail")
+                        break
                 }
-
-                case .failure(_):
-                    print("api fail")
-                    break
             }
+        }
+        else {
+            delegate?.didPlaceCreatorClickSignIn()
         }
     }
     
     @objc func onBoxUnderClicked(gesture: UITapGestureRecognizer) {
         print("box under")
         resignResponder()
+    }
+    
+    //test
+    override func resumeActiveState() {
+        print("placecreatorpanelview resume active")
+        
+        //test > check for signin status when in active state
+        asyncFetchSigninStatus()
+    }
+    
+    //test > initialization state => !!already exist in layoutsubview
+    var isInitialized = false
+    func initialize(topInset: CGFloat, bottomInset: CGFloat) {
+        //test
+        asyncFetchSigninStatus()
+    }
+    //test
+    func initialize() {
+        if(!isInitialized) {
+            if(isUserLoggedIn) {
+
+            } else {
+
+            }
+        }
+        isInitialized = true
+    }
+    //test > check sign in status before allowing user to create
+    func asyncFetchSigninStatus() {
+        //test > simple get method
+        let isSignedIn = SignInManager.shared.getStatus()
+        if(self.isInitialized) {
+            if(self.isUserLoggedIn != isSignedIn) {
+                self.isUserLoggedIn = isSignedIn
+        
+                self.isInitialized = false
+                self.initialize()
+            }
+            else {
+                if(self.isUserLoggedIn) {
+                    
+                } else {
+                    
+                }
+            }
+        } else {
+            self.isUserLoggedIn = isSignedIn
+            self.initialize()
+        }
     }
     
     func resignResponder() {
@@ -620,21 +704,35 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
 //        activate(textView: qTextField)
     }
     @objc func onAddRTextClicked(gesture: UITapGestureRecognizer) {
+        resignResponder()
+        
 //        activate(textField: rTextField) //test
         
         //test > init add location panel
 //        self.isHidden = true
         
         //test 2
-        delegate?.didPlaceCreatorClickLocationSelectScrollable()
+        let isSignedIn = SignInManager.shared.getStatus()
+        if(isSignedIn) {
+            delegate?.didPlaceCreatorClickLocationSelectScrollable()
+        }
+        else {
+            delegate?.didPlaceCreatorClickSignIn()
+        }
     }
     @objc func onAddPhotoClicked(gesture: UITapGestureRecognizer) {
         resignResponder()
-        openCameraRoll()
+        
+        let isSignedIn = SignInManager.shared.getStatus()
+        if(isSignedIn) {
+            openCameraRoll()
+        }
+        else {
+            delegate?.didPlaceCreatorClickSignIn()
+        }
     }
     @objc func onDraftBoxClicked(gesture: UITapGestureRecognizer) {
-        resignResponder()
-        openPlaceDraftPanel()
+
     }
     
     func closePlaceCreatorPanel(isAnimated: Bool) {
@@ -669,16 +767,6 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
         cameraRollPanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
         cameraRollPanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
         cameraRollPanel.delegate = self
-    }
-    
-    func openPlaceDraftPanel() {
-        let draftPanel = PlaceDraftPanelView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
-        panel.addSubview(draftPanel)
-        draftPanel.translatesAutoresizingMaskIntoConstraints = false
-        draftPanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
-        draftPanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
-        draftPanel.delegate = self
-        draftPanel.initialize()
     }
     
     //test
@@ -742,47 +830,33 @@ extension ViewController: PlaceCreatorPanelDelegate{
     func didPlaceCreatorClickLocationSelectScrollable(){
         openLocationSelectScrollablePanel()
     }
+    
+    func didPlaceCreatorClickSignIn(){
+        openLoginPanel()
+    }
 }
 
 extension PlaceCreatorConsolePanelView: CameraPhotoRollPanelDelegate{
     func didInitializeCameraPhotoRoll() {
-        //test to turn off camera
-//        session?.removeInput(videoDeviceInput!) //test
-//        self.session?.stopRunning()
+
     }
     func didClickFinishCameraPhotoRoll() {
-//        backPage()
+
     }
     func didClickPhotoSelect(photo: PHAsset) {
-//        openVideoEditor()
-        
-        //test > convert PHAsset to image for image editor/insert to post
-//        PHCachingImageManager.default().requestAVAsset(forVideo: video, options: nil) { [weak self] (video, _, _) in
-//
-//            if let avVid = video
-//            {
-//                DispatchQueue.main.async {
-//                    //test 1 > open with video asset => tested OK
-////                    self?.openVideoEditor(video: avVid)
-//
-//                    //test 2 > open with url => tested OK
-//                    //try get url from avasset
-//                    if let strURL = (video as? AVURLAsset)?.url.absoluteString {
-//                        print("VIDEO URL: ", strURL)
-//                        self?.openVideoEditor(videoUrl: URL(fileURLWithPath: strURL))
-//                    }
-//                }
-//            }
-//        }
+
     }
     func didClickMultiPhotoSelect(urls: [URL]){
-        
+        if(!urls.isEmpty) {
+            let imgUrl = urls[0]
+            aPhotoB.sd_setImage(with: imgUrl)
+        }
     }
 }
 
-extension PlaceCreatorConsolePanelView: PlaceDraftPanelDelegate{
-    func didClickClosePlaceDraftPanel() {
-        
-//        backPage(isCurrentPageScrollable: false)
-    }
-}
+//extension PlaceCreatorConsolePanelView: PlaceDraftPanelDelegate{
+//    func didClickClosePlaceDraftPanel() {
+//        
+////        backPage(isCurrentPageScrollable: false)
+//    }
+//}

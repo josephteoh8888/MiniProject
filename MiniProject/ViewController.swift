@@ -4360,6 +4360,9 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
         panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
         panel.delegate = self
+        
+        //test > try initialize
+        panel.initialize(topInset: topInset, bottomInset: bottomInset)
 
         pageList.append(panel)
 
@@ -4413,6 +4416,7 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
         panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
         panel.delegate = self
+        panel.initialize(topInset: topInset, bottomInset: bottomInset)
 
         pageList.append(panel)
         

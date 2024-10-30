@@ -26,6 +26,11 @@ protocol PostPanelDelegate : AnyObject {
     func didClickPostPanelVcvClickPost() //try
     func didClickPostPanelVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) //try
     func didClickPostPanelVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) //try
+    
+    //test > click to create new post
+    func didClickPostPanelVcvClickCreatePost()
+    func didClickPostPanelVcvClickCreatePhoto()
+    func didClickPostPanelVcvClickCreateVideo()
 
     //test > for marker animation after video closes
     func didStartPostPanGesture(ppv : PostPanelView)
@@ -1785,10 +1790,51 @@ extension ViewController: PostPanelDelegate{
         dataset.append("a")
         self.openVideoPanel(offX: offsetX, offY: offsetY, originatorView: view, originatorViewType: OriginatorTypes.UIVIEW, id: 0, originatorViewId: "", preterminedDatasets: dataset, mode: mode)
     }
+    
+    func didClickPostPanelVcvClickCreatePost(){
+        openPostCreatorPanel()
+    }
+    func didClickPostPanelVcvClickCreatePhoto(){
+        openPhotoCreatorPanel()
+    }
+    func didClickPostPanelVcvClickCreateVideo(){
+        openVideoCreatorPanel()
+    }
 }
 
 extension PostPanelView: ShareSheetScrollableDelegate{
-    func didShareSheetClick(){
+    func didShareSheetClickCreate(type: String){
+        //test > for deleting item
+        if(!pageList.isEmpty) {
+            pageList.remove(at: pageList.count - 1)
+            
+            if(pageList.count > 0) {
+                let lastPage = pageList[pageList.count - 1]
+                if let a = lastPage as? CommentScrollableView {
+                    print("lastpagelist e \(a.selectedItemIdx)")
+                    let idx = a.selectedItemIdx
+                    
+                    //test > create new post
+                    if(type == "post") {
+                        delegate?.didClickPostPanelVcvClickCreatePost()
+                    }
+                }
+                else if let b = lastPage as? ShareSheetScrollableView {
+                    print("lastpagelist f")
+                }
+            } else {
+                if(!self.feedList.isEmpty) {
+                    let feed = feedList[currentIndex]
+                    
+                    //test > create new post
+                    if(type == "post") {
+                        delegate?.didClickPostPanelVcvClickCreatePost()
+                    }
+                }
+            }
+        }
+    }
+    func didShareSheetClickDelete(){
         //test > for deleting item
         if(!pageList.isEmpty) {
             pageList.remove(at: pageList.count - 1)

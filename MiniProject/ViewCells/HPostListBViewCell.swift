@@ -425,7 +425,7 @@ class HPostListBViewCell: UICollectionViewCell {
         
         let eMini = UIView()
 //        eMini.backgroundColor = .ddmDarkColor
-        bMini.backgroundColor = .ddmBlackDark
+        eMini.backgroundColor = .ddmBlackDark
 //        eMini.backgroundColor = .green
 //        contentView.addSubview(eMini)
         eMiniCon.addSubview(eMini)

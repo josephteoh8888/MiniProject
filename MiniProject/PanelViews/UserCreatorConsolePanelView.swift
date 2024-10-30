@@ -49,6 +49,8 @@ class UserCreatorConsolePanelView: PanelView{
     let PANEL_MODE_EDIT: String = "edit"
     let aLoginText = UILabel()
     
+    let aPhotoB = SDAnimatedImageView()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -88,7 +90,8 @@ class UserCreatorConsolePanelView: PanelView{
     //        aBtn.topAnchor.constraint(equalTo: userPanel.topAnchor, constant: 30).isActive = true
 //        aBtn.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
 //        let topInsetMargin = panel.safeAreaInsets.top + 10
-        aBtn.topAnchor.constraint(equalTo: panel.topAnchor, constant: 50).isActive = true
+//        aBtn.topAnchor.constraint(equalTo: panel.topAnchor, constant: 50).isActive = true
+        aBtn.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
         aBtn.layer.cornerRadius = 20
 //        aBtn.layer.opacity = 0.3
         aBtn.isUserInteractionEnabled = true
@@ -106,6 +109,17 @@ class UserCreatorConsolePanelView: PanelView{
         bMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
 //        bMiniBtn.layer.opacity = 0.3
         
+//        let aLoginText = UILabel()
+        aLoginText.textAlignment = .center
+        aLoginText.textColor = .white
+//        aLoginText.textColor = .ddmBlackOverlayColor
+        aLoginText.font = .boldSystemFont(ofSize: 14) //16
+        panel.addSubview(aLoginText)
+        aLoginText.translatesAutoresizingMaskIntoConstraints = false
+        aLoginText.centerYAnchor.constraint(equalTo: aBtn.centerYAnchor, constant: 0).isActive = true
+        aLoginText.centerXAnchor.constraint(equalTo: panel.centerXAnchor, constant: 0).isActive = true
+        aLoginText.text = "Setup Profile"
+        
         let scrollView = UIScrollView()
         panel.addSubview(scrollView)
         scrollView.backgroundColor = .clear
@@ -119,6 +133,8 @@ class UserCreatorConsolePanelView: PanelView{
         scrollView.delegate = self
         scrollView.alwaysBounceVertical = true
         scrollView.centerXAnchor.constraint(equalTo: panel.centerXAnchor).isActive = true
+        scrollView.isUserInteractionEnabled = true
+        scrollView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBoxUnderClicked)))
         
         let stackView = UIView()
         stackView.backgroundColor = .clear
@@ -129,33 +145,45 @@ class UserCreatorConsolePanelView: PanelView{
         stackView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
         stackView.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true
         
-//        let aLoginText = UILabel()
-        aLoginText.textAlignment = .center
-        aLoginText.textColor = .white
-//        aLoginText.textColor = .ddmBlackOverlayColor
-        aLoginText.font = .boldSystemFont(ofSize: 14) //16
-        stackView.addSubview(aLoginText)
-        aLoginText.translatesAutoresizingMaskIntoConstraints = false
-        aLoginText.topAnchor.constraint(equalTo: stackView.topAnchor, constant: 30).isActive = true
-        aLoginText.centerXAnchor.constraint(equalTo: stackView.centerXAnchor, constant: 0).isActive = true
-        aLoginText.text = "Setup Profile"
+////        let aLoginText = UILabel()
+//        aLoginText.textAlignment = .center
+//        aLoginText.textColor = .white
+////        aLoginText.textColor = .ddmBlackOverlayColor
+//        aLoginText.font = .boldSystemFont(ofSize: 14) //16
+//        stackView.addSubview(aLoginText)
+//        aLoginText.translatesAutoresizingMaskIntoConstraints = false
+//        aLoginText.topAnchor.constraint(equalTo: stackView.topAnchor, constant: 30).isActive = true
+//        aLoginText.centerXAnchor.constraint(equalTo: stackView.centerXAnchor, constant: 0).isActive = true
+//        aLoginText.text = "Setup Profile"
         
-        let aPhotoB = SDAnimatedImageView()
+//        let aPhotoB = SDAnimatedImageView()
         stackView.addSubview(aPhotoB)
         aPhotoB.translatesAutoresizingMaskIntoConstraints = false
         aPhotoB.widthAnchor.constraint(equalToConstant: 100).isActive = true
         aPhotoB.heightAnchor.constraint(equalToConstant: 100).isActive = true
-//        aPhotoB.topAnchor.constraint(equalTo: stackView.topAnchor, constant: 40).isActive = true
-        aPhotoB.topAnchor.constraint(equalTo: aLoginText.bottomAnchor, constant: 30).isActive = true
+        aPhotoB.topAnchor.constraint(equalTo: stackView.topAnchor, constant: 40).isActive = true
+//        aPhotoB.topAnchor.constraint(equalTo: aLoginText.bottomAnchor, constant: 30).isActive = true
 //        aPhotoB.leadingAnchor.constraint(equalTo: aBtn.leadingAnchor, constant: 10).isActive = true //default: 100
         aPhotoB.centerXAnchor.constraint(equalTo: stackView.centerXAnchor, constant: 0).isActive = true //default: 100
-        let bImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//        let bImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
         aPhotoB.contentMode = .scaleAspectFill
         aPhotoB.layer.masksToBounds = true
         aPhotoB.layer.cornerRadius = 50
-        aPhotoB.sd_setImage(with: bImageUrl)
+//        aPhotoB.sd_setImage(with: bImageUrl)
+        aPhotoB.backgroundColor = .ddmDarkColor
         aPhotoB.isUserInteractionEnabled = true
         aPhotoB.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onAddPhotoClicked)))
+        
+        let lhsAddBtn = UIImageView(image: UIImage(named:"icon_round_add_circle")?.withRenderingMode(.alwaysTemplate))
+        lhsAddBtn.tintColor = .white //.ddmBlackOverlayColor
+        stackView.addSubview(lhsAddBtn)
+        lhsAddBtn.translatesAutoresizingMaskIntoConstraints = false
+        lhsAddBtn.leadingAnchor.constraint(equalTo: aPhotoB.trailingAnchor, constant: -20).isActive = true //10
+        lhsAddBtn.bottomAnchor.constraint(equalTo: aPhotoB.bottomAnchor, constant: -5).isActive = true
+        lhsAddBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true //ori 30
+        lhsAddBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        lhsAddBtn.isUserInteractionEnabled = true
+        lhsAddBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onAddPhotoClicked)))
         
         //test 2 > design 2
         let pResult = UIView()
@@ -287,44 +315,6 @@ class UserCreatorConsolePanelView: PanelView{
         rText.text = "Base"
 //        rText.layer.opacity = 0.5
         
-//        let bGrid = UIView()
-//        bGrid.backgroundColor = .ddmDarkColor
-////        panel.addSubview(bGrid)
-//        stackView.addSubview(bGrid)
-//        bGrid.translatesAutoresizingMaskIntoConstraints = false
-////        bGrid.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 20).isActive = true
-//        bGrid.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 20).isActive = true
-////        bGrid.leadingAnchor.constraint(equalTo: aPhotoB.leadingAnchor, constant: 0).isActive = true
-//        bGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
-//        bGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
-//        bGrid.topAnchor.constraint(equalTo: rResult.bottomAnchor, constant: 40).isActive = true //10
-////        bGrid.layer.cornerRadius = 10
-//        bGrid.layer.cornerRadius = 20
-//        bGrid.layer.opacity = 0.4 //0.4
-//        bGrid.bottomAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 0).isActive = true //10
-        
-//        let bGridIcon = UIImageView(image: UIImage(named:"icon_round_lock_open")?.withRenderingMode(.alwaysTemplate))
-//        bGridIcon.tintColor = .white
-//        bGrid.addSubview(bGridIcon)
-//        bGridIcon.translatesAutoresizingMaskIntoConstraints = false
-//        bGridIcon.centerXAnchor.constraint(equalTo: bGrid.centerXAnchor).isActive = true
-//        bGridIcon.centerYAnchor.constraint(equalTo: bGrid.centerYAnchor).isActive = true
-//        bGridIcon.heightAnchor.constraint(equalToConstant: 20).isActive = true
-//        bGridIcon.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        
-//        let bText = UILabel()
-//        bText.textAlignment = .left
-//        bText.textColor = .white
-//        bText.font = .boldSystemFont(ofSize: 14)
-////        panel.addSubview(bText)
-//        stackView.addSubview(bText)
-//        bText.translatesAutoresizingMaskIntoConstraints = false
-//        bText.centerYAnchor.constraint(equalTo: bGrid.centerYAnchor, constant: 0).isActive = true
-//        bText.leadingAnchor.constraint(equalTo: bGrid.trailingAnchor, constant: 10).isActive = true
-////        bText.text = "Everyone Can See"
-//        bText.text = "Public Account"
-//        bText.layer.opacity = 0.5
-        
         let bGrid = UIView()
         bGrid.backgroundColor = .ddmDarkBlack
         stackView.addSubview(bGrid)
@@ -338,7 +328,7 @@ class UserCreatorConsolePanelView: PanelView{
         bGrid.bottomAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 0).isActive = true //10
         
         let bGridBG = UIView()
-        bGridBG.backgroundColor = .ddmDarkColor
+//        bGridBG.backgroundColor = .ddmDarkColor
         stackView.addSubview(bGridBG)
         bGridBG.translatesAutoresizingMaskIntoConstraints = false
         bGridBG.leadingAnchor.constraint(equalTo: bGrid.leadingAnchor, constant: 10).isActive = true
@@ -359,8 +349,8 @@ class UserCreatorConsolePanelView: PanelView{
         let bText = UILabel()
         bText.textAlignment = .left
         bText.textColor = .white
-        bText.font = .boldSystemFont(ofSize: 14)
-//        bText.font = .systemFont(ofSize: 14)
+//        bText.font = .boldSystemFont(ofSize: 14)
+        bText.font = .systemFont(ofSize: 14)
         stackView.addSubview(bText)
         bText.translatesAutoresizingMaskIntoConstraints = false
         bText.centerYAnchor.constraint(equalTo: bGrid.centerYAnchor, constant: 0).isActive = true
@@ -404,8 +394,8 @@ class UserCreatorConsolePanelView: PanelView{
         aUploadText.translatesAutoresizingMaskIntoConstraints = false
 //        aUploadText.centerXAnchor.constraint(equalTo: aUpload.centerXAnchor).isActive = true
         aUploadText.centerYAnchor.constraint(equalTo: aUpload.centerYAnchor).isActive = true
-        aUploadText.leadingAnchor.constraint(equalTo: aUpload.leadingAnchor, constant: 25).isActive = true
-        aUploadText.trailingAnchor.constraint(equalTo: aUpload.trailingAnchor, constant: -25).isActive = true
+        aUploadText.leadingAnchor.constraint(equalTo: aUpload.leadingAnchor, constant: 15).isActive = true //25
+        aUploadText.trailingAnchor.constraint(equalTo: aUpload.trailingAnchor, constant: -15).isActive = true
         aUploadText.text = "Done" //create
         
         panel.addSubview(aSpinner)
@@ -472,7 +462,7 @@ class UserCreatorConsolePanelView: PanelView{
         
         let qHintText = UILabel()
         qHintText.textAlignment = .left
-        qHintText.textColor = .ddmDarkGrayColor
+        qHintText.textColor = .white
         qHintText.font = .systemFont(ofSize: 14)
 //        panel.addSubview(aUploadText)
         stackView.addSubview(qHintText)
@@ -482,7 +472,7 @@ class UserCreatorConsolePanelView: PanelView{
         qHintText.topAnchor.constraint(equalTo: qResult.topAnchor, constant: 2).isActive = true
         qHintText.bottomAnchor.constraint(equalTo: qResult.bottomAnchor, constant: -2).isActive = true
         qHintText.text = "Select date"
-//        qHintText.layer.opacity = 0.3
+        qHintText.layer.opacity = 0.3
         
         let qArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
         qArrowBtn.tintColor = .ddmDarkGrayColor
@@ -515,7 +505,7 @@ class UserCreatorConsolePanelView: PanelView{
         
         let rHintText = UILabel()
         rHintText.textAlignment = .left
-        rHintText.textColor = .ddmDarkGrayColor
+        rHintText.textColor = .white
         rHintText.font = .systemFont(ofSize: 14)
 //        panel.addSubview(aUploadText)
         stackView.addSubview(rHintText)
@@ -524,8 +514,8 @@ class UserCreatorConsolePanelView: PanelView{
         rHintText.trailingAnchor.constraint(equalTo: rResult.trailingAnchor, constant: -10).isActive = true
         rHintText.topAnchor.constraint(equalTo: rResult.topAnchor, constant: 2).isActive = true
         rHintText.bottomAnchor.constraint(equalTo: rResult.bottomAnchor, constant: -2).isActive = true
-        rHintText.text = "Where's your base at..."
-//        rHintText.layer.opacity = 0.3
+        rHintText.text = "Where you are based at..."
+        rHintText.layer.opacity = 0.3
         
         let rArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
         rArrowBtn.tintColor = .ddmDarkGrayColor
@@ -642,7 +632,7 @@ class UserCreatorConsolePanelView: PanelView{
             }, completion: { _ in
                 self.removeFromSuperview()
 
-//                self.delegate?.didClickFinishUserCreator()
+                self.delegate?.didClickFinishUserCreator()
             })
         } else {
             self.removeFromSuperview()
@@ -761,29 +751,13 @@ extension UserCreatorConsolePanelView: CameraPhotoRollPanelDelegate{
 //        backPage()
     }
     func didClickPhotoSelect(photo: PHAsset) {
-//        openVideoEditor()
-        
-        //test > convert PHAsset to image for image editor/insert to post
-//        PHCachingImageManager.default().requestAVAsset(forVideo: video, options: nil) { [weak self] (video, _, _) in
-//
-//            if let avVid = video
-//            {
-//                DispatchQueue.main.async {
-//                    //test 1 > open with video asset => tested OK
-////                    self?.openVideoEditor(video: avVid)
-//
-//                    //test 2 > open with url => tested OK
-//                    //try get url from avasset
-//                    if let strURL = (video as? AVURLAsset)?.url.absoluteString {
-//                        print("VIDEO URL: ", strURL)
-//                        self?.openVideoEditor(videoUrl: URL(fileURLWithPath: strURL))
-//                    }
-//                }
-//            }
-//        }
+
     }
     func didClickMultiPhotoSelect(urls: [URL]){
-        
+        if(!urls.isEmpty) {
+            let imgUrl = urls[0]
+            aPhotoB.sd_setImage(with: imgUrl)
+        }
     }
 }
 

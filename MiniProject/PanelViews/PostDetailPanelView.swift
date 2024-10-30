@@ -16,7 +16,7 @@ protocol PostDetailPanelDelegate : AnyObject {
     func didClickPostDetailPanelVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     func didClickPostDetailPanelVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
 }
-class PostDetailPanelView: PanelView {
+class PostDetailPanelView: PanelView, UIGestureRecognizerDelegate{
     
     var panelLeadingCons: NSLayoutConstraint?
     var currentPanelLeadingCons : CGFloat = 0.0
@@ -79,6 +79,9 @@ class PostDetailPanelView: PanelView {
     let sendASpinner = SpinLoader()
     let sendBText = UILabel()
     let sendBBox = UIView()
+    
+    //test > scroll view for carousel
+    var isCarouselScrolled = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -279,7 +282,21 @@ class PostDetailPanelView: PanelView {
         
         //test > gesture recognizer for dragging user panel
         let panelPanGesture = UIPanGestureRecognizer(target: self, action: #selector(onPanelPanGesture))
+//        self.addGestureRecognizer(panelPanGesture)
+        
+        //test
+        panelPanGesture.delegate = self //for simultaneous pan recognizer for uicollectionview
         self.addGestureRecognizer(panelPanGesture)
+    }
+    
+    //test
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        if (gestureRecognizer is UIPanGestureRecognizer) {
+            return true
+//            return false
+        } else {
+            return false
+        }
     }
     
     @objc func onBackPanelClicked(gesture: UITapGestureRecognizer) {
@@ -324,11 +341,20 @@ class PostDetailPanelView: PanelView {
                 }
             }
             if(direction == "x") {
-                var newX = self.currentPanelLeadingCons + x
-                if(newX < 0) {
-                    newX = 0
+//                var newX = self.currentPanelLeadingCons + x
+//                if(newX < 0) {
+//                    newX = 0
+//                }
+//                self.panelLeadingCons?.constant = newX
+                
+                //test > avoid accidental close panel
+                if(!isCarouselScrolled) {
+                    var newX = self.currentPanelLeadingCons + x
+                    if(newX < 0) {
+                        newX = 0
+                    }
+                    self.panelLeadingCons?.constant = newX
                 }
-                self.panelLeadingCons?.constant = newX
             }
         } else if(gesture.state == .ended){
             
@@ -2625,7 +2651,7 @@ extension PostDetailPanelView: HListCellDelegate {
     }
     
     func hListIsScrollCarousel(isScroll: Bool) {
-        
+        isCarouselScrolled = isScroll
     }
     
     func hListCarouselIdx(vc: UICollectionViewCell, aIdx: Int, idx: Int) {
@@ -2698,7 +2724,34 @@ extension PostDetailPanelView: HListCellDelegate {
 }
 
 extension PostDetailPanelView: ShareSheetScrollableDelegate{
-    func didShareSheetClick(){
+    func didShareSheetClickCreate(type: String){
+        //test > for deleting item
+        if(!pageList.isEmpty) {
+            pageList.remove(at: pageList.count - 1)
+            
+            if(pageList.count > 0) {
+                let lastPage = pageList[pageList.count - 1]
+                if let a = lastPage as? CommentScrollableView {
+                    print("lastpagelist e \(a.selectedItemIdx)")
+                    let idx = a.selectedItemIdx
+                    
+                    //test > create new post
+                    if(type == "post") {
+//                        delegate?.didClickPostPanelVcvClickCreatePost()
+                    }
+                }
+                else if let b = lastPage as? ShareSheetScrollableView {
+                    print("lastpagelist f")
+                }
+            } else {
+                //test > create new post
+                if(type == "post") {
+//                        delegate?.didClickPostPanelVcvClickCreatePost()
+                }
+            }
+        }
+    }
+    func didShareSheetClickDelete(){
         //test > for deleting item
         if(!pageList.isEmpty) {
             pageList.remove(at: pageList.count - 1)

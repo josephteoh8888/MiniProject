@@ -15,6 +15,13 @@ protocol PhotoCreatorPanelDelegate : AnyObject {
     func didInitializePhotoCreator()
     func didClickFinishPhotoCreator()
     func didPhotoCreatorClickLocationSelectScrollable()
+    
+    func didPhotoCreatorClickSignIn()
+}
+
+//test > photo cells in photo creator panel
+class PhotoClip: SDAnimatedImageView {
+    var pFrameLeadingCons: NSLayoutConstraint?
 }
 
 class PhotoCreatorConsolePanelView: CreatorPanelView{
@@ -35,10 +42,18 @@ class PhotoCreatorConsolePanelView: CreatorPanelView{
     
     let scrollView = UIScrollView()
     var photoUrlDataList = [URL]()
-    var photoViewList = [SDAnimatedImageView]()
+//    var photoViewList = [SDAnimatedImageView]()
+    var photoViewList = [PhotoClip]()
     
     let aaText = UILabel()
     let acText = UILabel()
+    
+    let aBox = UIView()
+    let aPromptBox = UIView()
+    var scrollViewHeightCons: NSLayoutConstraint?
+    
+    //test > user login/out status
+    var isUserLoggedIn = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -78,15 +93,16 @@ class PhotoCreatorConsolePanelView: CreatorPanelView{
         aBtn.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 10).isActive = true
 //        aBtn.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
 //        let topInsetMargin = panel.safeAreaInsets.top + 10
-        aBtn.topAnchor.constraint(equalTo: panel.topAnchor, constant: topInset).isActive = true
+//        aBtn.topAnchor.constraint(equalTo: panel.topAnchor, constant: topInset).isActive = true
+        aBtn.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
         aBtn.layer.cornerRadius = 20
-        aBtn.layer.opacity = 0.3
+//        aBtn.layer.opacity = 0.3
         aBtn.isUserInteractionEnabled = true
         aBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBackPhotoCreatorPanelClicked)))
 
 //        let bMiniBtn = UIImageView(image: UIImage(named:"icon_round_arrow_down_a")?.withRenderingMode(.alwaysTemplate))
         let bMiniBtn = UIImageView(image: UIImage(named:"icon_round_close")?.withRenderingMode(.alwaysTemplate))
-        bMiniBtn.tintColor = .white
+        bMiniBtn.tintColor = .ddmDarkGrayColor
 //        aStickyHeader.addSubview(bMiniBtn)
         panel.addSubview(bMiniBtn)
         bMiniBtn.translatesAutoresizingMaskIntoConstraints = false
@@ -95,66 +111,31 @@ class PhotoCreatorConsolePanelView: CreatorPanelView{
         bMiniBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         bMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
         
-        //carousel of images
-//        let scrollView = UIScrollView()
-        panel.addSubview(scrollView)
-//        scrollView.backgroundColor = .clear
-        scrollView.backgroundColor = .ddmDarkColor
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        let topMargin = 50.0 + topInset + 20.0
-        scrollView.topAnchor.constraint(equalTo: panel.topAnchor, constant: topMargin).isActive = true
-        scrollView.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 0).isActive = true //0
-        scrollView.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: 0).isActive = true
-        scrollView.heightAnchor.constraint(equalToConstant: 400.0).isActive = true  //280
-        scrollView.showsHorizontalScrollIndicator = false
-        scrollView.alwaysBounceHorizontal = true
-//        let contentWidth = viewWidth * 2
-//        scrollView.contentSize = CGSize(width: contentWidth, height: 400.0) //800, 280
-        scrollView.isPagingEnabled = true //false
-        scrollView.delegate = self
-
-//        let gifUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
-//        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-//        var gifImage1 = SDAnimatedImageView()
-//        gifImage1.contentMode = .scaleAspectFill
-//        gifImage1.clipsToBounds = true
-////        gifImage1.sd_setImage(with: imageUrl)
-////                gifImage1.layer.cornerRadius = 10 //5
-//        scrollView.addSubview(gifImage1)
-//        gifImage1.translatesAutoresizingMaskIntoConstraints = false
-//        gifImage1.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true //180
-//        gifImage1.heightAnchor.constraint(equalToConstant: 400.0).isActive = true //280
-//        gifImage1.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 0).isActive = true
-//        gifImage1.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 0).isActive = true
-//        //test > click on photo
-//        gifImage1.isUserInteractionEnabled = true
-////        gifImage1.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPhotoClicked)))//20
-//
-//        var gifImage2 = SDAnimatedImageView()
-//        gifImage2.contentMode = .scaleAspectFill
-//        gifImage2.clipsToBounds = true
-//        gifImage2.sd_setImage(with: gifUrl)
-////                gifImage2.layer.cornerRadius = 10 //5
-//        scrollView.addSubview(gifImage2)
-//        gifImage2.translatesAutoresizingMaskIntoConstraints = false
-//        gifImage2.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true //180
-//        gifImage2.heightAnchor.constraint(equalToConstant: 400.0).isActive = true //280
-//        gifImage2.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 0).isActive = true
-//        gifImage2.leadingAnchor.constraint(equalTo: gifImage1.trailingAnchor, constant: 0).isActive = true //10
+        //test
+        let aCreateTitleText = UILabel()
+        aCreateTitleText.textAlignment = .center
+        aCreateTitleText.textColor = .white
+//        aCreateTitleText.textColor = .ddmBlackOverlayColor
+        aCreateTitleText.font = .boldSystemFont(ofSize: 14) //16
+        panel.addSubview(aCreateTitleText)
+        aCreateTitleText.translatesAutoresizingMaskIntoConstraints = false
+        aCreateTitleText.centerYAnchor.constraint(equalTo: aBtn.centerYAnchor, constant: 0).isActive = true
+        aCreateTitleText.centerXAnchor.constraint(equalTo: panel.centerXAnchor, constant: 0).isActive = true
+        aCreateTitleText.text = "New Shot"
         
-        let aBox = UIView()
-//        aBox.backgroundColor = .ddmBlackOverlayColor
-        aBox.backgroundColor = .ddmDarkColor
+//        let aBox = UIView()
+        aBox.backgroundColor = .ddmBlackDark
         panel.addSubview(aBox)
         aBox.clipsToBounds = true
         aBox.translatesAutoresizingMaskIntoConstraints = false
-//        aBox.leadingAnchor.constraint(equalTo: aText.leadingAnchor, constant: 0).isActive = true
-        aBox.centerXAnchor.constraint(equalTo: panel.centerXAnchor, constant: 0).isActive = true
+        aBox.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -10).isActive = true
+//        aBox.centerXAnchor.constraint(equalTo: panel.centerXAnchor, constant: 0).isActive = true
         aBox.heightAnchor.constraint(equalToConstant: 30).isActive = true //default: 50
-//        aBox.topAnchor.constraint(equalTo: photoText.bottomAnchor, constant: 20).isActive = true
-        aBox.topAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 10).isActive = true //20
-        aBox.layer.cornerRadius = 5
+        aBox.centerYAnchor.constraint(equalTo: aBtn.centerYAnchor, constant: 0).isActive = true
+//        aBox.topAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 10).isActive = true //20
+        aBox.layer.cornerRadius = 15
 //        aBox.layer.opacity = 0.2 //0.3
+        aBox.isHidden = true
 
 //        let aaText = UILabel()
         aaText.textAlignment = .left
@@ -184,7 +165,7 @@ class PhotoCreatorConsolePanelView: CreatorPanelView{
         abText.bottomAnchor.constraint(equalTo: aBox.bottomAnchor, constant: -5).isActive = true
         abText.leadingAnchor.constraint(equalTo: aaText.trailingAnchor, constant: 10).isActive = true //10
 //        abText.trailingAnchor.constraint(equalTo: aBox.trailingAnchor, constant: -10).isActive = true
-        abText.text = " / "
+        abText.text = "/"
         
 //        let acText = UILabel()
         acText.textAlignment = .left
@@ -201,18 +182,121 @@ class PhotoCreatorConsolePanelView: CreatorPanelView{
         acText.trailingAnchor.constraint(equalTo: aBox.trailingAnchor, constant: -10).isActive = true
         acText.text = ""
         
+        //carousel of images
+//        let scrollView = UIScrollView()
+        panel.addSubview(scrollView)
+//        scrollView.backgroundColor = .clear
+        scrollView.backgroundColor = .ddmDarkColor
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+//        let topMargin = 50.0 + topInset + 20.0
+//        scrollView.topAnchor.constraint(equalTo: panel.topAnchor, constant: topMargin).isActive = true
+        scrollView.topAnchor.constraint(equalTo: aBtn.bottomAnchor, constant: 20).isActive = true
+        scrollView.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 0).isActive = true //0
+        scrollView.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: 0).isActive = true
+//        scrollView.heightAnchor.constraint(equalToConstant: 400.0).isActive = true  //280
+        scrollViewHeightCons = scrollView.heightAnchor.constraint(equalToConstant: viewWidth)
+        scrollViewHeightCons?.isActive = true
+        scrollView.showsHorizontalScrollIndicator = false
+        scrollView.alwaysBounceHorizontal = true
+//        let contentWidth = viewWidth * 2
+//        scrollView.contentSize = CGSize(width: contentWidth, height: 400.0) //800, 280
+        scrollView.isPagingEnabled = true //false
+        scrollView.delegate = self
+        scrollView.layer.cornerRadius = 10
+        
+//        let aPromptBox = UIView()
+//        aPromptBox.backgroundColor = .ddmDarkColor
+        panel.addSubview(aPromptBox)
+        aPromptBox.clipsToBounds = true
+        aPromptBox.translatesAutoresizingMaskIntoConstraints = false
+        aPromptBox.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: 0).isActive = true
+        aPromptBox.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 0).isActive = true
+//        aPromptBox.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor, constant: 0).isActive = true
+        aPromptBox.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 0).isActive = true
+        aPromptBox.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 0).isActive = true
+//        aPromptBox.isHidden = true
+        aPromptBox.isUserInteractionEnabled = true
+        aPromptBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onAddPhotoClicked)))
+        
+        let aPromptBoxInner = UIView()
+        aPromptBox.addSubview(aPromptBoxInner)
+        aPromptBoxInner.translatesAutoresizingMaskIntoConstraints = false
+//        aPromptBoxInner.centerXAnchor.constraint(equalTo: aPromptBox.centerXAnchor, constant: 0).isActive = true
+        aPromptBoxInner.centerYAnchor.constraint(equalTo: aPromptBox.centerYAnchor, constant: 0).isActive = true
+        aPromptBoxInner.trailingAnchor.constraint(equalTo: aPromptBox.trailingAnchor, constant: 0).isActive = true
+        aPromptBoxInner.leadingAnchor.constraint(equalTo: aPromptBox.leadingAnchor, constant: 0).isActive = true
+      
+        let lhsAddBtn = UIImageView(image: UIImage(named:"icon_round_add_circle")?.withRenderingMode(.alwaysTemplate))
+        lhsAddBtn.tintColor = .white //.ddmBlackOverlayColor
+        aPromptBoxInner.addSubview(lhsAddBtn)
+        lhsAddBtn.translatesAutoresizingMaskIntoConstraints = false
+        lhsAddBtn.centerXAnchor.constraint(equalTo: aPromptBoxInner.centerXAnchor, constant: 0).isActive = true
+        lhsAddBtn.topAnchor.constraint(equalTo: aPromptBoxInner.topAnchor, constant: 0).isActive = true
+        lhsAddBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true //ori 30
+        lhsAddBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        
+        let aPhotoPromptText = UILabel()
+        aPhotoPromptText.textAlignment = .left
+        aPhotoPromptText.textColor = .white
+//        aPhotoPromptText.textColor = .ddmDarkColor
+        aPhotoPromptText.font = .boldSystemFont(ofSize: 12)
+//        aaText.font = .systemFont(ofSize: 12)
+        aPromptBoxInner.addSubview(aPhotoPromptText)
+        aPhotoPromptText.clipsToBounds = true
+        aPhotoPromptText.translatesAutoresizingMaskIntoConstraints = false
+        aPhotoPromptText.centerXAnchor.constraint(equalTo: aPromptBoxInner.centerXAnchor, constant: 0).isActive = true
+        aPhotoPromptText.bottomAnchor.constraint(equalTo: aPromptBoxInner.bottomAnchor, constant: 0).isActive = true
+        aPhotoPromptText.topAnchor.constraint(equalTo: lhsAddBtn.bottomAnchor, constant: 10).isActive = true
+        aPhotoPromptText.text = "Add Photo"
+        
+        //test > add sound bar
+        let audioFrame = UIView()
+        panel.addSubview(audioFrame)
+        audioFrame.backgroundColor = .ddmDarkColor
+        audioFrame.translatesAutoresizingMaskIntoConstraints = false
+//        audioFrame.topAnchor.constraint(equalTo: aBox.bottomAnchor, constant: 20).isActive = true
+        audioFrame.topAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: 20).isActive = true
+        audioFrame.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 20).isActive = true
+        audioFrame.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -20).isActive = true
+        audioFrame.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        audioFrame.layer.cornerRadius = 10
+        audioFrame.isUserInteractionEnabled = true
+//        audioFrame.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onSelectAudioClicked)))
+        
+        let audioMiniBtn = UIImageView(image: UIImage(named:"icon_round_music")?.withRenderingMode(.alwaysTemplate))
+//        audioMiniBtn.image = UIImage(named:"icon_round_music")?.withRenderingMode(.alwaysTemplate)
+        audioMiniBtn.tintColor = .white
+        audioFrame.addSubview(audioMiniBtn)
+        audioMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        audioMiniBtn.leadingAnchor.constraint(equalTo: audioFrame.leadingAnchor, constant: 5).isActive = true
+        audioMiniBtn.centerYAnchor.constraint(equalTo: audioFrame.centerYAnchor).isActive = true
+        audioMiniBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        audioMiniBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        
+        let audioMiniText = UILabel()
+        audioMiniText.textAlignment = .left
+        audioMiniText.textColor = .white
+        audioMiniText.font = .boldSystemFont(ofSize: 10)
+        audioFrame.addSubview(audioMiniText)
+        audioMiniText.translatesAutoresizingMaskIntoConstraints = false
+        audioMiniText.leadingAnchor.constraint(equalTo: audioMiniBtn.trailingAnchor, constant: 5).isActive = true
+        audioMiniText.centerYAnchor.constraint(equalTo: audioFrame.centerYAnchor).isActive = true
+        audioMiniText.trailingAnchor.constraint(equalTo: audioFrame.trailingAnchor, constant: -10).isActive = true
+        audioMiniText.text = "Tap to Add Sound"
+        
         //**test > tools panel
         let toolPanel = UIView()
         toolPanel.backgroundColor = .ddmBlackOverlayColor //black
 //        toolPanel.backgroundColor = .black //black
         panel.addSubview(toolPanel)
         toolPanel.translatesAutoresizingMaskIntoConstraints = false
-        toolPanel.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: 0).isActive = true
+//        toolPanel.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: 0).isActive = true
+        toolPanel.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
 //        toolPanel.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: -bottomInset).isActive = true
         toolPanel.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 0).isActive = true
         toolPanel.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: 0).isActive = true
         toolPanel.layer.cornerRadius = 0
-        toolPanel.heightAnchor.constraint(equalToConstant: 120).isActive = true //60
+        toolPanel.heightAnchor.constraint(equalToConstant: 90).isActive = true //120
 
         let mainEditPanel = UIView()
         toolPanel.addSubview(mainEditPanel)
@@ -253,7 +337,7 @@ class PhotoCreatorConsolePanelView: CreatorPanelView{
         mainXGridText.translatesAutoresizingMaskIntoConstraints = false
         mainXGridText.topAnchor.constraint(equalTo: mainXGrid.bottomAnchor, constant: 2).isActive = true
         mainXGridText.centerXAnchor.constraint(equalTo: mainXGrid.centerXAnchor).isActive = true
-        mainXGridText.text = "Sound"
+        mainXGridText.text = "Add Sound"
         
         let fGrid = UIView() //add vc
         fGrid.backgroundColor = .ddmDarkColor
@@ -268,7 +352,7 @@ class PhotoCreatorConsolePanelView: CreatorPanelView{
         fGrid.topAnchor.constraint(equalTo: mainEditPanel.topAnchor, constant: 10).isActive = true
         fGrid.layer.cornerRadius = 20 //10
         fGrid.isUserInteractionEnabled = true
-        fGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onAddPhotoClicked)))
+        fGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onAddSoundClicked)))
         
         let fMiniBtn = UIImageView(image: UIImage(named:"icon_round_add_v")?.withRenderingMode(.alwaysTemplate))
 //        let fMiniBtn = UIImageView(image: UIImage(named:"icon_outline_photo")?.withRenderingMode(.alwaysTemplate))
@@ -359,48 +443,72 @@ class PhotoCreatorConsolePanelView: CreatorPanelView{
         aNextText.text = "Next"
     }
     
+    //test
+    override func resumeActiveState() {
+        print("photocreatorpanelview resume active")
+        
+        //test > check for signin status when in active state
+        asyncFetchSigninStatus()
+    }
+    
     //test > initialization state
     var isInitialized = false
     var topInset = 0.0
     var bottomInset = 0.0
     func initialize(topInset: CGFloat, bottomInset: CGFloat) {
 
-        if(!isInitialized) {
+//        if(!isInitialized) {
             self.topInset = topInset
             self.bottomInset = bottomInset
             
             redrawUI()
+       
+            //test
+//            let isToOpen = true
+//            if(isToOpen) {
+//                openCameraRoll()
+//            }
             
             //test
-            checkCameraRollPermission(isToOpen: true)
-            
-            //start fetch draft data
-//            asyncFetchDraft(id: "search_term")
-        }
+            asyncFetchSigninStatus()
+//        }
+//
+//        isInitialized = true
+    }
+    
+    //test
+    func initialize() {
+        if(!isInitialized) {
+            if(isUserLoggedIn) {
+                openCameraRoll()
+            } else {
 
+            }
+        }
         isInitialized = true
     }
     
-    func asyncFetchDraft(id: String) {
-        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
-            switch result {
-                case .success(let l):
-
-                //update UI on main thread
-                DispatchQueue.main.async {
-                    print("notifypanel init api success \(id), \(l)")
-
-                    guard let self = self else {
-                        return
-                    }
-                    
-                    self.checkCameraRollPermission(isToOpen: true)
-                }
-
-                case .failure(_):
-                    print("api fail")
-                    break
+    //test > check sign in status before allowing user to create
+    func asyncFetchSigninStatus() {
+        //test > simple get method
+        let isSignedIn = SignInManager.shared.getStatus()
+        if(self.isInitialized) {
+            if(self.isUserLoggedIn != isSignedIn) {
+                self.isUserLoggedIn = isSignedIn
+        
+                self.isInitialized = false
+                self.initialize()
             }
+            else {
+                if(self.isUserLoggedIn) {
+                    
+                } else {
+                    
+                }
+            }
+        } else {
+            self.isUserLoggedIn = isSignedIn
+            self.initialize()
         }
     }
     
@@ -429,11 +537,38 @@ class PhotoCreatorConsolePanelView: CreatorPanelView{
     }
     
     @objc func onAddPhotoClicked(gesture: UITapGestureRecognizer) {
-        openCameraRoll()
+//        openCameraRoll()
+        
+        let isSignedIn = SignInManager.shared.getStatus()
+        if(isSignedIn) {
+            openCameraRoll()
+        }
+        else {
+            delegate?.didPhotoCreatorClickSignIn()
+        }
+    }
+    
+    @objc func onAddSoundClicked(gesture: UITapGestureRecognizer) {
+        
+        let isSignedIn = SignInManager.shared.getStatus()
+        if(isSignedIn) {
+            
+        }
+        else {
+            delegate?.didPhotoCreatorClickSignIn()
+        }
     }
     
     @objc func onPhotoEditorNextClicked(gesture: UITapGestureRecognizer) {
-        openVideoFinalize()
+//        openPhotoFinalize()
+        
+        let isSignedIn = SignInManager.shared.getStatus()
+        if(isSignedIn) {
+            openPhotoFinalize()
+        }
+        else {
+            delegate?.didPhotoCreatorClickSignIn()
+        }
     }
     
     //test > check storage permission
@@ -477,32 +612,67 @@ class PhotoCreatorConsolePanelView: CreatorPanelView{
         cameraRollPanel.setMultiSelection()
     }
     
-    func openVideoFinalize() {
+    func openPhotoFinalize() {
         let photoFinalizePanel = PhotoFinalizePanelView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
         panel.addSubview(photoFinalizePanel)
         photoFinalizePanel.translatesAutoresizingMaskIntoConstraints = false
         photoFinalizePanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
         photoFinalizePanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
-//        photoFinalizePanel.delegate = self
+        photoFinalizePanel.delegate = self
         
 //        pageList.append(photoFinalizePanel)
     }
     
-    func getCurrentItemIndex(scrollView: UIScrollView) -> Int? {
-        let contentOffsetX = scrollView.contentOffset.x
-        let scrollViewWidth = scrollView.bounds.width
-        
-        // Calculate the current item index based on the content offset and the scroll view's subviews
-        for (index, subview) in scrollView.subviews.enumerated() {
-            let subviewX = subview.frame.origin.x
-            let subviewWidth = subview.frame.width
-            
-            if contentOffsetX >= subviewX && contentOffsetX < (subviewX + subviewWidth) {
-                return index
-            }
+//    func getCurrentItemIndex(scrollView: UIScrollView) -> Int? {
+//        let contentOffsetX = scrollView.contentOffset.x
+//        let scrollViewWidth = scrollView.bounds.width
+//        
+//        // Calculate the current item index based on the content offset and the scroll view's subviews
+//        for (index, subview) in scrollView.subviews.enumerated() {
+//            let subviewX = subview.frame.origin.x
+//            let subviewWidth = subview.frame.width
+//            
+//            if contentOffsetX >= subviewX && contentOffsetX < (subviewX + subviewWidth) {
+//                return index
+//            }
+//        }
+//        
+//        return nil // If the current item index cannot be determined
+//    }
+    
+    //test > hide prompt if user has selected photo beforehand
+    func reactPhotoUIChange() {
+//        if(photoUrlDataList.isEmpty) {
+        if(photoViewList.isEmpty) {
+            aPromptBox.isHidden = false
+        } else {
+            aPromptBox.isHidden = true
         }
-        
-        return nil // If the current item index cannot be determined
+    }
+    
+    //test > compute adaptive height according to photo asset aspect ratio and size
+    func getPhotoHeight() -> CGFloat{
+        let availableWidth = self.frame.width
+        let assetSize = CGSize(width: 3, height: 4) //4:3
+        var cSize = CGSize(width: 0, height: 0)
+        if(assetSize.width > assetSize.height) {
+            //1 > landscape photo 4:3 w:h
+            let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+            let cHeight = availableWidth * aRatio.height / aRatio.width
+            return cHeight
+        }
+        else if (assetSize.width < assetSize.height){
+            //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+            let aRatio = CGSize(width: 5, height: 6) //aspect ratio 2:3, 3:4
+//            let aRatio = CGSize(width: 3, height: 4)
+            let cWidth = availableWidth
+            let cHeight = cWidth * aRatio.height / aRatio.width
+            return cHeight
+        } else {
+            //square
+            let cWidth = availableWidth
+            return cWidth
+        }
     }
 }
 
@@ -516,26 +686,43 @@ extension PhotoCreatorConsolePanelView: UIScrollViewDelegate {
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        
-        if let currentItemIndex = getCurrentItemIndex(scrollView: scrollView) {
-            print("Current item index: \(currentItemIndex)")
-            
-            aaText.text = String(currentItemIndex + 1)
-        } else {
-            print("Unable to determine the current item index.")
-        }
 
+        let xOffset = scrollView.contentOffset.x
+        let viewWidth = self.frame.width
+        let currentIndex = round(xOffset/viewWidth)
+        let tempCurrentIndex = Int(currentIndex)
+        aaText.text = String(tempCurrentIndex + 1)
     }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    }
+    
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        print("photocreator scrollview animation ended")
+        
+        let xOffset = scrollView.contentOffset.x
+        let viewWidth = self.frame.width
+        let currentIndex = round(xOffset/viewWidth)
+        let tempCurrentIndex = Int(currentIndex)
+        aaText.text = String(tempCurrentIndex + 1)
+    }
+}
+
+extension PhotoCreatorConsolePanelView: PhotoFinalizePanelDelegate{
+    func didInitializePhotoFinalize(){
+        
+    }
+    func didClickFinishPhotoFinalize(){
+        
+    }
+    func didPhotoFinalizeClickUploadSuccess(){
+        closePhotoCreatorPanel(isAnimated: true)
     }
 }
 
 extension PhotoCreatorConsolePanelView: CameraPhotoRollPanelDelegate{
     func didInitializeCameraPhotoRoll() {
-        //test to turn off camera
-//        session?.removeInput(videoDeviceInput!) //test
-//        self.session?.stopRunning()
+
     }
     func didClickFinishCameraPhotoRoll() {
 //        backPage()
@@ -543,58 +730,96 @@ extension PhotoCreatorConsolePanelView: CameraPhotoRollPanelDelegate{
     func didClickPhotoSelect(photo: PHAsset) {
         print("asset didClickPhotoSelect")
         
-//        let options = PHContentEditingInputRequestOptions()
-//        options.isNetworkAccessAllowed = true
-//
-//        photo.requestContentEditingInput(with: options) { (input, _) in
-//            if let url = input?.fullSizeImageURL {
-//                print("Asset URL: \(url)")
-//
-//                DispatchQueue.main.async {
-////                    if let s = self {
-//                        self.gifImage1.sd_setImage(with: url)
-////                    }
-//                }
-//            }
-//        }
+
     }
     func didClickMultiPhotoSelect(urls: [URL]){
         if(!urls.isEmpty) {
             
-            for e in photoViewList {
-                e.removeFromSuperview()
-            }
-            photoViewList.removeAll()
-            photoUrlDataList.removeAll()
+            let h = getPhotoHeight()
+            scrollViewHeightCons?.constant = h
             
-            for url in urls {
-                var gifImage1 = SDAnimatedImageView()
-                gifImage1.contentMode = .scaleAspectFill
-                gifImage1.clipsToBounds = true
-                gifImage1.sd_setImage(with: url)
-                scrollView.addSubview(gifImage1)
-                gifImage1.translatesAutoresizingMaskIntoConstraints = false
-                gifImage1.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true //180
-                gifImage1.heightAnchor.constraint(equalToConstant: 400.0).isActive = true //280
-                gifImage1.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 0).isActive = true
-                
-                if(photoViewList.isEmpty) {
-                    gifImage1.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 0).isActive = true
-                } else {
-                    gifImage1.leadingAnchor.constraint(equalTo: photoViewList[photoViewList.count - 1].trailingAnchor, constant: 0).isActive = true
+            if(photoViewList.isEmpty) {
+                for url in urls {
+//                    var gifImage1 = SDAnimatedImageView()
+                    var gifImage1 = PhotoClip()
+                    gifImage1.contentMode = .scaleAspectFill
+                    gifImage1.clipsToBounds = true
+                    gifImage1.sd_setImage(with: url)
+                    scrollView.addSubview(gifImage1)
+                    gifImage1.translatesAutoresizingMaskIntoConstraints = false
+                    gifImage1.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true //180
+                    gifImage1.heightAnchor.constraint(equalToConstant: h).isActive = true //280
+                    gifImage1.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 0).isActive = true
+                    
+                    gifImage1.pFrameLeadingCons?.isActive = false
+                    if(photoViewList.isEmpty) {
+                        gifImage1.pFrameLeadingCons = gifImage1.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 0)
+                    } else {
+                        gifImage1.pFrameLeadingCons = gifImage1.leadingAnchor.constraint(equalTo: photoViewList[photoViewList.count - 1].trailingAnchor, constant: 0)
+                    }
+                    gifImage1.pFrameLeadingCons?.isActive = true
+                    
+                    photoViewList.append(gifImage1)
+                    photoUrlDataList.append(url)
                 }
                 
-                photoViewList.append(gifImage1)
-                photoUrlDataList.append(url)
+                let contentWidth = viewWidth * CGFloat(photoViewList.count)
+                scrollView.contentSize = CGSize(width: contentWidth, height: h) //800, 280
+                
+                aaText.text = String(1)
+                acText.text = String(photoViewList.count)
+//                let wOffset = viewWidth * CGFloat(photoViewList.count - 1)
+//                scrollView.setContentOffset(CGPoint(x: wOffset, y: 0), animated: true)
+                if(photoViewList.count > 1) {
+                    aBox.isHidden = false
+                }
+            } else {
+                let xOffset = scrollView.contentOffset.x
+                let viewWidth = self.frame.width
+                let currentIndex = round(xOffset/viewWidth)
+                let tempCurrentIndex = Int(currentIndex)
+                
+                var i = 0
+                for url in urls {
+                    i += 1
+                    
+//                    var gifImage1 = SDAnimatedImageView()
+                    var gifImage1 = PhotoClip()
+                    gifImage1.contentMode = .scaleAspectFill
+                    gifImage1.clipsToBounds = true
+                    gifImage1.sd_setImage(with: url)
+                    scrollView.addSubview(gifImage1)
+                    gifImage1.translatesAutoresizingMaskIntoConstraints = false
+                    gifImage1.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true //180
+                    gifImage1.heightAnchor.constraint(equalToConstant: h).isActive = true //280
+                    gifImage1.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 0).isActive = true
+                    gifImage1.pFrameLeadingCons = gifImage1.leadingAnchor.constraint(equalTo: photoViewList[tempCurrentIndex + i - 1].trailingAnchor, constant: 0)
+                    gifImage1.pFrameLeadingCons?.isActive = true
+                    
+                    photoViewList.insert(gifImage1, at: tempCurrentIndex + i)
+                    photoUrlDataList.insert(url, at: tempCurrentIndex + i)
+                }
+                
+                if(tempCurrentIndex + i < photoViewList.count - 1) {
+                    photoViewList[tempCurrentIndex + i + 1].pFrameLeadingCons?.isActive = false
+                    photoViewList[tempCurrentIndex + i + 1].pFrameLeadingCons = photoViewList[tempCurrentIndex + i + 1].leadingAnchor.constraint(equalTo: photoViewList[tempCurrentIndex + i].trailingAnchor, constant: 0)
+                    photoViewList[tempCurrentIndex + i + 1].pFrameLeadingCons?.isActive = true
+                }
+                
+                let contentWidth = viewWidth * CGFloat(photoViewList.count)
+                scrollView.contentSize = CGSize(width: contentWidth, height: h) //800, 280
+                
+                acText.text = String(photoViewList.count)
+                let wOffset = viewWidth * CGFloat(tempCurrentIndex + i)
+                scrollView.setContentOffset(CGPoint(x: wOffset, y: 0), animated: true)
+                if(photoViewList.count > 1) {
+                    aBox.isHidden = false
+                }
             }
-            print("didClickMultiPhotoSelect: \(photoUrlDataList)")
-            
-            let contentWidth = viewWidth * CGFloat(photoViewList.count)
-            scrollView.contentSize = CGSize(width: contentWidth, height: 400.0) //800, 280
-            
-            aaText.text = String(1)
-            acText.text = String(photoViewList.count)
         }
+        
+        //test > ui changes react to changes in number of photos
+        reactPhotoUIChange()
     }
 }
 
@@ -613,5 +838,9 @@ extension ViewController: PhotoCreatorPanelDelegate{
     
     func didPhotoCreatorClickLocationSelectScrollable() {
         openLocationSelectScrollablePanel()
+    }
+    
+    func didPhotoCreatorClickSignIn(){
+        openLoginPanel()
     }
 }
