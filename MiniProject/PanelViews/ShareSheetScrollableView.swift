@@ -21,7 +21,8 @@ class ShareSheetScrollableView: PanelView, UIGestureRecognizerDelegate{
     var viewWidth: CGFloat = 0
     var panelTopCons: NSLayoutConstraint?
     var currentPanelTopCons : CGFloat = 0.0
-    var scrollablePanelHeight : CGFloat = 300.0
+    var scrollablePanelHeight : CGFloat = 0.0 //300
+    var panelHeightCons: NSLayoutConstraint?
     
     weak var delegate : ShareSheetScrollableDelegate?
     
@@ -33,18 +34,23 @@ class ShareSheetScrollableView: PanelView, UIGestureRecognizerDelegate{
     var bVCV : UICollectionView?
     var bVDataList = [String]()
     
+    var cVCV : UICollectionView?
+    var cVDataList = [String]()
+    
+    let mainPanel = UIView()
+    let createPanel = UIView()
+    var isCreateModeSelected = false
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         viewWidth = frame.width
         viewHeight = frame.height
-        setupViews()
+//        setupViews()
 
     }
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        
-        setupViews()
     }
     
     func setupViews() {
@@ -67,9 +73,10 @@ class ShareSheetScrollableView: PanelView, UIGestureRecognizerDelegate{
         panelView.layer.masksToBounds = true
         panelView.layer.cornerRadius = 10 //10
         panelView.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true
-//        panelView.heightAnchor.constraint(equalToConstant: viewHeight).isActive = true
-        panelView.heightAnchor.constraint(equalToConstant: scrollablePanelHeight).isActive = true
-        panelTopCons = panelView.topAnchor.constraint(equalTo: self.bottomAnchor, constant: -scrollablePanelHeight) //default: 0
+//        panelView.heightAnchor.constraint(equalToConstant: scrollablePanelHeight).isActive = true
+        panelHeightCons = panelView.heightAnchor.constraint(equalToConstant: scrollablePanelHeight)
+        panelHeightCons?.isActive = true
+        panelTopCons = panelView.topAnchor.constraint(equalTo: self.bottomAnchor, constant: -scrollablePanelHeight)
         panelTopCons?.isActive = true
         
         let exitView = UIView()
@@ -77,8 +84,8 @@ class ShareSheetScrollableView: PanelView, UIGestureRecognizerDelegate{
 //        exitView.backgroundColor = .ddmDarkColor
         panelView.addSubview(exitView)
         exitView.translatesAutoresizingMaskIntoConstraints = false
-//        exitView.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
-        exitView.bottomAnchor.constraint(equalTo: panelView.bottomAnchor, constant: -50).isActive = true
+        exitView.bottomAnchor.constraint(equalTo: panelView.safeAreaLayoutGuide.bottomAnchor, constant: -10).isActive = true
+//        exitView.bottomAnchor.constraint(equalTo: panelView.bottomAnchor, constant: -50).isActive = true
         exitView.heightAnchor.constraint(equalToConstant: 45).isActive = true //ori 60
         exitView.leadingAnchor.constraint(equalTo: panelView.leadingAnchor, constant: 20).isActive = true
         exitView.trailingAnchor.constraint(equalTo: panelView.trailingAnchor, constant: -20).isActive = true
@@ -98,6 +105,15 @@ class ShareSheetScrollableView: PanelView, UIGestureRecognizerDelegate{
         exitViewText.centerYAnchor.constraint(equalTo: exitView.centerYAnchor).isActive = true
         exitViewText.text = "Cancel"
 //        exitViewText.layer.opacity = 0.5
+        
+//        let mainPanel = UIView()
+        panelView.addSubview(mainPanel)
+        mainPanel.translatesAutoresizingMaskIntoConstraints = false
+//        mainPanel.bottomAnchor.constraint(equalTo: panelView.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
+        mainPanel.bottomAnchor.constraint(equalTo: exitView.topAnchor, constant: -10).isActive = true
+        mainPanel.leadingAnchor.constraint(equalTo: panelView.leadingAnchor, constant: 0).isActive = true
+        mainPanel.trailingAnchor.constraint(equalTo: panelView.trailingAnchor, constant: 0).isActive = true
+//        mainPanel.isHidden = true
         
         //test > horizontal vcv for sharing functions
 //        aVDataList.append("sg") //send gift
@@ -119,9 +135,11 @@ class ShareSheetScrollableView: PanelView, UIGestureRecognizerDelegate{
         aVCV.delegate = self
         aVCV.showsHorizontalScrollIndicator = false
         aVCV.backgroundColor = .clear
-        panelView.addSubview(aVCV)
+//        panelView.addSubview(aVCV)
+        mainPanel.addSubview(aVCV)
         aVCV.translatesAutoresizingMaskIntoConstraints = false
-        aVCV.bottomAnchor.constraint(equalTo: exitView.topAnchor, constant: -10).isActive = true //aTabText, 20
+        aVCV.bottomAnchor.constraint(equalTo: mainPanel.bottomAnchor, constant: 0).isActive = true
+//        aVCV.bottomAnchor.constraint(equalTo: exitView.topAnchor, constant: -10).isActive = true //aTabText, 20
         aVCV.leadingAnchor.constraint(equalTo: panelView.leadingAnchor).isActive = true
         aVCV.trailingAnchor.constraint(equalTo: panelView.trailingAnchor).isActive = true
         let height = 80.0
@@ -130,13 +148,14 @@ class ShareSheetScrollableView: PanelView, UIGestureRecognizerDelegate{
         
         //test > horizontal vcv for sharing functions
 //        bVDataList.append("sg")//send gift
-        bVDataList.append("sg") //send gift - **gift can be subscription rebate, money, app virtual gift, app pay per view etc
+//        bVDataList.append("cr") //send gift - **gift can be subscription rebate, money, app virtual gift, app pay per view etc
         bVDataList.append("r")//repost
         bVDataList.append("s")//share to
 //        bVDataList.append("wa")//whatsapp
 //        bVDataList.append("x")//x
         bVDataList.append("c")//copy link
         bVDataList.append("f") //follow
+        bVDataList.append("sg")
 //        bVDataList.append("rp")//report post
         let bGridLayout = UICollectionViewFlowLayout()
         bGridLayout.scrollDirection = .horizontal
@@ -151,7 +170,8 @@ class ShareSheetScrollableView: PanelView, UIGestureRecognizerDelegate{
         bVCV.delegate = self
         bVCV.showsHorizontalScrollIndicator = false
         bVCV.backgroundColor = .clear
-        panelView.addSubview(bVCV)
+//        panelView.addSubview(bVCV)
+        mainPanel.addSubview(bVCV)
         bVCV.translatesAutoresizingMaskIntoConstraints = false
         bVCV.bottomAnchor.constraint(equalTo: aVCV.topAnchor, constant: -10).isActive = true //aTabText, 20
         bVCV.leadingAnchor.constraint(equalTo: panelView.leadingAnchor).isActive = true
@@ -159,6 +179,67 @@ class ShareSheetScrollableView: PanelView, UIGestureRecognizerDelegate{
         let bHeight = 80.0
         bVCV.heightAnchor.constraint(equalToConstant: bHeight).isActive = true
         bVCV.contentInsetAdjustmentBehavior = .never
+        bVCV.topAnchor.constraint(equalTo: mainPanel.topAnchor).isActive = true
+        
+        //test > create panel
+        panelView.addSubview(createPanel)
+        createPanel.translatesAutoresizingMaskIntoConstraints = false
+        createPanel.bottomAnchor.constraint(equalTo: exitView.topAnchor, constant: -10).isActive = true
+//        createPanel.topAnchor.constraint(equalTo: panelView.bottomAnchor, constant: -bottomInset).isActive = true
+        createPanel.leadingAnchor.constraint(equalTo: panelView.leadingAnchor, constant: 0).isActive = true
+        createPanel.trailingAnchor.constraint(equalTo: panelView.trailingAnchor, constant: 0).isActive = true
+        createPanel.isHidden = true
+        
+        cVDataList.append("cr_post")//copy link
+//        cVDataList.append("cr_photo")//copy link
+//        cVDataList.append("cr_video")//copy link
+        let cgridLayout = UICollectionViewFlowLayout()
+        cgridLayout.scrollDirection = .horizontal
+        cgridLayout.minimumLineSpacing = 0 //default: 8 => spacing between rows
+        cgridLayout.minimumInteritemSpacing = 0 //default: 4 => spacing between columns
+        cVCV = UICollectionView(frame: .zero, collectionViewLayout: cgridLayout)
+        guard let cVCV = cVCV else {
+            return
+        }
+        cVCV.register(VGridColumnViewCell.self, forCellWithReuseIdentifier: VGridColumnViewCell.identifier)
+        cVCV.dataSource = self
+        cVCV.delegate = self
+        cVCV.showsHorizontalScrollIndicator = false
+        cVCV.backgroundColor = .clear
+//        panelView.addSubview(aVCV)
+        createPanel.addSubview(cVCV)
+        cVCV.translatesAutoresizingMaskIntoConstraints = false
+        cVCV.bottomAnchor.constraint(equalTo: createPanel.bottomAnchor, constant: 0).isActive = true //aTabText, 20
+//        cVCV.bottomAnchor.constraint(equalTo: exitView.topAnchor, constant: -10).isActive = true //aTabText, 20
+        cVCV.leadingAnchor.constraint(equalTo: panelView.leadingAnchor).isActive = true
+        cVCV.trailingAnchor.constraint(equalTo: panelView.trailingAnchor).isActive = true
+        let cHeight = 80.0
+        cVCV.heightAnchor.constraint(equalToConstant: cHeight).isActive = true
+        cVCV.contentInsetAdjustmentBehavior = .never
+        
+        let aBtn = UIView()
+//        aBtn.backgroundColor = .ddmDarkColor
+        createPanel.addSubview(aBtn)
+        aBtn.translatesAutoresizingMaskIntoConstraints = false
+        aBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true //ori: 40
+        aBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        aBtn.leadingAnchor.constraint(equalTo: panelView.leadingAnchor, constant: 20).isActive = true
+    //        aBtn.topAnchor.constraint(equalTo: userPanel.topAnchor, constant: 30).isActive = true
+        aBtn.bottomAnchor.constraint(equalTo: cVCV.topAnchor, constant: -10).isActive = true
+        aBtn.layer.cornerRadius = 20
+//        aBtn.layer.opacity = 0.3
+        aBtn.isUserInteractionEnabled = true
+        aBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBackCreatePanelClicked)))
+        aBtn.topAnchor.constraint(equalTo: createPanel.topAnchor, constant: 0).isActive = true
+        
+        let bMiniBtn = UIImageView(image: UIImage(named:"icon_round_arrow_left")?.withRenderingMode(.alwaysTemplate))
+        bMiniBtn.tintColor = .white
+        aBtn.addSubview(bMiniBtn)
+        bMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        bMiniBtn.centerXAnchor.constraint(equalTo: aBtn.centerXAnchor).isActive = true
+        bMiniBtn.centerYAnchor.constraint(equalTo: aBtn.centerYAnchor).isActive = true
+        bMiniBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
+        bMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
         
         //test > vcv gesture simultaneous
 //        let panelPanGesture = UIPanGestureRecognizer(target: self, action: #selector(onVCVPanGesture))
@@ -171,6 +252,58 @@ class ShareSheetScrollableView: PanelView, UIGestureRecognizerDelegate{
         //test > to make comment bg non-movable
         let bPanelPanGesture = UIPanGestureRecognizer(target: self, action: #selector(onShareSheetBackgroundPanGesture))
         aView.addGestureRecognizer(bPanelPanGesture)
+    }
+    
+    var isInitialized = false
+    func initialize() {
+
+        if(!isInitialized) {
+            computeHeight()
+            setupViews()
+        }
+
+        isInitialized = true
+    }
+    //test
+    let mainPanelTopMargin = 20.0
+    let createPanelTopMargin = 10.0
+    let iconHeight = 80.0
+    let iconBottomMargin = 10.0
+    let exitBtnHeight = 45.0
+    let exitBtnBottomMargin = 10.0
+    let backBtnHeight = 40.0
+    let backBtnBottomMargin = 10.0
+    func computeHeight() {
+        if(isCreateModeSelected) {
+            let totalHeight = createPanelTopMargin + iconHeight + iconBottomMargin +  backBtnHeight + backBtnBottomMargin + exitBtnHeight + exitBtnBottomMargin + safeAreaInsets.bottom
+            scrollablePanelHeight = totalHeight
+        } else {
+            let numberOfRow = 2.0
+            let totalHeight = mainPanelTopMargin + (iconHeight + iconBottomMargin) * numberOfRow + exitBtnHeight + exitBtnBottomMargin + safeAreaInsets.bottom
+            print("totalH: \(totalHeight)")
+            
+            scrollablePanelHeight = totalHeight
+        }
+    }
+    func refreshModeUIChange() {
+        if(isCreateModeSelected) {
+            mainPanel.isHidden = true
+            createPanel.isHidden = false
+        } else {
+            mainPanel.isHidden = false
+            createPanel.isHidden = true
+        }
+        
+        computeHeight()
+
+        panelHeightCons?.constant = scrollablePanelHeight
+        panelTopCons?.constant = -scrollablePanelHeight
+    }
+    @objc func onBackCreatePanelClicked(gesture: UITapGestureRecognizer) {
+        if(isCreateModeSelected) {
+            isCreateModeSelected = false
+            refreshModeUIChange()
+        }
     }
     
     @objc func onExitViewClicked(gesture: UITapGestureRecognizer) {
@@ -274,6 +407,9 @@ extension ShareSheetScrollableView: UICollectionViewDataSource {
         } else if collectionView == bVCV {
             print("bVCV count")
             return bVDataList.count
+        } else if collectionView == cVCV {
+            print("cVCV count")
+            return cVDataList.count
         } else {
             return 0
         }
@@ -289,6 +425,8 @@ extension ShareSheetScrollableView: UICollectionViewDataSource {
             cell.configure(data: aVDataList[indexPath.row])
         } else if collectionView == bVCV {
             cell.configure(data: bVDataList[indexPath.row])
+        } else if collectionView == cVCV {
+            cell.configure(data: cVDataList[indexPath.row])
         }
         
         return cell
@@ -299,16 +437,58 @@ extension ShareSheetScrollableView: UICollectionViewDataSource {
         if collectionView == aVCV {
             print("vgrid a selected: \(aVDataList[indexPath.row])")
             
-            //close panel for more actions like delete item
-            self.removeFromSuperview()
-            delegate?.didShareSheetClickDelete()
+            //test 1 > close panel for more actions like delete item
+//            self.removeFromSuperview()
+//            delegate?.didShareSheetClickDelete()
             
+            let data = aVDataList[indexPath.row]
+            if(data == "de") {
+                self.removeFromSuperview()
+                delegate?.didShareSheetClickDelete()
+            } else if(data == "d") {
+                self.removeFromSuperview()
+            } else if(data == "rp") {
+                self.removeFromSuperview()
+            }
         } else if collectionView == bVCV {
             print("vgrid b selected: \(bVDataList[indexPath.row])")
             
+            let data = bVDataList[indexPath.row]
+            if(data == "cr") {
+                //test 2 > try create panel
+//                if(!isCreateModeSelected) {
+//                    isCreateModeSelected = true
+//                    refreshModeUIChange()
+//                }
+            } else if(data == "r") { //repost
+//                self.removeFromSuperview()
+                
+                //test 2 > try create panel
+                if(!isCreateModeSelected) {
+                    isCreateModeSelected = true
+                    refreshModeUIChange()
+                }
+            } else if(data == "s") { //share
+                self.removeFromSuperview()
+            } else if(data == "c") { //copy link
+                self.removeFromSuperview()
+            }
+            
             //close panel for more actions like delete item
-            self.removeFromSuperview()
-            delegate?.didShareSheetClickCreate(type: "post")
+//            self.removeFromSuperview()
+//            delegate?.didShareSheetClickCreate(type: "post")
+        } else if collectionView == cVCV {
+            let data = cVDataList[indexPath.row]
+            if(data == "cr_post") {
+                self.removeFromSuperview()
+                delegate?.didShareSheetClickCreate(type: "post")
+            } else if(data == "cr_photo") {
+                self.removeFromSuperview()
+                delegate?.didShareSheetClickCreate(type: "photo")
+            } else if(data == "cr_video") {
+                self.removeFromSuperview()
+                delegate?.didShareSheetClickCreate(type: "video")
+            }
         }
      }
     

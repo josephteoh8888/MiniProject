@@ -138,21 +138,7 @@ class SavePostDraftMsgView: UIView{
 extension PostCreatorConsolePanelView: SavePostDraftMsgDelegate{
     func didSPDClickProceed() {
         closePostCreatorPanel(isAnimated: true)
-        
-//        DataFetchManager.shared.saveData(id: "u") { [weak self]result in
-//            switch result {
-//                case .success(let l):
-//
-//                //update UI on main thread
-//                DispatchQueue.main.async {
-//                    self?.closePostCreatorPanel(isAnimated: true)
-//                }
-//
-//                case .failure(_):
-//                    print("api fail")
-//                    break
-//            }
-//        }
+
     }
     func didSPDClickDeny() {
 //        activate()

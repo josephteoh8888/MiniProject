@@ -622,7 +622,7 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
         isStatusUploading = true
         
         let id = "c_"
-        DataFetchManager.shared.sendCommentData(id: id) { [weak self]result in
+        DataUploadManager.shared.sendCommentData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 

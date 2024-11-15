@@ -26,6 +26,9 @@ protocol VideoPanelDelegate : AnyObject {
     
     func didClickVideoPanelClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) //try
     func didClickVideoPanelClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) //try
+    
+    //test > click to create new post
+    func didClickVideoPanelVcvClickCreate(type: String)
 }
 
 class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
@@ -1591,6 +1594,7 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         sharePanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
         sharePanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
         sharePanel.delegate = self
+        sharePanel.initialize()
         
         //test > track comment scrollable view
         pageList.append(sharePanel)
@@ -1731,7 +1735,7 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         isStatusUploading = true
         
         let id = "c_"
-        DataFetchManager.shared.sendCommentData(id: id) { [weak self]result in
+        DataUploadManager.shared.sendCommentData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -1963,6 +1967,13 @@ extension ViewController: VideoPanelDelegate{
 //        dataset.append("a")
         dataset.append("a")
         self.openVideoPanel(offX: offsetX, offY: offsetY, originatorView: view, originatorViewType: OriginatorTypes.UIVIEW, id: 0, originatorViewId: "", preterminedDatasets: dataset, mode: mode)
+    }
+    
+    func didClickVideoPanelVcvClickCreate(type: String){
+        if(type == "post") {
+            openPostCreatorPanel()
+        }
+        
     }
 }
 
@@ -2332,7 +2343,7 @@ extension VideoPanelView: ShareSheetScrollableDelegate{
                     
                     //test > create new post
                     if(type == "post") {
-//                        delegate?.didClickPostPanelVcvClickCreatePost()
+                        delegate?.didClickVideoPanelVcvClickCreate(type: "post")
                     }
                 }
                 else if let b = lastPage as? ShareSheetScrollableView {
@@ -2344,7 +2355,7 @@ extension VideoPanelView: ShareSheetScrollableDelegate{
                     
                     //test > create new post
                     if(type == "post") {
-//                        delegate?.didClickPostPanelVcvClickCreatePost()
+                        delegate?.didClickVideoPanelVcvClickCreate(type: "post")
                     }
                 }
             }

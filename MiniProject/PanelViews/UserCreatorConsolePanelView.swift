@@ -14,6 +14,7 @@ import Photos
 protocol UserCreatorPanelDelegate : AnyObject {
     func didInitializeUserCreator()
     func didClickFinishUserCreator()
+    func didUserCreatorClickUpload(data: String)
 }
 
 class UserCreatorConsolePanelView: PanelView{
@@ -50,6 +51,15 @@ class UserCreatorConsolePanelView: PanelView{
     let aLoginText = UILabel()
     
     let aPhotoB = SDAnimatedImageView()
+    
+    var maxSelectLimit = 5
+    let maxLimitErrorPanel = UIView()
+    let maxLimitText = UILabel()
+    let pMiniError = UIView()
+    let lMiniError = UIView()
+    let mMiniError = UIView()
+    let uMiniError = UIView()
+    let bMiniError = UIView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -185,6 +195,27 @@ class UserCreatorConsolePanelView: PanelView{
         lhsAddBtn.isUserInteractionEnabled = true
         lhsAddBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onAddPhotoClicked)))
         
+        mMiniError.backgroundColor = .red
+        stackView.addSubview(mMiniError)
+        mMiniError.translatesAutoresizingMaskIntoConstraints = false
+        mMiniError.leadingAnchor.constraint(equalTo: lhsAddBtn.trailingAnchor, constant: 5).isActive = true
+        mMiniError.centerYAnchor.constraint(equalTo: lhsAddBtn.centerYAnchor, constant: 0).isActive = true
+//        mMiniError.topAnchor.constraint(equalTo: maxLimitErrorPanel.topAnchor, constant: 5).isActive = true
+//        mMiniError.bottomAnchor.constraint(equalTo: pText.topAnchor, constant: -5).isActive = true
+        mMiniError.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        mMiniError.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        mMiniError.layer.cornerRadius = 10
+        mMiniError.isHidden = true
+
+        let mMiniBtn = UIImageView(image: UIImage(named:"icon_round_priority")?.withRenderingMode(.alwaysTemplate))
+        mMiniBtn.tintColor = .white
+        mMiniError.addSubview(mMiniBtn)
+        mMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        mMiniBtn.centerXAnchor.constraint(equalTo: mMiniError.centerXAnchor).isActive = true
+        mMiniBtn.centerYAnchor.constraint(equalTo: mMiniError.centerYAnchor).isActive = true
+        mMiniBtn.heightAnchor.constraint(equalToConstant: 12).isActive = true
+        mMiniBtn.widthAnchor.constraint(equalToConstant: 12).isActive = true
+        
         //test 2 > design 2
         let pResult = UIView()
         pResult.backgroundColor = .ddmDarkBlack
@@ -229,6 +260,27 @@ class UserCreatorConsolePanelView: PanelView{
         pHint.text = "@"
 //        pHint.layer.opacity = 0.5
         
+        uMiniError.backgroundColor = .red
+        stackView.addSubview(uMiniError)
+        uMiniError.translatesAutoresizingMaskIntoConstraints = false
+        uMiniError.trailingAnchor.constraint(equalTo: pResult.trailingAnchor, constant: -5).isActive = true
+        uMiniError.centerYAnchor.constraint(equalTo: pResult.centerYAnchor, constant: 0).isActive = true
+//        pMiniError.topAnchor.constraint(equalTo: maxLimitErrorPanel.topAnchor, constant: 5).isActive = true
+//        pMiniError.bottomAnchor.constraint(equalTo: maxLimitErrorPanel.bottomAnchor, constant: -5).isActive = true
+        uMiniError.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        uMiniError.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        uMiniError.layer.cornerRadius = 10
+        uMiniError.isHidden = true
+
+        let uMiniBtn = UIImageView(image: UIImage(named:"icon_round_priority")?.withRenderingMode(.alwaysTemplate))
+        uMiniBtn.tintColor = .white
+        uMiniError.addSubview(uMiniBtn)
+        uMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        uMiniBtn.centerXAnchor.constraint(equalTo: uMiniError.centerXAnchor).isActive = true
+        uMiniBtn.centerYAnchor.constraint(equalTo: uMiniError.centerYAnchor).isActive = true
+        uMiniBtn.heightAnchor.constraint(equalToConstant: 12).isActive = true
+        uMiniBtn.widthAnchor.constraint(equalToConstant: 12).isActive = true
+        
         //test > add username
         let ppResult = UIView()
         ppResult.backgroundColor = .ddmDarkBlack
@@ -256,6 +308,27 @@ class UserCreatorConsolePanelView: PanelView{
         ppText.centerYAnchor.constraint(equalTo: ppResult.centerYAnchor, constant: 0).isActive = true
         ppText.text = "Name"
 //        ppText.layer.opacity = 0.5
+        
+        pMiniError.backgroundColor = .red
+        stackView.addSubview(pMiniError)
+        pMiniError.translatesAutoresizingMaskIntoConstraints = false
+        pMiniError.trailingAnchor.constraint(equalTo: ppResult.trailingAnchor, constant: -5).isActive = true
+        pMiniError.centerYAnchor.constraint(equalTo: ppResult.centerYAnchor, constant: 0).isActive = true
+//        pMiniError.topAnchor.constraint(equalTo: maxLimitErrorPanel.topAnchor, constant: 5).isActive = true
+//        pMiniError.bottomAnchor.constraint(equalTo: maxLimitErrorPanel.bottomAnchor, constant: -5).isActive = true
+        pMiniError.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        pMiniError.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        pMiniError.layer.cornerRadius = 10
+        pMiniError.isHidden = true
+
+        let pMiniBtn = UIImageView(image: UIImage(named:"icon_round_priority")?.withRenderingMode(.alwaysTemplate))
+        pMiniBtn.tintColor = .white
+        pMiniError.addSubview(pMiniBtn)
+        pMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        pMiniBtn.centerXAnchor.constraint(equalTo: pMiniError.centerXAnchor).isActive = true
+        pMiniBtn.centerYAnchor.constraint(equalTo: pMiniError.centerYAnchor).isActive = true
+        pMiniBtn.heightAnchor.constraint(equalToConstant: 12).isActive = true
+        pMiniBtn.widthAnchor.constraint(equalToConstant: 12).isActive = true
         
         let qResult = UIView()
         qResult.backgroundColor = .ddmDarkBlack
@@ -405,6 +478,7 @@ class UserCreatorConsolePanelView: PanelView{
         aSpinner.centerXAnchor.constraint(equalTo: aUpload.centerXAnchor).isActive = true
         aSpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
         aSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        aSpinner.isUserInteractionEnabled = false
         
         pTextField.textAlignment = .left
         pTextField.textColor = .white
@@ -484,6 +558,27 @@ class UserCreatorConsolePanelView: PanelView{
         qArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
 //        qArrowBtn.layer.opacity = 0.5
         
+        bMiniError.backgroundColor = .red
+        stackView.addSubview(bMiniError)
+        bMiniError.translatesAutoresizingMaskIntoConstraints = false
+        bMiniError.trailingAnchor.constraint(equalTo: qArrowBtn.leadingAnchor, constant: -5).isActive = true
+        bMiniError.centerYAnchor.constraint(equalTo: qResult.centerYAnchor, constant: 0).isActive = true
+//        lMiniError.topAnchor.constraint(equalTo: maxLimitErrorPanel.topAnchor, constant: 5).isActive = true
+//        lMiniError.bottomAnchor.constraint(equalTo: pText.topAnchor, constant: -5).isActive = true
+        bMiniError.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        bMiniError.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        bMiniError.layer.cornerRadius = 10
+        bMiniError.isHidden = true
+
+        let bbMiniBtn = UIImageView(image: UIImage(named:"icon_round_priority")?.withRenderingMode(.alwaysTemplate))
+        bbMiniBtn.tintColor = .white
+        bMiniError.addSubview(bbMiniBtn)
+        bbMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        bbMiniBtn.centerXAnchor.constraint(equalTo: bMiniError.centerXAnchor).isActive = true
+        bbMiniBtn.centerYAnchor.constraint(equalTo: bMiniError.centerYAnchor).isActive = true
+        bbMiniBtn.heightAnchor.constraint(equalToConstant: 12).isActive = true
+        bbMiniBtn.widthAnchor.constraint(equalToConstant: 12).isActive = true
+        
         rTextField.textAlignment = .left
         rTextField.textColor = .white
         rTextField.backgroundColor = .clear
@@ -526,6 +621,74 @@ class UserCreatorConsolePanelView: PanelView{
         rArrowBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         rArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
 //        rArrowBtn.layer.opacity = 0.5
+        
+        lMiniError.backgroundColor = .red
+        stackView.addSubview(lMiniError)
+        lMiniError.translatesAutoresizingMaskIntoConstraints = false
+        lMiniError.trailingAnchor.constraint(equalTo: rArrowBtn.leadingAnchor, constant: -5).isActive = true
+        lMiniError.centerYAnchor.constraint(equalTo: rResult.centerYAnchor, constant: 0).isActive = true
+//        lMiniError.topAnchor.constraint(equalTo: maxLimitErrorPanel.topAnchor, constant: 5).isActive = true
+//        lMiniError.bottomAnchor.constraint(equalTo: pText.topAnchor, constant: -5).isActive = true
+        lMiniError.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        lMiniError.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        lMiniError.layer.cornerRadius = 10
+        lMiniError.isHidden = true
+
+        let lMiniBtn = UIImageView(image: UIImage(named:"icon_round_priority")?.withRenderingMode(.alwaysTemplate))
+        lMiniBtn.tintColor = .white
+        lMiniError.addSubview(lMiniBtn)
+        lMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        lMiniBtn.centerXAnchor.constraint(equalTo: lMiniError.centerXAnchor).isActive = true
+        lMiniBtn.centerYAnchor.constraint(equalTo: lMiniError.centerYAnchor).isActive = true
+        lMiniBtn.heightAnchor.constraint(equalToConstant: 12).isActive = true
+        lMiniBtn.widthAnchor.constraint(equalToConstant: 12).isActive = true
+        
+        //test > error handling max selected limit
+//        maxLimitErrorPanel.backgroundColor = .ddmBlackOverlayColor //black
+        maxLimitErrorPanel.backgroundColor = .white //black
+        panel.addSubview(maxLimitErrorPanel)
+        maxLimitErrorPanel.translatesAutoresizingMaskIntoConstraints = false
+        maxLimitErrorPanel.centerXAnchor.constraint(equalTo: panel.centerXAnchor, constant: 0).isActive = true
+        maxLimitErrorPanel.layer.cornerRadius = 10
+        maxLimitErrorPanel.topAnchor.constraint(equalTo: aUpload.bottomAnchor, constant: 10).isActive = true
+        maxLimitErrorPanel.isHidden = true
+        
+        let miniError = UIView()
+        miniError.backgroundColor = .red
+        maxLimitErrorPanel.addSubview(miniError)
+        miniError.translatesAutoresizingMaskIntoConstraints = false
+        miniError.leadingAnchor.constraint(equalTo: maxLimitErrorPanel.leadingAnchor, constant: 15).isActive = true
+//        miniError.centerYAnchor.constraint(equalTo: maxLimitErrorPanel.centerYAnchor, constant: 0).isActive = true
+        miniError.topAnchor.constraint(equalTo: maxLimitErrorPanel.topAnchor, constant: 5).isActive = true
+        miniError.bottomAnchor.constraint(equalTo: maxLimitErrorPanel.bottomAnchor, constant: -5).isActive = true
+        miniError.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        miniError.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        miniError.layer.cornerRadius = 10
+//        micMiniError.isHidden = true
+
+        let miniBtn = UIImageView(image: UIImage(named:"icon_round_priority")?.withRenderingMode(.alwaysTemplate))
+        miniBtn.tintColor = .white
+        miniError.addSubview(miniBtn)
+        miniBtn.translatesAutoresizingMaskIntoConstraints = false
+        miniBtn.centerXAnchor.constraint(equalTo: miniError.centerXAnchor).isActive = true
+        miniBtn.centerYAnchor.constraint(equalTo: miniError.centerYAnchor).isActive = true
+        miniBtn.heightAnchor.constraint(equalToConstant: 12).isActive = true
+        miniBtn.widthAnchor.constraint(equalToConstant: 12).isActive = true
+        
+//        let maxLimitText = UILabel()
+        maxLimitText.textAlignment = .center
+//        maxLimitText.textColor = .white
+        maxLimitText.textColor = .black
+        maxLimitText.font = .boldSystemFont(ofSize: 13)
+//        panel.addSubview(aUploadText)
+        maxLimitErrorPanel.addSubview(maxLimitText)
+        maxLimitText.translatesAutoresizingMaskIntoConstraints = false
+//        maxLimitText.topAnchor.constraint(equalTo: maxLimitErrorPanel.topAnchor, constant: 10).isActive = true
+//        maxLimitText.bottomAnchor.constraint(equalTo: maxLimitErrorPanel.bottomAnchor, constant: -10).isActive = true
+        maxLimitText.centerYAnchor.constraint(equalTo: maxLimitErrorPanel.centerYAnchor, constant: 0).isActive = true
+        maxLimitText.leadingAnchor.constraint(equalTo: miniError.trailingAnchor, constant: 7).isActive = true
+        maxLimitText.trailingAnchor.constraint(equalTo: maxLimitErrorPanel.trailingAnchor, constant: -15).isActive = true
+        maxLimitText.text = ""
     }
     
     @objc func onBackUserCreatorPanelClicked(gesture: UITapGestureRecognizer) {
@@ -537,12 +700,29 @@ class UserCreatorConsolePanelView: PanelView{
     }
     
     @objc func onUserUploadNextClicked(gesture: UITapGestureRecognizer) {
+        clearErrorUI()
         resignResponder()
-        aUpload.isHidden = true
-        aSpinner.startAnimating()
         
-        //test > sign up and set up profile
-        asyncSetupAccount(id: "sign_in")
+        if(pTextField.text == "") {
+            configureErrorUI(data: "na-username")
+            print("userA")
+        }
+        else if(ppTextField.text == "") {
+            configureErrorUI(data: "na-name")
+            print("userB")
+        } else {
+            print("userC")
+            aUpload.isHidden = true
+            aSpinner.startAnimating()
+            
+            //test > sign up and set up profile
+            if(currentPanelMode == PANEL_MODE_CREATE) {
+//                asyncSetupAccount(id: "sign_in")
+                asyncSetupAccount(id: "sign_in_facebook")
+            } else {
+                uploadProfileData()
+            }
+        }
     }
     
     @objc func onSaveDraftNextClicked(gesture: UITapGestureRecognizer) {
@@ -551,6 +731,7 @@ class UserCreatorConsolePanelView: PanelView{
     
     @objc func onBoxUnderClicked(gesture: UITapGestureRecognizer) {
         print("box under")
+        clearErrorUI()
         resignResponder()
     }
     
@@ -586,6 +767,7 @@ class UserCreatorConsolePanelView: PanelView{
 
     }
     @objc func onAddPhotoClicked(gesture: UITapGestureRecognizer) {
+        clearErrorUI()
         resignResponder()
         openCameraRoll()
     }
@@ -663,13 +845,97 @@ class UserCreatorConsolePanelView: PanelView{
                     }
                     
                     self.closeUserCreatorPanel(isAnimated: false)
+                    
+                    //test > in-app msg
+                    self.delegate?.didUserCreatorClickUpload(data: "up_user")
                 }
 
                 case .failure(_):
-                    print("api fail")
-                    break
+                DispatchQueue.main.async {
+                    print("usercreator api fail ")
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    self.configureErrorUI(data: "e")
+                }
+                break
             }
         }
+    }
+    
+    func uploadProfileData() {
+        DataUploadManager.shared.sendData(id: "a") { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    self.closeUserCreatorPanel(isAnimated: false)
+                    
+                    //test > in-app msg
+                    self.delegate?.didUserCreatorClickUpload(data: "ed_user")
+                }
+
+                case .failure(_):
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    guard let self = self else {
+                        return
+                    }
+                    print("api fail")
+                    
+                    self.configureErrorUI(data: "e")
+                }
+
+                break
+            }
+        }
+    }
+    
+    func configureErrorUI(data: String) {
+        if(data == "e") {
+            maxLimitText.text = "Error occurred. Try again"
+            aUpload.isHidden = false
+            aSpinner.stopAnimating()
+        }
+        else if(data == "na-photo") {
+            maxLimitText.text = "Photo is required"
+            mMiniError.isHidden = false
+        }
+        else if(data == "na-name") {
+            maxLimitText.text = "Name is required"
+            pMiniError.isHidden = false
+        }
+        else if(data == "na-username") {
+            maxLimitText.text = "Username is required"
+            uMiniError.isHidden = false
+        }
+        else if(data == "na-birthdate") {
+            maxLimitText.text = "Birthdate is required"
+            bMiniError.isHidden = false
+        }
+        else if(data == "na-location") {
+            maxLimitText.text = "Base location is required"
+            lMiniError.isHidden = false
+        }
+        
+        maxLimitErrorPanel.isHidden = false
+    }
+    
+    func clearErrorUI() {
+        maxLimitText.text = ""
+        maxLimitErrorPanel.isHidden = true
+        
+        pMiniError.isHidden = true
+        lMiniError.isHidden = true
+        mMiniError.isHidden = true
+        uMiniError.isHidden = true
+        bMiniError.isHidden = true
     }
 }
 
@@ -678,6 +944,7 @@ extension UserCreatorConsolePanelView: UIScrollViewDelegate {
         print("xx3 scrollview begin: \(scrollView.contentOffset.y)")
         let scrollOffsetY = scrollView.contentOffset.y
         
+        clearErrorUI()
         resignResponder()
     }
 
@@ -738,6 +1005,11 @@ extension ViewController: UserCreatorPanelDelegate{
 
     func didClickFinishUserCreator() {
         backPage(isCurrentPageScrollable: false)
+    }
+    
+    func didUserCreatorClickUpload(data: String){
+        openInAppMsgView(data: data)
+//        openInAppMsgView(data: "up_user")
     }
 }
 

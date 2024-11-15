@@ -26,6 +26,9 @@ protocol PhotoPanelDelegate : AnyObject {
     func didClickPhotoPanelVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) //try
     func didClickPhotoPanelVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) //try
     
+    //test > click to create new post
+    func didClickPhotoPanelVcvClickCreate(type: String)
+    
     //test > for marker animation after video closes
     func didStartPhotoPanGesture(ppv : PhotoPanelView)
     func didEndPhotoPanGesture(ppv : PhotoPanelView)
@@ -1241,6 +1244,7 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
         sharePanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
         sharePanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
         sharePanel.delegate = self
+        sharePanel.initialize()
         
         //test > track share scrollable view
         pageList.append(sharePanel)
@@ -1799,6 +1803,13 @@ extension ViewController: PhotoPanelDelegate{
         dataset.append("a")
         self.openVideoPanel(offX: offsetX, offY: offsetY, originatorView: view, originatorViewType: OriginatorTypes.UIVIEW, id: 0, originatorViewId: "", preterminedDatasets: dataset, mode: mode)
     }
+    
+    func didClickPhotoPanelVcvClickCreate(type: String){
+        if(type == "post") {
+            openPostCreatorPanel()
+        }
+        
+    }
 }
 
 extension PhotoPanelView: ShareSheetScrollableDelegate{
@@ -1815,7 +1826,7 @@ extension PhotoPanelView: ShareSheetScrollableDelegate{
                     
                     //test > create new post
                     if(type == "post") {
-//                        delegate?.didClickPostPanelVcvClickCreatePost()
+                        delegate?.didClickPhotoPanelVcvClickCreate(type: "post")
                     }
                 }
                 else if let b = lastPage as? ShareSheetScrollableView {
@@ -1827,7 +1838,7 @@ extension PhotoPanelView: ShareSheetScrollableDelegate{
                     
                     //test > create new post
                     if(type == "post") {
-//                        delegate?.didClickPostPanelVcvClickCreatePost()
+                        delegate?.didClickPhotoPanelVcvClickCreate(type: "post")
                     }
                 }
             }

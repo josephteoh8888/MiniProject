@@ -31,10 +31,10 @@
 		2E670AA32C30FE4A00EBA6D3 /* VideoPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670AA22C30FE4A00EBA6D3 /* VideoPanelView.swift */; };
 		2E670AA52C30FE9A00EBA6D3 /* VideoDraftPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670AA42C30FE9A00EBA6D3 /* VideoDraftPanelView.swift */; };
 		2E670AA72C30FED000EBA6D3 /* PostDraftPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670AA62C30FED000EBA6D3 /* PostDraftPanelView.swift */; };
-		2E670AA92C30FEF900EBA6D3 /* PhotoEditorPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670AA82C30FEF900EBA6D3 /* PhotoEditorPanelView.swift */; };
+		2E670AA92C30FEF900EBA6D3 /* InAppMsgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670AA82C30FEF900EBA6D3 /* InAppMsgView.swift */; };
 		2E670AAB2C30FF2500EBA6D3 /* VideoEditorPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670AAA2C30FF2500EBA6D3 /* VideoEditorPanelView.swift */; };
 		2E670AAD2C30FF5000EBA6D3 /* PhotoCreatorConsolePanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670AAC2C30FF5000EBA6D3 /* PhotoCreatorConsolePanelView.swift */; };
-		2E670AAF2C30FF8F00EBA6D3 /* VideoPreviewPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670AAE2C30FF8F00EBA6D3 /* VideoPreviewPanelView.swift */; };
+		2E670AAF2C30FF8F00EBA6D3 /* DataUploadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670AAE2C30FF8F00EBA6D3 /* DataUploadManager.swift */; };
 		2E670AB12C30FFBE00EBA6D3 /* VideoFinalizePanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670AB02C30FFBE00EBA6D3 /* VideoFinalizePanelView.swift */; };
 		2E670AB32C30FFE600EBA6D3 /* PlaceDraftPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670AB22C30FFE600EBA6D3 /* PlaceDraftPanelView.swift */; };
 		2E670AB52C31001500EBA6D3 /* LocationSelectScrollablePanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670AB42C31001500EBA6D3 /* LocationSelectScrollablePanelView.swift */; };
@@ -194,10 +194,10 @@
 		2E670AA22C30FE4A00EBA6D3 /* VideoPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPanelView.swift; sourceTree = "<group>"; };
 		2E670AA42C30FE9A00EBA6D3 /* VideoDraftPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoDraftPanelView.swift; sourceTree = "<group>"; };
 		2E670AA62C30FED000EBA6D3 /* PostDraftPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDraftPanelView.swift; sourceTree = "<group>"; };
-		2E670AA82C30FEF900EBA6D3 /* PhotoEditorPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoEditorPanelView.swift; sourceTree = "<group>"; };
+		2E670AA82C30FEF900EBA6D3 /* InAppMsgView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppMsgView.swift; sourceTree = "<group>"; };
 		2E670AAA2C30FF2500EBA6D3 /* VideoEditorPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEditorPanelView.swift; sourceTree = "<group>"; };
 		2E670AAC2C30FF5000EBA6D3 /* PhotoCreatorConsolePanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCreatorConsolePanelView.swift; sourceTree = "<group>"; };
-		2E670AAE2C30FF8F00EBA6D3 /* VideoPreviewPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPreviewPanelView.swift; sourceTree = "<group>"; };
+		2E670AAE2C30FF8F00EBA6D3 /* DataUploadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataUploadManager.swift; sourceTree = "<group>"; };
 		2E670AB02C30FFBE00EBA6D3 /* VideoFinalizePanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoFinalizePanelView.swift; sourceTree = "<group>"; };
 		2E670AB22C30FFE600EBA6D3 /* PlaceDraftPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceDraftPanelView.swift; sourceTree = "<group>"; };
 		2E670AB42C31001500EBA6D3 /* LocationSelectScrollablePanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSelectScrollablePanelView.swift; sourceTree = "<group>"; };
@@ -430,11 +430,9 @@
 				2E670AD22C3102A600EBA6D3 /* UserCreatorConsolePanelView.swift */,
 				2E670ABE2C31010A00EBA6D3 /* VideoCreatorConsolePanelView.swift */,
 				2E670AAA2C30FF2500EBA6D3 /* VideoEditorPanelView.swift */,
-				2E670AAE2C30FF8F00EBA6D3 /* VideoPreviewPanelView.swift */,
 				2E670AA42C30FE9A00EBA6D3 /* VideoDraftPanelView.swift */,
 				2E670AB02C30FFBE00EBA6D3 /* VideoFinalizePanelView.swift */,
 				2E670AAC2C30FF5000EBA6D3 /* PhotoCreatorConsolePanelView.swift */,
-				2E670AA82C30FEF900EBA6D3 /* PhotoEditorPanelView.swift */,
 				2E670AB82C31008400EBA6D3 /* PhotoDraftPanelView.swift */,
 				2E670ADA2C31033300EBA6D3 /* PhotoFinalizePanelView.swift */,
 				2E670ACE2C31026100EBA6D3 /* PostCreatorConsolePanelView.swift */,
@@ -514,6 +512,7 @@
 				2E670B252C3120BB00EBA6D3 /* QueueableView.swift */,
 				2E670B2B2C31212600EBA6D3 /* PlaceMarker.swift */,
 				2E670B3B2C31224900EBA6D3 /* GetStorageMsg.swift */,
+				2E670AA82C30FEF900EBA6D3 /* InAppMsgView.swift */,
 				2E670B492C31232700EBA6D3 /* SoundMarker.swift */,
 				2E670B332C3121B100EBA6D3 /* PageBubbleIndicator.swift */,
 				2E670B3D2C31226700EBA6D3 /* ExitVideoEditorMsg.swift */,
@@ -591,6 +590,7 @@
 		2EF15C1A2C3A2BA400B63907 /* Manager */ = {
 			isa = PBXGroup;
 			children = (
+				2E670AAE2C30FF8F00EBA6D3 /* DataUploadManager.swift */,
 				2E670A952C30486B00EBA6D3 /* DataFetchManager.swift */,
 				2E670A852C30448D00EBA6D3 /* CacheManager.swift */,
 				2E670A892C30471700EBA6D3 /* SignInManager.swift */,
@@ -777,7 +777,7 @@
 				2E670AE92C31043900EBA6D3 /* NotifyPanelView.swift in Sources */,
 				2E670B6A2C3125AC00EBA6D3 /* ScrollFeedHResultMainListCell.swift in Sources */,
 				2E670AC12C31013F00EBA6D3 /* CameraVideoRollPanelView.swift in Sources */,
-				2E670AA92C30FEF900EBA6D3 /* PhotoEditorPanelView.swift in Sources */,
+				2E670AA92C30FEF900EBA6D3 /* InAppMsgView.swift in Sources */,
 				2E670A862C30448D00EBA6D3 /* CacheManager.swift in Sources */,
 				2E670B0A2C3108D600EBA6D3 /* HResultHashtagListViewCell.swift in Sources */,
 				2EADB5372C4BE9220023B7F2 /* MeLocationListPanelView.swift in Sources */,
@@ -870,7 +870,7 @@
 				2E670B262C3120BB00EBA6D3 /* QueueableView.swift in Sources */,
 				2E670A982C3048CA00EBA6D3 /* Constant.swift in Sources */,
 				2E670AFC2C3107F100EBA6D3 /* HPlacesListViewCell.swift in Sources */,
-				2E670AAF2C30FF8F00EBA6D3 /* VideoPreviewPanelView.swift in Sources */,
+				2E670AAF2C30FF8F00EBA6D3 /* DataUploadManager.swift in Sources */,
 				2E670A942C30484000EBA6D3 /* APICaller.swift in Sources */,
 				2E670B9A2C31292F00EBA6D3 /* VideoClip.swift in Sources */,
 				2E670B522C3123C800EBA6D3 /* ScrollFeedHResultLocationListCell.swift in Sources */,

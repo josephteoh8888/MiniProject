@@ -48,6 +48,9 @@ class CameraVideoRollPanelView: PanelView, UIGestureRecognizerDelegate{
     let scrollView = UIScrollView()
     var photoViewList = [MultiSelectedCell]()
     let sPhotoSize = 60.0
+    var maxSelectLimit = 0.0
+    let maxLimitErrorPanel = UIView()
+    let maxLimitText = UILabel()
     
     let gLineSpacingHeight = 4.0
     let gLhsMargin = 20.0
@@ -322,6 +325,55 @@ class CameraVideoRollPanelView: PanelView, UIGestureRecognizerDelegate{
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.alwaysBounceHorizontal = true
         
+        //test > error handling max selected limit
+//        maxLimitErrorPanel.backgroundColor = .ddmBlackOverlayColor //black
+        maxLimitErrorPanel.backgroundColor = .white //black
+        panelView.addSubview(maxLimitErrorPanel)
+        maxLimitErrorPanel.translatesAutoresizingMaskIntoConstraints = false
+        maxLimitErrorPanel.centerXAnchor.constraint(equalTo: panelView.centerXAnchor, constant: 0).isActive = true
+//        maxLimitErrorPanel.leadingAnchor.constraint(equalTo: panelView.leadingAnchor, constant: 0).isActive = true
+//        maxLimitErrorPanel.trailingAnchor.constraint(equalTo: panelView.trailingAnchor, constant: 0).isActive = true
+        maxLimitErrorPanel.layer.cornerRadius = 10
+        maxLimitErrorPanel.bottomAnchor.constraint(equalTo: multiToolPanel.topAnchor, constant: -10).isActive = true
+        maxLimitErrorPanel.isHidden = true
+        
+        let miniError = UIView()
+        miniError.backgroundColor = .red
+        maxLimitErrorPanel.addSubview(miniError)
+        miniError.translatesAutoresizingMaskIntoConstraints = false
+        miniError.leadingAnchor.constraint(equalTo: maxLimitErrorPanel.leadingAnchor, constant: 15).isActive = true
+//        miniError.centerYAnchor.constraint(equalTo: maxLimitErrorPanel.centerYAnchor, constant: 0).isActive = true
+        miniError.topAnchor.constraint(equalTo: maxLimitErrorPanel.topAnchor, constant: 5).isActive = true
+        miniError.bottomAnchor.constraint(equalTo: maxLimitErrorPanel.bottomAnchor, constant: -5).isActive = true
+        miniError.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        miniError.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        miniError.layer.cornerRadius = 10
+//        micMiniError.isHidden = true
+
+        let miniBtn = UIImageView(image: UIImage(named:"icon_round_priority")?.withRenderingMode(.alwaysTemplate))
+        miniBtn.tintColor = .white
+        miniError.addSubview(miniBtn)
+        miniBtn.translatesAutoresizingMaskIntoConstraints = false
+        miniBtn.centerXAnchor.constraint(equalTo: miniError.centerXAnchor).isActive = true
+        miniBtn.centerYAnchor.constraint(equalTo: miniError.centerYAnchor).isActive = true
+        miniBtn.heightAnchor.constraint(equalToConstant: 12).isActive = true
+        miniBtn.widthAnchor.constraint(equalToConstant: 12).isActive = true
+        
+//        let maxLimitText = UILabel()
+        maxLimitText.textAlignment = .center
+//        maxLimitText.textColor = .white
+        maxLimitText.textColor = .black
+        maxLimitText.font = .boldSystemFont(ofSize: 13)
+//        panel.addSubview(aUploadText)
+        maxLimitErrorPanel.addSubview(maxLimitText)
+        maxLimitText.translatesAutoresizingMaskIntoConstraints = false
+//        maxLimitText.topAnchor.constraint(equalTo: maxLimitErrorPanel.topAnchor, constant: 10).isActive = true
+//        maxLimitText.bottomAnchor.constraint(equalTo: maxLimitErrorPanel.bottomAnchor, constant: -10).isActive = true
+        maxLimitText.centerYAnchor.constraint(equalTo: maxLimitErrorPanel.centerYAnchor, constant: 0).isActive = true
+        maxLimitText.leadingAnchor.constraint(equalTo: miniError.trailingAnchor, constant: 7).isActive = true
+        maxLimitText.trailingAnchor.constraint(equalTo: maxLimitErrorPanel.trailingAnchor, constant: -15).isActive = true
+        maxLimitText.text = ""
+        
         let aPanelPanGesture = UIPanGestureRecognizer(target: self, action: #selector(onCameraRollPanelPanGesture))
         panelView.addGestureRecognizer(aPanelPanGesture)
     }
@@ -554,6 +606,12 @@ class CameraVideoRollPanelView: PanelView, UIGestureRecognizerDelegate{
     //test > set camera roll to be multi or single selection
     func setMultiSelection() {
         isMultiSelect = true
+    }
+    
+    func setMultiSelection(limit: Double) {
+        setMultiSelection()
+        maxSelectLimit = limit
+        maxLimitText.text = "Max " + String(maxSelectLimit) + "s"
     }
     
     //test > add a time delay to load all images (avoid flicker when loading images)

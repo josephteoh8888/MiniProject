@@ -17,6 +17,7 @@ protocol PostCreatorPanelDelegate : AnyObject {
     func didPostCreatorClickLocationSelectScrollable()
     
     func didPostCreatorClickSignIn()
+    func didPostCreatorClickUpload(payload: String)
 }
 
 class PostClip {
@@ -80,6 +81,14 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     
     //test > user login/out status
     var isUserLoggedIn = false
+    
+    var maxSelectLimit = 5
+    let maxLimitErrorPanel = UIView()
+    let maxLimitText = UILabel()
+    
+    //test > use pre-designated sound or location
+    var predesignatedPlaceList = [String]()
+    let aaText = UILabel()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -239,7 +248,8 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         bPublicBox.translatesAutoresizingMaskIntoConstraints = false
         bPublicBox.widthAnchor.constraint(equalToConstant: 16).isActive = true //ori: 40
         bPublicBox.heightAnchor.constraint(equalToConstant: 16).isActive = true
-        bPublicBox.centerYAnchor.constraint(equalTo: abBox.centerYAnchor).isActive = true
+//        bPublicBox.centerYAnchor.constraint(equalTo: abBox.centerYAnchor).isActive = true
+        bPublicBox.bottomAnchor.constraint(equalTo: abBox.bottomAnchor).isActive = true
         bPublicBox.leadingAnchor.constraint(equalTo: abBox.leadingAnchor, constant: 5).isActive = true //10
         bPublicBox.layer.cornerRadius = 5 //6
 
@@ -319,7 +329,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         gridViewBtn.widthAnchor.constraint(equalToConstant: 16).isActive = true
 //        gridViewBtn.layer.opacity = 0.5
 
-        let aaText = UILabel()
+//        let aaText = UILabel()
         aaText.textAlignment = .left
         aaText.textColor = .white
 //        aaText.textColor = .ddmDarkColor
@@ -864,9 +874,57 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         aTextOKMiniBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true
         aTextOKMiniBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
         
+        //test > error handling max selected limit
+//        maxLimitErrorPanel.backgroundColor = .ddmBlackOverlayColor //black
+        maxLimitErrorPanel.backgroundColor = .white //black
+        panel.addSubview(maxLimitErrorPanel)
+        maxLimitErrorPanel.translatesAutoresizingMaskIntoConstraints = false
+        maxLimitErrorPanel.centerXAnchor.constraint(equalTo: panel.centerXAnchor, constant: 0).isActive = true
+        maxLimitErrorPanel.layer.cornerRadius = 10
+        maxLimitErrorPanel.topAnchor.constraint(equalTo: aUpload.bottomAnchor, constant: 10).isActive = true
+        maxLimitErrorPanel.isHidden = true
+        
+        let miniError = UIView()
+        miniError.backgroundColor = .red
+        maxLimitErrorPanel.addSubview(miniError)
+        miniError.translatesAutoresizingMaskIntoConstraints = false
+        miniError.leadingAnchor.constraint(equalTo: maxLimitErrorPanel.leadingAnchor, constant: 15).isActive = true
+//        miniError.centerYAnchor.constraint(equalTo: maxLimitErrorPanel.centerYAnchor, constant: 0).isActive = true
+        miniError.topAnchor.constraint(equalTo: maxLimitErrorPanel.topAnchor, constant: 5).isActive = true
+        miniError.bottomAnchor.constraint(equalTo: maxLimitErrorPanel.bottomAnchor, constant: -5).isActive = true
+        miniError.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        miniError.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        miniError.layer.cornerRadius = 10
+//        micMiniError.isHidden = true
+
+        let miniBtn = UIImageView(image: UIImage(named:"icon_round_priority")?.withRenderingMode(.alwaysTemplate))
+        miniBtn.tintColor = .white
+        miniError.addSubview(miniBtn)
+        miniBtn.translatesAutoresizingMaskIntoConstraints = false
+        miniBtn.centerXAnchor.constraint(equalTo: miniError.centerXAnchor).isActive = true
+        miniBtn.centerYAnchor.constraint(equalTo: miniError.centerYAnchor).isActive = true
+        miniBtn.heightAnchor.constraint(equalToConstant: 12).isActive = true
+        miniBtn.widthAnchor.constraint(equalToConstant: 12).isActive = true
+        
+//        let maxLimitText = UILabel()
+        maxLimitText.textAlignment = .center
+//        maxLimitText.textColor = .white
+        maxLimitText.textColor = .black
+        maxLimitText.font = .boldSystemFont(ofSize: 13)
+//        panel.addSubview(aUploadText)
+        maxLimitErrorPanel.addSubview(maxLimitText)
+        maxLimitText.translatesAutoresizingMaskIntoConstraints = false
+//        maxLimitText.topAnchor.constraint(equalTo: maxLimitErrorPanel.topAnchor, constant: 10).isActive = true
+//        maxLimitText.bottomAnchor.constraint(equalTo: maxLimitErrorPanel.bottomAnchor, constant: -10).isActive = true
+        maxLimitText.centerYAnchor.constraint(equalTo: maxLimitErrorPanel.centerYAnchor, constant: 0).isActive = true
+        maxLimitText.leadingAnchor.constraint(equalTo: miniError.trailingAnchor, constant: 7).isActive = true
+        maxLimitText.trailingAnchor.constraint(equalTo: maxLimitErrorPanel.trailingAnchor, constant: -15).isActive = true
+        maxLimitText.text = ""
+        
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(onKeyboardWillChange), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
         //**
+    
     }
     
     //test
@@ -945,6 +1003,19 @@ class PostCreatorConsolePanelView: CreatorPanelView{
             self.initialize()
         }
     }
+    
+    func setPredesignatedPlace(p: String) {
+        predesignatedPlaceList.append("p")
+        refreshTitleUI()
+    }
+    
+    func refreshTitleUI(){
+        aaText.text = "Add Location"
+        
+        if(!predesignatedPlaceList.isEmpty) {
+            aaText.text = "Petronas Twin Tower"
+        }
+    }
 
     func setFirstResponder(textView: UITextView) {
         textView.becomeFirstResponder()
@@ -993,11 +1064,15 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     
     @objc func onAGridClicked(gesture: UITapGestureRecognizer) {
         //test 2
+        clearErrorUI()
         resignResponder()
         delegate?.didPostCreatorClickLocationSelectScrollable()
     }
     
     @objc func onMainAddTextClicked(gesture: UITapGestureRecognizer) {
+        
+        clearErrorUI()
+        
         let isSignedIn = SignInManager.shared.getStatus()
         if(isSignedIn) {
             if(!pcList.isEmpty) {
@@ -1016,6 +1091,8 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     }
     @objc func onMainAddPhotoClicked(gesture: UITapGestureRecognizer) {
         //test 3 > add photo at the end
+        clearErrorUI()
+        
         let isSignedIn = SignInManager.shared.getStatus()
         if(isSignedIn) {
             if(!pcList.isEmpty) {
@@ -1036,6 +1113,9 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         }
     }
     @objc func onMainEmbedClicked(gesture: UITapGestureRecognizer) {
+        
+        clearErrorUI()
+        
         let isSignedIn = SignInManager.shared.getStatus()
         if(isSignedIn) {
             
@@ -1058,6 +1138,8 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         //test 1 > open camera to add photo
 //        resignResponder()
 //        openCameraRoll()
+        
+        clearErrorUI()
         
         print("xy txt+Photo a: \(selectedPcIndex), \(computePcPosition(index: selectedPcIndex, isInclusive: true)), \(stackView.frame.height)")
         let currentYPosition = computePcPosition(index: selectedPcIndex, isInclusive: true)
@@ -1139,6 +1221,8 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     }
     
     @objc func onTextNextClicked(gesture: UITapGestureRecognizer) {
+        
+        clearErrorUI()
 //        resignResponder()
 //        selectedPcIndex = -1
 
@@ -1174,6 +1258,8 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     }
     @objc func onPhotoDeleteSectionClicked(gesture: UITapGestureRecognizer) {
         
+        clearErrorUI()
+        
         unselectPostClipPhotoCell(i: selectedPcIndex)
         mainEditPanel.isHidden = false
         textEditPanel.isHidden = true
@@ -1183,6 +1269,9 @@ class PostCreatorConsolePanelView: CreatorPanelView{
 //        selectedPcIndex = -1
     }
     @objc func onPhotoNextClicked(gesture: UITapGestureRecognizer) {
+        
+        clearErrorUI()
+        
         unselectPostClipPhotoCell(i: selectedPcIndex)
         selectedPcIndex = -1
         
@@ -1580,28 +1669,38 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     }
     
     @objc func onPostUploadNextClicked(gesture: UITapGestureRecognizer) {
+        clearErrorUI()
         resignResponder()
         
         let isSignedIn = SignInManager.shared.getStatus()
         if(isSignedIn) {
-            aUpload.isHidden = true
-            aSpinner.startAnimating()
+//            if(true) {
+//                configureErrorUI(data: "na-location")
+//            } else {
+                aUpload.isHidden = true
+                aSpinner.startAnimating()
 
-            DataFetchManager.shared.sendData(id: "u") { [weak self]result in
-                switch result {
-                    case .success(let l):
-
-                    //update UI on main thread
-                    DispatchQueue.main.async {
-
-                        self?.closePostCreatorPanel(isAnimated: true)
-                    }
-
-                    case .failure(_):
-                        print("api fail")
-                        break
-                }
-            }
+                //test 1 > upload data
+//                DataUploadManager.shared.sendData(id: "u") { [weak self]result in
+//                    switch result {
+//                        case .success(let l):
+//
+//                        //update UI on main thread
+//                        DispatchQueue.main.async {
+//
+//                            self?.closePostCreatorPanel(isAnimated: true)
+//                        }
+//
+//                        case .failure(_):
+//                            print("api fail")
+//                            break
+//                    }
+//                }
+            
+                //test 2 > new method to upload data => for in-app msg view
+                self.closePostCreatorPanel(isAnimated: true)
+                delegate?.didPostCreatorClickUpload(payload: "cc") //payload e.g. location name
+//            }
         }
         else {
             delegate?.didPostCreatorClickSignIn()
@@ -1614,11 +1713,12 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     }
     
     @objc func onSaveDraftNextClicked(gesture: UITapGestureRecognizer) {
+        clearErrorUI()
         resignResponder()
         aSaveDraft.isHidden = true
         bSpinner.startAnimating()
 
-        DataFetchManager.shared.sendData(id: "u") { [weak self]result in
+        DataUploadManager.shared.sendData(id: "u") { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -1696,6 +1796,22 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         
         return yHeight
     }
+    
+    func configureErrorUI(data: String) {
+        if(data == "e") {
+            maxLimitText.text = "Error occurred. Try again"
+        }
+        else if(data == "na-location") {
+            maxLimitText.text = "Location is required"
+        }
+        
+        maxLimitErrorPanel.isHidden = false
+    }
+    
+    func clearErrorUI() {
+        maxLimitText.text = ""
+        maxLimitErrorPanel.isHidden = true
+    }
 }
 
 extension PostCreatorConsolePanelView: PostClipPhotoCellDelegate {
@@ -1768,6 +1884,43 @@ extension ViewController: PostCreatorPanelDelegate{
     
     func didPostCreatorClickSignIn(){
         openLoginPanel()
+    }
+    
+    func didPostCreatorClickUpload(payload: String){
+        DataUploadManager.shared.sendData(id: "a") { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    if(!self.inAppMsgList.isEmpty) {
+                        let a = self.inAppMsgList[self.inAppMsgList.count - 1]
+                        a.updateConfigUI(data: "up_post", taskId: "a")
+                    }
+                }
+
+                case .failure(_):
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    guard let self = self else {
+                        return
+                    }
+                    print("api fail")
+                    
+                    if(!self.inAppMsgList.isEmpty) {
+                        let a = self.inAppMsgList[self.inAppMsgList.count - 1]
+                        a.updateConfigUI(data: "up_post", taskId: "a")
+                    }
+                }
+                break
+            }
+        }
+        
+        openInAppMsgView(data: "up_post")
     }
 }
 
@@ -2086,6 +2239,8 @@ extension PostCreatorConsolePanelView: UIScrollViewDelegate {
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         print("xxpc scrollview begin: \(scrollView.contentOffset.y)")
         let scrollOffsetY = scrollView.contentOffset.y
+        
+        clearErrorUI()
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

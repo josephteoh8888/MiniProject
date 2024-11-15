@@ -14,6 +14,9 @@ protocol PhotoDetailPanelDelegate : AnyObject {
     func didClickPhotoDetailPanelVcvClickUser() //try
     func didClickPhotoDetailClosePanel()
     func didClickPhotoDetailPanelVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
+    
+    //test > click to create new post
+    func didClickPhotoDetailPanelVcvClickCreate(type: String)
 }
 
 class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
@@ -1108,6 +1111,7 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
         sharePanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
         sharePanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
         sharePanel.delegate = self
+        sharePanel.initialize()
         
         //test > track comment scrollable view
         pageList.append(sharePanel)
@@ -1513,7 +1517,7 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
         isStatusUploading = true
         
         let id = "c_"
-        DataFetchManager.shared.sendCommentData(id: id) { [weak self]result in
+        DataUploadManager.shared.sendCommentData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -2470,7 +2474,7 @@ extension PhotoDetailPanelView: ShareSheetScrollableDelegate{
                     
                     //test > create new post
                     if(type == "post") {
-//                        delegate?.didClickPostPanelVcvClickCreatePost()
+                        delegate?.didClickPhotoDetailPanelVcvClickCreate(type: "post")
                     }
                 }
                 else if let b = lastPage as? ShareSheetScrollableView {
@@ -2479,7 +2483,7 @@ extension PhotoDetailPanelView: ShareSheetScrollableDelegate{
             } else {
                 //test > create new post
                 if(type == "post") {
-//                        delegate?.didClickPostPanelVcvClickCreatePost()
+                    delegate?.didClickPhotoDetailPanelVcvClickCreate(type: "post")
                 }
             }
         }
@@ -2714,5 +2718,12 @@ extension ViewController: PhotoDetailPanelDelegate{
         } else if(mode == PhotoTypes.P_0){
             openPhotoZoomPanel(offX: offsetX, offY: offsetY)
         }
+    }
+    
+    func didClickPhotoDetailPanelVcvClickCreate(type: String){
+        if(type == "post") {
+            openPostCreatorPanel()
+        }
+        
     }
 }

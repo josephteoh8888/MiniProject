@@ -19,6 +19,7 @@ protocol PlaceCreatorPanelDelegate : AnyObject {
     func didPlaceCreatorClickLocationSelectScrollable()
     
     func didPlaceCreatorClickSignIn()
+    func didPlaceCreatorClickUpload(payload: String)
 }
 
 class PlaceCreatorConsolePanelView: CreatorPanelView{
@@ -53,6 +54,18 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
     
     //test > user login/out status
     var isUserLoggedIn = false
+    
+    var maxSelectLimit = 5
+    let maxLimitErrorPanel = UIView()
+    let maxLimitText = UILabel()
+    let pMiniError = UIView()
+    let lMiniError = UIView()
+    let mMiniError = UIView()
+    
+    //test > use pre-designated sound or location
+    var predesignatedPlaceList = [String]()
+    let aText = UILabel()
+    let aGrid = UIView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -191,6 +204,27 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
         lhsAddBtn.isUserInteractionEnabled = true
         lhsAddBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onAddPhotoClicked)))
         
+        mMiniError.backgroundColor = .red
+        stackView.addSubview(mMiniError)
+        mMiniError.translatesAutoresizingMaskIntoConstraints = false
+        mMiniError.leadingAnchor.constraint(equalTo: lhsAddBtn.trailingAnchor, constant: 5).isActive = true
+        mMiniError.centerYAnchor.constraint(equalTo: lhsAddBtn.centerYAnchor, constant: 0).isActive = true
+//        mMiniError.topAnchor.constraint(equalTo: maxLimitErrorPanel.topAnchor, constant: 5).isActive = true
+//        mMiniError.bottomAnchor.constraint(equalTo: pText.topAnchor, constant: -5).isActive = true
+        mMiniError.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        mMiniError.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        mMiniError.layer.cornerRadius = 10
+        mMiniError.isHidden = true
+
+        let mMiniBtn = UIImageView(image: UIImage(named:"icon_round_priority")?.withRenderingMode(.alwaysTemplate))
+        mMiniBtn.tintColor = .white
+        mMiniError.addSubview(mMiniBtn)
+        mMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        mMiniBtn.centerXAnchor.constraint(equalTo: mMiniError.centerXAnchor).isActive = true
+        mMiniBtn.centerYAnchor.constraint(equalTo: mMiniError.centerYAnchor).isActive = true
+        mMiniBtn.heightAnchor.constraint(equalToConstant: 12).isActive = true
+        mMiniBtn.widthAnchor.constraint(equalToConstant: 12).isActive = true
+        
         //test 2 > design 2
         let pResult = UIView()
 //        pResult.backgroundColor = .ddmDarkColor
@@ -222,6 +256,28 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
 //        pText.topAnchor.constraint(equalTo: pResult.bottomAnchor, constant: 20).isActive = true
         pText.text = "Name"
 //        pText.layer.opacity = 0.5
+        
+//        let pMiniError = UIView()
+        pMiniError.backgroundColor = .red
+        stackView.addSubview(pMiniError)
+        pMiniError.translatesAutoresizingMaskIntoConstraints = false
+        pMiniError.trailingAnchor.constraint(equalTo: pResult.trailingAnchor, constant: -5).isActive = true
+        pMiniError.centerYAnchor.constraint(equalTo: pResult.centerYAnchor, constant: 0).isActive = true
+//        pMiniError.topAnchor.constraint(equalTo: maxLimitErrorPanel.topAnchor, constant: 5).isActive = true
+//        pMiniError.bottomAnchor.constraint(equalTo: maxLimitErrorPanel.bottomAnchor, constant: -5).isActive = true
+        pMiniError.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        pMiniError.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        pMiniError.layer.cornerRadius = 10
+        pMiniError.isHidden = true
+
+        let pMiniBtn = UIImageView(image: UIImage(named:"icon_round_priority")?.withRenderingMode(.alwaysTemplate))
+        pMiniBtn.tintColor = .white
+        pMiniError.addSubview(pMiniBtn)
+        pMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        pMiniBtn.centerXAnchor.constraint(equalTo: pMiniError.centerXAnchor).isActive = true
+        pMiniBtn.centerYAnchor.constraint(equalTo: pMiniError.centerYAnchor).isActive = true
+        pMiniBtn.heightAnchor.constraint(equalToConstant: 12).isActive = true
+        pMiniBtn.widthAnchor.constraint(equalToConstant: 12).isActive = true
         
         let qResult = UIView()
 //        qResult.backgroundColor = .ddmDarkColor
@@ -425,6 +481,7 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
         bSpinner.centerXAnchor.constraint(equalTo: aSaveDraft.centerXAnchor).isActive = true
         bSpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
         bSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        bSpinner.isUserInteractionEnabled = false
         
 //        let aUpload = UIView()
         aUpload.backgroundColor = .yellow
@@ -461,6 +518,7 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
         aSpinner.centerXAnchor.constraint(equalTo: aUpload.centerXAnchor).isActive = true
         aSpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
         aSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        aSpinner.isUserInteractionEnabled = false
         
         let stackViewA = UIStackView(arrangedSubviews: [stack1, stack2])
         stackViewA.distribution = .fillEqually
@@ -544,8 +602,51 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
         rHintText.layer.opacity = 0.3
 //        rHintText.textColor = .ddmDarkBlack
         
+//        let aGrid = UIView()
+        stackView.addSubview(aGrid)
+        aGrid.translatesAutoresizingMaskIntoConstraints = false
+        aGrid.leadingAnchor.constraint(equalTo: rResult.leadingAnchor, constant: 100).isActive = true
+        aGrid.centerYAnchor.constraint(equalTo: rResult.centerYAnchor, constant: 0).isActive = true
+        aGrid.isHidden = true
+        
+        let aGridBG = UIView()
+//        aGridBG.backgroundColor = .ddmDarkColor
+//        panel.addSubview(aGridBG)
+        aGrid.addSubview(aGridBG)
+        aGridBG.translatesAutoresizingMaskIntoConstraints = false
+        aGridBG.leadingAnchor.constraint(equalTo: aGrid.leadingAnchor, constant: 0).isActive = true
+        aGridBG.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        aGridBG.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        aGridBG.topAnchor.constraint(equalTo: aGrid.topAnchor, constant: 0).isActive = true
+        aGridBG.bottomAnchor.constraint(equalTo: aGrid.bottomAnchor, constant: 0).isActive = true
+//        aGridBG.layer.cornerRadius = 5 //20
+        
+        let aGridIcon = UIImageView(image: UIImage(named:"icon_location")?.withRenderingMode(.alwaysTemplate))
+        aGridIcon.tintColor = .white
+//        panel.addSubview(aGridIcon)
+        aGridBG.addSubview(aGridIcon)
+        aGridIcon.translatesAutoresizingMaskIntoConstraints = false
+        aGridIcon.centerXAnchor.constraint(equalTo: aGridBG.centerXAnchor).isActive = true
+        aGridIcon.centerYAnchor.constraint(equalTo: aGridBG.centerYAnchor).isActive = true
+        aGridIcon.heightAnchor.constraint(equalToConstant: 16).isActive = true
+        aGridIcon.widthAnchor.constraint(equalToConstant: 16).isActive = true
+        
+//        let aText = UILabel()
+        aText.textAlignment = .left
+        aText.textColor = .white
+//        aText.font = .boldSystemFont(ofSize: 14)
+        aText.font = .systemFont(ofSize: 14)
+//        panel.addSubview(aText)
+        aGrid.addSubview(aText)
+        aText.translatesAutoresizingMaskIntoConstraints = false
+        aText.centerYAnchor.constraint(equalTo: aGrid.centerYAnchor, constant: 0).isActive = true
+        aText.leadingAnchor.constraint(equalTo: aGridBG.trailingAnchor, constant: 0).isActive = true
+        aText.trailingAnchor.constraint(equalTo: aGrid.trailingAnchor, constant: 0).isActive = true
+//        aText.text = "Everyone Can See"
+//        aText.text = "Petronas Twin Tower"
+        
         let rArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
-        rArrowBtn.tintColor = .white
+        rArrowBtn.tintColor = .ddmDarkGrayColor
 //        aStickyHeader.addSubview(bMiniBtn)
         stackView.addSubview(rArrowBtn)
         rArrowBtn.translatesAutoresizingMaskIntoConstraints = false
@@ -553,7 +654,77 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
         rArrowBtn.centerYAnchor.constraint(equalTo: rResult.centerYAnchor).isActive = true
         rArrowBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         rArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        rArrowBtn.layer.opacity = 0.5
+//        rArrowBtn.layer.opacity = 0.5
+        
+        lMiniError.backgroundColor = .red
+        stackView.addSubview(lMiniError)
+        lMiniError.translatesAutoresizingMaskIntoConstraints = false
+        lMiniError.trailingAnchor.constraint(equalTo: rArrowBtn.leadingAnchor, constant: -5).isActive = true
+        lMiniError.centerYAnchor.constraint(equalTo: rResult.centerYAnchor, constant: 0).isActive = true
+//        lMiniError.topAnchor.constraint(equalTo: maxLimitErrorPanel.topAnchor, constant: 5).isActive = true
+//        lMiniError.bottomAnchor.constraint(equalTo: pText.topAnchor, constant: -5).isActive = true
+        lMiniError.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        lMiniError.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        lMiniError.layer.cornerRadius = 10
+        lMiniError.isHidden = true
+
+        let lMiniBtn = UIImageView(image: UIImage(named:"icon_round_priority")?.withRenderingMode(.alwaysTemplate))
+        lMiniBtn.tintColor = .white
+        lMiniError.addSubview(lMiniBtn)
+        lMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        lMiniBtn.centerXAnchor.constraint(equalTo: lMiniError.centerXAnchor).isActive = true
+        lMiniBtn.centerYAnchor.constraint(equalTo: lMiniError.centerYAnchor).isActive = true
+        lMiniBtn.heightAnchor.constraint(equalToConstant: 12).isActive = true
+        lMiniBtn.widthAnchor.constraint(equalToConstant: 12).isActive = true
+        
+        //test > error handling max selected limit
+//        maxLimitErrorPanel.backgroundColor = .ddmBlackOverlayColor //black
+        maxLimitErrorPanel.backgroundColor = .white //black
+        panel.addSubview(maxLimitErrorPanel)
+        maxLimitErrorPanel.translatesAutoresizingMaskIntoConstraints = false
+        maxLimitErrorPanel.centerXAnchor.constraint(equalTo: panel.centerXAnchor, constant: 0).isActive = true
+//        maxLimitErrorPanel.leadingAnchor.constraint(equalTo: panelView.leadingAnchor, constant: 0).isActive = true
+//        maxLimitErrorPanel.trailingAnchor.constraint(equalTo: panelView.trailingAnchor, constant: 0).isActive = true
+        maxLimitErrorPanel.layer.cornerRadius = 10
+        maxLimitErrorPanel.bottomAnchor.constraint(equalTo: stackViewA.topAnchor, constant: -10).isActive = true
+        maxLimitErrorPanel.isHidden = true
+        
+        let miniError = UIView()
+        miniError.backgroundColor = .red
+        maxLimitErrorPanel.addSubview(miniError)
+        miniError.translatesAutoresizingMaskIntoConstraints = false
+        miniError.leadingAnchor.constraint(equalTo: maxLimitErrorPanel.leadingAnchor, constant: 15).isActive = true
+//        miniError.centerYAnchor.constraint(equalTo: maxLimitErrorPanel.centerYAnchor, constant: 0).isActive = true
+        miniError.topAnchor.constraint(equalTo: maxLimitErrorPanel.topAnchor, constant: 5).isActive = true
+        miniError.bottomAnchor.constraint(equalTo: maxLimitErrorPanel.bottomAnchor, constant: -5).isActive = true
+        miniError.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        miniError.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        miniError.layer.cornerRadius = 10
+//        micMiniError.isHidden = true
+
+        let miniBtn = UIImageView(image: UIImage(named:"icon_round_priority")?.withRenderingMode(.alwaysTemplate))
+        miniBtn.tintColor = .white
+        miniError.addSubview(miniBtn)
+        miniBtn.translatesAutoresizingMaskIntoConstraints = false
+        miniBtn.centerXAnchor.constraint(equalTo: miniError.centerXAnchor).isActive = true
+        miniBtn.centerYAnchor.constraint(equalTo: miniError.centerYAnchor).isActive = true
+        miniBtn.heightAnchor.constraint(equalToConstant: 12).isActive = true
+        miniBtn.widthAnchor.constraint(equalToConstant: 12).isActive = true
+        
+//        let maxLimitText = UILabel()
+        maxLimitText.textAlignment = .center
+//        maxLimitText.textColor = .white
+        maxLimitText.textColor = .black
+        maxLimitText.font = .boldSystemFont(ofSize: 13)
+//        panel.addSubview(aUploadText)
+        maxLimitErrorPanel.addSubview(maxLimitText)
+        maxLimitText.translatesAutoresizingMaskIntoConstraints = false
+//        maxLimitText.topAnchor.constraint(equalTo: maxLimitErrorPanel.topAnchor, constant: 10).isActive = true
+//        maxLimitText.bottomAnchor.constraint(equalTo: maxLimitErrorPanel.bottomAnchor, constant: -10).isActive = true
+        maxLimitText.centerYAnchor.constraint(equalTo: maxLimitErrorPanel.centerYAnchor, constant: 0).isActive = true
+        maxLimitText.leadingAnchor.constraint(equalTo: miniError.trailingAnchor, constant: 7).isActive = true
+        maxLimitText.trailingAnchor.constraint(equalTo: maxLimitErrorPanel.trailingAnchor, constant: -15).isActive = true
+        maxLimitText.text = ""
     }
     
     @objc func onBackPlaceCreatorPanelClicked(gesture: UITapGestureRecognizer) {
@@ -563,30 +734,38 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
     }
     
     @objc func onPlaceUploadNextClicked(gesture: UITapGestureRecognizer) {
+        clearErrorUI()
         resignResponder()
         
         let isSignedIn = SignInManager.shared.getStatus()
         if(isSignedIn) {
-            aUpload.isHidden = true
-            aSpinner.startAnimating()
-            
-            //test > close panel when upload
-    //        closePlaceCreatorPanel(isAnimated: true)
-            
-            DataFetchManager.shared.sendData(id: "u") { [weak self]result in
-                switch result {
-                    case .success(let l):
 
-                    //update UI on main thread
-                    DispatchQueue.main.async {
-
-                        self?.closePlaceCreatorPanel(isAnimated: true)
-                    }
-
-                    case .failure(_):
-                        print("api fail")
-                        break
-                }
+            if(pTextField.text == "") {
+                configureErrorUI(data: "na-name")
+            } else {
+                aUpload.isHidden = true
+                aSpinner.startAnimating()
+                
+                //test 1 > upload data
+//                DataUploadManager.shared.sendData(id: "u") { [weak self]result in
+//                    switch result {
+//                        case .success(let l):
+//
+//                        //update UI on main thread
+//                        DispatchQueue.main.async {
+//
+//                            self?.closePlaceCreatorPanel(isAnimated: true)
+//                        }
+//
+//                        case .failure(_):
+//                            print("api fail")
+//                            break
+//                    }
+//                }
+                
+                //test 2 > new method to upload data => for in-app msg view
+                self.closePlaceCreatorPanel(isAnimated: true)
+                delegate?.didPlaceCreatorClickUpload(payload: "cc") //payload e.g. location name
             }
         }
         else {
@@ -595,14 +774,16 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
     }
     
     @objc func onSaveDraftNextClicked(gesture: UITapGestureRecognizer) {
+        clearErrorUI()
         resignResponder()
         
         let isSignedIn = SignInManager.shared.getStatus()
         if(isSignedIn) {
+            
             aSaveDraft.isHidden = true
             bSpinner.startAnimating()
             
-            DataFetchManager.shared.sendData(id: "u") { [weak self]result in
+            DataUploadManager.shared.sendData(id: "u") { [weak self]result in
                 switch result {
                     case .success(let l):
 
@@ -677,6 +858,20 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
         }
     }
     
+    func setPredesignatedPlace(p: String) {
+        predesignatedPlaceList.append("p")
+        refreshTitleUI()
+    }
+    
+    func refreshTitleUI(){
+        rHintText.isHidden = true
+        
+        if(!predesignatedPlaceList.isEmpty) {
+            aGrid.isHidden = false
+            aText.text = "Petronas Twin Tower"
+        }
+    }
+    
     func resignResponder() {
         self.endEditing(true)
     }
@@ -704,6 +899,7 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
 //        activate(textView: qTextField)
     }
     @objc func onAddRTextClicked(gesture: UITapGestureRecognizer) {
+        clearErrorUI()
         resignResponder()
         
 //        activate(textField: rTextField) //test
@@ -721,6 +917,8 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
         }
     }
     @objc func onAddPhotoClicked(gesture: UITapGestureRecognizer) {
+        
+        clearErrorUI()
         resignResponder()
         
         let isSignedIn = SignInManager.shared.getStatus()
@@ -771,8 +969,42 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
     
     //test
     override func showLocationSelected() {
-        rHintText.text = mapPinString
+//        rHintText.text = mapPinString
         print("showLocationSelected")
+        
+        rHintText.isHidden = true
+        
+        aGrid.isHidden = false
+        aText.text = mapPinString
+    }
+    
+    func configureErrorUI(data: String) {
+        if(data == "e") {
+            maxLimitText.text = "Error occurred. Try again"
+        }
+        else if(data == "na-photo") {
+            maxLimitText.text = "Photo is required"
+            mMiniError.isHidden = false
+        }
+        else if(data == "na-name") {
+            maxLimitText.text = "Name is required"
+            pMiniError.isHidden = false
+        }        
+        else if(data == "na-location") {
+            maxLimitText.text = "Location is required"
+            lMiniError.isHidden = false
+        }
+        
+        maxLimitErrorPanel.isHidden = false
+    }
+    
+    func clearErrorUI() {
+        maxLimitText.text = ""
+        maxLimitErrorPanel.isHidden = true
+        
+        pMiniError.isHidden = true
+        lMiniError.isHidden = true
+        mMiniError.isHidden = true
     }
 }
 
@@ -782,6 +1014,8 @@ extension PlaceCreatorConsolePanelView: UIScrollViewDelegate {
         let scrollOffsetY = scrollView.contentOffset.y
         
         resignResponder()
+        
+        clearErrorUI()
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -834,6 +1068,44 @@ extension ViewController: PlaceCreatorPanelDelegate{
     func didPlaceCreatorClickSignIn(){
         openLoginPanel()
     }
+    
+    func didPlaceCreatorClickUpload(payload: String) {
+        
+        DataUploadManager.shared.sendData(id: "a") { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    if(!self.inAppMsgList.isEmpty) {
+                        let a = self.inAppMsgList[self.inAppMsgList.count - 1]
+                        a.updateConfigUI(data: "up_place", taskId: "a")
+                    }
+                }
+
+                case .failure(_):
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    guard let self = self else {
+                        return
+                    }
+                    print("api fail")
+                    
+                    if(!self.inAppMsgList.isEmpty) {
+                        let a = self.inAppMsgList[self.inAppMsgList.count - 1]
+                        a.updateConfigUI(data: "up_place", taskId: "a")
+                    }
+                }
+                break
+            }
+        }
+        
+        openInAppMsgView(data: "up_place")
+    }
 }
 
 extension PlaceCreatorConsolePanelView: CameraPhotoRollPanelDelegate{
@@ -853,10 +1125,3 @@ extension PlaceCreatorConsolePanelView: CameraPhotoRollPanelDelegate{
         }
     }
 }
-
-//extension PlaceCreatorConsolePanelView: PlaceDraftPanelDelegate{
-//    func didClickClosePlaceDraftPanel() {
-//        
-////        backPage(isCurrentPageScrollable: false)
-//    }
-//}

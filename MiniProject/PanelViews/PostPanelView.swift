@@ -28,9 +28,7 @@ protocol PostPanelDelegate : AnyObject {
     func didClickPostPanelVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) //try
     
     //test > click to create new post
-    func didClickPostPanelVcvClickCreatePost()
-    func didClickPostPanelVcvClickCreatePhoto()
-    func didClickPostPanelVcvClickCreateVideo()
+    func didClickPostPanelVcvClickCreate(type: String)
 
     //test > for marker animation after video closes
     func didStartPostPanGesture(ppv : PostPanelView)
@@ -1228,6 +1226,7 @@ class PostPanelView: PanelView, UIGestureRecognizerDelegate{
         sharePanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
         sharePanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
         sharePanel.delegate = self
+        sharePanel.initialize()
         
         //test > track share scrollable view
         pageList.append(sharePanel)
@@ -1791,14 +1790,11 @@ extension ViewController: PostPanelDelegate{
         self.openVideoPanel(offX: offsetX, offY: offsetY, originatorView: view, originatorViewType: OriginatorTypes.UIVIEW, id: 0, originatorViewId: "", preterminedDatasets: dataset, mode: mode)
     }
     
-    func didClickPostPanelVcvClickCreatePost(){
-        openPostCreatorPanel()
-    }
-    func didClickPostPanelVcvClickCreatePhoto(){
-        openPhotoCreatorPanel()
-    }
-    func didClickPostPanelVcvClickCreateVideo(){
-        openVideoCreatorPanel()
+    func didClickPostPanelVcvClickCreate(type: String){
+        if(type == "post") {
+            openPostCreatorPanel()
+        }
+        
     }
 }
 
@@ -1816,7 +1812,7 @@ extension PostPanelView: ShareSheetScrollableDelegate{
                     
                     //test > create new post
                     if(type == "post") {
-                        delegate?.didClickPostPanelVcvClickCreatePost()
+                        delegate?.didClickPostPanelVcvClickCreate(type: "post")
                     }
                 }
                 else if let b = lastPage as? ShareSheetScrollableView {
@@ -1828,7 +1824,7 @@ extension PostPanelView: ShareSheetScrollableDelegate{
                     
                     //test > create new post
                     if(type == "post") {
-                        delegate?.didClickPostPanelVcvClickCreatePost()
+                        delegate?.didClickPostPanelVcvClickCreate(type: "post")
                     }
                 }
             }

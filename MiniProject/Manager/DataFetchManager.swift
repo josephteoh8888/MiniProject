@@ -246,65 +246,6 @@ class DataFetchManager {
         })
     }
     
-    //test > send data for uploading posts
-    func sendData(id: String, completion: @escaping (Result<[String], Error>) -> Void) {
-        DispatchQueue.global().asyncAfter(deadline: .now()+1.0, execute: { //0.6s
-            let originalData = [
-                id
-            ]
-            
-            var newData = [String]()
-            if(id == "u") {
-                newData.append("Michael")
-            } else if(id == "p") {
-                newData.append("Petronas Twin Tower")
-            } else if(id == "s") {
-                newData.append("Miss You")
-            }
-
-            completion(.success(newData))
-
-        })
-    }
-    
-    //test > save data for drafts
-    func saveData(id: String, completion: @escaping (Result<[String], Error>) -> Void) {
-        DispatchQueue.global().asyncAfter(deadline: .now()+1.0, execute: { //0.6s
-            let originalData = [
-                id
-            ]
-            
-            var newData = [String]()
-            if(id == "u") {
-                newData.append("Michael")
-            } else if(id == "p") {
-                newData.append("Petronas Twin Tower")
-            } else if(id == "s") {
-                newData.append("Miss You")
-            }
-
-            completion(.success(newData))
-
-        })
-    }
-    
-    //test > upload new comment
-    func sendCommentData(id: String, completion: @escaping (Result<[String], Error>) -> Void) {
-        DispatchQueue.global().asyncAfter(deadline: .now()+1.0, execute: { //0.6s
-            
-            var newData = [String]()
-
-            if(id == "c") {
-                newData.append("a")
-
-                completion(.success(newData))
-            }
-            else {
-                completion(.failure(FetchDataError.invalidResponse))
-            }
-        })
-    }
-    
     //test > replicate firestore fetch data for getHeatmapPoints()
     func fetchGeoData(id: String, completion: @escaping (Result<[GeoDataset], Error>) -> Void) {
         DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s

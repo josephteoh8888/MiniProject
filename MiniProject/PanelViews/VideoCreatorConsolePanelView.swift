@@ -20,6 +20,7 @@ protocol VideoCreatorPanelDelegate : AnyObject {
     func didVideoCreatorClickLocationSelectScrollable()
     
     func didVideoCreatorClickSignIn()
+    func didVideoCreatorClickUpload(payload: String)
 }
 
 //test > editor as base
@@ -120,6 +121,19 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
     //test > user login/out status
     var isUserLoggedIn = false
     
+    var maxSelectLimit = 60.0 //video duration in s
+    let maxLimitErrorPanel = UIView()
+    let maxLimitText = UILabel()
+    
+    //test > use pre-designated sound or location
+    var predesignatedPlaceList = [String]()
+    var predesignatedSoundList = [String]()
+    let pSemiTransparentTextBox = UIView()
+    let pSemiTransparentText = UILabel()
+    let sSemiTransparentTextBox = UIView()
+    let sSemiTransparentText = UILabel()
+    let aCreateTitleText = UILabel()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -177,7 +191,7 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
         bMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
         
         //test
-        let aCreateTitleText = UILabel()
+//        let aCreateTitleText = UILabel()
         aCreateTitleText.textAlignment = .center
         aCreateTitleText.textColor = .white
 //        aCreateTitleText.textColor = .ddmBlackOverlayColor
@@ -187,6 +201,130 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
         aCreateTitleText.centerYAnchor.constraint(equalTo: aBtn.centerYAnchor, constant: 0).isActive = true
         aCreateTitleText.centerXAnchor.constraint(equalTo: panel.centerXAnchor, constant: 0).isActive = true
         aCreateTitleText.text = "New Loop"
+        aCreateTitleText.isHidden = false
+        
+        //test > semi-transparent for predesignated place
+//        let pSemiTransparentTextBox = UIView()
+//        pSemiTransparentTextBox.backgroundColor = .ddmBlackOverlayColor
+        panel.addSubview(pSemiTransparentTextBox)
+        pSemiTransparentTextBox.translatesAutoresizingMaskIntoConstraints = false
+//        aSemiTransparentTextBox.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 30).isActive = true
+        pSemiTransparentTextBox.centerYAnchor.constraint(equalTo: aBtn.centerYAnchor, constant: 0).isActive = true//default:0
+        pSemiTransparentTextBox.centerXAnchor.constraint(equalTo: panel.centerXAnchor).isActive = true
+        pSemiTransparentTextBox.layer.cornerRadius = 10
+        pSemiTransparentTextBox.heightAnchor.constraint(equalToConstant: 36).isActive = true //42
+//        pSemiTransparentTextBox.widthAnchor.constraint(equalToConstant: 100).isActive = true //test
+        pSemiTransparentTextBox.isHidden = true
+        
+        let pSemiTransparentTextBoxBG = UIView()
+//        pSemiTransparentTextBoxBG.backgroundColor = .ddmAccentColor
+        pSemiTransparentTextBoxBG.backgroundColor = .ddmDarkColor
+//        pSemiTransparentTextBoxBG.layer.opacity = 0.3 //0.3
+        pSemiTransparentTextBoxBG.layer.cornerRadius = 15
+        pSemiTransparentTextBox.addSubview(pSemiTransparentTextBoxBG)
+        pSemiTransparentTextBoxBG.translatesAutoresizingMaskIntoConstraints = false
+        pSemiTransparentTextBoxBG.topAnchor.constraint(equalTo: pSemiTransparentTextBox.topAnchor).isActive = true
+        pSemiTransparentTextBoxBG.bottomAnchor.constraint(equalTo: pSemiTransparentTextBox.bottomAnchor).isActive = true
+        pSemiTransparentTextBoxBG.leadingAnchor.constraint(equalTo: pSemiTransparentTextBox.leadingAnchor).isActive = true
+        pSemiTransparentTextBoxBG.trailingAnchor.constraint(equalTo: pSemiTransparentTextBox.trailingAnchor).isActive = true
+        
+        let pSemiGifImageOuter = UIView()
+//        pSemiGifImageOuter.backgroundColor = .white
+//        semiGifImageOuter.backgroundColor = .ddmGoldenYellowColor
+        pSemiTransparentTextBox.addSubview(pSemiGifImageOuter)
+//        self.view.addSubview(semiGifImageOuter)
+        pSemiGifImageOuter.translatesAutoresizingMaskIntoConstraints = false
+        pSemiGifImageOuter.leadingAnchor.constraint(equalTo: pSemiTransparentTextBox.leadingAnchor, constant: 0).isActive = true //10
+        pSemiGifImageOuter.centerYAnchor.constraint(equalTo: pSemiTransparentTextBox.centerYAnchor).isActive = true
+        pSemiGifImageOuter.heightAnchor.constraint(equalToConstant: 30).isActive = true //34
+        pSemiGifImageOuter.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        pSemiGifImageOuter.layer.cornerRadius = 15 //17
+//        pSemiGifImageOuter.layer.opacity = 0
+//        pSemiGifImageOuter.isHidden = true
+        
+        let pSemiTransparentBtn = UIImageView(image: UIImage(named:"icon_location")?.withRenderingMode(.alwaysTemplate))
+        pSemiTransparentBtn.tintColor = .white //white
+        pSemiGifImageOuter.addSubview(pSemiTransparentBtn)
+        pSemiTransparentBtn.translatesAutoresizingMaskIntoConstraints = false
+        pSemiTransparentBtn.centerXAnchor.constraint(equalTo: pSemiGifImageOuter.centerXAnchor).isActive = true
+        pSemiTransparentBtn.centerYAnchor.constraint(equalTo: pSemiGifImageOuter.centerYAnchor).isActive = true
+        pSemiTransparentBtn.heightAnchor.constraint(equalToConstant: 16).isActive = true
+        pSemiTransparentBtn.widthAnchor.constraint(equalToConstant: 16).isActive = true
+
+//        let pSemiTransparentText = UILabel()
+        pSemiTransparentText.textAlignment = .center
+        pSemiTransparentText.textColor = .white
+        pSemiTransparentText.font = .boldSystemFont(ofSize: 13)
+        pSemiTransparentTextBox.addSubview(pSemiTransparentText)
+        pSemiTransparentText.translatesAutoresizingMaskIntoConstraints = false
+        pSemiTransparentText.topAnchor.constraint(equalTo: pSemiTransparentTextBox.topAnchor, constant: 13).isActive = true
+        pSemiTransparentText.bottomAnchor.constraint(equalTo: pSemiTransparentTextBox.bottomAnchor, constant: -13).isActive = true
+        pSemiTransparentText.leadingAnchor.constraint(equalTo: pSemiGifImageOuter.trailingAnchor, constant: 0).isActive = true //10
+        pSemiTransparentText.trailingAnchor.constraint(equalTo: pSemiTransparentTextBox.trailingAnchor, constant: -10).isActive = true
+//        pSemiTransparentText.text = "Petronas Twin Tower"
+        pSemiTransparentText.widthAnchor.constraint(lessThanOrEqualToConstant: 150).isActive = true
+        pSemiTransparentText.text = ""
+        
+        //test > semi-transparent for predesignated sound
+//        let pSemiTransparentTextBox = UIView()
+//        pSemiTransparentTextBox.backgroundColor = .ddmBlackOverlayColor
+        panel.addSubview(sSemiTransparentTextBox)
+        sSemiTransparentTextBox.translatesAutoresizingMaskIntoConstraints = false
+//        sSemiTransparentTextBox.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 30).isActive = true
+        sSemiTransparentTextBox.centerYAnchor.constraint(equalTo: aBtn.centerYAnchor, constant: 0).isActive = true//default:0
+        sSemiTransparentTextBox.centerXAnchor.constraint(equalTo: panel.centerXAnchor).isActive = true
+        sSemiTransparentTextBox.layer.cornerRadius = 10
+        sSemiTransparentTextBox.heightAnchor.constraint(equalToConstant: 36).isActive = true //42
+//        pSemiTransparentTextBox.widthAnchor.constraint(equalToConstant: 100).isActive = true //test
+        sSemiTransparentTextBox.isHidden = true
+        
+        let sSemiTransparentTextBoxBG = UIView()
+//        pSemiTransparentTextBoxBG.backgroundColor = .ddmAccentColor
+        sSemiTransparentTextBoxBG.backgroundColor = .ddmDarkColor
+//        pSemiTransparentTextBoxBG.layer.opacity = 0.3 //0.3
+        sSemiTransparentTextBoxBG.layer.cornerRadius = 15
+        sSemiTransparentTextBox.addSubview(sSemiTransparentTextBoxBG)
+        sSemiTransparentTextBoxBG.translatesAutoresizingMaskIntoConstraints = false
+        sSemiTransparentTextBoxBG.topAnchor.constraint(equalTo: sSemiTransparentTextBox.topAnchor).isActive = true
+        sSemiTransparentTextBoxBG.bottomAnchor.constraint(equalTo: sSemiTransparentTextBox.bottomAnchor).isActive = true
+        sSemiTransparentTextBoxBG.leadingAnchor.constraint(equalTo: sSemiTransparentTextBox.leadingAnchor).isActive = true
+        sSemiTransparentTextBoxBG.trailingAnchor.constraint(equalTo: sSemiTransparentTextBox.trailingAnchor).isActive = true
+        
+        let sSemiGifImageOuter = UIView()
+//        pSemiGifImageOuter.backgroundColor = .white
+//        semiGifImageOuter.backgroundColor = .ddmGoldenYellowColor
+        sSemiTransparentTextBox.addSubview(sSemiGifImageOuter)
+//        self.view.addSubview(semiGifImageOuter)
+        sSemiGifImageOuter.translatesAutoresizingMaskIntoConstraints = false
+        sSemiGifImageOuter.leadingAnchor.constraint(equalTo: sSemiTransparentTextBox.leadingAnchor, constant: 0).isActive = true //10
+        sSemiGifImageOuter.centerYAnchor.constraint(equalTo: sSemiTransparentTextBox.centerYAnchor).isActive = true
+        sSemiGifImageOuter.heightAnchor.constraint(equalToConstant: 30).isActive = true //34
+        sSemiGifImageOuter.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        sSemiGifImageOuter.layer.cornerRadius = 15 //17
+//        pSemiGifImageOuter.layer.opacity = 0
+//        pSemiGifImageOuter.isHidden = true
+        
+        let sSemiTransparentBtn = UIImageView(image: UIImage(named:"icon_round_music")?.withRenderingMode(.alwaysTemplate))
+        sSemiTransparentBtn.tintColor = .white //white
+        sSemiGifImageOuter.addSubview(sSemiTransparentBtn)
+        sSemiTransparentBtn.translatesAutoresizingMaskIntoConstraints = false
+        sSemiTransparentBtn.centerXAnchor.constraint(equalTo: sSemiGifImageOuter.centerXAnchor).isActive = true
+        sSemiTransparentBtn.centerYAnchor.constraint(equalTo: sSemiGifImageOuter.centerYAnchor).isActive = true
+        sSemiTransparentBtn.heightAnchor.constraint(equalToConstant: 16).isActive = true
+        sSemiTransparentBtn.widthAnchor.constraint(equalToConstant: 16).isActive = true
+
+//        let pSemiTransparentText = UILabel()
+        sSemiTransparentText.textAlignment = .center
+        sSemiTransparentText.textColor = .white
+        sSemiTransparentText.font = .boldSystemFont(ofSize: 13)
+        sSemiTransparentTextBox.addSubview(sSemiTransparentText)
+        sSemiTransparentText.translatesAutoresizingMaskIntoConstraints = false
+        sSemiTransparentText.topAnchor.constraint(equalTo: sSemiTransparentTextBox.topAnchor, constant: 13).isActive = true
+        sSemiTransparentText.bottomAnchor.constraint(equalTo: sSemiTransparentTextBox.bottomAnchor, constant: -13).isActive = true
+        sSemiTransparentText.leadingAnchor.constraint(equalTo: sSemiGifImageOuter.trailingAnchor, constant: 0).isActive = true //10
+        sSemiTransparentText.trailingAnchor.constraint(equalTo: sSemiTransparentTextBox.trailingAnchor, constant: -10).isActive = true
+        sSemiTransparentText.widthAnchor.constraint(lessThanOrEqualToConstant: 150).isActive = true
+        sSemiTransparentText.text = ""
         
 //        let width = 180.0
         let width = viewWidth/2.3
@@ -895,10 +1033,10 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
         acSGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
         acSGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
 //        acSGrid.topAnchor.constraint(equalTo: pauseBtn.bottomAnchor, constant: 20).isActive = true
-        acSGrid.topAnchor.constraint(equalTo: vcBtnContainer.topAnchor, constant: 10).isActive = true
+        acSGrid.topAnchor.constraint(equalTo: acBtnContainer.topAnchor, constant: 10).isActive = true
         acSGrid.layer.cornerRadius = 20 //10
         acSGrid.isUserInteractionEnabled = true
-        acSGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onSPhotoClicked)))
+//        acSGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onSPhotoClicked)))
         
         let acSMiniBtn = UIImageView(image: UIImage(named:"icon_round_music")?.withRenderingMode(.alwaysTemplate))
         acSMiniBtn.tintColor = .white
@@ -1056,6 +1194,54 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
         scVMiniText.centerXAnchor.constraint(equalTo: scVGrid.centerXAnchor).isActive = true
         scVMiniText.text = "Delete"
         
+        //test > error handling max selected limit
+//        maxLimitErrorPanel.backgroundColor = .ddmBlackOverlayColor //black
+        maxLimitErrorPanel.backgroundColor = .white //black
+        panel.addSubview(maxLimitErrorPanel)
+        maxLimitErrorPanel.translatesAutoresizingMaskIntoConstraints = false
+        maxLimitErrorPanel.centerXAnchor.constraint(equalTo: panel.centerXAnchor, constant: 0).isActive = true
+//        maxLimitErrorPanel.leadingAnchor.constraint(equalTo: panelView.leadingAnchor, constant: 0).isActive = true
+//        maxLimitErrorPanel.trailingAnchor.constraint(equalTo: panelView.trailingAnchor, constant: 0).isActive = true
+        maxLimitErrorPanel.layer.cornerRadius = 10
+        maxLimitErrorPanel.bottomAnchor.constraint(equalTo: mainBtnContainer.topAnchor, constant: -10).isActive = true
+        maxLimitErrorPanel.isHidden = true
+        
+        let miniError = UIView()
+        miniError.backgroundColor = .red
+        maxLimitErrorPanel.addSubview(miniError)
+        miniError.translatesAutoresizingMaskIntoConstraints = false
+        miniError.leadingAnchor.constraint(equalTo: maxLimitErrorPanel.leadingAnchor, constant: 15).isActive = true
+//        miniError.centerYAnchor.constraint(equalTo: maxLimitErrorPanel.centerYAnchor, constant: 0).isActive = true
+        miniError.topAnchor.constraint(equalTo: maxLimitErrorPanel.topAnchor, constant: 5).isActive = true
+        miniError.bottomAnchor.constraint(equalTo: maxLimitErrorPanel.bottomAnchor, constant: -5).isActive = true
+        miniError.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        miniError.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        miniError.layer.cornerRadius = 10
+//        micMiniError.isHidden = true
+
+        let miniBtn = UIImageView(image: UIImage(named:"icon_round_priority")?.withRenderingMode(.alwaysTemplate))
+        miniBtn.tintColor = .white
+        miniError.addSubview(miniBtn)
+        miniBtn.translatesAutoresizingMaskIntoConstraints = false
+        miniBtn.centerXAnchor.constraint(equalTo: miniError.centerXAnchor).isActive = true
+        miniBtn.centerYAnchor.constraint(equalTo: miniError.centerYAnchor).isActive = true
+        miniBtn.heightAnchor.constraint(equalToConstant: 12).isActive = true
+        miniBtn.widthAnchor.constraint(equalToConstant: 12).isActive = true
+        
+//        let maxLimitText = UILabel()
+        maxLimitText.textAlignment = .center
+//        maxLimitText.textColor = .white
+        maxLimitText.textColor = .black
+        maxLimitText.font = .boldSystemFont(ofSize: 13)
+//        panel.addSubview(aUploadText)
+        maxLimitErrorPanel.addSubview(maxLimitText)
+        maxLimitText.translatesAutoresizingMaskIntoConstraints = false
+//        maxLimitText.topAnchor.constraint(equalTo: maxLimitErrorPanel.topAnchor, constant: 10).isActive = true
+//        maxLimitText.bottomAnchor.constraint(equalTo: maxLimitErrorPanel.bottomAnchor, constant: -10).isActive = true
+        maxLimitText.centerYAnchor.constraint(equalTo: maxLimitErrorPanel.centerYAnchor, constant: 0).isActive = true
+        maxLimitText.leadingAnchor.constraint(equalTo: miniError.trailingAnchor, constant: 7).isActive = true
+        maxLimitText.trailingAnchor.constraint(equalTo: maxLimitErrorPanel.trailingAnchor, constant: -15).isActive = true
+        maxLimitText.text = ""
         
         //test > preview GIF and thumbnail for compressed video
 //        let gifImage = SDAnimatedImageView()
@@ -1557,6 +1743,9 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
     //**
     
     @objc func onAPhotoClicked(gesture: UITapGestureRecognizer) {
+        
+        clearErrorUI()
+        
         let isSignedIn = SignInManager.shared.getStatus()
         if(isSignedIn) {
             //test > select vc for edit
@@ -1597,6 +1786,8 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
         //test > add vc
 //        delegate?.didClickAddVideoClip()
         
+        clearErrorUI()
+        
         let isSignedIn = SignInManager.shared.getStatus()
         if(isSignedIn) {
             openCameraRoll()
@@ -1606,6 +1797,9 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
         }
     }
     @objc func onCPhotoClicked(gesture: UITapGestureRecognizer) {
+        
+        clearErrorUI()
+        
         let isSignedIn = SignInManager.shared.getStatus()
         if(isSignedIn) {
             if(audioClipList.isEmpty) {
@@ -1632,6 +1826,8 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
 //        setFirstResponder(textView: aTextBox)
         
         //test 2 > check whether current time already has subtitle
+        clearErrorUI()
+        
         let isSignedIn = SignInManager.shared.getStatus()
         if(isSignedIn) {
             scInsertIndex = -1
@@ -1664,6 +1860,8 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
     }
     @objc func onBackVcClicked(gesture: UITapGestureRecognizer) {
         
+        clearErrorUI()
+        
         selectedVcIndex = -1
         for vc in vcList {
             vc.unselectVideoClip()
@@ -1675,6 +1873,8 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
     @objc func onSPhotoClicked(gesture: UITapGestureRecognizer) {
         //split
         print("split vc : \(lastPlayingVcCT)")
+        
+        clearErrorUI()
         
         if(selectedVcIndex > -1) {
             let strVUrl = vcList[selectedVcIndex].strVUrl
@@ -1689,6 +1889,9 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
         }
     }
     @objc func onTPhotoClicked(gesture: UITapGestureRecognizer) {
+        
+        clearErrorUI()
+        
         //replace
         let x = selectedVcIndex
         removeVideoClip(i: selectedVcIndex)
@@ -1697,6 +1900,9 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
         addVideoClip(strVUrl: newStrVurl, index: x, toOffset: false)
     }
     @objc func onUPhotoClicked(gesture: UITapGestureRecognizer) {
+        
+        clearErrorUI()
+        
         //copy
         let strVUrl = vcList[selectedVcIndex].strVUrl
         addVideoClip(strVUrl: strVUrl, index: selectedVcIndex + 1, toOffset: true)
@@ -1712,10 +1918,15 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
         }
     }
     @objc func onVPhotoClicked(gesture: UITapGestureRecognizer) {
+        
+        clearErrorUI()
+        
         //delete
         removeVideoClip(i: selectedVcIndex)
     }
     @objc func onSelectAudioClicked(gesture: UITapGestureRecognizer) {
+        
+        clearErrorUI()
         
         if(selectedVcIndex > -1) {
             selectedVcIndex = -1
@@ -1793,6 +2004,8 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
     }
     @objc func onBackAcClicked(gesture: UITapGestureRecognizer) {
         
+        clearErrorUI()
+        
         if(!audioClipList.isEmpty) {
             audioScrollBase.isHidden = true
             audioClipList[0].unselectAudioClip()
@@ -1801,6 +2014,8 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
         refreshAcBtnUIChange()
     }
     @objc func onAcVPhotoClicked(gesture: UITapGestureRecognizer) {
+        
+        clearErrorUI()
         
         if(!audioClipList.isEmpty) {
             audioScrollBase.isHidden = true
@@ -1827,6 +2042,9 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
     }
 
     @objc func onTimelineClicked(gesture: UITapGestureRecognizer) {
+        
+        clearErrorUI()
+        
         //unselect video
         selectedVcIndex = -1
         for vc in vcList {
@@ -1854,6 +2072,9 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
     
     @objc func onTCFrameClicked(gesture: UITapGestureRecognizer) {
         print("tc frame clicked, \(UIScreen.main.scale)")
+        
+        clearErrorUI()
+        
         if let tappedView = gesture.view {
             //unselect audio
             if(!audioClipList.isEmpty) {
@@ -1923,6 +2144,8 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
     @objc func onSCFrameClicked(gesture: UITapGestureRecognizer) {
         print("sc frame clicked, \(UIScreen.main.scale)")
         
+        clearErrorUI()
+        
         if(selectedVcIndex > -1) {
             selectedVcIndex = -1
             for vc in vcList {
@@ -1965,6 +2188,9 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
     }
     
     @objc func onBackScClicked(gesture: UITapGestureRecognizer) {
+        
+        clearErrorUI()
+        
         if(!scList.isEmpty) {
             for sc in scList {
                 sc.unselectSubtitleClip()
@@ -1974,9 +2200,15 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
         refreshScBtnUIChange()
     }
     @objc func onScVPhotoClicked(gesture: UITapGestureRecognizer) {
+        
+        clearErrorUI()
+        
         removeSubtitleClip(i: selectedScIndex)
     }
     @objc func onSCPhotoClicked(gesture: UITapGestureRecognizer) {
+        
+        clearErrorUI()
+        
         //edit sc text
         aTextBox.text = scList[selectedScIndex].subString
         setFirstResponder(textView: aTextBox)
@@ -1991,6 +2223,8 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
     }
     //test > initialization state => !!already exist in layoutsubview
     var isInitialized = false
+    var topInset = 0.0
+    var bottomInset = 0.0
     func initialize(topInset: CGFloat, bottomInset: CGFloat) {
 //        if(!isInitialized) {
 //            preloadAudioTimeObserver()
@@ -2001,6 +2235,12 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
 //                openCameraRoll()
 //            }
             
+            self.topInset = topInset
+            self.bottomInset = bottomInset
+        
+            //test > preload even if user logged out
+            preloadAudioTimeObserver()
+        
             //test
             asyncFetchSigninStatus()
 //        }
@@ -2011,7 +2251,7 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
     func initialize() {
         if(!isInitialized) {
             if(isUserLoggedIn) {
-                preloadAudioTimeObserver()
+//                preloadAudioTimeObserver()
                 
                 openCameraRoll()
             } else {
@@ -2042,6 +2282,46 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
         } else {
             self.isUserLoggedIn = isSignedIn
             self.initialize()
+        }
+    }
+    
+    func setPredesignatedPlace(p: String) {
+        predesignatedPlaceList.append("p")
+        refreshTitleUI()
+    }
+    func setPredesignatedSound(s: String) {
+        predesignatedSoundList.append("s")
+        refreshTitleUI()
+        
+        //test > add sound when init UI
+        if(audioClipList.isEmpty) {
+            if(self.player2 != nil && self.player2.currentItem != nil) {
+                NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player2.currentItem)
+            }
+
+            //add audio
+            addAudioClip(strAUrl: "")
+            player2.volume = 1.0 //mute
+            audioMiniText.text = "Wildson ft. Astyn Turr - One on One"
+            
+            //test > detect when audio finish playing => stop video player too
+            NotificationCenter.default.addObserver(self, selector: #selector(playerDidFinishPlaying(_:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: player2.currentItem)
+        }
+    }
+    func refreshTitleUI(){
+        pSemiTransparentTextBox.isHidden = true
+        sSemiTransparentTextBox.isHidden = true
+        aCreateTitleText.isHidden = true
+        if(!predesignatedPlaceList.isEmpty) {
+            pSemiTransparentTextBox.isHidden = false
+            pSemiTransparentText.text = "Petronas Twin Tower"
+        }
+        else if(!predesignatedSoundList.isEmpty) {
+            sSemiTransparentTextBox.isHidden = false
+            sSemiTransparentText.text = "Turn by turn"
+        }
+        else {
+            aCreateTitleText.isHidden = false
         }
     }
     
@@ -2692,6 +2972,11 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
         totalVDuration = totalDuration
         timelineScrollView.contentSize = CGSize(width: totalPFrameWidth, height: 50)
         
+        //test > check max video duration limit
+        if(totalVDuration > maxSelectLimit) {
+            configureErrorUI(data: "max")
+        }
+        
         let offset = viewWidth/2
         let ff = totalX
         let desiredOffset = CGPoint(x: -offset + ff, y: 0)
@@ -2819,6 +3104,11 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
             totalVPFrameWidth = totalPFrameWidth
             totalVDuration = totalDuration
             timelineScrollView.contentSize = CGSize(width: totalPFrameWidth, height: 50)
+            
+            //test > check max video duration limit
+            if(totalVDuration > maxSelectLimit) {
+                configureErrorUI(data: "max")
+            }
             
             //test > shorten audio duration to fit video
             let seekTimeA = CMTime(seconds: totalVDuration, preferredTimescale: CMTimeScale(1000)) //1000
@@ -3052,6 +3342,11 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
                 totalVPFrameWidth = totalPFrameWidth
                 timelineScrollView.contentSize = CGSize(width: totalPFrameWidth, height: 50)
                 
+                //test > check max video duration limit
+                if(totalVDuration > maxSelectLimit) {
+                    configureErrorUI(data: "max")
+                }
+                
                 //test > scroll timeline to adjust
                 let offset = viewWidth/2
                 let desiredOffset = CGPoint(x: -offset + totalOffset, y: 0)
@@ -3159,6 +3454,11 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
                 totalVDuration = totalDuration
                 totalVPFrameWidth = totalPFrameWidth
                 timelineScrollView.contentSize = CGSize(width: totalPFrameWidth, height: 50)
+                
+                //test > check max video duration limit
+                if(totalVDuration > maxSelectLimit) {
+                    configureErrorUI(data: "max")
+                }
                 
                 //test > scroll timeline to adjust
                 let offset = viewWidth/2
@@ -3518,6 +3818,8 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
     @objc func onOpenCameraRollClicked() {
         /*openCameraRoll()*/ //**
         
+        clearErrorUI()
+        
         let isSignedIn = SignInManager.shared.getStatus()
         if(isSignedIn) {
             openCameraRoll()
@@ -3535,6 +3837,7 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
         cameraRollPanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
         cameraRollPanel.delegate = self
 //        cameraRollPanel.setMultiSelection()
+        cameraRollPanel.setMultiSelection(limit: maxSelectLimit)
     }
     
     //test > open finalizing video for caption and uploading
@@ -3547,6 +3850,11 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
         videoFinalizePanel.delegate = self
         
         pageList.append(videoFinalizePanel)
+        
+        if(!predesignatedPlaceList.isEmpty) {
+            let selectedLocation = predesignatedPlaceList[0]
+            videoFinalizePanel.setSelectedLocation(l: selectedLocation)
+        }
     }
     
     //test > get user permission to access location, camera, storage
@@ -3558,14 +3866,6 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
         locationPanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
 //        locationPanel.delegate = self
     }
-//    func openStorageErrorPromptMsg() {
-//        let sPanel = GetStorageMsgView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
-//        panel.addSubview(sPanel)
-//        sPanel.translatesAutoresizingMaskIntoConstraints = false
-//        sPanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
-//        sPanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
-//        sPanel.delegate = self
-//    }
     
     func openExitVideoEditorPromptMsg() {
         let exitVideoPanel = ExitVideoEditorMsgView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
@@ -3598,12 +3898,15 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
     override func showLocationSelected() {
         if(!pageList.isEmpty) {
             let a = pageList[pageList.count - 1] as? VideoFinalizePanelView
-            a?.showLocationSelected(l: mapPinString)
-            print("showLocationSelected \(a)")
+//            a?.showLocationSelected(l: mapPinString)
+            a?.setSelectedLocation(l: mapPinString)
+//            print("showLocationSelected \(a)")
         }
     }
     
     @objc func onVideoEditorNextClicked(gesture: UITapGestureRecognizer) {
+        
+        clearErrorUI()
         
         let isSignedIn = SignInManager.shared.getStatus()
         if(isSignedIn) {
@@ -3616,10 +3919,23 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
             SDImageCache.shared.removeImage(forKey: getCoverImageOutputURL().description, withCompletion: nil)
             //**
 
+            //ori
     //        videoProcessProgressPanel.isHidden = false
     //        concatenateVideos(vcList: vcList)
+            
             //test
-            openVideoFinalize()
+//            openVideoFinalize()
+            
+            //test > check max video duration limit
+            if(vcList.isEmpty) {
+                configureErrorUI(data: "na")
+            } else {
+                if(totalVDuration > maxSelectLimit) {
+                    configureErrorUI(data: "max")
+                } else {
+                    openVideoFinalize()
+                }
+            }
         }
         else {
             delegate?.didVideoCreatorClickSignIn()
@@ -3629,13 +3945,18 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
     @objc func onMinimizeVideoClicked(gesture: UITapGestureRecognizer) {
         
         if(maxVidPanel.isHidden) {
+            
+            let h = viewHeight - bottomInset - 60.0
+            
             videoWidthLayoutConstraint?.constant = viewWidth
-            videoHeightLayoutConstraint?.constant = viewHeight - 94
+//            videoHeightLayoutConstraint?.constant = viewHeight - 94
+            videoHeightLayoutConstraint?.constant = h
             videoTopLayoutConstraint?.isActive = false
             videoTopLayoutConstraint = videoContainer.topAnchor.constraint(equalTo: panel.topAnchor, constant: 0)
             videoTopLayoutConstraint?.isActive = true
 
-            let x = CGRect(x: 0, y: 0, width: viewWidth, height: viewHeight - 94)
+//            let x = CGRect(x: 0, y: 0, width: viewWidth, height: viewHeight - 94)
+            let x = CGRect(x: 0, y: 0, width: viewWidth, height: h)
             playerLayer?.frame = x
             
             maxVidPanel.isHidden = false
@@ -3644,7 +3965,8 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
             sBoxWidthLayoutConstraint?.isActive = true
             sText.numberOfLines = 0
         } else {
-            let width = 180.0
+//            let width = 180.0
+            let width = viewWidth/2.3
             let height = width * 16 / 9
     //        vPreviewContainer.frame = CGRect(x: 0, y: 0, width: viewWidth, height: viewHeight - 94)
             videoWidthLayoutConstraint?.constant = width
@@ -3663,6 +3985,25 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
             sBoxWidthLayoutConstraint?.isActive = false
             sText.numberOfLines = 1
         }
+    }
+    
+    func configureErrorUI(data: String) {
+        if(data == "max") {
+            maxLimitText.text = "Max " + String(maxSelectLimit) + "s"
+        }
+        else if(data == "e") {
+            maxLimitText.text = "Error occurred. Try again"
+        }
+        else if(data == "na") {
+            maxLimitText.text = "Add at least 1 video"
+        }
+        
+        maxLimitErrorPanel.isHidden = false
+    }
+    
+    func clearErrorUI() {
+        maxLimitText.text = ""
+        maxLimitErrorPanel.isHidden = true
     }
     
     func concatenateVideos(vcList: [VideoClip]) {
@@ -4468,6 +4809,9 @@ extension VideoCreatorConsolePanelView: UIScrollViewDelegate {
         
         //test
         pauseVideo()
+        
+        //test
+        clearErrorUI()
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -4626,12 +4970,17 @@ extension VideoCreatorConsolePanelView: VideoFinalizePanelDelegate{
         backPage()
     }
     
-    func didVideoFinalizeClickUploadSuccess(){
-        closeVideoCreatorPanel(isAnimated: true)
-    }
+//    func didVideoFinalizeClickUploadSuccess(){
+//        closeVideoCreatorPanel(isAnimated: true)
+//    }
     
     func didVideoFinalizeClickLocationSelectScrollable(){
         delegate?.didVideoCreatorClickLocationSelectScrollable()
+    }
+    
+    func didVideoFinalizeClickUpload(payload: String) {
+        closeVideoCreatorPanel(isAnimated: true)
+        delegate?.didVideoCreatorClickUpload(payload: payload)
     }
 }
 
@@ -4654,6 +5003,44 @@ extension ViewController: VideoCreatorPanelDelegate{
     
     func didVideoCreatorClickSignIn(){
         openLoginPanel()
+    }
+    
+    func didVideoCreatorClickUpload(payload: String) {
+        DataUploadManager.shared.sendData(id: "a") { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    if(!self.inAppMsgList.isEmpty) {
+                        let a = self.inAppMsgList[self.inAppMsgList.count - 1]
+                        a.updateConfigUI(data: "up_video", taskId: "a")
+                    }
+                }
+
+                case .failure(_):
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    guard let self = self else {
+                        return
+                    }
+                    print("api fail")
+                    
+                    if(!self.inAppMsgList.isEmpty) {
+                        let a = self.inAppMsgList[self.inAppMsgList.count - 1]
+                        a.updateConfigUI(data: "up_video", taskId: "a")
+                    }
+                }
+
+                break
+            }
+        }
+        
+        openInAppMsgView(data: "up_video")
     }
 }
 

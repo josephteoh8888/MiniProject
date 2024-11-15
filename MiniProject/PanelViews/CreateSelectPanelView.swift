@@ -32,6 +32,7 @@ class CreateSelectPanelView: PanelView, UIGestureRecognizerDelegate{
     
     var panelTopCons: NSLayoutConstraint?
     var currentPanelTopCons : CGFloat = 0.0
+    var panelHeightCons: NSLayoutConstraint?
     
     var currentPanelMode = ""
     let PANEL_MODE_HALF: String = "half"
@@ -40,7 +41,7 @@ class CreateSelectPanelView: PanelView, UIGestureRecognizerDelegate{
     
     weak var delegate : CreateSelectPanelDelegate?
     
-    var scrollablePanelHeight : CGFloat = 350.0
+    var scrollablePanelHeight : CGFloat = 0.0 //350
     
     var lastAppMenuMode = ""
     
@@ -58,13 +59,13 @@ class CreateSelectPanelView: PanelView, UIGestureRecognizerDelegate{
         
         viewWidth = frame.width
         viewHeight = frame.height
-        setupViews()
+//        setupViews()
 
     }
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
-        setupViews()
+//        setupViews()
     }
     
     func setupViews() {
@@ -91,9 +92,12 @@ class CreateSelectPanelView: PanelView, UIGestureRecognizerDelegate{
         panel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
         panel.layer.masksToBounds = true
         panel.layer.cornerRadius = 10 //10
-//        panel.heightAnchor.constraint(equalToConstant: scrollablePanelHeight).isActive = true
-        panelTopCons = panel.topAnchor.constraint(equalTo: self.bottomAnchor, constant: -scrollablePanelHeight) //default: 0
-//        panelTopCons = panel.topAnchor.constraint(equalTo: self.bottomAnchor, constant: -gap)
+//        panelTopCons = panel.topAnchor.constraint(equalTo: self.bottomAnchor, constant: -scrollablePanelHeight)
+//        panelTopCons?.isActive = true
+        
+        panelHeightCons = panel.heightAnchor.constraint(equalToConstant: scrollablePanelHeight)
+        panelHeightCons?.isActive = true
+        panelTopCons = panel.topAnchor.constraint(equalTo: self.bottomAnchor, constant: -scrollablePanelHeight)
         panelTopCons?.isActive = true
         
         let exitView = UIView()
@@ -101,8 +105,8 @@ class CreateSelectPanelView: PanelView, UIGestureRecognizerDelegate{
 //        exitView.backgroundColor = .ddmDarkColor
         panel.addSubview(exitView)
         exitView.translatesAutoresizingMaskIntoConstraints = false
-//        exitView.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
-        exitView.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: -50).isActive = true
+        exitView.bottomAnchor.constraint(equalTo: panel.safeAreaLayoutGuide.bottomAnchor, constant: -10).isActive = true
+//        exitView.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: -50).isActive = true
         exitView.heightAnchor.constraint(equalToConstant: 45).isActive = true //ori 60
         exitView.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 15).isActive = true
         exitView.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -15).isActive = true
@@ -704,6 +708,24 @@ class CreateSelectPanelView: PanelView, UIGestureRecognizerDelegate{
         panel.addGestureRecognizer(panelPanGesture)
     }
     
+    let mainPanelTopMargin = 20.0
+    let aHeight = 40.0
+    let aBottomMargin = 20.0
+    let bHeight = 40.0
+    let bBottomMargin = 20.0
+    let cHeight = 40.0
+    let cBottomMargin = 20.0
+    let dHeight = 40.0
+    let dBottomMargin = 20.0
+    let exitBtnHeight = 45.0
+    let exitBtnBottomMargin = 10.0
+    func computeHeight() {
+        let totalHeight = mainPanelTopMargin + aHeight + aBottomMargin + bHeight + bBottomMargin + cHeight + cBottomMargin + dHeight + dBottomMargin + exitBtnHeight + exitBtnBottomMargin + safeAreaInsets.bottom
+        print("totalH: \(totalHeight)")
+        
+        scrollablePanelHeight = totalHeight
+    }
+    
     @objc func onBackPanelClicked(gesture: UITapGestureRecognizer) {
         closePanel(isAnimated: true)
     }
@@ -806,6 +828,9 @@ class CreateSelectPanelView: PanelView, UIGestureRecognizerDelegate{
             
             currentPanelMode = PANEL_MODE_HALF
             
+            computeHeight()
+            setupViews()
+            
             let gap = scrollablePanelHeight
             panelTopCons?.constant = -gap
             
@@ -884,38 +909,6 @@ class CreateSelectPanelView: PanelView, UIGestureRecognizerDelegate{
             self.isUserLoggedIn = isSignedIn
             self.initialize()
         }
-        
-//        SignInManager.shared.fetchStatus(id: "fetch_status") { [weak self]result in
-//            switch result {
-//                case .success(let l):
-//
-//                //update UI on main thread
-//                DispatchQueue.main.async {
-//                    print("createselectpanelview api success: \(l)")
-//                    guard let self = self else {
-//                        return
-//                    }
-//                    
-//                    let isSignedIn = l
-//                    
-//                    if(self.isInitialized) {
-//                        if(self.isUserLoggedIn != isSignedIn) {
-//                            self.isUserLoggedIn = isSignedIn
-//                    
-//                            self.isInitialized = false
-//                            self.initialize()
-//                        }
-//                    } else {
-//                        self.isUserLoggedIn = isSignedIn
-//                        self.initialize()
-//                    }
-//                }
-//
-//                case .failure(_):
-//                    print("api fail")
-//                    break
-//            }
-//        }
     }
     
     @objc func onPanelPanGesture(gesture: UIPanGestureRecognizer) {

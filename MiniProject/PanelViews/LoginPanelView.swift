@@ -12,6 +12,7 @@ import SDWebImage
 protocol LoginPanelDelegate : AnyObject {
     func didClickCloseLoginPanel()
     func didClickCreateUserAccount()
+    func didLoginUserCreatorClickUpload(data: String)
 }
 
 class LoginPanelView: PanelView{
@@ -1090,6 +1091,11 @@ extension ViewController: LoginPanelDelegate{
     func didClickCreateUserAccount(){
         
     }
+    
+    func didLoginUserCreatorClickUpload(data: String){
+        openInAppMsgView(data: data)
+//        openInAppMsgView(data: "up_user")
+    }
 }
 
 extension LoginPanelView: UserCreatorPanelDelegate{
@@ -1101,5 +1107,9 @@ extension LoginPanelView: UserCreatorPanelDelegate{
         //test
         resignResponder()
         closePanel(isAnimated: true)
+    }
+    
+    func didUserCreatorClickUpload(data: String) {
+        delegate?.didLoginUserCreatorClickUpload(data: data)
     }
 }

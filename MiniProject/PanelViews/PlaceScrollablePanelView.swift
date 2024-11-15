@@ -1224,6 +1224,7 @@ class PlaceScrollablePanelView: ScrollablePanelView{
         sharePanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
         sharePanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
         sharePanel.delegate = self
+        sharePanel.initialize()
         
         //test > track share scrollable view
         pageList.append(sharePanel)
@@ -2696,6 +2697,7 @@ extension ViewController: PlaceScrollablePanelDelegate{
             pSemiTransparentText.text = ""
         }
     }
+
 }
 extension PlaceScrollablePanelView: ShareSheetScrollableDelegate{
     func didShareSheetClickCreate(type: String){

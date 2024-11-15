@@ -37,7 +37,7 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
     let PANEL_MODE_HALF: String = "half"
     let PANEL_MODE_EMPTY: String = "empty"
     let PANEL_MODE_FULL: String = "full"
-    var scrollablePanelHeight : CGFloat = 300.0 //400
+    var scrollablePanelHeight : CGFloat = 0.0 //300
     var halfModeMapPadding : CGFloat = 150.0 //200
     
     var currentPanelMode = ""
@@ -58,19 +58,33 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
     
     weak var delegate : LocationSelectScrollablePanelDelegate?
     
+    //test > for search places
+    var vDataList = [String]()
+    var vCV : UICollectionView?
+    let aSpinner = SpinLoader()
+    let bSpinner = SpinLoader()
+    let footerView = UIView()
+    let aaText = UILabel()
+    var dataFetchState = ""
+    var dataPaginateStatus = "" //test
+    var pageNumber = 0
+    
+    let bbText = UILabel()
+    let errorText = UILabel()
+    let errorRefreshBtn = UIView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
 
         viewWidth = frame.width
         viewHeight = frame.height
-        setupViews()
+//        setupViews()
 
     }
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
 
-        setupViews()
+//        setupViews()
     }
 
     func setupViews() {
@@ -157,7 +171,7 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
         xText.centerYAnchor.constraint(equalTo: xGrid.centerYAnchor, constant: 0).isActive = true
         xText.leadingAnchor.constraint(equalTo: xGridBG.trailingAnchor, constant: 20).isActive = true
 //        xText.text = "Everyone Can See"
-        xText.text = "Pin Location"
+        xText.text = "Pin on Map"
 //        xText.layer.opacity = 0.5
         
 //        let aArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
@@ -170,7 +184,6 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
 //        aArrowBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
 //        aArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
 //        aArrowBtn.layer.opacity = 0.5
-        
         
         //fake search
         let aTextBox = UIView()
@@ -566,6 +579,43 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
         aBtn.heightAnchor.constraint(equalToConstant: 16).isActive = true
         aBtn.widthAnchor.constraint(equalToConstant: 16).isActive = true
         
+        let gridLayout = UICollectionViewFlowLayout()
+        gridLayout.scrollDirection = .vertical
+        gridLayout.minimumLineSpacing = 10 //default: 20 => spacing between rows
+        gridLayout.minimumInteritemSpacing = 0 //default: 4 => spacing between columns
+//        let vCV = UICollectionView(frame: .zero, collectionViewLayout: gridLayout)
+        vCV = UICollectionView(frame: .zero, collectionViewLayout: gridLayout)
+        guard let vCV = vCV else {
+            return
+        }
+        vCV.register(HSingleLocationViewCell.self, forCellWithReuseIdentifier: HSingleLocationViewCell.identifier)
+        vCV.dataSource = self
+        vCV.delegate = self
+        vCV.backgroundColor = .clear
+        bPanel.addSubview(vCV)
+        vCV.translatesAutoresizingMaskIntoConstraints = false
+        vCV.topAnchor.constraint(equalTo: bTextBox.bottomAnchor, constant: 10).isActive = true
+        vCV.leadingAnchor.constraint(equalTo: bPanel.leadingAnchor).isActive = true
+        vCV.bottomAnchor.constraint(equalTo: bPanel.bottomAnchor, constant: 0).isActive = true
+        vCV.trailingAnchor.constraint(equalTo: bPanel.trailingAnchor).isActive = true
+        vCV.contentInsetAdjustmentBehavior = .never
+//        let vcvPanGesture = UIPanGestureRecognizer(target: self, action: #selector(onVCVPanGesture))
+//        vcvPanGesture.delegate = self //for simultaneous pan recognizer for uicollectionview
+//        vCV.addGestureRecognizer(vcvPanGesture)
+        
+        //test > top spinner
+        vCV.addSubview(aSpinner)
+        aSpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
+        aSpinner.translatesAutoresizingMaskIntoConstraints = false
+        aSpinner.topAnchor.constraint(equalTo: vCV.topAnchor, constant: CGFloat(35)).isActive = true
+        aSpinner.centerXAnchor.constraint(equalTo: vCV.centerXAnchor).isActive = true
+        aSpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        aSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        
+        //test > add footer ***
+        vCV.register(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "footer")
+        //***
+        
         cPanel.backgroundColor = .ddmBlackOverlayColor
         panelView.addSubview(cPanel)
         cPanel.translatesAutoresizingMaskIntoConstraints = false
@@ -585,20 +635,41 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
         cPillBtn.topAnchor.constraint(equalTo: cPanel.topAnchor, constant: 10).isActive = true
         cPillBtn.layer.cornerRadius = 3
         
-//        let cTitleText = UILabel()
-//        cTitleText.textAlignment = .center
-//        cTitleText.textColor = .white
-////        cTitleText.textColor = .ddmBlackOverlayColor
-//        cTitleText.font = .boldSystemFont(ofSize: 14) //16
-//        cPanel.addSubview(cTitleText)
-//        cTitleText.translatesAutoresizingMaskIntoConstraints = false
-////        cTitleText.centerYAnchor.constraint(equalTo: gBox.centerYAnchor).isActive = true
-//        cTitleText.topAnchor.constraint(equalTo: cPanel.topAnchor, constant: 30).isActive = true
-////        cTitleText.bottomAnchor.constraint(equalTo: gBox.bottomAnchor, constant: -10).isActive = true
-//        cTitleText.leadingAnchor.constraint(equalTo: cPanel.leadingAnchor, constant: 20).isActive = true
-//        cTitleText.trailingAnchor.constraint(equalTo: cPanel.trailingAnchor, constant: -20).isActive = true
-//        cTitleText.numberOfLines = 0
-//        cTitleText.text = "Add this Location"
+        let aaBtn = UIView()
+//        aBtn.backgroundColor = .ddmDarkColor
+        cPanel.addSubview(aaBtn)
+        aaBtn.translatesAutoresizingMaskIntoConstraints = false
+        aaBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true //ori: 40
+        aaBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        aaBtn.leadingAnchor.constraint(equalTo: cPanel.leadingAnchor, constant: 20).isActive = true
+        aaBtn.layer.cornerRadius = 20
+//        aaBtn.layer.opacity = 0.3
+        aaBtn.isUserInteractionEnabled = true
+        aaBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onExitViewClicked)))
+        aaBtn.topAnchor.constraint(equalTo: cPanel.topAnchor, constant: 20).isActive = true
+        
+        let bMiniBtn = UIImageView(image: UIImage(named:"icon_round_arrow_left")?.withRenderingMode(.alwaysTemplate))
+        bMiniBtn.tintColor = .white
+        aaBtn.addSubview(bMiniBtn)
+        bMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        bMiniBtn.centerXAnchor.constraint(equalTo: aaBtn.centerXAnchor).isActive = true
+        bMiniBtn.centerYAnchor.constraint(equalTo: aaBtn.centerYAnchor).isActive = true
+        bMiniBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
+        bMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
+        
+        let cTitleText = UILabel()
+        cTitleText.textAlignment = .center
+        cTitleText.textColor = .white
+//        cTitleText.textColor = .ddmBlackOverlayColor
+        cTitleText.font = .boldSystemFont(ofSize: 14) //16
+        cPanel.addSubview(cTitleText)
+        cTitleText.translatesAutoresizingMaskIntoConstraints = false
+//        cTitleText.topAnchor.constraint(equalTo: cPanel.topAnchor, constant: 50).isActive = true
+        cTitleText.topAnchor.constraint(equalTo: aaBtn.bottomAnchor, constant: 0).isActive = true
+        cTitleText.leadingAnchor.constraint(equalTo: cPanel.leadingAnchor, constant: 20).isActive = true
+        cTitleText.trailingAnchor.constraint(equalTo: cPanel.trailingAnchor, constant: -20).isActive = true
+        cTitleText.numberOfLines = 0
+        cTitleText.text = "Confirm to use this Location?"
         
 //        let cLBox = UIView()
 ////        cLBox.backgroundColor = .ddmBlackOverlayColor
@@ -615,13 +686,40 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
 //        cLBox.layer.cornerRadius = 5
 //        cLBox.layer.opacity = 0.2 //0.3
         
+        let proceedView = UIView()
+//        proceedView.backgroundColor = .black
+        proceedView.backgroundColor = .yellow
+        cPanel.addSubview(proceedView)
+        proceedView.translatesAutoresizingMaskIntoConstraints = false
+        proceedView.topAnchor.constraint(equalTo: cTitleText.bottomAnchor, constant: 30).isActive = true
+//        proceedView.bottomAnchor.constraint(equalTo: exitView.topAnchor, constant: -10).isActive = true
+        proceedView.heightAnchor.constraint(equalToConstant: 40).isActive = true //ori 45
+        proceedView.leadingAnchor.constraint(equalTo: cPanel.leadingAnchor, constant: 40).isActive = true
+        proceedView.trailingAnchor.constraint(equalTo: cPanel.trailingAnchor, constant: -40).isActive = true
+//        proceedView.layer.opacity = 0.2 //0.3
+        proceedView.layer.cornerRadius = 10
+        proceedView.isUserInteractionEnabled = true
+        proceedView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onProceedViewClicked)))
+        
+        let proceedViewText = UILabel()
+        proceedViewText.textAlignment = .center
+        proceedViewText.textColor = .black
+        proceedViewText.font = .boldSystemFont(ofSize: 14)
+//        panel.addSubview(aSaveDraftText)
+        cPanel.addSubview(proceedViewText)
+        proceedViewText.translatesAutoresizingMaskIntoConstraints = false
+        proceedViewText.centerXAnchor.constraint(equalTo: proceedView.centerXAnchor).isActive = true
+        proceedViewText.centerYAnchor.constraint(equalTo: proceedView.centerYAnchor).isActive = true
+        proceedViewText.text = "Confirm"
+//        proceedViewText.layer.opacity = 0.5
+        
         let exitView = UIView()
 //        exitView.backgroundColor = .black
-        exitView.backgroundColor = .ddmDarkBlack
+        exitView.backgroundColor = .ddmDarkOverlayBlack
         cPanel.addSubview(exitView)
         exitView.translatesAutoresizingMaskIntoConstraints = false
-//        exitView.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
-        exitView.bottomAnchor.constraint(equalTo: cPanel.bottomAnchor, constant: -50).isActive = true
+        exitView.topAnchor.constraint(equalTo: proceedView.bottomAnchor, constant: 10).isActive = true
+//        exitView.bottomAnchor.constraint(equalTo: cPanel.bottomAnchor, constant: -50).isActive = true
         exitView.heightAnchor.constraint(equalToConstant: 40).isActive = true //ori 45
         exitView.leadingAnchor.constraint(equalTo: cPanel.leadingAnchor, constant: 40).isActive = true //15
         exitView.trailingAnchor.constraint(equalTo: cPanel.trailingAnchor, constant: -40).isActive = true
@@ -642,82 +740,80 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
         exitViewText.text = "Cancel"
 //        exitViewText.layer.opacity = 0.5
         
-        let proceedView = UIView()
-//        proceedView.backgroundColor = .black
-        proceedView.backgroundColor = .yellow
-        cPanel.addSubview(proceedView)
-        proceedView.translatesAutoresizingMaskIntoConstraints = false
-//        proceedView.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
-        proceedView.bottomAnchor.constraint(equalTo: exitView.topAnchor, constant: -10).isActive = true
-        proceedView.heightAnchor.constraint(equalToConstant: 40).isActive = true //ori 45
-        proceedView.leadingAnchor.constraint(equalTo: cPanel.leadingAnchor, constant: 40).isActive = true
-        proceedView.trailingAnchor.constraint(equalTo: cPanel.trailingAnchor, constant: -40).isActive = true
-//        proceedView.layer.opacity = 0.2 //0.3
-        proceedView.layer.cornerRadius = 10
-        proceedView.isUserInteractionEnabled = true
-        proceedView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onProceedViewClicked)))
-        
-        let proceedViewText = UILabel()
-        proceedViewText.textAlignment = .center
-        proceedViewText.textColor = .black
-        proceedViewText.font = .boldSystemFont(ofSize: 14)
-//        panel.addSubview(aSaveDraftText)
-        cPanel.addSubview(proceedViewText)
-        proceedViewText.translatesAutoresizingMaskIntoConstraints = false
-        proceedViewText.centerXAnchor.constraint(equalTo: proceedView.centerXAnchor).isActive = true
-        proceedViewText.centerYAnchor.constraint(equalTo: proceedView.centerYAnchor).isActive = true
-        proceedViewText.text = "Use this Location"
-//        proceedViewText.layer.opacity = 0.5
-        
-        let cLBox = UIView()
-//        cLBox.backgroundColor = .ddmBlackOverlayColor
-        cLBox.backgroundColor = .ddmDarkBlack
-        cPanel.addSubview(cLBox)
-        cLBox.clipsToBounds = true
-        cLBox.translatesAutoresizingMaskIntoConstraints = false
-        cLBox.leadingAnchor.constraint(equalTo: cPanel.leadingAnchor, constant: 40).isActive = true
-        cLBox.trailingAnchor.constraint(equalTo: cPanel.trailingAnchor, constant: -40).isActive = true
-        cLBox.heightAnchor.constraint(equalToConstant: 100).isActive = true //default: 50
-//        cLBox.topAnchor.constraint(equalTo: aText.bottomAnchor, constant: 20).isActive = true
-//        cLBox.topAnchor.constraint(equalTo: lGrid.bottomAnchor, constant: 0).isActive = true
-        cLBox.bottomAnchor.constraint(equalTo: proceedView.topAnchor, constant: -30).isActive = true
-        cLBox.layer.cornerRadius = 5
-//        cLBox.layer.opacity = 0.2 //0.3
-        
         //test > gesture recognizer for dragging user panel
         let panelPanGesture = UIPanGestureRecognizer(target: self, action: #selector(onPanelPanGesture))
         panelView.addGestureRecognizer(panelPanGesture)
     }
     
     @objc func onPinClicked(gesture: UITapGestureRecognizer) {
-        
-        aPanel.isHidden = true
-        cPanel.isHidden = false
-        
+
         currentLSelectMode = LSELECT_MODE_SELECTED_PIN
+        refreshModeUI()
         
         delegate?.didSelectedALocationSelectScrollable(pv: self)
-        
     }
     
     @objc func onL1Clicked(gesture: UITapGestureRecognizer) {
-        
-        aPanel.isHidden = true
-        cPanel.isHidden = false
-        
+
         currentLSelectMode = LSELECT_MODE_SELECTED_PLACE
+        refreshModeUI()
         
         delegate?.didSelectedALocationSelectScrollable(pv: self)
     }
     
     @objc func onExitViewClicked(gesture: UITapGestureRecognizer) {
         
-        aPanel.isHidden = false
-        cPanel.isHidden = true
-        
         currentLSelectMode = LSELECT_MODE_EMPTY
+        refreshModeUI()
         
         delegate?.didClickDenyLocationSelectScrollable(pv: self)
+    }
+    
+    let aPanelTopMargin = 30.0
+    let xGridHeight = 40.0
+    let aTextBoxTopMargin = 10.0
+    let aTextBoxHeight = 40.0
+    let lGridTopMargin = 30.0
+    let lGridHeight = 30.0
+    let lBoxTopMargin = 10.0
+    let lBoxHeight = 40.0
+    let aPanelBottomMargin = 20.0
+    let cPanelTopMargin = 20.0
+    let cBackBtnHeight = 40.0
+    let cTextTopMargin = 0.0
+    let cTextHeight = 18.0
+    let cProceedTopMargin = 30.0
+    let cProceedHeight = 40.0
+    let cExitTopMargin = 10.0
+    let cExitHeight = 40.0
+    let cPanelBottomMargin = 20.0
+    func computeHeight() {
+        if(currentLSelectMode == LSELECT_MODE_EMPTY) {
+            let totalHeight = aPanelTopMargin + xGridHeight + aTextBoxTopMargin + aTextBoxHeight + lGridTopMargin + lGridHeight + lBoxTopMargin + lBoxHeight + aPanelBottomMargin + safeAreaInsets.bottom
+            scrollablePanelHeight = totalHeight
+        } else if(currentLSelectMode == LSELECT_MODE_SELECTED_PIN){
+            let totalHeight = cPanelTopMargin + cBackBtnHeight + cTextTopMargin + cTextHeight + cProceedTopMargin + cProceedHeight + cExitTopMargin + cExitHeight + cPanelBottomMargin + safeAreaInsets.bottom
+            scrollablePanelHeight = totalHeight
+        } else if(currentLSelectMode == LSELECT_MODE_SELECTED_PLACE){
+            let totalHeight = cPanelTopMargin + cBackBtnHeight + cTextTopMargin + cTextHeight + cProceedTopMargin + cProceedHeight + cExitTopMargin + cExitHeight + cPanelBottomMargin + safeAreaInsets.bottom
+            scrollablePanelHeight = totalHeight
+        }
+    }
+    
+    func refreshModeUI() {
+        if(currentLSelectMode == LSELECT_MODE_EMPTY) {
+            aPanel.isHidden = false
+            cPanel.isHidden = true
+        } else if(currentLSelectMode == LSELECT_MODE_SELECTED_PLACE) {
+            aPanel.isHidden = true
+            cPanel.isHidden = false
+        } else if(currentLSelectMode == LSELECT_MODE_SELECTED_PIN) {
+            aPanel.isHidden = true
+            cPanel.isHidden = false
+        }
+        
+        computeHeight()
+        panelTopCons?.constant = -scrollablePanelHeight
     }
     
     @objc func onProceedViewClicked(gesture: UITapGestureRecognizer) {
@@ -741,6 +837,9 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
         
 //        aTextBox.isHidden = true
         aPanel.isHidden = true
+        
+        //test > place search
+        refreshFetchData()
     }
     
     @objc func onCloseTextBoxClicked(gesture: UITapGestureRecognizer) {
@@ -758,6 +857,8 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
         })
         
         self.changePanelMode(panelMode: self.PANEL_MODE_HALF) //test
+        
+        //test > erase all place search results
     }
     
     func setFirstResponder(textField: UITextField) {
@@ -783,6 +884,10 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
     var isInitialized = false
     func initialize() {
 
+        //test > compute UI height beforehand
+        currentLSelectMode = LSELECT_MODE_EMPTY
+        computeHeight()
+        
         UIView.animate(withDuration: 0.2, animations: {
             self.panelTopCons?.constant = -self.scrollablePanelHeight
 
@@ -795,7 +900,7 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
         })
         
         if(!isInitialized) {
-            currentLSelectMode = LSELECT_MODE_EMPTY
+            setupViews()
         }
         
         isInitialized = true
@@ -860,7 +965,8 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
                 if(self.panelTopCons!.constant - self.currentPanelTopCons < 150) {
                     print("createselect <150 \(self.currentPanelTopCons), \(self.panelTopCons!.constant)")
                     UIView.animate(withDuration: 0.2, animations: {
-                        let gap = 300.0
+//                        let gap = 300.0
+                        let gap = self.scrollablePanelHeight
                         self.panelTopCons?.constant = -gap
                         
                         self.changePanelMode(panelMode: self.PANEL_MODE_HALF) //test
@@ -877,7 +983,321 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
 
         }
     }
+    
+    //test > fetch data => temp fake data => try refresh data first
+    func asyncFetchFeed(id: String) {
+        
+        //test
+        self.vDataList.removeAll() //test > refresh dataset
+        self.vCV?.reloadData()
+        
+        dataFetchState = "start"
+        aSpinner.startAnimating()
+        
+        let id_ = "post"
+        let isPaginate = false
+        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+            switch result {
+                case .success(let l):
 
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    print("api success \(id), \(l)")
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    //test
+                    self.aSpinner.stopAnimating()
+                    
+                    //test 2 > reload entire dataset
+                    for i in l {
+                        self.vDataList.append(i)
+                    }
+                    self.vCV?.reloadData()
+                    
+                    //*test 3 > reload only appended data, not entire dataset
+//                    let dataCount = self.vDataList.count
+//                    var indexPaths = [IndexPath]()
+//                    var j = 1
+//                    for i in l {
+//                        self.vDataList.append(i)
+//
+//                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+//                        indexPaths.append(idx)
+//                        j += 1
+//
+//                        print("ppv asyncfetch reload \(idx)")
+//                    }
+//                    self.vCV?.insertItems(at: indexPaths)
+                    //*
+                    
+                    self.dataFetchState = "end"
+                    
+                    //test
+                    if(l.isEmpty) {
+                        self.configureFooterUI(data: "na")
+                        self.aaText.text = "No results."
+                    }
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    print("api fail")
+                    self?.aSpinner.stopAnimating()
+                    
+                    self?.configureFooterUI(data: "e")
+                }
+                break
+            }
+        }
+    }
+    
+    func asyncPaginateFetchFeed(id: String) {
+        bSpinner.startAnimating()
+        
+        pageNumber += 1
+        
+        let id_ = "post"
+        let isPaginate = true
+        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    print("rr api success \(id), \(l), \(l.isEmpty)")
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    if(l.isEmpty) {
+                        self.dataPaginateStatus = "end"
+                    }
+                    
+                    //test
+                    self.bSpinner.stopAnimating()
+                    
+//                    self.vDataList.append(contentsOf: l)
+//                    self.vCV?.reloadData()
+                    
+                    //*test 3 > reload only appended data, not entire dataset
+                    let dataCount = self.vDataList.count
+                    var indexPaths = [IndexPath]()
+                    var j = 1
+                    for i in l {
+                        self.vDataList.append(i)
+
+                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+                        indexPaths.append(idx)
+                        j += 1
+
+                        print("ppv asyncfetch reload \(idx)")
+                    }
+                    self.vCV?.insertItems(at: indexPaths)
+                    //*
+                    
+                    //test
+                    if(l.isEmpty) {
+                        self.configureFooterUI(data: "end")
+                    }
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    print("api fail")
+                    self?.bSpinner.stopAnimating()
+                    
+                    self?.configureFooterUI(data: "e")
+                }
+                break
+            }
+        }
+    }
+
+    //test > fetch data => temp fake data => try refresh data first
+    func refreshFetchData() {
+        configureFooterUI(data: "")
+        
+        dataPaginateStatus = ""
+        self.asyncFetchFeed(id: "post_feed")
+    }
+    
+    //test > footer error handling for refresh feed
+    @objc func onErrorRefreshClicked(gesture: UITapGestureRecognizer) {
+        print("error refresh clicked")
+        refreshFetchData()
+    }
+    
+    var footerState = ""
+    var footerAaText = ""
+    func setFooterAaText(text: String) {
+        footerAaText = text
+    }
+    func configureFooterUI(data: String) {
+        aaText.text = ""
+        errorText.text = ""
+        errorRefreshBtn.isHidden = true
+        
+        if(data == "end") {
+            aaText.text = "End"
+        }
+        else if(data == "e") {
+            errorText.text = "Something went wrong. Try again"
+            errorRefreshBtn.isHidden = false
+        }
+        else if(data == "na") {
+            aaText.text = footerAaText
+            //removed, text to be customized at panelview level
+        }
+        
+        footerState = data
+    }
+}
+
+extension LocationSelectScrollablePanelView: UICollectionViewDelegateFlowLayout {
+
+    func collectionView(_ collectionView: UICollectionView,
+                   layout collectionViewLayout: UICollectionViewLayout,
+                   sizeForItemAt indexPath: IndexPath) -> CGSize {
+        print("placepanel collection 2: \(indexPath)")
+//        return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
+        let lay = collectionViewLayout as! UICollectionViewFlowLayout
+        let widthPerItem = collectionView.frame.width / 3 - lay.minimumInteritemSpacing
+        
+        return CGSize(width: collectionView.frame.width, height: 60)
+    }
+    
+    //test > add footer
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        
+        print("postpanel footer reuse")
+        switch kind {
+        case UICollectionView.elementKindSectionHeader:
+            let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "header", for: indexPath)
+//            header.addSubview(headerView)
+            return header
+        case UICollectionView.elementKindSectionFooter:
+            let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "footer", for: indexPath)
+//            footer.addSubview(footerView)
+            
+            footerView.frame = CGRect(x: 0, y: 0, width: collectionView.frame.width, height: 100)
+//            footerView.backgroundColor = .ddmDarkColor
+//            footerView.backgroundColor = .blue
+            footer.addSubview(footerView)
+//            footerView.isHidden = true
+
+            aaText.textAlignment = .left
+            aaText.textColor = .white
+            aaText.font = .systemFont(ofSize: 12)
+            footerView.addSubview(aaText)
+            aaText.clipsToBounds = true
+            aaText.translatesAutoresizingMaskIntoConstraints = false
+//            aaText.centerYAnchor.constraint(equalTo: footerView.centerYAnchor, constant: 0).isActive = true
+            aaText.topAnchor.constraint(equalTo: footerView.topAnchor, constant: 20).isActive = true
+            aaText.centerXAnchor.constraint(equalTo: footerView.centerXAnchor, constant: 0).isActive = true
+            aaText.layer.opacity = 0.5
+//            if(dataPaginateStatus == "end") {
+//                aaText.text = "End"
+//            } else {
+//                aaText.text = ""
+//            }
+            
+            bSpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
+            footer.addSubview(bSpinner)
+            bSpinner.translatesAutoresizingMaskIntoConstraints = false
+//            bSpinner.centerYAnchor.constraint(equalTo: footer.centerYAnchor).isActive = true
+            bSpinner.topAnchor.constraint(equalTo: footer.topAnchor, constant: 20).isActive = true
+            bSpinner.centerXAnchor.constraint(equalTo: footer.centerXAnchor).isActive = true
+            bSpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
+            bSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
+//            bSpinner.isHidden = true
+            
+            //test > error handling
+            errorText.textAlignment = .center //left
+            errorText.textColor = .white
+            errorText.font = .systemFont(ofSize: 13)
+            footerView.addSubview(errorText)
+            errorText.clipsToBounds = true
+            errorText.translatesAutoresizingMaskIntoConstraints = false
+//            errorText.centerYAnchor.constraint(equalTo: footerView.centerYAnchor, constant: 0).isActive = true
+            errorText.topAnchor.constraint(equalTo: footerView.topAnchor, constant: 20).isActive = true
+            errorText.centerXAnchor.constraint(equalTo: footerView.centerXAnchor, constant: 0).isActive = true
+            errorText.text = ""
+            
+            errorRefreshBtn.backgroundColor = .ddmDarkColor //test to remove color
+            footerView.addSubview(errorRefreshBtn)
+            errorRefreshBtn.translatesAutoresizingMaskIntoConstraints = false
+            errorRefreshBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true //ori: 40
+            errorRefreshBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
+            errorRefreshBtn.centerXAnchor.constraint(equalTo: footerView.centerXAnchor).isActive = true
+            errorRefreshBtn.topAnchor.constraint(equalTo: errorText.bottomAnchor, constant: 10).isActive = true
+            errorRefreshBtn.layer.cornerRadius = 20
+            errorRefreshBtn.isUserInteractionEnabled = true
+            errorRefreshBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onErrorRefreshClicked)))
+            errorRefreshBtn.isHidden = true
+            
+            let bMiniBtn = UIImageView(image: UIImage(named:"icon_round_refresh")?.withRenderingMode(.alwaysTemplate))
+    //        bMiniBtn.tintColor = .black
+            bMiniBtn.tintColor = .white
+            errorRefreshBtn.addSubview(bMiniBtn)
+            bMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+            bMiniBtn.centerXAnchor.constraint(equalTo: errorRefreshBtn.centerXAnchor).isActive = true
+            bMiniBtn.centerYAnchor.constraint(equalTo: errorRefreshBtn.centerYAnchor).isActive = true
+            bMiniBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
+            bMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
+            
+            configureFooterUI(data: footerState)
+            
+            return footer
+        default:
+            fatalError("Unexpected element kind")
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        print("postpanel referencesize: \(section)")
+        return CGSize(width: collectionView.bounds.size.width, height: 100)
+        
+    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if indexPath.row == vDataList.count - 1 {
+            print("postpanel willdisplay: \(indexPath.row)")
+
+            if(dataPaginateStatus != "end") {
+                if(pageNumber >= 3) {
+                    asyncPaginateFetchFeed(id: "post_feed_end")
+                } else {
+                    asyncPaginateFetchFeed(id: "post_feed")
+                }
+
+            }
+        }
+    }
+}
+
+extension LocationSelectScrollablePanelView: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return vDataList.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HSingleLocationViewCell.identifier, for: indexPath) as! HSingleLocationViewCell
+//        cell.aDelegate = self
+        cell.configure(data: vDataList[indexPath.row])
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+
+     }
 }
 
 extension ViewController: LocationSelectScrollablePanelDelegate{

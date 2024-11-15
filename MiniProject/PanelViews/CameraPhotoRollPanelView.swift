@@ -45,6 +45,9 @@ class CameraPhotoRollPanelView: PanelView, UIGestureRecognizerDelegate{
     let scrollView = UIScrollView()
     var photoViewList = [MultiSelectedCell]()
     let sPhotoSize = 60.0
+    var maxSelectLimit = 0
+    let maxLimitErrorPanel = UIView()
+    let maxLimitText = UILabel()
     
     let gLineSpacingHeight = 4.0
     let gLhsMargin = 20.0
@@ -324,6 +327,55 @@ class CameraPhotoRollPanelView: PanelView, UIGestureRecognizerDelegate{
         scrollView.heightAnchor.constraint(equalToConstant: 60).isActive = true  //sPhotoSize
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.alwaysBounceHorizontal = true
+        
+        //test > error handling max selected limit
+//        maxLimitErrorPanel.backgroundColor = .ddmBlackOverlayColor //black
+        maxLimitErrorPanel.backgroundColor = .white //black
+        panelView.addSubview(maxLimitErrorPanel)
+        maxLimitErrorPanel.translatesAutoresizingMaskIntoConstraints = false
+        maxLimitErrorPanel.centerXAnchor.constraint(equalTo: panelView.centerXAnchor, constant: 0).isActive = true
+//        maxLimitErrorPanel.leadingAnchor.constraint(equalTo: panelView.leadingAnchor, constant: 0).isActive = true
+//        maxLimitErrorPanel.trailingAnchor.constraint(equalTo: panelView.trailingAnchor, constant: 0).isActive = true
+        maxLimitErrorPanel.layer.cornerRadius = 10
+        maxLimitErrorPanel.bottomAnchor.constraint(equalTo: multiToolPanel.topAnchor, constant: -10).isActive = true
+        maxLimitErrorPanel.isHidden = true
+        
+        let miniError = UIView()
+        miniError.backgroundColor = .red
+        maxLimitErrorPanel.addSubview(miniError)
+        miniError.translatesAutoresizingMaskIntoConstraints = false
+        miniError.leadingAnchor.constraint(equalTo: maxLimitErrorPanel.leadingAnchor, constant: 15).isActive = true
+//        miniError.centerYAnchor.constraint(equalTo: maxLimitErrorPanel.centerYAnchor, constant: 0).isActive = true
+        miniError.topAnchor.constraint(equalTo: maxLimitErrorPanel.topAnchor, constant: 5).isActive = true
+        miniError.bottomAnchor.constraint(equalTo: maxLimitErrorPanel.bottomAnchor, constant: -5).isActive = true
+        miniError.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        miniError.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        miniError.layer.cornerRadius = 10
+//        micMiniError.isHidden = true
+
+        let miniBtn = UIImageView(image: UIImage(named:"icon_round_priority")?.withRenderingMode(.alwaysTemplate))
+        miniBtn.tintColor = .white
+        miniError.addSubview(miniBtn)
+        miniBtn.translatesAutoresizingMaskIntoConstraints = false
+        miniBtn.centerXAnchor.constraint(equalTo: miniError.centerXAnchor).isActive = true
+        miniBtn.centerYAnchor.constraint(equalTo: miniError.centerYAnchor).isActive = true
+        miniBtn.heightAnchor.constraint(equalToConstant: 12).isActive = true
+        miniBtn.widthAnchor.constraint(equalToConstant: 12).isActive = true
+        
+//        let maxLimitText = UILabel()
+        maxLimitText.textAlignment = .center
+//        maxLimitText.textColor = .white
+        maxLimitText.textColor = .black
+        maxLimitText.font = .boldSystemFont(ofSize: 13)
+//        panel.addSubview(aUploadText)
+        maxLimitErrorPanel.addSubview(maxLimitText)
+        maxLimitText.translatesAutoresizingMaskIntoConstraints = false
+//        maxLimitText.topAnchor.constraint(equalTo: maxLimitErrorPanel.topAnchor, constant: 10).isActive = true
+//        maxLimitText.bottomAnchor.constraint(equalTo: maxLimitErrorPanel.bottomAnchor, constant: -10).isActive = true
+        maxLimitText.centerYAnchor.constraint(equalTo: maxLimitErrorPanel.centerYAnchor, constant: 0).isActive = true
+        maxLimitText.leadingAnchor.constraint(equalTo: miniError.trailingAnchor, constant: 7).isActive = true
+        maxLimitText.trailingAnchor.constraint(equalTo: maxLimitErrorPanel.trailingAnchor, constant: -15).isActive = true
+        maxLimitText.text = ""
 
         let aPanelPanGesture = UIPanGestureRecognizer(target: self, action: #selector(onCameraRollPanelPanGesture))
         panelView.addGestureRecognizer(aPanelPanGesture)
@@ -381,6 +433,8 @@ class CameraPhotoRollPanelView: PanelView, UIGestureRecognizerDelegate{
     
     @objc func onCloseCameraRollClicked(gesture: UITapGestureRecognizer) {
         
+        clearErrorUI()
+        
         UIView.animate(withDuration: 0.2, animations: {
             self.panelTopCons?.constant = 0
             self.layoutIfNeeded()
@@ -393,6 +447,8 @@ class CameraPhotoRollPanelView: PanelView, UIGestureRecognizerDelegate{
     }
     
     @objc func onCameraRollMultiSelectNextClicked(gesture: UITapGestureRecognizer) {
+        
+        clearErrorUI()
         
         self.delegate?.didClickMultiPhotoSelect(urls: multiSelectDataList)
         
@@ -570,6 +626,12 @@ class CameraPhotoRollPanelView: PanelView, UIGestureRecognizerDelegate{
         isMultiSelect = true
     }
     
+    func setMultiSelection(limit: Int) {
+        setMultiSelection()
+        maxSelectLimit = limit
+        maxLimitText.text = "Max " + String(maxSelectLimit)
+    }
+    
     //test > add a time delay to load all images (avoid flicker when loading images)
     func asyncReloadData(id: String) {
         
@@ -612,6 +674,25 @@ class CameraPhotoRollPanelView: PanelView, UIGestureRecognizerDelegate{
             n += 1
         }
     }
+    
+    func configureErrorUI(data: String) {
+        if(data == "max") {
+            maxLimitText.text = "Max " + String(maxSelectLimit) + " photos"
+        }
+        else if(data == "e") {
+            maxLimitText.text = "Error occurred. Try again"
+        }
+        else if(data == "na") {
+            maxLimitText.text = "Add at least 1 photo"
+        }
+        
+        maxLimitErrorPanel.isHidden = false
+    }
+    
+    func clearErrorUI() {
+        maxLimitText.text = ""
+        maxLimitErrorPanel.isHidden = true
+    }
 }
 
 extension CameraPhotoRollPanelView: UICollectionViewDelegateFlowLayout {
@@ -636,7 +717,7 @@ extension CameraPhotoRollPanelView: UICollectionViewDelegateFlowLayout {
 //test > try scrollview listener
 extension CameraPhotoRollPanelView: UICollectionViewDelegate {
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-    
+        clearErrorUI()
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -722,34 +803,39 @@ extension CameraPhotoRollPanelView: GridAssetDelegate {
                             model.requestContentEditingInput(with: options) { (input, _) in
                                 if let url = input?.fullSizeImageURL {
                                     DispatchQueue.main.async {
+                                        var isMaxLimitHit = false
                                         if(selectOrder == -1) {
 //                                        if(!self.multiSelectDataList.contains(url)) {
                                             
                                             //test 2 > use custom cell
-                                            let customCell = MultiSelectedCell(frame: CGRect(x: 0, y: 0, width: self.sPhotoSize, height: self.sPhotoSize))
-                                            self.scrollView.addSubview(customCell)
-                                            customCell.translatesAutoresizingMaskIntoConstraints = false
-                                            if(self.photoViewList.isEmpty) {
-                                                customCell.leadingAnchor.constraint(equalTo: self.scrollView.leadingAnchor, constant: 20).isActive = true
+                                            if(self.photoViewList.count < self.maxSelectLimit) {
+                                                let customCell = MultiSelectedCell(frame: CGRect(x: 0, y: 0, width: self.sPhotoSize, height: self.sPhotoSize))
+                                                self.scrollView.addSubview(customCell)
+                                                customCell.translatesAutoresizingMaskIntoConstraints = false
+                                                if(self.photoViewList.isEmpty) {
+                                                    customCell.leadingAnchor.constraint(equalTo: self.scrollView.leadingAnchor, constant: 20).isActive = true
+                                                } else {
+                                                    let lastArrayE = self.photoViewList[self.photoViewList.count - 1]
+                                                    customCell.leadingAnchor.constraint(equalTo: lastArrayE.trailingAnchor, constant: 0).isActive = true
+                                                }
+                                                customCell.centerYAnchor.constraint(equalTo: self.scrollView.centerYAnchor, constant: 0).isActive = true
+                                                customCell.widthAnchor.constraint(equalToConstant: self.sPhotoSize).isActive = true
+                                                customCell.heightAnchor.constraint(equalToConstant: self.sPhotoSize).isActive = true
+                                                customCell.redrawUI()
+                                                customCell.configure(url: url)
+                                                customCell.aDelegate = self
+                                                customCell.setGridIdx(idx: indexPath.row)
+                                                
+                                                self.photoViewList.append(customCell)
+                                                self.multiSelectDataList.append(url)
+                                                self.selectedGridAssetDataList.append(indexPath.row)
+                                                
+                                                //test > show order number in cell
+                                                data.setSelectedOrder(i: self.selectedGridAssetDataList.count - 1)
+                                                gridAsset.refreshSelectorOrder(gridAsset: data)
                                             } else {
-                                                let lastArrayE = self.photoViewList[self.photoViewList.count - 1]
-                                                customCell.leadingAnchor.constraint(equalTo: lastArrayE.trailingAnchor, constant: 0).isActive = true
+                                                isMaxLimitHit = true
                                             }
-                                            customCell.centerYAnchor.constraint(equalTo: self.scrollView.centerYAnchor, constant: 0).isActive = true
-                                            customCell.widthAnchor.constraint(equalToConstant: self.sPhotoSize).isActive = true
-                                            customCell.heightAnchor.constraint(equalToConstant: self.sPhotoSize).isActive = true
-                                            customCell.redrawUI()
-                                            customCell.configure(url: url)
-                                            customCell.aDelegate = self
-                                            customCell.setGridIdx(idx: indexPath.row)
-                                            
-                                            self.photoViewList.append(customCell)
-                                            self.multiSelectDataList.append(url)
-                                            self.selectedGridAssetDataList.append(indexPath.row)
-                                            
-                                            //test > show order number in cell
-                                            data.setSelectedOrder(i: self.selectedGridAssetDataList.count - 1)
-                                            gridAsset.refreshSelectorOrder(gridAsset: data)
                                         } else {
                                             if let index = self.multiSelectDataList.firstIndex(of: url) {
                                                 self.photoViewList[index].removeFromSuperview()
@@ -797,6 +883,12 @@ extension CameraPhotoRollPanelView: GridAssetDelegate {
                                             self.scrollView.setContentOffset(CGPoint(x: diff, y: 0), animated: true)
                                         } else {
                                             self.scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
+                                        }
+                                        
+                                        if(isMaxLimitHit) {
+                                            self.configureErrorUI(data: "max")
+                                        } else {
+                                            self.clearErrorUI()
                                         }
                                     }
                                 }
@@ -886,6 +978,8 @@ extension CameraPhotoRollPanelView: MultiSelectedCellDelegate {
             } else {
                 self.scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
             }
+            
+            clearErrorUI()
         }
     }
 }

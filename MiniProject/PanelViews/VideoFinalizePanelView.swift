@@ -13,7 +13,7 @@ import AVFoundation
 protocol VideoFinalizePanelDelegate : AnyObject {
     func didInitializeVideoFinalize()
     func didClickFinishVideoFinalize()
-    func didVideoFinalizeClickUploadSuccess()
+    func didVideoFinalizeClickUpload(payload: String)
     //test
     func didVideoFinalizeClickLocationSelectScrollable()
 }
@@ -35,6 +35,12 @@ class VideoFinalizePanelView: PanelView{
     let aSpinner = SpinLoader()
     
     let aText = UILabel()
+    
+    var maxSelectLimit = 5
+    let maxLimitErrorPanel = UIView()
+    let maxLimitText = UILabel()
+    let pMiniError = UIView()
+    let lMiniError = UIView()
 
     private let fileManager = FileManager.default
     private lazy var mainDirectoryUrl: URL = {
@@ -201,6 +207,26 @@ class VideoFinalizePanelView: PanelView{
         pText.text = "Caption your Video Loop..."
 //        pText.layer.opacity = 0.5
         
+        pMiniError.backgroundColor = .red
+        stackView.addSubview(pMiniError)
+        pMiniError.translatesAutoresizingMaskIntoConstraints = false
+        pMiniError.leadingAnchor.constraint(equalTo: pText.leadingAnchor, constant: 0).isActive = true
+        pMiniError.bottomAnchor.constraint(equalTo: pText.topAnchor, constant: -5).isActive = true
+//        pMiniError.topAnchor.constraint(equalTo: bTextView.bottomAnchor, constant: 5).isActive = true
+        pMiniError.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        pMiniError.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        pMiniError.layer.cornerRadius = 10
+        pMiniError.isHidden = true
+
+        let pMiniBtn = UIImageView(image: UIImage(named:"icon_round_priority")?.withRenderingMode(.alwaysTemplate))
+        pMiniBtn.tintColor = .white
+        pMiniError.addSubview(pMiniBtn)
+        pMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        pMiniBtn.centerXAnchor.constraint(equalTo: pMiniError.centerXAnchor).isActive = true
+        pMiniBtn.centerYAnchor.constraint(equalTo: pMiniError.centerYAnchor).isActive = true
+        pMiniBtn.heightAnchor.constraint(equalToConstant: 12).isActive = true
+        pMiniBtn.widthAnchor.constraint(equalToConstant: 12).isActive = true
+        
         //test > line divider for different sections
         let divider = UIView()
         divider.backgroundColor = .ddmDarkGrayColor //.ddmDarkColor
@@ -265,7 +291,6 @@ class VideoFinalizePanelView: PanelView{
         
         //test > setting for video upload
         let aGrid = UIView()
-
         aGrid.backgroundColor = .ddmDarkBlack
 //        panel.addSubview(aGrid)
         stackView.addSubview(aGrid)
@@ -327,6 +352,27 @@ class VideoFinalizePanelView: PanelView{
         aArrowBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         aArrowBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
 //        aArrowBtn.layer.opacity = 0.5
+        
+        lMiniError.backgroundColor = .red
+        stackView.addSubview(lMiniError)
+        lMiniError.translatesAutoresizingMaskIntoConstraints = false
+        lMiniError.trailingAnchor.constraint(equalTo: aArrowBtn.leadingAnchor, constant: -5).isActive = true
+        lMiniError.centerYAnchor.constraint(equalTo: aGrid.centerYAnchor, constant: 0).isActive = true
+//        lMiniError.topAnchor.constraint(equalTo: maxLimitErrorPanel.topAnchor, constant: 5).isActive = true
+//        lMiniError.bottomAnchor.constraint(equalTo: pText.topAnchor, constant: -5).isActive = true
+        lMiniError.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        lMiniError.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        lMiniError.layer.cornerRadius = 10
+        lMiniError.isHidden = true
+        
+        let lMiniBtn = UIImageView(image: UIImage(named:"icon_round_priority")?.withRenderingMode(.alwaysTemplate))
+        lMiniBtn.tintColor = .white
+        lMiniError.addSubview(lMiniBtn)
+        lMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        lMiniBtn.centerXAnchor.constraint(equalTo: lMiniError.centerXAnchor).isActive = true
+        lMiniBtn.centerYAnchor.constraint(equalTo: lMiniError.centerYAnchor).isActive = true
+        lMiniBtn.heightAnchor.constraint(equalToConstant: 12).isActive = true
+        lMiniBtn.widthAnchor.constraint(equalToConstant: 12).isActive = true
         
         let bGrid = UIView()
 //        bGrid.backgroundColor = .ddmDarkColor
@@ -512,6 +558,54 @@ class VideoFinalizePanelView: PanelView{
         stack1View.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 20).isActive = true
         stack1View.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -20).isActive = true
         
+        //test > error handling max selected limit
+//        maxLimitErrorPanel.backgroundColor = .ddmBlackOverlayColor //black
+        maxLimitErrorPanel.backgroundColor = .white //black
+        panel.addSubview(maxLimitErrorPanel)
+        maxLimitErrorPanel.translatesAutoresizingMaskIntoConstraints = false
+        maxLimitErrorPanel.centerXAnchor.constraint(equalTo: panel.centerXAnchor, constant: 0).isActive = true
+//        maxLimitErrorPanel.leadingAnchor.constraint(equalTo: panelView.leadingAnchor, constant: 0).isActive = true
+//        maxLimitErrorPanel.trailingAnchor.constraint(equalTo: panelView.trailingAnchor, constant: 0).isActive = true
+        maxLimitErrorPanel.layer.cornerRadius = 10
+        maxLimitErrorPanel.bottomAnchor.constraint(equalTo: stack1View.topAnchor, constant: -10).isActive = true
+        maxLimitErrorPanel.isHidden = true
+        
+        let miniError = UIView()
+        miniError.backgroundColor = .red
+        maxLimitErrorPanel.addSubview(miniError)
+        miniError.translatesAutoresizingMaskIntoConstraints = false
+        miniError.leadingAnchor.constraint(equalTo: maxLimitErrorPanel.leadingAnchor, constant: 15).isActive = true
+//        miniError.centerYAnchor.constraint(equalTo: maxLimitErrorPanel.centerYAnchor, constant: 0).isActive = true
+        miniError.topAnchor.constraint(equalTo: maxLimitErrorPanel.topAnchor, constant: 5).isActive = true
+        miniError.bottomAnchor.constraint(equalTo: maxLimitErrorPanel.bottomAnchor, constant: -5).isActive = true
+        miniError.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        miniError.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        miniError.layer.cornerRadius = 10
+//        micMiniError.isHidden = true
+
+        let miniBtn = UIImageView(image: UIImage(named:"icon_round_priority")?.withRenderingMode(.alwaysTemplate))
+        miniBtn.tintColor = .white
+        miniError.addSubview(miniBtn)
+        miniBtn.translatesAutoresizingMaskIntoConstraints = false
+        miniBtn.centerXAnchor.constraint(equalTo: miniError.centerXAnchor).isActive = true
+        miniBtn.centerYAnchor.constraint(equalTo: miniError.centerYAnchor).isActive = true
+        miniBtn.heightAnchor.constraint(equalToConstant: 12).isActive = true
+        miniBtn.widthAnchor.constraint(equalToConstant: 12).isActive = true
+        
+//        let maxLimitText = UILabel()
+        maxLimitText.textAlignment = .center
+//        maxLimitText.textColor = .white
+        maxLimitText.textColor = .black
+        maxLimitText.font = .boldSystemFont(ofSize: 13)
+//        panel.addSubview(aUploadText)
+        maxLimitErrorPanel.addSubview(maxLimitText)
+        maxLimitText.translatesAutoresizingMaskIntoConstraints = false
+//        maxLimitText.topAnchor.constraint(equalTo: maxLimitErrorPanel.topAnchor, constant: 10).isActive = true
+//        maxLimitText.bottomAnchor.constraint(equalTo: maxLimitErrorPanel.bottomAnchor, constant: -10).isActive = true
+        maxLimitText.centerYAnchor.constraint(equalTo: maxLimitErrorPanel.centerYAnchor, constant: 0).isActive = true
+        maxLimitText.leadingAnchor.constraint(equalTo: miniError.trailingAnchor, constant: 7).isActive = true
+        maxLimitText.trailingAnchor.constraint(equalTo: maxLimitErrorPanel.trailingAnchor, constant: -15).isActive = true
+        maxLimitText.text = ""
     }
 
     @objc func onPreviewVideoClicked(gesture: UITapGestureRecognizer) {
@@ -524,33 +618,40 @@ class VideoFinalizePanelView: PanelView{
     }
     
     @objc func onVideoUploadNextClicked(gesture: UITapGestureRecognizer) {
+        clearErrorUI()
         resignResponder()
         
         let isSignedIn = SignInManager.shared.getStatus()
         if(isSignedIn) {
-            aUpload.isHidden = true
-            aSpinner.startAnimating()
             
-            //test > close panel
-    //        closeVideoFinalizePanel(isAnimated: true)
-            
-            DataFetchManager.shared.sendData(id: "u") { [weak self]result in
-                switch result {
-                    case .success(let l):
-
-                    //update UI on main thread
-                    DispatchQueue.main.async {
-
-    //                    self?.closeVideoFinalizePanel(isAnimated: true)
-                        
-                        //test
-                        self?.delegate?.didVideoFinalizeClickUploadSuccess()
-                    }
-
-                    case .failure(_):
-                        print("api fail")
-                        break
-                }
+            if(bTextView.text == "") {
+                configureErrorUI(data: "na-caption")
+            } else {
+                aUpload.isHidden = true
+                aSpinner.startAnimating()
+                    
+                //test 1 > old method
+//                DataUploadManager.shared.sendData(id: "u") { [weak self]result in
+//                    switch result {
+//                        case .success(let l):
+//
+//                        //update UI on main thread
+//                        DispatchQueue.main.async {
+//
+//        //                    self?.closeVideoFinalizePanel(isAnimated: true)
+//                            
+//                            //test
+//                            self?.delegate?.didVideoFinalizeClickUploadSuccess()
+//                        }
+//
+//                        case .failure(_):
+//                            print("api fail")
+//                            break
+//                    }
+//                }
+                
+                //test 2 > new method to upload data for in-app msg
+                delegate?.didVideoFinalizeClickUpload(payload: "cc")
             }
         }
         else {
@@ -564,6 +665,7 @@ class VideoFinalizePanelView: PanelView{
     
     @objc func onBoxUnderClicked(gesture: UITapGestureRecognizer) {
         print("box under")
+        clearErrorUI()
         resignResponder()
     }
     
@@ -574,6 +676,7 @@ class VideoFinalizePanelView: PanelView{
     
     @objc func onAGridClicked(gesture: UITapGestureRecognizer) {
         //test 2
+        clearErrorUI()
         delegate?.didVideoFinalizeClickLocationSelectScrollable()
     }
     
@@ -606,9 +709,21 @@ class VideoFinalizePanelView: PanelView{
         self.endEditing(true)
     }
     
-    //test > location select ui change
-    func showLocationSelected(l : String) {
-        aText.text = l
+    var selectedPlaceList = [String]()
+    func setSelectedLocation(l : String) {
+        removeSelectedLocation()
+        
+        if(selectedPlaceList.isEmpty) {
+            selectedPlaceList.append("p")
+            aText.text = l
+        }
+    }
+    
+    func removeSelectedLocation() {
+        if(!selectedPlaceList.isEmpty) {
+            selectedPlaceList.removeLast()
+            aText.text = "Add Location"
+        }
     }
 
     func getGifOutputURL() -> URL {
@@ -623,12 +738,40 @@ class VideoFinalizePanelView: PanelView{
         
         return url
     }
+    
+    func configureErrorUI(data: String) {
+        if(data == "e") {
+            maxLimitText.text = "Error occurred. Try again"
+        }
+        else if(data == "na-photo") {
+            maxLimitText.text = "Photo is required"
+        }
+        else if(data == "na-caption") {
+            maxLimitText.text = "Caption is required"
+            pMiniError.isHidden = false
+        }
+        else if(data == "na-location") {
+            maxLimitText.text = "Location is required"
+            lMiniError.isHidden = false
+        }
+        
+        maxLimitErrorPanel.isHidden = false
+    }
+    
+    func clearErrorUI() {
+        maxLimitText.text = ""
+        maxLimitErrorPanel.isHidden = true
+        
+        pMiniError.isHidden = true
+        lMiniError.isHidden = true
+    }
 }
 extension VideoFinalizePanelView: UIScrollViewDelegate {
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         print("xx4 scrollview begin: \(scrollView.contentOffset.y)")
         let scrollOffsetY = scrollView.contentOffset.y
         
+        clearErrorUI()
         resignResponder()
     }
 

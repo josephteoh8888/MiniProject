@@ -315,7 +315,7 @@ class MePanelView: PanelView{
     }
     
     @objc func onABtnClicked(gesture: UITapGestureRecognizer) {
-
+        print("mePanel setting btn clicked")
     }
     @objc func onFollowClicked(gesture: UITapGestureRecognizer) {
         
@@ -734,7 +734,9 @@ extension MePanelView: UIScrollViewDelegate {
         
         //test > refresh dataset
         if(scrollOffsetY < -80) {
-            self.refreshFetchData()
+            if(isUserLoggedIn) {
+                self.refreshFetchData()
+            }
         }
         
     }

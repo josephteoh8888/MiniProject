@@ -45,7 +45,7 @@ class VGridColumnViewCell: UICollectionViewCell {
         aMiniRing.layer.cornerRadius = 22
 //        aMiniRing.layer.opacity = 0.4 //0.2
         
-        bMiniBtn.tintColor = .white
+//        bMiniBtn.tintColor = .white
 //        contentView.addSubview(bMiniBtn)
         contentView.addSubview(bMiniBtn)
         bMiniBtn.translatesAutoresizingMaskIntoConstraints = false
@@ -63,9 +63,8 @@ class VGridColumnViewCell: UICollectionViewCell {
         aMiniTextBox.translatesAutoresizingMaskIntoConstraints = false
         aMiniTextBox.topAnchor.constraint(equalTo: aMiniRing.bottomAnchor, constant: 2).isActive = true //default: -30
         aMiniTextBox.centerXAnchor.constraint(equalTo: aMiniRing.centerXAnchor).isActive = true
-        aMiniTextBox.heightAnchor.constraint(equalToConstant: 30).isActive = true
+//        aMiniTextBox.heightAnchor.constraint(equalToConstant: 30).isActive = true
         aMiniTextBox.widthAnchor.constraint(equalToConstant: 70).isActive = true
-//        aMiniTextBox.layer.cornerRadius = 5
         
         aMiniText.textAlignment = .center
         aMiniText.textColor = .white
@@ -73,11 +72,13 @@ class VGridColumnViewCell: UICollectionViewCell {
         aMiniText.font = .systemFont(ofSize: 10)
         aMiniTextBox.addSubview(aMiniText)
         aMiniText.translatesAutoresizingMaskIntoConstraints = false
-        aMiniText.centerXAnchor.constraint(equalTo: aMiniTextBox.centerXAnchor).isActive = true
+//        aMiniText.centerXAnchor.constraint(equalTo: aMiniTextBox.centerXAnchor).isActive = true
         aMiniText.topAnchor.constraint(equalTo: aMiniTextBox.topAnchor).isActive = true
-//        aMiniText.leadingAnchor.constraint(equalTo: aMiniTextBox.leadingAnchor, constant: 5).isActive = true
-//        aMiniText.trailingAnchor.constraint(equalTo: aMiniTextBox.trailingAnchor, constant: -5).isActive = true
+        aMiniText.leadingAnchor.constraint(equalTo: aMiniTextBox.leadingAnchor, constant: 5).isActive = true
+        aMiniText.trailingAnchor.constraint(equalTo: aMiniTextBox.trailingAnchor, constant: -5).isActive = true
         aMiniText.text = ""
+        aMiniText.numberOfLines = 2
+        aMiniText.bottomAnchor.constraint(equalTo: aMiniTextBox.bottomAnchor).isActive = true
     }
 
     override func prepareForReuse() {
@@ -94,15 +95,43 @@ class VGridColumnViewCell: UICollectionViewCell {
         
         if(data == "r") {
             bMiniBtn.image = UIImage(named:"icon_round_repeat")?.withRenderingMode(.alwaysTemplate)
-            aMiniText.text = "Repost"
+            bMiniBtn.tintColor = .white
+            aMiniText.text = "React" //Repost
         } else if(data == "s") {
             bMiniBtn.image = UIImage(named:"icon_round_share_to")?.withRenderingMode(.alwaysTemplate)
+            bMiniBtn.tintColor = .white
             aMiniText.text = "Share To"
         } else if(data == "c") {
             bMiniBtn.image = UIImage(named:"icon_round_link")?.withRenderingMode(.alwaysTemplate)
+            bMiniBtn.tintColor = .white
             aMiniText.text = "Copy Link"
+        } else if(data == "cr") {
+            bMiniBtn.image = UIImage(named:"icon_round_add")?.withRenderingMode(.alwaysTemplate)
+            bMiniBtn.tintColor = .white
+            aMiniText.text = "Use to Create"
+        } else if(data == "cr_p") {
+            bMiniBtn.image = UIImage(named:"icon_round_add")?.withRenderingMode(.alwaysTemplate)
+            bMiniBtn.tintColor = .white
+//            bMiniBtn.image = UIImage(named:"flaticon_srip_places")
+            aMiniText.text = "Create New Location"
+        } else if(data == "cr_post") {
+            bMiniBtn.image = UIImage(named:"icon_round_add")?.withRenderingMode(.alwaysTemplate)
+            bMiniBtn.tintColor = .white
+//            bMiniBtn.image = UIImage(named:"flaticon_freepik_article")
+            aMiniText.text = "Create Post"
+        } else if(data == "cr_photo") {
+            bMiniBtn.image = UIImage(named:"icon_round_add")?.withRenderingMode(.alwaysTemplate)
+            bMiniBtn.tintColor = .white
+//            bMiniBtn.image = UIImage(named:"flaticon_icon_home_photo")
+            aMiniText.text = "Create Shot" //Tag in New Shot
+        } else if(data == "cr_video") {
+            bMiniBtn.image = UIImage(named:"icon_round_add")?.withRenderingMode(.alwaysTemplate)
+            bMiniBtn.tintColor = .white
+//            bMiniBtn.image = UIImage(named:"flaticon_freepik_video_b")
+            aMiniText.text = "Create Loop"
         } else if(data == "rp") {
             bMiniBtn.image = UIImage(named:"icon_round_report")?.withRenderingMode(.alwaysTemplate)
+            bMiniBtn.tintColor = .white
             aMiniText.text = "Report"
         } else if(data == "wa") {
 //            bMiniBtn.image = UIImage(named:"icon_round_repeat")?.withRenderingMode(.alwaysTemplate)
@@ -112,18 +141,23 @@ class VGridColumnViewCell: UICollectionViewCell {
             aMiniText.text = "X"
         } else if(data == "f") {
             bMiniBtn.image = UIImage(named:"icon_round_add_person")?.withRenderingMode(.alwaysTemplate)
+            bMiniBtn.tintColor = .white
             aMiniText.text = "Follow"
         } else if(data == "d") {
             bMiniBtn.image = UIImage(named:"icon_round_heartbreak")?.withRenderingMode(.alwaysTemplate)
+            bMiniBtn.tintColor = .white
             aMiniText.text = "Dislike"
         } else if(data == "sg") {
             bMiniBtn.image = UIImage(named:"icon_round_cash")?.withRenderingMode(.alwaysTemplate)
+            bMiniBtn.tintColor = .white
             aMiniText.text = "Send Gift"
         } else if(data == "de") {
             bMiniBtn.image = UIImage(named:"icon_round_delete")?.withRenderingMode(.alwaysTemplate)
+            bMiniBtn.tintColor = .white
             aMiniText.text = "Delete"
         } else if(data == "sa") {
             bMiniBtn.image = UIImage(named:"icon_round_bookmark_b")?.withRenderingMode(.alwaysTemplate)
+            bMiniBtn.tintColor = .white
             aMiniText.text = "Save"
         }
     }
