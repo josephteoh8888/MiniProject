@@ -121,7 +121,7 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
     //test > user login/out status
     var isUserLoggedIn = false
     
-    var maxSelectLimit = 60.0 //video duration in s
+    var maxDurationLimit = 60.0 //video duration in s
     let maxLimitErrorPanel = UIView()
     let maxLimitText = UILabel()
     
@@ -173,7 +173,7 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
 //        aBtn.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
 //        let topInsetMargin = panel.safeAreaInsets.top + 10
 //        aBtn.topAnchor.constraint(equalTo: panel.topAnchor, constant: 50).isActive = true
-        aBtn.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
+        aBtn.topAnchor.constraint(equalTo: panel.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
         aBtn.layer.cornerRadius = 20
 //        aBtn.layer.opacity = 0.3
         aBtn.isUserInteractionEnabled = true
@@ -2973,7 +2973,7 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
         timelineScrollView.contentSize = CGSize(width: totalPFrameWidth, height: 50)
         
         //test > check max video duration limit
-        if(totalVDuration > maxSelectLimit) {
+        if(totalVDuration > maxDurationLimit) {
             configureErrorUI(data: "max")
         }
         
@@ -3106,7 +3106,7 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
             timelineScrollView.contentSize = CGSize(width: totalPFrameWidth, height: 50)
             
             //test > check max video duration limit
-            if(totalVDuration > maxSelectLimit) {
+            if(totalVDuration > maxDurationLimit) {
                 configureErrorUI(data: "max")
             }
             
@@ -3343,7 +3343,7 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
                 timelineScrollView.contentSize = CGSize(width: totalPFrameWidth, height: 50)
                 
                 //test > check max video duration limit
-                if(totalVDuration > maxSelectLimit) {
+                if(totalVDuration > maxDurationLimit) {
                     configureErrorUI(data: "max")
                 }
                 
@@ -3456,7 +3456,7 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
                 timelineScrollView.contentSize = CGSize(width: totalPFrameWidth, height: 50)
                 
                 //test > check max video duration limit
-                if(totalVDuration > maxSelectLimit) {
+                if(totalVDuration > maxDurationLimit) {
                     configureErrorUI(data: "max")
                 }
                 
@@ -3805,7 +3805,16 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
     }
     
     @objc func onBackVideoCreatorPanelClicked(gesture: UITapGestureRecognizer) {
-        openExitVideoEditorPromptMsg()
+//        openExitVideoEditorPromptMsg()
+        
+        //test 2
+        let isSignedIn = SignInManager.shared.getStatus()
+        if(isSignedIn) {
+            openExitVideoEditorPromptMsg()
+        }
+        else {
+            closeVideoCreatorPanel(isAnimated: true)
+        }
     }
     
     @objc func onPauseVideoClicked(gesture: UITapGestureRecognizer) {
@@ -3837,7 +3846,9 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
         cameraRollPanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
         cameraRollPanel.delegate = self
 //        cameraRollPanel.setMultiSelection()
+        let maxSelectLimit = 10
         cameraRollPanel.setMultiSelection(limit: maxSelectLimit)
+        cameraRollPanel.setDurationLimit(limit: maxDurationLimit)
     }
     
     //test > open finalizing video for caption and uploading
@@ -3874,6 +3885,7 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
         exitVideoPanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
         exitVideoPanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
         exitVideoPanel.delegate = self
+        exitVideoPanel.setType(t: "video")
     }
     
     func backPage() {
@@ -3930,7 +3942,7 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
             if(vcList.isEmpty) {
                 configureErrorUI(data: "na")
             } else {
-                if(totalVDuration > maxSelectLimit) {
+                if(totalVDuration > maxDurationLimit) {
                     configureErrorUI(data: "max")
                 } else {
                     openVideoFinalize()
@@ -3989,7 +4001,7 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
     
     func configureErrorUI(data: String) {
         if(data == "max") {
-            maxLimitText.text = "Max " + String(maxSelectLimit) + "s"
+            maxLimitText.text = "Max " + String(maxDurationLimit) + "s"
         }
         else if(data == "e") {
             maxLimitText.text = "Error occurred. Try again"
@@ -4915,36 +4927,36 @@ extension VideoCreatorConsolePanelView: CameraVideoRollPanelDelegate{
     func didClickVideoSelect(video: PHAsset) {
         
         //test > convert PHAsset to AVAsset
-        PHCachingImageManager.default().requestAVAsset(forVideo: video, options: nil) { [weak self] (video, _, _) in
-
-            if let avVid = video
-            {
-                DispatchQueue.main.async {
-                    //test 1 > open with video asset => tested OK
-//                    self?.openVideoEditor(video: avVid)
-                    
-                    //test 2 > open with url => tested OK
-                    //try get url from avasset
-                    if let strURL = (video as? AVURLAsset)?.url.absoluteString {
-                        print("VIDEO URL: ", strURL)
-                        
-                        if let s = self {
-                            
-                            //test 3 > without videoeditor panel
-//                            cameraRollPanel.removeFromSuperview()
-                            if(s.vcList.isEmpty) {
-                                print("vclist 0")
-                                s.preloadVideo(strVUrl: strURL)
-                            }
-                            else {
-                                print("vclist 1")
-                                s.addVideoClip(strVUrl: strURL)
-                            }
-                        }
-                    }
-                }
-            }
-        }
+//        PHCachingImageManager.default().requestAVAsset(forVideo: video, options: nil) { [weak self] (video, _, _) in
+//
+//            if let avVid = video
+//            {
+//                DispatchQueue.main.async {
+//                    //test 1 > open with video asset => tested OK
+////                    self?.openVideoEditor(video: avVid)
+//                    
+//                    //test 2 > open with url => tested OK
+//                    //try get url from avasset
+//                    if let strURL = (video as? AVURLAsset)?.url.absoluteString {
+//                        print("VIDEO URL: ", strURL)
+//                        
+//                        if let s = self {
+//                            
+//                            //test 3 > without videoeditor panel
+////                            cameraRollPanel.removeFromSuperview()
+//                            if(s.vcList.isEmpty) {
+//                                print("vclist 0")
+//                                s.preloadVideo(strVUrl: strURL)
+//                            }
+//                            else {
+//                                print("vclist 1")
+//                                s.addVideoClip(strVUrl: strURL)
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
     
     func didClickMultiVideoSelect(urls: [String]){

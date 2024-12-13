@@ -46,3 +46,8 @@ class Marker: QueueableView {
     func hideForShutter() {}
     func dehideForShutter() {}
 }
+
+class PlaceMarker: Marker {
+
+}
+

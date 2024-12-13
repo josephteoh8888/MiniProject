@@ -479,7 +479,7 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
 //        rBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
 //        rBtn.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
 //        rBtn.layer.cornerRadius = 20
-//        rBtn.layer.opacity = 0.3 //default 0.3
+//        rBtn.layer.opacity = 0.4 //default 0.3
 ////        rBtn.isUserInteractionEnabled = true
 ////        rBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBackPlacePanelClicked)))
 //
@@ -490,8 +490,8 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
 //        rBoxBtn.translatesAutoresizingMaskIntoConstraints = false
 //        rBoxBtn.centerXAnchor.constraint(equalTo: rBtn.centerXAnchor).isActive = true
 //        rBoxBtn.centerYAnchor.constraint(equalTo: rBtn.centerYAnchor).isActive = true
-//        rBoxBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
-//        rBoxBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
+//        rBoxBtn.heightAnchor.constraint(equalToConstant: 22).isActive = true //26
+//        rBoxBtn.widthAnchor.constraint(equalToConstant: 22).isActive = true
         
         //test > search panel in main
         self.view.insertSubview(searchPanel, belowSubview: menuPanelSafeArea)
@@ -1821,7 +1821,10 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
                 if(appScrollableId == vcScrollableId) {
                     var marker : Marker?
                     if(geoType == GeoDataTypes.MARKER) {
-                        marker = ExploreMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
+//                        marker = ExploreMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
+                        //test > new rectangular marker
+//                        marker = ExploreBMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
+                        marker = PhotoBMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
                     } else if (geoType == GeoDataTypes.USERMARKER) {
                         marker = UserMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
                     } else if (geoType == GeoDataTypes.PLACEMARKER) {
@@ -2299,7 +2302,9 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
                 //test 2 check scrollable id
                 print("show heatmap scrollableid \(vcScrollableId), \(appScrollableId)")
                 if(appScrollableId == vcScrollableId) {
-                    let marker = ExploreMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
+//                    let marker = ExploreMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
+//                    let marker = ExploreBMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
+                    let marker = PhotoBMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
                     marker.addLocation(coordinate: geo)
                     self.view.insertSubview(marker, aboveSubview: mapView)
                     self.markerList.append(marker)
@@ -4732,15 +4737,6 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
     //test > in-app msg for progress uploading post
     var inAppMsgList = [InAppMsgView]()
     func openInAppMsgView(data: String) {
-        //test > use reusable method
-//        let panel = InAppMsgView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
-//        self.view.addSubview(panel)
-//        panel.translatesAutoresizingMaskIntoConstraints = false
-//        panel.heightAnchor.constraint(equalToConstant: 50).isActive = true
-//        panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
-//        panel.panelTopCons = panel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10)
-//        panel.panelTopCons?.isActive = true
-//        panel.setConfig(data: data, taskId: "a")
         
         //test 2 > check for empty in-app msg first
         if(inAppMsgList.isEmpty) {

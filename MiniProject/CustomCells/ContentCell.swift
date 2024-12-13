@@ -114,7 +114,7 @@ class PostPhotoContentCell: ContentCell {
     func configure(data: String) {
         if(data == "a") {
             vDataList.append("p")
-            vDataList.append("p")
+//            vDataList.append("p")
             for _ in vDataList {
                 
 //                let gifUrl = "https://i3.ytimg.com/vi/2mcGhpbWlyg/maxresdefault.jpg"

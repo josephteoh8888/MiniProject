@@ -95,7 +95,7 @@
 		2E670B262C3120BB00EBA6D3 /* QueueableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B252C3120BB00EBA6D3 /* QueueableView.swift */; };
 		2E670B282C3120DF00EBA6D3 /* PulseWave.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B272C3120DF00EBA6D3 /* PulseWave.swift */; };
 		2E670B2A2C3120FE00EBA6D3 /* SavePostDraftMsg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B292C3120FE00EBA6D3 /* SavePostDraftMsg.swift */; };
-		2E670B2C2C31212600EBA6D3 /* PlaceMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B2B2C31212600EBA6D3 /* PlaceMarker.swift */; };
+		2E670B2C2C31212600EBA6D3 /* PhotoMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B2B2C31212600EBA6D3 /* PhotoMarker.swift */; };
 		2E670B2E2C31215000EBA6D3 /* GetCameraMsg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B2D2C31215000EBA6D3 /* GetCameraMsg.swift */; };
 		2E670B302C31216F00EBA6D3 /* SGestureScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B2F2C31216F00EBA6D3 /* SGestureScrollView.swift */; };
 		2E670B322C31219200EBA6D3 /* LiveLMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B312C31219200EBA6D3 /* LiveLMarker.swift */; };
@@ -258,7 +258,7 @@
 		2E670B252C3120BB00EBA6D3 /* QueueableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueableView.swift; sourceTree = "<group>"; };
 		2E670B272C3120DF00EBA6D3 /* PulseWave.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PulseWave.swift; sourceTree = "<group>"; };
 		2E670B292C3120FE00EBA6D3 /* SavePostDraftMsg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavePostDraftMsg.swift; sourceTree = "<group>"; };
-		2E670B2B2C31212600EBA6D3 /* PlaceMarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceMarker.swift; sourceTree = "<group>"; };
+		2E670B2B2C31212600EBA6D3 /* PhotoMarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoMarker.swift; sourceTree = "<group>"; };
 		2E670B2D2C31215000EBA6D3 /* GetCameraMsg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCameraMsg.swift; sourceTree = "<group>"; };
 		2E670B2F2C31216F00EBA6D3 /* SGestureScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SGestureScrollView.swift; sourceTree = "<group>"; };
 		2E670B312C31219200EBA6D3 /* LiveLMarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveLMarker.swift; sourceTree = "<group>"; };
@@ -506,33 +506,33 @@
 		2E670B222C311FF800EBA6D3 /* CustomViews */ = {
 			isa = PBXGroup;
 			children = (
-				2E670B232C31203300EBA6D3 /* SpinLoader.swift */,
-				2E670B272C3120DF00EBA6D3 /* PulseWave.swift */,
-				2E670B2F2C31216F00EBA6D3 /* SGestureScrollView.swift */,
 				2E670B252C3120BB00EBA6D3 /* QueueableView.swift */,
-				2E670B2B2C31212600EBA6D3 /* PlaceMarker.swift */,
-				2E670B3B2C31224900EBA6D3 /* GetStorageMsg.swift */,
-				2E670AA82C30FEF900EBA6D3 /* InAppMsgView.swift */,
-				2E670B492C31232700EBA6D3 /* SoundMarker.swift */,
-				2E670B332C3121B100EBA6D3 /* PageBubbleIndicator.swift */,
-				2E670B3D2C31226700EBA6D3 /* ExitVideoEditorMsg.swift */,
-				2E670B4F2C31238100EBA6D3 /* ExploreMarker.swift */,
-				2E670B4B2C31234500EBA6D3 /* MiniApp.swift */,
-				2EBFCBA62C7DC93500EA9169 /* CustomImageView.swift */,
-				2E670B452C3122E300EBA6D3 /* UserMarker.swift */,
-				2EADB52A2C4159B70023B7F2 /* SignoutProgressView.swift */,
 				2E670B4D2C31236400EBA6D3 /* Marker.swift */,
-				2E670B2D2C31215000EBA6D3 /* GetCameraMsg.swift */,
-				2EADB53E2C6E41D80023B7F2 /* ErrorUploadCommentMsgView.swift */,
+				2E670B492C31232700EBA6D3 /* SoundMarker.swift */,
+				2E670B4F2C31238100EBA6D3 /* ExploreMarker.swift */,
+				2E670B452C3122E300EBA6D3 /* UserMarker.swift */,
+				2E670B2B2C31212600EBA6D3 /* PhotoMarker.swift */,
 				2E670B372C3121FB00EBA6D3 /* PlaceAMarker.swift */,
-				2E670B3F2C31228900EBA6D3 /* GetLocationMsg.swift */,
 				2E670B472C31230000EBA6D3 /* PlaceBMarker.swift */,
 				2E670B432C3122C200EBA6D3 /* LocationPinMarker.swift */,
+				2E670B312C31219200EBA6D3 /* LiveLMarker.swift */,
+				2E670B272C3120DF00EBA6D3 /* PulseWave.swift */,
+				2E670B232C31203300EBA6D3 /* SpinLoader.swift */,
+				2E670B332C3121B100EBA6D3 /* PageBubbleIndicator.swift */,
+				2E670AA82C30FEF900EBA6D3 /* InAppMsgView.swift */,
+				2E670B4B2C31234500EBA6D3 /* MiniApp.swift */,
 				2E670B412C3122A700EBA6D3 /* TabStack.swift */,
+				2E670B2F2C31216F00EBA6D3 /* SGestureScrollView.swift */,
+				2EBFCBA62C7DC93500EA9169 /* CustomImageView.swift */,
+				2EADB53E2C6E41D80023B7F2 /* ErrorUploadCommentMsgView.swift */,
+				2EADB52A2C4159B70023B7F2 /* SignoutProgressView.swift */,
+				2E670B2D2C31215000EBA6D3 /* GetCameraMsg.swift */,
+				2E670B3B2C31224900EBA6D3 /* GetStorageMsg.swift */,
+				2E670B3F2C31228900EBA6D3 /* GetLocationMsg.swift */,
+				2E670B3D2C31226700EBA6D3 /* ExitVideoEditorMsg.swift */,
+				2E670B292C3120FE00EBA6D3 /* SavePostDraftMsg.swift */,
 				2E670B352C3121D700EBA6D3 /* SavePlaceDraftMsg.swift */,
 				2E670B392C31222A00EBA6D3 /* MapZoomView.swift */,
-				2E670B292C3120FE00EBA6D3 /* SavePostDraftMsg.swift */,
-				2E670B312C31219200EBA6D3 /* LiveLMarker.swift */,
 			);
 			path = CustomViews;
 			sourceTree = "<group>";
@@ -781,7 +781,7 @@
 				2E670A862C30448D00EBA6D3 /* CacheManager.swift in Sources */,
 				2E670B0A2C3108D600EBA6D3 /* HResultHashtagListViewCell.swift in Sources */,
 				2EADB5372C4BE9220023B7F2 /* MeLocationListPanelView.swift in Sources */,
-				2E670B2C2C31212600EBA6D3 /* PlaceMarker.swift in Sources */,
+				2E670B2C2C31212600EBA6D3 /* PhotoMarker.swift in Sources */,
 				2E670A902C3047D500EBA6D3 /* GeohashBox.swift in Sources */,
 				2E670ADB2C31033300EBA6D3 /* PhotoFinalizePanelView.swift in Sources */,
 				2E670B5C2C31248400EBA6D3 /* ScrollFeedGridPhoto3xViewCell.swift in Sources */,

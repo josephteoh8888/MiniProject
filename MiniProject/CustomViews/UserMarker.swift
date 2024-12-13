@@ -422,11 +422,13 @@ class UserMarker: Marker {
         if(duringInitialization) {
             markerHeightLayoutConstraint?.constant = newSize
             markerWidthLayoutConstraint?.constant = newSize
-            markerRing.layer.cornerRadius = newSize/2 - newCornerRadiusGap
-
+//            markerRing.layer.cornerRadius = newSize/2 - newCornerRadiusGap //ori
+            markerRing.layer.cornerRadius = newSize/2 //test rounded shape
+            
             gifHeightLayoutConstraint?.constant = newSize - newGifGap
             gifWidthLayoutConstraint?.constant = newSize - newGifGap
-            gifImage.layer.cornerRadius = (newSize - newGifGap)/2 - newCornerRadiusGap
+//            gifImage.layer.cornerRadius = (newSize - newGifGap)/2 - newCornerRadiusGap
+            gifImage.layer.cornerRadius = (newSize - newGifGap)/2
 
             ovalWidthLayoutConstraint?.constant = newOvalWidthSize
             ovalHeightLayoutConstraint?.constant = newOvalHeightSize
@@ -446,12 +448,14 @@ class UserMarker: Marker {
                 if(isOnScreen) {
                     markerHeightLayoutConstraint?.constant = newSize
                     markerWidthLayoutConstraint?.constant = newSize
-                    markerRing.layer.cornerRadius = newSize/2 - newCornerRadiusGap
+//                    markerRing.layer.cornerRadius = newSize/2 - newCornerRadiusGap //ori
+                    markerRing.layer.cornerRadius = newSize/2 //test rounded shape
 
                     gifHeightLayoutConstraint?.constant = newSize - newGifGap
                     gifWidthLayoutConstraint?.constant = newSize - newGifGap
-                    gifImage.layer.cornerRadius = (newSize - newGifGap)/2 - newCornerRadiusGap
-
+//                    gifImage.layer.cornerRadius = (newSize - newGifGap)/2 - newCornerRadiusGap
+                    gifImage.layer.cornerRadius = (newSize - newGifGap)/2
+                    
                     ovalWidthLayoutConstraint?.constant = newOvalWidthSize
                     ovalHeightLayoutConstraint?.constant = newOvalHeightSize
 

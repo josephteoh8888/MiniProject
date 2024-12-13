@@ -835,10 +835,10 @@ class CreateSelectPanelView: PanelView, UIGestureRecognizerDelegate{
             panelTopCons?.constant = -gap
             
             if(isUserLoggedIn) {
-                aView.isHidden = false
-                bView.isHidden = false
-                cView.isHidden = false
-                dView.isHidden = false
+                aView.isHidden = true //false => implement draft later in future
+                bView.isHidden = true
+                cView.isHidden = true
+                dView.isHidden = true
             } else {
                 aView.isHidden = true
                 bView.isHidden = true

@@ -22,6 +22,8 @@ class PostClipPhotoCell: UIView {
     var isSelected = false
     let selectedRect = UIView()
     
+//    let g1 = SDAnimatedImageView()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -51,18 +53,19 @@ class PostClipPhotoCell: UIView {
         aHLightRect1.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onClickPostClipPhotoClicked)))
         
         selectedRect.backgroundColor = .ddmGoldenYellowColor
-//        selectedRect.backgroundColor = .clear
         aHLightRect1.addSubview(selectedRect)
         selectedRect.translatesAutoresizingMaskIntoConstraints = false
-        selectedRect.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 10).isActive = true //0
+        selectedRect.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true //10
         selectedRect.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
         selectedRect.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-        selectedRect.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true
+        selectedRect.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true //-10
         selectedRect.layer.cornerRadius = 10
         selectedRect.isHidden = true
+//        selectedRect.backgroundColor = .ddmDarkColor
         
         let panelBG = UIView()
         panelBG.backgroundColor = .ddmBlackOverlayColor
+//        panelBG.backgroundColor = .ddmDarkColor
         selectedRect.addSubview(panelBG)
         panelBG.translatesAutoresizingMaskIntoConstraints = false
         panelBG.leadingAnchor.constraint(equalTo: selectedRect.leadingAnchor, constant: 2).isActive = true
@@ -70,24 +73,7 @@ class PostClipPhotoCell: UIView {
         panelBG.bottomAnchor.constraint(equalTo: selectedRect.bottomAnchor, constant: -2).isActive = true
         panelBG.trailingAnchor.constraint(equalTo: selectedRect.trailingAnchor, constant: -2).isActive = true
         panelBG.layer.cornerRadius = 10
-        
-        let gifUrl1 = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
-        let g1 = SDAnimatedImageView()
-        g1.contentMode = .scaleAspectFill
-        g1.clipsToBounds = true
-        g1.layer.cornerRadius = 10 //5
-        g1.sd_setImage(with: gifUrl1)
-        aHLightRect1.addSubview(g1)
-        g1.translatesAutoresizingMaskIntoConstraints = false
-        g1.widthAnchor.constraint(equalToConstant: 370).isActive = true //150
-        g1.heightAnchor.constraint(equalToConstant: 280).isActive = true //250
-        g1.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 20).isActive = true //20
-        g1.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 10).isActive = true //20, 0
-        g1.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true //-20, 0
-        
-        g1.isUserInteractionEnabled = true
-        g1.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onClickPostClipPhotoClicked)))
-        
+//        panelBG.isHidden = true //test
     }
     
     func selectCell() {
@@ -101,11 +87,92 @@ class PostClipPhotoCell: UIView {
     }
     
     @objc func onClickPostClipPhotoClicked(gesture: UITapGestureRecognizer) {
-        
+        print("postclip selected")
         aDelegate?.didClickPostClipCell(cell: self)
     }
     
     @objc func onClickClosePostClipPhotoClicked(gesture: UITapGestureRecognizer) {
 //        aDelegate?.didClickPostClipCell(cell: self)
+    }
+    
+    //test > set image according to img url
+    func setImage(url: URL) {
+//        g1.sd_setImage(with: url)
+    }
+    
+    func configure(data: String, cSize: CGSize) {
+        
+    }
+    
+    func configure(data: String, dataType: String, cSize: CGSize) {
+        if(dataType == "p") {
+            let contentCell = PostPhotoContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
+            aHLightRect1.addSubview(contentCell)
+            contentCell.translatesAutoresizingMaskIntoConstraints = false
+            contentCell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 20).isActive = true
+            contentCell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 10).isActive = true //20, 0
+            contentCell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true
+            contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //370
+            contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //280
+            contentCell.layer.cornerRadius = 10 //5
+            contentCell.redrawUI()
+            contentCell.configure(data: "a")
+        }
+        else if(dataType == "p_s") {
+            let contentCell = PostPhotoShotContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
+            aHLightRect1.addSubview(contentCell)
+            contentCell.translatesAutoresizingMaskIntoConstraints = false
+            contentCell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 20).isActive = true
+            contentCell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 10).isActive = true //20, 0
+            contentCell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true
+            contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //370
+            contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //280
+            contentCell.layer.cornerRadius = 10 //5
+            let t = "Shot text description"
+            contentCell.setDescHeight(lHeight: 40, txt: t)
+            contentCell.redrawUI()
+            contentCell.configure(data: "a")
+        }
+        else if(dataType == "v") {
+            let contentCell = PostVideoContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
+            aHLightRect1.addSubview(contentCell)
+            contentCell.translatesAutoresizingMaskIntoConstraints = false
+            contentCell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 20).isActive = true 
+            contentCell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 10).isActive = true //20, 0
+            contentCell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true
+            contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //370
+            contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //280
+            contentCell.layer.cornerRadius = 10 //5
+            contentCell.redrawUI()
+            contentCell.configure(data: "a")
+        }
+        else if(dataType == "v_l") {
+            let contentCell = PostVideoLoopContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
+            aHLightRect1.addSubview(contentCell)
+            contentCell.translatesAutoresizingMaskIntoConstraints = false
+            contentCell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 20).isActive = true
+            contentCell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 10).isActive = true //20, 0
+            contentCell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true
+            contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //370
+            contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //280
+            contentCell.layer.cornerRadius = 10 //5
+            let t = "Loop text description"
+            contentCell.setDescHeight(lHeight: 40, txt: t)
+            contentCell.redrawUI()
+            contentCell.configure(data: "a")
+        }
+        else if(dataType == "q") {
+            let contentCell = PostQuoteContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
+            aHLightRect1.addSubview(contentCell)
+            contentCell.translatesAutoresizingMaskIntoConstraints = false
+            contentCell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 20).isActive = true
+            contentCell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 10).isActive = true //20, 0
+            contentCell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true
+            contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //370
+            contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //280
+            contentCell.layer.cornerRadius = 10 //5
+            let t = "Nice food, nice environment! Worth a visit. \nSo Good."
+            contentCell.configure(data: "a", text: t)
+        }
     }
 }

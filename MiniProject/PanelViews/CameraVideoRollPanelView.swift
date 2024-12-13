@@ -48,7 +48,8 @@ class CameraVideoRollPanelView: PanelView, UIGestureRecognizerDelegate{
     let scrollView = UIScrollView()
     var photoViewList = [MultiSelectedCell]()
     let sPhotoSize = 60.0
-    var maxSelectLimit = 0.0
+    var maxSelectLimit = 0
+    var maxDurationLimit = 0.0
     let maxLimitErrorPanel = UIView()
     let maxLimitText = UILabel()
     
@@ -608,10 +609,15 @@ class CameraVideoRollPanelView: PanelView, UIGestureRecognizerDelegate{
         isMultiSelect = true
     }
     
-    func setMultiSelection(limit: Double) {
+    func setMultiSelection(limit: Int) {
         setMultiSelection()
         maxSelectLimit = limit
-        maxLimitText.text = "Max " + String(maxSelectLimit) + "s"
+        maxLimitText.text = "Max " + String(maxSelectLimit)
+    }
+    
+    func setDurationLimit(limit: Double) {
+        maxDurationLimit = limit
+        maxLimitText.text = "Max " + String(maxDurationLimit) + "s"
     }
     
     //test > add a time delay to load all images (avoid flicker when loading images)

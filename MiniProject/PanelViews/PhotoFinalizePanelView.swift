@@ -551,7 +551,8 @@ class PhotoFinalizePanelView: PanelView{
         aSpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
         aSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
         
-        let stack1View = UIStackView(arrangedSubviews: [stack1, stack2])
+//        let stack1View = UIStackView(arrangedSubviews: [stack1, stack2])
+        let stack1View = UIStackView(arrangedSubviews: [stack2])
         stack1View.distribution = .fillEqually
         panel.addSubview(stack1View)
         stack1View.translatesAutoresizingMaskIntoConstraints = false

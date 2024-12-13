@@ -121,7 +121,7 @@ class PhotoCreatorConsolePanelView: CreatorPanelView{
 //        aBtn.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
 //        let topInsetMargin = panel.safeAreaInsets.top + 10
 //        aBtn.topAnchor.constraint(equalTo: panel.topAnchor, constant: topInset).isActive = true
-        aBtn.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
+        aBtn.topAnchor.constraint(equalTo: panel.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
         aBtn.layer.cornerRadius = 20
 //        aBtn.layer.opacity = 0.3
         aBtn.isUserInteractionEnabled = true
@@ -908,7 +908,19 @@ class PhotoCreatorConsolePanelView: CreatorPanelView{
 //        resignResponder()
 //        openSavePostDraftPromptMsg()
         
-        closePhotoCreatorPanel(isAnimated: true)
+//        closePhotoCreatorPanel(isAnimated: true)
+        
+        //test
+//        openExitVideoEditorPromptMsg()
+        
+        //test 2
+        let isSignedIn = SignInManager.shared.getStatus()
+        if(isSignedIn) {
+            openExitVideoEditorPromptMsg()
+        }
+        else {
+            closePhotoCreatorPanel(isAnimated: true)
+        }
     }
     
     @objc func onAddPhotoClicked(gesture: UITapGestureRecognizer) {
@@ -1075,7 +1087,16 @@ class PhotoCreatorConsolePanelView: CreatorPanelView{
 //        cameraRollPanel.setMultiSelection()
         cameraRollPanel.setMultiSelection(limit: maxSelectLimit)
     }
-    
+    //test > try exit creator instead of save draft for now
+    func openExitVideoEditorPromptMsg() {
+        let exitVideoPanel = ExitVideoEditorMsgView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
+        panel.addSubview(exitVideoPanel)
+        exitVideoPanel.translatesAutoresizingMaskIntoConstraints = false
+        exitVideoPanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
+        exitVideoPanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
+        exitVideoPanel.delegate = self
+        exitVideoPanel.setType(t: "photo")
+    }
     func openPhotoFinalize() {
         let photoFinalizePanel = PhotoFinalizePanelView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
         panel.addSubview(photoFinalizePanel)
@@ -1346,6 +1367,18 @@ extension PhotoCreatorConsolePanelView: CameraPhotoRollPanelDelegate{
         
         //test > ui changes react to changes in number of photos
         reactPhotoUIChange()
+    }
+}
+
+extension PhotoCreatorConsolePanelView: ExitVideoEditorMsgDelegate{
+    func didSVDClickProceed() {
+        closePhotoCreatorPanel(isAnimated: true)
+    }
+    func didSVDClickDeny() {
+//        delegate?.didDenyExitVideoEditor()
+    }
+    func didSVDInitialize() {
+//        delegate?.didPromptExitVideoEditor()
     }
 }
 

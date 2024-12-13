@@ -108,7 +108,7 @@ class VGridColumnViewCell: UICollectionViewCell {
         } else if(data == "cr") {
             bMiniBtn.image = UIImage(named:"icon_round_add")?.withRenderingMode(.alwaysTemplate)
             bMiniBtn.tintColor = .white
-            aMiniText.text = "Use to Create"
+            aMiniText.text = "Use Location"
         } else if(data == "cr_p") {
             bMiniBtn.image = UIImage(named:"icon_round_add")?.withRenderingMode(.alwaysTemplate)
             bMiniBtn.tintColor = .white

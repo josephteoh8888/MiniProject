@@ -21,6 +21,8 @@ class ExitVideoEditorMsgView: UIView{
     weak var delegate : ExitVideoEditorMsgDelegate?
 
     var isExitVideoInitialized = false
+    
+    let gTitleText = UILabel()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -65,7 +67,7 @@ class ExitVideoEditorMsgView: UIView{
         gBox.backgroundColor = .white
         gBox.layer.cornerRadius = 15
 
-        let gTitleText = UILabel()
+//        let gTitleText = UILabel()
         gTitleText.textAlignment = .center
 //        gTitleText.textColor = .white
         gTitleText.textColor = .ddmBlackOverlayColor
@@ -78,7 +80,7 @@ class ExitVideoEditorMsgView: UIView{
         gTitleText.leadingAnchor.constraint(equalTo: gBox.leadingAnchor, constant: 20).isActive = true
         gTitleText.trailingAnchor.constraint(equalTo: gBox.trailingAnchor, constant: -20).isActive = true
         gTitleText.numberOfLines = 0
-        gTitleText.text = "Discard Changes to Video?"
+        gTitleText.text = ""
 
         let gBtn = UIView()
         gBox.addSubview(gBtn)
@@ -121,6 +123,18 @@ class ExitVideoEditorMsgView: UIView{
         gDenyText.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onExitVideoEditorDenyClicked)))
     }
 
+    func setType(t: String) {
+        if(t == "video") {
+            gTitleText.text = "Discard Video?"
+        } else if(t == "photo") {
+            gTitleText.text = "Discard Shot?"
+        } else if(t == "post") {
+            gTitleText.text = "Discard Post?"
+        } else if(t == "place") {
+            gTitleText.text = "Discard Location?"
+        }
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         print("exitvideo layoutsubview: ")

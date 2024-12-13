@@ -194,8 +194,23 @@ class PhotoZoomPanelView: PanelView, UIGestureRecognizerDelegate{
                     direction = "y"
                 }
             }
-            if(direction == "x") {
-                if(abs(x) > 40) {
+            print("photozoom \(direction), \(x), \(y)")
+            //test 1 > use x
+//            if(direction == "x") {
+//                if(abs(x) > 40) {
+////                        if(x > 40) {
+//                    print("postpanel vcv panning exit")
+////                    if(!isCarouselScrolled) {
+//                        isToPostPan = true
+////                    }
+//                } else {
+//                    print("postpanel vcv panning no exit")
+//                }
+//            }
+            
+            //test 2 > use y
+            if(direction == "y") {
+                if(abs(y) > 40) {
 //                        if(x > 40) {
                     print("postpanel vcv panning exit")
 //                    if(!isCarouselScrolled) {
@@ -205,7 +220,6 @@ class PhotoZoomPanelView: PanelView, UIGestureRecognizerDelegate{
                     print("postpanel vcv panning no exit")
                 }
             }
-            
             
             //test > panning panel exit once x-threshold reached
             if(isToPostPan) {

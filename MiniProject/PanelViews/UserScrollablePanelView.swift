@@ -374,7 +374,8 @@ class UserScrollablePanelView: ScrollablePanelView{
         aFollowAText.leadingAnchor.constraint(equalTo: aFollowA.leadingAnchor, constant: 15).isActive = true //20
         aFollowAText.trailingAnchor.constraint(equalTo: aFollowA.trailingAnchor, constant: -15).isActive = true
         aFollowAText.centerYAnchor.constraint(equalTo: aFollowA.centerYAnchor).isActive = true
-        aFollowAText.text = "Follow"
+//        aFollowAText.text = "Follow"
+        aFollowAText.text = ""
         
         //*test => highlight box section
         aPanelView.addSubview(aHLightBox)
@@ -591,7 +592,8 @@ class UserScrollablePanelView: ScrollablePanelView{
         aFollowText.translatesAutoresizingMaskIntoConstraints = false
         aFollowText.centerXAnchor.constraint(equalTo: aFollow.centerXAnchor).isActive = true
         aFollowText.centerYAnchor.constraint(equalTo: aFollow.centerYAnchor).isActive = true
-        aFollowText.text = "Follow"
+//        aFollowText.text = "Follow"
+        aFollowText.text = ""
 
         //*test => highlight section, like spotlight in twitter
         bPanelView.addSubview(aHLightSection)
@@ -883,7 +885,8 @@ class UserScrollablePanelView: ScrollablePanelView{
         aFollowCText.leadingAnchor.constraint(equalTo: aFollowC.leadingAnchor, constant: 20).isActive = true
         aFollowCText.trailingAnchor.constraint(equalTo: aFollowC.trailingAnchor, constant: -20).isActive = true
         aFollowCText.centerYAnchor.constraint(equalTo: aFollowC.centerYAnchor).isActive = true
-        aFollowCText.text = "Follow"
+//        aFollowCText.text = "Follow"
+        aFollowCText.text = ""
     }
     
     func layoutTabUI() {
@@ -1486,7 +1489,10 @@ class UserScrollablePanelView: ScrollablePanelView{
             aStickyPhoto.sd_setImage(with: stickyImageUrl)
             aPhoto.sd_setImage(with: stickyImageUrl)
             aPhotoB.sd_setImage(with: stickyImageUrl)
-        } 
+            
+            //test
+            actionUI(doneState: isAction)
+        }
         else {
             deconfigureUI()
         }

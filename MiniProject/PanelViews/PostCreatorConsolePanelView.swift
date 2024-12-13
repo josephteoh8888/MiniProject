@@ -129,7 +129,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
 //        aBtn.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
 //        let topInsetMargin = panel.safeAreaInsets.top + 10
 //        aBtn.topAnchor.constraint(equalTo: panel.topAnchor, constant: topInset).isActive = true
-        aBtn.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
+        aBtn.topAnchor.constraint(equalTo: panel.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
         aBtn.layer.cornerRadius = 20
 //        aBtn.layer.opacity = 0.3
         aBtn.isUserInteractionEnabled = true
@@ -155,9 +155,9 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         scrollView.topAnchor.constraint(equalTo: panel.topAnchor, constant: topMargin).isActive = true
 //        scrollView.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 50).isActive = true
         scrollView.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true
-//        let bottomMargin = 60.0 + bottomInset
-//        scrollViewBottomCons = scrollView.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: -bottomMargin) //-301
-        scrollViewBottomCons = scrollView.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: -120)
+        let bottomMargin = 90.0 + bottomInset //90 => tool panel height
+        scrollViewBottomCons = scrollView.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: -bottomMargin)
+//        scrollViewBottomCons = scrollView.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: -120)
         scrollViewBottomCons?.isActive = true
 //        scrollView.showsVerticalScrollIndicator = false
 //        scrollView.contentSize = CGSize(width: viewWidth, height: viewHeight - 150)
@@ -406,6 +406,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         aSaveDraft.layer.cornerRadius = 10
         aSaveDraft.isUserInteractionEnabled = true
         aSaveDraft.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onSaveDraftNextClicked)))
+        aSaveDraft.isHidden = true
 
         let aSaveDraftText = UILabel()
         aSaveDraftText.textAlignment = .center
@@ -427,6 +428,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         bSpinner.centerXAnchor.constraint(equalTo: aSaveDraft.centerXAnchor).isActive = true
         bSpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
         bSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        bSpinner.isUserInteractionEnabled = false
         
         let draftBox = UIView()
         draftBox.backgroundColor = .ddmDarkColor
@@ -1029,12 +1031,12 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         self.textEditPanel.transform = CGAffineTransform(translationX: 0, y: 0)
         
         //shift scrollview down
-//        let bottomMargin = 60.0 + bottomInset //60
-//        scrollViewBottomCons?.constant = -bottomMargin
-        scrollViewBottomCons?.constant = -120
+        let bottomMargin = 90.0 + bottomInset //60
+        scrollViewBottomCons?.constant = -bottomMargin
+//        scrollViewBottomCons?.constant = -120
         
         isKeyboardUp = false
-        keyboardHeight = 0.0
+//        keyboardHeight = 0.0 //test > save keyboardheight as constant
         
         mainEditPanel.isHidden = false
         textEditPanel.isHidden = true
@@ -1095,18 +1097,32 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         
         let isSignedIn = SignInManager.shared.getStatus()
         if(isSignedIn) {
-            if(!pcList.isEmpty) {
-                let initialSelectedIndex = pcList.count - 1
-                addPhotoSection(i: initialSelectedIndex, textToAdd: "")
-                
-                if(pcList[initialSelectedIndex].tBoxType == "t") {
-                    if let tBoxTv = pcList[initialSelectedIndex].tBox as? UITextView {
-                        if(tBoxTv.text == "") {
-                            removeTextSection(i: initialSelectedIndex)
-                        }
-                    }
-                }
-            }
+            //test > ori method
+//            if(!pcList.isEmpty) {
+//                let initialSelectedIndex = pcList.count - 1
+////                addPhotoSection(i: initialSelectedIndex, textToAdd: "")
+//                
+//                //test > new url method
+////                let url = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+////                if let u = url {
+////                    addPhotoSection(i: initialSelectedIndex, textToAdd: "", url: u)
+////                }
+//                let urls = [URL]()
+//                let assetSize = computePhotoSize()
+//                addPhotoSection(i: initialSelectedIndex, textToAdd: "", urls: urls, cSize: assetSize)
+//                
+//                if(pcList[initialSelectedIndex].tBoxType == "t") {
+//                    if let tBoxTv = pcList[initialSelectedIndex].tBox as? UITextView {
+//                        if(tBoxTv.text == "") {
+//                            removeTextSection(i: initialSelectedIndex)
+//                        }
+//                    }
+//                }
+//            }
+            
+            //test 2 > open camera to select photo
+//            openCameraPhotoRoll()
+            openCameraVideoRoll()
         }
         else {
             delegate?.didPostCreatorClickSignIn()
@@ -1135,14 +1151,240 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     
     @objc func onTextAddPhotoClicked(gesture: UITapGestureRecognizer) {
         print("post create addphoto")
-        //test 1 > open camera to add photo
-//        resignResponder()
-//        openCameraRoll()
         
         clearErrorUI()
         
-        print("xy txt+Photo a: \(selectedPcIndex), \(computePcPosition(index: selectedPcIndex, isInclusive: true)), \(stackView.frame.height)")
+        //test 2 > open camera
+        let aTextBeforeCursor = textBeforeCursor //test > save text as resignresponder() cancel out textbeforecursor
+        let aTextAfterCursor = textAfterCursor
+        
+        //*test 1 > open camera to add photo
+        resignResponder()
+//        openCameraPhotoRoll()
+        openCameraVideoRoll()
+        //*
+        
+        textBeforeCursor = aTextBeforeCursor
+        textAfterCursor = aTextAfterCursor
+        
+        //****test > ori => directly add photo
+//        clearErrorUI()
+//        
+//        print("xy txt+Photo a: \(selectedPcIndex), \(computePcPosition(index: selectedPcIndex, isInclusive: true)), \(stackView.frame.height)")
+//        let currentYPosition = computePcPosition(index: selectedPcIndex, isInclusive: true)
+//        let stackViewH = stackView.frame.height
+//        
+//        //test 2 > textbeforecursor, textaftercursor
+//        let aTextBeforeCursor = textBeforeCursor
+//        let aTextAfterCursor = textAfterCursor
+////        print("xy addphoto: \(selectedPcIndex), \(textBeforeCursor), \(textAfterCursor)")
+//        
+//        //test 3 > add photo in index i
+//        let initialSelectedIndex = selectedPcIndex
+//        
+//        let assetSize = computePhotoSize()
+//        let urls = [URL]()
+////        addPhotoSection(i: selectedPcIndex, textToAdd: aTextAfterCursor)
+//        addPhotoSection(i: selectedPcIndex, textToAdd: aTextAfterCursor, urls: urls, cSize: assetSize)
+//        
+//        //TODO 1: remove empty text section when adding photo
+//        //case 1: textbeforecursor "", add photo and textview with text below, remove current textview
+//        //case 2: textaftercursor "", add photo only, no need to add textview
+//        //case 3: cursor in middle, add photo and textview, repopulate both textviews
+//        //case 4: empty text, add photo only
+//        if(pcList[initialSelectedIndex].tBoxType == "t") {
+//            if let tBoxTv = pcList[initialSelectedIndex].tBox as? UITextView {
+//                //case 4
+//                if(tBoxTv.text == "") {
+////                    print("xy addphoto case 4")
+//                    if(initialSelectedIndex > 0) { //test > prevent index 0 from being removed
+//                        removeTextSection(i: initialSelectedIndex)
+//                        
+//                        //the new selectedindex of appended textview has to be deducted -1 coz removal of empty tv
+//                        if(selectedPcIndex > initialSelectedIndex) {
+//                            selectedPcIndex = selectedPcIndex - 1
+//                        }
+//                    }
+//                }
+//                else {
+//                    //case 3
+////                    let oldH = tBoxTv.contentSize.height
+//                    tBoxTv.text = aTextBeforeCursor
+//                    let newH = tBoxTv.contentSize.height
+//                    pcList[initialSelectedIndex].tBoxHeightCons?.constant = newH //update tbox height
+////                    print("xy addphoto case 3, \(stackView.frame.height)")
+//                    
+//                    let currentString: NSString = (tBoxTv.text ?? "") as NSString
+//                    let length = currentString.length
+//                    if(length > 0) {
+//                        pcList[initialSelectedIndex].tvBoxHint?.isHidden = true
+//                    } else {
+//                        pcList[initialSelectedIndex].tvBoxHint?.isHidden = false
+//                    }
+//                    
+//                    //case 1
+//                    if(aTextBeforeCursor == "") {
+////                        print("xy addphoto case 1")
+//                        removeTextSection(i: initialSelectedIndex)
+//                        
+//                        //the new selectedindex of appended textview has to be deducted -1 coz removal of empty tv
+//                        if(selectedPcIndex > initialSelectedIndex) {
+//                            selectedPcIndex = selectedPcIndex - 1
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        
+//        
+//        //test > scroll to position if not visible
+////        let y = scrollView.contentOffset.y
+//        let scrollViewBottomMargin = keyboardHeight + 60.0 //60
+//        let stackViewHeight = stackViewH + 280.0 + 20.0
+//        let scrollViewHeight = viewHeight - (50.0 + topInset) - scrollViewBottomMargin
+//        var scrollGap = stackViewHeight - scrollViewHeight
+//        if(scrollGap <= 0) {
+//            scrollGap = 0.0
+//        }
+//
+//        let yHeight = currentYPosition + 280.0 + 20.0
+//        let yContentOffset = yHeight/stackViewHeight * scrollGap
+//        scrollView.setContentOffset(CGPoint(x: 0, y: yContentOffset), animated: false)
+//        print("xy txt+Photo b: \(selectedPcIndex), \(stackViewHeight)")
+        //****
+    }
+    
+    @objc func onTextNextClicked(gesture: UITapGestureRecognizer) {
+        
+        print("ontextnext \(selectedPcIndex)")
+        clearErrorUI()
+//        resignResponder()
+//        selectedPcIndex = -1
+
+        //test
+        if(pcList[selectedPcIndex].tBoxType == "t") {
+            if let tBoxTv = pcList[selectedPcIndex].tBox as? UITextView {
+                if(selectedPcIndex > 0 && selectedPcIndex < pcList.count - 1) {
+                    if(tBoxTv.text == "") {
+                        //test > delete text section
+                        resignResponder()
+                        removeTextSection(i: selectedPcIndex)
+                        //test
+                        selectedPcIndex = -1
+                    }
+                    else {
+                        resignResponder()
+                        selectedPcIndex = -1
+                    }
+                } else {
+                    resignResponder()
+                    selectedPcIndex = -1
+                }
+            }
+        }
+    }
+    
+    @objc func onPhotoAddTextClicked(gesture: UITapGestureRecognizer) {
+        
+    }
+    @objc func onPhotoAddPhotoClicked(gesture: UITapGestureRecognizer) {
+
+        
+    }
+    @objc func onPhotoDeleteSectionClicked(gesture: UITapGestureRecognizer) {
+        
+        clearErrorUI()
+        
+        unselectPostClipCell(i: selectedPcIndex)
+        mainEditPanel.isHidden = false
+        textEditPanel.isHidden = true
+        photoEditPanel.isHidden = true
+        
+        removeContentSection(i: selectedPcIndex)
+//        selectedPcIndex = -1
+    }
+    @objc func onPhotoNextClicked(gesture: UITapGestureRecognizer) {
+        
+        clearErrorUI()
+        
+        unselectPostClipCell(i: selectedPcIndex)
+        selectedPcIndex = -1
+        
+        mainEditPanel.isHidden = false
+        textEditPanel.isHidden = true
+        photoEditPanel.isHidden = true
+    }
+
+    //test > add photo/video section => in multiple format/layout
+    func addContentSection(i: Int, textToAdd: String, urls: [URL], cSize: CGSize, dataType: String) {
+        //if index is last member
+        var isIndexLastElement = false
+        var isToAppendText = false
+        if(i == pcList.count - 1) {
+            pcList[i].tBoxBottomCons?.isActive = false
+            isIndexLastElement = true
+        }
+        
+        //*test 2 > with reusable cell
+        let a = PostClip()
+        a.tBoxType = dataType //p for photo
+        let cell = PostClipPhotoCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
+        uView.addSubview(cell)
+        cell.translatesAutoresizingMaskIntoConstraints = false
+        cell.trailingAnchor.constraint(equalTo: uView.trailingAnchor, constant: 0).isActive = true
+        cell.leadingAnchor.constraint(equalTo: uView.leadingAnchor, constant: 0).isActive = true
+        cell.redrawUI()
+        a.tBox = cell
+        cell.aDelegate = self
+        
+        //test > insert url for selected photo
+//        cell.setImage(url: url)//ori
+//        cell.configure(data: "a", cSize: cSize)
+        cell.configure(data: "a", dataType: dataType, cSize: cSize)
+        //*
+        
+        if let currentTBox = pcList[i].tBox {
+            //insert photo section below current selected index
+            a.tBoxTopCons = cell.topAnchor.constraint(equalTo: currentTBox.bottomAnchor, constant: 10) //20
+            a.tBoxTopCons?.isActive = true
+            
+            if(i < pcList.count - 1) {
+                if let nextTBox = pcList[i + 1].tBox {
+                    pcList[i + 1].tBoxTopCons?.isActive = false
+                    pcList[i + 1].tBoxTopCons = nextTBox.topAnchor.constraint(equalTo: cell.bottomAnchor, constant: 10) //20
+                    pcList[i + 1].tBoxTopCons?.isActive = true
+                }
+                
+                if(pcList[i + 1].tBoxType != "t" && textToAdd != "") {
+                    isToAppendText = true
+                }
+            }
+        }
+
+        pcList.insert(a, at: i + 1) //means "append" behind selectedindex
+        
+        //to append text section if last element
+        if(isIndexLastElement || isToAppendText) {
+//            let extraSize = 280.0 + 20.0
+            let extraSize = cSize.height + 20.0
+            addTextSection(i: i + 1, extraContentSize: extraSize, textToAdd: textToAdd)
+        }
+        else {
+            let sHeight = stackView.frame.height
+//            let newHeight = sHeight + 280.0 + 20.0
+            let newHeight = sHeight + cSize.height + 20.0
+            scrollView.contentSize = CGSize(width: stackView.frame.width, height: newHeight)
+            
+            //test > if no text section to add, then keyboard down
+            resignResponder()
+            selectedPcIndex = -1
+        }
+    }
+    
+    //test > add photo or video
+    func addContentAtText(urls: [URL], dataType: String) {
         let currentYPosition = computePcPosition(index: selectedPcIndex, isInclusive: true)
+        print("addcontent at text a: \(selectedPcIndex), \(currentYPosition), \(stackView.frame.height)")
         let stackViewH = stackView.frame.height
         
         //test 2 > textbeforecursor, textaftercursor
@@ -1150,9 +1392,15 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         let aTextAfterCursor = textAfterCursor
 //        print("xy addphoto: \(selectedPcIndex), \(textBeforeCursor), \(textAfterCursor)")
         
+        //*test > compute asset size beforehand
+        let assetSize = computeContentSize(dataType: dataType)
+        print("addcontent at text: \(assetSize)")
+        //*
+        
         //test 3 > add photo in index i
         let initialSelectedIndex = selectedPcIndex
-        addPhotoSection(i: selectedPcIndex, textToAdd: aTextAfterCursor)
+        //test > new url method
+        addContentSection(i: selectedPcIndex, textToAdd: aTextAfterCursor, urls: urls, cSize: assetSize, dataType: dataType)
         
         //TODO 1: remove empty text section when adding photo
         //case 1: textbeforecursor "", add photo and textview with text below, remove current textview
@@ -1206,136 +1454,334 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         
         //test > scroll to position if not visible
 //        let y = scrollView.contentOffset.y
-        let scrollViewBottomMargin = keyboardHeight + 60.0 //60
-        let stackViewHeight = stackViewH + 280.0 + 20.0
+        let scrollViewBottomMargin = keyboardHeight + 60.0 //60 => texteditpanel height
+        let stackViewHeight = stackViewH + assetSize.height + 20.0
         let scrollViewHeight = viewHeight - (50.0 + topInset) - scrollViewBottomMargin
         var scrollGap = stackViewHeight - scrollViewHeight
         if(scrollGap <= 0) {
             scrollGap = 0.0
         }
 
-        let yHeight = currentYPosition + 280.0 + 20.0
+        let yHeight = currentYPosition + assetSize.height + 20.0
         let yContentOffset = yHeight/stackViewHeight * scrollGap
         scrollView.setContentOffset(CGPoint(x: 0, y: yContentOffset), animated: false)
-        print("xy txt+Photo b: \(selectedPcIndex), \(stackViewHeight)")
+        print("xy txt+Photo b: \(selectedPcIndex), \(stackViewHeight), \(scrollViewHeight), \(scrollViewBottomMargin)")
     }
     
-    @objc func onTextNextClicked(gesture: UITapGestureRecognizer) {
-        
-        clearErrorUI()
-//        resignResponder()
-//        selectedPcIndex = -1
+    func addContentAtMain(urls: [URL], dataType: String) {
+        if(!pcList.isEmpty) {
+            let initialSelectedIndex = pcList.count - 1
+//                addPhotoSection(i: initialSelectedIndex, textToAdd: "")
 
-        //test
-        if(pcList[selectedPcIndex].tBoxType == "t") {
-            if let tBoxTv = pcList[selectedPcIndex].tBox as? UITextView {
-                if(selectedPcIndex > 0 && selectedPcIndex < pcList.count - 1) {
+            //test > new url method
+//            let url = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+//            if let u = url {
+//                addPhotoSection(i: initialSelectedIndex, textToAdd: "", url: u)
+//            }
+            
+            let assetSize = computeContentSize(dataType: dataType)
+            addContentSection(i: initialSelectedIndex, textToAdd: "", urls: urls, cSize: assetSize, dataType: dataType)
+
+            if(pcList[initialSelectedIndex].tBoxType == "t") {
+                if let tBoxTv = pcList[initialSelectedIndex].tBox as? UITextView {
                     if(tBoxTv.text == "") {
-                        //test > delete text section
-                        resignResponder()
-                        removeTextSection(i: selectedPcIndex)
-                        //test
-                        selectedPcIndex = -1
+                        //ori => fatal error
+//                        removeTextSection(i: initialSelectedIndex)
+                        
+                        //test 1 > prevent fatal error
+                        if(initialSelectedIndex > 0) { //test > prevent index 0 from being removed
+                            removeTextSection(i: initialSelectedIndex)
+                            
+                            //new selectedindex of appended textview has to be deducted -1 coz removal of empty tv
+                            if(selectedPcIndex > initialSelectedIndex) {
+                                selectedPcIndex = selectedPcIndex - 1
+                            }
+                        }
                     }
-                    else {
-                        resignResponder()
-                        selectedPcIndex = -1
-                    }
-                } else {
-                    resignResponder()
-                    selectedPcIndex = -1
                 }
             }
         }
     }
     
-    @objc func onPhotoAddTextClicked(gesture: UITapGestureRecognizer) {
+    //test > to be replaced with multiple urls computation
+    func computeContentSize(dataType: String) -> CGSize {
+        var cSize = CGSize(width: 0, height: 0)
         
-    }
-    @objc func onPhotoAddPhotoClicked(gesture: UITapGestureRecognizer) {
-
-        
-    }
-    @objc func onPhotoDeleteSectionClicked(gesture: UITapGestureRecognizer) {
-        
-        clearErrorUI()
-        
-        unselectPostClipPhotoCell(i: selectedPcIndex)
-        mainEditPanel.isHidden = false
-        textEditPanel.isHidden = true
-        photoEditPanel.isHidden = true
-        
-        removePhotoSection(i: selectedPcIndex)
-//        selectedPcIndex = -1
-    }
-    @objc func onPhotoNextClicked(gesture: UITapGestureRecognizer) {
-        
-        clearErrorUI()
-        
-        unselectPostClipPhotoCell(i: selectedPcIndex)
-        selectedPcIndex = -1
-        
-        mainEditPanel.isHidden = false
-        textEditPanel.isHidden = true
-        photoEditPanel.isHidden = true
-    }
-
-    //test > add photo/video section => in multiple format/layout
-    func addPhotoSection(i: Int, textToAdd: String) {
-        //if index is last member
-        var isIndexLastElement = false
-        var isToAppendText = false
-        if(i == pcList.count - 1) {
-            pcList[i].tBoxBottomCons?.isActive = false
-            isIndexLastElement = true
-        }
-        
-        //*test 2 > with reusable cell
-        let a = PostClip()
-        a.tBoxType = "p" //p for photo
-        let cell = PostClipPhotoCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
-        uView.addSubview(cell)
-        cell.translatesAutoresizingMaskIntoConstraints = false
-        cell.trailingAnchor.constraint(equalTo: uView.trailingAnchor, constant: 0).isActive = true
-        cell.leadingAnchor.constraint(equalTo: uView.leadingAnchor, constant: 0).isActive = true
-        cell.redrawUI()
-        a.tBox = cell
-        cell.aDelegate = self
-        //*
-        
-        if let currentTBox = pcList[i].tBox {
-            //insert photo section below current selected index
-            a.tBoxTopCons = cell.topAnchor.constraint(equalTo: currentTBox.bottomAnchor, constant: 10) //20
-            a.tBoxTopCons?.isActive = true
+        if(dataType == "p") {
+            let cellWidth = self.frame.width
+            let lhsMargin = 20.0
+            let rhsMargin = 20.0
+            let availableWidth = cellWidth - lhsMargin - rhsMargin
             
-            if(i < pcList.count - 1) {
-                if let nextTBox = pcList[i + 1].tBox {
-                    pcList[i + 1].tBoxTopCons?.isActive = false
-                    pcList[i + 1].tBoxTopCons = nextTBox.topAnchor.constraint(equalTo: cell.bottomAnchor, constant: 10) //20
-                    pcList[i + 1].tBoxTopCons?.isActive = true
+    //        let assetSize = CGSize(width: 4, height: 3) //landscape
+            let assetSize = CGSize(width: 3, height: 4)
+            if(assetSize.width > assetSize.height) {
+                //1 > landscape photo 4:3 w:h
+                let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                let cHeight = availableWidth * aRatio.height / aRatio.width
+                cSize = CGSize(width: availableWidth, height: cHeight)
+            }
+            else if (assetSize.width < assetSize.height){
+                //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                let cWidth = availableWidth * 2 / 3
+                let cHeight = cWidth * aRatio.height / aRatio.width
+                cSize = CGSize(width: cWidth, height: cHeight)
+            } else {
+                //square
+                let cWidth = availableWidth
+                cSize = CGSize(width: cWidth, height: cWidth)
+            }
+        } else if(dataType == "p_s") {
+            let cellWidth = self.frame.width
+            let lhsMargin = 20.0
+            let rhsMargin = 20.0
+            let descHeight = 40.0
+            let availableWidth = cellWidth - lhsMargin - rhsMargin
+            
+            let assetSize = CGSize(width: 4, height: 3)
+            if(assetSize.width > assetSize.height) {
+                //1 > landscape photo 4:3 w:h
+                let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
+                cSize = CGSize(width: availableWidth, height: cHeight)
+            }
+            else if (assetSize.width < assetSize.height){
+                //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                let cWidth = availableWidth * 2 / 3
+                let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
+                cSize = CGSize(width: cWidth, height: cHeight)
+            } else {
+                //square
+                let cWidth = availableWidth
+                cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+            }
+        } else if(dataType == "v") {
+            let cellWidth = self.frame.width
+            let lhsMargin = 20.0
+            let rhsMargin = 20.0
+            let availableWidth = cellWidth - lhsMargin - rhsMargin
+            
+            let assetSize = CGSize(width: 3, height: 4)
+            if(assetSize.width > assetSize.height) {
+                //1 > landscape photo 4:3 w:h
+                let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                let cHeight = availableWidth * aRatio.height / aRatio.width
+                cSize = CGSize(width: availableWidth, height: cHeight)
+            }
+            else if (assetSize.width < assetSize.height){
+                //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                let cWidth = availableWidth * 2 / 3
+                let cHeight = cWidth * aRatio.height / aRatio.width
+                cSize = CGSize(width: cWidth, height: cHeight)
+            } else {
+                //square
+                let cWidth = availableWidth
+                cSize = CGSize(width: cWidth, height: cWidth)
+            }
+        } else if(dataType == "v_l") {//loop videos
+            let cellWidth = self.frame.width
+            let lhsMargin = 20.0
+            let rhsMargin = 20.0
+            let descHeight = 40.0
+            let availableWidth = cellWidth - lhsMargin - rhsMargin
+            
+            let assetSize = CGSize(width: 3, height: 4)
+            if(assetSize.width > assetSize.height) {
+                //1 > landscape photo 4:3 w:h
+                let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
+                cSize = CGSize(width: availableWidth, height: cHeight)
+            }
+            else if (assetSize.width < assetSize.height){
+                //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                let cWidth = availableWidth * 2 / 3
+                let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
+                cSize = CGSize(width: cWidth, height: cHeight)
+            } else {
+                //square
+                let cWidth = availableWidth
+                cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+            }
+        } else if(dataType == "q") { //quote cell
+            //**test > fake data for quote post
+            var qDataArray = [String]()
+            qDataArray.append("t")
+//                qDataArray.append("p")
+//                qDataArray.append("p_s")
+            qDataArray.append("v")
+//                qDataArray.append("v_l")
+            //**
+
+            let cellWidth = self.frame.width
+            let qLhsMargin = 20.0
+            let qRhsMargin = 20.0
+            let quoteWidth = cellWidth - qLhsMargin - qRhsMargin
+            var contentHeight = 0.0
+            
+            for i in qDataArray {
+                if(i == "t") {
+                    let tTopMargin = 20.0
+                    let text = "Nice food, nice environment! Worth a visit. \nSo Good."
+                    let tContentHeight = estimateHeight(text: text, textWidth: quoteWidth - 20.0 - 20.0, fontSize: 14)
+                    let tHeight = tTopMargin + tContentHeight
+                    contentHeight += tHeight
                 }
-                
-                if(pcList[i + 1].tBoxType != "t" && textToAdd != "") {
-                    isToAppendText = true
+                else if(i == "p") {
+                    let lhsMargin = 20.0
+                    let rhsMargin = 20.0
+                    let availableWidth = quoteWidth - lhsMargin - rhsMargin
+                    
+                    let assetSize = CGSize(width: 4, height: 3)//landscape
+//                        let assetSize = CGSize(width: 3, height: 4)
+                    var cSize = CGSize(width: 0, height: 0)
+                    if(assetSize.width > assetSize.height) {
+                        //1 > landscape photo 4:3 w:h
+                        let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                        let cHeight = availableWidth * aRatio.height / aRatio.width
+                        cSize = CGSize(width: availableWidth, height: cHeight)
+                    }
+                    else if (assetSize.width < assetSize.height){
+                        //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                        let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                        let cWidth = availableWidth * 2 / 3
+    //                    let cWidth = availableWidth //test full width for portrait
+                        let cHeight = cWidth * aRatio.height / aRatio.width
+                        cSize = CGSize(width: cWidth, height: cHeight)
+                    } else {
+                        //square
+                        let cWidth = availableWidth
+                        cSize = CGSize(width: cWidth, height: cWidth)
+                    }
+
+                    let pTopMargin = 20.0
+    //                let pContentHeight = 280.0
+                    let pContentHeight = cSize.height
+                    let pHeight = pTopMargin + pContentHeight
+                    contentHeight += pHeight
+                }
+                else if(i == "p_s") {
+                    let lhsMargin = 20.0
+                    let rhsMargin = 20.0
+                    let descHeight = 40.0
+                    let availableWidth = quoteWidth - lhsMargin - rhsMargin
+                    
+                    let assetSize = CGSize(width: 4, height: 3)
+                    var cSize = CGSize(width: 0, height: 0)
+                    if(assetSize.width > assetSize.height) {
+                        //1 > landscape photo 4:3 w:h
+                        let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                        let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
+                        cSize = CGSize(width: availableWidth, height: cHeight)
+                    }
+                    else if (assetSize.width < assetSize.height){
+                        //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                        let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                        let cWidth = availableWidth * 2 / 3
+                        let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
+                        cSize = CGSize(width: cWidth, height: cHeight)
+                    } else {
+                        //square
+                        let cWidth = availableWidth
+                        cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                    }
+                    
+                    let pTopMargin = 20.0
+    //                let pContentHeight = 280.0
+                    let pContentHeight = cSize.height
+                    let pHeight = pTopMargin + pContentHeight
+                    contentHeight += pHeight
+                }
+                else if(i == "v") {
+                    let lhsMargin = 20.0
+                    let rhsMargin = 20.0
+                    let availableWidth = quoteWidth - lhsMargin - rhsMargin
+                    
+                    let assetSize = CGSize(width: 3, height: 4)
+                    var cSize = CGSize(width: 0, height: 0)
+                    if(assetSize.width > assetSize.height) {
+                        //1 > landscape photo 4:3 w:h
+                        let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                        let cHeight = availableWidth * aRatio.height / aRatio.width
+                        cSize = CGSize(width: availableWidth, height: cHeight)
+                    }
+                    else if (assetSize.width < assetSize.height){
+                        //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                        let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                        let cWidth = availableWidth * 2 / 3
+                        let cHeight = cWidth * aRatio.height / aRatio.width
+                        cSize = CGSize(width: cWidth, height: cHeight)
+                    } else {
+                        //square
+                        let cWidth = availableWidth
+                        cSize = CGSize(width: cWidth, height: cWidth)
+                    }
+                    
+                    let vTopMargin = 20.0
+    //                let vContentHeight = 350.0 //250
+                    let vContentHeight = cSize.height
+                    let vHeight = vTopMargin + vContentHeight
+                    contentHeight += vHeight
+                }
+                else if(i == "v_l") {
+                    let lhsMargin = 20.0
+                    let rhsMargin = 20.0
+                    let descHeight = 40.0
+                    let availableWidth = quoteWidth - lhsMargin - rhsMargin
+                    
+                    let assetSize = CGSize(width: 3, height: 4)
+                    var cSize = CGSize(width: 0, height: 0)
+                    if(assetSize.width > assetSize.height) {
+                        //1 > landscape photo 4:3 w:h
+                        let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                        let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
+                        cSize = CGSize(width: availableWidth, height: cHeight)
+                    }
+                    else if (assetSize.width < assetSize.height){
+                        //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                        let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                        let cWidth = availableWidth * 2 / 3
+                        let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
+                        cSize = CGSize(width: cWidth, height: cHeight)
+                    } else {
+                        //square
+                        let cWidth = availableWidth
+                        cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                    }
+                    
+                    let vTopMargin = 20.0
+    //                let vContentHeight = 350.0 //250
+                    let vContentHeight = cSize.height
+                    let vHeight = vTopMargin + vContentHeight
+    //                let vHeight = vTopMargin + vContentHeight + 40.0 //40.0 for bottom container for description
+                    contentHeight += vHeight
                 }
             }
+//            let qTopMargin = 20.0
+            let qUserPhotoHeight = 28.0
+            let qUserPhotoTopMargin = 20.0 //10
+            let qFrameBottomMargin = 20.0 //10
+            let qHeight = qUserPhotoHeight + qUserPhotoTopMargin + qFrameBottomMargin
+            contentHeight += qHeight
+            
+            cSize = CGSize(width: quoteWidth, height: contentHeight)
         }
 
-        pcList.insert(a, at: i + 1) //means "append" behind selectedindex
-        
-        //to append text section if last element
-        if(isIndexLastElement || isToAppendText) {
-            let extraSize = 280.0 + 20.0
-            addTextSection(i: i + 1, extraContentSize: extraSize, textToAdd: textToAdd)
-        }
-        else {
-            let sHeight = stackView.frame.height
-            let newHeight = sHeight + 280.0 + 20.0
-            scrollView.contentSize = CGSize(width: stackView.frame.width, height: newHeight)
+        return cSize
+    }
+    
+    private func estimateHeight(text: String, textWidth: CGFloat, fontSize: CGFloat) -> CGFloat {
+        if(text == ""){
+            return 0
+        } else {
+            let size = CGSize(width: textWidth, height: 1000) //1000 height is dummy
+            let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: fontSize)]
+            let estimatedFrame = NSString(string: text).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
             
-            //test > if no text section to add, then keyboard down
-            resignResponder()
-            selectedPcIndex = -1
+            return estimatedFrame.height
         }
     }
     
@@ -1518,9 +1964,18 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         }
     }
     
-    func removePhotoSection(i: Int) {
+    func removeContentSection(i: Int) {
         if(i > 0) { //means i-1 element exists, first element must be textview
-            if(pcList[i].tBoxType == "p") {
+//            if(pcList[i].tBoxType == "p") {
+                
+                //*test > compute asset size
+                var tBoxSizeH = 0.0
+                if let tBoxTv = pcList[i].tBox {
+                    tBoxSizeH = tBoxTv.frame.height
+                    print("removePhotoSection \(tBoxSizeH)")
+                }
+                //*
+                
                 pcList[i].tBox?.removeFromSuperview()
                 
                 if let prevTBox = pcList[i - 1].tBox {
@@ -1554,9 +2009,10 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                 
                 //test > update scrollview content size since photo removed
                 let sHeight = stackView.frame.height
-                let newHeight = sHeight - 280.0 - 20.0
+//                let newHeight = sHeight - 280.0 - 20.0
+                let newHeight = sHeight - tBoxSizeH
                 scrollView.contentSize = CGSize(width: stackView.frame.width, height: newHeight)
-            }
+//            }
         }
     }
     
@@ -1634,38 +2090,69 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         saveDraftPanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
         saveDraftPanel.delegate = self
     }
+    //test > try exit creator instead of save draft for now
+    func openExitVideoEditorPromptMsg() {
+        let exitVideoPanel = ExitVideoEditorMsgView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
+        panel.addSubview(exitVideoPanel)
+        exitVideoPanel.translatesAutoresizingMaskIntoConstraints = false
+        exitVideoPanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
+        exitVideoPanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
+        exitVideoPanel.delegate = self
+        exitVideoPanel.setType(t: "post")
+    }
     
-    func openCameraRoll() {
+    func openCameraPhotoRoll() {
         let cameraRollPanel = CameraPhotoRollPanelView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
         panel.addSubview(cameraRollPanel)
         cameraRollPanel.translatesAutoresizingMaskIntoConstraints = false
         cameraRollPanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
         cameraRollPanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
         cameraRollPanel.delegate = self
+        //test > set multi selection
+        cameraRollPanel.setMultiSelection(limit: maxSelectLimit)
     }
     
-//    func openPostDraftPanel() {
-//        let draftPanel = PostDraftPanelView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
-//        panel.addSubview(draftPanel)
-//        draftPanel.translatesAutoresizingMaskIntoConstraints = false
-//        draftPanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
-//        draftPanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
-//        draftPanel.delegate = self
-//        draftPanel.initialize()
-//    }
+    func openCameraVideoRoll() {
+        let cameraRollPanel = CameraVideoRollPanelView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
+        panel.addSubview(cameraRollPanel)
+        cameraRollPanel.translatesAutoresizingMaskIntoConstraints = false
+        cameraRollPanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
+        cameraRollPanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
+        cameraRollPanel.delegate = self
+        //test > set multi selection
+//        cameraRollPanel.setMultiSelection(limit: maxSelectLimit)
+        let maxDurationLimit = 60.0
+        cameraRollPanel.setDurationLimit(limit: maxDurationLimit)
+    }
     
-    func unselectPostClipPhotoCell(i : Int) {
-        if(pcList[i].tBoxType == "p") {
-            if let currentTBox = pcList[i].tBox as? PostClipPhotoCell {
-                currentTBox.unselectCell()
-            }
+    func unselectPostClipCell(i : Int) {
+//        if(pcList[i].tBoxType == "p") {
+//            if let currentTBox = pcList[i].tBox as? PostClipPhotoCell {
+//                currentTBox.unselectCell()
+//            }
+//        }
+        
+        //test 1 > not limited to "p" content only
+        if let currentTBox = pcList[i].tBox as? PostClipPhotoCell {
+            currentTBox.unselectCell()
         }
     }
     
     @objc func onBackPostCreatorPanelClicked(gesture: UITapGestureRecognizer) {
         resignResponder()
-        openSavePostDraftPromptMsg()
-//        closePostCreatorPanel(isAnimated: true)
+//        openSavePostDraftPromptMsg()
+
+        //test
+//        openExitVideoEditorPromptMsg()
+        
+        //test 2
+        let isSignedIn = SignInManager.shared.getStatus()
+        if(isSignedIn) {
+            openExitVideoEditorPromptMsg()
+        }
+        else {
+            closePostCreatorPanel(isAnimated: true)
+        }
     }
     
     @objc func onPostUploadNextClicked(gesture: UITapGestureRecognizer) {
@@ -1743,7 +2230,12 @@ class PostCreatorConsolePanelView: CreatorPanelView{
             let bottomInsetMargin = self.safeAreaInsets.bottom
             print("postcreator tool up \(keyboardSize.height), \(bottomInsetMargin) ")
 
-            keyboardHeight = keyboardSize.height
+//            keyboardHeight = keyboardSize.height
+            //test 2 > only assign keyboardheight if it is > 0
+            if(keyboardSize.height > 0) {
+                keyboardHeight = keyboardSize.height
+            }
+            
             if(!isKeyboardUp) {
                 UIView.animate(withDuration: 0.2, delay: 0.0, options: [.curveEaseInOut],
                     animations: {
@@ -1764,7 +2256,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     
     //compute relative position of pc view vs stackview
     func computePcPosition(index : Int, isInclusive: Bool) -> CGFloat {
-        let initialYHeight = 40.0 + 20.0
+        let initialYHeight = 40.0 + 20.0 //pMini => profile image size & top margin
         var yHeight = 0.0 + initialYHeight
         var i = 0
         if(!self.pcList.isEmpty) {
@@ -1776,6 +2268,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                 }
 
                 if let tBoxTv = l.tBox {
+                    print("computePCposition \(i), \(tBoxTv.frame.height)")
                     yHeight += tBoxTv.frame.height
                     if(i == 0) {
                         yHeight += 20.0 //top margin
@@ -1819,20 +2312,22 @@ extension PostCreatorConsolePanelView: PostClipPhotoCellDelegate {
         
         var i = 0
         for pc in pcList {
-            if(pc.tBoxType == "p") {
+//            if(pc.tBoxType == "p") {
                 if(pc.tBox == cell) {
 //                    print("xy click pc: \(i), \(cell)")
                     
                     if(selectedPcIndex != i) {
                         if(selectedPcIndex > -1) {
-                            unselectPostClipPhotoCell(i: selectedPcIndex)
+                            unselectPostClipCell(i: selectedPcIndex)
                         }
                         cell.selectCell()
                         selectedPcIndex = i
                         
                         //test > scroll to position if not visible
                         let stackViewHeight = stackView.frame.height
-                        let scrollViewHeight = viewHeight - (50.0 + topInset) - 120.0 //in full mode(keyboard down)
+                        let topMargin = 50.0 + topInset
+                        let bottomMargin = 90.0 + bottomInset
+                        let scrollViewHeight = viewHeight - topMargin - bottomMargin //in full mode(keyboard down)
                         var scrollGap = stackViewHeight - scrollViewHeight
                         if(scrollGap <= 0) {
                             scrollGap = 0.0
@@ -1859,7 +2354,7 @@ extension PostCreatorConsolePanelView: PostClipPhotoCellDelegate {
                     
                     break
                 }
-            }
+//            }
             i += 1
         }
     }
@@ -1948,7 +2443,7 @@ extension PostCreatorConsolePanelView: UITextViewDelegate {
                     
                     if(selectedPcIndex != i) {
                         if(selectedPcIndex > -1) {
-                            unselectPostClipPhotoCell(i: selectedPcIndex)
+                            unselectPostClipCell(i: selectedPcIndex)
                         }
                         selectedPcIndex = i
                     }
@@ -2223,15 +2718,83 @@ extension PostCreatorConsolePanelView: CameraPhotoRollPanelDelegate{
 
     }
     func didClickMultiPhotoSelect(urls: [URL]){
-        
+        if(!urls.isEmpty) {
+//            let imgUrl = urls[0]
+//            aPhotoB.sd_setImage(with: imgUrl)
+            
+            print("multiphotoclick \(selectedPcIndex)")
+            if(selectedPcIndex > -1) {
+                addContentAtText(urls: urls, dataType: "p")
+            } else {
+                addContentAtMain(urls: urls, dataType: "p")
+            }
+        }
     }
 }
 
+extension PostCreatorConsolePanelView: CameraVideoRollPanelDelegate{
+    func didInitializeCameraVideoRoll() {
+
+    }
+    func didClickFinishCameraVideoRoll() {
+
+    }
+    func didClickVideoSelect(video: PHAsset) {
+        print("postcreator cameravideo click")
+        //test > convert PHAsset to AVAsset
+//        PHCachingImageManager.default().requestAVAsset(forVideo: video, options: nil) { [weak self] (video, _, _) in
+//
+//            if let avVid = video
+//            {
+//                DispatchQueue.main.async {
+//                    
+//                    //test 2 > open with url => tested OK
+//                    //try get url from avasset
+//                    if let strURL = (video as? AVURLAsset)?.url.absoluteString {
+//                        print("VIDEO URL: ", strURL)
+//
+//                    }
+//                }
+//            }
+//        }
+    }
+    
+    func didClickMultiVideoSelect(urls: [String]){
+        print("postcreator cameravideo multi click \(urls)")
+        if(!urls.isEmpty) {
+            var vUrls = [URL]()
+            for url in urls {
+                let vUrl = URL(fileURLWithPath: url)
+                vUrls.append(vUrl)
+            }
+            
+            if(selectedPcIndex > -1) {
+//                addContentAtText(urls: vUrls, dataType: "v_l")
+                addContentAtText(urls: vUrls, dataType: "q") //test
+            } else {
+//                addContentAtMain(urls: vUrls, dataType: "v_l")
+                addContentAtMain(urls: vUrls, dataType: "q") //test
+            }
+        }
+    }
+}
 
 extension PostCreatorConsolePanelView: PostDraftPanelDelegate{
     func didClickClosePostDraftPanel() {
         
 //        backPage(isCurrentPageScrollable: false)
+    }
+}
+
+extension PostCreatorConsolePanelView: ExitVideoEditorMsgDelegate{
+    func didSVDClickProceed() {
+        closePostCreatorPanel(isAnimated: true)
+    }
+    func didSVDClickDeny() {
+//        delegate?.didDenyExitVideoEditor()
+    }
+    func didSVDInitialize() {
+//        delegate?.didPromptExitVideoEditor()
     }
 }
 

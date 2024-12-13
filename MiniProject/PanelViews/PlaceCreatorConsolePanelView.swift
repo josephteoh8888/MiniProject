@@ -106,8 +106,8 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
     //        aBtn.topAnchor.constraint(equalTo: userPanel.topAnchor, constant: 30).isActive = true
 //        aBtn.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
 //        let topInsetMargin = panel.safeAreaInsets.top + 10
-//        aBtn.topAnchor.constraint(equalTo: panel.topAnchor, constant: 50).isActive = true
-        aBtn.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
+        aBtn.topAnchor.constraint(equalTo: panel.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
+//        aBtn.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
         aBtn.layer.cornerRadius = 20
 //        aBtn.layer.opacity = 0.3
         aBtn.isUserInteractionEnabled = true
@@ -520,7 +520,8 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
         aSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
         aSpinner.isUserInteractionEnabled = false
         
-        let stackViewA = UIStackView(arrangedSubviews: [stack1, stack2])
+//        let stackViewA = UIStackView(arrangedSubviews: [stack1, stack2])
+        let stackViewA = UIStackView(arrangedSubviews: [stack2])
         stackViewA.distribution = .fillEqually
 //        stackViewA.backgroundColor = .black
 //        stackViewA.backgroundColor = .blue
@@ -730,7 +731,19 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
     @objc func onBackPlaceCreatorPanelClicked(gesture: UITapGestureRecognizer) {
         
         resignResponder()
-        openSavePlaceDraftPromptMsg()
+//        openSavePlaceDraftPromptMsg()
+        
+        //test
+//        openExitVideoEditorPromptMsg()
+        
+        //test 2
+        let isSignedIn = SignInManager.shared.getStatus()
+        if(isSignedIn) {
+            openExitVideoEditorPromptMsg()
+        }
+        else {
+            closePlaceCreatorPanel(isAnimated: true)
+        }
     }
     
     @objc func onPlaceUploadNextClicked(gesture: UITapGestureRecognizer) {
@@ -958,6 +971,16 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
         saveDraftPanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
         saveDraftPanel.delegate = self
     }
+    //test > try exit creator instead of save draft for now
+    func openExitVideoEditorPromptMsg() {
+        let exitVideoPanel = ExitVideoEditorMsgView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
+        panel.addSubview(exitVideoPanel)
+        exitVideoPanel.translatesAutoresizingMaskIntoConstraints = false
+        exitVideoPanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
+        exitVideoPanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
+        exitVideoPanel.delegate = self
+        exitVideoPanel.setType(t: "place")
+    }
     func openCameraRoll() {
         let cameraRollPanel = CameraPhotoRollPanelView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
         panel.addSubview(cameraRollPanel)
@@ -1123,5 +1146,17 @@ extension PlaceCreatorConsolePanelView: CameraPhotoRollPanelDelegate{
             let imgUrl = urls[0]
             aPhotoB.sd_setImage(with: imgUrl)
         }
+    }
+}
+
+extension PlaceCreatorConsolePanelView: ExitVideoEditorMsgDelegate{
+    func didSVDClickProceed() {
+        closePlaceCreatorPanel(isAnimated: true)
+    }
+    func didSVDClickDeny() {
+//        delegate?.didDenyExitVideoEditor()
+    }
+    func didSVDInitialize() {
+//        delegate?.didPromptExitVideoEditor()
     }
 }

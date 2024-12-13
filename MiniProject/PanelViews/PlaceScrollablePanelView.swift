@@ -384,7 +384,9 @@ class PlaceScrollablePanelView: ScrollablePanelView{
         aFollowAText.leadingAnchor.constraint(equalTo: aFollowA.leadingAnchor, constant: 15).isActive = true //20
         aFollowAText.trailingAnchor.constraint(equalTo: aFollowA.trailingAnchor, constant: -15).isActive = true
         aFollowAText.centerYAnchor.constraint(equalTo: aFollowA.centerYAnchor).isActive = true
-        aFollowAText.text = "Save"
+//        aFollowAText.text = "Save"
+        aFollowAText.text = ""
+//        aFollowAText.text = "Use Location"
         
         //*test => highlight box section
         aPanelView.addSubview(aHLightBox)
@@ -490,7 +492,8 @@ class PlaceScrollablePanelView: ScrollablePanelView{
         aFollowText.translatesAutoresizingMaskIntoConstraints = false
         aFollowText.centerXAnchor.constraint(equalTo: aFollow.centerXAnchor).isActive = true
         aFollowText.centerYAnchor.constraint(equalTo: aFollow.centerYAnchor).isActive = true
-        aFollowText.text = "Save"
+//        aFollowText.text = "Save"
+        aFollowText.text = ""
         
         bPanelView.addSubview(aHLightSection)
 //        aHLightSection.backgroundColor = .green
@@ -778,7 +781,8 @@ class PlaceScrollablePanelView: ScrollablePanelView{
         aFollowCText.leadingAnchor.constraint(equalTo: aFollowC.leadingAnchor, constant: 20).isActive = true
         aFollowCText.trailingAnchor.constraint(equalTo: aFollowC.trailingAnchor, constant: -20).isActive = true
         aFollowCText.centerYAnchor.constraint(equalTo: aFollowC.centerYAnchor).isActive = true
-        aFollowCText.text = "Save"
+//        aFollowCText.text = "Save"
+        aFollowCText.text = ""
     }
     
     func layoutTabUI() {
@@ -1344,6 +1348,9 @@ class PlaceScrollablePanelView: ScrollablePanelView{
             let aImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
             aPhoto.sd_setImage(with: aImageUrl)
             aPhotoB.sd_setImage(with: aImageUrl)
+            
+            //test
+            actionUI(doneState: isAction)
         }
         else {
             deconfigureUI()
