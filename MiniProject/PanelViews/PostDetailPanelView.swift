@@ -2999,7 +2999,8 @@ extension ViewController: PostDetailPanelDelegate{
     
     func didClickPostDetailPanelVcvClickCreate(type: String){
         if(type == "post") {
-            openPostCreatorPanel()
+//            openPostCreatorPanel()
+            openPostCreatorPanel(objectType: "post", objectId: "", mode: "")
         }
         
     }

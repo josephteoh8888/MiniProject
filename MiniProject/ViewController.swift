@@ -4354,22 +4354,6 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
     }
     
     func openVideoCreatorPanel() {
-        
-        //test 1 > as not scrollable panel
-//        nextPage(isNextPageScrollable: false)
-//
-//        //test > use reusable method
-//        let panel = VideoCreatorConsolePanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
-//        self.view.addSubview(panel)
-//        panel.translatesAutoresizingMaskIntoConstraints = false
-//        panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
-//        panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
-//        panel.delegate = self
-//        
-//        //test > try initialize
-//        panel.initialize(topInset: topInset, bottomInset: bottomInset)
-//
-//        pageList.append(panel)
 
         //test 2 > more specific method
         openVideoCreatorPanel(objectType: "", objectId: "", mode: "")
@@ -4411,20 +4395,6 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
     }
     
     func openPostCreatorPanel() {
-        
-        //test 1 > as not scrollable panel
-//        nextPage(isNextPageScrollable: false)
-//
-//        //test > use reusable method
-//        let panel = PostCreatorConsolePanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
-//        self.view.addSubview(panel)
-//        panel.translatesAutoresizingMaskIntoConstraints = false
-//        panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
-//        panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
-//        panel.delegate = self
-//        panel.initialize(topInset: topInset, bottomInset: bottomInset)
-//        
-//        pageList.append(panel)
 
         //test 2 > more specific method
         openPostCreatorPanel(objectType: "", objectId: "", mode: "")
@@ -4441,10 +4411,8 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
         panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
         panel.delegate = self
-        panel.initialize(topInset: topInset, bottomInset: bottomInset)
         
-        pageList.append(panel)
-        
+        //mode => tag or quote
         if(objectType == "p") {
             if(mode == "tag") {
                 panel.setPredesignatedPlace(p: "p")
@@ -4454,25 +4422,26 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
             }
         }
         else if(objectType == "s") {
-            
+            panel.setQuoteObject(type: "s", id: "#")
         }
+        else if(objectType == "post") {
+            panel.setQuoteObject(type: "q", id: "#")
+        }
+        else if(objectType == "photo") {
+            panel.setQuoteObject(type: "p_s", id: "#")
+        }
+        else if(objectType == "video") {
+            panel.setQuoteObject(type: "v_l", id: "#")
+        }
+        //*
+        
+        panel.initialize(topInset: topInset, bottomInset: bottomInset)
+        
+        pageList.append(panel)
+
     }
     
     func openPhotoCreatorPanel() {
-        
-        //test 1 > as not scrollable panel
-//        nextPage(isNextPageScrollable: false)
-//
-//        //test > use reusable method
-//        let panel = PhotoCreatorConsolePanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
-//        self.view.addSubview(panel)
-//        panel.translatesAutoresizingMaskIntoConstraints = false
-//        panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
-//        panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
-//        panel.delegate = self
-//        panel.initialize(topInset: topInset, bottomInset: bottomInset)
-//        
-//        pageList.append(panel)
 
         //test 2 > more specific method
         openPhotoCreatorPanel(objectType: "", objectId: "", mode: "")
@@ -4512,20 +4481,6 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
     }
     
     func openPlaceCreatorPanel() {
-        
-        //test 1 > as not scrollable panel
-//        nextPage(isNextPageScrollable: false)
-//
-//        //test > use reusable method
-//        let panel = PlaceCreatorConsolePanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
-//        self.view.addSubview(panel)
-//        panel.translatesAutoresizingMaskIntoConstraints = false
-//        panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
-//        panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
-//        panel.delegate = self
-//        panel.initialize(topInset: topInset, bottomInset: bottomInset)
-//
-//        pageList.append(panel)
         
         //test 2 > more specific method
         openPlaceCreatorPanel(objectType: "", objectId: "", mode: "")

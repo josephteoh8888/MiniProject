@@ -195,18 +195,20 @@ class PhotoZoomPanelView: PanelView, UIGestureRecognizerDelegate{
                 }
             }
             print("photozoom \(direction), \(x), \(y)")
+            
+            //**activate both x and y if want both horizontal and vertical close panel
             //test 1 > use x
-//            if(direction == "x") {
-//                if(abs(x) > 40) {
-////                        if(x > 40) {
-//                    print("postpanel vcv panning exit")
-////                    if(!isCarouselScrolled) {
-//                        isToPostPan = true
-////                    }
-//                } else {
-//                    print("postpanel vcv panning no exit")
-//                }
-//            }
+            if(direction == "x") {
+                if(abs(x) > 40) {
+//                        if(x > 40) {
+                    print("postpanel vcv panning exit")
+//                    if(!isCarouselScrolled) {
+                        isToPostPan = true
+//                    }
+                } else {
+                    print("postpanel vcv panning no exit")
+                }
+            }
             
             //test 2 > use y
             if(direction == "y") {

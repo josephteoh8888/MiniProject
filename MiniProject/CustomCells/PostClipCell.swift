@@ -9,20 +9,23 @@ import Foundation
 import UIKit
 import SDWebImage
 
-protocol PostClipPhotoCellDelegate : AnyObject {
-    func didClickPostClipCell(cell: PostClipPhotoCell)
+protocol PostClipCellDelegate : AnyObject {
+    func pcDidClickPostClipCell(cell: PostClipCell)
+    func pcDidClickPcClickPhoto(pc: PostClipCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String)
+    func pcDidClickPcClickVideo(pc: PostClipCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String)
+    func pcDidClickPcClickPlay(pc: PostClipCell, isPlay: Bool)
 }
 
-class PostClipPhotoCell: UIView {
+class PostClipCell: UIView {
     var viewHeight: CGFloat = 0
     var viewWidth: CGFloat = 0
     let aHLightRect1 = UIView()
-    weak var aDelegate : PostClipPhotoCellDelegate?
+    weak var aDelegate : PostClipCellDelegate?
     
     var isSelected = false
     let selectedRect = UIView()
     
-//    let g1 = SDAnimatedImageView()
+    var aTestArray = [UIView]()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -55,10 +58,10 @@ class PostClipPhotoCell: UIView {
         selectedRect.backgroundColor = .ddmGoldenYellowColor
         aHLightRect1.addSubview(selectedRect)
         selectedRect.translatesAutoresizingMaskIntoConstraints = false
-        selectedRect.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true //10
+        selectedRect.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 10).isActive = true //10
         selectedRect.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
         selectedRect.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-        selectedRect.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true //-10
+        selectedRect.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true //-10
         selectedRect.layer.cornerRadius = 10
         selectedRect.isHidden = true
 //        selectedRect.backgroundColor = .ddmDarkColor
@@ -88,7 +91,7 @@ class PostClipPhotoCell: UIView {
     
     @objc func onClickPostClipPhotoClicked(gesture: UITapGestureRecognizer) {
         print("postclip selected")
-        aDelegate?.didClickPostClipCell(cell: self)
+        aDelegate?.pcDidClickPostClipCell(cell: self)
     }
     
     @objc func onClickClosePostClipPhotoClicked(gesture: UITapGestureRecognizer) {
@@ -104,6 +107,57 @@ class PostClipPhotoCell: UIView {
         
     }
     
+    //test* > hide & dehide cells
+    func hideCell() {
+        print("hidecell postclipcell:")
+        if(!aTestArray.isEmpty) {
+            let c = aTestArray.count - 1
+            if let a = aTestArray[c] as? ContentCell{
+                a.hideCell()
+            }
+        }
+    }
+    
+    func dehideCell() {
+        print("dehidecell postclipcell:")
+        if(!aTestArray.isEmpty) {
+            let c = aTestArray.count - 1
+            if let a = aTestArray[c] as? ContentCell{
+                a.dehideCell()
+            }
+        }
+    }
+    //*
+    
+    //**test 2 > new method to play/stop media with asset idx for multi-assets per cell
+    func pauseMedia() {
+        if(!aTestArray.isEmpty) {
+            let c = aTestArray.count - 1
+            if let a = aTestArray[c] as? MediaContentCell{
+                a.pauseMedia()
+            }
+        }
+    }
+    func resumeMedia() {
+        if(!aTestArray.isEmpty) {
+            let c = aTestArray.count - 1
+            if let a = aTestArray[c] as? MediaContentCell{
+                a.resumeMedia()
+            }
+        }
+    }
+    //**
+    
+    //test > destroy view to avoid timeobserver memory leak
+    func destroyCell() {
+        if(!aTestArray.isEmpty) {
+            let c = aTestArray.count - 1
+            if let a = aTestArray[c] as? ContentCell{
+                a.destroyCell()
+            }
+        }
+    }
+    
     func configure(data: String, dataType: String, cSize: CGSize) {
         if(dataType == "p") {
             let contentCell = PostPhotoContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
@@ -117,6 +171,9 @@ class PostClipPhotoCell: UIView {
             contentCell.layer.cornerRadius = 10 //5
             contentCell.redrawUI()
             contentCell.configure(data: "a")
+            contentCell.aDelegate = self //test
+            contentCell.setAutohide(isEnabled: false)
+            aTestArray.append(contentCell)
         }
         else if(dataType == "p_s") {
             let contentCell = PostPhotoShotContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
@@ -132,6 +189,9 @@ class PostClipPhotoCell: UIView {
             contentCell.setDescHeight(lHeight: 40, txt: t)
             contentCell.redrawUI()
             contentCell.configure(data: "a")
+            contentCell.aDelegate = self //test
+            contentCell.setAutohide(isEnabled: false)
+            aTestArray.append(contentCell)
         }
         else if(dataType == "v") {
             let contentCell = PostVideoContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
@@ -145,6 +205,9 @@ class PostClipPhotoCell: UIView {
             contentCell.layer.cornerRadius = 10 //5
             contentCell.redrawUI()
             contentCell.configure(data: "a")
+            contentCell.aDelegate = self //test
+            contentCell.setAutohide(isEnabled: false)
+            aTestArray.append(contentCell)
         }
         else if(dataType == "v_l") {
             let contentCell = PostVideoLoopContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
@@ -160,6 +223,9 @@ class PostClipPhotoCell: UIView {
             contentCell.setDescHeight(lHeight: 40, txt: t)
             contentCell.redrawUI()
             contentCell.configure(data: "a")
+            contentCell.aDelegate = self //test
+            contentCell.setAutohide(isEnabled: false)
+            aTestArray.append(contentCell)
         }
         else if(dataType == "q") {
             let contentCell = PostQuoteContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
@@ -172,7 +238,63 @@ class PostClipPhotoCell: UIView {
             contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //280
             contentCell.layer.cornerRadius = 10 //5
             let t = "Nice food, nice environment! Worth a visit. \nSo Good."
+            contentCell.aDelegate = self //test
+            contentCell.setAutohide(isEnabled: false)
             contentCell.configure(data: "a", text: t)
+            aTestArray.append(contentCell)
         }
+    }
+}
+
+extension PostClipCell: ContentCellDelegate {
+    func contentCellIsScrollCarousel(isScroll: Bool){
+//        aDelegate?.hListIsScrollCarousel(isScroll: isScroll)
+    }
+    
+    func contentCellCarouselIdx(cc: UIView, idx: Int){
+//        if let j = aTestArray.firstIndex(of: cc) {
+//            aDelegate?.hListCarouselIdx(vc: self, aIdx: j, idx: idx)
+//        }
+    }
+    
+    func contentCellVideoStopTime(cc: UIView, ts: Double){
+//        if let j = aTestArray.firstIndex(of: cc) {
+//            aDelegate?.hListVideoStopTime(vc: self, aIdx: j, ts: ts)
+//        }
+    }
+    
+    func contentCellDidClickVcvClickPhoto(cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        let aTestFrame = aHLightRect1.frame.origin
+        let ccFrame = cc.frame.origin
+        
+        let pointX1 = pointX + aTestFrame.x + ccFrame.x
+        let pointY1 = pointY + aTestFrame.y + ccFrame.y
+        aDelegate?.pcDidClickPcClickPhoto(pc: self, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
+    }
+    func contentCellDidClickVcvClickVideo(cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        let aTestFrame = aHLightRect1.frame.origin
+        let ccFrame = cc.frame.origin
+        
+        let pointX1 = pointX + aTestFrame.x + ccFrame.x
+        let pointY1 = pointY + aTestFrame.y + ccFrame.y
+        aDelegate?.pcDidClickPcClickVideo(pc: self, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
+    }
+    func contentCellDidDoubleClickPhoto(pointX: CGFloat, pointY: CGFloat){
+        
+    }
+    func contentCellDidClickSound(){
+        
+    }
+    func contentCellDidClickUser(){
+        
+    }
+    func contentCellDidClickPlace(){
+        
+    }
+    func contentCellDidClickPost(){
+//        aDelegate?.hListDidClickVcvClickPost()
+    }
+    func contentCellDidClickVcvClickPlay(cc: UIView, isPlay: Bool){
+        aDelegate?.pcDidClickPcClickPlay(pc: self, isPlay: isPlay)
     }
 }

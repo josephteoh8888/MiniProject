@@ -2722,7 +2722,8 @@ extension ViewController: PhotoDetailPanelDelegate{
     
     func didClickPhotoDetailPanelVcvClickCreate(type: String){
         if(type == "post") {
-            openPostCreatorPanel()
+//            openPostCreatorPanel()
+            openPostCreatorPanel(objectType: "photo", objectId: "", mode: "")
         }
         
     }

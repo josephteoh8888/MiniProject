@@ -297,7 +297,7 @@ class ShareObjectScrollableView: PanelView, UIGestureRecognizerDelegate{
             aVDataList.append("rp")//report post
             aVDataList.append("d") //dislike
             
-//            bVDataList.append("cr")//use place to create
+            bVDataList.append("cr")//use place to create
             bVDataList.append("sa")//repost
             bVDataList.append("s")//share to
             bVDataList.append("c")//copy link

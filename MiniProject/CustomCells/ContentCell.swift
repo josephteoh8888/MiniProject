@@ -26,6 +26,7 @@ protocol ContentCellDelegate : AnyObject {
 
 class ContentCell: UIView {
     func dehideCell() {}
+    func hideCell() {}
     func destroyCell() {}
 }
 class MediaContentCell: ContentCell {
@@ -47,6 +48,9 @@ class PostPhotoContentCell: ContentCell {
     //test
     var current_p_s = 0
     var initial_x = 0.0 //test for scrollview x-scroll direction
+    
+    //test
+    var isAutohideEnabled = true
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -167,24 +171,17 @@ class PostPhotoContentCell: ContentCell {
         current_p_s = p
     }
     
-    func hideCell() {
+    func setAutohide(isEnabled: Bool) {
+        isAutohideEnabled = isEnabled
+    }
+    
+    override func hideCell() {
         scrollView.isHidden = true
     }
     
     override func dehideCell() {
         scrollView.isHidden = false
     }
-    
-//    @objc func onPhotoClicked(gesture: UITapGestureRecognizer) {
-//        print("postphoto click photo:")
-//        let pFrame = scrollView.frame.origin
-//        let pointX = pFrame.x
-//        let pointY = pFrame.y
-//        aDelegate?.contentCellDidClickVcvClickPhoto(cc: self, pointX: pointX, pointY: pointY, view: scrollView, mode: PhotoTypes.P_0)
-//        
-//        //test > hide photo
-//        hideCell()
-//    }
 }
 
 extension PostPhotoContentCell: CustomImageViewDelegate {
@@ -195,7 +192,9 @@ extension PostPhotoContentCell: CustomImageViewDelegate {
         aDelegate?.contentCellDidClickVcvClickPhoto(cc: self, pointX: pointX, pointY: pointY, view: scrollView, mode: PhotoTypes.P_0)
         
         //test > hide photo
-        hideCell()
+        if(isAutohideEnabled) {
+            hideCell()
+        }
     }
     
     func customImageViewDoubleClickPhoto(pointX: CGFloat, pointY: CGFloat){
@@ -283,6 +282,9 @@ class PostPhotoShotContentCell: ContentCell {
     //test
     var current_p_s = 0
     var initial_x = 0.0 //test for scrollview x-scroll direction
+    
+    //test
+    var isAutohideEnabled = true
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -579,7 +581,11 @@ class PostPhotoShotContentCell: ContentCell {
         current_p_s = p
     }
     
-    func hideCell() {
+    func setAutohide(isEnabled: Bool) {
+        isAutohideEnabled = isEnabled
+    }
+    
+    override func hideCell() {
         scrollView.isHidden = true
     }
     
@@ -707,6 +713,9 @@ class PostVideoContentCell: MediaContentCell {
     //1) setState t_s when asyncconfig
     var t_s_ = 0.0
     //2) indicate whether asset is loaded, then only playable
+    
+    //test
+    var isAutohideEnabled = true
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -950,7 +959,11 @@ class PostVideoContentCell: MediaContentCell {
         t_s_ = t
     }
     
-    func hideCell() {
+    func setAutohide(isEnabled: Bool) {
+        isAutohideEnabled = isEnabled
+    }
+    
+    override func hideCell() {
         videoContainer.isHidden = true
     }
     
@@ -1001,7 +1014,12 @@ class PostVideoContentCell: MediaContentCell {
         aDelegate?.contentCellDidClickVcvClickVideo(cc: self, pointX: pointX, pointY: pointY, view: videoContainer, mode: VideoTypes.V_0)
         
         //test > hide photo
-        hideCell() //disabled for testing only
+//        hideCell() //disabled for testing only
+        
+        //test > hide photo
+        if(isAutohideEnabled) {
+            hideCell()
+        }
     }
     @objc func onVideoBtnClicked(gesture: UITapGestureRecognizer) {
         print("postphoto click video btn:")
@@ -1115,6 +1133,9 @@ class PostVideoLoopContentCell: MediaContentCell {
     //1) setState t_s when asyncconfig
     var t_s_ = 0.0
     //2) indicate whether asset is loaded, then only playable
+    
+    //test
+    var isAutohideEnabled = true
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -1434,7 +1455,11 @@ class PostVideoLoopContentCell: MediaContentCell {
 //        player?.seek(to: seekTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
 //    }
     
-    func hideCell() {
+    func setAutohide(isEnabled: Bool) {
+        isAutohideEnabled = isEnabled
+    }
+    
+    override func hideCell() {
         videoContainer.isHidden = true
     }
     
@@ -1485,7 +1510,12 @@ class PostVideoLoopContentCell: MediaContentCell {
         aDelegate?.contentCellDidClickVcvClickVideo(cc: self, pointX: pointX, pointY: pointY, view: videoContainer, mode: VideoTypes.V_LOOP)
         
         //test > hide photo
-        hideCell() //disabled for testing only
+//        hideCell() //disabled for testing only
+        
+        //test > hide photo
+        if(isAutohideEnabled) {
+            hideCell()
+        }
     }
     @objc func onVideoClicked(gesture: UITapGestureRecognizer) {
         print("postphoto click video:")
@@ -1495,7 +1525,12 @@ class PostVideoLoopContentCell: MediaContentCell {
         aDelegate?.contentCellDidClickVcvClickVideo(cc: self, pointX: pointX, pointY: pointY, view: videoContainer, mode: VideoTypes.V_LOOP)
         
         //test > hide photo
-        hideCell() //disabled for testing only
+//        hideCell() //disabled for testing only
+        
+        //test > hide photo
+        if(isAutohideEnabled) {
+            hideCell()
+        }
     }
     @objc func onVideoBtnClicked(gesture: UITapGestureRecognizer) {
         print("postphoto click video btn:")
@@ -1729,7 +1764,7 @@ class ShotPhotoContentCell: ContentCell {
         current_p_s = p
     }
     
-    func hideCell() {
+    override func hideCell() {
         scrollView.isHidden = true
     }
     
@@ -2350,6 +2385,21 @@ class PostQuoteContentCell: MediaContentCell {
         aTest.topAnchor.constraint(equalTo: eUserCover.bottomAnchor, constant: 0).isActive = true
     }
     
+    //*test
+    var isAutohideEnabled = true
+    func setAutohide(isEnabled: Bool) {
+        isAutohideEnabled = isEnabled
+    }
+    
+    override func hideCell() {
+        for e in aTestArray {
+            if let a = e as? ContentCell {
+                a.hideCell()
+            }
+        }
+    }
+    //*
+    
     override func dehideCell() {
         for e in aTestArray {
             if let a = e as? ContentCell {
@@ -2455,6 +2505,7 @@ class PostQuoteContentCell: MediaContentCell {
 //                contentCell.setState(p: data.p_s)
                 contentCell.setState(p: 0) //do not revert state for simplicity
                 contentCell.aDelegate = self
+                contentCell.setAutohide(isEnabled: isAutohideEnabled)
             }
             else if(l == "p_s") {
                 let cellWidth = viewWidth
@@ -2506,6 +2557,7 @@ class PostQuoteContentCell: MediaContentCell {
                 contentCell.configure(data: "a")
                 contentCell.setState(p: 0) //do not revert state for simplicity
                 contentCell.aDelegate = self
+                contentCell.setAutohide(isEnabled: isAutohideEnabled)
             }
             else if(l == "v_l") {//loop videos
                 let cellWidth = viewWidth
@@ -2557,6 +2609,7 @@ class PostQuoteContentCell: MediaContentCell {
                 contentCell.configure(data: "a")
                 contentCell.setState(t: 0.0)
                 contentCell.aDelegate = self
+                contentCell.setAutohide(isEnabled: isAutohideEnabled)
             
                 mediaArray.append(contentCell)
             }
@@ -2608,6 +2661,7 @@ class PostQuoteContentCell: MediaContentCell {
                 contentCell.configure(data: "a")
                 contentCell.setState(t: 0.0)
                 contentCell.aDelegate = self
+                contentCell.setAutohide(isEnabled: isAutohideEnabled)
                 
                 mediaArray.append(contentCell)
             }

@@ -18,6 +18,10 @@ protocol PostCreatorPanelDelegate : AnyObject {
     
     func didPostCreatorClickSignIn()
     func didPostCreatorClickUpload(payload: String)
+    
+    //test
+    func didPostCreatorClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
+    func didPostCreatorClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
 }
 
 class PostClip {
@@ -48,8 +52,8 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     let stackView = UIView()
     let uView = UIView()
 //    var boxList = [UIView]()
-    var bTextBottomCons: NSLayoutConstraint?
-    var bTextHeightCons: NSLayoutConstraint?
+    var pMiniBottomCons: NSLayoutConstraint?
+//    var bTextHeightCons: NSLayoutConstraint?
     
     let aUpload = UIView()
     let aSaveDraft = UIView()
@@ -70,6 +74,8 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     let mainEditPanel = UIView()
     let textEditPanel = UIView()
     let photoEditPanel = UIView()
+    let videoEditPanel = UIView()
+    let embedEditPanel = UIView()
     
     var scrollViewBottomCons: NSLayoutConstraint?
     
@@ -89,6 +95,9 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     //test > use pre-designated sound or location
     var predesignatedPlaceList = [String]()
     let aaText = UILabel()
+    
+    var hideCellIndex = -1
+    var playingMediaAssetIdx = -1
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -145,6 +154,19 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         bMiniBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         bMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
         
+        //test > add title
+        let aCreateTitleText = UILabel()
+        aCreateTitleText.textAlignment = .center
+        aCreateTitleText.textColor = .white
+//        aCreateTitleText.textColor = .ddmBlackOverlayColor
+        aCreateTitleText.font = .boldSystemFont(ofSize: 14) //16
+        panel.addSubview(aCreateTitleText)
+        aCreateTitleText.translatesAutoresizingMaskIntoConstraints = false
+        aCreateTitleText.centerYAnchor.constraint(equalTo: aBtn.centerYAnchor, constant: 0).isActive = true
+        aCreateTitleText.centerXAnchor.constraint(equalTo: panel.centerXAnchor, constant: 0).isActive = true
+        aCreateTitleText.text = "New Post"
+        aCreateTitleText.isHidden = false
+        
         //test > add a scrollview
 //        let scrollView = UIScrollView()
         panel.addSubview(scrollView)
@@ -189,6 +211,9 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         pMini.translatesAutoresizingMaskIntoConstraints = false
         pMini.topAnchor.constraint(equalTo: uView.topAnchor, constant: 20).isActive = true
         pMini.leadingAnchor.constraint(equalTo: uView.leadingAnchor, constant: 20).isActive = true
+//        pMini.bottomAnchor.constraint(equalTo: uView.bottomAnchor, constant: 0).isActive = true
+        pMiniBottomCons = pMini.bottomAnchor.constraint(equalTo: uView.bottomAnchor, constant: 0)
+        pMiniBottomCons?.isActive = true
         pMini.heightAnchor.constraint(equalToConstant: 40).isActive = true
         pMini.widthAnchor.constraint(equalToConstant: 40).isActive = true
         pMini.layer.cornerRadius = 20
@@ -531,13 +556,45 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         mainXGridText.centerXAnchor.constraint(equalTo: mainXGrid.centerXAnchor).isActive = true
         mainXGridText.text = "Text"
         
+        let mainYYGrid = UIView()
+        mainEditPanel.addSubview(mainYYGrid)
+        mainYYGrid.backgroundColor = .ddmDarkColor
+        mainYYGrid.translatesAutoresizingMaskIntoConstraints = false
+        mainYYGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        mainYYGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        mainYYGrid.leadingAnchor.constraint(equalTo: mainXGrid.trailingAnchor, constant: 20).isActive = true //10
+        mainYYGrid.topAnchor.constraint(equalTo: mainEditPanel.topAnchor, constant: 10).isActive = true
+//        mainYYGrid.centerYAnchor.constraint(equalTo: mainXGrid.centerYAnchor, constant: 0).isActive = true
+        mainYYGrid.layer.cornerRadius = 20 //10
+        mainYYGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onMainAddVideoClicked)))
+
+        let mainYYGridIcon = UIImageView(image: UIImage(named:"icon_outline_video")?.withRenderingMode(.alwaysTemplate))
+        mainYYGridIcon.tintColor = .white
+//        uView.addSubview(xGridIcon)
+        mainEditPanel.addSubview(mainYYGridIcon)
+        mainYYGridIcon.translatesAutoresizingMaskIntoConstraints = false
+        mainYYGridIcon.centerXAnchor.constraint(equalTo: mainYYGrid.centerXAnchor, constant: 0).isActive = true
+        mainYYGridIcon.centerYAnchor.constraint(equalTo: mainYYGrid.centerYAnchor, constant: 0).isActive = true
+        mainYYGridIcon.heightAnchor.constraint(equalToConstant: 20).isActive = true //26
+        mainYYGridIcon.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        
+        let mainYYGridText = UILabel()
+        mainYYGridText.textAlignment = .center
+        mainYYGridText.textColor = .white
+        mainYYGridText.font = .boldSystemFont(ofSize: 10)
+        mainEditPanel.addSubview(mainYYGridText)
+        mainYYGridText.translatesAutoresizingMaskIntoConstraints = false
+        mainYYGridText.topAnchor.constraint(equalTo: mainYYGrid.bottomAnchor, constant: 2).isActive = true
+        mainYYGridText.centerXAnchor.constraint(equalTo: mainYYGrid.centerXAnchor).isActive = true
+        mainYYGridText.text = "Video"
+        
         let mainYGrid = UIView()
         mainEditPanel.addSubview(mainYGrid)
         mainYGrid.backgroundColor = .ddmDarkColor
         mainYGrid.translatesAutoresizingMaskIntoConstraints = false
         mainYGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
         mainYGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        mainYGrid.leadingAnchor.constraint(equalTo: mainXGrid.trailingAnchor, constant: 20).isActive = true //10
+        mainYGrid.leadingAnchor.constraint(equalTo: mainYYGrid.trailingAnchor, constant: 20).isActive = true //10
         mainYGrid.topAnchor.constraint(equalTo: mainEditPanel.topAnchor, constant: 10).isActive = true
 //        mainYGrid.centerYAnchor.constraint(equalTo: mainXGrid.centerYAnchor, constant: 0).isActive = true
         mainYGrid.layer.cornerRadius = 20 //10
@@ -575,7 +632,8 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         mainZGrid.layer.cornerRadius = 20 //10
         mainZGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onMainEmbedClicked)))
         
-        let mainZGridIcon = UIImageView(image: UIImage(named:"icon_round_code")?.withRenderingMode(.alwaysTemplate))
+//        let mainZGridIcon = UIImageView(image: UIImage(named:"icon_round_code")?.withRenderingMode(.alwaysTemplate))
+        let mainZGridIcon = UIImageView(image: UIImage(named:"icon_round_add")?.withRenderingMode(.alwaysTemplate))
         mainZGridIcon.tintColor = .white
 //        uView.addSubview(xGridIcon)
         mainEditPanel.addSubview(mainZGridIcon)
@@ -659,7 +717,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         photoXGridText.translatesAutoresizingMaskIntoConstraints = false
         photoXGridText.topAnchor.constraint(equalTo: photoXGrid.bottomAnchor, constant: 2).isActive = true
         photoXGridText.centerXAnchor.constraint(equalTo: photoXGrid.centerXAnchor).isActive = true
-        photoXGridText.text = "Layout"
+        photoXGridText.text = "Swap" //Layout
         
         let photoYGrid = UIView()
         photoEditPanel.addSubview(photoYGrid)
@@ -729,28 +787,261 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         photoVGridText.centerXAnchor.constraint(equalTo: photoVGrid.centerXAnchor).isActive = true
         photoVGridText.text = "Delete"
         
-        let aPhotoOK = UIView()
-        aPhotoOK.backgroundColor = .yellow
-        photoEditPanel.addSubview(aPhotoOK)
-        aPhotoOK.translatesAutoresizingMaskIntoConstraints = false
-        aPhotoOK.trailingAnchor.constraint(equalTo: photoEditPanel.trailingAnchor, constant: -20).isActive = true
-        aPhotoOK.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        aPhotoOK.widthAnchor.constraint(equalToConstant: 30).isActive = true
-        aPhotoOK.topAnchor.constraint(equalTo: photoEditPanel.topAnchor, constant: 10).isActive = true
-//        aPhotoOK.centerYAnchor.constraint(equalTo: photoEditPanel.centerYAnchor, constant: 0).isActive = true
-        aPhotoOK.layer.cornerRadius = 15
-        aPhotoOK.isUserInteractionEnabled = true
-        aPhotoOK.isHidden = true
-        aPhotoOK.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPhotoNextClicked)))
+//        let aPhotoOK = UIView()
+//        aPhotoOK.backgroundColor = .yellow
+//        photoEditPanel.addSubview(aPhotoOK)
+//        aPhotoOK.translatesAutoresizingMaskIntoConstraints = false
+//        aPhotoOK.trailingAnchor.constraint(equalTo: photoEditPanel.trailingAnchor, constant: -20).isActive = true
+//        aPhotoOK.heightAnchor.constraint(equalToConstant: 30).isActive = true
+//        aPhotoOK.widthAnchor.constraint(equalToConstant: 30).isActive = true
+//        aPhotoOK.topAnchor.constraint(equalTo: photoEditPanel.topAnchor, constant: 10).isActive = true
+////        aPhotoOK.centerYAnchor.constraint(equalTo: photoEditPanel.centerYAnchor, constant: 0).isActive = true
+//        aPhotoOK.layer.cornerRadius = 15
+//        aPhotoOK.isUserInteractionEnabled = true
+//        aPhotoOK.isHidden = true
+//        aPhotoOK.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPhotoNextClicked)))
+//        
+//        let aPhotoOKMiniBtn = UIImageView(image: UIImage(named:"icon_round_done")?.withRenderingMode(.alwaysTemplate))
+//        aPhotoOKMiniBtn.tintColor = .black
+//        aPhotoOK.addSubview(aPhotoOKMiniBtn)
+//        aPhotoOKMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+//        aPhotoOKMiniBtn.centerXAnchor.constraint(equalTo: aPhotoOK.centerXAnchor).isActive = true
+//        aPhotoOKMiniBtn.centerYAnchor.constraint(equalTo: aPhotoOK.centerYAnchor).isActive = true
+//        aPhotoOKMiniBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true
+//        aPhotoOKMiniBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
         
-        let aPhotoOKMiniBtn = UIImageView(image: UIImage(named:"icon_round_done")?.withRenderingMode(.alwaysTemplate))
-        aPhotoOKMiniBtn.tintColor = .black
-        aPhotoOK.addSubview(aPhotoOKMiniBtn)
-        aPhotoOKMiniBtn.translatesAutoresizingMaskIntoConstraints = false
-        aPhotoOKMiniBtn.centerXAnchor.constraint(equalTo: aPhotoOK.centerXAnchor).isActive = true
-        aPhotoOKMiniBtn.centerYAnchor.constraint(equalTo: aPhotoOK.centerYAnchor).isActive = true
-        aPhotoOKMiniBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        aPhotoOKMiniBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        //video edit panel
+        toolPanel.addSubview(videoEditPanel)
+        videoEditPanel.translatesAutoresizingMaskIntoConstraints = false
+        videoEditPanel.bottomAnchor.constraint(equalTo: toolPanel.bottomAnchor, constant: 0).isActive = true
+        videoEditPanel.topAnchor.constraint(equalTo: toolPanel.topAnchor, constant: 0).isActive = true
+        videoEditPanel.leadingAnchor.constraint(equalTo: toolPanel.leadingAnchor, constant: 0).isActive = true
+        videoEditPanel.trailingAnchor.constraint(equalTo: toolPanel.trailingAnchor, constant: 0).isActive = true
+        videoEditPanel.isHidden = true
+        
+        let backVideoVcGrid = UIView() //edit vc
+        backVideoVcGrid.backgroundColor = .ddmDarkColor
+        videoEditPanel.addSubview(backVideoVcGrid)
+        backVideoVcGrid.translatesAutoresizingMaskIntoConstraints = false
+        backVideoVcGrid.leadingAnchor.constraint(equalTo: videoEditPanel.leadingAnchor, constant: 20).isActive = true
+        backVideoVcGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        backVideoVcGrid.widthAnchor.constraint(equalToConstant: 25).isActive = true
+        backVideoVcGrid.topAnchor.constraint(equalTo: videoEditPanel.topAnchor, constant: 10).isActive = true
+//        backVideoVcGrid.centerYAnchor.constraint(equalTo: photoEditPanel.centerYAnchor, constant: 0).isActive = true
+        backVideoVcGrid.layer.cornerRadius = 10
+        backVideoVcGrid.isUserInteractionEnabled = true
+        backVideoVcGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onVideoNextClicked)))
+        
+        let backVideoVcMiniBtn = UIImageView(image: UIImage(named:"icon_round_arrow_left")?.withRenderingMode(.alwaysTemplate))
+        backVideoVcMiniBtn.tintColor = .white
+        videoEditPanel.addSubview(backVideoVcMiniBtn)
+        backVideoVcMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        backVideoVcMiniBtn.centerXAnchor.constraint(equalTo: backVideoVcGrid.centerXAnchor).isActive = true
+        backVideoVcMiniBtn.centerYAnchor.constraint(equalTo: backVideoVcGrid.centerYAnchor).isActive = true
+        backVideoVcMiniBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        backVideoVcMiniBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        
+        let videoXGrid = UIView()
+        videoEditPanel.addSubview(videoXGrid)
+        videoXGrid.backgroundColor = .ddmDarkColor
+        videoXGrid.translatesAutoresizingMaskIntoConstraints = false
+        videoXGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        videoXGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        videoXGrid.leadingAnchor.constraint(equalTo: backVideoVcGrid.trailingAnchor, constant: 40).isActive = true
+        videoXGrid.topAnchor.constraint(equalTo: videoEditPanel.topAnchor, constant: 10).isActive = true
+//        videoXGrid.centerYAnchor.constraint(equalTo: photoEditPanel.centerYAnchor, constant: 0).isActive = true
+        videoXGrid.layer.cornerRadius = 20 //10
+        videoXGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onVideoAddTextClicked)))
+
+        let videoXGridIcon = UIImageView(image: UIImage(named:"icon_round_swap")?.withRenderingMode(.alwaysTemplate))
+        videoXGridIcon.tintColor = .white
+//        uView.addSubview(xGridIcon)
+        videoEditPanel.addSubview(videoXGridIcon)
+        videoXGridIcon.translatesAutoresizingMaskIntoConstraints = false
+//        videoXGridIcon.centerXAnchor.constraint(equalTo: pMini.centerXAnchor, constant: 0).isActive = true
+//        videoXGridIcon.bottomAnchor.constraint(equalTo: divider.topAnchor, constant: 0).isActive = true
+        videoXGridIcon.centerXAnchor.constraint(equalTo: videoXGrid.centerXAnchor, constant: 0).isActive = true
+        videoXGridIcon.centerYAnchor.constraint(equalTo: videoXGrid.centerYAnchor, constant: 0).isActive = true
+        videoXGridIcon.heightAnchor.constraint(equalToConstant: 20).isActive = true //26
+        videoXGridIcon.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        
+        let videoXGridText = UILabel()
+        videoXGridText.textAlignment = .center
+        videoXGridText.textColor = .white
+        videoXGridText.font = .boldSystemFont(ofSize: 10)
+        videoEditPanel.addSubview(videoXGridText)
+        videoXGridText.translatesAutoresizingMaskIntoConstraints = false
+        videoXGridText.topAnchor.constraint(equalTo: videoXGrid.bottomAnchor, constant: 2).isActive = true
+        videoXGridText.centerXAnchor.constraint(equalTo: videoXGrid.centerXAnchor).isActive = true
+        videoXGridText.text = "Swap"
+//
+//        let videoYGrid = UIView()
+//        videoEditPanel.addSubview(videoYGrid)
+//        videoYGrid.backgroundColor = .ddmDarkColor
+//        videoYGrid.translatesAutoresizingMaskIntoConstraints = false
+//        videoYGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
+//        videoYGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
+//        videoYGrid.leadingAnchor.constraint(equalTo: videoXGrid.trailingAnchor, constant: 20).isActive = true //0
+//        videoYGrid.topAnchor.constraint(equalTo: videoEditPanel.topAnchor, constant: 10).isActive = true
+////        videoYGrid.centerYAnchor.constraint(equalTo: photoXGrid.centerYAnchor, constant: 0).isActive = true
+//        videoYGrid.layer.cornerRadius = 20 //10
+//        videoYGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onVideoAddVideoClicked)))
+//
+////        let photoYGridIcon = UIImageView(image: UIImage(named:"icon_outline_photo")?.withRenderingMode(.alwaysTemplate))
+//        let videoYGridIcon = UIImageView(image: UIImage(named:"icon_round_add_v")?.withRenderingMode(.alwaysTemplate))
+//        videoYGridIcon.tintColor = .white
+////        uView.addSubview(xGridIcon)
+//        videoEditPanel.addSubview(videoYGridIcon)
+//        videoYGridIcon.translatesAutoresizingMaskIntoConstraints = false
+//        videoYGridIcon.centerXAnchor.constraint(equalTo: videoYGrid.centerXAnchor, constant: 0).isActive = true
+//        videoYGridIcon.centerYAnchor.constraint(equalTo: videoYGrid.centerYAnchor, constant: 0).isActive = true
+//        videoYGridIcon.heightAnchor.constraint(equalToConstant: 20).isActive = true //26
+//        videoYGridIcon.widthAnchor.constraint(equalToConstant: 20).isActive = true
+//        
+//        let videoYGridText = UILabel()
+//        videoYGridText.textAlignment = .center
+//        videoYGridText.textColor = .white
+//        videoYGridText.font = .boldSystemFont(ofSize: 10)
+//        videoEditPanel.addSubview(videoYGridText)
+//        videoYGridText.translatesAutoresizingMaskIntoConstraints = false
+//        videoYGridText.topAnchor.constraint(equalTo: videoYGrid.bottomAnchor, constant: 2).isActive = true
+//        videoYGridText.centerXAnchor.constraint(equalTo: videoYGrid.centerXAnchor).isActive = true
+//        videoYGridText.text = "Add Video"
+        
+        let videoVGrid = UIView() //delete vc
+//        videoVGrid.backgroundColor = .ddmDarkColor
+        videoVGrid.backgroundColor = .red
+        videoEditPanel.addSubview(videoVGrid)
+        videoVGrid.translatesAutoresizingMaskIntoConstraints = false
+        videoVGrid.trailingAnchor.constraint(equalTo: videoEditPanel.trailingAnchor, constant: -20).isActive = true
+//        videoVGrid.leadingAnchor.constraint(equalTo: photoYGrid.trailingAnchor, constant: 10).isActive = true //0
+        videoVGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        videoVGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        videoVGrid.topAnchor.constraint(equalTo: videoEditPanel.topAnchor, constant: 10).isActive = true
+//        videoVGrid.centerYAnchor.constraint(equalTo: photoEditPanel.centerYAnchor, constant: 0).isActive = true
+        videoVGrid.layer.cornerRadius = 20 //10
+        videoVGrid.layer.opacity = 0.5
+        videoVGrid.isUserInteractionEnabled = true
+        videoVGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onVideoDeleteSectionClicked)))
+
+        let videoVGridIcon = UIImageView(image: UIImage(named:"icon_round_delete")?.withRenderingMode(.alwaysTemplate))
+        videoVGridIcon.tintColor = .white
+        videoEditPanel.addSubview(videoVGridIcon)
+        videoVGridIcon.translatesAutoresizingMaskIntoConstraints = false
+        videoVGridIcon.centerXAnchor.constraint(equalTo: videoVGrid.centerXAnchor).isActive = true
+        videoVGridIcon.centerYAnchor.constraint(equalTo: videoVGrid.centerYAnchor).isActive = true
+        videoVGridIcon.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        videoVGridIcon.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        
+        let videoVGridText = UILabel()
+        videoVGridText.textAlignment = .center
+        videoVGridText.textColor = .white
+        videoVGridText.font = .boldSystemFont(ofSize: 10)
+        videoEditPanel.addSubview(videoVGridText)
+        videoVGridText.translatesAutoresizingMaskIntoConstraints = false
+        videoVGridText.topAnchor.constraint(equalTo: videoVGrid.bottomAnchor, constant: 2).isActive = true
+        videoVGridText.centerXAnchor.constraint(equalTo: videoVGrid.centerXAnchor).isActive = true
+        videoVGridText.text = "Delete"
+        
+        //embed edit panel
+        toolPanel.addSubview(embedEditPanel)
+        embedEditPanel.translatesAutoresizingMaskIntoConstraints = false
+        embedEditPanel.bottomAnchor.constraint(equalTo: toolPanel.bottomAnchor, constant: 0).isActive = true
+        embedEditPanel.topAnchor.constraint(equalTo: toolPanel.topAnchor, constant: 0).isActive = true
+        embedEditPanel.leadingAnchor.constraint(equalTo: toolPanel.leadingAnchor, constant: 0).isActive = true
+        embedEditPanel.trailingAnchor.constraint(equalTo: toolPanel.trailingAnchor, constant: 0).isActive = true
+        embedEditPanel.isHidden = true
+        
+        let backEmbedVcGrid = UIView() //edit vc
+        backEmbedVcGrid.backgroundColor = .ddmDarkColor
+        embedEditPanel.addSubview(backEmbedVcGrid)
+        backEmbedVcGrid.translatesAutoresizingMaskIntoConstraints = false
+        backEmbedVcGrid.leadingAnchor.constraint(equalTo: embedEditPanel.leadingAnchor, constant: 20).isActive = true
+        backEmbedVcGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        backEmbedVcGrid.widthAnchor.constraint(equalToConstant: 25).isActive = true
+        backEmbedVcGrid.topAnchor.constraint(equalTo: embedEditPanel.topAnchor, constant: 10).isActive = true
+//        backEmbedVcGrid.centerYAnchor.constraint(equalTo: photoEditPanel.centerYAnchor, constant: 0).isActive = true
+        backEmbedVcGrid.layer.cornerRadius = 10
+        backEmbedVcGrid.isUserInteractionEnabled = true
+        backEmbedVcGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onEmbedNextClicked)))
+        
+        let backEmbedVcMiniBtn = UIImageView(image: UIImage(named:"icon_round_arrow_left")?.withRenderingMode(.alwaysTemplate))
+        backEmbedVcMiniBtn.tintColor = .white
+        embedEditPanel.addSubview(backEmbedVcMiniBtn)
+        backEmbedVcMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        backEmbedVcMiniBtn.centerXAnchor.constraint(equalTo: backEmbedVcGrid.centerXAnchor).isActive = true
+        backEmbedVcMiniBtn.centerYAnchor.constraint(equalTo: backEmbedVcGrid.centerYAnchor).isActive = true
+        backEmbedVcMiniBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        backEmbedVcMiniBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        
+        let embedXGrid = UIView()
+        embedEditPanel.addSubview(embedXGrid)
+        embedXGrid.backgroundColor = .ddmDarkColor
+        embedXGrid.translatesAutoresizingMaskIntoConstraints = false
+        embedXGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        embedXGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        embedXGrid.leadingAnchor.constraint(equalTo: backEmbedVcGrid.trailingAnchor, constant: 40).isActive = true
+        embedXGrid.topAnchor.constraint(equalTo: embedEditPanel.topAnchor, constant: 10).isActive = true
+//        embedXGrid.centerYAnchor.constraint(equalTo: photoEditPanel.centerYAnchor, constant: 0).isActive = true
+        embedXGrid.layer.cornerRadius = 20 //10
+        embedXGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onEmbedAddTextClicked)))
+
+        let embedXGridIcon = UIImageView(image: UIImage(named:"icon_round_swap")?.withRenderingMode(.alwaysTemplate))
+        embedXGridIcon.tintColor = .white
+//        uView.addSubview(xGridIcon)
+        embedEditPanel.addSubview(embedXGridIcon)
+        embedXGridIcon.translatesAutoresizingMaskIntoConstraints = false
+//        embedXGridIcon.centerXAnchor.constraint(equalTo: pMini.centerXAnchor, constant: 0).isActive = true
+//        embedXGridIcon.bottomAnchor.constraint(equalTo: divider.topAnchor, constant: 0).isActive = true
+        embedXGridIcon.centerXAnchor.constraint(equalTo: embedXGrid.centerXAnchor, constant: 0).isActive = true
+        embedXGridIcon.centerYAnchor.constraint(equalTo: embedXGrid.centerYAnchor, constant: 0).isActive = true
+        embedXGridIcon.heightAnchor.constraint(equalToConstant: 20).isActive = true //26
+        embedXGridIcon.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        
+        let embedXGridText = UILabel()
+        embedXGridText.textAlignment = .center
+        embedXGridText.textColor = .white
+        embedXGridText.font = .boldSystemFont(ofSize: 10)
+        embedEditPanel.addSubview(embedXGridText)
+        embedXGridText.translatesAutoresizingMaskIntoConstraints = false
+        embedXGridText.topAnchor.constraint(equalTo: embedXGrid.bottomAnchor, constant: 2).isActive = true
+        embedXGridText.centerXAnchor.constraint(equalTo: embedXGrid.centerXAnchor).isActive = true
+        embedXGridText.text = "Swap"
+        
+        let embedVGrid = UIView() //delete vc
+//        embedVGrid.backgroundColor = .ddmDarkColor
+        embedVGrid.backgroundColor = .red
+        embedEditPanel.addSubview(embedVGrid)
+        embedVGrid.translatesAutoresizingMaskIntoConstraints = false
+        embedVGrid.trailingAnchor.constraint(equalTo: embedEditPanel.trailingAnchor, constant: -20).isActive = true
+//        embedVGrid.leadingAnchor.constraint(equalTo: photoYGrid.trailingAnchor, constant: 10).isActive = true //0
+        embedVGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        embedVGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        embedVGrid.topAnchor.constraint(equalTo: embedEditPanel.topAnchor, constant: 10).isActive = true
+//        embedVGrid.centerYAnchor.constraint(equalTo: photoEditPanel.centerYAnchor, constant: 0).isActive = true
+        embedVGrid.layer.cornerRadius = 20 //10
+        embedVGrid.layer.opacity = 0.5
+        embedVGrid.isUserInteractionEnabled = true
+        embedVGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onEmbedDeleteSectionClicked)))
+
+        let embedVGridIcon = UIImageView(image: UIImage(named:"icon_round_delete")?.withRenderingMode(.alwaysTemplate))
+        embedVGridIcon.tintColor = .white
+        embedEditPanel.addSubview(embedVGridIcon)
+        embedVGridIcon.translatesAutoresizingMaskIntoConstraints = false
+        embedVGridIcon.centerXAnchor.constraint(equalTo: embedVGrid.centerXAnchor).isActive = true
+        embedVGridIcon.centerYAnchor.constraint(equalTo: embedVGrid.centerYAnchor).isActive = true
+        embedVGridIcon.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        embedVGridIcon.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        
+        let embedVGridText = UILabel()
+        embedVGridText.textAlignment = .center
+        embedVGridText.textColor = .white
+        embedVGridText.font = .boldSystemFont(ofSize: 10)
+        embedEditPanel.addSubview(embedVGridText)
+        embedVGridText.translatesAutoresizingMaskIntoConstraints = false
+        embedVGridText.topAnchor.constraint(equalTo: embedVGrid.bottomAnchor, constant: 2).isActive = true
+        embedVGridText.centerXAnchor.constraint(equalTo: embedVGrid.centerXAnchor).isActive = true
+        embedVGridText.text = "Delete"
         
 //        textEditPanel.backgroundColor = .ddmBlackOverlayColor //black
 //        textEditPanel.backgroundColor = .ddmBlackDark
@@ -814,7 +1105,20 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         yGrid.layer.cornerRadius = 20 //10
         yGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onTextHashtagClicked)))
         
-        let yGridIcon = UIImageView(image: UIImage(named:"icon_round_hashtag")?.withRenderingMode(.alwaysTemplate))
+//        let yGridIcon = UIImageView(image: UIImage(named:"icon_round_hashtag")?.withRenderingMode(.alwaysTemplate))
+//        yGridIcon.tintColor = .white
+////        uView.addSubview(yGridIcon)
+//        textEditPanel.addSubview(yGridIcon)
+//        yGridIcon.translatesAutoresizingMaskIntoConstraints = false
+////        yGridIcon.leadingAnchor.constraint(equalTo: xGridIcon.trailingAnchor, constant: 15).isActive = true
+////        yGridIcon.centerYAnchor.constraint(equalTo: xGridIcon.centerYAnchor, constant: 0).isActive = true
+//        yGridIcon.centerXAnchor.constraint(equalTo: yGrid.centerXAnchor, constant: 0).isActive = true
+//        yGridIcon.centerYAnchor.constraint(equalTo: yGrid.centerYAnchor, constant: 0).isActive = true
+//        yGridIcon.heightAnchor.constraint(equalToConstant: 20).isActive = true //26
+//        yGridIcon.widthAnchor.constraint(equalToConstant: 20).isActive = true
+////        yGridIcon.layer.opacity = 0.5
+        
+        let yGridIcon = UIImageView(image: UIImage(named:"icon_outline_video")?.withRenderingMode(.alwaysTemplate))
         yGridIcon.tintColor = .white
 //        uView.addSubview(yGridIcon)
         textEditPanel.addSubview(yGridIcon)
@@ -823,8 +1127,8 @@ class PostCreatorConsolePanelView: CreatorPanelView{
 //        yGridIcon.centerYAnchor.constraint(equalTo: xGridIcon.centerYAnchor, constant: 0).isActive = true
         yGridIcon.centerXAnchor.constraint(equalTo: yGrid.centerXAnchor, constant: 0).isActive = true
         yGridIcon.centerYAnchor.constraint(equalTo: yGrid.centerYAnchor, constant: 0).isActive = true
-        yGridIcon.heightAnchor.constraint(equalToConstant: 20).isActive = true //26
-        yGridIcon.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        yGridIcon.heightAnchor.constraint(equalToConstant: 22).isActive = true //26
+        yGridIcon.widthAnchor.constraint(equalToConstant: 22).isActive = true
 //        yGridIcon.layer.opacity = 0.5
 
         let zGrid = UIView()
@@ -855,26 +1159,29 @@ class PostCreatorConsolePanelView: CreatorPanelView{
 //        zGridIcon.layer.opacity = 0.5
         
         let aTextOK = UIView()
-        aTextOK.backgroundColor = .yellow
+//        aTextOK.backgroundColor = .yellow
+        aTextOK.backgroundColor = .ddmDarkColor
         textEditPanel.addSubview(aTextOK)
         aTextOK.translatesAutoresizingMaskIntoConstraints = false
         aTextOK.trailingAnchor.constraint(equalTo: textEditPanel.trailingAnchor, constant: -20).isActive = true
-        aTextOK.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        aTextOK.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        aTextOK.heightAnchor.constraint(equalToConstant: 40).isActive = true //40
+        aTextOK.widthAnchor.constraint(equalToConstant: 40).isActive = true
         aTextOK.centerYAnchor.constraint(equalTo: textEditPanel.centerYAnchor, constant: 0).isActive = true
-        aTextOK.layer.cornerRadius = 15
+        aTextOK.layer.cornerRadius = 20 //15
         aTextOK.isUserInteractionEnabled = true
         aTextOK.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onTextNextClicked)))
 //        aTextOK.isHidden = true
         
-        let aTextOKMiniBtn = UIImageView(image: UIImage(named:"icon_round_done")?.withRenderingMode(.alwaysTemplate))
-        aTextOKMiniBtn.tintColor = .black
+//        let aTextOKMiniBtn = UIImageView(image: UIImage(named:"icon_round_done")?.withRenderingMode(.alwaysTemplate))
+        let aTextOKMiniBtn = UIImageView(image: UIImage(named:"icon_outline_keyboard_hide")?.withRenderingMode(.alwaysTemplate))
+//        aTextOKMiniBtn.tintColor = .black
+        aTextOKMiniBtn.tintColor = .white
         aTextOK.addSubview(aTextOKMiniBtn)
         aTextOKMiniBtn.translatesAutoresizingMaskIntoConstraints = false
         aTextOKMiniBtn.centerXAnchor.constraint(equalTo: aTextOK.centerXAnchor).isActive = true
         aTextOKMiniBtn.centerYAnchor.constraint(equalTo: aTextOK.centerYAnchor).isActive = true
-        aTextOKMiniBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        aTextOKMiniBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        aTextOKMiniBtn.heightAnchor.constraint(equalToConstant: 22).isActive = true //20
+        aTextOKMiniBtn.widthAnchor.constraint(equalToConstant: 22).isActive = true
         
         //test > error handling max selected limit
 //        maxLimitErrorPanel.backgroundColor = .ddmBlackOverlayColor //black
@@ -941,6 +1248,123 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         
         //test > check for signin status when in active state
         asyncFetchSigninStatus()
+        
+        //test > dehide cell and resume playing media
+        resumeMediaAsset()
+        dehideCell()
+    }
+    
+    func dehideCell() {
+        if(hideCellIndex > -1) {
+            if let currentTBox = pcList[hideCellIndex].tBox as? PostClipCell {
+                currentTBox.dehideCell()
+                
+                print("dehidecell \(hideCellIndex)")
+                hideCellIndex = -1
+            }
+        }
+    }
+    
+    func pauseMediaAsset() {
+        if(playingMediaAssetIdx > -1) {
+            if let currentTBox = pcList[playingMediaAssetIdx].tBox as? PostClipCell {
+                currentTBox.pauseMedia()
+                
+                playingMediaAssetIdx = -1
+            }
+        }
+    }
+    
+    func resumeMediaAsset() {
+        if(playingMediaAssetIdx > -1) {
+            if let currentTBox = pcList[playingMediaAssetIdx].tBox as? PostClipCell {
+                currentTBox.resumeMedia()
+                
+                playingMediaAssetIdx = -1
+            }
+        }
+    }
+    
+    //test > destroy cell
+    func destroyCell() {
+        if(playingMediaAssetIdx > -1) {
+            if let tBox = pcList[playingMediaAssetIdx].tBox as? PostClipCell {
+                tBox.destroyCell()
+                
+                playingMediaAssetIdx = -1
+            }
+        }
+    }
+    func destroyCell(i: Int) {
+        if(i > -1) {
+            if let tBox = pcList[i].tBox as? PostClipCell {
+                tBox.destroyCell()
+            }
+        }
+    }
+    
+    func getIntersect() {
+        let dummyTopMargin = 200.0
+//        let panelRectY = panelView.frame.origin.y
+        let vCvRectY = scrollView.frame.origin.y
+        let dummyOriginY = vCvRectY + dummyTopMargin
+        let dummyView = CGRect(x: 0, y: dummyOriginY, width: self.frame.width, height: 300)
+//        let dummyView = CGRect(x: 0, y: dummyOriginY, width: 20, height: 300)
+        //*just in case > add view for illustration
+//        let dV = UIView(frame: dummyView)
+//        dV.backgroundColor = .blue
+//        self.addSubview(dV)
+        
+//        var cellAssetIdxArray = [Int]()
+        print("postcreator intersect playmediaidx \(playingMediaAssetIdx)")
+        
+        if(playingMediaAssetIdx > -1) {
+            if let currentTBox = pcList[playingMediaAssetIdx].tBox as? PostClipCell {
+                let cellRect = uView.convert(currentTBox.frame, to: self)
+                let aTestRect = currentTBox.aHLightRect1.frame
+                if(!currentTBox.aTestArray.isEmpty) {
+                    let c = currentTBox.aTestArray.count - 1
+                    if let q = currentTBox.aTestArray[c] as? PostQuoteContentCell {
+                        let pp = q.mediaArray
+                        
+                        if(!pp.isEmpty) {
+                            for mm in pp {
+                                let mmFrame = mm.frame
+                                let aaTestRect = q.aTest.frame
+                                
+                                let mFrame = q.frame
+                                let cVidCOriginY = mFrame.origin.y + aTestRect.origin.y + cellRect.origin.y + mmFrame.origin.y + aaTestRect.origin.y
+                                let cVidCRect = CGRect(x: 0, y: cVidCOriginY, width: mmFrame.size.width, height: mmFrame.size.height)
+                                
+                                let isIntersect = dummyView.intersects(cVidCRect)
+                                if(isIntersect) {
+                                    print("postcreator intersect a Y")
+                                } else {
+                                    print("postcreator intersect a N")
+                                    pauseMediaAsset()
+                                    playingMediaAssetIdx = -1
+                                }
+                            }
+                        }
+                    } else {
+                        if let a = currentTBox.aTestArray[c] as? ContentCell{
+                            let mFrame = a.frame
+                            let cVidCOriginY = mFrame.origin.y + aTestRect.origin.y + cellRect.origin.y
+                            let cVidCRect = CGRect(x: 0, y: cVidCOriginY, width: mFrame.size.width, height: mFrame.size.height)
+                            
+                            let isIntersect = dummyView.intersects(cVidCRect)
+                            if(isIntersect) {
+                                print("postcreator intersect b Y")
+                            } else {
+                                print("postcreator intersect b N")
+                                pauseMediaAsset()
+                                playingMediaAssetIdx = -1
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
     
     //test > initialization state
@@ -968,7 +1392,21 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                 pNameText.text = "Michael Kins"
                 
                 //test > add first textview
-                addTextSection(i: 0, extraContentSize: 0.0, textToAdd: "")
+                addTextSection(i: 0, extraContentSize: 0.0, textToAdd: "", toSetCursor: true)
+                
+                //* special test > embed post within post
+                if(quoteObjectType != "") {
+                    let vUrls = [URL]()
+                    let textBoxHeight = 17.0
+                    let textBoxTopMargin = 20.0
+                    let extraMargin = textBoxTopMargin + textBoxHeight
+//                    attachContentAtInitialize(urls: vUrls, dataType: "q", extraYMargin: extraMargin)
+                    attachContentAtInitialize(urls: vUrls, dataType: quoteObjectType, extraYMargin: extraMargin)
+                }
+                //*
+                //test > refresh tagged location 
+                refreshPlaceTitleUI()
+                //
                 
                 aBox.isHidden = false //show add location
             } else {
@@ -1008,15 +1446,23 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     
     func setPredesignatedPlace(p: String) {
         predesignatedPlaceList.append("p")
-        refreshTitleUI()
+//        refreshPlaceTitleUI()
     }
     
-    func refreshTitleUI(){
+    func refreshPlaceTitleUI(){
         aaText.text = "Add Location"
         
         if(!predesignatedPlaceList.isEmpty) {
             aaText.text = "Petronas Twin Tower"
         }
+    }
+    
+    //test => attach quote object at initialization
+    var quoteObjectType = ""
+    var quoteObjectId = ""
+    func setQuoteObject(type: String, id: String) {
+        quoteObjectId = id
+        quoteObjectType = type
     }
 
     func setFirstResponder(textView: UITextView) {
@@ -1033,14 +1479,11 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         //shift scrollview down
         let bottomMargin = 90.0 + bottomInset //60
         scrollViewBottomCons?.constant = -bottomMargin
-//        scrollViewBottomCons?.constant = -120
         
         isKeyboardUp = false
 //        keyboardHeight = 0.0 //test > save keyboardheight as constant
         
-        mainEditPanel.isHidden = false
-        textEditPanel.isHidden = true
-        photoEditPanel.isHidden = true
+        activatePanel(panel: "mainEditPanel")
         
         //test
         textBeforeCursor = ""
@@ -1053,11 +1496,17 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                 self.panelTopCons?.constant = 0
                 self.layoutIfNeeded()
             }, completion: { _ in
+                //test
+                self.destroyCell()
+                
                 self.removeFromSuperview()
                 
                 self.delegate?.didClickFinishPostCreator()
             })
         } else {
+            //test
+            self.destroyCell()
+            
             self.removeFromSuperview()
             
             self.delegate?.didClickFinishPostCreator()
@@ -1079,7 +1528,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         if(isSignedIn) {
             if(!pcList.isEmpty) {
                 if(pcList[pcList.count - 1].tBoxType != "t") {
-                    addTextSection(i: pcList.count - 1, extraContentSize: 0.0, textToAdd: "")
+                    addTextSection(i: pcList.count - 1, extraContentSize: 0.0, textToAdd: "", toSetCursor: true)
                 } else {
                     if let aTBox = pcList[pcList.count - 1].tBox as? UITextView {
                         setFirstResponder(textView: aTBox)
@@ -1091,38 +1540,31 @@ class PostCreatorConsolePanelView: CreatorPanelView{
             delegate?.didPostCreatorClickSignIn()
         }
     }
+    @objc func onMainAddVideoClicked(gesture: UITapGestureRecognizer) {
+        //test 3 > add video at the end
+        clearErrorUI()
+        
+        let isSignedIn = SignInManager.shared.getStatus()
+        if(isSignedIn) {
+            
+            //test 2 > open camera to select photo
+//            openCameraPhotoRoll()
+            openCameraVideoRoll()
+        }
+        else {
+            delegate?.didPostCreatorClickSignIn()
+        }
+    }
     @objc func onMainAddPhotoClicked(gesture: UITapGestureRecognizer) {
         //test 3 > add photo at the end
         clearErrorUI()
         
         let isSignedIn = SignInManager.shared.getStatus()
         if(isSignedIn) {
-            //test > ori method
-//            if(!pcList.isEmpty) {
-//                let initialSelectedIndex = pcList.count - 1
-////                addPhotoSection(i: initialSelectedIndex, textToAdd: "")
-//                
-//                //test > new url method
-////                let url = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
-////                if let u = url {
-////                    addPhotoSection(i: initialSelectedIndex, textToAdd: "", url: u)
-////                }
-//                let urls = [URL]()
-//                let assetSize = computePhotoSize()
-//                addPhotoSection(i: initialSelectedIndex, textToAdd: "", urls: urls, cSize: assetSize)
-//                
-//                if(pcList[initialSelectedIndex].tBoxType == "t") {
-//                    if let tBoxTv = pcList[initialSelectedIndex].tBox as? UITextView {
-//                        if(tBoxTv.text == "") {
-//                            removeTextSection(i: initialSelectedIndex)
-//                        }
-//                    }
-//                }
-//            }
             
             //test 2 > open camera to select photo
-//            openCameraPhotoRoll()
-            openCameraVideoRoll()
+            openCameraPhotoRoll()
+//            openCameraVideoRoll()
         }
         else {
             delegate?.didPostCreatorClickSignIn()
@@ -1139,6 +1581,8 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         else {
             delegate?.didPostCreatorClickSignIn()
         }
+        
+//        getIntersect()
     }
     
     @objc func onTextAtClicked(gesture: UITapGestureRecognizer) {
@@ -1146,6 +1590,20 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     }
     
     @objc func onTextHashtagClicked(gesture: UITapGestureRecognizer) {
+        print("post create addvideo")
+        clearErrorUI()
+        
+        //test 2 > open camera
+        let aTextBeforeCursor = textBeforeCursor //test > save text as resignresponder() cancel out textbeforecursor
+        let aTextAfterCursor = textAfterCursor
+        
+        //*test 1 > open camera to add video
+        resignResponder()
+        openCameraVideoRoll()
+        //*
+        
+        textBeforeCursor = aTextBeforeCursor
+        textAfterCursor = aTextAfterCursor
 
     }
     
@@ -1160,98 +1618,11 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         
         //*test 1 > open camera to add photo
         resignResponder()
-//        openCameraPhotoRoll()
-        openCameraVideoRoll()
+        openCameraPhotoRoll()
         //*
         
         textBeforeCursor = aTextBeforeCursor
         textAfterCursor = aTextAfterCursor
-        
-        //****test > ori => directly add photo
-//        clearErrorUI()
-//        
-//        print("xy txt+Photo a: \(selectedPcIndex), \(computePcPosition(index: selectedPcIndex, isInclusive: true)), \(stackView.frame.height)")
-//        let currentYPosition = computePcPosition(index: selectedPcIndex, isInclusive: true)
-//        let stackViewH = stackView.frame.height
-//        
-//        //test 2 > textbeforecursor, textaftercursor
-//        let aTextBeforeCursor = textBeforeCursor
-//        let aTextAfterCursor = textAfterCursor
-////        print("xy addphoto: \(selectedPcIndex), \(textBeforeCursor), \(textAfterCursor)")
-//        
-//        //test 3 > add photo in index i
-//        let initialSelectedIndex = selectedPcIndex
-//        
-//        let assetSize = computePhotoSize()
-//        let urls = [URL]()
-////        addPhotoSection(i: selectedPcIndex, textToAdd: aTextAfterCursor)
-//        addPhotoSection(i: selectedPcIndex, textToAdd: aTextAfterCursor, urls: urls, cSize: assetSize)
-//        
-//        //TODO 1: remove empty text section when adding photo
-//        //case 1: textbeforecursor "", add photo and textview with text below, remove current textview
-//        //case 2: textaftercursor "", add photo only, no need to add textview
-//        //case 3: cursor in middle, add photo and textview, repopulate both textviews
-//        //case 4: empty text, add photo only
-//        if(pcList[initialSelectedIndex].tBoxType == "t") {
-//            if let tBoxTv = pcList[initialSelectedIndex].tBox as? UITextView {
-//                //case 4
-//                if(tBoxTv.text == "") {
-////                    print("xy addphoto case 4")
-//                    if(initialSelectedIndex > 0) { //test > prevent index 0 from being removed
-//                        removeTextSection(i: initialSelectedIndex)
-//                        
-//                        //the new selectedindex of appended textview has to be deducted -1 coz removal of empty tv
-//                        if(selectedPcIndex > initialSelectedIndex) {
-//                            selectedPcIndex = selectedPcIndex - 1
-//                        }
-//                    }
-//                }
-//                else {
-//                    //case 3
-////                    let oldH = tBoxTv.contentSize.height
-//                    tBoxTv.text = aTextBeforeCursor
-//                    let newH = tBoxTv.contentSize.height
-//                    pcList[initialSelectedIndex].tBoxHeightCons?.constant = newH //update tbox height
-////                    print("xy addphoto case 3, \(stackView.frame.height)")
-//                    
-//                    let currentString: NSString = (tBoxTv.text ?? "") as NSString
-//                    let length = currentString.length
-//                    if(length > 0) {
-//                        pcList[initialSelectedIndex].tvBoxHint?.isHidden = true
-//                    } else {
-//                        pcList[initialSelectedIndex].tvBoxHint?.isHidden = false
-//                    }
-//                    
-//                    //case 1
-//                    if(aTextBeforeCursor == "") {
-////                        print("xy addphoto case 1")
-//                        removeTextSection(i: initialSelectedIndex)
-//                        
-//                        //the new selectedindex of appended textview has to be deducted -1 coz removal of empty tv
-//                        if(selectedPcIndex > initialSelectedIndex) {
-//                            selectedPcIndex = selectedPcIndex - 1
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        
-//        
-//        //test > scroll to position if not visible
-////        let y = scrollView.contentOffset.y
-//        let scrollViewBottomMargin = keyboardHeight + 60.0 //60
-//        let stackViewHeight = stackViewH + 280.0 + 20.0
-//        let scrollViewHeight = viewHeight - (50.0 + topInset) - scrollViewBottomMargin
-//        var scrollGap = stackViewHeight - scrollViewHeight
-//        if(scrollGap <= 0) {
-//            scrollGap = 0.0
-//        }
-//
-//        let yHeight = currentYPosition + 280.0 + 20.0
-//        let yContentOffset = yHeight/stackViewHeight * scrollGap
-//        scrollView.setContentOffset(CGPoint(x: 0, y: yContentOffset), animated: false)
-//        print("xy txt+Photo b: \(selectedPcIndex), \(stackViewHeight)")
-        //****
     }
     
     @objc func onTextNextClicked(gesture: UITapGestureRecognizer) {
@@ -1285,20 +1656,36 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     }
     
     @objc func onPhotoAddTextClicked(gesture: UITapGestureRecognizer) {
+        //test > to add text after photo
+        clearErrorUI()
         
+        let isSignedIn = SignInManager.shared.getStatus()
+        if(isSignedIn) {
+            if(!pcList.isEmpty) {
+                if(pcList[selectedPcIndex + 1].tBoxType != "t") {
+                    print("photoaddtext A \(selectedPcIndex)")
+                    addTextSection(i: selectedPcIndex, extraContentSize: 0.0, textToAdd: "", toSetCursor: true)
+                } else {
+                    print("photoaddtext B")
+                    if let aTBox = pcList[selectedPcIndex + 1].tBox as? UITextView {
+                        setFirstResponder(textView: aTBox)
+                    }
+                }
+            }
+        }
+        else {
+            delegate?.didPostCreatorClickSignIn()
+        }
     }
     @objc func onPhotoAddPhotoClicked(gesture: UITapGestureRecognizer) {
 
-        
     }
     @objc func onPhotoDeleteSectionClicked(gesture: UITapGestureRecognizer) {
         
         clearErrorUI()
         
         unselectPostClipCell(i: selectedPcIndex)
-        mainEditPanel.isHidden = false
-        textEditPanel.isHidden = true
-        photoEditPanel.isHidden = true
+        activatePanel(panel: "mainEditPanel")
         
         removeContentSection(i: selectedPcIndex)
 //        selectedPcIndex = -1
@@ -1310,13 +1697,103 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         unselectPostClipCell(i: selectedPcIndex)
         selectedPcIndex = -1
         
-        mainEditPanel.isHidden = false
+        activatePanel(panel: "mainEditPanel")
+    }
+    
+    @objc func onVideoAddTextClicked(gesture: UITapGestureRecognizer) {
+        //test > to add text after video
+        clearErrorUI()
+        
+        let isSignedIn = SignInManager.shared.getStatus()
+        if(isSignedIn) {
+            if(!pcList.isEmpty) {
+                if(pcList[selectedPcIndex + 1].tBoxType != "t") {
+                    print("videoaddtext A \(selectedPcIndex)")
+                    addTextSection(i: selectedPcIndex, extraContentSize: 0.0, textToAdd: "", toSetCursor: true)
+                } else {
+                    print("videoaddtext B")
+                    if let aTBox = pcList[selectedPcIndex + 1].tBox as? UITextView {
+                        setFirstResponder(textView: aTBox)
+                    }
+                }
+            }
+        }
+        else {
+            delegate?.didPostCreatorClickSignIn()
+        }
+    }
+    @objc func onVideoAddVideoClicked(gesture: UITapGestureRecognizer) {
+
+    }
+    @objc func onVideoDeleteSectionClicked(gesture: UITapGestureRecognizer) {
+        
+        clearErrorUI()
+        
+        unselectPostClipCell(i: selectedPcIndex)
+        activatePanel(panel: "mainEditPanel")
+        
+        removeContentSection(i: selectedPcIndex)
+//        selectedPcIndex = -1
+    }
+    @objc func onVideoNextClicked(gesture: UITapGestureRecognizer) {
+        
+        clearErrorUI()
+        
+        unselectPostClipCell(i: selectedPcIndex)
+        selectedPcIndex = -1
+        
+        activatePanel(panel: "mainEditPanel")
+    }
+    
+    @objc func onEmbedAddTextClicked(gesture: UITapGestureRecognizer) {
+        
+    }
+    @objc func onEmbedDeleteSectionClicked(gesture: UITapGestureRecognizer) {
+        
+        clearErrorUI()
+        
+        unselectPostClipCell(i: selectedPcIndex)
+        activatePanel(panel: "mainEditPanel")
+        
+        removeContentSection(i: selectedPcIndex)
+//        selectedPcIndex = -1
+    }
+    @objc func onEmbedNextClicked(gesture: UITapGestureRecognizer) {
+        
+        clearErrorUI()
+        
+        unselectPostClipCell(i: selectedPcIndex)
+        selectedPcIndex = -1
+
+        activatePanel(panel: "mainEditPanel")
+    }
+    
+    //utility function
+    func activatePanel(panel: String) {
+        mainEditPanel.isHidden = true
         textEditPanel.isHidden = true
         photoEditPanel.isHidden = true
+        videoEditPanel.isHidden = true
+        embedEditPanel.isHidden = true
+        
+        if(panel == "mainEditPanel") {
+            mainEditPanel.isHidden = false
+        } else if(panel == "textEditPanel") {
+            textEditPanel.isHidden = false
+        } else if(panel == "photoEditPanel") {
+            photoEditPanel.isHidden = false
+        } else if(panel == "videoEditPanel") {
+            videoEditPanel.isHidden = false
+        } else if(panel == "embedEditPanel") {
+            embedEditPanel.isHidden = false
+        }
     }
 
     //test > add photo/video section => in multiple format/layout
-    func addContentSection(i: Int, textToAdd: String, urls: [URL], cSize: CGSize, dataType: String) {
+    func addContentSection(i: Int, textToAdd: String, urls: [URL], cSize: CGSize, dataType: String, extraYMargin: CGFloat) {
+        addContentSection(i: i, textToAdd: textToAdd, urls: urls, cSize: cSize, dataType: dataType, extraYMargin: extraYMargin, toSetCursor: true)
+    }
+    func addContentSection(i: Int, textToAdd: String, urls: [URL], cSize: CGSize, dataType: String, extraYMargin: CGFloat, toSetCursor: Bool) {
         //if index is last member
         var isIndexLastElement = false
         var isToAppendText = false
@@ -1328,7 +1805,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         //*test 2 > with reusable cell
         let a = PostClip()
         a.tBoxType = dataType //p for photo
-        let cell = PostClipPhotoCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
+        let cell = PostClipCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
         uView.addSubview(cell)
         cell.translatesAutoresizingMaskIntoConstraints = false
         cell.trailingAnchor.constraint(equalTo: uView.trailingAnchor, constant: 0).isActive = true
@@ -1351,7 +1828,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
             if(i < pcList.count - 1) {
                 if let nextTBox = pcList[i + 1].tBox {
                     pcList[i + 1].tBoxTopCons?.isActive = false
-                    pcList[i + 1].tBoxTopCons = nextTBox.topAnchor.constraint(equalTo: cell.bottomAnchor, constant: 10) //20
+                    pcList[i + 1].tBoxTopCons = nextTBox.topAnchor.constraint(equalTo: cell.bottomAnchor, constant: 10)
                     pcList[i + 1].tBoxTopCons?.isActive = true
                 }
                 
@@ -1365,13 +1842,22 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         
         //to append text section if last element
         if(isIndexLastElement || isToAppendText) {
-//            let extraSize = 280.0 + 20.0
-            let extraSize = cSize.height + 20.0
-            addTextSection(i: i + 1, extraContentSize: extraSize, textToAdd: textToAdd)
+//            let extraSize = cSize.height + 20.0
+            let extraSize = cSize.height + 20.0 + extraYMargin
+//            addTextSection(i: i + 1, extraContentSize: extraSize, textToAdd: textToAdd, toSetCursor: true)
+            addTextSection(i: i + 1, extraContentSize: extraSize, textToAdd: textToAdd, toSetCursor: toSetCursor)
         }
         else {
-            let sHeight = stackView.frame.height
-//            let newHeight = sHeight + 280.0 + 20.0
+            var sHeight = stackView.frame.height
+            if(sHeight <= 0.0) {
+                let pMiniH = 40.0
+                let pMiniTopMargin = 20.0
+                let locationBoxTopMargin = 40.0
+                let locationBoxH = 30.0
+                let locationBoxBottomMargin = 40.0
+                sHeight = pMiniH + pMiniTopMargin + locationBoxTopMargin + locationBoxH + locationBoxBottomMargin
+            }
+            print("addcontentB \(sHeight)")
             let newHeight = sHeight + cSize.height + 20.0
             scrollView.contentSize = CGSize(width: stackView.frame.width, height: newHeight)
             
@@ -1400,7 +1886,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         //test 3 > add photo in index i
         let initialSelectedIndex = selectedPcIndex
         //test > new url method
-        addContentSection(i: selectedPcIndex, textToAdd: aTextAfterCursor, urls: urls, cSize: assetSize, dataType: dataType)
+        addContentSection(i: selectedPcIndex, textToAdd: aTextAfterCursor, urls: urls, cSize: assetSize, dataType: dataType, extraYMargin: 0.0)
         
         //TODO 1: remove empty text section when adding photo
         //case 1: textbeforecursor "", add photo and textview with text below, remove current textview
@@ -1451,7 +1937,6 @@ class PostCreatorConsolePanelView: CreatorPanelView{
             }
         }
         
-        
         //test > scroll to position if not visible
 //        let y = scrollView.contentOffset.y
         let scrollViewBottomMargin = keyboardHeight + 60.0 //60 => texteditpanel height
@@ -1468,19 +1953,19 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         print("xy txt+Photo b: \(selectedPcIndex), \(stackViewHeight), \(scrollViewHeight), \(scrollViewBottomMargin)")
     }
     
-    func addContentAtMain(urls: [URL], dataType: String) {
+    func attachContentAtInitialize(urls: [URL], dataType: String, extraYMargin: CGFloat) {
+        addContentAtMain(urls: urls, dataType: dataType, extraYMargin: extraYMargin, toSetCursor: false)
+    }
+    func addContentAtMain(urls: [URL], dataType: String){
+        addContentAtMain(urls: urls, dataType: dataType, extraYMargin: 0.0, toSetCursor: true)
+    }
+    func addContentAtMain(urls: [URL], dataType: String, extraYMargin: CGFloat, toSetCursor: Bool) {
+        print("addcontent at main a: \(stackView.frame.height), \(extraYMargin)")
         if(!pcList.isEmpty) {
             let initialSelectedIndex = pcList.count - 1
-//                addPhotoSection(i: initialSelectedIndex, textToAdd: "")
-
-            //test > new url method
-//            let url = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
-//            if let u = url {
-//                addPhotoSection(i: initialSelectedIndex, textToAdd: "", url: u)
-//            }
             
             let assetSize = computeContentSize(dataType: dataType)
-            addContentSection(i: initialSelectedIndex, textToAdd: "", urls: urls, cSize: assetSize, dataType: dataType)
+            addContentSection(i: initialSelectedIndex, textToAdd: "", urls: urls, cSize: assetSize, dataType: dataType, extraYMargin: extraYMargin, toSetCursor: toSetCursor)
 
             if(pcList[initialSelectedIndex].tBoxType == "t") {
                 if let tBoxTv = pcList[initialSelectedIndex].tBox as? UITextView {
@@ -1785,8 +2270,11 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         }
     }
     
-    func addTextSection(i: Int, extraContentSize: CGFloat, textToAdd: String) {
+    func addTextSection(i: Int, extraContentSize: CGFloat, textToAdd: String, toSetCursor: Bool) {
         if(pcList.isEmpty) {
+            
+            pMiniBottomCons?.isActive = false //test
+            
             let a = PostClip()
             a.tBoxType = "t"
             let bTv = UITextView()
@@ -1829,18 +2317,30 @@ class PostCreatorConsolePanelView: CreatorPanelView{
             
             pcList.append(a)
             
-            setFirstResponder(textView: bTv)
+            if(toSetCursor) {
+                setFirstResponder(textView: bTv)
+            }
             
-            let sHeight = stackView.frame.height
+            var sHeight = stackView.frame.height
+            if(sHeight <= 0.0) {
+                let pMiniH = 40.0
+                let pMiniTopMargin = 20.0
+                let locationBoxTopMargin = 40.0
+                let locationBoxH = 30.0
+                let locationBoxBottomMargin = 40.0
+                sHeight = pMiniH + pMiniTopMargin + locationBoxTopMargin + locationBoxH + locationBoxBottomMargin
+            }
             let newHeight = sHeight + 17.0 + 20.0 + extraContentSize
+            print("addtextsectionA \(sHeight), \(newHeight), \(extraContentSize)")
             scrollView.contentSize = CGSize(width: stackView.frame.width, height: newHeight)
         }
         else {
+            print("addtextsectionA1 ")
             if(pcList[i].tBoxType != "t") {
                 if(i < pcList.count - 1) {
                     if(pcList[i + 1].tBoxType != "t") {
                         
-                        print("addtextsection A")
+                        print("addtextsectionB")
                         
                         let a = PostClip()
                         a.tBoxType = "t"
@@ -1889,21 +2389,32 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                         
                         pcList.insert(a, at: i + 1) //means "append" behind selectedindex
                         
-                        setFirstResponder(textView: bTv)
+                        if(toSetCursor) {
+                            setFirstResponder(textView: bTv)
+                        }
+                        
                         //test > move cursor to beginning of textview
                         let beginningPosition = bTv.beginningOfDocument
                         let newRange = bTv.textRange(from: beginningPosition, to: beginningPosition)
                         bTv.selectedTextRange = newRange
                         
                         //update scrollview content size
-                        let sHeight = stackView.frame.height
+                        var sHeight = stackView.frame.height
+                        if(sHeight <= 0.0) {
+                            let pMiniH = 40.0
+                            let pMiniTopMargin = 20.0
+                            let locationBoxTopMargin = 40.0
+                            let locationBoxH = 30.0
+                            let locationBoxBottomMargin = 40.0
+                            sHeight = pMiniH + pMiniTopMargin + locationBoxTopMargin + locationBoxH + locationBoxBottomMargin
+                        }
                         let newHeight = sHeight + 17.0 + 20.0 + extraContentSize
                         scrollView.contentSize = CGSize(width: stackView.frame.width, height: newHeight)
                     }
                 }
                 else if(i == pcList.count - 1) {
                     
-                    print("addtextsection B")
+//                    print("addtextsectionC")
                     
                     pcList[i].tBoxBottomCons?.isActive = false
                     
@@ -1950,13 +2461,25 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                     
                     pcList.append(a)
                     
-                    setFirstResponder(textView: bTv)
+                    if(toSetCursor) {
+                        setFirstResponder(textView: bTv)
+                    }
+                    
                     //test > move cursor to beginning of textview
                     let beginningPosition = bTv.beginningOfDocument
                     let newRange = bTv.textRange(from: beginningPosition, to: beginningPosition)
                     bTv.selectedTextRange = newRange
                     
-                    let sHeight = stackView.frame.height
+                    var sHeight = stackView.frame.height
+                    if(sHeight <= 0.0) {
+                        let pMiniH = 40.0
+                        let pMiniTopMargin = 20.0
+                        let locationBoxTopMargin = 40.0
+                        let locationBoxH = 30.0
+                        let locationBoxBottomMargin = 40.0
+                        sHeight = pMiniH + pMiniTopMargin + locationBoxTopMargin + locationBoxH + locationBoxBottomMargin
+                    }
+                    print("addtextsectionC \(sHeight)")
                     let newHeight = sHeight + 17.0 + 20.0 + extraContentSize
                     scrollView.contentSize = CGSize(width: stackView.frame.width, height: newHeight)
                 }
@@ -1966,53 +2489,53 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     
     func removeContentSection(i: Int) {
         if(i > 0) { //means i-1 element exists, first element must be textview
-//            if(pcList[i].tBoxType == "p") {
+            //*test > compute asset size
+            var tBoxSizeH = 0.0
+            if let tBoxTv = pcList[i].tBox {
+                tBoxSizeH = tBoxTv.frame.height
+                print("removePhotoSection \(tBoxSizeH)")
+            }
+            //*
+            
+            //test
+            destroyCell(i: i)
+            
+            pcList[i].tBox?.removeFromSuperview()
+            
+            if let prevTBox = pcList[i - 1].tBox {
                 
-                //*test > compute asset size
-                var tBoxSizeH = 0.0
-                if let tBoxTv = pcList[i].tBox {
-                    tBoxSizeH = tBoxTv.frame.height
-                    print("removePhotoSection \(tBoxSizeH)")
+                if(i == pcList.count - 1) { //if current pc is last element
+                    pcList[i].tBoxBottomCons?.isActive = false
+                    pcList[i - 1].tBoxBottomCons = prevTBox.bottomAnchor.constraint(equalTo: uView.bottomAnchor, constant: 0)
+                    pcList[i - 1].tBoxBottomCons?.isActive = true
                 }
-                //*
-                
-                pcList[i].tBox?.removeFromSuperview()
-                
-                if let prevTBox = pcList[i - 1].tBox {
-                    
-                    if(i == pcList.count - 1) { //if current pc is last element
-                        pcList[i].tBoxBottomCons?.isActive = false
-                        pcList[i - 1].tBoxBottomCons = prevTBox.bottomAnchor.constraint(equalTo: uView.bottomAnchor, constant: 0)
-                        pcList[i - 1].tBoxBottomCons?.isActive = true
-                    }
-                    else{
-                        if let nextTBox = pcList[i + 1].tBox {
-                            pcList[i + 1].tBoxTopCons?.isActive = false
-                            pcList[i + 1].tBoxTopCons = nextTBox.topAnchor.constraint(equalTo: prevTBox.bottomAnchor, constant: 10) //20
-                            pcList[i + 1].tBoxTopCons?.isActive = true
-                        }
-                    }
-                }
-                
-                pcList.remove(at: i)
-                
-                //test *> unselect selectedindex
-                selectedPcIndex = -1
-                //*
-                
-                //if previous pc is text section, and next pc is also text section, then combine texts
-                if(i <= pcList.count - 1) {
-                    if(pcList[i - 1].tBoxType == "t" && pcList[i].tBoxType == "t") {
-                        removeTextSection(i: i)
+                else{
+                    if let nextTBox = pcList[i + 1].tBox {
+                        pcList[i + 1].tBoxTopCons?.isActive = false
+                        pcList[i + 1].tBoxTopCons = nextTBox.topAnchor.constraint(equalTo: prevTBox.bottomAnchor, constant: 10) //20
+                        pcList[i + 1].tBoxTopCons?.isActive = true
                     }
                 }
-                
-                //test > update scrollview content size since photo removed
-                let sHeight = stackView.frame.height
+            }
+            
+            pcList.remove(at: i)
+            
+            //test *> unselect selectedindex
+            selectedPcIndex = -1
+            //*
+            
+            //if previous pc is text section, and next pc is also text section, then combine texts
+            if(i <= pcList.count - 1) {
+                if(pcList[i - 1].tBoxType == "t" && pcList[i].tBoxType == "t") {
+                    removeTextSection(i: i)
+                }
+            }
+            
+            //test > update scrollview content size since photo removed
+            let sHeight = stackView.frame.height
 //                let newHeight = sHeight - 280.0 - 20.0
-                let newHeight = sHeight - tBoxSizeH
-                scrollView.contentSize = CGSize(width: stackView.frame.width, height: newHeight)
-//            }
+            let newHeight = sHeight - tBoxSizeH
+            scrollView.contentSize = CGSize(width: stackView.frame.width, height: newHeight)
         }
     }
     
@@ -2025,6 +2548,9 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                 if let currentTBox = pcList[i].tBox as? UITextView {
                     currentT = currentTBox.text
                 }
+                
+                //test
+                destroyCell(i: i)
                 
                 pcList[i].tBox?.removeFromSuperview()
                 pcList[i].tvBoxHint?.removeFromSuperview()
@@ -2133,7 +2659,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
 //        }
         
         //test 1 > not limited to "p" content only
-        if let currentTBox = pcList[i].tBox as? PostClipPhotoCell {
+        if let currentTBox = pcList[i].tBox as? PostClipCell {
             currentTBox.unselectCell()
         }
     }
@@ -2161,28 +2687,15 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         
         let isSignedIn = SignInManager.shared.getStatus()
         if(isSignedIn) {
-//            if(true) {
+            
+//            let sHeight = stackView.frame.height
+//            print("onpostB \(sHeight)")
+            
+//            if(true) { //not to remove, will change to check condition in future
 //                configureErrorUI(data: "na-location")
 //            } else {
                 aUpload.isHidden = true
                 aSpinner.startAnimating()
-
-                //test 1 > upload data
-//                DataUploadManager.shared.sendData(id: "u") { [weak self]result in
-//                    switch result {
-//                        case .success(let l):
-//
-//                        //update UI on main thread
-//                        DispatchQueue.main.async {
-//
-//                            self?.closePostCreatorPanel(isAnimated: true)
-//                        }
-//
-//                        case .failure(_):
-//                            print("api fail")
-//                            break
-//                    }
-//                }
             
                 //test 2 > new method to upload data => for in-app msg view
                 self.closePostCreatorPanel(isAnimated: true)
@@ -2228,13 +2741,9 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             
             let bottomInsetMargin = self.safeAreaInsets.bottom
-            print("postcreator tool up \(keyboardSize.height), \(bottomInsetMargin) ")
+            print("postcreator tool up \(selectedPcIndex), \(keyboardSize.height), \(bottomInsetMargin) ")
 
-//            keyboardHeight = keyboardSize.height
-            //test 2 > only assign keyboardheight if it is > 0
-            if(keyboardSize.height > 0) {
-                keyboardHeight = keyboardSize.height
-            }
+            keyboardHeight = keyboardSize.height
             
             if(!isKeyboardUp) {
                 UIView.animate(withDuration: 0.2, delay: 0.0, options: [.curveEaseInOut],
@@ -2247,10 +2756,25 @@ class PostCreatorConsolePanelView: CreatorPanelView{
             }
             
             //test > adjust scrollview height when keyboard up
-            let scrollViewMargin = keyboardHeight + 60.0 //60
+            let scrollViewMargin = keyboardHeight + 60.0 //60 > texttoolpanel
             self.scrollViewBottomCons?.constant = -scrollViewMargin
             
             isKeyboardUp = true
+            
+            //*special test 2 > try to move to cursor when keyboard height changes
+            let stackViewH = stackView.frame.height
+            let currentYPosition = computePcPosition(index: selectedPcIndex, isInclusive: true)
+            let scrollViewHeight = viewHeight - (50.0 + topInset) - scrollViewMargin
+            var scrollGap = stackViewH - scrollViewHeight
+            if(scrollGap <= 0) {
+                scrollGap = 0.0
+            }
+
+            let yHeight = currentYPosition
+            let yContentOffset = yHeight/stackViewH * scrollGap
+            print("onkeyboardup \(stackViewH), \(selectedPcIndex), \(currentYPosition)")
+            scrollView.setContentOffset(CGPoint(x: 0, y: yContentOffset), animated: false)
+            //*
         }
     }
     
@@ -2307,8 +2831,8 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     }
 }
 
-extension PostCreatorConsolePanelView: PostClipPhotoCellDelegate {
-    func didClickPostClipCell(cell: PostClipPhotoCell) {
+extension PostCreatorConsolePanelView: PostClipCellDelegate {
+    func pcDidClickPostClipCell(cell: PostClipCell) {
         
         var i = 0
         for pc in pcList {
@@ -2348,13 +2872,124 @@ extension PostCreatorConsolePanelView: PostClipPhotoCellDelegate {
                     
                     resignResponder()
                     
-                    mainEditPanel.isHidden = true
-                    textEditPanel.isHidden = true
-                    photoEditPanel.isHidden = false
+                    if(pc.tBoxType == "p") {
+                        activatePanel(panel: "photoEditPanel")
+                    } else if(pc.tBoxType == "v") {
+                        activatePanel(panel: "videoEditPanel")
+                    } else if(pc.tBoxType == "q") {
+                        activatePanel(panel: "embedEditPanel")
+                    } else if(pc.tBoxType == "v_l") {
+                        activatePanel(panel: "embedEditPanel")
+                    } else if(pc.tBoxType == "p_s") {
+                        activatePanel(panel: "embedEditPanel")
+                    }
                     
                     break
                 }
 //            }
+            i += 1
+        }
+    }
+    
+    func pcDidClickPcClickPhoto(pc: PostClipCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String) {
+        //test 1 > only hide if keyboard down
+        if(selectedPcIndex > -1) {
+            resignResponder()
+            selectedPcIndex = -1
+        } else {
+            var i = 0
+            for p in pcList {
+                if(p.tBox == pc) {
+                    let originInRootView = uView.convert(pc.frame.origin, to: self)
+                    let pointX1 = originInRootView.x + pointX
+                    let pointY1 = originInRootView.y + pointY
+
+                    print("pcclickphoto \(i), \(originInRootView.y)")
+                    delegate?.didPostCreatorClickPhoto(pointX: pointX1, pointY: pointY1, view: view, mode: mode)
+                    pc.hideCell()
+
+                    break
+                }
+                i += 1
+            }
+
+            hideCellIndex = i
+        }
+        
+        //ori > hide cell whether keyboard up or down
+//        var i = 0
+//        for p in pcList {
+//            if(p.tBox == pc) {
+//                let originInRootView = uView.convert(pc.frame.origin, to: self)
+//                let pointX1 = originInRootView.x + pointX
+//                let pointY1 = originInRootView.y + pointY
+//                
+//                print("pcclickphoto \(i), \(originInRootView.y)")
+//                delegate?.didPostCreatorClickPhoto(pointX: pointX1, pointY: pointY1, view: view, mode: mode)
+//                
+//                break
+//            }
+//            i += 1
+//        }
+//        
+//        hideCellIndex = i
+    }
+    func pcDidClickPcClickVideo(pc: PostClipCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String) {
+        //test 1 > only hide if keyboard down
+        if(selectedPcIndex > -1) {
+            resignResponder()
+            selectedPcIndex = -1
+        } else {
+            var i = 0
+            for p in pcList {
+                if(p.tBox == pc) {
+                    let originInRootView = uView.convert(pc.frame.origin, to: self)
+                    let pointX1 = originInRootView.x + pointX
+                    let pointY1 = originInRootView.y + pointY
+    
+                    print("pcclickvideo \(i), \(originInRootView.y)")
+                    delegate?.didPostCreatorClickVideo(pointX: pointX1, pointY: pointY1, view: view, mode: mode)
+                    pc.hideCell()
+                    
+                    break
+                }
+                i += 1
+            }
+    
+            hideCellIndex = i
+        }
+        
+        //ori > hide cell whether keyboard up or down
+//        var i = 0
+//        for p in pcList {
+//            if(p.tBox == pc) {
+//                let originInRootView = uView.convert(pc.frame.origin, to: self)
+//                let pointX1 = originInRootView.x + pointX
+//                let pointY1 = originInRootView.y + pointY
+//                
+//                print("pcclickvideo \(i), \(originInRootView.y)")
+//                delegate?.didPostCreatorClickVideo(pointX: pointX1, pointY: pointY1, view: view, mode: mode)
+//                break
+//            }
+//            i += 1
+//        }
+//        
+//        hideCellIndex = i
+    }
+    
+    func pcDidClickPcClickPlay(pc: PostClipCell, isPlay: Bool) {
+        var i = 0
+        for p in pcList {
+            if(p.tBox == pc) {
+                print("pcclickplay \(i)")
+                if(isPlay) {
+                    pauseMediaAsset()
+                    playingMediaAssetIdx = i
+                } else {
+                    playingMediaAssetIdx = -1
+                }
+                break
+            }
             i += 1
         }
     }
@@ -2417,11 +3052,36 @@ extension ViewController: PostCreatorPanelDelegate{
         
         openInAppMsgView(data: "up_post")
     }
+    
+    //test > click photo to view
+    func didPostCreatorClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+        
+        let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
+        let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
+        
+        if(mode == PhotoTypes.P_SHOT_DETAIL) {
+            openPhotoDetailPanel()
+        } else if(mode == PhotoTypes.P_0){
+            openPhotoZoomPanel(offX: offsetX, offY: offsetY)
+        }
+    }
+    
+    //test > click video to view
+    func didPostCreatorClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+        let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
+        let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
+
+        //test 1 > for video only
+        var dataset = [String]()
+        dataset.append("a")
+        self.openVideoPanel(offX: offsetX, offY: offsetY, originatorView: view, originatorViewType: OriginatorTypes.UIVIEW, id: 0, originatorViewId: "", preterminedDatasets: dataset, mode: mode)
+    }
 }
 
 extension PostCreatorConsolePanelView: UITextViewDelegate {
     
     func textViewDidBeginEditing(_ textView: UITextView) {
+        print("xy textview begin edit")
         
         //test > detect which textview is currently at
         var i = 0
@@ -2451,9 +3111,7 @@ extension PostCreatorConsolePanelView: UITextViewDelegate {
                         //same selectedindex
                     }
                     
-                    mainEditPanel.isHidden = true
-                    textEditPanel.isHidden = false
-                    photoEditPanel.isHidden = true
+                    activatePanel(panel: "textEditPanel")
                     
                     break
                 }
@@ -2557,8 +3215,10 @@ extension PostCreatorConsolePanelView: UITextViewDelegate {
     }
     
     func textViewDidChange(_ textView: UITextView) {
+        
         let currentString: NSString = (textView.text ?? "") as NSString
         let length = currentString.length
+        print("xy textview change \(currentString)")
         
         //test > check for textview size
         let h = textView.contentSize.height
@@ -2726,7 +3386,7 @@ extension PostCreatorConsolePanelView: CameraPhotoRollPanelDelegate{
             if(selectedPcIndex > -1) {
                 addContentAtText(urls: urls, dataType: "p")
             } else {
-                addContentAtMain(urls: urls, dataType: "p")
+                addContentAtMain(urls: urls, dataType: "p_s")
             }
         }
     }
@@ -2770,10 +3430,10 @@ extension PostCreatorConsolePanelView: CameraVideoRollPanelDelegate{
             
             if(selectedPcIndex > -1) {
 //                addContentAtText(urls: vUrls, dataType: "v_l")
-                addContentAtText(urls: vUrls, dataType: "q") //test
+                addContentAtText(urls: vUrls, dataType: "v") //test
             } else {
 //                addContentAtMain(urls: vUrls, dataType: "v_l")
-                addContentAtMain(urls: vUrls, dataType: "q") //test
+                addContentAtMain(urls: vUrls, dataType: "v") //test
             }
         }
     }
@@ -2808,8 +3468,8 @@ extension PostCreatorConsolePanelView: UIScrollViewDelegate {
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         print("xxpc scrollview scroll: \(scrollView.contentOffset.y), \(stackView.frame.height)")
-
-        let scrollOffsetY = scrollView.contentOffset.y
+        
+        getIntersect()
     }
 
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {

@@ -1971,7 +1971,8 @@ extension ViewController: VideoPanelDelegate{
     
     func didClickVideoPanelVcvClickCreate(type: String){
         if(type == "post") {
-            openPostCreatorPanel()
+//            openPostCreatorPanel()
+            openPostCreatorPanel(objectType: "video", objectId: "", mode: "")
         }
         
     }
