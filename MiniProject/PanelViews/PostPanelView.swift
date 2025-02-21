@@ -797,6 +797,25 @@ class PostPanelView: PanelView, UIGestureRecognizerDelegate{
             searchBoxBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
             searchBoxBtn.layer.opacity = 0.5
     //        addBoxBtn.isHidden = true
+        } else {
+            let stickyHLight = UIView()
+//            photoPanel.addSubview(stickyHLight)
+            aStickyHeader.addSubview(stickyHLight)
+            stickyHLight.translatesAutoresizingMaskIntoConstraints = false
+            stickyHLight.centerXAnchor.constraint(equalTo: postPanel.centerXAnchor, constant: 0).isActive = true
+            stickyHLight.heightAnchor.constraint(equalToConstant: 40).isActive = true //30
+            stickyHLight.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
+            
+            let aTabText = UILabel()
+            aTabText.textAlignment = .center
+            aTabText.textColor = .white
+            aTabText.font = .boldSystemFont(ofSize: 15) //default 14
+            aTabText.text = "Posts"
+            stickyHLight.addSubview(aTabText)
+            aTabText.translatesAutoresizingMaskIntoConstraints = false
+            aTabText.leadingAnchor.constraint(equalTo: stickyHLight.leadingAnchor, constant: 0).isActive = true
+            aTabText.trailingAnchor.constraint(equalTo: stickyHLight.trailingAnchor, constant: 0).isActive = true
+            aTabText.centerYAnchor.constraint(equalTo: stickyHLight.centerYAnchor).isActive = true
         }
     }
     //test > see if video in postVc flickers...

@@ -12,6 +12,7 @@ extension UIColor {
     
     static let ddmDarkGrayColor = UIColor(red: 0.59, green: 0.59, blue: 0.59, alpha: 1) //for semi-white font
     static let ddmDarkColor = UIColor(red: 0.21, green: 0.21, blue: 0.21, alpha: 1)
+    static let ddmDarkLightColor = UIColor(red: 0.30, green: 0.30, blue: 0.30, alpha: 1)
     static let ddmBlackOverlayColor = UIColor(red: 0.11, green: 0.11, blue: 0.11, alpha: 1)
     static let ddmBlackDark = UIColor(red: 0.15, green: 0.15, blue: 0.15, alpha: 1) //0.15
     static let ddmDarkBlack = UIColor(red: 0.12, green: 0.12, blue: 0.12, alpha: 1) //0.12

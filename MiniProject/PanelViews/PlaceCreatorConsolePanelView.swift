@@ -549,7 +549,7 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
 //        pTextField.heightAnchor.constraint(equalToConstant: 40).isActive = true //test
         pTextField.text = ""
         pTextField.tintColor = .yellow
-//        pTextField.delegate = self
+        pTextField.delegate = self
         pTextField.placeholder = "Give it a nice name"
         
         qTextField.textAlignment = .left
@@ -756,29 +756,17 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
             if(pTextField.text == "") {
                 configureErrorUI(data: "na-name")
             } else {
-                aUpload.isHidden = true
-                aSpinner.startAnimating()
-                
-                //test 1 > upload data
-//                DataUploadManager.shared.sendData(id: "u") { [weak self]result in
-//                    switch result {
-//                        case .success(let l):
-//
-//                        //update UI on main thread
-//                        DispatchQueue.main.async {
-//
-//                            self?.closePlaceCreatorPanel(isAnimated: true)
-//                        }
-//
-//                        case .failure(_):
-//                            print("api fail")
-//                            break
-//                    }
-//                }
-                
-                //test 2 > new method to upload data => for in-app msg view
-                self.closePlaceCreatorPanel(isAnimated: true)
-                delegate?.didPlaceCreatorClickUpload(payload: "cc") //payload e.g. location name
+                if(selectedPlaceList.isEmpty) {
+                    configureErrorUI(data: "na-location")
+                }
+                else {
+                    aUpload.isHidden = true
+                    aSpinner.startAnimating()
+                    
+                    //test 2 > new method to upload data => for in-app msg view
+                    self.closePlaceCreatorPanel(isAnimated: true)
+                    delegate?.didPlaceCreatorClickUpload(payload: "cc") //payload e.g. location name
+                }
             }
         }
         else {
@@ -873,15 +861,47 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
     
     func setPredesignatedPlace(p: String) {
         predesignatedPlaceList.append("p")
-        refreshTitleUI()
-    }
-    
-    func refreshTitleUI(){
-        rHintText.isHidden = true
+//        refreshTitleUI()
         
         if(!predesignatedPlaceList.isEmpty) {
-            aGrid.isHidden = false
-            aText.text = "Petronas Twin Tower"
+            setSelectedLocation(l: "p")
+        }
+    }
+    
+    //test
+    override func showLocationSelected() {
+        print("showLocationSelected")
+        
+//        rHintText.isHidden = true
+//        
+//        aGrid.isHidden = false
+//        aText.text = mapPinString
+        
+        setSelectedLocation(l: mapPinString)
+    }
+    
+    var selectedPlaceList = [String]()
+    func setSelectedLocation(l : String) {
+        removeSelectedLocation()
+        
+        rHintText.isHidden = true
+        
+        aGrid.isHidden = false
+        
+        if(selectedPlaceList.isEmpty) {
+            selectedPlaceList.append("p")
+            aText.text = l
+        }
+    }
+    
+    func removeSelectedLocation() {
+        rHintText.isHidden = false
+        
+        aGrid.isHidden = true
+        
+        if(!selectedPlaceList.isEmpty) {
+            selectedPlaceList.removeLast()
+            aText.text = ""
         }
     }
     
@@ -990,17 +1010,6 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
         cameraRollPanel.delegate = self
     }
     
-    //test
-    override func showLocationSelected() {
-//        rHintText.text = mapPinString
-        print("showLocationSelected")
-        
-        rHintText.isHidden = true
-        
-        aGrid.isHidden = false
-        aText.text = mapPinString
-    }
-    
     func configureErrorUI(data: String) {
         if(data == "e") {
             maxLimitText.text = "Error occurred. Try again"
@@ -1063,6 +1072,9 @@ extension PlaceCreatorConsolePanelView: UIScrollViewDelegate {
 extension PlaceCreatorConsolePanelView: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         print("textfield begin edit")
+        
+        //test
+        clearErrorUI()
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {

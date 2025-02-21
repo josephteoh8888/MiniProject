@@ -18,6 +18,8 @@ protocol ExploreMarkerDelegate : MarkerDelegate {
 class ExploreMarker: Marker {
     
 }
+
+//circle
 class ExploreAMarker: ExploreMarker {
 //class ExploreMarker: Marker {
     
@@ -531,7 +533,14 @@ extension ViewController: ExploreMarkerDelegate{
                 if(d) {
 //                    self.openVideoPanel(offX: offsetX, offY: offsetY, originatorView: marker, originatorViewType: OriginatorTypes.MARKER, id: id)
                     //test > marker id
-                    self.openVideoPanel(offX: offsetX, offY: offsetY, originatorView: marker, originatorViewType: OriginatorTypes.MARKER, id: id, originatorViewId: marker.getMarkerId())
+//                    self.openVideoPanel(offX: offsetX, offY: offsetY, originatorView: marker, originatorViewType: OriginatorTypes.MARKER, id: id, originatorViewId: marker.getMarkerId())
+                    
+                    //test > show panel according to marker type
+                    if let c = marker as? PhotoBMarker {
+                        self.openPhotoPanel(offX: offsetX, offY: offsetY, originatorView: marker, originatorViewType: OriginatorTypes.MARKER, id: id, originatorViewId: marker.getMarkerId(), preterminedDatasets: [String]())
+                    } else if let b = marker as? ExploreBMarker  {
+                        self.openVideoPanel(offX: offsetX, offY: offsetY, originatorView: marker, originatorViewType: OriginatorTypes.MARKER, id: id, originatorViewId: marker.getMarkerId())
+                    }
                 }
             }
         }

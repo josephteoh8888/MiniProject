@@ -561,7 +561,7 @@ class HCommentListViewCell: UICollectionViewCell {
             for cl in dataCL {
                 let l = cl.dataType
 
-                if(l == "t") {
+                if(l == "text") {
                     let aaText = UILabel()
                     aaText.textAlignment = .left
                     aaText.textColor = .white
@@ -581,7 +581,7 @@ class HCommentListViewCell: UICollectionViewCell {
                     aaText.text = data.dataTextString
                     aTestArray.append(aaText)
                 }
-                else if(l == "p") {
+                else if(l == "photo") {
                     let cellWidth = self.frame.width
                     let lhsMargin = indentSize
                     let rhsMargin = 20.0
@@ -631,7 +631,7 @@ class HCommentListViewCell: UICollectionViewCell {
                     contentCell.setState(p: cl.p_s)
                     contentCell.aDelegate = self
                 }
-                else if(l == "p_s") {
+                else if(l == "photo_s") {
                     let cellWidth = self.frame.width
                     let lhsMargin = indentSize
                     let rhsMargin = 20.0
@@ -683,7 +683,7 @@ class HCommentListViewCell: UICollectionViewCell {
                     contentCell.setState(p: cl.p_s)
                     contentCell.aDelegate = self
                 }
-                else if(l == "v_l") {//loop videos
+                else if(l == "video_l") {//loop videos
                     let cellWidth = self.frame.width
                     let lhsMargin = indentSize
                     let rhsMargin = 20.0
@@ -737,7 +737,7 @@ class HCommentListViewCell: UICollectionViewCell {
                     
                     mediaArray.append(contentCell)
                 }
-                else if(l == "v") { //vi
+                else if(l == "video") { //vi
                     let cellWidth = self.frame.width
                     let lhsMargin = indentSize
                     let rhsMargin = 20.0
@@ -789,7 +789,7 @@ class HCommentListViewCell: UICollectionViewCell {
                     
                     mediaArray.append(contentCell)
                 }
-                else if(l == "q") {
+                else if(l == "quote") {
                     //test 2 > new reusable view
                     let cellWidth = self.frame.width
                     let lhsMargin = indentSize

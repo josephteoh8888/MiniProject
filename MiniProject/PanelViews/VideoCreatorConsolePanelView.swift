@@ -3866,6 +3866,10 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
             let selectedLocation = predesignatedPlaceList[0]
             videoFinalizePanel.setSelectedLocation(l: selectedLocation)
         }
+        if(!predesignatedSoundList.isEmpty) {
+            let selectedSound = predesignatedSoundList[0]
+            videoFinalizePanel.setSelectedSound(s: selectedSound)
+        }
     }
     
     //test > get user permission to access location, camera, storage

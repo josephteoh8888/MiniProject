@@ -1111,6 +1111,10 @@ class PhotoCreatorConsolePanelView: CreatorPanelView{
             let selectedLocation = predesignatedPlaceList[0]
             photoFinalizePanel.setSelectedLocation(l: selectedLocation)
         }
+        if(!predesignatedSoundList.isEmpty) {
+            let selectedSound = predesignatedSoundList[0]
+            photoFinalizePanel.setSelectedSound(s: selectedSound)
+        }
     }
     
     func backPage() {

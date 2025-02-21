@@ -1337,13 +1337,13 @@ extension CommentScrollableView: UICollectionViewDelegateFlowLayout {
             for cl in dataCL {
                 let l = cl.dataType
 
-                if(l == "t") {
+                if(l == "text") {
                     let tTopMargin = 20.0
                     let tContentHeight = estimateHeight(text: text, textWidth: collectionView.frame.width - indentSize - 30.0, fontSize: 13)
                     let tHeight = tTopMargin + tContentHeight
                     contentHeight += tHeight
                 }
-                else if(l == "p") {
+                else if(l == "photo") {
                     let cellWidth = collectionView.frame.width
                     let lhsMargin = indentSize
                     let rhsMargin = 20.0
@@ -1375,7 +1375,7 @@ extension CommentScrollableView: UICollectionViewDelegateFlowLayout {
                     let pHeight = pTopMargin + pContentHeight
                     contentHeight += pHeight
                 }
-                else if(l == "p_s") {
+                else if(l == "photo_s") {
                     let cellWidth = self.frame.width
                     let lhsMargin = indentSize
                     let rhsMargin = 20.0
@@ -1409,7 +1409,7 @@ extension CommentScrollableView: UICollectionViewDelegateFlowLayout {
                     let pHeight = pTopMargin + pContentHeight
                     contentHeight += pHeight
                 }
-                else if(l == "v") {
+                else if(l == "video") {
                     let cellWidth = self.frame.width
                     let lhsMargin = indentSize
                     let rhsMargin = 20.0
@@ -1441,7 +1441,7 @@ extension CommentScrollableView: UICollectionViewDelegateFlowLayout {
                     let vHeight = vTopMargin + vContentHeight
                     contentHeight += vHeight
                 }
-                else if(l == "v_l") {
+                else if(l == "video_l") {
                     let cellWidth = collectionView.frame.width
                     let lhsMargin = indentSize
                     let rhsMargin = 20.0
@@ -1475,13 +1475,13 @@ extension CommentScrollableView: UICollectionViewDelegateFlowLayout {
     //                let vHeight = vTopMargin + vContentHeight + 40.0 //40.0 for bottom container for description
                     contentHeight += vHeight
                 }
-                else if(l == "q") {
+                else if(l == "quote") {
                     //**test > fake data for quote post
                     var qDataArray = [String]()
-                    qDataArray.append("t")
+                    qDataArray.append("text")
     //                qDataArray.append("p")
     //                qDataArray.append("p_s")
-                    qDataArray.append("v")
+                    qDataArray.append("video")
     //                qDataArray.append("v_l")
                     //**
 
@@ -1490,13 +1490,13 @@ extension CommentScrollableView: UICollectionViewDelegateFlowLayout {
                     let quoteWidth = collectionView.frame.width - qLhsMargin - qRhsMargin
                     
                     for i in qDataArray {
-                        if(i == "t") {
+                        if(i == "text") {
                             let tTopMargin = 20.0
                             let tContentHeight = estimateHeight(text: text, textWidth: quoteWidth - 20.0 - 20.0, fontSize: 14)
                             let tHeight = tTopMargin + tContentHeight
                             contentHeight += tHeight
                         }
-                        else if(i == "p") {
+                        else if(i == "photo") {
                             let lhsMargin = 20.0
                             let rhsMargin = 20.0
                             let availableWidth = quoteWidth - lhsMargin - rhsMargin
@@ -1529,7 +1529,7 @@ extension CommentScrollableView: UICollectionViewDelegateFlowLayout {
                             let pHeight = pTopMargin + pContentHeight
                             contentHeight += pHeight
                         }
-                        else if(i == "p_s") {
+                        else if(i == "photo_s") {
                             let lhsMargin = 20.0
                             let rhsMargin = 20.0
                             let descHeight = 40.0
@@ -1561,7 +1561,7 @@ extension CommentScrollableView: UICollectionViewDelegateFlowLayout {
                             let pHeight = pTopMargin + pContentHeight
                             contentHeight += pHeight
                         }
-                        else if(i == "v") {
+                        else if(i == "video") {
                             let lhsMargin = 20.0
                             let rhsMargin = 20.0
                             let availableWidth = quoteWidth - lhsMargin - rhsMargin
@@ -1592,7 +1592,7 @@ extension CommentScrollableView: UICollectionViewDelegateFlowLayout {
                             let vHeight = vTopMargin + vContentHeight
                             contentHeight += vHeight
                         }
-                        else if(i == "v_l") {
+                        else if(i == "video_l") {
                             let lhsMargin = 20.0
                             let rhsMargin = 20.0
                             let descHeight = 40.0

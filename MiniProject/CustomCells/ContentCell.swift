@@ -2426,15 +2426,15 @@ class PostQuoteContentCell: MediaContentCell {
         
         //**test > fake data for quote post
         var qDataArray = [String]()
-        qDataArray.append("t")
+        qDataArray.append("text")
 //        qDataArray.append("p")
 //        qDataArray.append("p_s")
-        qDataArray.append("v")
+        qDataArray.append("video")
 //        qDataArray.append("v_l")
         //**
         
         for l in qDataArray {
-            if(l == "t") {
+            if(l == "text") {
                 let aaText = UILabel()
                 aaText.textAlignment = .left
                 aaText.textColor = .white
@@ -2454,7 +2454,7 @@ class PostQuoteContentCell: MediaContentCell {
                 aaText.text = text
                 aTestArray.append(aaText)
             }
-            else if(l == "p") {
+            else if(l == "photo") {
                 let cellWidth = viewWidth
                 let lhsMargin = 20.0
                 let rhsMargin = 20.0
@@ -2507,7 +2507,7 @@ class PostQuoteContentCell: MediaContentCell {
                 contentCell.aDelegate = self
                 contentCell.setAutohide(isEnabled: isAutohideEnabled)
             }
-            else if(l == "p_s") {
+            else if(l == "photo_s") {
                 let cellWidth = viewWidth
                 let lhsMargin = 20.0
                 let rhsMargin = 20.0
@@ -2559,7 +2559,7 @@ class PostQuoteContentCell: MediaContentCell {
                 contentCell.aDelegate = self
                 contentCell.setAutohide(isEnabled: isAutohideEnabled)
             }
-            else if(l == "v_l") {//loop videos
+            else if(l == "video_l") {//loop videos
                 let cellWidth = viewWidth
                 let lhsMargin = 20.0
                 let rhsMargin = 20.0
@@ -2613,7 +2613,7 @@ class PostQuoteContentCell: MediaContentCell {
             
                 mediaArray.append(contentCell)
             }
-            else if(l == "v") { //vi
+            else if(l == "video") { //vi
                 let cellWidth = viewWidth
                 let lhsMargin = 20.0
                 let rhsMargin = 20.0

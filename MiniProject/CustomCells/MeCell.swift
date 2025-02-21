@@ -1116,7 +1116,7 @@ class BookmarkMeCell: MeCell {
         aHLightTitle.translatesAutoresizingMaskIntoConstraints = false
         aHLightTitle.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 10).isActive = true
         aHLightTitle.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 10).isActive = true
-        aHLightTitle.text = "Bookmarks"
+        aHLightTitle.text = "Saves"
 //        aHLightTitle.isHidden = true
         aHLightTitle.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true
         

@@ -37,43 +37,43 @@ class PostData: BaseData {
     
     func setData(data: String) {
         if(data == "a") {
-            dataArray.append("t") //text
-            dataArray.append("p") //photo
-            dataArray.append("p_s") //video
+            dataArray.append("text") //text
+            dataArray.append("photo") //photo
+            dataArray.append("photo_s") //video
 //            dataArray.append("t") //text
 //            dataArray.append("q") //text
 //            dataArray.append("q") //photo
 //            dataArray.append("q") //quote
-            dataArray.append("v") //loop
+            dataArray.append("video") //loop
 //            dataArray.append("v") //video
-            dataArray.append("v_l") //loop
+            dataArray.append("video_l") //loop
         }
         else if(data == "b") {
-            dataArray.append("t") //text
+            dataArray.append("text") //text
 //            dataArray.append("p") //photo
-            dataArray.append("p_s") //video
-            dataArray.append("t") //text
+            dataArray.append("photo_s") //video
+            dataArray.append("text") //text
             
 //            //test > error handling
 //            dataArray.append("us")
         }
         else if(data == "c") {
 //            dataArray.append("t")
-            dataArray.append("p") //photo
-            dataArray.append("q") //quote
+            dataArray.append("photo") //photo
+            dataArray.append("quote") //quote
             
-            dataArray.append("v") //loop
-            dataArray.append("v") //video
+            dataArray.append("video") //loop
+            dataArray.append("video") //video
         }
         else if(data == "d") {
-            dataArray.append("t") //text
-            dataArray.append("v") //video
-            dataArray.append("v_l") //loop
-            dataArray.append("t") //text
+            dataArray.append("text") //text
+            dataArray.append("video") //video
+            dataArray.append("video_l") //loop
+            dataArray.append("text") //text
             
-            dataArray.append("p")
-            dataArray.append("p")
-            dataArray.append("p")
+            dataArray.append("photo")
+            dataArray.append("photo")
+            dataArray.append("photo")
             
 //            //test > error handling
 //            dataArray.append("us")
@@ -238,7 +238,7 @@ class PhotoData: BaseData {
 
 //test > video data for loop panel
 class VideoData: BaseData {
-    
+    //default UI mode
     var uiMode = VideoTypes.V_LOOP
     
     func setDataType(data: String) {
@@ -333,13 +333,13 @@ class CommentData: BaseData {
     
     func setData(data: String) {
         if(data == "a") {
-            dataArray.append("t") //text
+            dataArray.append("text") //text
 //            dataArray.append("p") //photo
 //            dataArray.append("t") //text
-            dataArray.append("q") //text
+            dataArray.append("quote") //text
 //            dataArray.append("q") //photo
 //            dataArray.append("q") //quote
-            dataArray.append("v_l")
+            dataArray.append("video_l")
         }
         else if(data == "b") {
 ////            dataArray.append("p") //photo
@@ -351,12 +351,12 @@ class CommentData: BaseData {
             dataArray.append("us")
         }
         else if(data == "c") {
-            dataArray.append("t")
-            dataArray.append("p") //photo
+            dataArray.append("text")
+            dataArray.append("photo") //photo
 //            dataArray.append("q") //quote
             
 //            dataArray.append("c") //comment
-            dataArray.append("v")
+            dataArray.append("video")
 //            dataArray.append("p") //photo
 //            dataArray.append("p") //photo
         }

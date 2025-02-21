@@ -159,7 +159,7 @@ class PostClipCell: UIView {
     }
     
     func configure(data: String, dataType: String, cSize: CGSize) {
-        if(dataType == "p") {
+        if(dataType == "photo") {
             let contentCell = PostPhotoContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
             aHLightRect1.addSubview(contentCell)
             contentCell.translatesAutoresizingMaskIntoConstraints = false
@@ -175,7 +175,7 @@ class PostClipCell: UIView {
             contentCell.setAutohide(isEnabled: false)
             aTestArray.append(contentCell)
         }
-        else if(dataType == "p_s") {
+        else if(dataType == "photo_s") {
             let contentCell = PostPhotoShotContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
             aHLightRect1.addSubview(contentCell)
             contentCell.translatesAutoresizingMaskIntoConstraints = false
@@ -193,7 +193,7 @@ class PostClipCell: UIView {
             contentCell.setAutohide(isEnabled: false)
             aTestArray.append(contentCell)
         }
-        else if(dataType == "v") {
+        else if(dataType == "video") {
             let contentCell = PostVideoContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
             aHLightRect1.addSubview(contentCell)
             contentCell.translatesAutoresizingMaskIntoConstraints = false
@@ -209,7 +209,7 @@ class PostClipCell: UIView {
             contentCell.setAutohide(isEnabled: false)
             aTestArray.append(contentCell)
         }
-        else if(dataType == "v_l") {
+        else if(dataType == "video_l") {
             let contentCell = PostVideoLoopContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
             aHLightRect1.addSubview(contentCell)
             contentCell.translatesAutoresizingMaskIntoConstraints = false
@@ -227,7 +227,7 @@ class PostClipCell: UIView {
             contentCell.setAutohide(isEnabled: false)
             aTestArray.append(contentCell)
         }
-        else if(dataType == "q") {
+        else if(dataType == "quote") {
             let contentCell = PostQuoteContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
             aHLightRect1.addSubview(contentCell)
             contentCell.translatesAutoresizingMaskIntoConstraints = false

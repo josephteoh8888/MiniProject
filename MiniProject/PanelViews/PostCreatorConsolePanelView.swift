@@ -65,6 +65,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     //test > for stacking multiple media in sequence
     let pMini = UIView()
     let pImage = SDAnimatedImageView()
+    let aStickyPhoto = SDAnimatedImageView()
     let pNameText = UILabel()
     let aBox = UIView() //add location btn
     var aTestArray = [UIView]()
@@ -91,6 +92,8 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     var maxSelectLimit = 5
     let maxLimitErrorPanel = UIView()
     let maxLimitText = UILabel()
+    let lMiniError = UIView()
+    let pMiniError = UIView()
     
     //test > use pre-designated sound or location
     var predesignatedPlaceList = [String]()
@@ -98,6 +101,10 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     
     var hideCellIndex = -1
     var playingMediaAssetIdx = -1
+    
+    var cNameTextCenterYCons: NSLayoutConstraint?
+    
+    let abBox = UIView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -154,6 +161,44 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         bMiniBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         bMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
         
+        //test > post upload btn
+//        let aUpload = UIView()
+        aUpload.backgroundColor = .yellow
+        panel.addSubview(aUpload)
+//        stack2.addSubview(aUpload)
+        aUpload.translatesAutoresizingMaskIntoConstraints = false
+        aUpload.heightAnchor.constraint(equalToConstant: 30).isActive = true //30
+        aUpload.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -10).isActive = true
+//        aUpload.topAnchor.constraint(equalTo: panel.topAnchor, constant: 50).isActive = true
+//        aUpload.leadingAnchor.constraint(equalTo: stack2.leadingAnchor, constant: 10).isActive = true
+//        aUpload.trailingAnchor.constraint(equalTo: stack2.trailingAnchor, constant: 0).isActive = true
+        aUpload.centerYAnchor.constraint(equalTo: aBtn.centerYAnchor).isActive = true
+        aUpload.layer.cornerRadius = 10
+        aUpload.isUserInteractionEnabled = true
+        aUpload.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPostUploadNextClicked)))
+
+        let aUploadText = UILabel()
+        aUploadText.textAlignment = .center
+        aUploadText.textColor = .black
+        aUploadText.font = .boldSystemFont(ofSize: 13)
+        panel.addSubview(aUploadText)
+//        aUpload.addSubview(aUploadText)
+        aUploadText.translatesAutoresizingMaskIntoConstraints = false
+//        aUploadText.centerXAnchor.constraint(equalTo: aUpload.centerXAnchor).isActive = true
+        aUploadText.centerYAnchor.constraint(equalTo: aUpload.centerYAnchor).isActive = true
+        aUploadText.leadingAnchor.constraint(equalTo: aUpload.leadingAnchor, constant: 25).isActive = true
+        aUploadText.trailingAnchor.constraint(equalTo: aUpload.trailingAnchor, constant: -25).isActive = true
+        aUploadText.text = "Post"
+        
+        panel.addSubview(aSpinner)
+        aSpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
+        aSpinner.translatesAutoresizingMaskIntoConstraints = false
+        aSpinner.centerYAnchor.constraint(equalTo: aUpload.centerYAnchor).isActive = true
+        aSpinner.centerXAnchor.constraint(equalTo: aUpload.centerXAnchor).isActive = true
+        aSpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        aSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        aSpinner.isUserInteractionEnabled = false
+        
         //test > add title
         let aCreateTitleText = UILabel()
         aCreateTitleText.textAlignment = .center
@@ -167,11 +212,111 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         aCreateTitleText.text = "New Post"
         aCreateTitleText.isHidden = false
         
+        let stickyHLight = UIView()
+        stickyHLight.backgroundColor = .ddmBlackOverlayColor
+//        stickyHLight.backgroundColor = .blue
+        panel.addSubview(stickyHLight)
+        stickyHLight.translatesAutoresizingMaskIntoConstraints = false
+        stickyHLight.leadingAnchor.constraint(equalTo: aBtn.trailingAnchor, constant: 10).isActive = true //20
+        stickyHLight.trailingAnchor.constraint(equalTo: aUpload.leadingAnchor, constant: -10).isActive = true //20
+//        stickyHLight.trailingAnchor.constraint(equalTo: aStickyHeader.trailingAnchor, constant: -30).isActive = true //20
+        stickyHLight.heightAnchor.constraint(equalToConstant: 40).isActive = true //30
+        cNameTextCenterYCons = stickyHLight.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 50)
+        cNameTextCenterYCons?.isActive = true
+
+        let aStickyPhotoOuter = UIView()
+        aStickyPhotoOuter.backgroundColor = .white
+        stickyHLight.addSubview(aStickyPhotoOuter)
+        aStickyPhotoOuter.translatesAutoresizingMaskIntoConstraints = false
+        aStickyPhotoOuter.leadingAnchor.constraint(equalTo: stickyHLight.leadingAnchor, constant: 0).isActive = true
+        aStickyPhotoOuter.centerYAnchor.constraint(equalTo: stickyHLight.centerYAnchor, constant: 0).isActive = true
+        aStickyPhotoOuter.heightAnchor.constraint(equalToConstant: 28).isActive = true //ori 38
+        aStickyPhotoOuter.widthAnchor.constraint(equalToConstant: 28).isActive = true
+        aStickyPhotoOuter.layer.cornerRadius = 14 //19
+
+//        let aStickyPhoto = SDAnimatedImageView()
+        aStickyPhotoOuter.addSubview(aStickyPhoto)
+        aStickyPhoto.translatesAutoresizingMaskIntoConstraints = false
+        aStickyPhoto.centerXAnchor.constraint(equalTo: aStickyPhotoOuter.centerXAnchor).isActive = true
+        aStickyPhoto.centerYAnchor.constraint(equalTo: aStickyPhotoOuter.centerYAnchor).isActive = true
+        aStickyPhoto.heightAnchor.constraint(equalToConstant: 28).isActive = true //30
+        aStickyPhoto.widthAnchor.constraint(equalToConstant: 28).isActive = true
+//        let stickyImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+        aStickyPhoto.contentMode = .scaleAspectFill
+        aStickyPhoto.layer.masksToBounds = true
+        aStickyPhoto.layer.cornerRadius = 14
+//        aStickyPhoto.sd_setImage(with: stickyImageUrl)
+        aStickyPhoto.backgroundColor = .ddmDarkColor
+        
+        let abcBox = UIView()
+//        abBox.backgroundColor = .ddmBlackDark
+//        stackView.addSubview(abBox)
+        stickyHLight.addSubview(abcBox)
+        abcBox.clipsToBounds = true
+        abcBox.translatesAutoresizingMaskIntoConstraints = false
+        abcBox.leadingAnchor.constraint(equalTo: aStickyPhotoOuter.trailingAnchor, constant: 10).isActive = true
+        abcBox.heightAnchor.constraint(equalToConstant: 30).isActive = true //default: 50
+        abcBox.centerYAnchor.constraint(equalTo: aStickyPhotoOuter.centerYAnchor, constant: 0).isActive = true //20
+        abcBox.layer.cornerRadius = 5
+//        abBox.layer.opacity = 0.2 //0.3
+        abcBox.isUserInteractionEnabled = true
+//        abBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPlaceClicked)))
+//        abBox.isHidden = true
+        
+        let bcPublicBox = UIView()
+        bcPublicBox.backgroundColor = .clear //yellow
+        abcBox.addSubview(bcPublicBox)
+        bcPublicBox.clipsToBounds = true
+        bcPublicBox.translatesAutoresizingMaskIntoConstraints = false
+        bcPublicBox.widthAnchor.constraint(equalToConstant: 16).isActive = true //ori: 40
+        bcPublicBox.heightAnchor.constraint(equalToConstant: 16).isActive = true
+        bcPublicBox.centerYAnchor.constraint(equalTo: abcBox.centerYAnchor).isActive = true
+//        bcPublicBox.bottomAnchor.constraint(equalTo: abcBox.bottomAnchor).isActive = true
+        bcPublicBox.leadingAnchor.constraint(equalTo: abcBox.leadingAnchor, constant: 5).isActive = true //10
+        bcPublicBox.layer.cornerRadius = 5 //6
+
+        let bcGridIcon = UIImageView(image: UIImage(named:"icon_round_lock_open")?.withRenderingMode(.alwaysTemplate))
+        bcGridIcon.tintColor = .white
+//        panel.addSubview(bGridIcon)
+        bcPublicBox.addSubview(bcGridIcon)
+        bcGridIcon.translatesAutoresizingMaskIntoConstraints = false
+        bcGridIcon.centerXAnchor.constraint(equalTo: bcPublicBox.centerXAnchor).isActive = true
+        bcGridIcon.centerYAnchor.constraint(equalTo: bcPublicBox.centerYAnchor).isActive = true
+        bcGridIcon.heightAnchor.constraint(equalToConstant: 16).isActive = true
+        bcGridIcon.widthAnchor.constraint(equalToConstant: 16).isActive = true
+
+        let acPublicText = UILabel()
+        acPublicText.textAlignment = .left
+        acPublicText.textColor = .white
+        acPublicText.font = .boldSystemFont(ofSize: 12)
+//        aPublicText.font = .systemFont(ofSize: 12)
+//        contentView.addSubview(aGridNameText)
+        abcBox.addSubview(acPublicText)
+        acPublicText.translatesAutoresizingMaskIntoConstraints = false
+//        aPublicText.bottomAnchor.constraint(equalTo: aUserPhoto.bottomAnchor).isActive = true
+        acPublicText.centerYAnchor.constraint(equalTo: bcPublicBox.centerYAnchor).isActive = true
+//        aPublicText.topAnchor.constraint(equalTo: pMini.topAnchor).isActive = true
+//        aPublicText.trailingAnchor.constraint(equalTo: uView.trailingAnchor, constant: -20).isActive = true
+        acPublicText.leadingAnchor.constraint(equalTo: bcPublicBox.trailingAnchor, constant: 5).isActive = true
+        acPublicText.text = "Public"
+        
+        let bcArrowBtn = UIImageView()
+        bcArrowBtn.image = UIImage(named:"icon_round_arrow_down")?.withRenderingMode(.alwaysTemplate)
+        bcArrowBtn.tintColor = .white
+        abcBox.addSubview(bcArrowBtn)
+        bcArrowBtn.translatesAutoresizingMaskIntoConstraints = false
+        bcArrowBtn.leadingAnchor.constraint(equalTo: acPublicText.trailingAnchor).isActive = true
+        bcArrowBtn.centerYAnchor.constraint(equalTo: acPublicText.centerYAnchor).isActive = true
+        bcArrowBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true //ori 26
+        bcArrowBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        bcArrowBtn.trailingAnchor.constraint(equalTo: abcBox.trailingAnchor, constant: 0).isActive = true //-10
+        
         //test > add a scrollview
 //        let scrollView = UIScrollView()
         panel.addSubview(scrollView)
 //        scrollView.backgroundColor = .blue
-        scrollView.backgroundColor = .clear
+//        scrollView.backgroundColor = .clear //default
+        scrollView.backgroundColor = .ddmBlackOverlayColor
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         let topMargin = 50.0 + topInset
         scrollView.topAnchor.constraint(equalTo: panel.topAnchor, constant: topMargin).isActive = true
@@ -217,7 +362,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         pMini.heightAnchor.constraint(equalToConstant: 40).isActive = true
         pMini.widthAnchor.constraint(equalToConstant: 40).isActive = true
         pMini.layer.cornerRadius = 20
-        pMini.layer.opacity = 1.0 //default 0.3
+//        pMini.layer.opacity = 1.0 //default 0.3
 
 //        let pImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
 //        let pImage = SDAnimatedImageView()
@@ -232,6 +377,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         pImage.widthAnchor.constraint(equalToConstant: 40).isActive = true //36
         pImage.layer.cornerRadius = 20
         pImage.backgroundColor = .ddmDarkColor
+        pImage.isHidden = true
 //        pImage.isUserInteractionEnabled = true
 //        pImage.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onUserClicked)))
         
@@ -251,7 +397,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
 ////        pNameText.text = "Michael Kins"
 //        pNameText.text = "-"
         
-        let abBox = UIView()
+//        let abBox = UIView()
 //        abBox.backgroundColor = .ddmBlackDark
 //        stackView.addSubview(abBox)
         uView.addSubview(abBox)
@@ -264,7 +410,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
 //        abBox.layer.opacity = 0.2 //0.3
         abBox.isUserInteractionEnabled = true
 //        abBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPlaceClicked)))
-//        abBox.isHidden = true
+        abBox.isHidden = true
         
         let bPublicBox = UIView()
         bPublicBox.backgroundColor = .clear //yellow
@@ -327,7 +473,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         aBox.layer.cornerRadius = 5
 //        aBox.layer.opacity = 0.2 //0.3
         aBox.isUserInteractionEnabled = true
-//        aBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPlaceClicked)))
+        aBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onAGridClicked)))
         aBox.bottomAnchor.constraint(equalTo: stackView.bottomAnchor, constant: -40).isActive = true //-20
         aBox.isHidden = true
         
@@ -382,43 +528,84 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         aArrowBtn.trailingAnchor.constraint(equalTo: aBox.trailingAnchor, constant: 0).isActive = true //-10
 //        aArrowBtn.isHidden = true
         
-        //test > post upload btn
-//        let aUpload = UIView()
-        aUpload.backgroundColor = .yellow
-        panel.addSubview(aUpload)
-//        stack2.addSubview(aUpload)
-        aUpload.translatesAutoresizingMaskIntoConstraints = false
-        aUpload.heightAnchor.constraint(equalToConstant: 30).isActive = true //30
-        aUpload.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -10).isActive = true
-//        aUpload.topAnchor.constraint(equalTo: panel.topAnchor, constant: 50).isActive = true
-//        aUpload.leadingAnchor.constraint(equalTo: stack2.leadingAnchor, constant: 10).isActive = true
-//        aUpload.trailingAnchor.constraint(equalTo: stack2.trailingAnchor, constant: 0).isActive = true
-        aUpload.centerYAnchor.constraint(equalTo: aBtn.centerYAnchor).isActive = true
-        aUpload.layer.cornerRadius = 10
-        aUpload.isUserInteractionEnabled = true
-        aUpload.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPostUploadNextClicked)))
+        lMiniError.backgroundColor = .red
+        stackView.addSubview(lMiniError)
+        lMiniError.translatesAutoresizingMaskIntoConstraints = false
+        lMiniError.trailingAnchor.constraint(equalTo: aBox.trailingAnchor, constant: 5).isActive = true
+        lMiniError.centerYAnchor.constraint(equalTo: aBox.centerYAnchor, constant: 0).isActive = true
+//        lMiniError.topAnchor.constraint(equalTo: maxLimitErrorPanel.topAnchor, constant: 5).isActive = true
+//        lMiniError.bottomAnchor.constraint(equalTo: pText.topAnchor, constant: -5).isActive = true
+        lMiniError.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        lMiniError.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        lMiniError.layer.cornerRadius = 10
+        lMiniError.isHidden = true
 
-        let aUploadText = UILabel()
-        aUploadText.textAlignment = .center
-        aUploadText.textColor = .black
-        aUploadText.font = .boldSystemFont(ofSize: 13)
-        panel.addSubview(aUploadText)
-//        aUpload.addSubview(aUploadText)
-        aUploadText.translatesAutoresizingMaskIntoConstraints = false
-//        aUploadText.centerXAnchor.constraint(equalTo: aUpload.centerXAnchor).isActive = true
-        aUploadText.centerYAnchor.constraint(equalTo: aUpload.centerYAnchor).isActive = true
-        aUploadText.leadingAnchor.constraint(equalTo: aUpload.leadingAnchor, constant: 25).isActive = true
-        aUploadText.trailingAnchor.constraint(equalTo: aUpload.trailingAnchor, constant: -25).isActive = true
-        aUploadText.text = "Post"
+        let lMiniBtn = UIImageView(image: UIImage(named:"icon_round_priority")?.withRenderingMode(.alwaysTemplate))
+        lMiniBtn.tintColor = .white
+        lMiniError.addSubview(lMiniBtn)
+        lMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        lMiniBtn.centerXAnchor.constraint(equalTo: lMiniError.centerXAnchor).isActive = true
+        lMiniBtn.centerYAnchor.constraint(equalTo: lMiniError.centerYAnchor).isActive = true
+        lMiniBtn.heightAnchor.constraint(equalToConstant: 12).isActive = true
+        lMiniBtn.widthAnchor.constraint(equalToConstant: 12).isActive = true
         
-        panel.addSubview(aSpinner)
-        aSpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
-        aSpinner.translatesAutoresizingMaskIntoConstraints = false
-        aSpinner.centerYAnchor.constraint(equalTo: aUpload.centerYAnchor).isActive = true
-        aSpinner.centerXAnchor.constraint(equalTo: aUpload.centerXAnchor).isActive = true
-        aSpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        aSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        aSpinner.isUserInteractionEnabled = false
+//        pMiniError.backgroundColor = .red
+//        stackView.addSubview(pMiniError)
+//        pMiniError.translatesAutoresizingMaskIntoConstraints = false
+//        pMiniError.trailingAnchor.constraint(equalTo: uView.trailingAnchor, constant: -20).isActive = true
+//        pMiniError.topAnchor.constraint(equalTo: pMini.bottomAnchor, constant: 20).isActive = true
+////        pMiniError.topAnchor.constraint(equalTo: bTextView.bottomAnchor, constant: 5).isActive = true
+//        pMiniError.heightAnchor.constraint(equalToConstant: 20).isActive = true
+//        pMiniError.widthAnchor.constraint(equalToConstant: 20).isActive = true
+//        pMiniError.layer.cornerRadius = 10
+//        pMiniError.isHidden = true
+//
+//        let pMiniBtn = UIImageView(image: UIImage(named:"icon_round_priority")?.withRenderingMode(.alwaysTemplate))
+//        pMiniBtn.tintColor = .white
+//        pMiniError.addSubview(pMiniBtn)
+//        pMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+//        pMiniBtn.centerXAnchor.constraint(equalTo: pMiniError.centerXAnchor).isActive = true
+//        pMiniBtn.centerYAnchor.constraint(equalTo: pMiniError.centerYAnchor).isActive = true
+//        pMiniBtn.heightAnchor.constraint(equalToConstant: 12).isActive = true
+//        pMiniBtn.widthAnchor.constraint(equalToConstant: 12).isActive = true
+        
+//        //test > post upload btn
+////        let aUpload = UIView()
+//        aUpload.backgroundColor = .yellow
+//        panel.addSubview(aUpload)
+////        stack2.addSubview(aUpload)
+//        aUpload.translatesAutoresizingMaskIntoConstraints = false
+//        aUpload.heightAnchor.constraint(equalToConstant: 30).isActive = true //30
+//        aUpload.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -10).isActive = true
+////        aUpload.topAnchor.constraint(equalTo: panel.topAnchor, constant: 50).isActive = true
+////        aUpload.leadingAnchor.constraint(equalTo: stack2.leadingAnchor, constant: 10).isActive = true
+////        aUpload.trailingAnchor.constraint(equalTo: stack2.trailingAnchor, constant: 0).isActive = true
+//        aUpload.centerYAnchor.constraint(equalTo: aBtn.centerYAnchor).isActive = true
+//        aUpload.layer.cornerRadius = 10
+//        aUpload.isUserInteractionEnabled = true
+//        aUpload.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPostUploadNextClicked)))
+//
+//        let aUploadText = UILabel()
+//        aUploadText.textAlignment = .center
+//        aUploadText.textColor = .black
+//        aUploadText.font = .boldSystemFont(ofSize: 13)
+//        panel.addSubview(aUploadText)
+////        aUpload.addSubview(aUploadText)
+//        aUploadText.translatesAutoresizingMaskIntoConstraints = false
+////        aUploadText.centerXAnchor.constraint(equalTo: aUpload.centerXAnchor).isActive = true
+//        aUploadText.centerYAnchor.constraint(equalTo: aUpload.centerYAnchor).isActive = true
+//        aUploadText.leadingAnchor.constraint(equalTo: aUpload.leadingAnchor, constant: 25).isActive = true
+//        aUploadText.trailingAnchor.constraint(equalTo: aUpload.trailingAnchor, constant: -25).isActive = true
+//        aUploadText.text = "Post"
+//        
+//        panel.addSubview(aSpinner)
+//        aSpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
+//        aSpinner.translatesAutoresizingMaskIntoConstraints = false
+//        aSpinner.centerYAnchor.constraint(equalTo: aUpload.centerYAnchor).isActive = true
+//        aSpinner.centerXAnchor.constraint(equalTo: aUpload.centerXAnchor).isActive = true
+//        aSpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
+//        aSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
+//        aSpinner.isUserInteractionEnabled = false
         
 //        let aSaveDraft = UIView()
         aSaveDraft.backgroundColor = .ddmDarkColor
@@ -1173,7 +1360,8 @@ class PostCreatorConsolePanelView: CreatorPanelView{
 //        aTextOK.isHidden = true
         
 //        let aTextOKMiniBtn = UIImageView(image: UIImage(named:"icon_round_done")?.withRenderingMode(.alwaysTemplate))
-        let aTextOKMiniBtn = UIImageView(image: UIImage(named:"icon_outline_keyboard_hide")?.withRenderingMode(.alwaysTemplate))
+//        let aTextOKMiniBtn = UIImageView(image: UIImage(named:"icon_outline_keyboard_hide")?.withRenderingMode(.alwaysTemplate))
+        let aTextOKMiniBtn = UIImageView(image: UIImage(named:"icon_round_arrow_down_a")?.withRenderingMode(.alwaysTemplate))
 //        aTextOKMiniBtn.tintColor = .black
         aTextOKMiniBtn.tintColor = .white
         aTextOK.addSubview(aTextOKMiniBtn)
@@ -1190,7 +1378,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         maxLimitErrorPanel.translatesAutoresizingMaskIntoConstraints = false
         maxLimitErrorPanel.centerXAnchor.constraint(equalTo: panel.centerXAnchor, constant: 0).isActive = true
         maxLimitErrorPanel.layer.cornerRadius = 10
-        maxLimitErrorPanel.topAnchor.constraint(equalTo: aUpload.bottomAnchor, constant: 10).isActive = true
+        maxLimitErrorPanel.topAnchor.constraint(equalTo: aUpload.bottomAnchor, constant: 5).isActive = true
         maxLimitErrorPanel.isHidden = true
         
         let miniError = UIView()
@@ -1234,12 +1422,6 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         notificationCenter.addObserver(self, selector: #selector(onKeyboardWillChange), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
         //**
     
-    }
-    
-    //test
-    override func showLocationSelected() {
-        aText.text = mapPinString
-        print("showLocationSelected")
     }
     
     //test
@@ -1389,7 +1571,10 @@ class PostCreatorConsolePanelView: CreatorPanelView{
             if(isUserLoggedIn) {
                 let pImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
                 pImage.sd_setImage(with: pImageUrl)
+                pImage.isHidden = false
+                aStickyPhoto.sd_setImage(with: pImageUrl)
                 pNameText.text = "Michael Kins"
+                abBox.isHidden = false
                 
                 //test > add first textview
                 addTextSection(i: 0, extraContentSize: 0.0, textToAdd: "", toSetCursor: true)
@@ -1405,14 +1590,20 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                 }
                 //*
                 //test > refresh tagged location 
-                refreshPlaceTitleUI()
+//                refreshPlaceTitleUI()
+                if(!predesignatedPlaceList.isEmpty) {
+                    setSelectedLocation(l: "p")
+                }
                 //
                 
                 aBox.isHidden = false //show add location
             } else {
                 let pImageUrl = URL(string: "")
                 pImage.sd_setImage(with: pImageUrl)
+                pImage.isHidden = true
+                aStickyPhoto.sd_setImage(with: pImageUrl)
                 pNameText.text = "-"
+                abBox.isHidden = true
                 
                 aBox.isHidden = true //hide add location
             }
@@ -1446,14 +1637,30 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     
     func setPredesignatedPlace(p: String) {
         predesignatedPlaceList.append("p")
-//        refreshPlaceTitleUI()
     }
     
-    func refreshPlaceTitleUI(){
-        aaText.text = "Add Location"
+    //test
+    override func showLocationSelected() {
+//        aText.text = mapPinString
+        print("showLocationSelected")
         
-        if(!predesignatedPlaceList.isEmpty) {
-            aaText.text = "Petronas Twin Tower"
+        setSelectedLocation(l: mapPinString)
+    }
+    
+    var selectedPlaceList = [String]()
+    func setSelectedLocation(l : String) {
+        removeSelectedLocation()
+        
+        if(selectedPlaceList.isEmpty) {
+            selectedPlaceList.append("p")
+            aaText.text = l
+        }
+    }
+    
+    func removeSelectedLocation() {
+        if(!selectedPlaceList.isEmpty) {
+            selectedPlaceList.removeLast()
+            aaText.text = ""
         }
     }
     
@@ -1517,7 +1724,16 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         //test 2
         clearErrorUI()
         resignResponder()
-        delegate?.didPostCreatorClickLocationSelectScrollable()
+//        delegate?.didPostCreatorClickLocationSelectScrollable()
+        
+        //test 2
+        let isSignedIn = SignInManager.shared.getStatus()
+        if(isSignedIn) {
+            delegate?.didPostCreatorClickLocationSelectScrollable()
+        }
+        else {
+            delegate?.didPostCreatorClickSignIn()
+        }
     }
     
     @objc func onMainAddTextClicked(gesture: UITapGestureRecognizer) {
@@ -1527,7 +1743,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         let isSignedIn = SignInManager.shared.getStatus()
         if(isSignedIn) {
             if(!pcList.isEmpty) {
-                if(pcList[pcList.count - 1].tBoxType != "t") {
+                if(pcList[pcList.count - 1].tBoxType != "text") {
                     addTextSection(i: pcList.count - 1, extraContentSize: 0.0, textToAdd: "", toSetCursor: true)
                 } else {
                     if let aTBox = pcList[pcList.count - 1].tBox as? UITextView {
@@ -1633,7 +1849,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
 //        selectedPcIndex = -1
 
         //test
-        if(pcList[selectedPcIndex].tBoxType == "t") {
+        if(pcList[selectedPcIndex].tBoxType == "text") {
             if let tBoxTv = pcList[selectedPcIndex].tBox as? UITextView {
                 if(selectedPcIndex > 0 && selectedPcIndex < pcList.count - 1) {
                     if(tBoxTv.text == "") {
@@ -1662,7 +1878,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         let isSignedIn = SignInManager.shared.getStatus()
         if(isSignedIn) {
             if(!pcList.isEmpty) {
-                if(pcList[selectedPcIndex + 1].tBoxType != "t") {
+                if(pcList[selectedPcIndex + 1].tBoxType != "text") {
                     print("photoaddtext A \(selectedPcIndex)")
                     addTextSection(i: selectedPcIndex, extraContentSize: 0.0, textToAdd: "", toSetCursor: true)
                 } else {
@@ -1707,7 +1923,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         let isSignedIn = SignInManager.shared.getStatus()
         if(isSignedIn) {
             if(!pcList.isEmpty) {
-                if(pcList[selectedPcIndex + 1].tBoxType != "t") {
+                if(pcList[selectedPcIndex + 1].tBoxType != "text") {
                     print("videoaddtext A \(selectedPcIndex)")
                     addTextSection(i: selectedPcIndex, extraContentSize: 0.0, textToAdd: "", toSetCursor: true)
                 } else {
@@ -1832,7 +2048,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                     pcList[i + 1].tBoxTopCons?.isActive = true
                 }
                 
-                if(pcList[i + 1].tBoxType != "t" && textToAdd != "") {
+                if(pcList[i + 1].tBoxType != "text" && textToAdd != "") {
                     isToAppendText = true
                 }
             }
@@ -1893,7 +2109,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         //case 2: textaftercursor "", add photo only, no need to add textview
         //case 3: cursor in middle, add photo and textview, repopulate both textviews
         //case 4: empty text, add photo only
-        if(pcList[initialSelectedIndex].tBoxType == "t") {
+        if(pcList[initialSelectedIndex].tBoxType == "text") {
             if let tBoxTv = pcList[initialSelectedIndex].tBox as? UITextView {
                 //case 4
                 if(tBoxTv.text == "") {
@@ -1967,7 +2183,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
             let assetSize = computeContentSize(dataType: dataType)
             addContentSection(i: initialSelectedIndex, textToAdd: "", urls: urls, cSize: assetSize, dataType: dataType, extraYMargin: extraYMargin, toSetCursor: toSetCursor)
 
-            if(pcList[initialSelectedIndex].tBoxType == "t") {
+            if(pcList[initialSelectedIndex].tBoxType == "text") {
                 if let tBoxTv = pcList[initialSelectedIndex].tBox as? UITextView {
                     if(tBoxTv.text == "") {
                         //ori => fatal error
@@ -1992,7 +2208,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     func computeContentSize(dataType: String) -> CGSize {
         var cSize = CGSize(width: 0, height: 0)
         
-        if(dataType == "p") {
+        if(dataType == "photo") {
             let cellWidth = self.frame.width
             let lhsMargin = 20.0
             let rhsMargin = 20.0
@@ -2017,7 +2233,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                 let cWidth = availableWidth
                 cSize = CGSize(width: cWidth, height: cWidth)
             }
-        } else if(dataType == "p_s") {
+        } else if(dataType == "photo_s") {
             let cellWidth = self.frame.width
             let lhsMargin = 20.0
             let rhsMargin = 20.0
@@ -2042,7 +2258,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                 let cWidth = availableWidth
                 cSize = CGSize(width: cWidth, height: cWidth + descHeight)
             }
-        } else if(dataType == "v") {
+        } else if(dataType == "video") {
             let cellWidth = self.frame.width
             let lhsMargin = 20.0
             let rhsMargin = 20.0
@@ -2066,7 +2282,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                 let cWidth = availableWidth
                 cSize = CGSize(width: cWidth, height: cWidth)
             }
-        } else if(dataType == "v_l") {//loop videos
+        } else if(dataType == "video_l") {//loop videos
             let cellWidth = self.frame.width
             let lhsMargin = 20.0
             let rhsMargin = 20.0
@@ -2091,13 +2307,13 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                 let cWidth = availableWidth
                 cSize = CGSize(width: cWidth, height: cWidth + descHeight)
             }
-        } else if(dataType == "q") { //quote cell
+        } else if(dataType == "quote") { //quote cell
             //**test > fake data for quote post
             var qDataArray = [String]()
-            qDataArray.append("t")
+            qDataArray.append("text")
 //                qDataArray.append("p")
 //                qDataArray.append("p_s")
-            qDataArray.append("v")
+            qDataArray.append("video")
 //                qDataArray.append("v_l")
             //**
 
@@ -2108,14 +2324,14 @@ class PostCreatorConsolePanelView: CreatorPanelView{
             var contentHeight = 0.0
             
             for i in qDataArray {
-                if(i == "t") {
+                if(i == "text") {
                     let tTopMargin = 20.0
                     let text = "Nice food, nice environment! Worth a visit. \nSo Good."
                     let tContentHeight = estimateHeight(text: text, textWidth: quoteWidth - 20.0 - 20.0, fontSize: 14)
                     let tHeight = tTopMargin + tContentHeight
                     contentHeight += tHeight
                 }
-                else if(i == "p") {
+                else if(i == "photo") {
                     let lhsMargin = 20.0
                     let rhsMargin = 20.0
                     let availableWidth = quoteWidth - lhsMargin - rhsMargin
@@ -2148,7 +2364,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                     let pHeight = pTopMargin + pContentHeight
                     contentHeight += pHeight
                 }
-                else if(i == "p_s") {
+                else if(i == "photo_s") {
                     let lhsMargin = 20.0
                     let rhsMargin = 20.0
                     let descHeight = 40.0
@@ -2180,7 +2396,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                     let pHeight = pTopMargin + pContentHeight
                     contentHeight += pHeight
                 }
-                else if(i == "v") {
+                else if(i == "video") {
                     let lhsMargin = 20.0
                     let rhsMargin = 20.0
                     let availableWidth = quoteWidth - lhsMargin - rhsMargin
@@ -2211,7 +2427,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                     let vHeight = vTopMargin + vContentHeight
                     contentHeight += vHeight
                 }
-                else if(i == "v_l") {
+                else if(i == "video_l") {
                     let lhsMargin = 20.0
                     let rhsMargin = 20.0
                     let descHeight = 40.0
@@ -2276,7 +2492,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
             pMiniBottomCons?.isActive = false //test
             
             let a = PostClip()
-            a.tBoxType = "t"
+            a.tBoxType = "text"
             let bTv = UITextView()
             bTv.textAlignment = .left
             bTv.textColor = .white
@@ -2336,14 +2552,14 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         }
         else {
             print("addtextsectionA1 ")
-            if(pcList[i].tBoxType != "t") {
+            if(pcList[i].tBoxType != "text") {
                 if(i < pcList.count - 1) {
-                    if(pcList[i + 1].tBoxType != "t") {
+                    if(pcList[i + 1].tBoxType != "text") {
                         
                         print("addtextsectionB")
                         
                         let a = PostClip()
-                        a.tBoxType = "t"
+                        a.tBoxType = "text"
                         let bTv = UITextView()
                         bTv.textAlignment = .left
                         bTv.textColor = .white
@@ -2419,7 +2635,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                     pcList[i].tBoxBottomCons?.isActive = false
                     
                     let a = PostClip()
-                    a.tBoxType = "t"
+                    a.tBoxType = "text"
                     let bTv = UITextView()
                     bTv.textAlignment = .left
                     bTv.textColor = .white
@@ -2526,7 +2742,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
             
             //if previous pc is text section, and next pc is also text section, then combine texts
             if(i <= pcList.count - 1) {
-                if(pcList[i - 1].tBoxType == "t" && pcList[i].tBoxType == "t") {
+                if(pcList[i - 1].tBoxType == "text" && pcList[i].tBoxType == "text") {
                     removeTextSection(i: i)
                 }
             }
@@ -2544,7 +2760,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         if(i > 0) {
             var currentT = ""
             var prevT = ""
-            if(pcList[i].tBoxType == "t") {
+            if(pcList[i].tBoxType == "text") {
                 if let currentTBox = pcList[i].tBox as? UITextView {
                     currentT = currentTBox.text
                 }
@@ -2558,7 +2774,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                 if(i > 0) { //means i-1 element exists
                     if let prevTBox = pcList[i - 1].tBox {
                         //if previous pc is text section, then combine texts
-                        if(pcList[i - 1].tBoxType == "t") {
+                        if(pcList[i - 1].tBoxType == "text") {
                             if let prevTBoxTv = pcList[i - 1].tBox as? UITextView {
                                 prevT = prevTBoxTv.text
                                 if let text = prevT as NSString? {
@@ -2665,6 +2881,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     }
     
     @objc func onBackPostCreatorPanelClicked(gesture: UITapGestureRecognizer) {
+        clearErrorUI()
         resignResponder()
 //        openSavePostDraftPromptMsg()
 
@@ -2691,16 +2908,43 @@ class PostCreatorConsolePanelView: CreatorPanelView{
 //            let sHeight = stackView.frame.height
 //            print("onpostB \(sHeight)")
             
-//            if(true) { //not to remove, will change to check condition in future
-//                configureErrorUI(data: "na-location")
-//            } else {
-                aUpload.isHidden = true
-                aSpinner.startAnimating()
-            
-                //test 2 > new method to upload data => for in-app msg view
-                self.closePostCreatorPanel(isAnimated: true)
-                delegate?.didPostCreatorClickUpload(payload: "cc") //payload e.g. location name
-//            }
+            if(!pcList.isEmpty) {
+                if(pcList.count == 1) {
+                    if(pcList[0].tBoxType == "text") {
+                        if let tBoxTv = pcList[0].tBox as? UITextView {
+                            if(tBoxTv.text == "") {
+                                configureErrorUI(data: "na-content")
+                            }
+                            else {
+                                if(selectedPlaceList.isEmpty) {
+                                    configureErrorUI(data: "na-location")
+                                }
+                                else {
+                                    aUpload.isHidden = true
+                                    aSpinner.startAnimating()
+                                
+                                    //test 2 > new method to upload data => for in-app msg view
+                                    self.closePostCreatorPanel(isAnimated: true)
+                                    delegate?.didPostCreatorClickUpload(payload: "cc") //payload e.g. location name
+                                }
+                            }
+                        }
+                    }
+                }
+                else {
+                    if(selectedPlaceList.isEmpty) {
+                        configureErrorUI(data: "na-location")
+                    }
+                    else {
+                        aUpload.isHidden = true
+                        aSpinner.startAnimating()
+                    
+                        //test 2 > new method to upload data => for in-app msg view
+                        self.closePostCreatorPanel(isAnimated: true)
+                        delegate?.didPostCreatorClickUpload(payload: "cc") //payload e.g. location name
+                    }
+                }
+            }
         }
         else {
             delegate?.didPostCreatorClickSignIn()
@@ -2820,6 +3064,11 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         }
         else if(data == "na-location") {
             maxLimitText.text = "Location is required"
+            lMiniError.isHidden = false
+        }
+        else if(data == "na-content") {
+            maxLimitText.text = "Content is required"
+            pMiniError.isHidden = false
         }
         
         maxLimitErrorPanel.isHidden = false
@@ -2828,6 +3077,34 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     func clearErrorUI() {
         maxLimitText.text = ""
         maxLimitErrorPanel.isHidden = true
+        
+        lMiniError.isHidden = true
+        pMiniError.isHidden = true
+    }
+    
+    //test > sticky header title animation when scroll up and down
+    var isCTitleDisplayed = false
+    func cTitleAnimateDisplay() {
+        //title appear
+        if(isCTitleDisplayed == false) {
+            UIView.animate(withDuration: 0.2, animations: {
+                self.cNameTextCenterYCons?.constant = 10.0
+                self.layoutIfNeeded()
+
+                self.isCTitleDisplayed = true
+            })
+        }
+    }
+    func cTitleAnimateHide() {
+        //title hide
+        if(isCTitleDisplayed == true) {
+            UIView.animate(withDuration: 0.2, animations: {
+                self.cNameTextCenterYCons?.constant = 50.0
+                self.layoutIfNeeded()
+
+                self.isCTitleDisplayed = false
+            })
+        }
     }
 }
 
@@ -2872,15 +3149,15 @@ extension PostCreatorConsolePanelView: PostClipCellDelegate {
                     
                     resignResponder()
                     
-                    if(pc.tBoxType == "p") {
+                    if(pc.tBoxType == "photo") {
                         activatePanel(panel: "photoEditPanel")
-                    } else if(pc.tBoxType == "v") {
+                    } else if(pc.tBoxType == "video") {
                         activatePanel(panel: "videoEditPanel")
-                    } else if(pc.tBoxType == "q") {
+                    } else if(pc.tBoxType == "quote") {
                         activatePanel(panel: "embedEditPanel")
-                    } else if(pc.tBoxType == "v_l") {
+                    } else if(pc.tBoxType == "video_l") {
                         activatePanel(panel: "embedEditPanel")
-                    } else if(pc.tBoxType == "p_s") {
+                    } else if(pc.tBoxType == "photo_s") {
                         activatePanel(panel: "embedEditPanel")
                     }
                     
@@ -3083,10 +3360,13 @@ extension PostCreatorConsolePanelView: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         print("xy textview begin edit")
         
+        //test
+        clearErrorUI()
+        
         //test > detect which textview is currently at
         var i = 0
         for pc in pcList {
-            if(pc.tBoxType == "t") {
+            if(pc.tBoxType == "text") {
                 if(pc.tBox == textView) {
                     
                     //*test > update textview height when merge multiline textview with another textview
@@ -3226,7 +3506,7 @@ extension PostCreatorConsolePanelView: UITextViewDelegate {
             
             //test 2 > efficient method using selectedpcindex
             let pc = pcList[selectedPcIndex]
-            if(pc.tBoxType == "t" && pc.tBox == textView) {
+            if(pc.tBoxType == "text" && pc.tBox == textView) {
                 pc.tBoxHeightCons?.constant = h
 
                 if(length > 0) {
@@ -3384,9 +3664,9 @@ extension PostCreatorConsolePanelView: CameraPhotoRollPanelDelegate{
             
             print("multiphotoclick \(selectedPcIndex)")
             if(selectedPcIndex > -1) {
-                addContentAtText(urls: urls, dataType: "p")
+                addContentAtText(urls: urls, dataType: "photo")
             } else {
-                addContentAtMain(urls: urls, dataType: "p_s")
+                addContentAtMain(urls: urls, dataType: "photo_s")
             }
         }
     }
@@ -3430,10 +3710,10 @@ extension PostCreatorConsolePanelView: CameraVideoRollPanelDelegate{
             
             if(selectedPcIndex > -1) {
 //                addContentAtText(urls: vUrls, dataType: "v_l")
-                addContentAtText(urls: vUrls, dataType: "v") //test
+                addContentAtText(urls: vUrls, dataType: "video") //test
             } else {
 //                addContentAtMain(urls: vUrls, dataType: "v_l")
-                addContentAtMain(urls: vUrls, dataType: "v") //test
+                addContentAtMain(urls: vUrls, dataType: "video_l") //test
             }
         }
     }
@@ -3469,7 +3749,21 @@ extension PostCreatorConsolePanelView: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         print("xxpc scrollview scroll: \(scrollView.contentOffset.y), \(stackView.frame.height)")
         
+        //test > compute video intersect wrt dummy
         getIntersect()
+        
+        //test > stickyheader UI respond to scroll change
+        let photoHeight = 40.0
+        let photoTopMargin = 20.0
+        let totalPhotoHeight = photoHeight + photoTopMargin
+        let isSignedIn = SignInManager.shared.getStatus()
+        if(isSignedIn) {
+            if(scrollView.contentOffset.y >= totalPhotoHeight) {
+                cTitleAnimateDisplay()
+            } else {
+                cTitleAnimateHide()
+            }
+        }
     }
 
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {

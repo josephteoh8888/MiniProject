@@ -630,31 +630,16 @@ class VideoFinalizePanelView: PanelView{
             if(bTextView.text == "") {
                 configureErrorUI(data: "na-caption")
             } else {
-                aUpload.isHidden = true
-                aSpinner.startAnimating()
+                if(selectedPlaceList.isEmpty) {
+                    configureErrorUI(data: "na-location")
+                }
+                else {
+                    aUpload.isHidden = true
+                    aSpinner.startAnimating()
                     
-                //test 1 > old method
-//                DataUploadManager.shared.sendData(id: "u") { [weak self]result in
-//                    switch result {
-//                        case .success(let l):
-//
-//                        //update UI on main thread
-//                        DispatchQueue.main.async {
-//
-//        //                    self?.closeVideoFinalizePanel(isAnimated: true)
-//                            
-//                            //test
-//                            self?.delegate?.didVideoFinalizeClickUploadSuccess()
-//                        }
-//
-//                        case .failure(_):
-//                            print("api fail")
-//                            break
-//                    }
-//                }
-                
-                //test 2 > new method to upload data for in-app msg
-                delegate?.didVideoFinalizeClickUpload(payload: "cc")
+                    //test 2 > new method to upload data for in-app msg
+                    delegate?.didVideoFinalizeClickUpload(payload: "cc")
+                }
             }
         }
         else {
@@ -726,6 +711,20 @@ class VideoFinalizePanelView: PanelView{
         if(!selectedPlaceList.isEmpty) {
             selectedPlaceList.removeLast()
             aText.text = "Add Location"
+        }
+    }
+    
+    var selectedSoundList = [String]()
+    func setSelectedSound(s : String) {
+        removeSelectedSound()
+        
+        if(selectedSoundList.isEmpty) {
+            selectedSoundList.append("s")
+        }
+    }
+    func removeSelectedSound() {
+        if(!selectedSoundList.isEmpty) {
+            selectedSoundList.removeLast()
         }
     }
 
@@ -808,6 +807,11 @@ extension VideoFinalizePanelView: UITextViewDelegate {
             pText.isHidden = false
         }
         print("textView change \(length)")
+    }
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        //test
+        clearErrorUI()
     }
 }
 

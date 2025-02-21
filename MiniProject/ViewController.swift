@@ -206,6 +206,7 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
     let aSemiTransparentText = UILabel()
     let arrowBtn = UIImageView()
     let semiTransparentSpinner = SpinLoader()
+    let aSemiTransparentSpinner = SpinLoader()
     let pSemiTransparentSpinner = SpinLoader()
     let pSemiTransparentText = UILabel()
     let uSemiTransparentSpinner = SpinLoader()
@@ -287,55 +288,55 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         aSemiTransparentTextBoxBG.leadingAnchor.constraint(equalTo: aSemiTransparentTextBox.leadingAnchor).isActive = true
         aSemiTransparentTextBoxBG.trailingAnchor.constraint(equalTo: aSemiTransparentTextBox.trailingAnchor).isActive = true
         
-        //test > semiGif
-        aSemiTransparentTextBox.addSubview(semiGifImageOuter)
-        semiGifImageOuter.translatesAutoresizingMaskIntoConstraints = false
-        semiGifImageOuter.leadingAnchor.constraint(equalTo: aSemiTransparentTextBox.leadingAnchor, constant: 10).isActive = true
-        semiGifImageOuter.centerYAnchor.constraint(equalTo: aSemiTransparentTextBox.centerYAnchor).isActive = true
-        semiGifImageOuter.heightAnchor.constraint(equalToConstant: 38).isActive = true //34
-        semiGifImageOuter.widthAnchor.constraint(equalToConstant: 38).isActive = true
-        semiGifImageOuter.changeLineWidth(width: 2)
-        semiGifImageOuter.changeStrokeColor(color: UIColor.yellow)
-        semiGifImageOuter.isHidden = true
-
-        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-//        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
-//        var semiGifImage = SDAnimatedImageView()
-        semiGifImage.contentMode = .scaleAspectFill
-        semiGifImage.layer.masksToBounds = true
-        semiGifImage.layer.cornerRadius = 17
-        semiGifImage.sd_setImage(with: imageUrl)
-        semiGifImageOuter.addSubview(semiGifImage)
-        semiGifImage.translatesAutoresizingMaskIntoConstraints = false
-        semiGifImage.centerXAnchor.constraint(equalTo: semiGifImageOuter.centerXAnchor).isActive = true
-        semiGifImage.centerYAnchor.constraint(equalTo: semiGifImageOuter.centerYAnchor).isActive = true
-        semiGifImage.heightAnchor.constraint(equalToConstant: 34).isActive = true //34
-        semiGifImage.widthAnchor.constraint(equalToConstant: 34).isActive = true
-
-//        aSemiTransparentTextBox.addSubview(semiTransparentSpinner)
-        semiGifImageOuter.addSubview(semiTransparentSpinner)
-        semiTransparentSpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
-        semiTransparentSpinner.translatesAutoresizingMaskIntoConstraints = false
-        semiTransparentSpinner.centerYAnchor.constraint(equalTo: semiGifImageOuter.centerYAnchor).isActive = true
-        semiTransparentSpinner.centerXAnchor.constraint(equalTo: semiGifImageOuter.centerXAnchor).isActive = true
-        semiTransparentSpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        semiTransparentSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        //test > semiGif => compilation of videos at "around you"
+//        aSemiTransparentTextBox.addSubview(semiGifImageOuter)
+//        semiGifImageOuter.translatesAutoresizingMaskIntoConstraints = false
+//        semiGifImageOuter.leadingAnchor.constraint(equalTo: aSemiTransparentTextBox.leadingAnchor, constant: 10).isActive = true
+//        semiGifImageOuter.centerYAnchor.constraint(equalTo: aSemiTransparentTextBox.centerYAnchor).isActive = true
+//        semiGifImageOuter.heightAnchor.constraint(equalToConstant: 38).isActive = true //34
+//        semiGifImageOuter.widthAnchor.constraint(equalToConstant: 38).isActive = true
+//        semiGifImageOuter.changeLineWidth(width: 2)
+//        semiGifImageOuter.changeStrokeColor(color: UIColor.yellow)
+//        semiGifImageOuter.isHidden = true
+//
+//        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+////        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
+////        var semiGifImage = SDAnimatedImageView()
+//        semiGifImage.contentMode = .scaleAspectFill
+//        semiGifImage.layer.masksToBounds = true
+//        semiGifImage.layer.cornerRadius = 17
+//        semiGifImage.sd_setImage(with: imageUrl)
+//        semiGifImageOuter.addSubview(semiGifImage)
+//        semiGifImage.translatesAutoresizingMaskIntoConstraints = false
+//        semiGifImage.centerXAnchor.constraint(equalTo: semiGifImageOuter.centerXAnchor).isActive = true
+//        semiGifImage.centerYAnchor.constraint(equalTo: semiGifImageOuter.centerYAnchor).isActive = true
+//        semiGifImage.heightAnchor.constraint(equalToConstant: 34).isActive = true //34
+//        semiGifImage.widthAnchor.constraint(equalToConstant: 34).isActive = true
+//
+////        aSemiTransparentTextBox.addSubview(semiTransparentSpinner)
+//        semiGifImageOuter.addSubview(semiTransparentSpinner)
+//        semiTransparentSpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
+//        semiTransparentSpinner.translatesAutoresizingMaskIntoConstraints = false
+//        semiTransparentSpinner.centerYAnchor.constraint(equalTo: semiGifImageOuter.centerYAnchor).isActive = true
+//        semiTransparentSpinner.centerXAnchor.constraint(equalTo: semiGifImageOuter.centerXAnchor).isActive = true
+//        semiTransparentSpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
+//        semiTransparentSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
 
         //test > fake aSemi container for better clicking => it IS better
-        let aSemi = UIView()
-        aSemiTransparentTextBox.addSubview(aSemi)
-//        aSemiBG.addSubview(aSemi)
-//        aSemi.backgroundColor = .red
-//        aSemi.layer.opacity = 0.5
-        aSemi.translatesAutoresizingMaskIntoConstraints = false
-        aSemi.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        aSemi.widthAnchor.constraint(equalToConstant: 50).isActive = true
-        aSemi.centerYAnchor.constraint(equalTo: semiGifImageOuter.centerYAnchor).isActive = true
-        aSemi.centerXAnchor.constraint(equalTo: semiGifImageOuter.centerXAnchor).isActive = true
-//        aSemi.leadingAnchor.constraint(equalTo: aSemiTransparentTextBox.leadingAnchor, constant: 10).isActive = true
-//        aSemi.centerYAnchor.constraint(equalTo: aSemiTransparentTextBox.centerYAnchor).isActive = true
-        aSemi.isUserInteractionEnabled = true
-        aSemi.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onSemiGifClicked)))
+//        let aSemi = UIView()
+//        aSemiTransparentTextBox.addSubview(aSemi)
+////        aSemiBG.addSubview(aSemi)
+////        aSemi.backgroundColor = .red
+////        aSemi.layer.opacity = 0.5
+//        aSemi.translatesAutoresizingMaskIntoConstraints = false
+//        aSemi.heightAnchor.constraint(equalToConstant: 40).isActive = true
+//        aSemi.widthAnchor.constraint(equalToConstant: 50).isActive = true
+//        aSemi.centerYAnchor.constraint(equalTo: semiGifImageOuter.centerYAnchor).isActive = true
+//        aSemi.centerXAnchor.constraint(equalTo: semiGifImageOuter.centerXAnchor).isActive = true
+////        aSemi.leadingAnchor.constraint(equalTo: aSemiTransparentTextBox.leadingAnchor, constant: 10).isActive = true
+////        aSemi.centerYAnchor.constraint(equalTo: aSemiTransparentTextBox.centerYAnchor).isActive = true
+//        aSemi.isUserInteractionEnabled = true
+//        aSemi.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onSemiGifClicked)))
         
 //        let aSemiTransparentText = UILabel()
         aSemiTransparentText.textAlignment = .center
@@ -348,8 +349,8 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         aSemiTransparentText.bottomAnchor.constraint(equalTo: aSemiTransparentTextBox.bottomAnchor, constant: -13).isActive = true
 //        aSemiTransparentText.leadingAnchor.constraint(equalTo: semiGifImageOuter.trailingAnchor, constant: 10).isActive = true
         aSemiTransparentText.leadingAnchor.constraint(equalTo: aSemiTransparentTextBox.leadingAnchor, constant: 20).isActive = true
-        aSemiTransparentText.text = "Around You" //default: Around You
-//        aSemiTransparentText.text = "" //default: Around You
+//        aSemiTransparentText.text = "Around You" //default: Around You
+        aSemiTransparentText.text = "" //default: Around You
         aSemiTransparentText.isUserInteractionEnabled = true
         aSemiTransparentText.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onSemiArrowClicked)))
 
@@ -361,12 +362,24 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         aSemiTransparentTextBox.addSubview(arrowBtn)
         arrowBtn.translatesAutoresizingMaskIntoConstraints = false
         arrowBtn.leadingAnchor.constraint(equalTo: aSemiTransparentText.trailingAnchor).isActive = true
-        arrowBtn.trailingAnchor.constraint(equalTo: aSemiTransparentTextBox.trailingAnchor, constant: 0).isActive = true //-5
+        arrowBtn.trailingAnchor.constraint(equalTo: aSemiTransparentTextBox.trailingAnchor, constant: 0).isActive = true //-5, 0
         arrowBtn.centerYAnchor.constraint(equalTo: aSemiTransparentTextBox.centerYAnchor).isActive = true
-        arrowBtn.heightAnchor.constraint(equalToConstant: 36).isActive = true //ori 26
+        arrowBtn.heightAnchor.constraint(equalToConstant: 36).isActive = true //ori 36
         arrowBtn.widthAnchor.constraint(equalToConstant: 36).isActive = true
         arrowBtn.isUserInteractionEnabled = true
         arrowBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onSemiArrowClicked)))
+        arrowBtn.isHidden = true
+        
+        //test > new spinner for "around you"
+        aSemiTransparentTextBox.addSubview(aSemiTransparentSpinner)
+        aSemiTransparentSpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
+        aSemiTransparentSpinner.translatesAutoresizingMaskIntoConstraints = false
+        aSemiTransparentSpinner.centerYAnchor.constraint(equalTo: aSemiTransparentTextBox.centerYAnchor).isActive = true
+        aSemiTransparentSpinner.centerXAnchor.constraint(equalTo: aSemiTransparentTextBox.centerXAnchor).isActive = true
+//        uSemiTransparentSpinner.leadingAnchor.constraint(equalTo: uSemiGifImageOuter.trailingAnchor, constant: 10).isActive = true
+        aSemiTransparentSpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        aSemiTransparentSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
+//        aSemiTransparentSpinner.startAnimating()
         
         //test 2 > mini apps at bottom like snapmap
         addMiniApps()
@@ -469,29 +482,8 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
 //        bBtn.isUserInteractionEnabled = true
 //        bBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onRefreshClicked)))
         
-        //test > try top RHS dynamic buttons
-//        let rBtn = UIView()
-//        rBtn.backgroundColor = .ddmBlackOverlayColor
-//        self.view.addSubview(rBtn)
-//        rBtn.translatesAutoresizingMaskIntoConstraints = false
-//        rBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true //ori: 40
-//        rBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
-//        rBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
-//        rBtn.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
-//        rBtn.layer.cornerRadius = 20
-//        rBtn.layer.opacity = 0.4 //default 0.3
-////        rBtn.isUserInteractionEnabled = true
-////        rBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onBackPlacePanelClicked)))
-//
-//        let rBoxBtn = UIImageView()
-//        rBoxBtn.image = UIImage(named:"icon_round_setting")?.withRenderingMode(.alwaysTemplate)
-//        rBoxBtn.tintColor = .white
-//        self.view.addSubview(rBoxBtn)
-//        rBoxBtn.translatesAutoresizingMaskIntoConstraints = false
-//        rBoxBtn.centerXAnchor.constraint(equalTo: rBtn.centerXAnchor).isActive = true
-//        rBoxBtn.centerYAnchor.constraint(equalTo: rBtn.centerYAnchor).isActive = true
-//        rBoxBtn.heightAnchor.constraint(equalToConstant: 22).isActive = true //26
-//        rBoxBtn.widthAnchor.constraint(equalToConstant: 22).isActive = true
+        //test > RHS settings and content type filter for map
+        addContentTypeFilter()
         
         //test > search panel in main
         self.view.insertSubview(searchPanel, belowSubview: menuPanelSafeArea)
@@ -1304,8 +1296,8 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         })
         aBoxUnder.isHidden = true
     }
-    //
     
+    //*test > start and stop particles confetti
     @objc func onRefreshClicked(gesture: UITapGestureRecognizer) {
         stopParticles()
     }
@@ -1313,6 +1305,7 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         print("ongpsclick")
         startParticles()
     }
+    //*
     
     @objc func onMenuHomeClicked(gesture: UITapGestureRecognizer) {
         changeAppMenuMode(mode: "home")
@@ -1341,7 +1334,6 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         appMenuMode = mode
         
         menuHomeBtn.image = UIImage(named:"icon_outline_home")?.withRenderingMode(.alwaysTemplate)
-//        aSearchRound.isHidden = true
         menuSearchBtn.image = UIImage(named:"icon_outline_explore")?.withRenderingMode(.alwaysTemplate)
         menuNotifyBtn.image = UIImage(named:"icon_outline_inbox")?.withRenderingMode(.alwaysTemplate)
         menuProfileBtn.image = UIImage(named:"icon_outline_account")?.withRenderingMode(.alwaysTemplate)
@@ -1484,28 +1476,79 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         
         //test > remove pulsewave without removing from array, but by pulsating
         stopPulseWave()
-
-        //create new pulsewave
-        let zoom = mapView.camera.zoom
-        let point = mapView.projection.point(for: coordinate)
-        let pulseWave = PulseWave(frame: CGRect(x: point.x - MAX_MARKER_DIM/2 , y: point.y - MAX_MARKER_DIM/2, width: MAX_MARKER_DIM, height: MAX_MARKER_DIM))
-        pulseWave.addLocation(coordinate: coordinate)
-        pulseWave.isUserInteractionEnabled = false
-        self.view.insertSubview(pulseWave, aboveSubview: mapView) //put below markers
-        pulseWaveList.append(pulseWave)
-        pulseWave.delegate = self //test
-        pulseWave.initialize(withAnimation: true, changeSizeZoom: CGFloat(zoom))
-        pulseWave.frame.origin.x = point.x - pulseWave.frame.width/2 //update position after changesize()
-        pulseWave.frame.origin.y = point.y - pulseWave.frame.height/2
         
-        //test > add queue and fetch data
-        dequeueObject()
-        let qId = addQueueObject()
-        if(qId != -1) {
-            pulseWave.setId(id: qId)
+        //test 2 > exclude LocationSelectPanel from pulsewave
+        if(pageList.isEmpty) {
+            //create new pulsewave
+            let zoom = mapView.camera.zoom
+            let point = mapView.projection.point(for: coordinate)
+            let pulseWave = PulseWave(frame: CGRect(x: point.x - MAX_MARKER_DIM/2 , y: point.y - MAX_MARKER_DIM/2, width: MAX_MARKER_DIM, height: MAX_MARKER_DIM))
+            pulseWave.addLocation(coordinate: coordinate)
+            pulseWave.isUserInteractionEnabled = false
+            self.view.insertSubview(pulseWave, aboveSubview: mapView) //put below markers
+            pulseWaveList.append(pulseWave)
+            pulseWave.delegate = self //test
+            pulseWave.initialize(withAnimation: true, changeSizeZoom: CGFloat(zoom))
+            pulseWave.frame.origin.x = point.x - pulseWave.frame.width/2 //update position after changesize()
+            pulseWave.frame.origin.y = point.y - pulseWave.frame.height/2
             
-            asyncFetchData(id: qId, coordinate: coordinate)
+            //test > add queue and fetch data
+            dequeueObject()
+            let qId = addQueueObject()
+            if(qId != -1) {
+                pulseWave.setId(id: qId)
+                
+                asyncFetchData(id: qId, coordinate: coordinate)
+            }
+        } else {
+            if let c = pageList[pageList.count - 1] as? LocationSelectScrollablePanelView {
+                
+            } else {
+                //create new pulsewave
+                let zoom = mapView.camera.zoom
+                let point = mapView.projection.point(for: coordinate)
+                let pulseWave = PulseWave(frame: CGRect(x: point.x - MAX_MARKER_DIM/2 , y: point.y - MAX_MARKER_DIM/2, width: MAX_MARKER_DIM, height: MAX_MARKER_DIM))
+                pulseWave.addLocation(coordinate: coordinate)
+                pulseWave.isUserInteractionEnabled = false
+                self.view.insertSubview(pulseWave, aboveSubview: mapView) //put below markers
+                pulseWaveList.append(pulseWave)
+                pulseWave.delegate = self //test
+                pulseWave.initialize(withAnimation: true, changeSizeZoom: CGFloat(zoom))
+                pulseWave.frame.origin.x = point.x - pulseWave.frame.width/2 //update position after changesize()
+                pulseWave.frame.origin.y = point.y - pulseWave.frame.height/2
+                
+                //test > add queue and fetch data
+                dequeueObject()
+                let qId = addQueueObject()
+                if(qId != -1) {
+                    pulseWave.setId(id: qId)
+                    
+                    asyncFetchData(id: qId, coordinate: coordinate)
+                }
+            }
         }
+        
+        //ori => create pulsewave across all pages
+//        let zoom = mapView.camera.zoom
+//        let point = mapView.projection.point(for: coordinate)
+//        let pulseWave = PulseWave(frame: CGRect(x: point.x - MAX_MARKER_DIM/2 , y: point.y - MAX_MARKER_DIM/2, width: MAX_MARKER_DIM, height: MAX_MARKER_DIM))
+//        pulseWave.addLocation(coordinate: coordinate)
+//        pulseWave.isUserInteractionEnabled = false
+//        self.view.insertSubview(pulseWave, aboveSubview: mapView) //put below markers
+//        pulseWaveList.append(pulseWave)
+//        pulseWave.delegate = self //test
+//        pulseWave.initialize(withAnimation: true, changeSizeZoom: CGFloat(zoom))
+//        pulseWave.frame.origin.x = point.x - pulseWave.frame.width/2 //update position after changesize()
+//        pulseWave.frame.origin.y = point.y - pulseWave.frame.height/2
+//
+//        //test > add queue and fetch data
+//        dequeueObject()
+//        let qId = addQueueObject()
+//        if(qId != -1) {
+//            pulseWave.setId(id: qId)
+//
+//            asyncFetchData(id: qId, coordinate: coordinate)
+//        }
     }
     
     func deactivateQueueState() {
@@ -1600,14 +1643,14 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
                         if(id == c.getId() && lId == id) {
                             if(d) {
                                 print("async pulsewave start open video: ")
-                                //open video panel
-//                                self?.openVideoPanel(offX: offsetX, offY: offsetY, originatorView: c, originatorViewType: OriginatorTypes.PULSEWAVE, id: id)
-                                
-                                //open post panel
-//                                self?.openPostPanel(offX: offsetX, offY: offsetY, originatorView: c, originatorViewType: OriginatorTypes.PULSEWAVE, id: id)
-                                
-                                //open photo panel
-                                self?.openPhotoPanel(offX: offsetX, offY: offsetY, originatorView: c, originatorViewType: OriginatorTypes.PULSEWAVE, id: id)
+                                //test > open panel according to content type filter
+                                if(self?.xContentDataType == "loop") {
+                                    self?.openVideoPanel(offX: offsetX, offY: offsetY, originatorView: c, originatorViewType: OriginatorTypes.PULSEWAVE, id: id)
+                                } else if(self?.xContentDataType == "shot") {
+                                    self?.openPhotoPanel(offX: offsetX, offY: offsetY, originatorView: c, originatorViewType: OriginatorTypes.PULSEWAVE, id: id)
+                                } else {
+                                    self?.openPostPanel(offX: offsetX, offY: offsetY, originatorView: c, originatorViewType: OriginatorTypes.PULSEWAVE, id: id)
+                                }
                             } else {
                                 //close pulsewave with animation => it works
     //                                c.stopPulsatingWithAnimation(delay: 0.0)
@@ -1824,7 +1867,15 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
 //                        marker = ExploreMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
                         //test > new rectangular marker
 //                        marker = ExploreBMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
-                        marker = PhotoBMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
+//                        marker = ExploreAMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
+//                        marker = PhotoBMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
+                        //test
+                        if(xContentDataType == "shot") {
+                            marker = PhotoBMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
+                        }
+                        else if(xContentDataType == "loop") {
+                            marker = ExploreBMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
+                        }
                     } else if (geoType == GeoDataTypes.USERMARKER) {
                         marker = UserMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
                     } else if (geoType == GeoDataTypes.PLACEMARKER) {
@@ -2079,6 +2130,13 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
     
     func getHeatmapPoints() {
         let id = "g"
+        
+        //*test > start spinner when start fetching data
+        self.aSemiTransparentText.text = ""
+        self.arrowBtn.isHidden = true
+        self.aSemiTransparentSpinner.startAnimating()
+        //*
+        
         DataFetchManager.shared.fetchGeoData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -2090,6 +2148,12 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
                     guard let self = self else {
                         return
                     }
+                    
+                    //*test > stop spinner when fetch data complete
+                    self.aSemiTransparentText.text = "Around You"
+                    self.arrowBtn.isHidden = false
+                    self.aSemiTransparentSpinner.stopAnimating()
+                    //*
 
                     for i in l {
                         let geoL3 = i.getGeohashL3()
@@ -2282,6 +2346,8 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         return Int.random(in: 0..<3)
     }
     func showHeatmapPoints() {
+        //test > remove markers first beforehand
+        mapRemoveMarkers()
         
         //test 1 > algo #0 => show 1 marker from every geohash
 //        print("state marker initialized \(generateRandomTypes())")
@@ -2302,20 +2368,30 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
                 //test 2 check scrollable id
                 print("show heatmap scrollableid \(vcScrollableId), \(appScrollableId)")
                 if(appScrollableId == vcScrollableId) {
+                    var marker : Marker?
 //                    let marker = ExploreMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
 //                    let marker = ExploreBMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
-                    let marker = PhotoBMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
-                    marker.addLocation(coordinate: geo)
-                    self.view.insertSubview(marker, aboveSubview: mapView)
-                    self.markerList.append(marker)
-                    marker.delegate = self
-                    marker.initialize(withAnimation: true, changeSizeZoom: CGFloat(zoom))
-                    marker.frame.origin.x = point.x - marker.frame.width/2
-                    marker.frame.origin.y = point.y - marker.frame.height
+//                    let marker = ExploreAMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
+//                    let marker = PhotoBMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
+                    if(xContentDataType == "shot") {
+                        marker = PhotoBMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
+                    }
+                    else if(xContentDataType == "loop") {
+                        marker = ExploreBMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
+                    }
+                    if let marker = marker { //added for Marker?
+                        marker.addLocation(coordinate: geo)
+                        self.view.insertSubview(marker, aboveSubview: mapView)
+                        self.markerList.append(marker)
+                        marker.delegate = self
+                        marker.initialize(withAnimation: true, changeSizeZoom: CGFloat(zoom))
+                        marker.frame.origin.x = point.x - marker.frame.width/2
+                        marker.frame.origin.y = point.y - marker.frame.height
 
-                    //test > markerId map to marker list
-                    self.markerGeoMarkerIdList.updateValue(marker, forKey: markerId)
-                    marker.setMarkerId(markerId: markerId) //test market id
+                        //test > markerId map to marker list
+                        self.markerGeoMarkerIdList.updateValue(marker, forKey: markerId)
+                        marker.setMarkerId(markerId: markerId) //test market id
+                    }
                 }
                 
                 //test 2 > multi type markers
@@ -2563,6 +2639,503 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         }
     }
 
+    //test > content type filter btn => e.g. only show photos on map
+    let rBtn = UIView()
+    let rBtnSpinner = SpinLoader()
+    let rInnerBtn = UIView()
+    let aInnerRing = UIView()
+    let bInnerRing = UIView()
+    let cInnerRing = UIView()
+    let rSettingBtn = UIImageView()
+    let rBoxCloseBtn = UIImageView()
+    let rABtn = UIView()
+    let rAMiniBtn = UIView()
+    let rBMiniBtn = UIView()
+    let rCMiniBtn = UIView()
+    let rAMiniOuterRing = RingView()
+    let rBMiniOuterRing = RingView()
+    let rCMiniOuterRing = RingView()
+    var xContentDataType = "loop" //shot, post => to be reset to user's chosen setting
+    func addContentTypeFilter() {
+        //test > try top RHS dynamic buttons => map setting
+//        let rBtn = UIView()
+//        rBtn.backgroundColor = .ddmBlackOverlayColor
+        self.view.addSubview(rBtn)
+        rBtn.translatesAutoresizingMaskIntoConstraints = false
+        rBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true //ori: 40
+        rBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        rBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
+//        rBtn.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
+        rBtn.centerYAnchor.constraint(equalTo: aSemiTransparentTextBox.centerYAnchor, constant: 0).isActive = true
+        rBtn.layer.cornerRadius = 20
+//        rBtn.layer.opacity = 0.4 //default 0.3
+        rBtn.isUserInteractionEnabled = true
+        rBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onMapSettingBtnClicked)))
+//        rBtn.isHidden = true
+        
+        let rSemiTranparentBtn = UIView()
+        rSemiTranparentBtn.backgroundColor = .ddmBlackOverlayColor
+        rBtn.addSubview(rSemiTranparentBtn)
+        rSemiTranparentBtn.translatesAutoresizingMaskIntoConstraints = false
+        rSemiTranparentBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true //ori: 40
+        rSemiTranparentBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        rSemiTranparentBtn.centerXAnchor.constraint(equalTo: rBtn.centerXAnchor).isActive = true
+        rSemiTranparentBtn.centerYAnchor.constraint(equalTo: rBtn.centerYAnchor).isActive = true
+        rSemiTranparentBtn.layer.cornerRadius = 20
+        rSemiTranparentBtn.layer.opacity = 0.4
+
+//        let rBoxBtn = UIImageView()
+        rSettingBtn.image = UIImage(named:"icon_round_setting")?.withRenderingMode(.alwaysTemplate)
+//        rBoxBtn.image =  UIImage(named:"icon_round_arrow_down_a")?.withRenderingMode(.alwaysTemplate)
+//        rBoxBtn.image = UIImage(named:"icon_outline_filter")?.withRenderingMode(.alwaysTemplate)
+//        rBoxBtn.image = UIImage(named:"icon_round_filter")?.withRenderingMode(.alwaysTemplate)
+        rSettingBtn.tintColor = .white
+        rBtn.addSubview(rSettingBtn)
+        rSettingBtn.translatesAutoresizingMaskIntoConstraints = false
+        rSettingBtn.centerXAnchor.constraint(equalTo: rBtn.centerXAnchor).isActive = true
+        rSettingBtn.centerYAnchor.constraint(equalTo: rBtn.centerYAnchor).isActive = true
+        rSettingBtn.heightAnchor.constraint(equalToConstant: 22).isActive = true //26, 22
+        rSettingBtn.widthAnchor.constraint(equalToConstant: 22).isActive = true
+//        rBoxBtn.isHidden = true
+        
+        rBoxCloseBtn.image =  UIImage(named:"icon_round_arrow_up_a")?.withRenderingMode(.alwaysTemplate)
+        rBoxCloseBtn.tintColor = .white
+        rBtn.addSubview(rBoxCloseBtn)
+        rBoxCloseBtn.translatesAutoresizingMaskIntoConstraints = false
+        rBoxCloseBtn.centerXAnchor.constraint(equalTo: rBtn.centerXAnchor).isActive = true
+        rBoxCloseBtn.centerYAnchor.constraint(equalTo: rBtn.centerYAnchor).isActive = true
+        rBoxCloseBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true //26, 22
+        rBoxCloseBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
+        rBoxCloseBtn.isHidden = true
+        
+        rBtn.addSubview(rInnerBtn)
+//        self.view.addSubview(rInnerBtn)
+        rInnerBtn.translatesAutoresizingMaskIntoConstraints = false
+        rInnerBtn.centerXAnchor.constraint(equalTo: rBtn.centerXAnchor).isActive = true
+        rInnerBtn.centerYAnchor.constraint(equalTo: rBtn.centerYAnchor).isActive = true
+//        rInnerBtn.topAnchor.constraint(equalTo: rBtn.bottomAnchor, constant: 10).isActive = true
+        rInnerBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true //32
+        rInnerBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        rInnerBtn.layer.cornerRadius = 20
+//        rInnerBtn.isUserInteractionEnabled = true
+//        rInnerBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onRABtnClicked)))
+        rInnerBtn.isHidden = true
+        
+        let rInnerOuterRing = RingView()
+        rInnerBtn.addSubview(rInnerOuterRing)
+        rInnerOuterRing.translatesAutoresizingMaskIntoConstraints = false
+        rInnerOuterRing.centerXAnchor.constraint(equalTo: rInnerBtn.centerXAnchor).isActive = true
+        rInnerOuterRing.centerYAnchor.constraint(equalTo: rInnerBtn.centerYAnchor).isActive = true
+        rInnerOuterRing.heightAnchor.constraint(equalToConstant: 26).isActive = true //32
+        rInnerOuterRing.widthAnchor.constraint(equalToConstant: 26).isActive = true
+        rInnerOuterRing.changeLineWidth(width: 2)
+//        rInnerOuterRing.changeStrokeColor(color: UIColor.ddmGoldenYellowColor)
+        rInnerOuterRing.changeStrokeColor(color: UIColor.yellow)
+//        rInnerOuterRing.changeStrokeColor(color: UIColor.white)
+//        rInnerOuterRing.isHidden = true
+        
+//        let aInnerRing = UIView()
+        aInnerRing.backgroundColor = .ddmDarkGreyColor //ddmDarkColor
+        rInnerBtn.addSubview(aInnerRing)
+        aInnerRing.translatesAutoresizingMaskIntoConstraints = false
+        aInnerRing.centerXAnchor.constraint(equalTo: rInnerBtn.centerXAnchor).isActive = true
+        aInnerRing.centerYAnchor.constraint(equalTo: rInnerBtn.centerYAnchor).isActive = true
+        aInnerRing.heightAnchor.constraint(equalToConstant: 22).isActive = true //28
+        aInnerRing.widthAnchor.constraint(equalToConstant: 22).isActive = true
+        aInnerRing.layer.cornerRadius = 11
+        aInnerRing.isHidden = true
+        
+//        let aMiniImage = UIImageView(image: UIImage(named:"flaticon_freepik_video_b"))
+        let aInnerImage = UIImageView(image: UIImage(named:"flaticon_icon_home_photo"))
+//        let aMiniImage = UIImageView(image: UIImage(named:"flaticon_freepik_article"))
+//        aMiniImage.contentMode = .scaleAspectFill
+//        aMiniImage.layer.masksToBounds = true
+        aInnerRing.addSubview(aInnerImage)
+        aInnerImage.translatesAutoresizingMaskIntoConstraints = false
+        aInnerImage.centerXAnchor.constraint(equalTo: aInnerRing.centerXAnchor).isActive = true
+        aInnerImage.centerYAnchor.constraint(equalTo: aInnerRing.centerYAnchor).isActive = true
+        aInnerImage.heightAnchor.constraint(equalToConstant: 16).isActive = true //20
+        aInnerImage.widthAnchor.constraint(equalToConstant: 16).isActive = true
+        aInnerImage.layer.cornerRadius = 8
+        
+//        let aInnerRing = UIView()
+        bInnerRing.backgroundColor = .ddmDarkGreyColor //ddmDarkColor
+        rInnerBtn.addSubview(bInnerRing)
+        bInnerRing.translatesAutoresizingMaskIntoConstraints = false
+        bInnerRing.centerXAnchor.constraint(equalTo: rInnerBtn.centerXAnchor).isActive = true
+        bInnerRing.centerYAnchor.constraint(equalTo: rInnerBtn.centerYAnchor).isActive = true
+        bInnerRing.heightAnchor.constraint(equalToConstant: 22).isActive = true //28
+        bInnerRing.widthAnchor.constraint(equalToConstant: 22).isActive = true
+        bInnerRing.layer.cornerRadius = 11
+        bInnerRing.isHidden = true
+        
+        let bInnerImageCircleBg = UIView()
+        bInnerImageCircleBg.backgroundColor = .systemYellow
+//        aMiniImageCircleBg.backgroundColor = .white
+        bInnerRing.addSubview(bInnerImageCircleBg)
+        bInnerImageCircleBg.translatesAutoresizingMaskIntoConstraints = false
+        bInnerImageCircleBg.centerXAnchor.constraint(equalTo: bInnerRing.centerXAnchor).isActive = true
+        bInnerImageCircleBg.centerYAnchor.constraint(equalTo: bInnerRing.centerYAnchor).isActive = true
+        bInnerImageCircleBg.heightAnchor.constraint(equalToConstant: 16).isActive = true //20
+        bInnerImageCircleBg.widthAnchor.constraint(equalToConstant: 16).isActive = true
+        bInnerImageCircleBg.layer.cornerRadius = 8
+        
+        let bInnerImage = UIImageView(image: UIImage(named:"flaticon_freepik_video_b"))
+//        let bInnerImage = UIImageView(image: UIImage(named:"flaticon_icon_home_photo"))
+//        let aMiniImage = UIImageView(image: UIImage(named:"flaticon_freepik_article"))
+//        aMiniImage.contentMode = .scaleAspectFill
+//        aMiniImage.layer.masksToBounds = true
+        bInnerRing.addSubview(bInnerImage)
+        bInnerImage.translatesAutoresizingMaskIntoConstraints = false
+        bInnerImage.centerXAnchor.constraint(equalTo: bInnerRing.centerXAnchor).isActive = true
+        bInnerImage.centerYAnchor.constraint(equalTo: bInnerRing.centerYAnchor).isActive = true
+        bInnerImage.heightAnchor.constraint(equalToConstant: 16).isActive = true //20
+        bInnerImage.widthAnchor.constraint(equalToConstant: 16).isActive = true
+        bInnerImage.layer.cornerRadius = 8
+        
+//        let cInnerRing = UIView()
+        cInnerRing.backgroundColor = .ddmDarkGreyColor //ddmDarkColor
+        rInnerBtn.addSubview(cInnerRing)
+        cInnerRing.translatesAutoresizingMaskIntoConstraints = false
+        cInnerRing.centerXAnchor.constraint(equalTo: rInnerBtn.centerXAnchor).isActive = true
+        cInnerRing.centerYAnchor.constraint(equalTo: rInnerBtn.centerYAnchor).isActive = true
+        cInnerRing.heightAnchor.constraint(equalToConstant: 22).isActive = true //28
+        cInnerRing.widthAnchor.constraint(equalToConstant: 22).isActive = true
+        cInnerRing.layer.cornerRadius = 11
+        cInnerRing.isHidden = true
+        
+//        let aMiniImage = UIImageView(image: UIImage(named:"flaticon_freepik_video_b"))
+//        let cInnerImage = UIImageView(image: UIImage(named:"flaticon_icon_home_photo"))
+        let cInnerImage = UIImageView(image: UIImage(named:"flaticon_freepik_article"))
+//        aMiniImage.contentMode = .scaleAspectFill
+//        aMiniImage.layer.masksToBounds = true
+        cInnerRing.addSubview(cInnerImage)
+        cInnerImage.translatesAutoresizingMaskIntoConstraints = false
+        cInnerImage.centerXAnchor.constraint(equalTo: cInnerRing.centerXAnchor).isActive = true
+        cInnerImage.centerYAnchor.constraint(equalTo: cInnerRing.centerYAnchor).isActive = true
+        cInnerImage.heightAnchor.constraint(equalToConstant: 14).isActive = true //16
+        cInnerImage.widthAnchor.constraint(equalToConstant: 14).isActive = true
+        cInnerImage.layer.cornerRadius = 7
+        
+//        rBtn.addSubview(rBtnSpinner)
+//        rBtnSpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
+//        rBtnSpinner.translatesAutoresizingMaskIntoConstraints = false
+//        rBtnSpinner.centerYAnchor.constraint(equalTo: rBtn.centerYAnchor).isActive = true
+//        rBtnSpinner.centerXAnchor.constraint(equalTo: rBtn.centerXAnchor).isActive = true
+//        rBtnSpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
+//        rBtnSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
+////        rBtnSpinner.startAnimating()
+        
+        let rBoxNotifyView = UIView() //indicate not default map setting
+        rBoxNotifyView.backgroundColor = .red
+        rBtn.addSubview(rBoxNotifyView)
+        rBoxNotifyView.translatesAutoresizingMaskIntoConstraints = false
+        rBoxNotifyView.trailingAnchor.constraint(equalTo: rSemiTranparentBtn.trailingAnchor, constant: 0).isActive = true //-5
+        rBoxNotifyView.topAnchor.constraint(equalTo: rSemiTranparentBtn.topAnchor, constant: 0).isActive = true //5
+        rBoxNotifyView.heightAnchor.constraint(equalToConstant: 10).isActive = true
+        rBoxNotifyView.widthAnchor.constraint(equalToConstant: 10).isActive = true //20
+        rBoxNotifyView.layer.cornerRadius = 5 //10
+        rBoxNotifyView.isHidden = true
+        
+        //content type filter btns
+        self.view.addSubview(rABtn)
+        rABtn.translatesAutoresizingMaskIntoConstraints = false
+        rABtn.widthAnchor.constraint(equalToConstant: 40).isActive = true //ori: 40
+        rABtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
+        rABtn.topAnchor.constraint(equalTo: rBtn.bottomAnchor, constant: 10).isActive = true
+//        rABtn.topAnchor.constraint(equalTo: aSemiTransparentTextBox.topAnchor, constant: 0).isActive = true
+        rABtn.layer.cornerRadius = 20
+        rABtn.isHidden = true
+        
+        let rASemiTranparentBtn = UIView()
+        rASemiTranparentBtn.backgroundColor = .ddmBlackOverlayColor
+        rABtn.addSubview(rASemiTranparentBtn)
+        rASemiTranparentBtn.translatesAutoresizingMaskIntoConstraints = false
+        rASemiTranparentBtn.topAnchor.constraint(equalTo: rABtn.topAnchor).isActive = true
+        rASemiTranparentBtn.bottomAnchor.constraint(equalTo: rABtn.bottomAnchor).isActive = true
+        rASemiTranparentBtn.leadingAnchor.constraint(equalTo: rABtn.leadingAnchor).isActive = true
+        rASemiTranparentBtn.trailingAnchor.constraint(equalTo: rABtn.trailingAnchor).isActive = true
+        rASemiTranparentBtn.layer.cornerRadius = 20
+        rASemiTranparentBtn.layer.opacity = 0.4
+        
+//        let rAMiniBtn = UIView()
+//        rAMiniBtn.backgroundColor = .ddmDarkGreyColor //ddmDarkColor
+        rABtn.addSubview(rAMiniBtn)
+        rAMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        rAMiniBtn.centerXAnchor.constraint(equalTo: rASemiTranparentBtn.centerXAnchor).isActive = true
+        rAMiniBtn.topAnchor.constraint(equalTo: rASemiTranparentBtn.topAnchor, constant: 2).isActive = true //6
+        rAMiniBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true //32
+        rAMiniBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        rAMiniBtn.layer.cornerRadius = 20
+        rAMiniBtn.isUserInteractionEnabled = true
+        rAMiniBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onRABtnClicked)))
+        
+//        let rAMiniOuterRing = RingView()
+        rAMiniBtn.addSubview(rAMiniOuterRing)
+        rAMiniOuterRing.translatesAutoresizingMaskIntoConstraints = false
+        rAMiniOuterRing.centerXAnchor.constraint(equalTo: rAMiniBtn.centerXAnchor).isActive = true
+        rAMiniOuterRing.centerYAnchor.constraint(equalTo: rAMiniBtn.centerYAnchor).isActive = true
+        rAMiniOuterRing.heightAnchor.constraint(equalToConstant: 32).isActive = true //34
+        rAMiniOuterRing.widthAnchor.constraint(equalToConstant: 32).isActive = true
+        rAMiniOuterRing.changeLineWidth(width: 2)
+//        rAMiniOuterRing.changeStrokeColor(color: UIColor.ddmGoldenYellowColor)
+        rAMiniOuterRing.changeStrokeColor(color: UIColor.yellow)
+//        rAMiniOuterRing.changeStrokeColor(color: UIColor.white)
+        rAMiniOuterRing.isHidden = true
+        
+        let aMiniRing = UIView()
+        aMiniRing.backgroundColor = .ddmDarkGreyColor //ddmDarkColor
+        rAMiniBtn.addSubview(aMiniRing)
+        aMiniRing.translatesAutoresizingMaskIntoConstraints = false
+        aMiniRing.centerXAnchor.constraint(equalTo: rAMiniBtn.centerXAnchor).isActive = true
+        aMiniRing.centerYAnchor.constraint(equalTo: rAMiniBtn.centerYAnchor).isActive = true
+        aMiniRing.heightAnchor.constraint(equalToConstant: 28).isActive = true //30
+        aMiniRing.widthAnchor.constraint(equalToConstant: 28).isActive = true
+        aMiniRing.layer.cornerRadius = 14
+        
+//        let aMiniImage = UIImageView(image: UIImage(named:"flaticon_freepik_video_b"))
+        let aMiniImage = UIImageView(image: UIImage(named:"flaticon_icon_home_photo"))
+//        let aMiniImage = UIImageView(image: UIImage(named:"flaticon_freepik_article"))
+//        aMiniImage.contentMode = .scaleAspectFill
+//        aMiniImage.layer.masksToBounds = true
+        aMiniRing.addSubview(aMiniImage)
+        aMiniImage.translatesAutoresizingMaskIntoConstraints = false
+        aMiniImage.centerXAnchor.constraint(equalTo: aMiniRing.centerXAnchor).isActive = true
+        aMiniImage.centerYAnchor.constraint(equalTo: aMiniRing.centerYAnchor).isActive = true
+        aMiniImage.heightAnchor.constraint(equalToConstant: 20).isActive = true //20
+        aMiniImage.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        aMiniImage.layer.cornerRadius = 10
+        
+//        let eAddRing = UIView()
+//        eAddRing.backgroundColor = .ddmDarkColor
+//        rABtn.addSubview(eAddRing)
+//        eAddRing.translatesAutoresizingMaskIntoConstraints = false
+////        eAddRing.centerXAnchor.constraint(equalTo: aMiniRing.centerXAnchor).isActive = true
+//        eAddRing.trailingAnchor.constraint(equalTo: aMiniRing.trailingAnchor).isActive = true
+//        eAddRing.topAnchor.constraint(equalTo: aMiniRing.bottomAnchor, constant: -10).isActive = true //-7
+//        eAddRing.heightAnchor.constraint(equalToConstant: 16).isActive = true //14
+//        eAddRing.widthAnchor.constraint(equalToConstant: 16).isActive = true //20
+//        eAddRing.layer.cornerRadius = 8
+////        eAddRing.isHidden = true
+//
+//        let eAddBtn = UIImageView(image: UIImage(named:"icon_round_done_circle")?.withRenderingMode(.alwaysTemplate))
+////        eAddBtn.tintColor = .yellow
+//        eAddBtn.tintColor = .white
+//        eAddRing.addSubview(eAddBtn)
+//        eAddBtn.translatesAutoresizingMaskIntoConstraints = false
+//        eAddBtn.centerXAnchor.constraint(equalTo: eAddRing.centerXAnchor).isActive = true
+//        eAddBtn.centerYAnchor.constraint(equalTo: eAddRing.centerYAnchor).isActive = true
+//        eAddBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true //10
+//        eAddBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        
+//        rBMiniBtn.backgroundColor = .ddmDarkGreyColor //ddmDarkColor
+        rABtn.addSubview(rBMiniBtn)
+        rBMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        rBMiniBtn.centerXAnchor.constraint(equalTo: rASemiTranparentBtn.centerXAnchor).isActive = true
+        rBMiniBtn.topAnchor.constraint(equalTo: rAMiniBtn.bottomAnchor, constant: 0).isActive = true //10
+        rBMiniBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true //30
+        rBMiniBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        rBMiniBtn.layer.cornerRadius = 20
+        rBMiniBtn.isUserInteractionEnabled = true
+        rBMiniBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onRBBtnClicked)))
+        
+//        let rBMiniOuterRing = RingView()
+        rBMiniBtn.addSubview(rBMiniOuterRing)
+        rBMiniOuterRing.translatesAutoresizingMaskIntoConstraints = false
+        rBMiniOuterRing.centerXAnchor.constraint(equalTo: rBMiniBtn.centerXAnchor).isActive = true
+        rBMiniOuterRing.centerYAnchor.constraint(equalTo: rBMiniBtn.centerYAnchor).isActive = true
+        rBMiniOuterRing.heightAnchor.constraint(equalToConstant: 32).isActive = true //34
+        rBMiniOuterRing.widthAnchor.constraint(equalToConstant: 32).isActive = true
+        rBMiniOuterRing.changeLineWidth(width: 2)
+//        rBMiniOuterRing.changeStrokeColor(color: UIColor.ddmGoldenYellowColor)
+        rBMiniOuterRing.changeStrokeColor(color: UIColor.yellow)
+        rBMiniOuterRing.isHidden = true
+        
+        let bMiniRing = UIView()
+        bMiniRing.backgroundColor = .ddmDarkGreyColor //ddmDarkColor
+        rBMiniBtn.addSubview(bMiniRing)
+        bMiniRing.translatesAutoresizingMaskIntoConstraints = false
+        bMiniRing.centerXAnchor.constraint(equalTo: rBMiniBtn.centerXAnchor).isActive = true
+        bMiniRing.centerYAnchor.constraint(equalTo: rBMiniBtn.centerYAnchor).isActive = true
+        bMiniRing.heightAnchor.constraint(equalToConstant: 28).isActive = true //30
+        bMiniRing.widthAnchor.constraint(equalToConstant: 28).isActive = true
+        bMiniRing.layer.cornerRadius = 14
+        
+        let bMiniImageCircleBg = UIView()
+        bMiniImageCircleBg.backgroundColor = .systemYellow
+//        aMiniImageCircleBg.backgroundColor = .white
+        bMiniRing.addSubview(bMiniImageCircleBg)
+        bMiniImageCircleBg.translatesAutoresizingMaskIntoConstraints = false
+        bMiniImageCircleBg.centerXAnchor.constraint(equalTo: bMiniRing.centerXAnchor).isActive = true
+        bMiniImageCircleBg.centerYAnchor.constraint(equalTo: bMiniRing.centerYAnchor).isActive = true
+        bMiniImageCircleBg.heightAnchor.constraint(equalToConstant: 20).isActive = true //28, 32
+        bMiniImageCircleBg.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        bMiniImageCircleBg.layer.cornerRadius = 10
+        
+        let bMiniImage = UIImageView(image: UIImage(named:"flaticon_freepik_video_b"))
+//        let bMiniImage = UIImageView(image: UIImage(named:"flaticon_icon_home_photo"))
+//        let aMiniImage = UIImageView(image: UIImage(named:"flaticon_freepik_article"))
+//        aMiniImage.contentMode = .scaleAspectFill
+//        aMiniImage.layer.masksToBounds = true
+        bMiniRing.addSubview(bMiniImage)
+        bMiniImage.translatesAutoresizingMaskIntoConstraints = false
+        bMiniImage.centerXAnchor.constraint(equalTo: bMiniRing.centerXAnchor).isActive = true
+        bMiniImage.centerYAnchor.constraint(equalTo: bMiniRing.centerYAnchor).isActive = true
+        bMiniImage.heightAnchor.constraint(equalToConstant: 20).isActive = true //20
+        bMiniImage.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        bMiniImage.layer.cornerRadius = 10
+        
+//        rCMiniBtn.backgroundColor = .ddmDarkGreyColor //ddmDarkColor
+        rABtn.addSubview(rCMiniBtn)
+        rCMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        rCMiniBtn.centerXAnchor.constraint(equalTo: rASemiTranparentBtn.centerXAnchor).isActive = true
+        rCMiniBtn.topAnchor.constraint(equalTo: rBMiniBtn.bottomAnchor, constant: 0).isActive = true //10
+        rCMiniBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true //30
+        rCMiniBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        rCMiniBtn.layer.cornerRadius = 20
+        rCMiniBtn.isUserInteractionEnabled = true
+        rCMiniBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onRCBtnClicked)))
+        rCMiniBtn.bottomAnchor.constraint(equalTo: rASemiTranparentBtn.bottomAnchor, constant: -2).isActive = true
+        
+//        let rCMiniOuterRing = RingView()
+        rCMiniBtn.addSubview(rCMiniOuterRing)
+        rCMiniOuterRing.translatesAutoresizingMaskIntoConstraints = false
+        rCMiniOuterRing.centerXAnchor.constraint(equalTo: rCMiniBtn.centerXAnchor).isActive = true
+        rCMiniOuterRing.centerYAnchor.constraint(equalTo: rCMiniBtn.centerYAnchor).isActive = true
+        rCMiniOuterRing.heightAnchor.constraint(equalToConstant: 32).isActive = true //34
+        rCMiniOuterRing.widthAnchor.constraint(equalToConstant: 32).isActive = true
+        rCMiniOuterRing.changeLineWidth(width: 2)
+//        rCMiniOuterRing.changeStrokeColor(color: UIColor.ddmGoldenYellowColor)
+        rCMiniOuterRing.changeStrokeColor(color: UIColor.yellow)
+        rCMiniOuterRing.isHidden = true
+        
+        let cMiniRing = UIView()
+        cMiniRing.backgroundColor = .ddmDarkGreyColor //ddmDarkColor
+        rCMiniBtn.addSubview(cMiniRing)
+        cMiniRing.translatesAutoresizingMaskIntoConstraints = false
+        cMiniRing.centerXAnchor.constraint(equalTo: rCMiniBtn.centerXAnchor).isActive = true
+        cMiniRing.centerYAnchor.constraint(equalTo: rCMiniBtn.centerYAnchor).isActive = true
+        cMiniRing.heightAnchor.constraint(equalToConstant: 28).isActive = true //30
+        cMiniRing.widthAnchor.constraint(equalToConstant: 28).isActive = true
+        cMiniRing.layer.cornerRadius = 14
+        
+//        let bMiniImage = UIImageView(image: UIImage(named:"flaticon_freepik_video_b"))
+//        let bMiniImage = UIImageView(image: UIImage(named:"flaticon_icon_home_photo"))
+        let cMiniImage = UIImageView(image: UIImage(named:"flaticon_freepik_article"))
+//        aMiniImage.contentMode = .scaleAspectFill
+//        aMiniImage.layer.masksToBounds = true
+        cMiniRing.addSubview(cMiniImage)
+        cMiniImage.translatesAutoresizingMaskIntoConstraints = false
+        cMiniImage.centerXAnchor.constraint(equalTo: cMiniRing.centerXAnchor).isActive = true
+        cMiniImage.centerYAnchor.constraint(equalTo: cMiniRing.centerYAnchor).isActive = true
+        cMiniImage.heightAnchor.constraint(equalToConstant: 16).isActive = true //20
+        cMiniImage.widthAnchor.constraint(equalToConstant: 16).isActive = true
+        cMiniImage.layer.cornerRadius = 8
+        
+//        let bMiniBtn = UIImageView(image: UIImage(named:"icon_round_arrow_down_a")?.withRenderingMode(.alwaysTemplate))
+////        let bMiniBtn = UIImageView(image: UIImage(named:"icon_round_arrow_down_a")?.withRenderingMode(.alwaysTemplate))
+//        bMiniBtn.tintColor = .white
+//        rABtn.addSubview(bMiniBtn)
+//        bMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+//        bMiniBtn.centerXAnchor.constraint(equalTo: rASemiTranparentBtn.centerXAnchor).isActive = true
+//        bMiniBtn.topAnchor.constraint(equalTo: cMiniRing.bottomAnchor, constant: 6).isActive = true
+//        bMiniBtn.heightAnchor.constraint(equalToConstant: 22).isActive = true //20
+//        bMiniBtn.widthAnchor.constraint(equalToConstant: 22).isActive = true
+//        bMiniBtn.bottomAnchor.constraint(equalTo: rASemiTranparentBtn.bottomAnchor, constant: -8).isActive = true //6
+        
+        reactToRContentTypeChange(type: xContentDataType)
+    }
+    
+    //test > toggle to different content type on map
+    @objc func onMapSettingBtnClicked(gesture: UITapGestureRecognizer) {
+        if(rABtn.isHidden) {
+            rSettingBtn.isHidden = true
+//            rInnerBtn.isHidden = true
+            rBoxCloseBtn.isHidden = false
+            rABtn.isHidden = false
+        } else {
+            rSettingBtn.isHidden = false
+//            rInnerBtn.isHidden = false
+            rBoxCloseBtn.isHidden = true
+            rABtn.isHidden = true
+        }
+    }
+    
+    @objc func onRABtnClicked(gesture: UITapGestureRecognizer) {
+        stopPulseWave()
+        dequeueObject()
+        
+        reactToRContentTypeChange(type: "shot")
+        
+        //*test 1 > remove markers and switch new content type
+        if(xContentDataType != "shot") {
+            xContentDataType = "shot"
+            
+            rSettingBtn.isHidden = false
+            rBoxCloseBtn.isHidden = true
+            rABtn.isHidden = true
+            
+            getHeatmapPoints()
+        }
+        //*
+    }
+    @objc func onRBBtnClicked(gesture: UITapGestureRecognizer) {
+        stopPulseWave()
+        dequeueObject()
+        
+        reactToRContentTypeChange(type: "loop")
+        
+        //*test 1 > remove markers and switch new content type
+        if(xContentDataType != "loop") {
+            xContentDataType = "loop"
+            
+            rSettingBtn.isHidden = false
+            rBoxCloseBtn.isHidden = true
+            rABtn.isHidden = true
+            
+            getHeatmapPoints()
+        }
+        //*
+    }
+    @objc func onRCBtnClicked(gesture: UITapGestureRecognizer) {
+        stopPulseWave()
+        dequeueObject()
+        
+        reactToRContentTypeChange(type: "post")
+        
+        //*test 1 > remove markers and switch new content type
+        if(xContentDataType != "post") {
+            xContentDataType = "post"
+            
+            rSettingBtn.isHidden = false
+            rBoxCloseBtn.isHidden = true
+            rABtn.isHidden = true
+            
+//            getHeatmapPoints()
+        }
+    }
+    func reactToRContentTypeChange(type: String) {
+        
+        rAMiniOuterRing.isHidden = true
+        rBMiniOuterRing.isHidden = true
+        rCMiniOuterRing.isHidden = true
+        
+        aInnerRing.isHidden = true
+        bInnerRing.isHidden = true
+        cInnerRing.isHidden = true
+        
+        if(type == "shot") {
+            rAMiniOuterRing.isHidden = false
+            aInnerRing.isHidden = false
+        } else if(type == "loop") {
+            rBMiniOuterRing.isHidden = false
+            bInnerRing.isHidden = false
+        } else {
+            rCMiniOuterRing.isHidden = false
+            cInnerRing.isHidden = false
+        }
+    }
+    
     let llMini = UIView()
     let llMiniError = UIView()
     let miniAppContainer = UIView()
@@ -4425,13 +4998,13 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
             panel.setQuoteObject(type: "s", id: "#")
         }
         else if(objectType == "post") {
-            panel.setQuoteObject(type: "q", id: "#")
+            panel.setQuoteObject(type: "quote", id: "#")
         }
         else if(objectType == "photo") {
-            panel.setQuoteObject(type: "p_s", id: "#")
+            panel.setQuoteObject(type: "photo_s", id: "#")
         }
         else if(objectType == "video") {
-            panel.setQuoteObject(type: "v_l", id: "#")
+            panel.setQuoteObject(type: "video_l", id: "#")
         }
         //*
         

@@ -24,6 +24,216 @@ protocol LocationSelectScrollablePanelDelegate : AnyObject {
     func didStartMapChangeLocationSelectScrollable(pv: LocationSelectScrollablePanelView)
     func didFinishMapChangeLocationSelectScrollable(pv: LocationSelectScrollablePanelView)
 }
+protocol SuggestedLocationResultDelegate : AnyObject {
+    func didSuggestedLocationResultClick()
+}
+protocol SuggestedLocationTabDelegate : AnyObject {
+    func didSuggestedLocationTabClick(s: SuggestedLocationTab)
+}
+
+class SuggestedLocationResult: UIView {
+    
+    let aHLightRect1 = UIView()
+    var viewHeight: CGFloat = 0
+    var viewWidth: CGFloat = 0
+    
+    let aaText = UILabel()
+    
+    weak var aDelegate : SuggestedLocationResultDelegate?
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        viewWidth = frame.width
+        viewHeight = frame.height
+        setupViews()
+        
+    }
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        
+        setupViews()
+    }
+    
+    func setupViews() {
+        //move to redrawUI()
+//        redrawUI()
+    }
+    
+    func redrawUI() {
+        let l1Box = UIView()
+//        aBox.backgroundColor = .ddmBlackOverlayColor
+//        l1Box.backgroundColor = .ddmDarkBlack //ori
+        l1Box.backgroundColor = .ddmBlackDark
+        self.addSubview(l1Box)
+        l1Box.clipsToBounds = true
+        l1Box.translatesAutoresizingMaskIntoConstraints = false
+        l1Box.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
+        l1Box.heightAnchor.constraint(equalToConstant: 40).isActive = true //default: 50
+        l1Box.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
+        l1Box.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
+        l1Box.layer.cornerRadius = 5
+//        l1Box.layer.opacity = 0.2 //0.3
+        l1Box.isUserInteractionEnabled = true
+        l1Box.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onL1Clicked)))
+        
+        let l1BoxBox = UIView()
+        l1BoxBox.backgroundColor = .clear //yellow
+        l1Box.addSubview(l1BoxBox)
+        l1BoxBox.clipsToBounds = true
+        l1BoxBox.translatesAutoresizingMaskIntoConstraints = false
+        l1BoxBox.widthAnchor.constraint(equalToConstant: 20).isActive = true //ori: 40
+        l1BoxBox.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        l1BoxBox.centerYAnchor.constraint(equalTo: l1Box.centerYAnchor).isActive = true
+        l1BoxBox.leadingAnchor.constraint(equalTo: l1Box.leadingAnchor, constant: 5).isActive = true //10
+        l1BoxBox.layer.cornerRadius = 5 //6
+
+        let gridViewBtn = UIImageView(image: UIImage(named:"icon_location")?.withRenderingMode(.alwaysTemplate))
+        gridViewBtn.tintColor = .white
+        l1BoxBox.addSubview(gridViewBtn)
+        gridViewBtn.translatesAutoresizingMaskIntoConstraints = false
+        gridViewBtn.centerXAnchor.constraint(equalTo: l1BoxBox.centerXAnchor).isActive = true
+        gridViewBtn.centerYAnchor.constraint(equalTo: l1BoxBox.centerYAnchor).isActive = true
+        gridViewBtn.heightAnchor.constraint(equalToConstant: 16).isActive = true
+        gridViewBtn.widthAnchor.constraint(equalToConstant: 16).isActive = true
+//        gridViewBtn.layer.opacity = 0.5
+
+//        let aaText = UILabel()
+        aaText.textAlignment = .left
+        aaText.textColor = .white
+//        aaText.textColor = .ddmDarkColor
+        aaText.font = .boldSystemFont(ofSize: 13)
+//        aaText.font = .systemFont(ofSize: 12)
+        l1Box.addSubview(aaText)
+        aaText.clipsToBounds = true
+        aaText.translatesAutoresizingMaskIntoConstraints = false
+        aaText.topAnchor.constraint(equalTo: l1Box.topAnchor, constant: 5).isActive = true
+        aaText.bottomAnchor.constraint(equalTo: l1Box.bottomAnchor, constant: -5).isActive = true
+        aaText.leadingAnchor.constraint(equalTo: l1BoxBox.trailingAnchor, constant: 5).isActive = true //10
+        aaText.trailingAnchor.constraint(equalTo: l1Box.trailingAnchor, constant: -10).isActive = true
+//        aaText.text = "Petronas Twin Tower"
+        aaText.text = ""
+//        aaText.layer.opacity = 0.5
+    }
+    
+    @objc func onL1Clicked(gesture: UITapGestureRecognizer) {
+        aDelegate?.didSuggestedLocationResultClick()
+    }
+    
+    func configureUI(data: String) {
+        aaText.text = data
+    }
+}
+class SuggestedLocationTab: UIView {
+    
+    let aHLightRect1 = UIView()
+    var viewHeight: CGFloat = 0
+    var viewWidth: CGFloat = 0
+    
+    let l1Box = UIView()
+    let aaText = UILabel()
+    let l1TabArrowBtn = UIImageView()
+    var aaTextTrailingCons: NSLayoutConstraint?
+    var l1TabArrowBtnTrailingCons: NSLayoutConstraint?
+    
+    weak var aDelegate : SuggestedLocationTabDelegate?
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        viewWidth = frame.width
+        viewHeight = frame.height
+        setupViews()
+        
+    }
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        
+        setupViews()
+    }
+    
+    func setupViews() {
+        //move to redrawUI()
+//        redrawUI()
+    }
+    
+    func redrawUI() {
+//        let l1Box = UIView()
+//        aBox.backgroundColor = .ddmBlackOverlayColor
+        l1Box.backgroundColor = .ddmDarkBlack //ori
+//        l1Box.backgroundColor = .ddmBlackDark
+        self.addSubview(l1Box)
+        l1Box.clipsToBounds = true
+        l1Box.translatesAutoresizingMaskIntoConstraints = false
+        l1Box.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
+        l1Box.heightAnchor.constraint(equalToConstant: 30).isActive = true //default: 50
+        l1Box.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
+        l1Box.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
+        l1Box.layer.cornerRadius = 5
+//        l1Box.layer.opacity = 0.2 //0.3
+        l1Box.isUserInteractionEnabled = true
+        l1Box.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onS1Clicked)))
+
+//        let aaText = UILabel()
+        aaText.textAlignment = .left
+        aaText.textColor = .ddmDarkGrayColor
+//        aaText.textColor = .ddmDarkColor
+        aaText.font = .boldSystemFont(ofSize: 13)
+//        aaText.font = .systemFont(ofSize: 12)
+        l1Box.addSubview(aaText)
+        aaText.clipsToBounds = true
+        aaText.translatesAutoresizingMaskIntoConstraints = false
+        aaText.centerYAnchor.constraint(equalTo: l1Box.centerYAnchor).isActive = true
+        aaText.leadingAnchor.constraint(equalTo: l1Box.leadingAnchor, constant: 7).isActive = true //10
+        aaTextTrailingCons = aaText.trailingAnchor.constraint(equalTo: l1Box.trailingAnchor, constant: -7)
+        aaTextTrailingCons?.isActive = true
+//        aaText.trailingAnchor.constraint(equalTo: l1Box.trailingAnchor, constant: -7).isActive = true
+//        aaText.text = "Petronas Twin Tower"
+        aaText.text = "" //Created
+//        aaText.layer.opacity = 0.5
+        
+//        let l1TabArrowBtn = UIImageView()
+//        l1TabArrowBtn.image = UIImage(named:"icon_arrow_down")?.withRenderingMode(.alwaysTemplate)
+        l1TabArrowBtn.image = UIImage(named:"icon_round_arrow_down")?.withRenderingMode(.alwaysTemplate)
+        l1TabArrowBtn.tintColor = .white
+//        self.view.addSubview(arrowBtn)
+        l1Box.addSubview(l1TabArrowBtn)
+        l1TabArrowBtn.translatesAutoresizingMaskIntoConstraints = false
+        l1TabArrowBtn.leadingAnchor.constraint(equalTo: aaText.trailingAnchor, constant: 0).isActive = true
+        l1TabArrowBtnTrailingCons = l1TabArrowBtn.trailingAnchor.constraint(equalTo: l1Box.trailingAnchor, constant: 0)
+        l1TabArrowBtnTrailingCons?.isActive = false
+//        l1TabArrowBtn.trailingAnchor.constraint(equalTo: l1Box.trailingAnchor, constant: 0).isActive = true //-5
+        l1TabArrowBtn.centerYAnchor.constraint(equalTo: aaText.centerYAnchor).isActive = true
+        l1TabArrowBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true //ori 26
+        l1TabArrowBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
+//        l1TabArrowBtn.layer.opacity = 0.5
+        l1TabArrowBtn.isHidden = true
+    }
+    
+    @objc func onS1Clicked(gesture: UITapGestureRecognizer) {
+        aDelegate?.didSuggestedLocationTabClick(s: self)
+    }
+    
+    func configureUI(data: String) {
+        aaText.text = data
+    }
+    
+    func selectTab() {
+        l1Box.backgroundColor = .ddmBlackDark
+        aaText.textColor = .white
+        aaTextTrailingCons?.isActive = false
+        l1TabArrowBtnTrailingCons?.isActive = true
+        l1TabArrowBtn.isHidden = false
+    }
+    
+    func unselectTab() {
+        l1Box.backgroundColor = .ddmDarkBlack
+        aaText.textColor = .ddmDarkGrayColor
+        aaTextTrailingCons?.isActive = true
+        l1TabArrowBtnTrailingCons?.isActive = false
+        l1TabArrowBtn.isHidden = true
+    }
+}
 class LocationSelectScrollablePanelView: ScrollablePanelView{
     
     var viewHeight: CGFloat = 0
@@ -72,6 +282,19 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
     let bbText = UILabel()
     let errorText = UILabel()
     let errorRefreshBtn = UIView()
+    
+    //test > location suggestions for user
+    let cSpinner = SpinLoader()
+    let aScroll1 = UIScrollView()
+    var uDataList = [String]()
+    var aHLightViewArray = [UIView]()
+    
+    var tabDataList = [String]()
+    var aTabViewArray = [SuggestedLocationTab]()
+    let pImage = SDAnimatedImageView()
+    let lGrid = UIView()
+    let cErrorText = UILabel()
+    let cErrorRefreshBtn = UIView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -135,7 +358,7 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
         xGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPinClicked)))
         
         let xGridBG = UIView()
-        xGridBG.backgroundColor = .ddmDarkColor
+//        xGridBG.backgroundColor = .ddmDarkColor //ori
 //        xGridBG.backgroundColor = .clear
 //        panel.addSubview(xGridBG)
         aPanel.addSubview(xGridBG)
@@ -169,9 +392,9 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
         aPanel.addSubview(xText)
         xText.translatesAutoresizingMaskIntoConstraints = false
         xText.centerYAnchor.constraint(equalTo: xGrid.centerYAnchor, constant: 0).isActive = true
-        xText.leadingAnchor.constraint(equalTo: xGridBG.trailingAnchor, constant: 20).isActive = true
+        xText.leadingAnchor.constraint(equalTo: xGridBG.trailingAnchor, constant: 10).isActive = true //ori: 20
 //        xText.text = "Everyone Can See"
-        xText.text = "Pin on Map"
+        xText.text = "Pin Map Location"
 //        xText.layer.opacity = 0.5
         
 //        let aArrowBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right")?.withRenderingMode(.alwaysTemplate))
@@ -214,7 +437,7 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
 //        aTextBg.layer.opacity = 0.1
         
         let aGridBG = UIView()
-        aGridBG.backgroundColor = .ddmDarkColor
+//        aGridBG.backgroundColor = .ddmDarkColor //ori
 //        aGridBG.backgroundColor = .clear
 //        panel.addSubview(aGridBG)
         aPanel.addSubview(aGridBG)
@@ -248,12 +471,11 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
         aPanel.addSubview(aText)
         aText.translatesAutoresizingMaskIntoConstraints = false
         aText.centerYAnchor.constraint(equalTo: aTextBox.centerYAnchor, constant: 0).isActive = true
-        aText.leadingAnchor.constraint(equalTo: aGridBG.trailingAnchor, constant: 20).isActive = true
+        aText.leadingAnchor.constraint(equalTo: aGridBG.trailingAnchor, constant: 10).isActive = true //ori: 20
 //        aText.text = "Everyone Can See"
         aText.text = "Search Place"
         
-        
-        let lGrid = UIView()
+//        let lGrid = UIView()
 //        lGrid.backgroundColor = .ddmDarkColor
         lGrid.backgroundColor = .clear
 //        panel.addSubview(aGrid)
@@ -266,244 +488,85 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
         lGrid.layer.cornerRadius = 10
 //        lGrid.layer.opacity = 0.1
         
-        let lText = UILabel()
-        lText.textAlignment = .left
-        lText.textColor = .white
-        lText.font = .boldSystemFont(ofSize: 13)
-//        lText.font = .systemFont(ofSize: 14)
-//        panel.addSubview(aText)
-        aPanel.addSubview(lText)
-        lText.translatesAutoresizingMaskIntoConstraints = false
-//        lText.topAnchor.constraint(equalTo: aTextBox.bottomAnchor, constant: 20).isActive = true
-        lText.centerYAnchor.constraint(equalTo: lGrid.centerYAnchor, constant: 0).isActive = true
-        lText.leadingAnchor.constraint(equalTo: lGrid.leadingAnchor, constant: 10).isActive = true
-//        lText.text = "Everyone Can See"
-        lText.text = "More"
+        let pImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
+//        let pImage = SDAnimatedImageView()
+        pImage.contentMode = .scaleAspectFill
+        pImage.layer.masksToBounds = true
+        pImage.sd_setImage(with: pImageUrl)
+        aPanel.addSubview(pImage)
+        pImage.translatesAutoresizingMaskIntoConstraints = false
+        pImage.leadingAnchor.constraint(equalTo: lGrid.leadingAnchor, constant: 10).isActive = true
+        pImage.centerYAnchor.constraint(equalTo: lGrid.centerYAnchor, constant: 0).isActive = true
+        pImage.heightAnchor.constraint(equalToConstant: 28).isActive = true
+        pImage.widthAnchor.constraint(equalToConstant: 28).isActive = true //30
+        pImage.layer.cornerRadius = 14
+        pImage.backgroundColor = .ddmDarkColor
         
-//        let lRefresh = UIImageView()
-//        lRefresh.image = UIImage(named:"icon_round_refresh")?.withRenderingMode(.alwaysTemplate)
-//        lRefresh.tintColor = .white
-////        aTextBox.addSubview(aTextSearch)
-//        aPanel.addSubview(lRefresh)
-//        lRefresh.translatesAutoresizingMaskIntoConstraints = false
-//        lRefresh.leadingAnchor.constraint(equalTo: lText.trailingAnchor, constant: 10).isActive = true
-////        lRefresh.centerYAnchor.constraint(equalTo: aTextBox.centerYAnchor).isActive = true
-////        lRefresh.trailingAnchor.constraint(equalTo: lGrid.trailingAnchor).isActive = true
-//        lRefresh.centerYAnchor.constraint(equalTo: lText.centerYAnchor).isActive = true
-//        lRefresh.heightAnchor.constraint(equalToConstant: 20).isActive = true //ori 26
-//        lRefresh.widthAnchor.constraint(equalToConstant: 20).isActive = true
-////        lRefresh.layer.opacity = 0.5
-
-        let l1Tab = UIView()
-//        aBox.backgroundColor = .ddmBlackOverlayColor
-        l1Tab.backgroundColor = .ddmDarkColor
-        aPanel.addSubview(l1Tab)
-        l1Tab.clipsToBounds = true
-        l1Tab.translatesAutoresizingMaskIntoConstraints = false
-        l1Tab.leadingAnchor.constraint(equalTo: lGrid.leadingAnchor, constant: 10).isActive = true
-        l1Tab.heightAnchor.constraint(equalToConstant: 30).isActive = true //default: 50
-//        l1Tab.widthAnchor.constraint(equalToConstant: 60).isActive = true //default: 50
-//        l1Tab.bottomAnchor.constraint(equalTo: videoPanel.bottomAnchor, constant: -30).isActive = true
-//        l1Tab.topAnchor.constraint(equalTo: aText.bottomAnchor, constant: 20).isActive = true
-//        l1Tab.topAnchor.constraint(equalTo: lGrid.bottomAnchor, constant: 0).isActive = true
-        l1Tab.centerYAnchor.constraint(equalTo: lText.centerYAnchor, constant: 0).isActive = true
-//        l1Tab.leadingAnchor.constraint(equalTo: lText.trailingAnchor, constant: 15).isActive = true
-        l1Tab.layer.cornerRadius = 5
-//        l1Tab.layer.opacity = 0.2 //0.3
+        //*selection tab for suggested locations
+        tabDataList.append("c") //created
+        tabDataList.append("b") //bookmark
+        tabDataList.append("n") //near me
+        //*
         
-        let l1TabText = UILabel()
-        l1TabText.textAlignment = .left
-        l1TabText.textColor = .ddmDarkGrayColor
-//        l1TabText.textColor = .ddmDarkColor
-        l1TabText.font = .boldSystemFont(ofSize: 12)
-//        l1TabText.font = .systemFont(ofSize: 12)
-        l1Tab.addSubview(l1TabText)
-        l1TabText.clipsToBounds = true
-        l1TabText.translatesAutoresizingMaskIntoConstraints = false
-        l1TabText.centerYAnchor.constraint(equalTo: l1Tab.centerYAnchor).isActive = true
-//        l1TabText.topAnchor.constraint(equalTo: l1Tab.topAnchor, constant: 5).isActive = true
-//        l1TabText.bottomAnchor.constraint(equalTo: l1Tab.bottomAnchor, constant: -5).isActive = true
-        l1TabText.leadingAnchor.constraint(equalTo: l1Tab.leadingAnchor, constant: 7).isActive = true //10
-//        l1TabText.trailingAnchor.constraint(equalTo: l1Tab.trailingAnchor, constant: -5).isActive = true
-        l1TabText.text = "Bookmarks"
-//        l1TabText.layer.opacity = 0.5
+        aPanel.addSubview(aScroll1)
+        aScroll1.translatesAutoresizingMaskIntoConstraints = false
+//        aScroll1.widthAnchor.constraint(equalToConstant: scrollViewWidth).isActive = true //ori: 80
+        aScroll1.heightAnchor.constraint(equalToConstant: 40).isActive = true //60
+        aScroll1.leadingAnchor.constraint(equalTo: aPanel.leadingAnchor, constant: 0).isActive = true
+        aScroll1.trailingAnchor.constraint(equalTo: aPanel.trailingAnchor, constant: 0).isActive = true
+        aScroll1.topAnchor.constraint(equalTo: lGrid.bottomAnchor, constant: 10).isActive = true
+//        aScroll1.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true
+        aScroll1.showsHorizontalScrollIndicator = false
+        aScroll1.showsVerticalScrollIndicator = false
+//        aScroll1.backgroundColor = .red
         
-        let l1TabArrowBtn = UIImageView()
-//        l1TabArrowBtn.image = UIImage(named:"icon_arrow_down")?.withRenderingMode(.alwaysTemplate)
-        l1TabArrowBtn.image = UIImage(named:"icon_round_arrow_down")?.withRenderingMode(.alwaysTemplate)
-        l1TabArrowBtn.tintColor = .ddmDarkGrayColor
-//        self.view.addSubview(arrowBtn)
-        l1Tab.addSubview(l1TabArrowBtn)
-        l1TabArrowBtn.translatesAutoresizingMaskIntoConstraints = false
-        l1TabArrowBtn.leadingAnchor.constraint(equalTo: l1TabText.trailingAnchor, constant: 0).isActive = true
-        l1TabArrowBtn.trailingAnchor.constraint(equalTo: l1Tab.trailingAnchor, constant: 0).isActive = true //-5
-        l1TabArrowBtn.centerYAnchor.constraint(equalTo: l1TabText.centerYAnchor).isActive = true
-        l1TabArrowBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true //ori 26
-        l1TabArrowBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
-//        l1TabArrowBtn.layer.opacity = 0.5
+        aPanel.addSubview(cSpinner)
+        cSpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
+        cSpinner.translatesAutoresizingMaskIntoConstraints = false
+        cSpinner.centerYAnchor.constraint(equalTo: aScroll1.centerYAnchor, constant: CGFloat(0)).isActive = true
+//        cSpinner.centerXAnchor.constraint(equalTo: aPanel.centerXAnchor).isActive = true
+        cSpinner.leadingAnchor.constraint(equalTo: lGrid.leadingAnchor, constant: 20).isActive = true
+        cSpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        cSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
+//        cSpinner.startAnimating()
         
-        let l2Tab = UIView()
-//        aBox.backgroundColor = .ddmBlackOverlayColor
-        l2Tab.backgroundColor = .ddmDarkBlack
-        aPanel.addSubview(l2Tab)
-        l2Tab.clipsToBounds = true
-        l2Tab.translatesAutoresizingMaskIntoConstraints = false
-        l2Tab.leadingAnchor.constraint(equalTo: l1Tab.trailingAnchor, constant: 10).isActive = true
-        l2Tab.heightAnchor.constraint(equalToConstant: 30).isActive = true //default: 50
-//        l2Tab.widthAnchor.constraint(equalToConstant: 60).isActive = true //default: 50
-//        l2Tab.bottomAnchor.constraint(equalTo: videoPanel.bottomAnchor, constant: -30).isActive = true
-//        l2Tab.topAnchor.constraint(equalTo: aText.bottomAnchor, constant: 20).isActive = true
-//        l2Tab.topAnchor.constraint(equalTo: lGrid.bottomAnchor, constant: 0).isActive = true
-        l2Tab.centerYAnchor.constraint(equalTo: lText.centerYAnchor, constant: 0).isActive = true
-//        l1Tab.leadingAnchor.constraint(equalTo: lText.leadingAnchor, constant: 15).isActive = true
-        l2Tab.layer.cornerRadius = 5
-//        l2Tab.layer.opacity = 0.2 //0.3
+        //test > error handling
+        cErrorText.textAlignment = .center //left
+        cErrorText.textColor = .white
+        cErrorText.font = .systemFont(ofSize: 13)
+        aPanel.addSubview(cErrorText)
+        cErrorText.clipsToBounds = true
+        cErrorText.translatesAutoresizingMaskIntoConstraints = false
+        cErrorText.centerYAnchor.constraint(equalTo: aScroll1.centerYAnchor, constant: 0).isActive = true
+        cErrorText.leadingAnchor.constraint(equalTo: lGrid.leadingAnchor, constant: 20).isActive = true
+//        cErrorText.centerXAnchor.constraint(equalTo: aPanel.centerXAnchor, constant: -20).isActive = true
+        cErrorText.text = ""
+        cErrorText.numberOfLines = 0
+        cErrorText.isHidden = true
         
-        let l2TabText = UILabel()
-        l2TabText.textAlignment = .left
-        l2TabText.textColor = .ddmDarkGrayColor
-//        l2TabText.textColor = .ddmDarkColor
-        l2TabText.font = .boldSystemFont(ofSize: 12)
-//        l2TabText.font = .systemFont(ofSize: 12)
-//        l2Tab.addSubview(l2TabText)
-        aPanel.addSubview(l2TabText)
-        l2TabText.clipsToBounds = true
-        l2TabText.translatesAutoresizingMaskIntoConstraints = false
-        l2TabText.centerYAnchor.constraint(equalTo: l2Tab.centerYAnchor).isActive = true
-//        l2TabText.topAnchor.constraint(equalTo: l1Tab.topAnchor, constant: 5).isActive = true
-//        l2TabText.bottomAnchor.constraint(equalTo: l1Tab.bottomAnchor, constant: -5).isActive = true
-        l2TabText.leadingAnchor.constraint(equalTo: l2Tab.leadingAnchor, constant: 7).isActive = true //10
-        l2TabText.trailingAnchor.constraint(equalTo: l2Tab.trailingAnchor, constant: -7).isActive = true
-        l2TabText.text = "Near Me"
-//        l2TabText.layer.opacity = 0.5
+//        errorRefreshBtn.backgroundColor = .ddmDarkColor //test to remove color
+        aPanel.addSubview(cErrorRefreshBtn)
+        cErrorRefreshBtn.translatesAutoresizingMaskIntoConstraints = false
+        cErrorRefreshBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true //ori: 40
+        cErrorRefreshBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
+//        errorRefreshBtn.centerXAnchor.constraint(equalTo: aHLightRect1.centerXAnchor).isActive = true
+//        errorRefreshBtn.topAnchor.constraint(equalTo: errorText.bottomAnchor, constant: 0).isActive = true
+        cErrorRefreshBtn.centerYAnchor.constraint(equalTo: cErrorText.centerYAnchor, constant: 0).isActive = true //test
+        cErrorRefreshBtn.leadingAnchor.constraint(equalTo: cErrorText.trailingAnchor).isActive = true
+        cErrorRefreshBtn.layer.cornerRadius = 20
+        cErrorRefreshBtn.isUserInteractionEnabled = true
+        cErrorRefreshBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onCErrorRefreshClicked)))
+        cErrorRefreshBtn.isHidden = true
         
-        let l3Tab = UIView()
-//        aBox.backgroundColor = .ddmBlackOverlayColor
-        l3Tab.backgroundColor = .ddmDarkBlack
-        aPanel.addSubview(l3Tab)
-        l3Tab.clipsToBounds = true
-        l3Tab.translatesAutoresizingMaskIntoConstraints = false
-        l3Tab.leadingAnchor.constraint(equalTo: l2Tab.trailingAnchor, constant: 10).isActive = true
-        l3Tab.heightAnchor.constraint(equalToConstant: 30).isActive = true //default: 50
-//        l3Tab.widthAnchor.constraint(equalToConstant: 60).isActive = true //default: 50
-//        l3Tab.bottomAnchor.constraint(equalTo: videoPanel.bottomAnchor, constant: -30).isActive = true
-//        l3Tab.topAnchor.constraint(equalTo: aText.bottomAnchor, constant: 20).isActive = true
-//        l3Tab.topAnchor.constraint(equalTo: lGrid.bottomAnchor, constant: 0).isActive = true
-        l3Tab.centerYAnchor.constraint(equalTo: lText.centerYAnchor, constant: 0).isActive = true
-        l3Tab.layer.cornerRadius = 5
-//        l3Tab.layer.opacity = 0.2 //0.3
-        
-        let l3TabText = UILabel()
-        l3TabText.textAlignment = .left
-        l3TabText.textColor = .ddmDarkGrayColor
-//        l3TabText.textColor = .ddmDarkColor
-        l3TabText.font = .boldSystemFont(ofSize: 12)
-//        l3TabText.font = .systemFont(ofSize: 12)
-//        l3Tab.addSubview(l3TabText)
-        aPanel.addSubview(l3TabText)
-        l3TabText.clipsToBounds = true
-        l3TabText.translatesAutoresizingMaskIntoConstraints = false
-        l3TabText.centerYAnchor.constraint(equalTo: l3Tab.centerYAnchor).isActive = true
-//        l3TabText.topAnchor.constraint(equalTo: l1Tab.topAnchor, constant: 5).isActive = true
-//        l3TabText.bottomAnchor.constraint(equalTo: l1Tab.bottomAnchor, constant: -5).isActive = true
-        l3TabText.leadingAnchor.constraint(equalTo: l3Tab.leadingAnchor, constant: 7).isActive = true //10
-        l3TabText.trailingAnchor.constraint(equalTo: l3Tab.trailingAnchor, constant: -7).isActive = true
-        l3TabText.text = "Created"
-//        l3TabText.layer.opacity = 0.5
-        
-        let l1Box = UIView()
-//        aBox.backgroundColor = .ddmBlackOverlayColor
-        l1Box.backgroundColor = .ddmDarkBlack
-        aPanel.addSubview(l1Box)
-        l1Box.clipsToBounds = true
-        l1Box.translatesAutoresizingMaskIntoConstraints = false
-        l1Box.leadingAnchor.constraint(equalTo: lGrid.leadingAnchor, constant: 10).isActive = true
-        l1Box.heightAnchor.constraint(equalToConstant: 40).isActive = true //default: 50
-//        l1Box.topAnchor.constraint(equalTo: aText.bottomAnchor, constant: 20).isActive = true
-//        l1Box.topAnchor.constraint(equalTo: lGrid.bottomAnchor, constant: 0).isActive = true
-        l1Box.topAnchor.constraint(equalTo: l1Tab.bottomAnchor, constant: 10).isActive = true
-        l1Box.layer.cornerRadius = 5
-//        l1Box.layer.opacity = 0.2 //0.3
-        l1Box.isUserInteractionEnabled = true
-        l1Box.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onL1Clicked)))
-
-        let l1BoxBox = UIView()
-        l1BoxBox.backgroundColor = .clear //yellow
-        aPanel.addSubview(l1BoxBox)
-        l1BoxBox.clipsToBounds = true
-        l1BoxBox.translatesAutoresizingMaskIntoConstraints = false
-        l1BoxBox.widthAnchor.constraint(equalToConstant: 20).isActive = true //ori: 40
-        l1BoxBox.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        l1BoxBox.centerYAnchor.constraint(equalTo: l1Box.centerYAnchor).isActive = true
-        l1BoxBox.leadingAnchor.constraint(equalTo: l1Box.leadingAnchor, constant: 5).isActive = true //10
-        l1BoxBox.layer.cornerRadius = 5 //6
-
-        let gridViewBtn = UIImageView(image: UIImage(named:"icon_location")?.withRenderingMode(.alwaysTemplate))
-        gridViewBtn.tintColor = .white
-        l1BoxBox.addSubview(gridViewBtn)
-        gridViewBtn.translatesAutoresizingMaskIntoConstraints = false
-        gridViewBtn.centerXAnchor.constraint(equalTo: l1BoxBox.centerXAnchor).isActive = true
-        gridViewBtn.centerYAnchor.constraint(equalTo: l1BoxBox.centerYAnchor).isActive = true
-        gridViewBtn.heightAnchor.constraint(equalToConstant: 16).isActive = true
-        gridViewBtn.widthAnchor.constraint(equalToConstant: 16).isActive = true
-//        gridViewBtn.layer.opacity = 0.5
-
-        let aaText = UILabel()
-        aaText.textAlignment = .left
-        aaText.textColor = .white
-//        aaText.textColor = .ddmDarkColor
-        aaText.font = .boldSystemFont(ofSize: 13)
-//        aaText.font = .systemFont(ofSize: 12)
-        aPanel.addSubview(aaText)
-        aaText.clipsToBounds = true
-        aaText.translatesAutoresizingMaskIntoConstraints = false
-        aaText.topAnchor.constraint(equalTo: l1Box.topAnchor, constant: 5).isActive = true
-        aaText.bottomAnchor.constraint(equalTo: l1Box.bottomAnchor, constant: -5).isActive = true
-        aaText.leadingAnchor.constraint(equalTo: l1BoxBox.trailingAnchor, constant: 5).isActive = true //10
-        aaText.trailingAnchor.constraint(equalTo: l1Box.trailingAnchor, constant: -10).isActive = true
-        aaText.text = "Petronas Twin Tower"
-//        aaText.layer.opacity = 0.5
-        
-//        let l1Box = UIView()
-//        l1Box.backgroundColor = .ddmDarkColor
-////        panel.addSubview(aGrid)
-//        aPanel.addSubview(l1Box)
-//        l1Box.translatesAutoresizingMaskIntoConstraints = false
-////        l1Box.topAnchor.constraint(equalTo: aTextBox.bottomAnchor, constant: 10).isActive = true
-//        l1Box.topAnchor.constraint(equalTo: lText.bottomAnchor, constant: 10).isActive = true
-//        l1Box.leadingAnchor.constraint(equalTo: aPanel.leadingAnchor, constant: 15).isActive = true
-//        l1Box.widthAnchor.constraint(equalToConstant: 140).isActive = true
-//        l1Box.heightAnchor.constraint(equalToConstant: 70).isActive = true //40
-//        l1Box.layer.cornerRadius = 10
-//        l1Box.layer.opacity = 0.1
-        
-//        let l1BoxText = UILabel()
-//        l1BoxText.textAlignment = .left
-//        l1BoxText.textColor = .white
-//        l1BoxText.font = .boldSystemFont(ofSize: 13)
-////        l1BoxText.font = .systemFont(ofSize: 14)
-////        panel.addSubview(aText)
-//        aPanel.addSubview(l1BoxText)
-//        l1BoxText.translatesAutoresizingMaskIntoConstraints = false
-//        l1BoxText.topAnchor.constraint(equalTo: l1Box.topAnchor, constant: 5).isActive = true
-//        l1BoxText.leadingAnchor.constraint(equalTo: l1Box.leadingAnchor, constant: 10).isActive = true
-//        l1BoxText.trailingAnchor.constraint(equalTo: l1Box.trailingAnchor, constant: -10).isActive = true
-//        l1BoxText.text = "Petronas twin Tower"
-//        l1BoxText.layer.opacity = 0.5
-//
-//        let l2Box = UIView()
-//        l2Box.backgroundColor = .ddmDarkColor
-////        panel.addSubview(aGrid)
-//        aPanel.addSubview(l2Box)
-//        l2Box.translatesAutoresizingMaskIntoConstraints = false
-//        l2Box.topAnchor.constraint(equalTo: lText.bottomAnchor, constant: 10).isActive = true
-////        l2Box.topAnchor.constraint(equalTo: tText.bottomAnchor, constant: 20).isActive = true
-//        l2Box.leadingAnchor.constraint(equalTo: l1Box.trailingAnchor, constant: 15).isActive = true
-//        l2Box.widthAnchor.constraint(equalToConstant: 140).isActive = true
-//        l2Box.heightAnchor.constraint(equalToConstant: 70).isActive = true //40
-//        l2Box.layer.cornerRadius = 10
-//        l2Box.layer.opacity = 0.1
-        
+        let cbMiniBtn = UIImageView(image: UIImage(named:"icon_round_refresh")?.withRenderingMode(.alwaysTemplate))
+//        bMiniBtn.tintColor = .black
+        cbMiniBtn.tintColor = .white
+        cErrorRefreshBtn.addSubview(cbMiniBtn)
+        cbMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        cbMiniBtn.centerXAnchor.constraint(equalTo: cErrorRefreshBtn.centerXAnchor).isActive = true
+        cbMiniBtn.centerYAnchor.constraint(equalTo: cErrorRefreshBtn.centerYAnchor).isActive = true
+        cbMiniBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true //26
+        cbMiniBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
         
         //real text field
 //        let bPanel = UIView()
@@ -516,12 +579,43 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
         bPanel.heightAnchor.constraint(equalToConstant: viewHeight).isActive = true
         bPanel.isHidden = true
         
+        let acBtn = UIView()
+//        aBtn.backgroundColor = .ddmDarkColor
+        bPanel.addSubview(acBtn)
+        acBtn.translatesAutoresizingMaskIntoConstraints = false
+        acBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true //ori: 40
+        acBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
+//        aBtn.leadingAnchor.constraint(equalTo: aStickyHeader.leadingAnchor, constant: 10).isActive = true
+        acBtn.leadingAnchor.constraint(equalTo: bPanel.leadingAnchor, constant: 10).isActive = true
+    //        aBtn.topAnchor.constraint(equalTo: userPanel.topAnchor, constant: 30).isActive = true
+        acBtn.topAnchor.constraint(equalTo: bPanel.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
+//        let topInsetMargin = panel.safeAreaInsets.top + 10
+//        aBtn.topAnchor.constraint(equalTo: panel.topAnchor, constant: 50).isActive = true
+        acBtn.layer.cornerRadius = 20
+//        aBtn.layer.opacity = 0.3
+        acBtn.isUserInteractionEnabled = true
+        acBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onCloseTextBoxClicked)))
+
+//        let bcMiniBtn = UIImageView(image: UIImage(named:"icon_round_arrow_left")?.withRenderingMode(.alwaysTemplate))
+        let bcMiniBtn = UIImageView(image: UIImage(named:"icon_round_arrow_down_a")?.withRenderingMode(.alwaysTemplate))
+//        let bMiniBtn = UIImageView(image: UIImage(named:"icon_round_close")?.withRenderingMode(.alwaysTemplate))
+        bcMiniBtn.tintColor = .white
+//        aStickyHeader.addSubview(bMiniBtn)
+        acBtn.addSubview(bcMiniBtn)
+        bcMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        bcMiniBtn.centerXAnchor.constraint(equalTo: acBtn.centerXAnchor).isActive = true
+        bcMiniBtn.centerYAnchor.constraint(equalTo: acBtn.centerYAnchor).isActive = true
+        bcMiniBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
+        bcMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
+        
 //        let bTextBox = UIView()
         bPanel.addSubview(bTextBox)
         bTextBox.translatesAutoresizingMaskIntoConstraints = false
 //        bTextBox.topAnchor.constraint(equalTo: aTextBox.topAnchor, constant: 0).isActive = true
-        bTextBox.topAnchor.constraint(equalTo: bPanel.topAnchor, constant: 60).isActive = true
-        bTextBox.leadingAnchor.constraint(equalTo: bPanel.leadingAnchor, constant: 15).isActive = true
+        bTextBox.topAnchor.constraint(equalTo: bPanel.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
+//        bTextBox.topAnchor.constraint(equalTo: bPanel.topAnchor, constant: 60).isActive = true //ori
+//        bTextBox.leadingAnchor.constraint(equalTo: bPanel.leadingAnchor, constant: 15).isActive = true
+        bTextBox.leadingAnchor.constraint(equalTo: acBtn.trailingAnchor, constant: 0).isActive = true
         bTextBox.trailingAnchor.constraint(equalTo: bPanel.trailingAnchor, constant: -15).isActive = true
         bTextBox.heightAnchor.constraint(equalToConstant: 40).isActive = true
         bTextBox.backgroundColor = .ddmDarkColor
@@ -568,7 +662,8 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
         bBox.centerYAnchor.constraint(equalTo: bTextBox.centerYAnchor).isActive = true
         bBox.trailingAnchor.constraint(equalTo: bTextBox.trailingAnchor, constant: -10).isActive = true
         bBox.layer.cornerRadius = 10
-        bBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onCloseTextBoxClicked)))
+//        bBox.isHidden = true
+        bBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onEraseSearchTextClicked)))
         
         let aBtn = UIImageView(image: UIImage(named:"icon_round_close")?.withRenderingMode(.alwaysTemplate))
         aBtn.tintColor = .ddmDarkColor
@@ -602,6 +697,7 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
 //        let vcvPanGesture = UIPanGestureRecognizer(target: self, action: #selector(onVCVPanGesture))
 //        vcvPanGesture.delegate = self //for simultaneous pan recognizer for uicollectionview
 //        vCV.addGestureRecognizer(vcvPanGesture)
+        vCV.alwaysBounceVertical = true
         
         //test > top spinner
         vCV.addSubview(aSpinner)
@@ -801,6 +897,8 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
     }
     
     func refreshModeUI() {
+        resignResponder()
+        
         if(currentLSelectMode == LSELECT_MODE_EMPTY) {
             aPanel.isHidden = false
             cPanel.isHidden = true
@@ -861,6 +959,10 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
         //test > erase all place search results
     }
     
+    @objc func onEraseSearchTextClicked(gesture: UITapGestureRecognizer) {
+        bTextField.text = ""
+    }
+    
     func setFirstResponder(textField: UITextField) {
         textField.becomeFirstResponder()
 //        aTextBox.isHidden = true
@@ -878,6 +980,190 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
 //        bTextBox.isHidden = true
         bPanel.isHidden = true
 //        bbText.isHidden = true
+    }
+    
+    //test > for suggesting locations
+//    var uDataList = [String]()
+//    var aHLightViewArray = [UIView]()
+    func configure(data: String) {
+//        let scrollViewWidth = 200.0
+        let scrollViewHeight = 40.0
+        
+        let scrollLeadingMargin = 15.0
+        let scrollTrailingMargin = 15.0
+        let resultGap = 10.0
+        var totalSumSize = 0.0
+        
+        if(data == "a") {
+            uDataList.append("Petronas Twin Tower") //"p"
+            uDataList.append("London")
+            uDataList.append("Tesla Gigafactory")
+
+            for a in uDataList {
+            
+                let hd = SuggestedLocationResult()
+                aScroll1.addSubview(hd)
+                hd.translatesAutoresizingMaskIntoConstraints = false
+//                hd.widthAnchor.constraint(equalToConstant: scrollViewWidth).isActive = true //180
+                hd.heightAnchor.constraint(equalToConstant: scrollViewHeight).isActive = true //280
+                hd.topAnchor.constraint(equalTo: aScroll1.topAnchor, constant: 0).isActive = true
+                if(aHLightViewArray.isEmpty) {
+                    let firstGap = scrollLeadingMargin + resultGap
+                    totalSumSize += firstGap
+                    totalSumSize += scrollTrailingMargin
+                    
+                    hd.leadingAnchor.constraint(equalTo: aScroll1.leadingAnchor, constant: firstGap).isActive = true
+                } else {
+                    totalSumSize += resultGap
+                    
+                    let lastArrayE = aHLightViewArray[aHLightViewArray.count - 1]
+                    hd.leadingAnchor.constraint(equalTo: lastArrayE.trailingAnchor, constant: resultGap).isActive = true
+                }
+                aHLightViewArray.append(hd)
+                hd.redrawUI()
+                hd.configureUI(data: a) //"a"
+                hd.aDelegate = self
+                
+                //test > compute width
+                let tContentWidth = estimateWidth(text: a, textHeight: 40, fontSize: 14)
+                let tContentTrailingMargin = 10.0
+                let tContentLeadingMargin = 5.0
+                let tIconSize = 20.0
+                let tIconLeadingMargin = 5.0
+                let tSum = tContentWidth + tContentTrailingMargin + tContentLeadingMargin + tIconSize + tIconLeadingMargin
+                totalSumSize += tSum
+                print("estimateWidth: \(tContentWidth)")
+            }
+
+            aScroll1.contentSize = CGSize(width: totalSumSize, height: scrollViewHeight) //800, 280
+        }
+    }
+    
+    private func estimateWidth(text: String, textHeight: CGFloat, fontSize: CGFloat) -> CGFloat {
+        if(text == ""){
+            return 0
+        } else {
+            let size = CGSize(width: 1000, height: textHeight) //1000 height is dummy
+            let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: fontSize)]
+            let estimatedFrame = NSString(string: text).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
+            
+            return estimatedFrame.width
+        }
+    }
+    
+    func asyncConfigure(data: String) {
+        let id = "u"
+        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    print("pdp api success \(id), \(l)")
+                    
+                    guard let self = self else {
+                        return
+                    }
+
+                    self.cSpinner.stopAnimating()
+                    self.configure(data: "a")
+                    
+                    if(l.isEmpty) {
+                        self.configureCErrorUI(data: "na")
+                    }
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    self.cSpinner.stopAnimating()
+                    
+                    //error handling e.g. refetch button
+                    self.configureCErrorUI(data: "e")
+                }
+                break
+            }
+        }
+    }
+    
+    func deconfigureCell() {
+        aScroll1.setContentOffset(CGPoint.zero, animated: false)
+        
+        if(!aHLightViewArray.isEmpty) {
+            for e in aHLightViewArray {
+                e.removeFromSuperview()
+            }
+            aHLightViewArray.removeAll()
+            uDataList.removeAll()
+        }
+    }
+    
+    func configureCErrorUI(data: String) {
+        self.cErrorText.text = ""
+        self.cErrorText.isHidden = true
+        self.cErrorRefreshBtn.isHidden = true
+        
+        if(data == "e") {
+            self.cErrorText.text = "Something went wrong. Retry."
+            self.cErrorText.isHidden = false
+            self.cErrorRefreshBtn.isHidden = false
+        }
+        else if(data == "na") {
+            self.cErrorText.text = "Empty result."
+            self.cErrorText.isHidden = false
+        }
+    }
+    
+    func clearCErrorUI() {
+        self.cErrorText.text = ""
+        self.cErrorText.isHidden = true
+        self.cErrorRefreshBtn.isHidden = true
+    }
+    
+    //test > error handling for refresh suggested locations
+    @objc func onCErrorRefreshClicked(gesture: UITapGestureRecognizer) {
+        deconfigureCell()
+        clearCErrorUI()
+        
+        cSpinner.startAnimating()
+        asyncConfigure(data: "")
+    }
+    
+    func configureTab() {
+        for a in tabDataList {
+            let s1Tab = SuggestedLocationTab()
+            aPanel.addSubview(s1Tab)
+            s1Tab.translatesAutoresizingMaskIntoConstraints = false
+            s1Tab.heightAnchor.constraint(equalToConstant: 30).isActive = true //280
+            s1Tab.centerYAnchor.constraint(equalTo: lGrid.centerYAnchor, constant: 0).isActive = true
+            if(aTabViewArray.isEmpty) {
+                s1Tab.leadingAnchor.constraint(equalTo: pImage.trailingAnchor, constant: 10).isActive = true
+            } else {
+                let lastArrayE = aTabViewArray[aTabViewArray.count - 1]
+                s1Tab.leadingAnchor.constraint(equalTo: lastArrayE.trailingAnchor, constant: 10).isActive = true
+            }
+//            s1Tab.leadingAnchor.constraint(equalTo: pImage.trailingAnchor, constant: 10).isActive = true
+            s1Tab.redrawUI()
+            if(a == "n") {
+                s1Tab.configureUI(data: "Near Me") //"a"
+            }
+            else if (a == "c") {
+                s1Tab.configureUI(data: "Created") //"a"
+            }
+            else if (a == "b") {
+                s1Tab.configureUI(data: "Saves") //"a"
+            }
+            s1Tab.aDelegate = self
+            aTabViewArray.append(s1Tab)
+        }
+        
+        //init => select tab at 0 first
+        if(!aTabViewArray.isEmpty) {
+            aTabViewArray[0].selectTab()
+        }
     }
     
     //test > initialization state
@@ -901,6 +1187,12 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
         
         if(!isInitialized) {
             setupViews()
+            
+            configureTab()
+            
+            //test > fetch suggested locations for prompt
+            cSpinner.startAnimating()
+            asyncConfigure(data: "")
         }
         
         isInitialized = true
@@ -1290,7 +1582,7 @@ extension LocationSelectScrollablePanelView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HSingleLocationViewCell.identifier, for: indexPath) as! HSingleLocationViewCell
-//        cell.aDelegate = self
+        cell.aDelegate = self
         cell.configure(data: vDataList[indexPath.row])
         return cell
     }
@@ -1399,5 +1691,39 @@ extension ViewController: LocationSelectScrollablePanelDelegate{
         }
         
         mapReappearMarkers()
+    }
+}
+
+extension LocationSelectScrollablePanelView: HSingleLocationDelegate{
+    func didClickSinglePlaceLocation() {
+        //test
+        currentLSelectMode = LSELECT_MODE_SELECTED_PLACE
+        refreshModeUI()
+        
+        delegate?.didSelectedALocationSelectScrollable(pv: self)
+    }
+}
+
+extension LocationSelectScrollablePanelView: SuggestedLocationResultDelegate{
+    func didSuggestedLocationResultClick() {
+        currentLSelectMode = LSELECT_MODE_SELECTED_PLACE
+        refreshModeUI()
+        
+        delegate?.didSelectedALocationSelectScrollable(pv: self)
+    }
+}
+extension LocationSelectScrollablePanelView: SuggestedLocationTabDelegate{
+    func didSuggestedLocationTabClick(s: SuggestedLocationTab) {
+//        reactToTabChange(tab: "1")
+        for t in aTabViewArray {
+            t.unselectTab()
+        }
+        s.selectTab()
+        
+        deconfigureCell()
+        clearCErrorUI()
+        
+        cSpinner.startAnimating()
+        asyncConfigure(data: "")
     }
 }
