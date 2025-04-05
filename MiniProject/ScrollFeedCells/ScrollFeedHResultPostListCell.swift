@@ -147,7 +147,7 @@ extension ScrollFeedHResultPostListCell: UICollectionViewDelegateFlowLayout {
         
         var contentHeight = 0.0
         let contentTopMargin = 10.0
-        let l = vDataList[indexPath.row].dataType
+        let l = vDataList[indexPath.row].dataCode
         let s = vDataList[indexPath.row].dataTextString
         
         let maxContentDummyText = "\n\n\n\n" //4 lines of text

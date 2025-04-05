@@ -195,30 +195,25 @@ class HNotifyInboxListViewCell: UICollectionViewCell {
             aFollowAText.textColor = .black
         }
     }
-    func configure(data: String) {
-        
-        if(data == "a") {
+//    func configure(data: String) {
+    func configure(data: NotifyData) {
+        let d = data.dataCode
+//        if(data == "a") {
+        if(d == "a") {
             asyncConfigure(data: "")
             
-            aNameText.text = "YikCai"
-            contentText.text = "started following you."
-        } 
-        else if(data == "na") {
+//            aNameText.text = "YikCai"
+//            contentText.text = "started following you."
+            contentText.text = data.notifyTextString
+        }
+//        else if(data == "na") {
+        else if(d == "na") {
             
         }
-        else if(data == "us") {
+//        else if(data == "us") {
+        else if(d == "us") {
             
         }
-//        else if(data == "b") {
-//            aNameText.text = "Evelyn"
-//            contentText.text = "liked your recent comment."
-//        } else if(data == "c") {
-//            aNameText.text = "Teacher Isa"
-//            contentText.text = "shared a loop 5s ago."
-//        } else if(data == "d") {
-//            aNameText.text = "Sis Ning"
-//            contentText.text = "just commented on your post."
-//        }
         
         actionUI(doneState: isAction)
     }
@@ -237,10 +232,24 @@ class HNotifyInboxListViewCell: UICollectionViewCell {
                         return
                     }
 
-                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-                    self.aUserPhoto.sd_setImage(with: imageUrl)
+                    if(!l.isEmpty) {
+                        let l_0 = l[0]
+                        let uData = UserData()
+                        uData.setData(rData: l_0)
+                        let l_ = uData.dataCode
+                        
+                        self.aNameText.text = uData.dataTextString
+                        
+                        let eImageUrl = URL(string: uData.coverPhotoString)
+                        self.aUserPhoto.sd_setImage(with: eImageUrl)
+                        
+                        self.aFollowA.isHidden = false
+                    }
                     
-                    self.aFollowA.isHidden = false
+//                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//                    self.aUserPhoto.sd_setImage(with: imageUrl)
+//                    
+//                    self.aFollowA.isHidden = false
                 }
 
                 case .failure(let error):
@@ -249,6 +258,8 @@ class HNotifyInboxListViewCell: UICollectionViewCell {
                     guard let self = self else {
                         return
                     }
+                    
+                    self.aNameText.text = "-"
                     
                     let imageUrl = URL(string: "")
                     self.aUserPhoto.sd_setImage(with: imageUrl)

@@ -176,17 +176,23 @@ class HUsersListViewCell: UICollectionViewCell {
         vBtn.image = nil
     }
     
-    func configure(data: String) {
-
-        if(data == "a") {
+//    func configure(data: String) {
+    func configure(data: BaseData) {
+        guard let a = data as? UserData else {
+            return
+        }
+        
+        let l = a.dataCode
+        
+        if(l == "a") {
             asyncConfigure(data: "")
             
             self.aNameText.text = "Michael Kins"
         }
-        else if(data == "na") {
+        else if(l == "na") {
             
         }
-        else if(data == "us") {
+        else if(l == "us") {
             
         }
     }

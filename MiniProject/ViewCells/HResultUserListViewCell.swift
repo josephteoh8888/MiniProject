@@ -119,6 +119,7 @@ class HResultUserListViewCell: UICollectionViewCell {
         aNameText.topAnchor.constraint(equalTo: eUserCover.topAnchor, constant: 5).isActive = true
         aNameText.leadingAnchor.constraint(equalTo: aUserPhoto.trailingAnchor, constant: 10).isActive = true
         aNameText.text = "-"
+        aNameText.trailingAnchor.constraint(lessThanOrEqualTo: aFollowA.leadingAnchor, constant: -50).isActive = true
         
         //test > verified badge
 //        let vBtn = UIImageView(image: UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate))
@@ -176,44 +177,38 @@ class HResultUserListViewCell: UICollectionViewCell {
         actionUI(doneState: false)
     }
     
-    func configure(data: PostData) {
+//    func configure(data: PostData) {
+    func configure(data: BaseData) {
         
-        let l = data.dataType
+        guard let a = data as? UserData else {
+            return
+        }
+        
+//        let l = data.dataType
+        let l = a.dataCode
         
         if(l == "a") {
             asyncConfigure(data: "")
             
-            self.aNameText.text = "Michael Kins"
-            self.aBioText.text = "cars/tech/content creator"
+//            self.aNameText.text = "Michael Kins"
+            self.aNameText.text = a.dataTextString
+//            self.aBioText.text = "cars/tech/content creator"
+            self.aBioText.text = a.bioTextString
             self.aUserNameText.text = "140k followers" //"@mic1809"
             
-            self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
-        } 
+            let imageUrl = URL(string: a.coverPhotoString)
+            self.aUserPhoto.sd_setImage(with: imageUrl)
+            
+            if(a.isAccountVerified) {
+                self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
+            }
+        }
         else if(l == "na") {
             
         }
         else if(l == "us") {
             
         }
-//        else if(l == "b") {
-//            self.aNameText.text = "JennyBaby"
-//            self.aBioText.text = "*.*"
-//            self.aUserNameText.text = "541 followers" //"@mic1809"
-//            
-//            self.vBtn.image = nil
-//        } else if(l == "c") {
-//            self.aNameText.text = "YikCai"
-//            self.aBioText.text = ".....WTF...."
-//            self.aUserNameText.text = "978 followers" //"@mic1809"
-//            
-//            self.vBtn.image = nil
-//        } else if(l == "d") {
-//            self.aNameText.text = "IshowSpeed"
-//            self.aBioText.text = "SIU!"
-//            self.aUserNameText.text = "32.9m followers" //"@mic1809"
-//            
-//            self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
-//        }
         
         actionUI(doneState: isAction)
     }
@@ -233,8 +228,8 @@ class HResultUserListViewCell: UICollectionViewCell {
                         return
                     }
 
-                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-                    self.aUserPhoto.sd_setImage(with: imageUrl)
+//                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//                    self.aUserPhoto.sd_setImage(with: imageUrl)
                     
                     self.aFollowA.isHidden = false
                 }
@@ -248,8 +243,8 @@ class HResultUserListViewCell: UICollectionViewCell {
                     
                     self.aFollowA.isHidden = true
                     
-                    let imageUrl = URL(string: "")
-                    self.aUserPhoto.sd_setImage(with: imageUrl)
+//                    let imageUrl = URL(string: "")
+//                    self.aUserPhoto.sd_setImage(with: imageUrl)
                     
                 }
                 break

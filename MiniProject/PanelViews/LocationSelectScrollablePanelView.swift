@@ -269,7 +269,8 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
     weak var delegate : LocationSelectScrollablePanelDelegate?
     
     //test > for search places
-    var vDataList = [String]()
+//    var vDataList = [String]()
+    var vDataList = [BaseData]()
     var vCV : UICollectionView?
     let aSpinner = SpinLoader()
     let bSpinner = SpinLoader()
@@ -1288,8 +1289,8 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
         
         let id_ = "post"
         let isPaginate = false
-        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
-//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+//        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+        DataFetchManager.shared.fetchPlaceFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -1306,7 +1307,11 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
                     
                     //test 2 > reload entire dataset
                     for i in l {
-                        self.vDataList.append(i)
+//                        self.vDataList.append(i)
+                        
+                        let pData = PlaceData()
+                        pData.setData(rData: i)
+                        self.vDataList.append(pData)
                     }
                     self.vCV?.reloadData()
                     
@@ -1354,8 +1359,8 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
         
         let id_ = "post"
         let isPaginate = true
-        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
-//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+//        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+        DataFetchManager.shared.fetchPlaceFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -1382,7 +1387,11 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
                     var indexPaths = [IndexPath]()
                     var j = 1
                     for i in l {
-                        self.vDataList.append(i)
+//                        self.vDataList.append(i)
+                        
+                        let pData = PlaceData()
+                        pData.setData(rData: i)
+                        self.vDataList.append(pData)
 
                         let idx = IndexPath(item: dataCount - 1 + j, section: 0)
                         indexPaths.append(idx)

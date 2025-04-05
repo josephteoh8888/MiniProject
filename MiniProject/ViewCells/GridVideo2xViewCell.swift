@@ -246,40 +246,42 @@ class GridVideo2xViewCell: UICollectionViewCell {
         bCountText.text = ""
     }
     
-    func configure(data: PostData) {
+//    func configure(data: PostData) {
+    func configure(data: BaseData) {
         
-        let l = data.dataType
-        let s = data.dataTextString
+//        guard let a = data as? PostData else {
+//            return
+//        }
+        guard let a = data as? VideoData else {
+            return
+        }
+        
+//        let l = data.dataType
+        let l = a.dataCode
         
         if(l == "a") {
-            asyncConfigure(data: data)
+            asyncConfigure(data: "")
             
-            aaText.text = "What a wonderful day in Tokyo"
-            aUserNameText.text = "JennyBaby"
+//            aaText.text = "What a wonderful day in Tokyo"
+            aaText.text = a.dataTextString
+//            aUserNameText.text = "JennyBaby"
+            
+//            let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+            let imageUrl = URL(string: a.coverPhotoString)
+            self.gifImage.sd_setImage(with: imageUrl)
             
             aCountText.text = "3.9m"
             bMiniBtn.image = UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate) //icon_round_play
         }
         else if(l == "na") {
-            
+        
         }
         else if(l == "us") {
-            
+     
         }
-//        else if(l == "b") {
-//            aaText.text = s
-//            aUserNameText.text = "Michael Kins"
-//        } else if(l == "c") {
-//            aaText.text = ".....WTF...."
-//            aUserNameText.text = "YikCai"
-//        } else if(l == "d") {
-//            aaText.text = s
-//            aUserNameText.text = "THXY"
-//        }
-        
-//        bCountText.text = "2hr"
     }
-    func asyncConfigure(data: PostData) {
+//    func asyncConfigure(data: PostData) {
+    func asyncConfigure(data: String) {
         let id = "u"
         DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
             switch result {
@@ -293,11 +295,24 @@ class GridVideo2xViewCell: UICollectionViewCell {
                         return
                     }
 
-                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-                    self.gifImage.sd_setImage(with: imageUrl)
+                    if(!l.isEmpty) {
+                        let l_0 = l[0]
+                        let uData = UserData()
+                        uData.setData(rData: l_0)
+                        let l_ = uData.dataCode
+                        
+                        self.aUserNameText.text = uData.dataTextString
+                        
+                        let imageUrl2 = URL(string: uData.coverPhotoString)
+                        self.aUserPhoto.sd_setImage(with: imageUrl2)
+                    }
                     
-                    let imageUrl2 = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
-                    self.aUserPhoto.sd_setImage(with: imageUrl2)
+//                    self.aUserNameText.text = "JennyBaby"
+//                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//                    self.gifImage.sd_setImage(with: imageUrl)
+//                    
+//                    let imageUrl2 = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+//                    self.aUserPhoto.sd_setImage(with: imageUrl2)
                 }
 
                 case .failure(let error):
@@ -307,8 +322,10 @@ class GridVideo2xViewCell: UICollectionViewCell {
                         return
                     }
                     
-                    let imageUrl = URL(string: "")
-                    self.gifImage.sd_setImage(with: imageUrl)
+//                    let imageUrl = URL(string: "")
+//                    self.gifImage.sd_setImage(with: imageUrl)
+                    
+                    self.aUserNameText.text = "-"
                     
                     let imageUrl2 = URL(string: "")
                     self.aUserPhoto.sd_setImage(with: imageUrl2)

@@ -616,9 +616,9 @@ class UserScrollablePanelView: ScrollablePanelView{
 //        bSpinner.startAnimating()
 
         //test > tabs for navigating posts and videos
-        vDataList.append("p") //post
-        vDataList.append("s") //shots/photos
-        vDataList.append("v") //videos
+        vDataList.append(DataTypes.POST) //post
+        vDataList.append(DataTypes.SHOT) //shots/photos
+        vDataList.append(DataTypes.LOOP) //videos
 //        vDataList.append("p") //post
 //        vDataList.append("v") //videos
 //        vDataList.append("p") //post
@@ -920,13 +920,13 @@ class UserScrollablePanelView: ScrollablePanelView{
             stack.setTabTypeSmall(isSmall: true)
             stack.delegate = self
             
-            if(d == "v") {
+            if(d == DataTypes.LOOP) {
                 stack.setText(code: d, d: "Loops")
-            } else if(d == "p") {
+            } else if(d == DataTypes.POST) {
                 stack.setText(code: d, d: "Posts")
-            }  else if(d == "s") {
+            } else if(d == DataTypes.SHOT) {
                 stack.setText(code: d, d: "Shots")
-            } else if(d == "l") {
+            } else if(d == DataTypes.LOCATION) {
 //                stack.setText(d: "Locations")
             } else if(d == "i") {
 //                stack.setText(d: "Items")
@@ -940,11 +940,11 @@ class UserScrollablePanelView: ScrollablePanelView{
         for v in vDataList {
             
             let stack: ScrollDataFeedCell
-            if(v == "p") {
+            if(v == DataTypes.POST) {
                 stack = ScrollFeedHPostListCell()
-            } else if(v == "v") {
+            } else if(v == DataTypes.LOOP) {
                 stack = ScrollFeedGridVideo3xViewCell()
-            } else if(v == "s") {
+            } else if(v == DataTypes.SHOT) {
                 stack = ScrollFeedGridPhoto3xViewCell()
             } else {
                 return
@@ -964,6 +964,9 @@ class UserScrollablePanelView: ScrollablePanelView{
             stack.initialize()
             stack.aDelegate = self
             stack.setShowVerticalScroll(isShowVertical: true)
+            
+            //test > set code
+            stack.setCode(code: v)
         }
 
         let tabCount = vDataList.count
@@ -1464,16 +1467,22 @@ class UserScrollablePanelView: ScrollablePanelView{
     }
     
     //test > populate UI when data fetched
-    func configureUI(data: String) {
-        if(data == "a") {
-            self.aNameText.text = "Michael Kins"
-            self.aNameTextB.text = "Michael Kins"
-            self.aNameTextC.text = "Michael Kins"
+//    func configureUI(data: String) {
+    func configureUI(data: UserData) {
+//        if(data == "a") {
+        if(data.dataCode == "a") {
+//            self.aNameText.text = "Michael Kins"
+            self.aNameText.text = data.dataTextString
+//            self.aNameTextB.text = "Michael Kins"
+            self.aNameTextB.text = data.dataTextString
+//            self.aNameTextC.text = "Michael Kins"
+            self.aNameTextC.text = data.dataTextString
             
             self.aUsernameAText.text = "@mic1809"
             self.aUsernameText.text = "@mic1809"
             
-            self.aBioText.text = "I am just a normal girl"
+//            self.aBioText.text = "I am just a normal girl"
+            self.aBioText.text = data.bioTextString
             
             self.aFollowerCountAText.text = "1.5m"
             self.aFollowerCountText.text = "1.5m"
@@ -1485,7 +1494,8 @@ class UserScrollablePanelView: ScrollablePanelView{
             self.aMoreBtn.isHidden = false
             self.aMoreCBtn.isHidden = false
             
-            let stickyImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//            let stickyImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+            let stickyImageUrl = URL(string: data.coverPhotoString)
             aStickyPhoto.sd_setImage(with: stickyImageUrl)
             aPhoto.sd_setImage(with: stickyImageUrl)
             aPhotoB.sd_setImage(with: stickyImageUrl)
@@ -1614,7 +1624,6 @@ class UserScrollablePanelView: ScrollablePanelView{
         
         //test > new fetch method for testing error handling
         DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
-//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
             
             switch result {
                 case .success(let l):
@@ -1631,7 +1640,12 @@ class UserScrollablePanelView: ScrollablePanelView{
                     self.bSpinner.stopAnimating()
                     
                     if(!l.isEmpty) {
-                        let l_ = l[0]
+//                        let l_ = l[0]
+                        let l_0 = l[0]
+                        let uData = UserData()
+                        uData.setData(rData: l_0)
+                        let l_ = l_0.dataCode
+                        
                         if(l_ == "a") {
                             //user account exists
                             self.isFetchFeedAllowed = true
@@ -1646,19 +1660,24 @@ class UserScrollablePanelView: ScrollablePanelView{
                             //test > lay out highlight section
 //                            self.aHLightDataArray.append("j") //job //*
                             
-                            self.configureUI(data: "a")
+//                            self.configureUI(data: "a")
+                            self.configureUI(data: uData)
                         }
-                        else if(l_ == "b"){
+//                        else if(l_ == "b"){
+                        else if(l_ == "us"){
                             self.aHLightBoxArray.append("us") //suspended
                             self.aHLightDataArray.append("us") //job //*
                             //user account suspended
-                            self.configureUI(data: "b")
+//                            self.configureUI(data: "b")
+//                            self.configureUI(data: "us")
+                            self.deconfigureUI()
                         }
                         else {
                             //user account deleted
                             self.aHLightBoxArray.append("na") //user not found highlight box
                             self.aHLightDataArray.append("na")
-                            self.configureUI(data: "na")//na - user data not available
+//                            self.configureUI(data: "na")//na - user data not available
+                            self.deconfigureUI()
                         }
                     }
                     
@@ -1678,7 +1697,11 @@ class UserScrollablePanelView: ScrollablePanelView{
                     if(!self.feedList.isEmpty) {
                         let b = self.feedList[self.currentIndex]
                         if(self.isFetchFeedAllowed) {
-                            self.asyncFetchFeed(cell: b, id: "post_feed")
+//                            self.asyncFetchFeed(cell: b, id: "post_feed")
+                            
+                            //test 2 > new method
+                            let feedCode = b.feedCode
+                            self.asyncFetchFeed(cell: b, id: feedCode)
                         }
                     }
                 }
@@ -1695,17 +1718,20 @@ class UserScrollablePanelView: ScrollablePanelView{
                     if let a = error as? FetchDataError{
                         
                         if(a == .dataNotFound) {
-                            self.configureUI(data: "na")//na - user data not available
+//                            self.configureUI(data: "na")//na - user data not available
+                            self.deconfigureUI()
                             
                             self.aHLightBoxArray.append("na") //user not found highlight box
                             self.aHLightDataArray.append("na")
                         } else if(a == .invalidResponse) {
-                            self.configureUI(data: "e")//na - user data not available
+//                            self.configureUI(data: "e")//na - user data not available
+                            self.deconfigureUI()
                             
                             self.aHLightBoxArray.append("e") //user not found highlight box
                             self.aHLightDataArray.append("e")
                         } else if(a == .networkError) {
-                            self.configureUI(data: "e")//na - user data not available
+//                            self.configureUI(data: "e")//na - user data not available
+                            self.deconfigureUI()
                             
                             self.aHLightBoxArray.append("e") //user not found highlight box
                             self.aHLightDataArray.append("e")
@@ -1737,7 +1763,11 @@ class UserScrollablePanelView: ScrollablePanelView{
             feed.configureFooterUI(data: "")
             
             feed.dataPaginateStatus = ""
-            asyncFetchFeed(cell: feed, id: "post")
+//            asyncFetchFeed(cell: feed, id: "post")
+            
+            //test 2 > new method
+            let feedCode = feed.feedCode
+            self.asyncFetchFeed(cell: feed, id: feedCode)
         }
     }
     //**test > remove elements from dataset n uicollectionview
@@ -1777,8 +1807,7 @@ class UserScrollablePanelView: ScrollablePanelView{
 
         let id_ = "post"
         let isPaginate = false
-        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
-//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+        DataFetchManager.shared.fetchFeedData(id: id, isPaginate: isPaginate) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -1795,11 +1824,28 @@ class UserScrollablePanelView: ScrollablePanelView{
 
                     //test 2 > new append method
                     for i in l {
-                        let postData = PostData()
-                        postData.setDataType(data: i)
-                        postData.setData(data: i)
-                        postData.setTextString(data: i)
-                        feed.vDataList.append(postData)
+//                        let postData = PostData()
+//                        postData.setDataType(data: i)
+//                        postData.setData(data: i)
+//                        postData.setTextString(data: i)
+//                        feed.vDataList.append(postData)
+                        
+                        //test 2 > new method
+                        if let post = i as? PostDataset {
+                            let postData = PostData()
+                            postData.setData(rData: post)
+                            feed.vDataList.append(postData)
+                        }
+                        else if let photo = i as? PhotoDataset {
+                            let photoData = PhotoData()
+                            photoData.setData(rData: photo)
+                            feed.vDataList.append(photoData)
+                        }
+                        else if let video = i as? VideoDataset {
+                            let videoData = VideoData()
+                            videoData.setData(rData: video)
+                            feed.vDataList.append(videoData)
+                        }
                     }
 
                     feed.vCV?.reloadData()
@@ -1852,8 +1898,7 @@ class UserScrollablePanelView: ScrollablePanelView{
 
         let id_ = "post"
         let isPaginate = true
-        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
-//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+        DataFetchManager.shared.fetchFeedData(id: id, isPaginate: isPaginate) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -1876,17 +1921,46 @@ class UserScrollablePanelView: ScrollablePanelView{
                     var indexPaths = [IndexPath]()
                     var j = 1
                     for i in l {
-                        let postData = PostData()
-                        postData.setDataType(data: i)
-                        postData.setData(data: i)
-                        postData.setTextString(data: i)
-                        feed.vDataList.append(postData)
+//                        let postData = PostData()
+//                        postData.setDataType(data: i)
+//                        postData.setData(data: i)
+//                        postData.setTextString(data: i)
+//                        feed.vDataList.append(postData)
+//
+//                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+//                        indexPaths.append(idx)
+//                        j += 1
 
-                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
-                        indexPaths.append(idx)
-                        j += 1
-
-                        print("ppv asyncpaginate reload \(idx)")
+//                        print("ppv asyncpaginate reload \(idx)")
+                        
+                        //test 2 > new method
+                        if let post = i as? PostDataset {
+                            let postData = PostData()
+                            postData.setData(rData: post)
+                            feed.vDataList.append(postData)
+                            
+                            let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+                            indexPaths.append(idx)
+                            j += 1
+                        }
+                        else if let photo = i as? PhotoDataset {
+                            let photoData = PhotoData()
+                            photoData.setData(rData: photo)
+                            feed.vDataList.append(photoData)
+                            
+                            let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+                            indexPaths.append(idx)
+                            j += 1
+                        }
+                        else if let video = i as? VideoDataset {
+                            let videoData = VideoData()
+                            videoData.setData(rData: video)
+                            feed.vDataList.append(videoData)
+                            
+                            let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+                            indexPaths.append(idx)
+                            j += 1
+                        }
                     }
                     feed.vCV?.insertItems(at: indexPaths)
                     //*
@@ -2421,7 +2495,11 @@ extension UserScrollablePanelView: UIScrollViewDelegate {
                 let b = self.feedList[rIndex]
                 if(b.dataPaginateStatus == "") {
                     if(self.isFetchFeedAllowed) {
-                        self.asyncFetchFeed(cell: b, id: "post_feed")
+//                        self.asyncFetchFeed(cell: b, id: "post_feed")
+                        
+                        //test 2 > new method
+                        let feedCode = b.feedCode
+                        self.asyncFetchFeed(cell: b, id: feedCode)
                     }
                 }
             }
@@ -2744,7 +2822,10 @@ extension UserScrollablePanelView: ScrollFeedCellDelegate {
             return
         }
         if(self.isFetchFeedAllowed) {
-            asyncPaginateFetchFeed(cell: b, id: "post_feed_end")
+//            asyncPaginateFetchFeed(cell: b, id: "post_feed_end")
+            
+            let feedCode = b.feedCode
+            self.asyncPaginateFetchFeed(cell: b, id: feedCode)
         }
     }
     

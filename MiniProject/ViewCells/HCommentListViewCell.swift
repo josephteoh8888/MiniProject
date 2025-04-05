@@ -175,7 +175,7 @@ class HCommentListViewCell: UICollectionViewCell {
         
         //test > verified badge
 //        let vBtn = UIImageView(image: UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate))
-        vBtn.tintColor = .yellow
+        vBtn.tintColor = .white
 //        contentView.addSubview(vBtn)
         aCon.addSubview(vBtn)
         vBtn.translatesAutoresizingMaskIntoConstraints = false
@@ -499,7 +499,7 @@ class HCommentListViewCell: UICollectionViewCell {
     
     //*test > async fetch images/names/videos
     func asyncConfigure(data: String) {
-        let id = "u_"
+        let id = "u" //u_
         DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -512,11 +512,27 @@ class HCommentListViewCell: UICollectionViewCell {
                         return
                     }
 
-                    self.aGridNameText.text = "Michael Kins"
-                    self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
+                    if(!l.isEmpty) {
+                        let l_0 = l[0]
+                        let uData = UserData()
+                        uData.setData(rData: l_0)
+                        let l_ = uData.dataCode
+                        
+                        self.aGridNameText.text = uData.dataTextString
+                        
+                        let eImageUrl = URL(string: uData.coverPhotoString)
+                        self.aUserPhoto.sd_setImage(with: eImageUrl)
+                        
+                        if(uData.isAccountVerified) {
+                            self.vBtn.image = UIImage(named:"icon_round_verified_b")?.withRenderingMode(.alwaysTemplate)
+                        }
+                    }
                     
-                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-                    self.aUserPhoto.sd_setImage(with: imageUrl)
+//                    self.aGridNameText.text = "Michael Kins"
+//                    self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
+//                    
+//                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//                    self.aUserPhoto.sd_setImage(with: imageUrl)
                 }
 
                 case .failure(let error):
@@ -540,12 +556,12 @@ class HCommentListViewCell: UICollectionViewCell {
     
     func configure(data: BaseData) {
 
-        asyncConfigure(data: "")
+//        asyncConfigure(data: "")
         
         aUserNameText.text = "-"
         
         //test > dynamic create ui for various data types in sequence
-        let d = data.dataType
+        let d = data.dataCode
         
         let photoSize = 28.0
         let photoLhsMargin = 20.0
@@ -555,12 +571,15 @@ class HCommentListViewCell: UICollectionViewCell {
         if(d == "a") {
             aUserNameText.text = "4hr . 324k views"
             
+            asyncConfigure(data: "")
+            
             let dataL = data.dataArray
             let dataCL = data.contentDataArray
 
             for cl in dataCL {
-                let l = cl.dataType
-
+                let l = cl.dataCode
+                let da = cl.dataArray
+                
                 if(l == "text") {
                     let aaText = UILabel()
                     aaText.textAlignment = .left
@@ -626,7 +645,8 @@ class HCommentListViewCell: UICollectionViewCell {
                     contentCell.layer.cornerRadius = 10 //5
                     aTestArray.append(contentCell)
                     contentCell.redrawUI()
-                    contentCell.configure(data: "a")
+//                    contentCell.configure(data: "a")
+                    contentCell.configure(data: da)
     //                contentCell.setState(p: data.p_s)
                     contentCell.setState(p: cl.p_s)
                     contentCell.aDelegate = self
@@ -678,9 +698,12 @@ class HCommentListViewCell: UICollectionViewCell {
                     aTestArray.append(contentCell)
                     contentCell.setDescHeight(lHeight: descHeight, txt: data.dataTextString)
                     contentCell.redrawUI()
-                    contentCell.configure(data: "a")
-    //                contentCell.setState(p: data.p_s)
-                    contentCell.setState(p: cl.p_s)
+                    contentCell.configure(data: "a") //ori
+//                    contentCell.configure(data: "a", state: cl.p_s)
+//                    var da = [String]() //temp solution
+//                    da.append("https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+//                    contentCell.configure(data: da)
+                    contentCell.setState(p: cl.p_s) //ori
                     contentCell.aDelegate = self
                 }
                 else if(l == "video_l") {//loop videos

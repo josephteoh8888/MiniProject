@@ -180,21 +180,37 @@ class MultiPhotosMeCell: MeCell {
     }
     
     func asyncConfigure(data: String) {
-        let id = "u"
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+//        let id = "u"
+        let id_ = "post"
+        let isPaginate = false
+        DataFetchManager.shared.fetchPhotoFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+//        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
                 //update UI on main thread
                 DispatchQueue.main.async {
-                    print("pdp api success \(id), \(l)")
+//                    print("pdp api success \(id), \(l)")
+                    print("pdp api success \(id_), \(l)")
                     
                     guard let self = self else {
                         return
                     }
-
+                    
                     self.bSpinner.stopAnimating()
-                    self.configure(data: "a")
+//                    self.configure(data: "a")
+                    
+                    //test 2 > new append method
+                    var tempDataList = [PhotoData]()
+                    if(!l.isEmpty) {
+                        for i in l {
+                            let vData = PhotoData()
+                            vData.setData(rData: i)
+                            tempDataList.append(vData)
+                        }
+                    }
+                    self.vDataList.insert(contentsOf: tempDataList, at: 0)
+                    self.configure(data: self.vDataList)
                 }
 
                 case .failure(let error):
@@ -216,18 +232,20 @@ class MultiPhotosMeCell: MeCell {
         }
     }
     
-    var vDataList = [String]()
+//    var vDataList = [String]()
+    var vDataList = [PhotoData]()
     var aHLightViewArray = [UIView]()
-    func configure(data: String) {
+//    func configure(data: String) {
+    func configure(data: [PhotoData]) {
         let scrollViewWidth = 70.0
         let scrollViewHeight = 70.0
         
-        if(data == "a") {
-            vDataList.append("p")
-            vDataList.append("p")
-            vDataList.append("p")
+//        if(data == "a") {
+//            vDataList.append("p")
+//            vDataList.append("p")
+//            vDataList.append("p")
 
-            for _ in vDataList {
+            for a in vDataList {
             
                 let hd = SDAnimatedImageView()
                 aScroll1.addSubview(hd)
@@ -245,16 +263,26 @@ class MultiPhotosMeCell: MeCell {
                 hd.contentMode = .scaleAspectFill
                 hd.layer.masksToBounds = true
                 hd.layer.cornerRadius = 3 //5
+                hd.backgroundColor = .ddmDarkColor //test
                 
-                let imageUrl2 = URL(string: "https://i3.ytimg.com/vi/2mcGhpbWlyg/maxresdefault.jpg")
-                hd.sd_setImage(with: imageUrl2) //temp disable picture
+                let l = a.dataCode
+                if(l == "a") {
+                    let imageUrl2 = URL(string: a.coverPhotoString)
+                    hd.sd_setImage(with: imageUrl2) //temp disable picture
+                }
+                else if(l == "na") {
+                
+                }
+                else if(l == "us") {
+             
+                }
             }
             
             let dataCount = vDataList.count
             
             let totalWidth = CGFloat(dataCount) * scrollViewWidth
             aScroll1.contentSize = CGSize(width: totalWidth, height: scrollViewHeight) //800, 280
-        }
+//        }
     }
     
     @objc func onRectClicked(gesture: UITapGestureRecognizer) {
@@ -419,21 +447,36 @@ class MultiLoopsMeCell: MeCell {
     }
     
     func asyncConfigure(data: String) {
-        let id = "u"
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+//        let id = "u"
+        let id_ = "video"
+        let isPaginate = false
+        DataFetchManager.shared.fetchVideoFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+//        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
                 //update UI on main thread
                 DispatchQueue.main.async {
-                    print("pdp api success \(id), \(l)")
+//                    print("pdp api success \(id), \(l)")
                     
                     guard let self = self else {
                         return
                     }
 
                     self.bSpinner.stopAnimating()
-                    self.configure(data: "a")
+//                    self.configure(data: "a")
+                    
+                    //test 2 > new append method
+                    var tempDataList = [VideoData]()
+                    if(!l.isEmpty) {
+                        for i in l {
+                            let vData = VideoData()
+                            vData.setData(rData: i)
+                            tempDataList.append(vData)
+                        }
+                    }
+                    self.vDataList.insert(contentsOf: tempDataList, at: 0)
+                    self.configure(data: self.vDataList)
                 }
 
                 case .failure(let error):
@@ -454,18 +497,20 @@ class MultiLoopsMeCell: MeCell {
         }
     }
     
-    var vDataList = [String]()
+//    var vDataList = [String]()
+    var vDataList = [VideoData]()
     var aHLightViewArray = [UIView]()
-    func configure(data: String) {
+//    func configure(data: String) {
+    func configure(data: [VideoData]) {
         let scrollViewWidth = 70.0
         let scrollViewHeight = 90.0
         
-        if(data == "a") {
-            vDataList.append("p")
-            vDataList.append("p")
-            vDataList.append("p")
+//        if(data == "a") {
+//            vDataList.append("p")
+//            vDataList.append("p")
+//            vDataList.append("p")
 
-            for _ in vDataList {
+            for a in vDataList {
             
                 let hd = SDAnimatedImageView()
                 aScroll1.addSubview(hd)
@@ -483,16 +528,26 @@ class MultiLoopsMeCell: MeCell {
                 hd.contentMode = .scaleAspectFill
                 hd.layer.masksToBounds = true
                 hd.layer.cornerRadius = 3 //5
+                hd.backgroundColor = .ddmDarkColor //test
                 
-                let imageUrl2 = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-                hd.sd_setImage(with: imageUrl2) //temp disable picture
+                let l = a.dataCode
+                if(l == "a") {
+                    let imageUrl2 = URL(string: a.coverPhotoString)
+                    hd.sd_setImage(with: imageUrl2) //temp disable picture
+                }
+                else if(l == "na") {
+                
+                }
+                else if(l == "us") {
+             
+                }
             }
             
             let dataCount = vDataList.count
             
             let totalWidth = CGFloat(dataCount) * scrollViewWidth
             aScroll1.contentSize = CGSize(width: totalWidth, height: scrollViewHeight) //800, 280
-        }
+//        }
     }
     
     @objc func onRectClicked(gesture: UITapGestureRecognizer) {
@@ -642,7 +697,7 @@ class MultiPostsMeCell: MeCell {
 //        aHItem1ATitle.leadingAnchor.constraint(equalTo: aGrid.trailingAnchor, constant: 10).isActive = true
 //        aHItem1ATitle.trailingAnchor.constraint(equalTo: aGrid.leadingAnchor, constant: -20).isActive = true
         aHItem1ATitle.trailingAnchor.constraint(equalTo: aScroll1.trailingAnchor, constant: -40).isActive = true
-        aHItem1ATitle.text = ""
+        aHItem1ATitle.text = "-"
         aHItem1ATitle.numberOfLines = 3
         
         //test > error handling
@@ -699,15 +754,19 @@ class MultiPostsMeCell: MeCell {
 
         isInitialized = true
     }
+    
     func asyncConfigure(data: String) {
-        let id = "u"
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+//        let id = "u"
+        let id_ = "post"
+        let isPaginate = false
+        DataFetchManager.shared.fetchPostFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+//        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
                 //update UI on main thread
                 DispatchQueue.main.async {
-                    print("pdp api success \(id), \(l)")
+//                    print("pdp api success \(id), \(l)")
                     
                     guard let self = self else {
                         return
@@ -715,11 +774,19 @@ class MultiPostsMeCell: MeCell {
 
                     self.bSpinner.stopAnimating()
                     
-                    self.aHItem1ATitle.text = "往年的这个时候，iPhone 虽然也是位列销量榜榜首，但那都是上一代的旧机型呀...\n只能说这次 11.11 各家给的优惠都太给力了."
+//                    self.aHItem1ATitle.text = "往年的这个时候，iPhone 虽然也是位列销量榜榜首，但那都是上一代的旧机型呀...\n只能说这次 11.11 各家给的优惠都太给力了."
                     
-//                    let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
-//                    self.gifImage.sd_setImage(with: imageUrl) //temp disable picture
-//                    self.aGrid.isHidden = true
+                    //test 2 > new append method
+                    var tempDataList = [PostData]()
+                    if(!l.isEmpty) {
+                        for i in l {
+                            let vData = PostData()
+                            vData.setData(rData: i)
+                            tempDataList.append(vData)
+                        }
+                    }
+                    self.vDataList.insert(contentsOf: tempDataList, at: 0)
+                    self.configure(data: self.vDataList)
                 }
 
                 case .failure(let error):
@@ -736,6 +803,22 @@ class MultiPostsMeCell: MeCell {
                     self.errorRefreshBtn.isHidden = false
                 }
                 break
+            }
+        }
+    }
+    var vDataList = [PostData]()
+    func configure(data: [PostData]) {
+        if(!data.isEmpty) {
+            let a = data[0]
+            let l = a.dataCode
+            if(l == "a") {
+                self.aHItem1ATitle.text = a.dataTextString
+            }
+            else if(l == "na") {
+            
+            }
+            else if(l == "us") {
+         
             }
         }
     }
@@ -1535,6 +1618,7 @@ class BaseMeCell: MeCell {
         rGridBG.layer.cornerRadius = 5
 //        rGridBG.sd_setImage(with: imageUrl)
         rGridBG.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true
+        rGridBG.backgroundColor = .ddmDarkColor
 
 //        let aHSubDesc = UILabel()
         aHSubDesc.textAlignment = .left
@@ -1547,7 +1631,7 @@ class BaseMeCell: MeCell {
         aHSubDesc.topAnchor.constraint(equalTo: rGridBG.topAnchor, constant: 0).isActive = true //10
 //        aHSubDesc.centerYAnchor.constraint(equalTo: rGridBG.centerYAnchor, constant: 0).isActive = true //20
         aHSubDesc.leadingAnchor.constraint(equalTo: rGridBG.trailingAnchor, constant: 10).isActive = true
-        aHSubDesc.text = ""
+        aHSubDesc.text = "-"
         
 //        let aHSubDesc2 = UILabel()
         aHSubDesc2.textAlignment = .left
@@ -1561,7 +1645,7 @@ class BaseMeCell: MeCell {
         aHSubDesc2.leadingAnchor.constraint(equalTo: rGridBG.trailingAnchor, constant: 10).isActive = true
 //                aHSubDesc2.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true
 //        aHSubDesc2.text = "87k saves"
-        aHSubDesc2.text = ""
+        aHSubDesc2.text = "-"
 //        aHSubDesc2.layer.opacity = 0.4
         
         //test > error handling
@@ -1620,8 +1704,10 @@ class BaseMeCell: MeCell {
     }
     
     func asyncConfigure(data: String) {
-        let id = "u_"
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+//        let id = "u_"
+        let id = "p1" //p_
+//        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+        DataFetchManager.shared.fetchPlaceData2(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -1635,13 +1721,23 @@ class BaseMeCell: MeCell {
 
                     self.bSpinner.stopAnimating()
                     
-                    self.aHSubDesc.text = "Petronas Twin Tower"
-                    self.aHSubDesc2.text = "Malaysia"
+//                    self.aHSubDesc.text = "Petronas Twin Tower"
+//                    self.aHSubDesc2.text = "Malaysia"
+//                    
+//                    let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+//                    self.rGridBG.sd_setImage(with: imageUrl)
                     
-                    let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
-                    self.rGridBG.sd_setImage(with: imageUrl)
+                    let pData = PlaceData()
+                    pData.setData(rData: l)
+                    let l_ = pData.dataCode
                     
-//                    self.rArrowBtn.isHidden = false
+                    if(l_ == "a") {
+                        self.aHSubDesc.text = pData.dataTextString
+                        self.aHSubDesc2.text = "Malaysia"
+                        
+                        let imageUrl = URL(string: pData.coverPhotoString)
+                        self.rGridBG.sd_setImage(with: imageUrl)
+                    }
                 }
 
                 case .failure(let error):
@@ -1877,14 +1973,17 @@ class LocationMeCell: MeCell {
     }
     
     func asyncConfigure(data: String) {
-        let id = "u"
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+//        let id = "u"
+        let id_ = "post"
+        let isPaginate = false
+        DataFetchManager.shared.fetchPlaceFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+//        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
                 //update UI on main thread
                 DispatchQueue.main.async {
-                    print("pdp api success \(id), \(l)")
+//                    print("pdp api success \(id), \(l)")
                     
                     guard let self = self else {
                         return
@@ -1892,13 +1991,23 @@ class LocationMeCell: MeCell {
 
                     self.bSpinner.stopAnimating()
                     
-                    self.aHSubDesc.text = "DinoDreamTgX"
-                    self.aHSubDesc2.text = "United States"
-                    
-                    let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
-                    self.rGridBG.sd_setImage(with: imageUrl)
-                    
-//                    self.rArrowBtn.isHidden = false
+//                    self.aHSubDesc.text = "DinoDreamTgX"
+//                    self.aHSubDesc2.text = "United States"
+//                    
+//                    let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+//                    self.rGridBG.sd_setImage(with: imageUrl)
+
+                    //test 2 > new append method
+                    var tempDataList = [PlaceData]()
+                    if(!l.isEmpty) {
+                        for i in l {
+                            let vData = PlaceData()
+                            vData.setData(rData: i)
+                            tempDataList.append(vData)
+                        }
+                    }
+                    self.vDataList.insert(contentsOf: tempDataList, at: 0)
+                    self.configure(data: self.vDataList)
                 }
 
                 case .failure(let error):
@@ -1924,6 +2033,27 @@ class LocationMeCell: MeCell {
                     self.errorRefreshBtn.isHidden = false
                 }
                 break
+            }
+        }
+    }
+    
+    var vDataList = [PlaceData]()
+    func configure(data: [PlaceData]) {
+        if(!data.isEmpty) {
+            let a = data[0]
+            let l = a.dataCode
+            if(l == "a") {
+                self.aHSubDesc.text = a.dataTextString
+                self.aHSubDesc2.text = "United States"
+                
+                let imageUrl = URL(string: a.coverPhotoString)
+                self.rGridBG.sd_setImage(with: imageUrl)
+            }
+            else if(l == "na") {
+            
+            }
+            else if(l == "us") {
+         
             }
         }
     }
@@ -2156,11 +2286,25 @@ class ProfileMeCell: MeCell {
 
                     self.bSpinner.stopAnimating()
                     
-                    self.aNameText.text = "Michelle Lee"
-                    self.aFollowAText.text = "@mic809"
+                    if(!l.isEmpty) {
+                        let l_0 = l[0]
+                        let pData = UserData()
+                        pData.setData(rData: l_0)
+                        let l_ = pData.dataCode
+                        if(l_ == "a") {
+                            self.aNameText.text  = pData.dataTextString
+                            self.aFollowAText.text = "@mic809"
+                            
+                            let imageUrl = URL(string: pData.coverPhotoString)
+                            self.aPhoto.sd_setImage(with: imageUrl)
+                        }
+                    }
                     
-                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-                    self.aPhoto.sd_setImage(with: imageUrl)
+//                    self.aNameText.text = "Michelle Lee"
+//                    self.aFollowAText.text = "@mic809"
+//                    
+//                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//                    self.aPhoto.sd_setImage(with: imageUrl)
                 }
 
                 case .failure(let error):

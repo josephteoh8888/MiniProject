@@ -119,15 +119,21 @@ class GridPhotoViewCell: UICollectionViewCell {
         cMiniBtn.image = nil
     }
     
-    func configure(data: PostData) {
+//    func configure(data: PostData) {
+    func configure(data: BaseData) {
         
-        let l = data.dataType
-//        let s = data.dataTextString
+        guard let a = data as? PhotoData else {
+            return
+        }
+        
+//        let l = data.dataType
+        let l = a.dataCode
         
         if(l == "a") {
-            asyncConfigure(data: data)
+//            asyncConfigure(data: "")
             
-//            cMiniBtn.image = UIImage(named:"icon_round_folder_close")?.withRenderingMode(.alwaysTemplate)
+            let imageUrl = URL(string: a.coverPhotoString)
+            self.gifImage.sd_setImage(with: imageUrl)
             
             aCountText.text = "54"
             bMiniBtn.image = UIImage(named:"icon_love")?.withRenderingMode(.alwaysTemplate)
@@ -138,24 +144,9 @@ class GridPhotoViewCell: UICollectionViewCell {
         else if(l == "us") {
             
         }
-//        else if(l == "b") {
-////            cMiniBtn.image = UIImage(named:"icon_round_folder_close")?.withRenderingMode(.alwaysTemplate)
-//            
-//            aCountText.text = "398"
-//            bMiniBtn.image = UIImage(named:"icon_love")?.withRenderingMode(.alwaysTemplate)
-//        } else if(l == "c") {
-////            cMiniBtn.image = nil
-//            
-//            aCountText.text = "101k"
-//            bMiniBtn.image = UIImage(named:"icon_love")?.withRenderingMode(.alwaysTemplate)
-//        } else if(l == "d") {
-////            cMiniBtn.image = nil
-//            
-//            aCountText.text = "5.4k"
-//            bMiniBtn.image = UIImage(named:"icon_love")?.withRenderingMode(.alwaysTemplate)
-//        }
     }
-    func asyncConfigure(data: PostData) {
+//    func asyncConfigure(data: PostData) {
+    func asyncConfigure(data: String) {
         let id = "u"
         DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
             switch result {
@@ -169,8 +160,8 @@ class GridPhotoViewCell: UICollectionViewCell {
                         return
                     }
 
-                    let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
-                    self.gifImage.sd_setImage(with: imageUrl)
+//                    let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+//                    self.gifImage.sd_setImage(with: imageUrl)
                 }
 
                 case .failure(let error):
@@ -180,8 +171,8 @@ class GridPhotoViewCell: UICollectionViewCell {
                         return
                     }
                     
-                    let imageUrl = URL(string: "")
-                    self.gifImage.sd_setImage(with: imageUrl)
+//                    let imageUrl = URL(string: "")
+//                    self.gifImage.sd_setImage(with: imageUrl)
                     
                 }
                 break

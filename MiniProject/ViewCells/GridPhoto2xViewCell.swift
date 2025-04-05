@@ -197,6 +197,7 @@ class GridPhoto2xViewCell: UICollectionViewCell {
         aUserNameText.translatesAutoresizingMaskIntoConstraints = false
         aUserNameText.centerYAnchor.constraint(equalTo: e2UserCover.centerYAnchor, constant: 0).isActive = true
         aUserNameText.leadingAnchor.constraint(equalTo: e2UserCover.trailingAnchor, constant: 5).isActive = true
+        aUserNameText.trailingAnchor.constraint(lessThanOrEqualTo: bMiniBtn.leadingAnchor, constant: -20).isActive = true
         
         //test > time created
         bCountText.textAlignment = .left
@@ -241,16 +242,28 @@ class GridPhoto2xViewCell: UICollectionViewCell {
         bCountText.text = ""
     }
     
-    func configure(data: PostData) {
+//    func configure(data: PostData) {
+    func configure(data: BaseData) {
         
-        let l = data.dataType
-        let s = data.dataTextString
+//        guard let a = data as? PostData else {
+//            return
+//        }
+        guard let a = data as? PhotoData else {
+            return
+        }
+        
+//        let l = data.dataType
+        let l = a.dataCode
         
         if(l == "a") {
-            asyncConfigure(data: data)
+            asyncConfigure(data: "")
             
-            aaText.text = "#Tokyo trip"
-            aUserNameText.text = "JennyBaby"
+//            aaText.text = "#Tokyo trip"
+            aaText.text = a.dataTextString
+            
+//            let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+            let imageUrl = URL(string: a.coverPhotoString)
+            self.gifImage.sd_setImage(with: imageUrl)
             
             aCountText.text = "52"
             bMiniBtn.image = UIImage(named:"icon_love")?.withRenderingMode(.alwaysTemplate) //icon_round_play
@@ -261,20 +274,9 @@ class GridPhoto2xViewCell: UICollectionViewCell {
         else if(l == "us") {
             
         }
-//        else if(l == "b") {
-//            aaText.text = s
-//            aUserNameText.text = "Michael Kins"
-//        } else if(l == "c") {
-//            aaText.text = "=.="
-//            aUserNameText.text = "YikCai"
-//        } else if(l == "d") {
-//            aaText.text = s
-//            aUserNameText.text = "THXY"
-//        }
-        
-//        bCountText.text = "2hr"
     }
-    func asyncConfigure(data: PostData) {
+//    func asyncConfigure(data: PostData) {
+    func asyncConfigure(data: String) {
         let id = "u"
         DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
             switch result {
@@ -287,12 +289,18 @@ class GridPhoto2xViewCell: UICollectionViewCell {
                     guard let self = self else {
                         return
                     }
-
-                    let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
-                    self.gifImage.sd_setImage(with: imageUrl)
                     
-                    let imageUrl2 = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-                    self.aUserPhoto.sd_setImage(with: imageUrl2)
+                    if(!l.isEmpty) {
+                        let l_0 = l[0]
+                        let uData = UserData()
+                        uData.setData(rData: l_0)
+                        let l_ = uData.dataCode
+                        
+                        self.aUserNameText.text = uData.dataTextString
+                        
+                        let imageUrl2 = URL(string: uData.coverPhotoString)
+                        self.aUserPhoto.sd_setImage(with: imageUrl2)
+                    }
                 }
 
                 case .failure(let error):
@@ -302,8 +310,10 @@ class GridPhoto2xViewCell: UICollectionViewCell {
                         return
                     }
                     
-                    let imageUrl = URL(string: "")
-                    self.gifImage.sd_setImage(with: imageUrl)
+//                    let imageUrl = URL(string: "")
+//                    self.gifImage.sd_setImage(with: imageUrl)
+                    
+                    self.aUserNameText.text = "-"
                     
                     let imageUrl2 = URL(string: "")
                     self.aUserPhoto.sd_setImage(with: imageUrl2)

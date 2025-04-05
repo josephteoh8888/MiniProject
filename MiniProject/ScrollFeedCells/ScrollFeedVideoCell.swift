@@ -111,7 +111,7 @@ class ScrollFeedVideoCell: UIView {
         }
         if(currentIndexPath.row > -1) {
             if(!vcDataList.isEmpty && currentIndexPath.row < vcDataList.count) {
-                let z = vcDataList[currentIndexPath.row].dataType
+                let z = vcDataList[currentIndexPath.row].dataCode
                 if(z == "a") {
                     b.playVideo()
                 }
@@ -130,7 +130,7 @@ class ScrollFeedVideoCell: UIView {
         }
         if(currentIndexPath.row > -1) {
             if(!vcDataList.isEmpty && currentIndexPath.row < vcDataList.count) {
-                let z = vcDataList[currentIndexPath.row].dataType
+                let z = vcDataList[currentIndexPath.row].dataCode
                 if(z == "a") {
                     b.resumeVideo()
                 }
@@ -149,7 +149,7 @@ class ScrollFeedVideoCell: UIView {
         }
         if(currentIndexPath.row > -1) {
             if(!vcDataList.isEmpty && currentIndexPath.row < vcDataList.count) {
-                let z = vcDataList[currentIndexPath.row].dataType
+                let z = vcDataList[currentIndexPath.row].dataCode
                 if(z == "a") {
                     b.stopVideo()
                 }
@@ -168,7 +168,7 @@ class ScrollFeedVideoCell: UIView {
         }
         if(currentIndexPath.row > -1) {
             if(!vcDataList.isEmpty && currentIndexPath.row < vcDataList.count) {
-                let z = vcDataList[currentIndexPath.row].dataType
+                let z = vcDataList[currentIndexPath.row].dataCode
                 if(z == "a") {
                     b.pauseVideo()
                 }
@@ -241,7 +241,7 @@ extension ScrollFeedVideoCell: UICollectionViewDelegateFlowLayout {
         //test 2
         if indexPath.row == vcDataList.count - 1 {
             if(dataFetchState == "end") { //means asyncFetchData has been performed once(initialized)
-                let y = vcDataList[indexPath.row].dataType
+                let y = vcDataList[indexPath.row].dataCode
                 if(y == "b") {
                     if(dataPaginateStatus == "") {
                         aDelegate?.sfvcAsyncPaginateFeed(cell: self)
@@ -260,7 +260,7 @@ extension ScrollFeedVideoCell: UICollectionViewDelegateFlowLayout {
         
         //test 2 > only play video if user not scrolling
         if(!isUserScrolling) {
-            let z = vcDataList[indexPath.row].dataType
+            let z = vcDataList[indexPath.row].dataCode
             if(z == "a") {
                 if let c = cell as? VCViewCell {
                     aDelegate?.sfvcAutoplayVideo(cell: self, vCCell: c)
@@ -355,7 +355,7 @@ extension ScrollFeedVideoCell: UICollectionViewDelegate {
         }
         
         if(!vcDataList.isEmpty) {
-            let z = vcDataList[visibleIndexPath.row].dataType
+            let z = vcDataList[visibleIndexPath.row].dataCode
             
             //test > only play video if data is "a"(valid data, not loading spinner) && scroll from previous viewcell to prevent restart of video if scroll slightly
             if(currentVc != previousVc && z == "a") {

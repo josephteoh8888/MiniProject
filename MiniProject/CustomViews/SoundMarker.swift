@@ -79,16 +79,17 @@ class SoundMarker: Marker {
         markerWidthLayoutConstraint?.isActive = true
 
 //        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-        let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
-        guard let imageUrl = imageUrl else {
-            return
-        }
+//        let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+//        guard let imageUrl = imageUrl else {
+//            return
+//        }
 
         gifImage.contentMode = .scaleAspectFill
         gifImage.layer.masksToBounds = true
         gifImage.layer.cornerRadius = (viewSize - 8)/2
-        gifImage.backgroundColor = .ddmDarkGreyColor
-        gifImage.sd_setImage(with: imageUrl)
+//        gifImage.backgroundColor = .ddmDarkGreyColor
+        gifImage.backgroundColor = .ddmDarkColor
+//        gifImage.sd_setImage(with: imageUrl)
         markerRing.addSubview(gifImage)
         gifImage.translatesAutoresizingMaskIntoConstraints = false
         gifImage.centerXAnchor.constraint(equalTo: markerRing.centerXAnchor).isActive = true
@@ -180,6 +181,58 @@ class SoundMarker: Marker {
         }
     }
 
+    override func configure(data: String) {
+//        if(data == "a") {
+//            let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+//            guard let imageUrl = imageUrl else {
+//                return
+//            }
+//            self.gifImage.sd_setImage(with: imageUrl)
+//        }
+        
+        asyncConfigure(data: "")
+    }
+    
+    //*test > async fetch images/names/videos
+    func asyncConfigure(data: String) {
+        let id = "u" //u_
+        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    print("pdp api success \(id), \(l)")
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+                    guard let imageUrl = imageUrl else {
+                        return
+                    }
+                    self.gifImage.sd_setImage(with: imageUrl)
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    let imageUrl = URL(string: "")
+                    guard let imageUrl = imageUrl else {
+                        return
+                    }
+                    self.gifImage.sd_setImage(with: imageUrl)
+                }
+                break
+            }
+        }
+    }
+    //*
+    
     @objc func onMarkerClicked(gesture: UITapGestureRecognizer) {
         print("onmarkerclicked: \(self.frame.size.height)")
         self.delegate?.didClickSoundMarker(marker: self, coord: self.coordinateLocation!)
@@ -304,36 +357,55 @@ class SoundMarker: Marker {
     override func changeSize(zoomLevel: CGFloat) {
         changeSize(zoomLevel: zoomLevel, duringInitialization: false)
     }
+    
+    //test > varying initial size instead of fixed size
+//    var minMarkerWidth: CGFloat = 44 //44
+    var minMarkerWidth: CGFloat = 0 //44
+    var maxMarkerWidth: CGFloat = 100
+    var minGifGap: CGFloat = 6.0
+    var maxGifGap: CGFloat = 14.0
+    var minOvalWidth: CGFloat = 26
+    var maxOvalWidth: CGFloat = 50
+    var minOvalHeight: CGFloat = 8
+    var maxOvalHeight: CGFloat = 16
+    var minDotGap: CGFloat = 6.0
+    var maxDotGap: CGFloat = 10.0
+    var minDotSize: CGFloat = 16.0
+    var maxDotSize: CGFloat = 26.0
     func changeSize(zoomLevel: CGFloat, duringInitialization: Bool) {
 
-        //test > using zoom level
-        var newSize = 44.0
-        var newGifGap = 6.0 //8.0
-        var newOvalWidthSize = 26.0
-        var newOvalHeightSize = 8.0
-        var newDotSize = 16.0
-        var newDotGap = 6.0
-        var newCornerRadiusGap = 5.0
+        //test > initialize random size if not already
+        if(minMarkerWidth == 0) {
+//            minMarkerWidth = CGFloat(generateRandomSize())
+            minMarkerWidth = 44
+        }
+        //test > varying marker size
+        var newSize = minMarkerWidth //default 40
+        var newGifGap = minGifGap //default 8
+        var newOvalWidthSize = minOvalWidth
+        var newOvalHeightSize = minOvalHeight
+        var newDotSize = minDotSize
+        var newDotGap = minDotGap
+//        var newCornerRadiusGap = 5.0
         if(zoomLevel >= 8) {
-            newSize = 44 + ((100 - 44)/(20 - 8) * (zoomLevel - 8))
-            newGifGap = 6 + ((14 - 6)/(20 - 8) * (zoomLevel - 8))
-            newOvalWidthSize = 26 + ((50 - 26)/(20 - 8) * (zoomLevel - 8))
-            newOvalHeightSize = 8 + ((16 - 8)/(20 - 8) * (zoomLevel - 8))
-            newCornerRadiusGap = 5 + ((13 - 5)/(20 - 8) * (zoomLevel - 8))
-            newDotSize = 16 + ((26 - 16)/(20 - 8) * (zoomLevel - 8))
-            newDotGap = 6 + ((10 - 6)/(20 - 8) * (zoomLevel - 8))
+            newSize = minMarkerWidth + ((maxMarkerWidth - minMarkerWidth)/(20 - 8) * (zoomLevel - 8))
+            newGifGap = minGifGap + ((maxGifGap - minGifGap)/(20 - 8) * (zoomLevel - 8))
+            newOvalWidthSize = minOvalWidth + ((maxOvalWidth - minOvalWidth)/(20 - 8) * (zoomLevel - 8))
+            newOvalHeightSize = minOvalHeight + ((maxOvalHeight - minOvalHeight)/(20 - 8) * (zoomLevel - 8))
+//            newCornerRadiusGap = 5 + ((13 - 5)/(20 - 8) * (zoomLevel - 8))
+            newDotSize = minDotSize + ((maxDotSize - minDotSize)/(20 - 8) * (zoomLevel - 8))
+            newDotGap = minDotGap + ((maxDotGap - minDotGap)/(20 - 8) * (zoomLevel - 8))
         } else {
-            newSize = 44
-            newGifGap = 6
-            newOvalWidthSize = 26
-            newOvalHeightSize = 8
-            newCornerRadiusGap = 5
-            newDotSize = 16
-            newDotGap = 6
+            newSize = minMarkerWidth
+            newGifGap = minGifGap
+            newOvalWidthSize = minOvalWidth
+            newOvalHeightSize = minOvalHeight
+//            newCornerRadiusGap = 5
+            newDotSize = minDotSize
+            newDotGap = minDotGap
         }
 
         print("changesize user : \(isOnScreen), \(isInitialized), \(newDotSize), \(newDotGap)")
-
 
         //test > with condition of "isinitialized"
         if(duringInitialization) {
@@ -358,6 +430,7 @@ class SoundMarker: Marker {
 
             self.frame.size.height = newSize + newDotSize/2
             self.frame.size.width = newSize
+            self.widthOriginOffset = newSize //test => adjust origin for map projection
         } else {
             if(isInitialized) {
                 if(isOnScreen) {
@@ -382,6 +455,7 @@ class SoundMarker: Marker {
 
                     self.frame.size.height = newSize + newDotSize/2
                     self.frame.size.width = newSize
+                    self.widthOriginOffset = newSize //test => adjust origin for map projection
                 }
             }
         }
@@ -479,6 +553,16 @@ class SoundMarker: Marker {
 //        infoBox.isHidden = false
 //    }
 }
+
+extension ViewController: SoundMarkerDelegate{
+    
+    func didClickSoundMarker(marker: SoundMarker, coord: CLLocationCoordinate2D){
+        //test > remove pulsewave when click on marker
+        stopPulseWave()
+        dequeueObject()
+    }
+}
+
 //class SoundMarker: Marker {
 //
 //    var markerRing = UIView()
@@ -967,10 +1051,3 @@ class SoundMarker: Marker {
 ////        return cell
 ////    }
 //}
-
-extension ViewController: SoundMarkerDelegate{
-    
-    func didClickSoundMarker(marker: SoundMarker, coord: CLLocationCoordinate2D){
-        
-    }
-}

@@ -573,7 +573,7 @@ class HPhotoListBViewCell: UICollectionViewCell {
     
     //*test > async fetch images/names/videos
     func asyncConfigure(data: String) {
-        let id = "u_"
+        let id = "u" //u_
         DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -586,11 +586,27 @@ class HPhotoListBViewCell: UICollectionViewCell {
                         return
                     }
 
-                    self.aGridNameText.text = "Michael Kins"
-                    self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
+                    if(!l.isEmpty) {
+                        let l_0 = l[0]
+                        let uData = UserData()
+                        uData.setData(rData: l_0)
+                        let l_ = uData.dataCode
+                        
+                        self.aGridNameText.text = uData.dataTextString
+                        
+                        let eImageUrl = URL(string: uData.coverPhotoString)
+                        self.aUserPhoto.sd_setImage(with: eImageUrl)
+                        
+                        if(uData.isAccountVerified) {
+                            self.vBtn.image = UIImage(named:"icon_round_verified_b")?.withRenderingMode(.alwaysTemplate)
+                        }
+                    }
                     
-                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-                    self.aUserPhoto.sd_setImage(with: imageUrl)
+//                    self.aGridNameText.text = "Michael Kins"
+//                    self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
+//                    
+//                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//                    self.aUserPhoto.sd_setImage(with: imageUrl)
                 }
 
                 case .failure(let error):
@@ -611,9 +627,45 @@ class HPhotoListBViewCell: UICollectionViewCell {
         }
     }
     //*
+    //*test > async fetch place profile
+    func asyncConfigurePlace(data: String) {
+        let id = "p4"
+        DataFetchManager.shared.fetchPlaceData2(id: id) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    print("pdp api success \(id), \(l)")
+                    
+                    guard let self = self else {
+                        return
+                    }
+
+                    let pData = PlaceData()
+                    pData.setData(rData: l)
+                    let l_ = pData.dataCode
+                    
+                    if(l_ == "a") {
+                        self.aaText.text = pData.dataTextString
+                    }
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    self.aaText.text = "-"
+                }
+                break
+            }
+        }
+    }
     
     func configure(data: BaseData, width: CGFloat) {
-        asyncConfigure(data: "")
+//        asyncConfigure(data: "")
         
         aUserNameText.text = "-"
         aaText.text = "-"
@@ -634,69 +686,78 @@ class HPhotoListBViewCell: UICollectionViewCell {
         //test > dynamic create ui for various data types in sequence
 //        let dataL = data.dataArray
         let dataCL = data.contentDataArray
-        let d = data.dataType
+        let d = data.dataCode
         
         if(d == "a") {
             aUserNameText.text = "1.2m views . 3hr"
-            aaText.text = "Nvidia GPU Lab"
+//            aaText.text = "Nvidia GPU Lab"
+            
+            asyncConfigure(data: "")
+            asyncConfigurePlace(data: "")
             
             for cl in dataCL {
-                let l = cl.dataType
-
+                let l = cl.dataCode
+                let da = cl.dataArray
+                
                 photoText.text = data.dataTextString
                 
                 let availableWidth = self.frame.width
-                let bubbleHeight = 3.0
-                let bubbleTopMargin = 10.0
-                let totalBubbleH = bubbleHeight + bubbleTopMargin
+                
+                //test > with "p"
+                if(l == "p") {
+                    let bubbleHeight = 3.0
+                    let bubbleTopMargin = 10.0
+                    let totalBubbleH = bubbleHeight + bubbleTopMargin
 
-                let assetSize = CGSize(width: 3, height: 4) //4:3
-                var cSize = CGSize(width: 0, height: 0)
-                if(assetSize.width > assetSize.height) {
-                    //1 > landscape photo 4:3 w:h
-                    let aRatio = CGSize(width: 4, height: 3) //aspect ratio
-                    let cHeight = availableWidth * aRatio.height / aRatio.width + totalBubbleH
-                    cSize = CGSize(width: availableWidth, height: cHeight)
+                    let assetSize = CGSize(width: 3, height: 4) //4:3
+                    var cSize = CGSize(width: 0, height: 0)
+                    if(assetSize.width > assetSize.height) {
+                        //1 > landscape photo 4:3 w:h
+                        let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                        let cHeight = availableWidth * aRatio.height / aRatio.width + totalBubbleH
+                        cSize = CGSize(width: availableWidth, height: cHeight)
+                    }
+                    else if (assetSize.width < assetSize.height){
+                        //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                        let aRatio = CGSize(width: 5, height: 6) //aspect ratio 2:3, 3:4
+                        let cWidth = availableWidth
+                        let cHeight = cWidth * aRatio.height / aRatio.width + totalBubbleH
+                        cSize = CGSize(width: cWidth, height: cHeight)
+                    } else {
+                        //square
+                        let cWidth = availableWidth
+                        cSize = CGSize(width: cWidth, height: cWidth + totalBubbleH)
+                    }
+                    
+                    //test 2 > reusable custom view
+        //                let contentCell = PostPhotoContentCell(frame: CGRect(x: 0, y: 0, width: 370, height: 280))
+                    let contentCell = ShotPhotoContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
+                    aTest.addSubview(contentCell)
+                    contentCell.translatesAutoresizingMaskIntoConstraints = false
+                    if(aTestArray.isEmpty) {
+                        contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 0).isActive = true
+                    } else {
+                        let lastArrayE = aTestArray[aTestArray.count - 1]
+                        contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 0).isActive = true
+                    }
+                    contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 0).isActive = true
+                    contentCell.trailingAnchor.constraint(equalTo: aTest.trailingAnchor, constant: 0).isActive = true
+        //                contentCell.widthAnchor.constraint(equalToConstant: 370).isActive = true  //370
+        //                contentCell.heightAnchor.constraint(equalToConstant: 280).isActive = true  //280
+                    contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //370
+                    contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //280
+                    contentCell.layer.cornerRadius = 10 //5
+                    aTestArray.append(contentCell)
+                    contentCell.setBubbleHeight(lHeight: totalBubbleH)
+                    contentCell.redrawUI()
+//                    contentCell.configure(data: "a")
+                    contentCell.configure(data: da)
+        //            contentCell.setState(p: data.p_s)
+                    contentCell.setState(p: cl.p_s)
+                    contentCell.aDelegate = self
                 }
-                else if (assetSize.width < assetSize.height){
-                    //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
-                    let aRatio = CGSize(width: 5, height: 6) //aspect ratio 2:3, 3:4
-                    let cWidth = availableWidth
-                    let cHeight = cWidth * aRatio.height / aRatio.width + totalBubbleH
-                    cSize = CGSize(width: cWidth, height: cHeight)
-                } else {
-                    //square
-                    let cWidth = availableWidth
-                    cSize = CGSize(width: cWidth, height: cWidth + totalBubbleH)
-                }
-                
-                //test 2 > reusable custom view
-    //                let contentCell = PostPhotoContentCell(frame: CGRect(x: 0, y: 0, width: 370, height: 280))
-                let contentCell = ShotPhotoContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
-                aTest.addSubview(contentCell)
-                contentCell.translatesAutoresizingMaskIntoConstraints = false
-                if(aTestArray.isEmpty) {
-                    contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 0).isActive = true
-                } else {
-                    let lastArrayE = aTestArray[aTestArray.count - 1]
-                    contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 0).isActive = true
-                }
-                contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 0).isActive = true
-                contentCell.trailingAnchor.constraint(equalTo: aTest.trailingAnchor, constant: 0).isActive = true
-    //                contentCell.widthAnchor.constraint(equalToConstant: 370).isActive = true  //370
-    //                contentCell.heightAnchor.constraint(equalToConstant: 280).isActive = true  //280
-                contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //370
-                contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //280
-                contentCell.layer.cornerRadius = 10 //5
-                aTestArray.append(contentCell)
-                contentCell.setBubbleHeight(lHeight: totalBubbleH)
-                contentCell.redrawUI()
-                contentCell.configure(data: "a")
-    //            contentCell.setState(p: data.p_s)
-                contentCell.setState(p: cl.p_s)
-                contentCell.aDelegate = self
-                
-                if(l == "m") {
+                else if(l == "m") {
+//                if(l == "m") {
                     //with music
                     let lhsMargin = 20.0
                     let rhsMargin = 20.0
@@ -726,9 +787,9 @@ class HPhotoListBViewCell: UICollectionViewCell {
                     
                     mediaArray.append(contentCell)
                 }
-                else if(l == "p") {
-                    //without music
-                }
+//                else if(l == "p") {
+//                    //without music
+//                }
             }
         }
         else if(d == "na") {

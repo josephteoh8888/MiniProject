@@ -87,7 +87,7 @@ class LiveLMarker: Marker {
     }
     
     override func initialize(withAnimation: Bool, changeSizeZoom: CGFloat) {
-//        changeSize(zoomLevel: changeSizeZoom, duringInitialization: true)
+        changeSize(zoomLevel: changeSizeZoom, duringInitialization: true) //test
         initialize(withAnimation: withAnimation)
     }
     func initialize(withAnimation: Bool) {
@@ -124,5 +124,13 @@ class LiveLMarker: Marker {
             completion: { _ in
 
             })
+    }
+    
+    func changeSize(zoomLevel: CGFloat, duringInitialization: Bool) {
+        //just set frame sizes
+        let newSize = viewSize
+        self.frame.size.height = newSize
+        self.frame.size.width = newSize
+        self.widthOriginOffset = newSize //test => adjust origin for map projection
     }
 }

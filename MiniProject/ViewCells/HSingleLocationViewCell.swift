@@ -110,25 +110,35 @@ class HSingleLocationViewCell: UICollectionViewCell {
         rGridBG.sd_setImage(with: imageUrl)
     }
     
-    func configure(data: String) {
+//    func configure(data: String) {
+    func configure(data: BaseData) {
+        guard let a = data as? PlaceData else {
+            return
+        }
         
-        if(data == "a") {
+        let l = a.dataCode
+        
+        if(l == "a") {
             asyncConfigure(data: "")
             
-            self.aHSubDesc.text = "DinoDreamTgX"
-        }
-        else if(data == "na") {
+            self.aHSubDesc.text = a.dataTextString
+            self.aHSubDesc2.text = "United States"
             
+            let imageUrl = URL(string: a.coverPhotoString)
+            self.rGridBG.sd_setImage(with: imageUrl)
         }
-        else if(data == "us") {
+        else if(l == "na") {
+           
+        }
+        else if(l == "us") {
             
         }
     }
     
     //*test > async fetch images/names/videos
     func asyncConfigure(data: String) {
-        let id = "p"
-        DataFetchManager.shared.fetchPlaceData(id: id) { [weak self]result in
+        let id = "a"
+        DataFetchManager.shared.fetchDummyDataTimeDelay(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -141,10 +151,10 @@ class HSingleLocationViewCell: UICollectionViewCell {
                     }
 
 //                    self.aHSubDesc.text = "DinoDreamTgX"
-                    self.aHSubDesc2.text = "United States"
+//                    self.aHSubDesc2.text = "United States"
                     
-                    let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
-                    self.rGridBG.sd_setImage(with: imageUrl)
+//                    let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+//                    self.rGridBG.sd_setImage(with: imageUrl)
                 }
 
                 case .failure(let error):
@@ -155,10 +165,10 @@ class HSingleLocationViewCell: UICollectionViewCell {
                     }
                     
 //                    self.aHSubDesc.text = "-"
-                    self.aHSubDesc2.text = "-"
+//                    self.aHSubDesc2.text = "-"
                     
-                    let imageUrl = URL(string: "")
-                    self.rGridBG.sd_setImage(with: imageUrl)
+//                    let imageUrl = URL(string: "")
+//                    self.rGridBG.sd_setImage(with: imageUrl)
                     
                 }
                 break

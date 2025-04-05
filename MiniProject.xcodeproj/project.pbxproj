@@ -21,7 +21,7 @@
 		2E670A8E2C30479E00EBA6D3 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670A8D2C30479E00EBA6D3 /* Colors.swift */; };
 		2E670A902C3047D500EBA6D3 /* GeohashBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670A8F2C3047D500EBA6D3 /* GeohashBox.swift */; };
 		2E670A922C30480B00EBA6D3 /* Geohash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670A912C30480A00EBA6D3 /* Geohash.swift */; };
-		2E670A942C30484000EBA6D3 /* APICaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670A932C30484000EBA6D3 /* APICaller.swift */; };
+		2E670A942C30484000EBA6D3 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670A932C30484000EBA6D3 /* DataManager.swift */; };
 		2E670A962C30486B00EBA6D3 /* DataFetchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670A952C30486B00EBA6D3 /* DataFetchManager.swift */; };
 		2E670A982C3048CA00EBA6D3 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670A972C3048CA00EBA6D3 /* Constant.swift */; };
 		2E670A9B2C30FC8500EBA6D3 /* PanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670A9A2C30FC8500EBA6D3 /* PanelView.swift */; };
@@ -101,7 +101,7 @@
 		2E670B322C31219200EBA6D3 /* LiveLMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B312C31219200EBA6D3 /* LiveLMarker.swift */; };
 		2E670B342C3121B100EBA6D3 /* PageBubbleIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B332C3121B100EBA6D3 /* PageBubbleIndicator.swift */; };
 		2E670B362C3121D700EBA6D3 /* SavePlaceDraftMsg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B352C3121D700EBA6D3 /* SavePlaceDraftMsg.swift */; };
-		2E670B382C3121FB00EBA6D3 /* PlaceAMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B372C3121FB00EBA6D3 /* PlaceAMarker.swift */; };
+		2E670B382C3121FB00EBA6D3 /* PlaceMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B372C3121FB00EBA6D3 /* PlaceMarker.swift */; };
 		2E670B3A2C31222A00EBA6D3 /* MapZoomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B392C31222A00EBA6D3 /* MapZoomView.swift */; };
 		2E670B3C2C31224900EBA6D3 /* GetStorageMsg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B3B2C31224900EBA6D3 /* GetStorageMsg.swift */; };
 		2E670B3E2C31226700EBA6D3 /* ExitVideoEditorMsg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B3D2C31226700EBA6D3 /* ExitVideoEditorMsg.swift */; };
@@ -109,7 +109,7 @@
 		2E670B422C3122A700EBA6D3 /* TabStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B412C3122A700EBA6D3 /* TabStack.swift */; };
 		2E670B442C3122C200EBA6D3 /* LocationPinMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B432C3122C200EBA6D3 /* LocationPinMarker.swift */; };
 		2E670B462C3122E300EBA6D3 /* UserMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B452C3122E300EBA6D3 /* UserMarker.swift */; };
-		2E670B482C31230000EBA6D3 /* PlaceBMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B472C31230000EBA6D3 /* PlaceBMarker.swift */; };
+		2E670B482C31230000EBA6D3 /* PostMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B472C31230000EBA6D3 /* PostMarker.swift */; };
 		2E670B4A2C31232700EBA6D3 /* SoundMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B492C31232700EBA6D3 /* SoundMarker.swift */; };
 		2E670B4C2C31234500EBA6D3 /* MiniApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B4B2C31234500EBA6D3 /* MiniApp.swift */; };
 		2E670B4E2C31236400EBA6D3 /* Marker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B4D2C31236400EBA6D3 /* Marker.swift */; };
@@ -145,11 +145,12 @@
 		2E670B8D2C31286500EBA6D3 /* HighlightCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B8C2C31286500EBA6D3 /* HighlightCell.swift */; };
 		2E670B8F2C31288100EBA6D3 /* MeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B8E2C31288100EBA6D3 /* MeCell.swift */; };
 		2E670B922C3128B900EBA6D3 /* QueueObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B912C3128B900EBA6D3 /* QueueObject.swift */; };
-		2E670B942C3128D300EBA6D3 /* PostData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B932C3128D300EBA6D3 /* PostData.swift */; };
+		2E670B942C3128D300EBA6D3 /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B932C3128D300EBA6D3 /* DataModel.swift */; };
 		2E670B962C3128F500EBA6D3 /* SubtitleClip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B952C3128F500EBA6D3 /* SubtitleClip.swift */; };
 		2E670B982C31291100EBA6D3 /* AudioClip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B972C31291100EBA6D3 /* AudioClip.swift */; };
 		2E670B9A2C31292F00EBA6D3 /* VideoClip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B992C31292F00EBA6D3 /* VideoClip.swift */; };
-		2E670B9C2C31294B00EBA6D3 /* GeoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B9B2C31294B00EBA6D3 /* GeoData.swift */; };
+		2E670B9C2C31294B00EBA6D3 /* DatasetModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B9B2C31294B00EBA6D3 /* DatasetModel.swift */; };
+		2E737BB42DA15ED200471096 /* blank.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E737BB32DA15ED200471096 /* blank.swift */; };
 		2EADB52B2C4159B70023B7F2 /* SignoutProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB52A2C4159B70023B7F2 /* SignoutProgressView.swift */; };
 		2EADB52D2C44011B0023B7F2 /* HSingleLocationViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB52C2C44011B0023B7F2 /* HSingleLocationViewCell.swift */; };
 		2EADB52F2C4A9FA10023B7F2 /* MeFollowListPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB52E2C4A9FA10023B7F2 /* MeFollowListPanelView.swift */; };
@@ -184,7 +185,7 @@
 		2E670A8D2C30479E00EBA6D3 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		2E670A8F2C3047D500EBA6D3 /* GeohashBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeohashBox.swift; sourceTree = "<group>"; };
 		2E670A912C30480A00EBA6D3 /* Geohash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Geohash.swift; sourceTree = "<group>"; };
-		2E670A932C30484000EBA6D3 /* APICaller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APICaller.swift; sourceTree = "<group>"; };
+		2E670A932C30484000EBA6D3 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		2E670A952C30486B00EBA6D3 /* DataFetchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataFetchManager.swift; sourceTree = "<group>"; };
 		2E670A972C3048CA00EBA6D3 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		2E670A9A2C30FC8500EBA6D3 /* PanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelView.swift; sourceTree = "<group>"; };
@@ -264,7 +265,7 @@
 		2E670B312C31219200EBA6D3 /* LiveLMarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveLMarker.swift; sourceTree = "<group>"; };
 		2E670B332C3121B100EBA6D3 /* PageBubbleIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageBubbleIndicator.swift; sourceTree = "<group>"; };
 		2E670B352C3121D700EBA6D3 /* SavePlaceDraftMsg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavePlaceDraftMsg.swift; sourceTree = "<group>"; };
-		2E670B372C3121FB00EBA6D3 /* PlaceAMarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceAMarker.swift; sourceTree = "<group>"; };
+		2E670B372C3121FB00EBA6D3 /* PlaceMarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceMarker.swift; sourceTree = "<group>"; };
 		2E670B392C31222A00EBA6D3 /* MapZoomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapZoomView.swift; sourceTree = "<group>"; };
 		2E670B3B2C31224900EBA6D3 /* GetStorageMsg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetStorageMsg.swift; sourceTree = "<group>"; };
 		2E670B3D2C31226700EBA6D3 /* ExitVideoEditorMsg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExitVideoEditorMsg.swift; sourceTree = "<group>"; };
@@ -272,7 +273,7 @@
 		2E670B412C3122A700EBA6D3 /* TabStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabStack.swift; sourceTree = "<group>"; };
 		2E670B432C3122C200EBA6D3 /* LocationPinMarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPinMarker.swift; sourceTree = "<group>"; };
 		2E670B452C3122E300EBA6D3 /* UserMarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMarker.swift; sourceTree = "<group>"; };
-		2E670B472C31230000EBA6D3 /* PlaceBMarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceBMarker.swift; sourceTree = "<group>"; };
+		2E670B472C31230000EBA6D3 /* PostMarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostMarker.swift; sourceTree = "<group>"; };
 		2E670B492C31232700EBA6D3 /* SoundMarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundMarker.swift; sourceTree = "<group>"; };
 		2E670B4B2C31234500EBA6D3 /* MiniApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniApp.swift; sourceTree = "<group>"; };
 		2E670B4D2C31236400EBA6D3 /* Marker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Marker.swift; sourceTree = "<group>"; };
@@ -308,11 +309,12 @@
 		2E670B8C2C31286500EBA6D3 /* HighlightCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightCell.swift; sourceTree = "<group>"; };
 		2E670B8E2C31288100EBA6D3 /* MeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeCell.swift; sourceTree = "<group>"; };
 		2E670B912C3128B900EBA6D3 /* QueueObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueObject.swift; sourceTree = "<group>"; };
-		2E670B932C3128D300EBA6D3 /* PostData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostData.swift; sourceTree = "<group>"; };
+		2E670B932C3128D300EBA6D3 /* DataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
 		2E670B952C3128F500EBA6D3 /* SubtitleClip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubtitleClip.swift; sourceTree = "<group>"; };
 		2E670B972C31291100EBA6D3 /* AudioClip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioClip.swift; sourceTree = "<group>"; };
 		2E670B992C31292F00EBA6D3 /* VideoClip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoClip.swift; sourceTree = "<group>"; };
-		2E670B9B2C31294B00EBA6D3 /* GeoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoData.swift; sourceTree = "<group>"; };
+		2E670B9B2C31294B00EBA6D3 /* DatasetModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatasetModel.swift; sourceTree = "<group>"; };
+		2E737BB32DA15ED200471096 /* blank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = blank.swift; sourceTree = "<group>"; };
 		2EADB52A2C4159B70023B7F2 /* SignoutProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignoutProgressView.swift; sourceTree = "<group>"; };
 		2EADB52C2C44011B0023B7F2 /* HSingleLocationViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HSingleLocationViewCell.swift; sourceTree = "<group>"; };
 		2EADB52E2C4A9FA10023B7F2 /* MeFollowListPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeFollowListPanelView.swift; sourceTree = "<group>"; };
@@ -449,6 +451,7 @@
 		2E670AEC2C31068C00EBA6D3 /* ViewCells */ = {
 			isa = PBXGroup;
 			children = (
+				2E737BB32DA15ED200471096 /* blank.swift */,
 				2E670AEF2C3106CE00EBA6D3 /* HListViewCell.swift */,
 				2EADB52C2C44011B0023B7F2 /* HSingleLocationViewCell.swift */,
 				2E670AF92C3107D200EBA6D3 /* HMultiLocationViewCell.swift */,
@@ -512,8 +515,8 @@
 				2E670B4F2C31238100EBA6D3 /* ExploreMarker.swift */,
 				2E670B452C3122E300EBA6D3 /* UserMarker.swift */,
 				2E670B2B2C31212600EBA6D3 /* PhotoMarker.swift */,
-				2E670B372C3121FB00EBA6D3 /* PlaceAMarker.swift */,
-				2E670B472C31230000EBA6D3 /* PlaceBMarker.swift */,
+				2E670B372C3121FB00EBA6D3 /* PlaceMarker.swift */,
+				2E670B472C31230000EBA6D3 /* PostMarker.swift */,
 				2E670B432C3122C200EBA6D3 /* LocationPinMarker.swift */,
 				2E670B312C31219200EBA6D3 /* LiveLMarker.swift */,
 				2E670B272C3120DF00EBA6D3 /* PulseWave.swift */,
@@ -581,8 +584,8 @@
 				2E670B952C3128F500EBA6D3 /* SubtitleClip.swift */,
 				2E670B972C31291100EBA6D3 /* AudioClip.swift */,
 				2E670B992C31292F00EBA6D3 /* VideoClip.swift */,
-				2E670B9B2C31294B00EBA6D3 /* GeoData.swift */,
-				2E670B932C3128D300EBA6D3 /* PostData.swift */,
+				2E670B9B2C31294B00EBA6D3 /* DatasetModel.swift */,
+				2E670B932C3128D300EBA6D3 /* DataModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -594,7 +597,7 @@
 				2E670A952C30486B00EBA6D3 /* DataFetchManager.swift */,
 				2E670A852C30448D00EBA6D3 /* CacheManager.swift */,
 				2E670A892C30471700EBA6D3 /* SignInManager.swift */,
-				2E670A932C30484000EBA6D3 /* APICaller.swift */,
+				2E670A932C30484000EBA6D3 /* DataManager.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -695,9 +698,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-MiniProject/Pods-MiniProject-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-MiniProject/Pods-MiniProject-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -712,9 +719,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-MiniProject/Pods-MiniProject-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-MiniProject/Pods-MiniProject-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -814,6 +825,7 @@
 				2E670A8C2C30476000EBA6D3 /* StrokeUILabel.swift in Sources */,
 				2E670B3E2C31226700EBA6D3 /* ExitVideoEditorMsg.swift in Sources */,
 				2E670AF22C3106EF00EBA6D3 /* HPostListBViewCell.swift in Sources */,
+				2E737BB42DA15ED200471096 /* blank.swift in Sources */,
 				2E670AF62C31073200EBA6D3 /* HPhotoListBViewCell.swift in Sources */,
 				2E670B642C31255C00EBA6D3 /* ScrollFeedHNotifyChatListCell.swift in Sources */,
 				2E670B702C31260F00EBA6D3 /* ScrollFeedGridVideo2xViewCell.swift in Sources */,
@@ -841,11 +853,11 @@
 				2E670B7A2C31271000EBA6D3 /* TriangleView.swift in Sources */,
 				2E670AE12C3103C000EBA6D3 /* PlaceScrollablePanelView.swift in Sources */,
 				2E670B322C31219200EBA6D3 /* LiveLMarker.swift in Sources */,
-				2E670B482C31230000EBA6D3 /* PlaceBMarker.swift in Sources */,
+				2E670B482C31230000EBA6D3 /* PostMarker.swift in Sources */,
 				2E670B062C31089800EBA6D3 /* GridPhotoRollViewCell.swift in Sources */,
 				2E670B182C3109AA00EBA6D3 /* HPhotoListAViewCell.swift in Sources */,
 				2E670B0E2C31091000EBA6D3 /* HNotifyInboxListViewCell.swift in Sources */,
-				2E670B382C3121FB00EBA6D3 /* PlaceAMarker.swift in Sources */,
+				2E670B382C3121FB00EBA6D3 /* PlaceMarker.swift in Sources */,
 				2E670B8F2C31288100EBA6D3 /* MeCell.swift in Sources */,
 				2E670AF82C31075500EBA6D3 /* GridVideoViewCell.swift in Sources */,
 				2E670ABD2C3100D300EBA6D3 /* ScrollablePanelView.swift in Sources */,
@@ -864,14 +876,14 @@
 				2E670B5A2C31245800EBA6D3 /* ScrollFeedHResultPhotoListCell.swift in Sources */,
 				2E670B102C31092B00EBA6D3 /* HPostListAViewCell.swift in Sources */,
 				2EBFCBA52C7B260600EA9169 /* ContentCell.swift in Sources */,
-				2E670B942C3128D300EBA6D3 /* PostData.swift in Sources */,
+				2E670B942C3128D300EBA6D3 /* DataModel.swift in Sources */,
 				2E670AA52C30FE9A00EBA6D3 /* VideoDraftPanelView.swift in Sources */,
 				2E670AD52C3102C700EBA6D3 /* UsersMiniScrollablePanelView.swift in Sources */,
 				2E670B262C3120BB00EBA6D3 /* QueueableView.swift in Sources */,
 				2E670A982C3048CA00EBA6D3 /* Constant.swift in Sources */,
 				2E670AFC2C3107F100EBA6D3 /* HPlacesListViewCell.swift in Sources */,
 				2E670AAF2C30FF8F00EBA6D3 /* DataUploadManager.swift in Sources */,
-				2E670A942C30484000EBA6D3 /* APICaller.swift in Sources */,
+				2E670A942C30484000EBA6D3 /* DataManager.swift in Sources */,
 				2E670B9A2C31292F00EBA6D3 /* VideoClip.swift in Sources */,
 				2E670B522C3123C800EBA6D3 /* ScrollFeedHResultLocationListCell.swift in Sources */,
 				2E670AF42C31071300EBA6D3 /* HResultLocationListViewCell.swift in Sources */,
@@ -892,7 +904,7 @@
 				2E670ABB2C3100AB00EBA6D3 /* CreateSelectPanelView.swift in Sources */,
 				2E670AC92C3101CD00EBA6D3 /* PlacesMiniScrollablePanelView.swift in Sources */,
 				2E670AA12C30FE1300EBA6D3 /* PhotoZoomPanelView.swift in Sources */,
-				2E670B9C2C31294B00EBA6D3 /* GeoData.swift in Sources */,
+				2E670B9C2C31294B00EBA6D3 /* DatasetModel.swift in Sources */,
 				2E670B582C31243A00EBA6D3 /* ScrollFeedGridPhoto2xViewCell.swift in Sources */,
 				2E670B142C31096B00EBA6D3 /* VCBViewCell.swift in Sources */,
 				2E670AD32C3102A600EBA6D3 /* UserCreatorConsolePanelView.swift in Sources */,

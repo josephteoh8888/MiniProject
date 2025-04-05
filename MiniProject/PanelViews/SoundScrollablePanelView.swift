@@ -573,8 +573,8 @@ class SoundScrollablePanelView: ScrollablePanelView{
 //        vDataList.append("p") //post
 //        vDataList.append("s") //shots/photos
 //        vDataList.append("p") //post
-        vDataList.append("p") //posts
-        vDataList.append("v") //videos
+        vDataList.append(DataTypes.POST) //posts
+        vDataList.append(DataTypes.LOOP) //videos
 //        vDataList.append("p")
 //        vDataList.append("v")
 
@@ -902,11 +902,11 @@ class SoundScrollablePanelView: ScrollablePanelView{
             stack.setTabTypeSmall(isSmall: true)
             stack.delegate = self
             
-            if(d == "v") {
+            if(d == DataTypes.LOOP) {
                 stack.setText(code: d, d: "Loops")
-            } else if(d == "p") {
+            } else if(d == DataTypes.POST) {
                 stack.setText(code: d, d: "Posts")
-            } else if(d == "s") {
+            } else if(d == DataTypes.SHOT) {
                 stack.setText(code: d, d: "Shots")
             }
         }
@@ -918,11 +918,11 @@ class SoundScrollablePanelView: ScrollablePanelView{
         for v in vDataList {
             
             let stack: ScrollDataFeedCell
-            if(v == "p") {
+            if(v == DataTypes.POST) {
                 stack = ScrollFeedHPostListCell()
-            } else if(v == "v") {
+            } else if(v == DataTypes.LOOP) {
                 stack = ScrollFeedGridVideo2xViewCell()
-            } else if(v == "s") {
+            } else if(v == DataTypes.SHOT) {
                 stack = ScrollFeedGridPhoto2xViewCell()
             } else {
                 return
@@ -942,6 +942,9 @@ class SoundScrollablePanelView: ScrollablePanelView{
             stack.initialize()
             stack.aDelegate = self
             stack.setShowVerticalScroll(isShowVertical: true)
+            
+            //test > set code
+            stack.setCode(code: v)
         }
 
         let tabCount = vDataList.count
@@ -1550,8 +1553,8 @@ class SoundScrollablePanelView: ScrollablePanelView{
         self.bSpinner.startAnimating()
         
         //test > new fetch method for testing error handling
-        DataFetchManager.shared.fetchSoundData(id: id) { [weak self]result in
-//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+        let id = "s1"
+        DataFetchManager.shared.fetchSoundData2(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -1565,37 +1568,40 @@ class SoundScrollablePanelView: ScrollablePanelView{
                     self.aSpinner.stopAnimating()
                     self.bSpinner.stopAnimating()
                     
-                    if(!l.isEmpty) {
-                        let l_ = l[0]
-                        if(l_ == "a") {
-                            
-                            //test > preload audio for playing sound
-                            self.preloadAudio()
-                            
-                            //user account exists
-                            self.isFetchFeedAllowed = true
-                            
-                            //test > lay out halfmode highlight box
-                            self.aHLightBoxArray.append("np") //no posts
-                            self.aHLightBoxArray.append("d_s") //discover more places
-                            
-                            //test > lay out highlight section
+                    let pData = SoundData()
+                    pData.setData(rData: l)
+                    let l_ = pData.dataCode
+                        
+                    if(l_ == "a") {
+                        
+                        //test > preload audio for playing sound
+                        self.preloadAudio()
+                        
+                        //user account exists
+                        self.isFetchFeedAllowed = true
+                        
+                        //test > lay out halfmode highlight box
+                        self.aHLightBoxArray.append("np") //no posts
+                        self.aHLightBoxArray.append("d_s") //discover more places
+                        
+                        //test > lay out highlight section
 //                            self.aHLightDataArray.append("r") //ranking *
-                            
-                            self.configureUI(data: "a")
-                        }
-                        else if(l_ == "b"){
-                            self.aHLightBoxArray.append("us") //suspended
-                            self.aHLightDataArray.append("us") //job //*
-                            //suspended
-                            self.configureUI(data: "b")
-                        }
-                        else {
-                            //deleted
-                            self.aHLightBoxArray.append("na") //not found highlight box
-                            self.aHLightDataArray.append("na")
-                            self.configureUI(data: "na")//na - data not available
-                        }
+                        
+                        self.configureUI(data: "a")
+                    }
+                    else if(l_ == "us"){
+//                        else if(l_ == "b"){
+                        self.aHLightBoxArray.append("us") //suspended
+                        self.aHLightDataArray.append("us") //job //*
+                        //suspended
+//                            self.configureUI(data: "b")
+                        self.configureUI(data: "us")
+                    }
+                    else {
+                        //deleted
+                        self.aHLightBoxArray.append("na") //not found highlight box
+                        self.aHLightDataArray.append("na")
+                        self.configureUI(data: "na")//na - data not available
                     }
                     
                     //test > half mode highlight box
@@ -1613,7 +1619,11 @@ class SoundScrollablePanelView: ScrollablePanelView{
                     if(!self.feedList.isEmpty) {
                         let b = self.feedList[self.currentIndex]
                         if(self.isFetchFeedAllowed) {
-                            self.asyncFetchFeed(cell: b, id: "post_feed")
+//                            self.asyncFetchFeed(cell: b, id: "post_feed")
+                            
+                            //test 2 > new method
+                            let feedCode = b.feedCode
+                            self.asyncFetchFeed(cell: b, id: feedCode)
                         }
                     }
                 }
@@ -1672,7 +1682,11 @@ class SoundScrollablePanelView: ScrollablePanelView{
             feed.configureFooterUI(data: "")
             
             feed.dataPaginateStatus = ""
-            asyncFetchFeed(cell: feed, id: "post")
+//            asyncFetchFeed(cell: feed, id: "post")
+            
+            //test 2 > new method
+            let feedCode = feed.feedCode
+            self.asyncFetchFeed(cell: feed, id: feedCode)
         }
     }
     
@@ -1714,8 +1728,7 @@ class SoundScrollablePanelView: ScrollablePanelView{
 
         let id_ = "post"
         let isPaginate = false
-        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
-//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+        DataFetchManager.shared.fetchFeedData(id: id, isPaginate: isPaginate) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -1732,11 +1745,28 @@ class SoundScrollablePanelView: ScrollablePanelView{
                     
                     //test 2 > new append method
                     for i in l {
-                        let postData = PostData()
-                        postData.setDataType(data: i)
-                        postData.setData(data: i)
-                        postData.setTextString(data: i)
-                        feed.vDataList.append(postData)
+//                        let postData = PostData()
+//                        postData.setDataType(data: i)
+//                        postData.setData(data: i)
+//                        postData.setTextString(data: i)
+//                        feed.vDataList.append(postData)
+                        
+                        //test 2 > new method
+                        if let post = i as? PostDataset {
+                            let postData = PostData()
+                            postData.setData(rData: post)
+                            feed.vDataList.append(postData)
+                        }
+                        else if let photo = i as? PhotoDataset {
+                            let photoData = PhotoData()
+                            photoData.setData(rData: photo)
+                            feed.vDataList.append(photoData)
+                        }
+                        else if let video = i as? VideoDataset {
+                            let videoData = VideoData()
+                            videoData.setData(rData: video)
+                            feed.vDataList.append(videoData)
+                        }
                     }
                     feed.vCV?.reloadData()
                     
@@ -1787,8 +1817,7 @@ class SoundScrollablePanelView: ScrollablePanelView{
         
         let id_ = "post"
         let isPaginate = true
-        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
-//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+        DataFetchManager.shared.fetchFeedData(id: id, isPaginate: isPaginate) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -1825,17 +1854,46 @@ class SoundScrollablePanelView: ScrollablePanelView{
                     var indexPaths = [IndexPath]()
                     var j = 1
                     for i in l {
-                        let postData = PostData()
-                        postData.setDataType(data: i)
-                        postData.setData(data: i)
-                        postData.setTextString(data: i)
-                        feed.vDataList.append(postData)
-
-                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
-                        indexPaths.append(idx)
-                        j += 1
-
-                        print("ppv asyncpaginate reload \(idx)")
+//                        let postData = PostData()
+//                        postData.setDataType(data: i)
+//                        postData.setData(data: i)
+//                        postData.setTextString(data: i)
+//                        feed.vDataList.append(postData)
+//
+//                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+//                        indexPaths.append(idx)
+//                        j += 1
+//
+//                        print("ppv asyncpaginate reload \(idx)")
+                        
+                        //test 2 > new method
+                        if let post = i as? PostDataset {
+                            let postData = PostData()
+                            postData.setData(rData: post)
+                            feed.vDataList.append(postData)
+                            
+                            let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+                            indexPaths.append(idx)
+                            j += 1
+                        }
+                        else if let photo = i as? PhotoDataset {
+                            let photoData = PhotoData()
+                            photoData.setData(rData: photo)
+                            feed.vDataList.append(photoData)
+                            
+                            let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+                            indexPaths.append(idx)
+                            j += 1
+                        }
+                        else if let video = i as? VideoDataset {
+                            let videoData = VideoData()
+                            videoData.setData(rData: video)
+                            feed.vDataList.append(videoData)
+                            
+                            let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+                            indexPaths.append(idx)
+                            j += 1
+                        }
                     }
                     feed.vCV?.insertItems(at: indexPaths)
                     //*
@@ -2334,7 +2392,11 @@ extension SoundScrollablePanelView: UIScrollViewDelegate {
                 let b = self.feedList[rIndex]
                 if(b.dataPaginateStatus == "") {
                     if(self.isFetchFeedAllowed) {
-                        self.asyncFetchFeed(cell: b, id: "post_feed")
+//                        self.asyncFetchFeed(cell: b, id: "post_feed")
+                        
+                        //test 2 > new method
+                        let feedCode = b.feedCode
+                        self.asyncFetchFeed(cell: b, id: feedCode)
                     }
                 }
             }
@@ -2687,7 +2749,10 @@ extension SoundScrollablePanelView: ScrollFeedCellDelegate {
             return
         }
         if(self.isFetchFeedAllowed) {
-            asyncPaginateFetchFeed(cell: b, id: "post_feed_end")
+//            asyncPaginateFetchFeed(cell: b, id: "post_feed_end")
+            
+            let feedCode = b.feedCode
+            self.asyncPaginateFetchFeed(cell: b, id: feedCode)
         }
     }
     

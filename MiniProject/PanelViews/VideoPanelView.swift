@@ -117,7 +117,8 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
     let tabScrollRHSBtn = UIView()
     
     var isMultipleTab = false
-    var predeterminedDatasets = [String]()
+//    var predeterminedDatasets = [String]()
+    var predeterminedDatasets = [VideoDataset]() //test > real data structure
     var uiMode = VideoTypes.V_LOOP //"loop", "video"
     
     //test > track comment scrollable view
@@ -919,7 +920,15 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
     }
     
     func setPreterminedDatasets(datasets: [String]){
-        predeterminedDatasets.append(contentsOf: datasets)
+        //ori
+//        predeterminedDatasets.append(contentsOf: datasets)
+        
+        //test 2
+        for r in datasets {
+            let vData = VideoDataset()
+            vData.setupData(data: r)
+            predeterminedDatasets.append(vData)
+        }
     }
     
     func setUiMode(mode : String){
@@ -1146,9 +1155,10 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
             
             //*test > add loading spinner before fetch data
             let vData = VideoData()
-            vData.setDataType(data: "b")
-            vData.setData(data: "b")
-            vData.setTextString(data: "b")
+            vData.setDataStatus(data: "b")
+//            vData.setDataType(data: "b")
+//            vData.setData(data: "b")
+//            vData.setTextString(data: "b")
             stack.vcDataList.append(vData)
             //*
         }
@@ -1199,7 +1209,9 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         self.arrowReactToTabScroll(tabXOffset: xTabOffset)
         self.reactToTabSectionChange(index: self.currentIndex)
     }
+
     func asyncInit(id: String) {
+        //use fetchdata() for time delay to get width for layout
         DataFetchManager.shared.fetchData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -1233,7 +1245,8 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         }
     }
     
-    func asyncInitPredeterminedDatasets(dataset: [String]) {
+//    func asyncInitPredeterminedDatasets(dataset: [String]) {
+    func asyncInitPredeterminedDatasets(dataset: [VideoDataset]) {
         if(!self.feedList.isEmpty) {
             let feed = feedList[currentIndex]
             
@@ -1242,9 +1255,10 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
             var tempDataList = [VideoData]()
             for i in dataset {
                 let vData = VideoData()
-                vData.setDataType(data: i)
-                vData.setData(data: i)
-                vData.setTextString(data: i)
+//                vData.setDataType(data: i)
+//                vData.setData(data: i)
+//                vData.setTextString(data: i)
+                vData.setData(rData: i)
                 
                 if(uiMode == VideoTypes.V_0) {
                     vData.setUIMode(mode: uiMode)
@@ -1271,9 +1285,10 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
 
             //add loading spinner
             let vData = VideoData()
-            vData.setDataType(data: "b")
-            vData.setData(data: "b")
-            vData.setTextString(data: "b")
+            vData.setDataStatus(data: "b")
+//            vData.setDataType(data: "b")
+//            vData.setData(data: "b")
+//            vData.setTextString(data: "b")
             feed.vcDataList.append(vData)
             //
             
@@ -1313,9 +1328,10 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
                 //test > footer to show msg when no more data
                 if(feed.vcDataList.isEmpty) {
                     let vData = VideoData()
-                    vData.setDataType(data: "d")
-                    vData.setData(data: "d")
-                    vData.setTextString(data: "d")
+                    vData.setDataStatus(data: "d")
+//                    vData.setDataType(data: "d")
+//                    vData.setData(data: "d")
+//                    vData.setTextString(data: "d")
                     feed.vcDataList.append(vData)
                     
                     feed.videoCV?.reloadData()
@@ -1340,8 +1356,7 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
 
         let id_ = "video"
         let isPaginate = false
-        DataFetchManager.shared.fetchVideoData(id: id_, isPaginate: isPaginate) { [weak self]result in
-//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+        DataFetchManager.shared.fetchVideoFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -1363,18 +1378,20 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
                         
                         for i in l {
                             let vData = VideoData()
-                            vData.setDataType(data: i)
-                            vData.setData(data: i)
-                            vData.setTextString(data: i)
+//                            vData.setDataType(data: i)
+//                            vData.setData(data: i)
+//                            vData.setTextString(data: i)
+                            vData.setData(rData: i)
                             tempDataList.append(vData)
                         }
                     } else {
                         feed.vcDataList.remove(at: 0) //remove loading spinner
                         
                         let vData = VideoData()
-                        vData.setDataType(data: "d")
-                        vData.setData(data: "d")
-                        vData.setTextString(data: "d")
+                        vData.setDataStatus(data: "d")
+//                        vData.setDataType(data: "d")
+//                        vData.setData(data: "d")
+//                        vData.setTextString(data: "d")
                         tempDataList.append(vData)
                     }
                     feed.vcDataList.insert(contentsOf: tempDataList, at: 0)
@@ -1395,9 +1412,10 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
                     feed.vcDataList.remove(at: 0) //remove loading spinner
                     
                     let vData = VideoData()
-                    vData.setDataType(data: "e")
-                    vData.setData(data: "e")
-                    vData.setTextString(data: "e")
+                    vData.setDataStatus(data: "e")
+//                    vData.setDataType(data: "e")
+//                    vData.setData(data: "e")
+//                    vData.setTextString(data: "e")
                     tempDataList.append(vData)
                     
                     feed.vcDataList.insert(contentsOf: tempDataList, at: 0)
@@ -1419,8 +1437,7 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         let id_ = "video"
         let isPaginate = true
 //        let isPaginate = false
-        DataFetchManager.shared.fetchVideoData(id: id_, isPaginate: isPaginate) { [weak self]result in
-//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+        DataFetchManager.shared.fetchVideoFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -1433,8 +1450,8 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
 
                     let w = feed.vcDataList.count - 1
                     let x = feed.currentIndexPath.row
-                    let y = feed.vcDataList[w].dataType
-                    let z = feed.vcDataList[x].dataType
+                    let y = feed.vcDataList[w].dataCode
+                    let z = feed.vcDataList[x].dataCode
 
                     print("api success asyncPaginateFetchFeed: \(w), \(x), \(y), \(z)")
 
@@ -1445,9 +1462,10 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
                             feed.dataPaginateStatus = "end"
 
                             let vData = VideoData()
-                            vData.setDataType(data: "c")
-                            vData.setData(data: "c")
-                            vData.setTextString(data: "c")
+                            vData.setDataStatus(data: "c")
+//                            vData.setDataType(data: "c")
+//                            vData.setData(data: "c")
+//                            vData.setTextString(data: "c")
                             feed.vcDataList[feed.vcDataList.count - 1] = vData
                             
                             //test 2 > new reload method
@@ -1467,9 +1485,10 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
                             var tempDataList = [VideoData]()
                             for i in l {
                                 let vData = VideoData()
-                                vData.setDataType(data: i)
-                                vData.setData(data: i)
-                                vData.setTextString(data: i)
+//                                vData.setDataType(data: i)
+//                                vData.setData(data: i)
+//                                vData.setTextString(data: i)
+                                vData.setData(rData: i)
                                 tempDataList.append(vData)
                                 
                                 let idx = IndexPath(item: w + j, section: 0)
@@ -1500,9 +1519,10 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
 //                    var tempDataList = [VideoData]()
                     
                     let vData = VideoData()
-                    vData.setDataType(data: "e")
-                    vData.setData(data: "e")
-                    vData.setTextString(data: "e")
+                    vData.setDataStatus(data: "e")
+//                    vData.setDataType(data: "e")
+//                    vData.setData(data: "e")
+//                    vData.setTextString(data: "e")
                     feed.vcDataList[feed.vcDataList.count - 1] = vData
 
 //                    feed.videoCV?.reloadData()
@@ -1803,7 +1823,7 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         if(!self.feedList.isEmpty) {
             let feed = feedList[currentIndex]
             if(!feed.vcDataList.isEmpty) {
-                let d = feed.vcDataList[feed.currentIndexPath.row].dataType
+                let d = feed.vcDataList[feed.currentIndexPath.row].dataCode
                 return d
             }
         }

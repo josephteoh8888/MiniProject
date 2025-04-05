@@ -77,7 +77,7 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
     var stateMapTargetZoom : Float = 0.0
     
     //test > fake data for async ops, e.g. open video panel
-    let api = APICaller()
+//    let api = APICaller()
     var queueObjectList = [QueueObject]()
     
     //test > menu panel
@@ -115,6 +115,9 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //test > black bg color for light mode
+        self.view.backgroundColor = .black
         
         // Do any additional setup after loading the view.
         GMSServices.provideAPIKey("XXX")
@@ -1122,10 +1125,11 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
             }
         }
         
+        //test > data manager to simulate data => to be removed in future
+        DataManager.shared.initData()
+        
         //test > location selection
         addLocationSelect()
-        
-        
 
         //test > yellow location select marker
         //yellow
@@ -1271,6 +1275,8 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         
         stopPulseWave()
         dequeueObject()
+        //test > dismiss RHS content filter btn
+        hideRMapSettingBtn()
         
         //method 2 > slide up without animation
         openPlaceSelectPanel()
@@ -1325,11 +1331,13 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
     
     func changeAppMenuMode(mode: String) {
         
-        let lastAppMenuMode = appMenuMode
+//        let lastAppMenuMode = appMenuMode
         
         //test > dequeue before transition
         stopPulseWave()
         dequeueObject()
+        //test > dismiss RHS content filter btn
+        hideRMapSettingBtn()
         
         appMenuMode = mode
         
@@ -1467,15 +1475,20 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         stopPulseWave()
         dequeueObject()
         
+        //test > dismiss RHS content filter btn
+        hideRMapSettingBtn()
     }
     
     func mapView(_ mapView: GMSMapView, didTapAt coordinate : CLLocationCoordinate2D ) {
         print("state map tap")
         print("Mapmap tap \(coordinate)")
         print("async pulsewave start: \(pulseWaveList)")
-        
+
         //test > remove pulsewave without removing from array, but by pulsating
         stopPulseWave()
+        
+        //test > dismiss RHS content filter btn
+        hideRMapSettingBtn()
         
         //test 2 > exclude LocationSelectPanel from pulsewave
         if(pageList.isEmpty) {
@@ -1527,28 +1540,6 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
                 }
             }
         }
-        
-        //ori => create pulsewave across all pages
-//        let zoom = mapView.camera.zoom
-//        let point = mapView.projection.point(for: coordinate)
-//        let pulseWave = PulseWave(frame: CGRect(x: point.x - MAX_MARKER_DIM/2 , y: point.y - MAX_MARKER_DIM/2, width: MAX_MARKER_DIM, height: MAX_MARKER_DIM))
-//        pulseWave.addLocation(coordinate: coordinate)
-//        pulseWave.isUserInteractionEnabled = false
-//        self.view.insertSubview(pulseWave, aboveSubview: mapView) //put below markers
-//        pulseWaveList.append(pulseWave)
-//        pulseWave.delegate = self //test
-//        pulseWave.initialize(withAnimation: true, changeSizeZoom: CGFloat(zoom))
-//        pulseWave.frame.origin.x = point.x - pulseWave.frame.width/2 //update position after changesize()
-//        pulseWave.frame.origin.y = point.y - pulseWave.frame.height/2
-//
-//        //test > add queue and fetch data
-//        dequeueObject()
-//        let qId = addQueueObject()
-//        if(qId != -1) {
-//            pulseWave.setId(id: qId)
-//
-//            asyncFetchData(id: qId, coordinate: coordinate)
-//        }
     }
     
     func deactivateQueueState() {
@@ -1570,9 +1561,8 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
     //test > generate random id to connect marker and resultant video panel
     func addQueueObject() -> Int {
         var isAllowedToAddNewQueue = false
-        if(!queueObjectList.isEmpty) {
-//            queueObjectList[queueObjectList.count - 1].setIsToOpenVideoPanel(isToOpen: false)
-            
+        if(!queueObjectList.isEmpty) {       
+            //only allow to add new queue if panel is not active
             if(!queueObjectList[queueObjectList.count - 1].getIsPanelActive()) {
                 isAllowedToAddNewQueue = true
             }
@@ -1594,7 +1584,8 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
     }
     //test > async fetch data for pulsewave
     func asyncFetchData(id: Int, coordinate : CLLocationCoordinate2D) {
-        api.fetchData(id: id) { [weak self]result in
+        DataFetchManager.shared.fetchPulsewaveData(id: id) { [weak self]result in
+//        api.fetchData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -1872,9 +1863,10 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
                         //test
                         if(xContentDataType == "shot") {
                             marker = PhotoBMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
-                        }
-                        else if(xContentDataType == "loop") {
+                        } else if(xContentDataType == "loop") {
                             marker = ExploreBMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
+                        } else if(xContentDataType == "post") {
+                            marker = PostMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
                         }
                     } else if (geoType == GeoDataTypes.USERMARKER) {
                         marker = UserMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
@@ -1886,8 +1878,13 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
                         self.view.insertSubview(marker, aboveSubview: mapView)
                         self.markerList.append(marker)
                         marker.delegate = self
+                        marker.setScreenSizeLimit(width: self.view.frame.width, height: self.view.frame.height)
+                        //test
+                        marker.configure(data: "a")
                         marker.initialize(withAnimation: withAnimation, changeSizeZoom: CGFloat(zoom))
-                        marker.frame.origin.x = point.x - marker.frame.width/2 //update position after changesize()
+                        
+                        //test > width offset for irregular shaped marker
+                        marker.frame.origin.x = point.x - marker.widthOriginOffset/2
                         marker.frame.origin.y = point.y - marker.frame.height
                         
                         //test > markerId map to marker list
@@ -1912,8 +1909,11 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         self.view.insertSubview(marker, aboveSubview: mapView)
         self.markerList.append(marker)
         marker.delegate = self
+        //test
+        marker.configure(data: "a")
         marker.initialize(withAnimation: false, changeSizeZoom: CGFloat(zoom))
-        marker.frame.origin.x = point.x - marker.frame.width/2 //update position after changesize()
+        
+        marker.frame.origin.x = point.x - marker.widthOriginOffset/2
         marker.frame.origin.y = point.y - marker.frame.height
         
         //test > markerId map to marker list
@@ -1991,8 +1991,11 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
                         self.view.insertSubview(marker, aboveSubview: mapView)
                         self.markerList.append(marker) //test
                         marker.delegate = self
+                        //test
+                        marker.configure(data: "a")
                         marker.initialize(withAnimation: withAnimation, changeSizeZoom: CGFloat(zoom))
-                        marker.frame.origin.x = point.x - marker.frame.width/2 //update position after changesize()
+                        
+                        marker.frame.origin.x = point.x - marker.widthOriginOffset/2
                         marker.frame.origin.y = point.y - marker.frame.height
         
                         //test > markerId map to marker list
@@ -2375,18 +2378,24 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
 //                    let marker = PhotoBMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
                     if(xContentDataType == "shot") {
                         marker = PhotoBMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
-                    }
-                    else if(xContentDataType == "loop") {
+                    } else if(xContentDataType == "loop") {
                         marker = ExploreBMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
+                    } else if(xContentDataType == "post") {
+                        marker = PostMarker(frame: CGRect(x: point.x - self.MIN_MARKER_DIM/2 , y: point.y - self.MIN_MARKER_DIM, width: self.MIN_MARKER_DIM, height: self.MIN_MARKER_DIM))
                     }
                     if let marker = marker { //added for Marker?
                         marker.addLocation(coordinate: geo)
                         self.view.insertSubview(marker, aboveSubview: mapView)
                         self.markerList.append(marker)
                         marker.delegate = self
+                        marker.setScreenSizeLimit(width: self.view.frame.width, height: self.view.frame.height)
+                        //test
+                        marker.configure(data: "a")
                         marker.initialize(withAnimation: true, changeSizeZoom: CGFloat(zoom))
-                        marker.frame.origin.x = point.x - marker.frame.width/2
+
+//                        marker.frame.origin.x = point.x - marker.frame.width/2 //ori
                         marker.frame.origin.y = point.y - marker.frame.height
+                        marker.frame.origin.x = point.x - marker.widthOriginOffset/2
 
                         //test > markerId map to marker list
                         self.markerGeoMarkerIdList.updateValue(marker, forKey: markerId)
@@ -2578,7 +2587,8 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
                 }
                 
                 let point = mapView.projection.point(for: radialLocation)
-                entry.frame.origin.x = point.x - entry.frame.width/2
+//                entry.frame.origin.x = point.x - entry.frame.width/2
+                entry.frame.origin.x = point.x - entry.widthOriginOffset/2 //test
                 entry.frame.origin.y = point.y - entry.frame.height
                 print("refresh markers x: \(point.x), \(entry.frame.origin.x)")
                 
@@ -2708,130 +2718,121 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         rBoxCloseBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
         rBoxCloseBtn.isHidden = true
         
-        rBtn.addSubview(rInnerBtn)
-//        self.view.addSubview(rInnerBtn)
-        rInnerBtn.translatesAutoresizingMaskIntoConstraints = false
-        rInnerBtn.centerXAnchor.constraint(equalTo: rBtn.centerXAnchor).isActive = true
-        rInnerBtn.centerYAnchor.constraint(equalTo: rBtn.centerYAnchor).isActive = true
-//        rInnerBtn.topAnchor.constraint(equalTo: rBtn.bottomAnchor, constant: 10).isActive = true
-        rInnerBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true //32
-        rInnerBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        rInnerBtn.layer.cornerRadius = 20
-//        rInnerBtn.isUserInteractionEnabled = true
-//        rInnerBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onRABtnClicked)))
-        rInnerBtn.isHidden = true
-        
-        let rInnerOuterRing = RingView()
-        rInnerBtn.addSubview(rInnerOuterRing)
-        rInnerOuterRing.translatesAutoresizingMaskIntoConstraints = false
-        rInnerOuterRing.centerXAnchor.constraint(equalTo: rInnerBtn.centerXAnchor).isActive = true
-        rInnerOuterRing.centerYAnchor.constraint(equalTo: rInnerBtn.centerYAnchor).isActive = true
-        rInnerOuterRing.heightAnchor.constraint(equalToConstant: 26).isActive = true //32
-        rInnerOuterRing.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        rInnerOuterRing.changeLineWidth(width: 2)
-//        rInnerOuterRing.changeStrokeColor(color: UIColor.ddmGoldenYellowColor)
-        rInnerOuterRing.changeStrokeColor(color: UIColor.yellow)
-//        rInnerOuterRing.changeStrokeColor(color: UIColor.white)
-//        rInnerOuterRing.isHidden = true
-        
-//        let aInnerRing = UIView()
-        aInnerRing.backgroundColor = .ddmDarkGreyColor //ddmDarkColor
-        rInnerBtn.addSubview(aInnerRing)
-        aInnerRing.translatesAutoresizingMaskIntoConstraints = false
-        aInnerRing.centerXAnchor.constraint(equalTo: rInnerBtn.centerXAnchor).isActive = true
-        aInnerRing.centerYAnchor.constraint(equalTo: rInnerBtn.centerYAnchor).isActive = true
-        aInnerRing.heightAnchor.constraint(equalToConstant: 22).isActive = true //28
-        aInnerRing.widthAnchor.constraint(equalToConstant: 22).isActive = true
-        aInnerRing.layer.cornerRadius = 11
-        aInnerRing.isHidden = true
-        
-//        let aMiniImage = UIImageView(image: UIImage(named:"flaticon_freepik_video_b"))
-        let aInnerImage = UIImageView(image: UIImage(named:"flaticon_icon_home_photo"))
-//        let aMiniImage = UIImageView(image: UIImage(named:"flaticon_freepik_article"))
-//        aMiniImage.contentMode = .scaleAspectFill
-//        aMiniImage.layer.masksToBounds = true
-        aInnerRing.addSubview(aInnerImage)
-        aInnerImage.translatesAutoresizingMaskIntoConstraints = false
-        aInnerImage.centerXAnchor.constraint(equalTo: aInnerRing.centerXAnchor).isActive = true
-        aInnerImage.centerYAnchor.constraint(equalTo: aInnerRing.centerYAnchor).isActive = true
-        aInnerImage.heightAnchor.constraint(equalToConstant: 16).isActive = true //20
-        aInnerImage.widthAnchor.constraint(equalToConstant: 16).isActive = true
-        aInnerImage.layer.cornerRadius = 8
-        
-//        let aInnerRing = UIView()
-        bInnerRing.backgroundColor = .ddmDarkGreyColor //ddmDarkColor
-        rInnerBtn.addSubview(bInnerRing)
-        bInnerRing.translatesAutoresizingMaskIntoConstraints = false
-        bInnerRing.centerXAnchor.constraint(equalTo: rInnerBtn.centerXAnchor).isActive = true
-        bInnerRing.centerYAnchor.constraint(equalTo: rInnerBtn.centerYAnchor).isActive = true
-        bInnerRing.heightAnchor.constraint(equalToConstant: 22).isActive = true //28
-        bInnerRing.widthAnchor.constraint(equalToConstant: 22).isActive = true
-        bInnerRing.layer.cornerRadius = 11
-        bInnerRing.isHidden = true
-        
-        let bInnerImageCircleBg = UIView()
-        bInnerImageCircleBg.backgroundColor = .systemYellow
-//        aMiniImageCircleBg.backgroundColor = .white
-        bInnerRing.addSubview(bInnerImageCircleBg)
-        bInnerImageCircleBg.translatesAutoresizingMaskIntoConstraints = false
-        bInnerImageCircleBg.centerXAnchor.constraint(equalTo: bInnerRing.centerXAnchor).isActive = true
-        bInnerImageCircleBg.centerYAnchor.constraint(equalTo: bInnerRing.centerYAnchor).isActive = true
-        bInnerImageCircleBg.heightAnchor.constraint(equalToConstant: 16).isActive = true //20
-        bInnerImageCircleBg.widthAnchor.constraint(equalToConstant: 16).isActive = true
-        bInnerImageCircleBg.layer.cornerRadius = 8
-        
-        let bInnerImage = UIImageView(image: UIImage(named:"flaticon_freepik_video_b"))
-//        let bInnerImage = UIImageView(image: UIImage(named:"flaticon_icon_home_photo"))
-//        let aMiniImage = UIImageView(image: UIImage(named:"flaticon_freepik_article"))
-//        aMiniImage.contentMode = .scaleAspectFill
-//        aMiniImage.layer.masksToBounds = true
-        bInnerRing.addSubview(bInnerImage)
-        bInnerImage.translatesAutoresizingMaskIntoConstraints = false
-        bInnerImage.centerXAnchor.constraint(equalTo: bInnerRing.centerXAnchor).isActive = true
-        bInnerImage.centerYAnchor.constraint(equalTo: bInnerRing.centerYAnchor).isActive = true
-        bInnerImage.heightAnchor.constraint(equalToConstant: 16).isActive = true //20
-        bInnerImage.widthAnchor.constraint(equalToConstant: 16).isActive = true
-        bInnerImage.layer.cornerRadius = 8
-        
-//        let cInnerRing = UIView()
-        cInnerRing.backgroundColor = .ddmDarkGreyColor //ddmDarkColor
-        rInnerBtn.addSubview(cInnerRing)
-        cInnerRing.translatesAutoresizingMaskIntoConstraints = false
-        cInnerRing.centerXAnchor.constraint(equalTo: rInnerBtn.centerXAnchor).isActive = true
-        cInnerRing.centerYAnchor.constraint(equalTo: rInnerBtn.centerYAnchor).isActive = true
-        cInnerRing.heightAnchor.constraint(equalToConstant: 22).isActive = true //28
-        cInnerRing.widthAnchor.constraint(equalToConstant: 22).isActive = true
-        cInnerRing.layer.cornerRadius = 11
-        cInnerRing.isHidden = true
-        
-//        let aMiniImage = UIImageView(image: UIImage(named:"flaticon_freepik_video_b"))
-//        let cInnerImage = UIImageView(image: UIImage(named:"flaticon_icon_home_photo"))
-        let cInnerImage = UIImageView(image: UIImage(named:"flaticon_freepik_article"))
-//        aMiniImage.contentMode = .scaleAspectFill
-//        aMiniImage.layer.masksToBounds = true
-        cInnerRing.addSubview(cInnerImage)
-        cInnerImage.translatesAutoresizingMaskIntoConstraints = false
-        cInnerImage.centerXAnchor.constraint(equalTo: cInnerRing.centerXAnchor).isActive = true
-        cInnerImage.centerYAnchor.constraint(equalTo: cInnerRing.centerYAnchor).isActive = true
-        cInnerImage.heightAnchor.constraint(equalToConstant: 14).isActive = true //16
-        cInnerImage.widthAnchor.constraint(equalToConstant: 14).isActive = true
-        cInnerImage.layer.cornerRadius = 7
-        
-//        rBtn.addSubview(rBtnSpinner)
-//        rBtnSpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
-//        rBtnSpinner.translatesAutoresizingMaskIntoConstraints = false
-//        rBtnSpinner.centerYAnchor.constraint(equalTo: rBtn.centerYAnchor).isActive = true
-//        rBtnSpinner.centerXAnchor.constraint(equalTo: rBtn.centerXAnchor).isActive = true
-//        rBtnSpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
-//        rBtnSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
-////        rBtnSpinner.startAnimating()
+//        rBtn.addSubview(rInnerBtn)
+////        self.view.addSubview(rInnerBtn)
+//        rInnerBtn.translatesAutoresizingMaskIntoConstraints = false
+//        rInnerBtn.centerXAnchor.constraint(equalTo: rBtn.centerXAnchor).isActive = true
+//        rInnerBtn.centerYAnchor.constraint(equalTo: rBtn.centerYAnchor).isActive = true
+////        rInnerBtn.topAnchor.constraint(equalTo: rBtn.bottomAnchor, constant: 10).isActive = true
+//        rInnerBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true //32
+//        rInnerBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true
+//        rInnerBtn.layer.cornerRadius = 20
+////        rInnerBtn.isUserInteractionEnabled = true
+////        rInnerBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onRABtnClicked)))
+//        rInnerBtn.isHidden = true
+//        
+//        let rInnerOuterRing = RingView()
+//        rInnerBtn.addSubview(rInnerOuterRing)
+//        rInnerOuterRing.translatesAutoresizingMaskIntoConstraints = false
+//        rInnerOuterRing.centerXAnchor.constraint(equalTo: rInnerBtn.centerXAnchor).isActive = true
+//        rInnerOuterRing.centerYAnchor.constraint(equalTo: rInnerBtn.centerYAnchor).isActive = true
+//        rInnerOuterRing.heightAnchor.constraint(equalToConstant: 26).isActive = true //32
+//        rInnerOuterRing.widthAnchor.constraint(equalToConstant: 26).isActive = true
+//        rInnerOuterRing.changeLineWidth(width: 2)
+////        rInnerOuterRing.changeStrokeColor(color: UIColor.ddmGoldenYellowColor)
+//        rInnerOuterRing.changeStrokeColor(color: UIColor.yellow)
+////        rInnerOuterRing.changeStrokeColor(color: UIColor.white)
+////        rInnerOuterRing.isHidden = true
+//        
+////        let aInnerRing = UIView()
+//        aInnerRing.backgroundColor = .ddmDarkGreyColor //ddmDarkColor
+//        rInnerBtn.addSubview(aInnerRing)
+//        aInnerRing.translatesAutoresizingMaskIntoConstraints = false
+//        aInnerRing.centerXAnchor.constraint(equalTo: rInnerBtn.centerXAnchor).isActive = true
+//        aInnerRing.centerYAnchor.constraint(equalTo: rInnerBtn.centerYAnchor).isActive = true
+//        aInnerRing.heightAnchor.constraint(equalToConstant: 22).isActive = true //28
+//        aInnerRing.widthAnchor.constraint(equalToConstant: 22).isActive = true
+//        aInnerRing.layer.cornerRadius = 11
+//        aInnerRing.isHidden = true
+//        
+////        let aMiniImage = UIImageView(image: UIImage(named:"flaticon_freepik_video_b"))
+//        let aInnerImage = UIImageView(image: UIImage(named:"flaticon_icon_home_photo"))
+////        let aMiniImage = UIImageView(image: UIImage(named:"flaticon_freepik_article"))
+////        aMiniImage.contentMode = .scaleAspectFill
+////        aMiniImage.layer.masksToBounds = true
+//        aInnerRing.addSubview(aInnerImage)
+//        aInnerImage.translatesAutoresizingMaskIntoConstraints = false
+//        aInnerImage.centerXAnchor.constraint(equalTo: aInnerRing.centerXAnchor).isActive = true
+//        aInnerImage.centerYAnchor.constraint(equalTo: aInnerRing.centerYAnchor).isActive = true
+//        aInnerImage.heightAnchor.constraint(equalToConstant: 16).isActive = true //20
+//        aInnerImage.widthAnchor.constraint(equalToConstant: 16).isActive = true
+//        aInnerImage.layer.cornerRadius = 8
+//        
+////        let aInnerRing = UIView()
+//        bInnerRing.backgroundColor = .ddmDarkGreyColor //ddmDarkColor
+//        rInnerBtn.addSubview(bInnerRing)
+//        bInnerRing.translatesAutoresizingMaskIntoConstraints = false
+//        bInnerRing.centerXAnchor.constraint(equalTo: rInnerBtn.centerXAnchor).isActive = true
+//        bInnerRing.centerYAnchor.constraint(equalTo: rInnerBtn.centerYAnchor).isActive = true
+//        bInnerRing.heightAnchor.constraint(equalToConstant: 22).isActive = true //28
+//        bInnerRing.widthAnchor.constraint(equalToConstant: 22).isActive = true
+//        bInnerRing.layer.cornerRadius = 11
+//        bInnerRing.isHidden = true
+//        
+//        let bInnerImageCircleBg = UIView()
+//        bInnerImageCircleBg.backgroundColor = .systemYellow
+////        aMiniImageCircleBg.backgroundColor = .white
+//        bInnerRing.addSubview(bInnerImageCircleBg)
+//        bInnerImageCircleBg.translatesAutoresizingMaskIntoConstraints = false
+//        bInnerImageCircleBg.centerXAnchor.constraint(equalTo: bInnerRing.centerXAnchor).isActive = true
+//        bInnerImageCircleBg.centerYAnchor.constraint(equalTo: bInnerRing.centerYAnchor).isActive = true
+//        bInnerImageCircleBg.heightAnchor.constraint(equalToConstant: 16).isActive = true //20
+//        bInnerImageCircleBg.widthAnchor.constraint(equalToConstant: 16).isActive = true
+//        bInnerImageCircleBg.layer.cornerRadius = 8
+//        
+//        let bInnerImage = UIImageView(image: UIImage(named:"flaticon_freepik_video_b"))
+////        let bInnerImage = UIImageView(image: UIImage(named:"flaticon_icon_home_photo"))
+////        let aMiniImage = UIImageView(image: UIImage(named:"flaticon_freepik_article"))
+////        aMiniImage.contentMode = .scaleAspectFill
+////        aMiniImage.layer.masksToBounds = true
+//        bInnerRing.addSubview(bInnerImage)
+//        bInnerImage.translatesAutoresizingMaskIntoConstraints = false
+//        bInnerImage.centerXAnchor.constraint(equalTo: bInnerRing.centerXAnchor).isActive = true
+//        bInnerImage.centerYAnchor.constraint(equalTo: bInnerRing.centerYAnchor).isActive = true
+//        bInnerImage.heightAnchor.constraint(equalToConstant: 16).isActive = true //20
+//        bInnerImage.widthAnchor.constraint(equalToConstant: 16).isActive = true
+//        bInnerImage.layer.cornerRadius = 8
+//        
+////        let cInnerRing = UIView()
+//        cInnerRing.backgroundColor = .ddmDarkGreyColor //ddmDarkColor
+//        rInnerBtn.addSubview(cInnerRing)
+//        cInnerRing.translatesAutoresizingMaskIntoConstraints = false
+//        cInnerRing.centerXAnchor.constraint(equalTo: rInnerBtn.centerXAnchor).isActive = true
+//        cInnerRing.centerYAnchor.constraint(equalTo: rInnerBtn.centerYAnchor).isActive = true
+//        cInnerRing.heightAnchor.constraint(equalToConstant: 22).isActive = true //28
+//        cInnerRing.widthAnchor.constraint(equalToConstant: 22).isActive = true
+//        cInnerRing.layer.cornerRadius = 11
+//        cInnerRing.isHidden = true
+//        
+////        let aMiniImage = UIImageView(image: UIImage(named:"flaticon_freepik_video_b"))
+////        let cInnerImage = UIImageView(image: UIImage(named:"flaticon_icon_home_photo"))
+//        let cInnerImage = UIImageView(image: UIImage(named:"flaticon_freepik_article"))
+////        aMiniImage.contentMode = .scaleAspectFill
+////        aMiniImage.layer.masksToBounds = true
+//        cInnerRing.addSubview(cInnerImage)
+//        cInnerImage.translatesAutoresizingMaskIntoConstraints = false
+//        cInnerImage.centerXAnchor.constraint(equalTo: cInnerRing.centerXAnchor).isActive = true
+//        cInnerImage.centerYAnchor.constraint(equalTo: cInnerRing.centerYAnchor).isActive = true
+//        cInnerImage.heightAnchor.constraint(equalToConstant: 14).isActive = true //16
+//        cInnerImage.widthAnchor.constraint(equalToConstant: 14).isActive = true
+//        cInnerImage.layer.cornerRadius = 7
         
         let rBoxNotifyView = UIView() //indicate not default map setting
         rBoxNotifyView.backgroundColor = .red
         rBtn.addSubview(rBoxNotifyView)
         rBoxNotifyView.translatesAutoresizingMaskIntoConstraints = false
-        rBoxNotifyView.trailingAnchor.constraint(equalTo: rSemiTranparentBtn.trailingAnchor, constant: 0).isActive = true //-5
-        rBoxNotifyView.topAnchor.constraint(equalTo: rSemiTranparentBtn.topAnchor, constant: 0).isActive = true //5
+        rBoxNotifyView.trailingAnchor.constraint(equalTo: rSemiTranparentBtn.trailingAnchor, constant: -5).isActive = true //-5
+        rBoxNotifyView.topAnchor.constraint(equalTo: rSemiTranparentBtn.topAnchor, constant: 5).isActive = true //5
         rBoxNotifyView.heightAnchor.constraint(equalToConstant: 10).isActive = true
         rBoxNotifyView.widthAnchor.constraint(equalToConstant: 10).isActive = true //20
         rBoxNotifyView.layer.cornerRadius = 5 //10
@@ -3048,6 +3049,10 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
     
     //test > toggle to different content type on map
     @objc func onMapSettingBtnClicked(gesture: UITapGestureRecognizer) {
+        //test > remove pulsewave when clicked
+        stopPulseWave()
+        dequeueObject()
+        
         if(rABtn.isHidden) {
             rSettingBtn.isHidden = true
 //            rInnerBtn.isHidden = true
@@ -3061,6 +3066,12 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         }
     }
     
+    func hideRMapSettingBtn() {
+        rSettingBtn.isHidden = false
+        rBoxCloseBtn.isHidden = true
+        rABtn.isHidden = true
+    }
+    
     @objc func onRABtnClicked(gesture: UITapGestureRecognizer) {
         stopPulseWave()
         dequeueObject()
@@ -3070,11 +3081,7 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         //*test 1 > remove markers and switch new content type
         if(xContentDataType != "shot") {
             xContentDataType = "shot"
-            
-            rSettingBtn.isHidden = false
-            rBoxCloseBtn.isHidden = true
-            rABtn.isHidden = true
-            
+            hideRMapSettingBtn()
             getHeatmapPoints()
         }
         //*
@@ -3088,11 +3095,7 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         //*test 1 > remove markers and switch new content type
         if(xContentDataType != "loop") {
             xContentDataType = "loop"
-            
-            rSettingBtn.isHidden = false
-            rBoxCloseBtn.isHidden = true
-            rABtn.isHidden = true
-            
+            hideRMapSettingBtn()
             getHeatmapPoints()
         }
         //*
@@ -3106,12 +3109,8 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         //*test 1 > remove markers and switch new content type
         if(xContentDataType != "post") {
             xContentDataType = "post"
-            
-            rSettingBtn.isHidden = false
-            rBoxCloseBtn.isHidden = true
-            rABtn.isHidden = true
-            
-//            getHeatmapPoints()
+            hideRMapSettingBtn()
+            getHeatmapPoints()
         }
     }
     func reactToRContentTypeChange(type: String) {
@@ -3617,7 +3616,8 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
 //                let b = CLLocationCoordinate2D(latitude: 0, longitude: 0)
                 a.changeLocation(coordinate: latestUserLocation) //latestUserLocation
                 let point = mapView.projection.point(for: latestUserLocation)
-                a.frame.origin.x = point.x - a.frame.width/2
+//                a.frame.origin.x = point.x - a.frame.width/2
+                a.frame.origin.x = point.x - a.widthOriginOffset/2 //test
                 a.frame.origin.y = point.y - a.frame.height
             } else {
                 let point = mapView.projection.point(for: latestUserLocation)
@@ -3626,8 +3626,11 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
                 self.view.insertSubview(marker, aboveSubview: mapView)
                 self.markerList.append(marker)
                 marker.delegate = self
+                //test
+                marker.configure(data: "a")
                 marker.initialize(withAnimation: true, changeSizeZoom: CGFloat(zoom))
-                marker.frame.origin.x = point.x - marker.frame.width/2 //update position after changesize()
+                
+                marker.frame.origin.x = point.x - marker.widthOriginOffset/2 //test
                 marker.frame.origin.y = point.y - marker.frame.height
 
                 //test > markerId map to marker list
@@ -3643,6 +3646,10 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
     }
     //test > prompt msg for location permission
     @objc func onGetLocationClicked(gesture: UITapGestureRecognizer) {
+        
+        //test > remove pulsewave when clicked
+        stopPulseWave()
+        dequeueObject()
         
         //test > indicate whether user specifically clicked get location button
         isUserGetLocationClicked = true
@@ -3998,8 +4005,11 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
                     self.view.insertSubview(marker, aboveSubview: mapView)
                     self.markerList.append(marker) //test
                     marker.delegate = self
+                    //test
+                    marker.configure(data: "a")
                     marker.initialize(withAnimation: true, changeSizeZoom: CGFloat(tZoom)) //try 14, default: zoom
-                    marker.frame.origin.x = point.x - marker.frame.width/2 //update position after changesize()
+                    
+                    marker.frame.origin.x = point.x - marker.widthOriginOffset/2
                     marker.frame.origin.y = point.y - marker.frame.height
                     
                     //test > markerId map to marker list
@@ -4048,7 +4058,8 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
                     self.markerList.append(marker) //test
                     marker.delegate = self
                     marker.initialize(withAnimation: true, changeSizeZoom: CGFloat(tZoom)) //try 14, default: zoom
-                    marker.frame.origin.x = point.x - marker.frame.width/2 //update position after changesize()
+//                    marker.frame.origin.x = point.x - marker.frame.width/2 //update position after changesize()
+                    marker.frame.origin.x = point.x - marker.widthOriginOffset/2
                     marker.frame.origin.y = point.y - marker.frame.height
                     
                     //test > markerId map to marker list
@@ -4095,8 +4106,11 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
                     self.markerList.append(marker) //test
                     marker.delegate = self
     //                marker.initialize(withAnimation: true, changeSizeZoom: CGFloat(zoom))
+                    //test
+                    marker.configure(data: "a")
                     marker.initialize(withAnimation: true, changeSizeZoom: CGFloat(tZoom)) //try 14, default: zoom
-                    marker.frame.origin.x = point.x - marker.frame.width/2 //update position after changesize()
+
+                    marker.frame.origin.x = point.x - marker.widthOriginOffset/2
                     marker.frame.origin.y = point.y - marker.frame.height
                     
                     //test > markerId map to marker list
@@ -4136,8 +4150,11 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
                         self.view.insertSubview(marker, aboveSubview: mapView)
                         self.markerList.append(marker) //test
                         marker.delegate = self
+                        //test
+                        marker.configure(data: "a")
                         marker.initialize(withAnimation: true, changeSizeZoom: CGFloat(zoom))
-                        marker.frame.origin.x = point.x - marker.frame.width/2 //update position after changesize()
+                        
+                        marker.frame.origin.x = point.x - marker.widthOriginOffset/2
                         marker.frame.origin.y = point.y - marker.frame.height
                         
                         //test > markerId map to marker list
@@ -4181,8 +4198,11 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
                         self.markerList.append(marker) //test
                         marker.delegate = self
                         marker.hideInfoBox() //test
+                        //test
+                        marker.configure(data: "a")
                         marker.initialize(withAnimation: true, changeSizeZoom: CGFloat(zoom))
-                        marker.frame.origin.x = point.x - marker.frame.width/2 //update position after changesize()
+                        
+                        marker.frame.origin.x = point.x - marker.widthOriginOffset/2
                         marker.frame.origin.y = point.y - marker.frame.height
                         
                         //test > markerId map to marker list
@@ -4225,7 +4245,8 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
                 self.markerList.append(marker) //test
 //                marker.delegate = self
                 marker.initialize(withAnimation: true, changeSizeZoom: CGFloat(zoom)) //try 14, default: zoom
-                marker.frame.origin.x = point.x - marker.frame.width/2 //update position after changesize()
+//                marker.frame.origin.x = point.x - marker.frame.width/2 //update position after changesize()
+                marker.frame.origin.x = point.x - marker.widthOriginOffset/2
                 marker.frame.origin.y = point.y - marker.frame.height
                 
 //                marker.setOnscreen(os: true) //test > to prevent oncreen animation when map moves
@@ -4262,8 +4283,12 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
 //                self.view.insertSubview(marker, belowSubview: lPinner)
                 self.markerList.append(marker) //test
                 marker.delegate = self
+                //test
+                marker.configure(data: "a")
                 marker.initialize(withAnimation: true, changeSizeZoom: CGFloat(zoom)) //try 14, default: zoom
-                marker.frame.origin.x = point.x - marker.frame.width/2 //update position after changesize()
+                
+//                marker.frame.origin.x = point.x - marker.frame.width/2 //update position after changesize()
+                marker.frame.origin.x = point.x - marker.widthOriginOffset/2
                 marker.frame.origin.y = point.y - marker.frame.height
                 
                 marker.setOnscreen(os: true) //test > to prevent oncreen animation when map moves
@@ -4301,7 +4326,8 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
 //                self.view.insertSubview(lPinner, aboveSubview: mapView)
                 self.view.insertSubview(lPinner, belowSubview: pv)
 //                self.view.addSubview(lPinner)
-                lPinner.frame.origin.x = point.x - lPinner.frame.width/2 //update position after changesize()
+//                lPinner.frame.origin.x = point.x - lPinner.frame.width/2 //update position after changesize()
+                lPinner.frame.origin.x = point.x - lPinner.widthOriginOffset/2
                 lPinner.frame.origin.y = point.y - lPinner.frame.height
             }
             
@@ -4331,7 +4357,8 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
                 self.markerList.append(marker) //test
 //                marker.delegate = self
                 marker.initialize(withAnimation: true, changeSizeZoom: CGFloat(zoom)) //try 14, default: zoom
-                marker.frame.origin.x = point.x - marker.frame.width/2 //update position after changesize()
+//                marker.frame.origin.x = point.x - marker.frame.width/2 //update position after changesize()
+                marker.frame.origin.x = point.x - marker.widthOriginOffset/2
                 marker.frame.origin.y = point.y - marker.frame.height
                 
                 //test > markerId map to marker list
@@ -5303,6 +5330,9 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         unhideMenuPanel()
         //***
         
+        //test > dismiss RHS content filter btn
+        hideRMapSettingBtn()
+        
         //test > remove last page
         if(!pageList.isEmpty) {
             pageList.remove(at: pageList.count - 1)
@@ -5454,6 +5484,9 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
             hideMiniApps()//test
             hideMenuPanel()//test
         }
+        
+        //test > dismiss RHS content filter btn
+        hideRMapSettingBtn()
         
         print("page: \(pageList)")
         

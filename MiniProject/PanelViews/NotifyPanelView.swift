@@ -525,8 +525,8 @@ class NotifyPanelView: PanelView{
 
         let id_ = "post"
         let isPaginate = false
-        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
-//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+//        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+        DataFetchManager.shared.fetchNotifyFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -544,7 +544,13 @@ class NotifyPanelView: PanelView{
 //                    feed.dataPaginateStatus = "fetch"
                     
                     //test 1
-                    feed.vDataList.append(contentsOf: l)
+//                    feed.vDataList.append(contentsOf: l)
+                    for i in l {
+                        let notifyData = NotifyData()
+                        notifyData.setData(rData: i)
+                        feed.vDataList.append(notifyData)
+                    }
+                    
                     feed.vCV?.reloadData()
 
                     //*test 3 > reload only appended data, not entire dataset
@@ -589,8 +595,8 @@ class NotifyPanelView: PanelView{
 
         let id_ = "post"
         let isPaginate = true
-        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
-//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+//        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+        DataFetchManager.shared.fetchNotifyFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -616,7 +622,11 @@ class NotifyPanelView: PanelView{
                     var indexPaths = [IndexPath]()
                     var j = 1
                     for i in l {
-                        feed.vDataList.append(i)
+//                        feed.vDataList.append(i)
+                        
+                        let notifyData = NotifyData()
+                        notifyData.setData(rData: i)
+                        feed.vDataList.append(notifyData)
 
                         let idx = IndexPath(item: dataCount - 1 + j, section: 0)
                         indexPaths.append(idx)

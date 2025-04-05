@@ -118,6 +118,7 @@ class HResultLocationListViewCell: UICollectionViewCell {
         aNameText.topAnchor.constraint(equalTo: eUserCover.topAnchor, constant: 5).isActive = true
         aNameText.leadingAnchor.constraint(equalTo: aUserPhoto.trailingAnchor, constant: 10).isActive = true
         aNameText.text = "-"
+        aNameText.trailingAnchor.constraint(lessThanOrEqualTo: aFollowA.leadingAnchor, constant: -50).isActive = true
         
         //test > verified badge
 //        let vBtn = UIImageView(image: UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate))
@@ -163,14 +164,24 @@ class HResultLocationListViewCell: UICollectionViewCell {
         actionUI(doneState: false)
     }
     
-    func configure(data: PostData) {
+//    func configure(data: PostData) {
+    func configure(data: BaseData) {
         
-        let l = data.dataType
+        guard let a = data as? PlaceData else {
+            return
+        }
+        
+//        let l = data.dataType
+        let l = a.dataCode
         
         if(l == "a") {
             asyncConfigure(data: "")
             
-            self.aNameText.text = "Petronas Twin Tower"
+//            self.aNameText.text = "Petronas Twin Tower"
+//            self.aNameText.text = "." //test with ""
+            self.aNameText.text = a.dataTextString
+            let imageUrl = URL(string: a.coverPhotoString)
+            self.aUserPhoto.sd_setImage(with: imageUrl)
         }
         else if(l == "na") {
             
@@ -196,8 +207,8 @@ class HResultLocationListViewCell: UICollectionViewCell {
                         return
                     }
 
-                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-                    self.aUserPhoto.sd_setImage(with: imageUrl)
+//                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//                    self.aUserPhoto.sd_setImage(with: imageUrl)
 //                    self.aNameText.text = "Petronas Twin Tower"
                     self.aUserNameText.text = "101 posts"
                     
@@ -217,8 +228,8 @@ class HResultLocationListViewCell: UICollectionViewCell {
                     self.aUserNameText.text = "-"
                     self.vBtn.image = nil
                     
-                    let imageUrl = URL(string: "")
-                    self.aUserPhoto.sd_setImage(with: imageUrl)
+//                    let imageUrl = URL(string: "")
+//                    self.aUserPhoto.sd_setImage(with: imageUrl)
                     
                     self.aFollowA.isHidden = true
                 }

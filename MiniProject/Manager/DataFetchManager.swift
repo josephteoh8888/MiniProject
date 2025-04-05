@@ -21,6 +21,39 @@ class DataFetchManager {
     
     public var isPaginating = false
 
+    func fetchPulsewaveData(id: Int, pagination: Bool = false, completion: @escaping (Result<[String], Error>) -> Void) {
+        
+        if pagination {
+            isPaginating = true
+        }
+        DispatchQueue.global().asyncAfter(deadline: .now()+1.6, execute: {
+            let originalData = [
+                String(id)
+            ]
+            let newData = [
+                "banana", "orange"
+            ]
+            completion(.success(pagination ? newData: originalData))
+            
+            if pagination {
+                self.isPaginating = false
+            }
+        })
+    }
+    
+    //test > dummy time delay
+    func fetchDummyDataTimeDelay(id: String, completion: @escaping (Result<String, Error>) -> Void) {
+        DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s
+            
+            if id == "a" {
+                completion(.success("a"))
+            }
+            else {
+                completion(.failure(FetchDataError.invalidResponse))
+            }
+        })
+    }
+    
     func fetchData(id: String, completion: @escaping (Result<[String], Error>) -> Void) {
 //        if pagination {
 //            isPaginating = true
@@ -126,119 +159,605 @@ class DataFetchManager {
         })
     }
     
-    func fetchUserData(id: String, completion: @escaping (Result<[String], Error>) -> Void) {
-        DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s
-            var newData = [String]()
-            if(id == "u") { // "u" - success, "u_" - error
-                newData.append("a") //a - data available, b - suspended, c - deleted
-                completion(.success(newData))
-            }
-            else {
-                completion(.failure(FetchDataError.invalidResponse))
-            }
-        })
-    }
-    
-    func fetchPlaceData(id: String, completion: @escaping (Result<[String], Error>) -> Void) {
-        DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s
-            var newData = [String]()
-            if(id == "p") {
-                newData.append("a")
-                completion(.success(newData))
-            }
-            else {
-                completion(.failure(FetchDataError.invalidResponse))
-            }
-        })
-    }
-    
-    func fetchSoundData(id: String, completion: @escaping (Result<[String], Error>) -> Void) {
-        DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s
-            var newData = [String]()
-            if(id == "s") {
-                newData.append("a")
-                completion(.success(newData))
-            }
-            else {
-                completion(.failure(FetchDataError.invalidResponse))
-            }
-        })
-    }
-    
-    func fetchPostData(id: String, completion: @escaping (Result<[String], Error>) -> Void) {
-        DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s
-            var newData = [String]()
-            if(id == "post") {
-                newData.append("a")
-                completion(.success(newData))
-            }
-            else {
-                completion(.failure(FetchDataError.invalidResponse))
-            }
-        })
-    }
-    
-    func fetchFeedData(id: String, isPaginate: Bool, completion: @escaping (Result<[String], Error>) -> Void) {
+//    func fetchUserData(id: String, completion: @escaping (Result<[String], Error>) -> Void) {
+    func fetchUserData(id: String, completion: @escaping (Result<[UserDataset], Error>) -> Void) {
         DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s
             var newData = [String]()
             
-            if(id == "post") {
-                if(isPaginate == false) {
-        
-                    newData.append("a")
-                    newData.append("na") //a
-                    newData.append("us") //a
-                    newData.append("a") //a
-                } else  {
-                    //post_feed_end
+            //*test 2 > real data structure
+            var newDataset = [UserDataset]()
+            let newIdString = ["u1", "u2", "u3", "u4"]
+            
+            if(id == "u") { // "u" - success, "u_" - error
+//                newData.append("a") //a - data available, b - suspended, c - deleted
+                
+                //test 3 > datamanager method
+                DataManager.shared.initData()
+                let rNumber = Int.random(in: 0..<4) //no inclusive
+                let r = newIdString[rNumber]
+
+                if let vData = DataManager.shared.getUserData(id: r) {
+                    newDataset.append(vData)
                 }
-                completion(.success(newData))
+                
+//                completion(.success(newData))
+                completion(.success(newDataset))
             }
             else {
                 completion(.failure(FetchDataError.invalidResponse))
             }
         })
     }
-    func fetchCommentFeedData(id: String, isPaginate: Bool, completion: @escaping (Result<[String], Error>) -> Void) {
+    
+    func fetchPlaceData(id: String, completion: @escaping (Result<[PlaceDataset], Error>) -> Void) {
+        DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s
+//            var newData = [String]()
+            
+            //*test 2 > real data structure
+            var newDataset = [PlaceDataset]()
+            let newIdString = ["p1", "p2", "p3", "p4"]
+            
+            if(id == "p") {
+//                newData.append("a")
+                
+                //test 3 > datamanager method
+                DataManager.shared.initData()
+                let rNumber = Int.random(in: 0..<4) //no inclusive
+                let r = newIdString[rNumber]
+                
+                if let vData = DataManager.shared.getPlaceData(id: r) {
+                    newDataset.append(vData)
+                }
+                
+//                completion(.success(newData))
+                completion(.success(newDataset))
+            }
+            else {
+                completion(.failure(FetchDataError.invalidResponse))
+            }
+        })
+    }
+    
+//    func fetchSoundData(id: String, completion: @escaping (Result<[String], Error>) -> Void) {
+    func fetchSoundData(id: String, completion: @escaping (Result<[SoundDataset], Error>) -> Void) {
         DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s
             var newData = [String]()
+            
+            //*test 2 > real data structure
+            var newDataset = [SoundDataset]()
+            let newIdString = ["s1", "s2", "s3", "s4"]
+            
+            if(id == "s") {
+//                newData.append("a")
+                
+                //test 3 > datamanager method
+                DataManager.shared.initData()
+                let rNumber = Int.random(in: 0..<4) //no inclusive
+                let r = newIdString[rNumber]
+                
+                if let vData = DataManager.shared.getSoundData(id: r) {
+                    newDataset.append(vData)
+                }
+                
+//                completion(.success(newData))
+                completion(.success(newDataset))
+            }
+            else {
+                completion(.failure(FetchDataError.invalidResponse))
+            }
+        })
+    }
+    
+    //*test 2 > new method fetching data for selected id
+    func fetchUserData2(id: String, completion: @escaping (Result<UserDataset, Error>) -> Void) {
+        DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s
+            
+            DataManager.shared.initData()
+            
+            if let vData = DataManager.shared.getUserData(id: id) {
+                completion(.success(vData))
+            }
+            else {
+                //to be replaced with proper error code
+                completion(.failure(FetchDataError.invalidResponse))
+            }
+        })
+    }
+    
+    func fetchPlaceData2(id: String, completion: @escaping (Result<PlaceDataset, Error>) -> Void) {
+        DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s
+            
+            DataManager.shared.initData()
+            
+            if let vData = DataManager.shared.getPlaceData(id: id) {
+                completion(.success(vData))
+            }
+            else {
+                //to be replaced with proper error code
+                completion(.failure(FetchDataError.invalidResponse))
+            }
+        })
+    }
+    
+    func fetchSoundData2(id: String, completion: @escaping (Result<SoundDataset, Error>) -> Void) {
+        DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s
+            
+            DataManager.shared.initData()
+            
+            if let vData = DataManager.shared.getSoundData(id: id) {
+                completion(.success(vData))
+            }
+            else {
+                //to be replaced with proper error code
+                completion(.failure(FetchDataError.invalidResponse))
+            }
+        })
+    }
+    
+    func fetchVideoData2(id: String, completion: @escaping (Result<VideoDataset, Error>) -> Void) {
+        DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s
+            
+            DataManager.shared.initData()
+            
+            if let vData = DataManager.shared.getVideoData(id: id) {
+                completion(.success(vData))
+            }
+            else {
+                //to be replaced with proper error code
+                completion(.failure(FetchDataError.invalidResponse))
+            }
+        })
+    }
+    
+    func fetchPostData2(id: String, completion: @escaping (Result<PostDataset, Error>) -> Void) {
+        DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s
+            
+            DataManager.shared.initData()
+            
+            if let vData = DataManager.shared.getPostData(id: id) {
+                completion(.success(vData))
+            }
+            else {
+                //to be replaced with proper error code
+                completion(.failure(FetchDataError.invalidResponse))
+            }
+        })
+    }
+    
+    func fetchPhotoData2(id: String, completion: @escaping (Result<PhotoDataset, Error>) -> Void) {
+        DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s
+            
+            DataManager.shared.initData()
+            
+            if let vData = DataManager.shared.getPhotoData(id: id) {
+                completion(.success(vData))
+            }
+            else {
+                //to be replaced with proper error code
+                completion(.failure(FetchDataError.invalidResponse))
+            }
+        })
+    }
+    //*
+    
+//    func fetchFeedData(id: String, isPaginate: Bool, completion: @escaping (Result<[String], Error>) -> Void) {
+    func fetchFeedData(id: String, isPaginate: Bool, completion: @escaping (Result<[BaseDataset], Error>) -> Void) {
+        DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s
+//            var newData = [String]()
+            
+            //*test 2 > real data structure
+            var newDataset = [BaseDataset]()
+//            let newDataString = ["a", "na", "us", "a"]
+            
+//            if(id == "post") {
+            if(id != "") { //temp "" for testing for multi-modal data fetch > "u", "p" etc
+                if(isPaginate == false) {
+        
+//                    newData.append("a")
+//                    newData.append("na") //a
+//                    newData.append("us") //a
+//                    newData.append("a") //a
+                    
+                    //test 3 > datamanager method
+                    DataManager.shared.initData()
+                    if(id == "u") {
+                        let newIdString = ["u1", "u2", "u3", "u4"]
+                        for r in newIdString {
+                            if let vData = DataManager.shared.getUserData(id: r) {
+                                newDataset.append(vData)
+                            }
+                        }
+                    }
+                    else if(id == "p") {
+                        let newIdString = ["p1", "p2", "p3", "p4"]
+                        for r in newIdString {
+                            if let vData = DataManager.shared.getPlaceData(id: r) {
+                                newDataset.append(vData)
+                            }
+                        }
+                    }
+                    else if(id == "s") {
+                        let newIdString = ["s1", "s2", "s3", "s4"]
+                        for r in newIdString {
+                            if let vData = DataManager.shared.getSoundData(id: r) {
+                                newDataset.append(vData)
+                            }
+                        }
+                    }
+                    else if(id == "post") {
+                        let newIdString = ["post1", "post2", "post3", "post4"]
+                        for r in newIdString {
+                            if let vData = DataManager.shared.getPostData(id: r) {
+                                newDataset.append(vData)
+                            }
+                        }
+                    }
+                    else if(id == "photo") {
+                        let newIdString = ["photo1", "photo2", "photo3", "photo4"]
+                        for r in newIdString {
+                            if let vData = DataManager.shared.getPhotoData(id: r) {
+                                newDataset.append(vData)
+                            }
+                        }
+                    }
+                    else if(id == "video") {
+                        let newIdString = ["video1", "video2", "video3", "video4"]
+                        for r in newIdString {
+                            if let vData = DataManager.shared.getVideoData(id: r) {
+                                newDataset.append(vData)
+                            }
+                        }
+                    }
+                } else  {
+                    //post_feed_end
+                }
+//                completion(.success(newData))
+                completion(.success(newDataset))
+            }
+            else {
+                completion(.failure(FetchDataError.invalidResponse))
+            }
+        })
+    }
+    
+//    func fetchPostData(id: String, completion: @escaping (Result<[String], Error>) -> Void) {
+    func fetchPostFeedData(id: String, isPaginate: Bool,completion: @escaping (Result<[PostDataset], Error>) -> Void) {
+        DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s
+//            var newData = [String]()
+            
+            //*test 2 > real data structure
+            var newDataset = [PostDataset]()
+//            let newDataString = ["a", "na", "us", "a"]
+            let newIdString = ["post1", "post2", "post3", "post4"]
+            if(id == "post") {
+                if(isPaginate == false) {
+        
+//                    newData.append("a")
+//                    newData.append("na") //a
+//                    newData.append("us") //a
+//                    newData.append("a") //a
+                    
+                    //test 2 > postdataset method
+//                    for r in newDataString {
+//                        let vData = PostDataset()
+//                        vData.setupData(data: r)
+//                        newDataset.append(vData)
+//                    }
+                    
+                    //test 3 > datamanager method
+                    DataManager.shared.initData()
+                    for r in newIdString {
+                        if let vData = DataManager.shared.getPostData(id: r) {
+                            newDataset.append(vData)
+                        }
+                    }
+                } else  {
+                    //post_feed_end
+                }
+//                completion(.success(newData))
+                completion(.success(newDataset))
+            }
+            else {
+                completion(.failure(FetchDataError.invalidResponse))
+            }
+        })
+    }
+    
+//    func fetchCommentFeedData(id: String, isPaginate: Bool, completion: @escaping (Result<[String], Error>) -> Void) {
+    func fetchCommentFeedData(id: String, isPaginate: Bool, completion: @escaping (Result<[CommentDataset], Error>) -> Void) {
+        DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s
+//            var newData = [String]()
+            
+            //*test 2 > real data structure
+            var newDataset = [CommentDataset]()
+//            let newDataString = ["a", "b", "c"]
+            let newIdString = ["comment1", "comment2", "comment3", "comment4"]
             
             if(id == "comment") {
                 if(isPaginate == false) {
         
-                    newData.append("a")
-                    newData.append("b") //a
-                    newData.append("c") //a
-                    
 //                    newData.append("a")
 //                    newData.append("b") //a
 //                    newData.append("c") //a
+                    
+                    //test 2 > real data structure
+//                    for r in newDataString {
+//                        let vData = CommentDataset()
+//                        vData.setupData(data: r)
+//                        newDataset.append(vData)
+//                    }
+                    
+                    //test 3 > datamanager method
+                    DataManager.shared.initData()
+                    for r in newIdString {
+                        if let vData = DataManager.shared.getCommentData(id: r) {
+                            newDataset.append(vData)
+                        }
+                    }
                 } else  {
                     //post_feed_end
                 }
-                completion(.success(newData))
+//                completion(.success(newData))
+                completion(.success(newDataset))
             }
             else {
                 completion(.failure(FetchDataError.invalidResponse))
             }
         })
     }
-    func fetchVideoData(id: String, isPaginate: Bool, completion: @escaping (Result<[String], Error>) -> Void) {
+    func fetchPhotoFeedData(id: String, isPaginate: Bool, completion: @escaping (Result<[PhotoDataset], Error>) -> Void) {
         DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s
-            var newData = [String]()
+//            var newData = [String]()
+            
+            //*test 2 > real data structure
+            var newDataset = [PhotoDataset]()
+//            let newDataString = ["a", "na", "us", "a"]
+            let newIdString = ["photo1", "photo2", "photo3", "photo4"]
+            
+            if(id == "post") {
+                if(isPaginate == false) {
+        
+//                    newData.append("a")
+//                    newData.append("na") //a
+//                    newData.append("us") //a
+//                    newData.append("a") //a
+                    
+                    //test 2 > real data structure
+//                    for r in newDataString {
+//                        let vData = PhotoDataset()
+//                        vData.setupData(data: r)
+//                        newDataset.append(vData)
+//                    }
+                    
+                    //test 3 > datamanager method
+                    DataManager.shared.initData()
+                    for r in newIdString {
+                        if let vData = DataManager.shared.getPhotoData(id: r) {
+                            newDataset.append(vData)
+                        }
+                    }
+                } else  {
+                    //post_feed_end
+                }
+//                completion(.success(newData))
+                completion(.success(newDataset))
+            }
+            else {
+                completion(.failure(FetchDataError.invalidResponse))
+            }
+        })
+    }
+//    func fetchVideoData(id: String, isPaginate: Bool, completion: @escaping (Result<[String], Error>) -> Void) {
+    func fetchVideoFeedData(id: String, isPaginate: Bool, completion: @escaping (Result<[VideoDataset], Error>) -> Void) {
+        DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s
+            //ori
+//            var newData = [String]()
+            
+            //*test 2 > real data structure
+            var newDataset = [VideoDataset]()
+//            let newDataString = ["a", "na", "a", "a"]
+            let newIdString = ["video1", "video2", "video3", "video4"]
             
             if(id == "video") {
                 if(isPaginate == false) {
-        
-                    newData.append("a")
-                    newData.append("na") //a
-                    newData.append("a") //a
-                    newData.append("a") //a
+                    //ori
+//                    newData.append("a")
+//                    newData.append("na") //a
+//                    newData.append("a") //a
+//                    newData.append("a") //a
+                    
+                    //test 2 > real data structure
+//                    for r in newDataString {
+//                        let vData = VideoDataset()
+//                        vData.setupData(data: r)
+//                        newDataset.append(vData)
+//                    }
+                    
+                    //test 3 > datamanager method
+                    DataManager.shared.initData()
+                    for r in newIdString {
+                        if let vData = DataManager.shared.getVideoData(id: r) {
+                            newDataset.append(vData)
+                        }
+                    }
                 } else  {
                     //video_feed_end
 //                    newData.append("a") 
                 }
-                completion(.success(newData))
+//                completion(.success(newData))
+                completion(.success(newDataset))
+            }
+            else {
+                completion(.failure(FetchDataError.invalidResponse))
+            }
+        })
+    }
+    
+    func fetchNotifyFeedData(id: String, isPaginate: Bool, completion: @escaping (Result<[NotifyDataset], Error>) -> Void) {
+        DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s
+//            var newData = [String]()
+            
+            //*test 2 > real data structure
+            var newDataset = [NotifyDataset]()
+//            let newDataString = ["a", "na", "us", "a"]
+            let newIdString = ["notify1", "notify2", "notify3", "notify4"]
+            
+            if(id == "post") {
+                if(isPaginate == false) {
+        
+//                    newData.append("a")
+//                    newData.append("na") //a
+//                    newData.append("us") //a
+//                    newData.append("a") //a
+                    
+                    //test 2 > real data structure
+//                    for r in newDataString {
+//                        let vData = NotifyDataset()
+//                        vData.setupData(data: r)
+//                        newDataset.append(vData)
+//                    }
+                    
+                    //test 3 > datamanager method
+                    DataManager.shared.initData()
+                    for r in newIdString {
+                        if let vData = DataManager.shared.getNotifyData(id: r) {
+                            newDataset.append(vData)
+                        }
+                    }
+                } else  {
+                    //post_feed_end
+                }
+//                completion(.success(newData))
+                completion(.success(newDataset))
+            }
+            else {
+                completion(.failure(FetchDataError.invalidResponse))
+            }
+        })
+    }
+    
+    func fetchPlaceFeedData(id: String, isPaginate: Bool,completion: @escaping (Result<[PlaceDataset], Error>) -> Void) {
+        DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s
+//            var newData = [String]()
+            
+            //*test 2 > real data structure
+            var newDataset = [PlaceDataset]()
+//            let newDataString = ["a", "na", "us", "a"]
+            let newIdString = ["p1", "p2", "p3", "p4"]
+
+            if(id == "post") {
+                if(isPaginate == false) {
+        
+//                    newData.append("a")
+//                    newData.append("na") //a
+//                    newData.append("us") //a
+//                    newData.append("a") //a
+                    
+                    //test 2 > real data structure
+//                    for r in newDataString {
+//                        let vData = PlaceDataset()
+//                        vData.setupData(data: r)
+//                        newDataset.append(vData)
+//                    }
+                    
+                    //test 3 > datamanager method
+                    DataManager.shared.initData()
+                    for r in newIdString {
+                        if let vData = DataManager.shared.getPlaceData(id: r) {
+                            newDataset.append(vData)
+                        }
+                    }
+                } else  {
+                    //post_feed_end
+                }
+//                completion(.success(newData))
+                completion(.success(newDataset))
+            }
+            else {
+                completion(.failure(FetchDataError.invalidResponse))
+            }
+        })
+    }
+    
+    func fetchSoundFeedData(id: String, isPaginate: Bool,completion: @escaping (Result<[SoundDataset], Error>) -> Void) {
+        DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s
+//            var newData = [String]()
+            
+            //*test 2 > real data structure
+            var newDataset = [SoundDataset]()
+//            let newDataString = ["a", "na", "us", "a"]
+            let newIdString = ["s1", "s2", "s3", "s4"]
+            
+            if(id == "post") {
+                if(isPaginate == false) {
+        
+//                    newData.append("a")
+//                    newData.append("na") //a
+//                    newData.append("us") //a
+//                    newData.append("a") //a
+                    
+                    //test 2 > real data structure
+//                    for r in newDataString {
+//                        let vData = SoundDataset()
+//                        vData.setupData(data: r)
+//                        newDataset.append(vData)
+//                    }
+                    
+                    //test 3 > datamanager method
+                    DataManager.shared.initData()
+                    for r in newIdString {
+                        if let vData = DataManager.shared.getSoundData(id: r) {
+                            newDataset.append(vData)
+                        }
+                    }
+                } else  {
+                    //post_feed_end
+                }
+//                completion(.success(newData))
+                completion(.success(newDataset))
+            }
+            else {
+                completion(.failure(FetchDataError.invalidResponse))
+            }
+        })
+    }
+    
+    func fetchUserFeedData(id: String, isPaginate: Bool,completion: @escaping (Result<[UserDataset], Error>) -> Void) {
+        DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s
+//            var newData = [String]()
+            
+            //*test 2 > real data structure
+            var newDataset = [UserDataset]()
+//            let newDataString = ["a", "na", "us", "a"]
+            let newIdString = ["u1", "u2", "u3", "u4"]
+            
+            if(id == "post") {
+                if(isPaginate == false) {
+        
+//                    newData.append("a")
+//                    newData.append("na") //a
+//                    newData.append("us") //a
+//                    newData.append("a") //a
+                    
+                    //test 2 > real data structure
+//                    for r in newDataString {
+//                        let vData = UserDataset()
+//                        vData.setupData(data: r)
+//                        newDataset.append(vData)
+//                    }
+                    
+                    //test 3 > datamanager method
+                    DataManager.shared.initData()
+                    for r in newIdString {
+                        if let vData = DataManager.shared.getUserData(id: r) {
+                            newDataset.append(vData)
+                        }
+                    }
+                } else  {
+                    //post_feed_end
+                }
+//                completion(.success(newData))
+                completion(.success(newDataset))
             }
             else {
                 completion(.failure(FetchDataError.invalidResponse))

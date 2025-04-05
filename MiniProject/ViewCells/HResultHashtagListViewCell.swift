@@ -177,9 +177,15 @@ class HResultHashtagListViewCell: UICollectionViewCell {
         
         actionUI(doneState: false)
     }
-    func configure(data: PostData) {
+//    func configure(data: PostData) {
+    func configure(data: BaseData) {
 
-        let l = data.dataType
+        guard let a = data as? PostData else {
+            return
+        }
+        
+//        let l = data.dataType
+        let l = a.dataCode
         
         if(l == "a") {
             asyncConfigure(data: "")
@@ -198,7 +204,7 @@ class HResultHashtagListViewCell: UICollectionViewCell {
     //*test > async fetch images/names/videos
     func asyncConfigure(data: String) {
         let id = "p"
-        DataFetchManager.shared.fetchPlaceData(id: id) { [weak self]result in
+        DataFetchManager.shared.fetchDummyDataTimeDelay(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 

@@ -126,9 +126,9 @@ class MeHistoryListPanelView: PanelView{
 //        aTitleText.trailingAnchor.constraint(equalTo: aLoggedOutTextBox.trailingAnchor, constant: -10).isActive = true
         aTitleText.text = "Viewed History" //Profile
         
-        tabDataList.append("p") //posts
-        tabDataList.append("v") //video
-        tabDataList.append("i") //shot
+        tabDataList.append(DataTypes.POST) //posts
+        tabDataList.append(DataTypes.LOOP) //video
+        tabDataList.append(DataTypes.SHOT) //shot
 //        tabDataList.append("c") //comment
 //        tabDataList.append("f") notification
 //        tabDataList.append("dm") //chat
@@ -413,11 +413,11 @@ class MeHistoryListPanelView: PanelView{
             stack.setArrowAdded(isArrowAdd: false)
             stack.delegate = self
 
-            if(d == "p") {
+            if(d == DataTypes.POST) {
                 stack.setText(code: d, d: "Posts") //Messages
-            } else if(d == "v") {
+            } else if(d == DataTypes.LOOP) {
                 stack.setText(code: d, d: "Videos")
-            } else if(d == "i") {
+            } else if(d == DataTypes.SHOT) {
                 stack.setText(code: d, d: "Shots")
             }
         }
@@ -431,11 +431,11 @@ class MeHistoryListPanelView: PanelView{
             
             var stack: ScrollFeedHResultListCell?
             
-            if(d == "p") {
+            if(d == DataTypes.POST) {
                 stack = ScrollFeedHResultPostListCell()
-            } else if(d == "v") {
+            } else if(d == DataTypes.LOOP) {
                 stack = ScrollFeedHResultVideoListCell()
-            } else if(d == "i") {
+            } else if(d == DataTypes.SHOT) {
                 stack = ScrollFeedHResultPhotoListCell()
             } else {
                 stack = ScrollFeedHResultUserListCell()
@@ -514,7 +514,11 @@ class MeHistoryListPanelView: PanelView{
                     if(!self.feedList.isEmpty) {
                         let feed = self.feedList[self.currentIndex]
                         if(self.isUserLoggedIn) {
-                            self.asyncFetchFeed(cell: feed, id: "notify_feed")
+//                            self.asyncFetchFeed(cell: feed, id: "notify_feed")
+                            
+                            //test 2 > new method
+                            let feedCode = feed.feedCode
+                            self.asyncFetchFeed(cell: feed, id: feedCode)
                         }
                     }
                 }
@@ -558,7 +562,11 @@ class MeHistoryListPanelView: PanelView{
             feed.configureFooterUI(data: "")
             
             feed.dataPaginateStatus = ""
-            asyncFetchFeed(cell: feed, id: "notify_feed")
+//            asyncFetchFeed(cell: feed, id: "notify_feed")
+            
+            //test 2 > new method
+            let feedCode = feed.feedCode
+            self.asyncFetchFeed(cell: feed, id: feedCode)
         }
     }
     
@@ -590,7 +598,7 @@ class MeHistoryListPanelView: PanelView{
 
         let id_ = "post"
         let isPaginate = false
-        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+        DataFetchManager.shared.fetchFeedData(id: id, isPaginate: isPaginate) { [weak self]result in
 //        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -611,11 +619,28 @@ class MeHistoryListPanelView: PanelView{
                     //test 1
 //                    feed.vDataList.append(contentsOf: l)
                     for i in l {
-                        let postData = PostData()
-                        postData.setDataType(data: i)
-                        postData.setData(data: i)
-                        postData.setTextString(data: i)
-                        feed.vDataList.append(postData)
+//                        let postData = PostData()
+//                        postData.setDataType(data: i)
+//                        postData.setData(data: i)
+//                        postData.setTextString(data: i)
+//                        feed.vDataList.append(postData)
+                        
+                        //test 2 > new method
+                        if let post = i as? PostDataset {
+                            let postData = PostData()
+                            postData.setData(rData: post)
+                            feed.vDataList.append(postData)
+                        }
+                        else if let photo = i as? PhotoDataset {
+                            let photoData = PhotoData()
+                            photoData.setData(rData: photo)
+                            feed.vDataList.append(photoData)
+                        }
+                        else if let video = i as? VideoDataset {
+                            let videoData = VideoData()
+                            videoData.setData(rData: video)
+                            feed.vDataList.append(videoData)
+                        }
                     }
                     feed.vCV?.reloadData()
                     
@@ -665,7 +690,7 @@ class MeHistoryListPanelView: PanelView{
 
         let id_ = "post"
         let isPaginate = true
-        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+        DataFetchManager.shared.fetchFeedData(id: id, isPaginate: isPaginate) { [weak self]result in
 //        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -695,15 +720,44 @@ class MeHistoryListPanelView: PanelView{
                     for i in l {
 //                        feed.vDataList.append(i)
                         
-                        let postData = PostData()
-                        postData.setDataType(data: i)
-                        postData.setData(data: i)
-                        postData.setTextString(data: i)
-                        feed.vDataList.append(postData)
-
-                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
-                        indexPaths.append(idx)
-                        j += 1
+//                        let postData = PostData()
+//                        postData.setDataType(data: i)
+//                        postData.setData(data: i)
+//                        postData.setTextString(data: i)
+//                        feed.vDataList.append(postData)
+//
+//                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+//                        indexPaths.append(idx)
+//                        j += 1
+                        
+                        //test 2 > new method
+                        if let post = i as? PostDataset {
+                            let postData = PostData()
+                            postData.setData(rData: post)
+                            feed.vDataList.append(postData)
+                            
+                            let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+                            indexPaths.append(idx)
+                            j += 1
+                        }
+                        else if let photo = i as? PhotoDataset {
+                            let photoData = PhotoData()
+                            photoData.setData(rData: photo)
+                            feed.vDataList.append(photoData)
+                            
+                            let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+                            indexPaths.append(idx)
+                            j += 1
+                        }
+                        else if let video = i as? VideoDataset {
+                            let videoData = VideoData()
+                            videoData.setData(rData: video)
+                            feed.vDataList.append(videoData)
+                            
+                            let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+                            indexPaths.append(idx)
+                            j += 1
+                        }
                     }
                     feed.vCV?.insertItems(at: indexPaths)
                     //*
@@ -850,7 +904,11 @@ extension MeHistoryListPanelView: UIScrollViewDelegate {
                 let feed = self.feedList[rIndex]
                 if(feed.dataPaginateStatus == "") {
                     if(isUserLoggedIn) {
-                        self.asyncFetchFeed(cell: feed, id: "notify_feed")
+//                        self.asyncFetchFeed(cell: feed, id: "notify_feed")
+                        
+                        //test 2 > new method
+                        let feedCode = feed.feedCode
+                        self.asyncFetchFeed(cell: feed, id: feedCode)
                     }
                 }
             }
@@ -1015,7 +1073,11 @@ extension MeHistoryListPanelView: ScrollFeedCellDelegate {
         print("feedhresultlistcell real paginate async")
         if let d = cell as? ScrollFeedHResultListCell {
             if(isUserLoggedIn) {
-                self.asyncPaginateFetchFeed(cell: d, id: "notify_feed_end")
+//                self.asyncPaginateFetchFeed(cell: d, id: "notify_feed_end")
+                
+                //test 2 > new method
+                let feedCode = d.feedCode
+                self.asyncPaginateFetchFeed(cell: d, id: feedCode)
             }
         }
     }

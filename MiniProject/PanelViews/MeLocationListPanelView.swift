@@ -582,8 +582,8 @@ class MeLocationListPanelView: PanelView{
 
         let id_ = "post"
         let isPaginate = false
-        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
-//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+//        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+        DataFetchManager.shared.fetchPlaceFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -603,11 +603,15 @@ class MeLocationListPanelView: PanelView{
                     //test 1
 //                    feed.vDataList.append(contentsOf: l)
                     for i in l {
-                        let postData = PostData()
-                        postData.setDataType(data: i)
-                        postData.setData(data: i)
-                        postData.setTextString(data: i)
-                        feed.vDataList.append(postData)
+//                        let postData = PostData()
+//                        postData.setDataType(data: i)
+//                        postData.setData(data: i)
+//                        postData.setTextString(data: i)
+//                        feed.vDataList.append(postData)
+                        
+                        let pData = PlaceData()
+                        pData.setData(rData: i)
+                        feed.vDataList.append(pData)
                     }
                     feed.vCV?.reloadData()
 
@@ -657,8 +661,8 @@ class MeLocationListPanelView: PanelView{
 
         let id_ = "post"
         let isPaginate = true
-        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
-//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+//        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+        DataFetchManager.shared.fetchPlaceFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -687,11 +691,15 @@ class MeLocationListPanelView: PanelView{
                     for i in l {
 //                        feed.vDataList.append(i)
                         
-                        let postData = PostData()
-                        postData.setDataType(data: i)
-                        postData.setData(data: i)
-                        postData.setTextString(data: i)
-                        feed.vDataList.append(postData)
+//                        let postData = PostData()
+//                        postData.setDataType(data: i)
+//                        postData.setData(data: i)
+//                        postData.setTextString(data: i)
+//                        feed.vDataList.append(postData)
+                        
+                        let pData = PlaceData()
+                        pData.setData(rData: i)
+                        feed.vDataList.append(pData)
 
                         let idx = IndexPath(item: dataCount - 1 + j, section: 0)
                         indexPaths.append(idx)

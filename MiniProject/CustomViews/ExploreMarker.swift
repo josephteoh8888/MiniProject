@@ -15,9 +15,6 @@ protocol ExploreMarkerDelegate : MarkerDelegate {
 //    func didClickExploreMarker(coord: CLLocationCoordinate2D, markerHeight: CGFloat, marker: ExploreMarker)
 //    func didStartClickExploreMarker(marker: ExploreMarker)
 }
-class ExploreMarker: Marker {
-    
-}
 
 //circle
 class ExploreAMarker: ExploreMarker {
@@ -94,18 +91,18 @@ class ExploreAMarker: ExploreMarker {
 //        markerRing.changeLineWidth(width: 3)
         
         //add gif
-        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
-        guard let imageUrl = imageUrl else {
-            return
-        }
+//        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
+//        guard let imageUrl = imageUrl else {
+//            return
+//        }
         let newGifImageSize = viewSize - 6
         gifImage.contentMode = .scaleAspectFill
         gifImage.layer.masksToBounds = true
 //        gifImage.layer.cornerRadius = (viewSize - 8 - 20)/2 //default: (viewSize - 4 - 20)/2
         gifImage.layer.cornerRadius = newGifImageSize/2 //test without -20
-        gifImage.sd_setImage(with: imageUrl)
-        gifImage.backgroundColor = .ddmDarkGreyColor
-//        self.addSubview(gifImage)
+//        gifImage.sd_setImage(with: imageUrl)
+//        gifImage.backgroundColor = .ddmDarkGreyColor
+        gifImage.backgroundColor = .ddmDarkColor
         markerRing.addSubview(gifImage)
         gifImage.translatesAutoresizingMaskIntoConstraints = false
         gifImage.centerXAnchor.constraint(equalTo: markerRing.centerXAnchor).isActive = true
@@ -153,6 +150,58 @@ class ExploreAMarker: ExploreMarker {
                 })
         }
     }
+    
+    override func configure(data: String) {
+//        if(data == "a") {
+//            let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
+//            guard let imageUrl = imageUrl else {
+//                return
+//            }
+//            self.gifImage.sd_setImage(with: imageUrl)
+//        }
+        
+        asyncConfigure(data: "")
+    }
+    
+    //*test > async fetch images/names/videos
+    func asyncConfigure(data: String) {
+        let id = "u" //u_
+        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    print("pdp api success \(id), \(l)")
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
+                    guard let imageUrl = imageUrl else {
+                        return
+                    }
+                    self.gifImage.sd_setImage(with: imageUrl)
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    let imageUrl = URL(string: "")
+                    guard let imageUrl = imageUrl else {
+                        return
+                    }
+                    self.gifImage.sd_setImage(with: imageUrl)
+                }
+                break
+            }
+        }
+    }
+    //*
     
     override func addLocation(coordinate : CLLocationCoordinate2D ) {
         coordinateLocation = coordinate
@@ -396,23 +445,6 @@ class ExploreAMarker: ExploreMarker {
     var maxOvalHeight: CGFloat = 16
     func changeSize(zoomLevel: CGFloat, duringInitialization: Bool) {
         
-        //test > using zoom level with fixed size
-//        var newSize = 44.0 //default 40
-//        var newGifGap = 6.0 //default 8
-//        var newOvalWidthSize = 26.0
-//        var newOvalHeightSize = 8.0
-//        if(zoomLevel >= 8) {
-//            newSize = 44 + ((110 - 44)/(20 - 8) * (zoomLevel - 8))
-//            newGifGap = 6 + ((14 - 6)/(20 - 8) * (zoomLevel - 8))
-//            newOvalWidthSize = 26 + ((50 - 26)/(20 - 8) * (zoomLevel - 8))
-//            newOvalHeightSize = 8 + ((16 - 8)/(20 - 8) * (zoomLevel - 8))
-//        } else {
-//            newSize = 44
-//            newGifGap = 6
-//            newOvalWidthSize = 26
-//            newOvalHeightSize = 8
-//        }
-        
         //test > initialize random size if not already
         if(minMarkerWidth == 0) {
 //            minMarkerWidth = CGFloat(generateRandomSize())
@@ -437,8 +469,6 @@ class ExploreAMarker: ExploreMarker {
         
         //test > with condition of "isinitialized"
         if(duringInitialization) {
-            self.frame.size.height = newSize
-            self.frame.size.width = newSize
             markerRing.layer.cornerRadius = newSize/2
 
             gifHeightLayoutConstraint?.constant = newSize - newGifGap
@@ -447,11 +477,13 @@ class ExploreAMarker: ExploreMarker {
             
             ovalWidthLayoutConstraint?.constant = newOvalWidthSize
             ovalHeightLayoutConstraint?.constant = newOvalHeightSize
+            
+            self.frame.size.height = newSize
+            self.frame.size.width = newSize
+            self.widthOriginOffset = newSize //test => adjust origin for map projection
         } else {
             if(isInitialized) {
                 if(isOnScreen) {
-                    self.frame.size.height = newSize
-                    self.frame.size.width = newSize
                     markerRing.layer.cornerRadius = newSize/2
 
                     gifHeightLayoutConstraint?.constant = newSize - newGifGap
@@ -460,6 +492,10 @@ class ExploreAMarker: ExploreMarker {
                     
                     ovalWidthLayoutConstraint?.constant = newOvalWidthSize
                     ovalHeightLayoutConstraint?.constant = newOvalHeightSize
+                    
+                    self.frame.size.height = newSize
+                    self.frame.size.width = newSize
+                    self.widthOriginOffset = newSize //test => adjust origin for map projection
                 }
             }
         }
@@ -540,6 +576,8 @@ extension ViewController: ExploreMarkerDelegate{
                         self.openPhotoPanel(offX: offsetX, offY: offsetY, originatorView: marker, originatorViewType: OriginatorTypes.MARKER, id: id, originatorViewId: marker.getMarkerId(), preterminedDatasets: [String]())
                     } else if let b = marker as? ExploreBMarker  {
                         self.openVideoPanel(offX: offsetX, offY: offsetY, originatorView: marker, originatorViewType: OriginatorTypes.MARKER, id: id, originatorViewId: marker.getMarkerId())
+                    } else if let a = marker as? PostMarker  {
+                        self.openPostPanel(offX: offsetX, offY: offsetY, originatorView: marker, originatorViewType: OriginatorTypes.MARKER, id: id, originatorViewId: marker.getMarkerId())
                     }
                 }
             }
@@ -635,16 +673,15 @@ class ExploreBMarker: ExploreMarker {
 //        markerRing.changeLineWidth(width: 3)
         
         //add gif
-        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
-        guard let imageUrl = imageUrl else {
-            return
-        }
+//        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
+//        guard let imageUrl = imageUrl else {
+//            return
+//        }
         gifImage.contentMode = .scaleAspectFill
         gifImage.layer.masksToBounds = true
-//        gifImage.layer.cornerRadius = 8
-//        gifImage.layer.cornerRadius = (viewSize - 8)/2
-        gifImage.sd_setImage(with: imageUrl)
-        gifImage.backgroundColor = .ddmDarkGreyColor
+//        gifImage.sd_setImage(with: imageUrl)
+//        gifImage.backgroundColor = .ddmDarkGreyColor
+        gifImage.backgroundColor = .ddmDarkColor
         markerRing.addSubview(gifImage)
         gifImage.translatesAutoresizingMaskIntoConstraints = false
         gifImage.centerXAnchor.constraint(equalTo: markerRing.centerXAnchor).isActive = true
@@ -688,6 +725,58 @@ class ExploreBMarker: ExploreMarker {
                 })
         }
     }
+    
+    override func configure(data: String) {
+//        if(data == "a") {
+//            let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
+//            guard let imageUrl = imageUrl else {
+//                return
+//            }
+//            self.gifImage.sd_setImage(with: imageUrl)
+//        }
+        
+        asyncConfigure(data: "")
+    }
+    
+    //*test > async fetch images/names/videos
+    func asyncConfigure(data: String) {
+        let id = "u" //u_
+        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    print("pdp api success \(id), \(l)")
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
+                    guard let imageUrl = imageUrl else {
+                        return
+                    }
+                    self.gifImage.sd_setImage(with: imageUrl)
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    let imageUrl = URL(string: "")
+                    guard let imageUrl = imageUrl else {
+                        return
+                    }
+                    self.gifImage.sd_setImage(with: imageUrl)
+                }
+                break
+            }
+        }
+    }
+    //*
     
     override func addLocation(coordinate : CLLocationCoordinate2D ) {
         coordinateLocation = coordinate
@@ -930,23 +1019,6 @@ class ExploreBMarker: ExploreMarker {
     var maxOvalHeight: CGFloat = 16
     func changeSize(zoomLevel: CGFloat, duringInitialization: Bool) {
         
-        //test > using zoom level with fixed size
-//        var newSize = 44.0 //default 40
-//        var newGifGap = 6.0 //default 8
-//        var newOvalWidthSize = 26.0
-//        var newOvalHeightSize = 8.0
-//        if(zoomLevel >= 8) {
-//            newSize = 44 + ((110 - 44)/(20 - 8) * (zoomLevel - 8))
-//            newGifGap = 6 + ((14 - 6)/(20 - 8) * (zoomLevel - 8))
-//            newOvalWidthSize = 26 + ((50 - 26)/(20 - 8) * (zoomLevel - 8))
-//            newOvalHeightSize = 8 + ((16 - 8)/(20 - 8) * (zoomLevel - 8))
-//        } else {
-//            newSize = 44
-//            newGifGap = 6
-//            newOvalWidthSize = 26
-//            newOvalHeightSize = 8
-//        }
-        
         //test > initialize random size if not already
         if(minMarkerWidth == 0) {
 //            minMarkerWidth = CGFloat(generateRandomSize())
@@ -972,9 +1044,6 @@ class ExploreBMarker: ExploreMarker {
         //test > with condition of "isinitialized"
         let aspectRatio: CGFloat = 15 / 9 //default 16/9
         if(duringInitialization) {
-            self.frame.size.height = newSize * aspectRatio
-            self.frame.size.width = newSize
-            
             markerHeightLayoutConstraint?.constant = newSize * aspectRatio
             markerWidthLayoutConstraint?.constant = newSize
             markerRing.layer.cornerRadius = newGifGap * 3
@@ -985,12 +1054,13 @@ class ExploreBMarker: ExploreMarker {
             
             ovalWidthLayoutConstraint?.constant = newOvalWidthSize
             ovalHeightLayoutConstraint?.constant = newOvalHeightSize
+            
+            self.frame.size.height = newSize * aspectRatio
+            self.frame.size.width = newSize
+            self.widthOriginOffset = newSize //test => adjust origin for map projection
         } else {
             if(isInitialized) {
                 if(isOnScreen) {
-                    self.frame.size.height = newSize * aspectRatio
-                    self.frame.size.width = newSize
-                    
                     markerHeightLayoutConstraint?.constant = newSize * aspectRatio
                     markerWidthLayoutConstraint?.constant = newSize
                     markerRing.layer.cornerRadius = newGifGap * 3
@@ -1001,6 +1071,10 @@ class ExploreBMarker: ExploreMarker {
                     
                     ovalWidthLayoutConstraint?.constant = newOvalWidthSize
                     ovalHeightLayoutConstraint?.constant = newOvalHeightSize
+                    
+                    self.frame.size.height = newSize * aspectRatio
+                    self.frame.size.width = newSize
+                    self.widthOriginOffset = newSize //test => adjust origin for map projection
                 }
             }
         }

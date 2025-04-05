@@ -170,7 +170,10 @@ class PostClipCell: UIView {
             contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //280
             contentCell.layer.cornerRadius = 10 //5
             contentCell.redrawUI()
-            contentCell.configure(data: "a")
+//            contentCell.configure(data: "a")
+            var da = [String]() //temp solution
+            da.append("https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+            contentCell.configure(data: da)
             contentCell.aDelegate = self //test
             contentCell.setAutohide(isEnabled: false)
             aTestArray.append(contentCell)
@@ -188,7 +191,11 @@ class PostClipCell: UIView {
             let t = "Shot text description"
             contentCell.setDescHeight(lHeight: 40, txt: t)
             contentCell.redrawUI()
-            contentCell.configure(data: "a")
+            contentCell.configure(data: "a") //ori
+//            contentCell.configure(data: "a", state: 0)
+//            var da = [String]() //temp solution
+//            da.append("https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+//            contentCell.configure(data: da)
             contentCell.aDelegate = self //test
             contentCell.setAutohide(isEnabled: false)
             aTestArray.append(contentCell)

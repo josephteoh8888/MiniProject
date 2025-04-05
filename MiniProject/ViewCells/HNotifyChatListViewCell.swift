@@ -182,12 +182,15 @@ class HNotifyChatListViewCell: UICollectionViewCell {
         timeText.layer.opacity = 0.5 //0.5
     }
     
-    func configure(data: String) {
-        
-        if(data == "a") {
+//    func configure(data: String) {
+    func configure(data: NotifyData) {
+        let d = data.dataCode
+//        if(data == "a") {
+        if(d == "a") {
             asyncConfigure(data: "")
             
-            messageText.text = "Happy Birthday!!"
+//            messageText.text = "Happy Birthday!!"
+            messageText.text = data.dataTextString
             messageText.layer.opacity = 1.0 //0.5
             messageText.font = .boldSystemFont(ofSize: 13)
             messageCountBox.isHidden = false
@@ -196,40 +199,14 @@ class HNotifyChatListViewCell: UICollectionViewCell {
             timeText.textColor = .white
             timeText.layer.opacity = 1.0 //0.5
         } 
-        else if(data == "na") {
+//        else if(data == "na") {
+        else if(d == "na") {
             
         }
-        else if(data == "us") {
+//        else if(data == "us") {
+        else if(d == "us") {
             
         }
-//        else if(data == "b") {
-//            messageText.text = "Honey, wanna come over tonight?"
-//            messageText.layer.opacity = 0.6 //0.5
-//            messageText.font = .systemFont(ofSize: 13)
-//            messageCountBox.isHidden = true
-//            
-//            timeText.text = "3h"
-//            timeText.textColor = .white
-//            timeText.layer.opacity = 0.5 //0.5
-//        } else if(data == "c") {
-//            messageText.text = "OMG!"
-//            messageText.layer.opacity = 0.6 //0.5
-//            messageText.font = .systemFont(ofSize: 13)
-//            messageCountBox.isHidden = true
-//            
-//            timeText.text = "10m"
-//            timeText.textColor = .white
-//            timeText.layer.opacity = 0.5 //0.5
-//        } else if(data == "d") {
-//            messageText.text = "Thanks. See ya"
-//            messageText.layer.opacity = 0.6 //0.5
-//            messageText.font = .systemFont(ofSize: 13)
-//            messageCountBox.isHidden = true
-//            
-//            timeText.text = "5d"
-//            timeText.textColor = .white
-//            timeText.layer.opacity = 0.5 //0.5
-//        }
     }
     //*test > async fetch images/names/videos
     func asyncConfigure(data: String) {
@@ -246,12 +223,28 @@ class HNotifyChatListViewCell: UICollectionViewCell {
                         return
                     }
 
-                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-                    self.aUserPhoto.sd_setImage(with: imageUrl)
+                    if(!l.isEmpty) {
+                        let l_0 = l[0]
+                        let uData = UserData()
+                        uData.setData(rData: l_0)
+                        let l_ = uData.dataCode
+                        
+                        self.aNameText.text = uData.dataTextString
+                        
+                        let eImageUrl = URL(string: uData.coverPhotoString)
+                        self.aUserPhoto.sd_setImage(with: eImageUrl)
+                        
+                        if(uData.isAccountVerified) {
+                            self.vBtn.image = UIImage(named:"icon_round_verified_b")?.withRenderingMode(.alwaysTemplate)
+                        }
+                    }
                     
-                    self.aNameText.text = "Michael Kins"
-                    
-                    self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
+//                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//                    self.aUserPhoto.sd_setImage(with: imageUrl)
+//                    
+//                    self.aNameText.text = "Michael Kins"
+//                    
+//                    self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
                 }
 
                 case .failure(let error):

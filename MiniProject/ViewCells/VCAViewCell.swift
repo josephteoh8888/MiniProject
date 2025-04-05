@@ -64,6 +64,7 @@ class VCAViewCell: VCViewCell {
     let mBtn = UIImageView()
     let vBtn = UIImageView()
     let mText = UILabel()
+    let mImage = SDAnimatedImageView()
     let aTitleText = UILabel()
     let aNameText = UILabel()
     let eImage = SDAnimatedImageView()
@@ -433,11 +434,11 @@ class VCAViewCell: VCViewCell {
         mMini.layer.opacity = 0.3 //0.7
         
 //        let mImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
-        let mImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-        let mImage = SDAnimatedImageView()
+//        let mImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//        let mImage = SDAnimatedImageView()
         mImage.contentMode = .scaleAspectFill
         mImage.layer.masksToBounds = true
-        mImage.sd_setImage(with: mImageUrl)
+//        mImage.sd_setImage(with: mImageUrl)
         mImage.backgroundColor = .ddmDarkGreyColor
 //        contentView.addSubview(mImage)
 //        aContainer.addSubview(mImage)
@@ -971,11 +972,27 @@ class VCAViewCell: VCViewCell {
                         return
                     }
 
-                    self.aNameText.text = "Michael Kins"
-                    self.vBtn.image = UIImage(named:"icon_round_verified_b")?.withRenderingMode(.alwaysTemplate)
+                    if(!l.isEmpty) {
+                        let l_0 = l[0]
+                        let uData = UserData()
+                        uData.setData(rData: l_0)
+                        let l_ = uData.dataCode
+                        
+                        self.aNameText.text = uData.dataTextString
+                        
+                        let eImageUrl = URL(string: uData.coverPhotoString)
+                        self.eImage.sd_setImage(with: eImageUrl)
+                        
+                        if(uData.isAccountVerified) {
+                            self.vBtn.image = UIImage(named:"icon_round_verified_b")?.withRenderingMode(.alwaysTemplate)
+                        }
+                    }
                     
-                    let eImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
-                    self.eImage.sd_setImage(with: eImageUrl)
+//                    self.aNameText.text = "Michael Kins"
+//                    self.vBtn.image = UIImage(named:"icon_round_verified_b")?.withRenderingMode(.alwaysTemplate)
+                    
+//                    let eImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
+//                    self.eImage.sd_setImage(with: eImageUrl)
                 }
 
                 case .failure(let error):
@@ -990,6 +1007,86 @@ class VCAViewCell: VCViewCell {
                     let eImageUrl = URL(string: "")
                     self.eImage.sd_setImage(with: eImageUrl)
                     
+                }
+                break
+            }
+        }
+    }
+    //*
+    //*test > async fetch sound profile
+    func asyncConfigureSound(data: String) {
+        let id = "s4"
+        DataFetchManager.shared.fetchSoundData2(id: id) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    print("pdp api success \(id), \(l)")
+                    
+                    guard let self = self else {
+                        return
+                    }
+
+                    let sData = SoundData()
+                    sData.setData(rData: l)
+                    let l_ = sData.dataCode
+                        
+                    if(l_ == "a") {
+                        self.mText.text = sData.dataTextString
+                        
+                        let mImageUrl = URL(string: sData.coverPhotoString)
+                        self.mImage.sd_setImage(with: mImageUrl)
+                    }
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    self.mText.text = "-"
+                    
+                    let mImageUrl = URL(string: "")
+                    self.mImage.sd_setImage(with: mImageUrl)
+                }
+                break
+            }
+        }
+    }
+    //*
+    //*test > async fetch place profile
+    func asyncConfigurePlace(data: String) {
+        let id = "p1"
+        DataFetchManager.shared.fetchPlaceData2(id: id) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    print("pdp api success \(id), \(l)")
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    let pData = PlaceData()
+                    pData.setData(rData: l)
+                    let l_ = pData.dataCode
+                    
+                    if(l_ == "a") {
+                        self.aText.text = pData.dataTextString
+                    }
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    self.aText.text = "-"
                 }
                 break
             }
@@ -1013,8 +1110,8 @@ class VCAViewCell: VCViewCell {
         
         startFlashLoaderAnimation()
         
-        let id = "s"
-        DataFetchManager.shared.fetchSoundData(id: id) { [weak self]result in
+        let id = "a"
+        DataFetchManager.shared.fetchDummyDataTimeDelay(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -1030,7 +1127,7 @@ class VCAViewCell: VCViewCell {
                     
                     //test 2 > try video without looper, use conventional avplayer
                     var videoURL = ""
-                    if(data.dataType == "a") {
+                    if(data.dataCode == "a") {
                         videoURL = "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_video_4.mp4?alt=media"
                     }
 
@@ -1093,36 +1190,41 @@ class VCAViewCell: VCViewCell {
         let dataText = data.dataTextString
         var videoURL = ""
         
-        if(data.dataType == "b") { // b - loading data
+        if(data.dataCode == "b") { // b - loading data
             aSpinner.startAnimating()
-        } else if(data.dataType == "c") { // c - no more data
-            aaText.text = dataText
+        } else if(data.dataCode == "c") { // c - no more data
+//            aaText.text = dataText
+            aaText.text = "End"
             aaText.isHidden = false
-        } else if(data.dataType == "d") { // d - empty data
-            aaText.text = dataText
+        } else if(data.dataCode == "d") { // d - empty data
+//            aaText.text = dataText
+            aaText.text = "No results"
             aaText.isHidden = false
-        } else if(data.dataType == "e") { // e - something went wrong
-            errorText.text = dataText
+        } else if(data.dataCode == "e") { // e - something went wrong
+//            errorText.text = dataText
+            errorText.text = "Something went wrong. Try again."
             errorText.isHidden = false
             errorRefreshBtn.isHidden = false
         }
         //*test > post suspended and not found
-        else if(data.dataType == "na") { // na - not found
+        else if(data.dataCode == "na") { // na - not found
             aaText.text = "Loop does not exist."
             aaText.isHidden = false
         }
-        else if(data.dataType == "us") { // us - suspended
+        else if(data.dataCode == "us") { // us - suspended
             aaText.text = "Loop violated community rules."
             aaText.isHidden = false
         }
-        else if(data.dataType == "a") { // a - video play
+        else if(data.dataCode == "a") { // a - video play
             aContainer.isHidden = false
             
             asyncConfigure(data: "") //get creator data, e.g. name
+            asyncConfigureSound(data: "")
+            asyncConfigurePlace(data: "")
             
             aTitleText.text = dataText
-            aText.text = "Suntec City Hall 1B"
-            mText.text = "明知故犯 - HubertWu 明知故犯 - HubertWu 明知故犯 - HubertWu 明知故犯 - HubertWu"
+//            aText.text = "Suntec City Hall 1B"
+//            mText.text = "明知故犯 - HubertWu 明知故犯 - HubertWu 明知故犯 - HubertWu 明知故犯 - HubertWu"
             
             //populate data count
             let dataC = data.dataCount

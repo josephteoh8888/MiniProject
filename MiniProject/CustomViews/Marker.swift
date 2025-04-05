@@ -17,6 +17,7 @@ protocol MarkerDelegate : AnyObject {
     func didClickPlaceA(marker: PlaceAMarker, coord: CLLocationCoordinate2D)
     func didClickPlaceB(marker: PlaceBMarker, coord: CLLocationCoordinate2D)
     func didClickSoundMarker(marker: SoundMarker, coord: CLLocationCoordinate2D)
+//    func didClickPostMarker(marker: PostMarker, coord: CLLocationCoordinate2D)
 }
 class Marker: QueueableView {
     var coordinateLocation : CLLocationCoordinate2D?
@@ -45,9 +46,17 @@ class Marker: QueueableView {
     func animateFromVideoClose() {}
     func hideForShutter() {}
     func dehideForShutter() {}
+    
+    //test > variable size for post marker that has irregular shape
+    var widthOriginOffset: CGFloat = 0.0
+    func setScreenSizeLimit(width: CGFloat, height: CGFloat) {}
+    
+    func configure(data: String){}
 }
 
 class PlaceMarker: Marker {
 
 }
-
+class ExploreMarker: Marker {
+    
+}

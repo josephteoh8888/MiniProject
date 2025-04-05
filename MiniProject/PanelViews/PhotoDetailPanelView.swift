@@ -800,11 +800,19 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
     func addData() {
         var indexPaths = [IndexPath]()
         
-        let i = "b"
+        //test 1 > ori
+//        let i = "b"
+//        let postData = PostData()
+//        postData.setDataCode(data: i)
+//        postData.setData(data: i)
+//        postData.setTextString(data: i)
+        
+        //test 2 > add postdata to datamanager
+        let text = "bbbbbb"
+        let postDataset = DataManager.shared.addPostData(text: text)
         let postData = PostData()
-        postData.setDataType(data: i)
-        postData.setData(data: i)
-        postData.setTextString(data: i)
+        postData.setData(rData: postDataset)
+        
         self.vcDataList.insert(postData, at: 1) //second item
         
         let idx = IndexPath(item: 1, section: 0) //second item
@@ -828,7 +836,7 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
     func asyncFetchPost(id: String) {
         aSpinner.startAnimating()
         
-        DataFetchManager.shared.fetchPostData(id: id) { [weak self]result in
+        DataFetchManager.shared.fetchPhotoFeedData(id: id, isPaginate: false) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -846,15 +854,18 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
                         let l_ = l[0]
                         
                         //test 2 > new append method
-                        let postData = PhotoData()
-                        postData.setDataType(data: l_) //"a"
-                        postData.setData(data: l_)
-                        postData.setTextString(data: l_)
-                        self.vcDataList.append(postData)
+                        let photoData = PhotoData()
+//                        photoData.setDataType(data: l_) //"a"
+//                        photoData.setData(data: l_)
+//                        photoData.setTextString(data: l_)
+                        photoData.setData(rData: l_)
+                        self.vcDataList.append(photoData)
                         self.photoCV?.reloadData()
                         
                         //test
-                        self.configureUI(data: l_)
+//                        self.configureUI(data: l_)
+                        let dataType = l_.dataCode
+                        self.configureUI(data: dataType)
                     }
                     
                     self.asyncFetchFeed(id: "comment_feed")
@@ -884,10 +895,11 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
         dataFetchState = "start"
         bSpinner.startAnimating()
         
-        let id_ = "post"
+//        let id_ = "post"
+        let id_ = "comment" //test > transition from "fetchfeeddata" to "fetchcomment"
         let isPaginate = false
-        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
-//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+//        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+        DataFetchManager.shared.fetchCommentFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -907,11 +919,11 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
                     var indexPaths = [IndexPath]()
                     var j = 1
                     for i in l {
-//                        let photoData = PhotoData()
                         let postData = PostData()
-                        postData.setDataType(data: i)
-                        postData.setData(data: i)
-                        postData.setTextString(data: i)
+//                        postData.setDataType(data: i)
+//                        postData.setData(data: i)
+//                        postData.setTextString(data: i)
+                        postData.setData(rData: i)
                         self.vcDataList.append(postData)
 
                         let idx = IndexPath(item: dataCount - 1 + j, section: 0)
@@ -947,10 +959,11 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
         
         pageNumber += 1
         
-        let id_ = "post"
+//        let id_ = "post"
+        let id_ = "comment" //test > transition from "fetchfeeddata" to "fetchcomment"
         let isPaginate = true
-        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
-//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+//        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+        DataFetchManager.shared.fetchCommentFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -973,11 +986,11 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
                     var indexPaths = [IndexPath]()
                     var j = 1
                     for i in l {
-//                        let photoData = PhotoData()
                         let postData = PostData()
-                        postData.setDataType(data: i)
-                        postData.setData(data: i)
-                        postData.setTextString(data: i)
+//                        postData.setDataType(data: i)
+//                        postData.setData(data: i)
+//                        postData.setTextString(data: i)
+                        postData.setData(rData: i)
                         self.vcDataList.append(postData)
 
                         let idx = IndexPath(item: dataCount - 1 + j, section: 0)
@@ -1584,7 +1597,7 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
     func getVCDataType() -> String {
         let postIdx = 0
         if(!self.vcDataList.isEmpty) {
-            let d = self.vcDataList[postIdx].dataType
+            let d = self.vcDataList[postIdx].dataCode
             return d
         }
         
@@ -1618,59 +1631,63 @@ extension PhotoDetailPanelView: UICollectionViewDelegateFlowLayout {
             let text = vcDataList[indexPath.row].dataTextString
             let dataL = vcDataList[indexPath.row].dataArray
             let dataCL = vcDataList[indexPath.row].contentDataArray
-            let d = vcDataList[indexPath.row].dataType
+            let d = vcDataList[indexPath.row].dataCode
             
             let statText = "1.2m views . 3hr"
             var contentHeight = 0.0
             
             if(d == "a") {
                 for cl in dataCL {
-                    let l = cl.dataType
+                    let l = cl.dataCode
 
                     let availableWidth = self.frame.width
-                    let bubbleHeight = 3.0
-                    let bubbleTopMargin = 10.0
-                    let totalBubbleH = bubbleHeight + bubbleTopMargin
+                    
+                    //test > with "p"
+                    if(l == "p") {
+                        let bubbleHeight = 3.0
+                        let bubbleTopMargin = 10.0
+                        let totalBubbleH = bubbleHeight + bubbleTopMargin
 
-                    let assetSize = CGSize(width: 3, height: 4) //4:3
-                    var cSize = CGSize(width: 0, height: 0)
-                    if(assetSize.width > assetSize.height) {
-                        //1 > landscape photo 4:3 w:h
-                        let aRatio = CGSize(width: 4, height: 3) //aspect ratio
-                        let cHeight = availableWidth * aRatio.height / aRatio.width + totalBubbleH
-                        cSize = CGSize(width: availableWidth, height: cHeight)
+                        let assetSize = CGSize(width: 3, height: 4) //4:3
+                        var cSize = CGSize(width: 0, height: 0)
+                        if(assetSize.width > assetSize.height) {
+                            //1 > landscape photo 4:3 w:h
+                            let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                            let cHeight = availableWidth * aRatio.height / aRatio.width + totalBubbleH
+                            cSize = CGSize(width: availableWidth, height: cHeight)
+                        }
+                        else if (assetSize.width < assetSize.height){
+                            //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                            let aRatio = CGSize(width: 5, height: 6) //aspect ratio 2:3, 3:4
+                            let cWidth = availableWidth
+                            let cHeight = cWidth * aRatio.height / aRatio.width + totalBubbleH
+                            cSize = CGSize(width: cWidth, height: cHeight)
+                        } else {
+                            //square
+                            let cWidth = availableWidth
+                            cSize = CGSize(width: cWidth, height: cWidth + totalBubbleH)
+                        }
+                        
+                        let pTopMargin = 0.0
+            //                let pContentHeight = 400.0 //280.0
+                        let pContentHeight = cSize.height
+                        let tTopMargin = 10.0
+            //                let tText = "Nice food, nice environment! Worth a visit. \nSo good!"
+                        let tContentHeight = estimateHeight(text: text, textWidth: collectionView.frame.width - 20.0 - 20.0, fontSize: 14)
+                        print("photo p text size: \(tContentHeight), \(text)")
+                        let pHeight = pTopMargin + pContentHeight + tTopMargin + tContentHeight
+                        contentHeight += pHeight
                     }
-                    else if (assetSize.width < assetSize.height){
-                        //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
-                        let aRatio = CGSize(width: 5, height: 6) //aspect ratio 2:3, 3:4
-                        let cWidth = availableWidth
-                        let cHeight = cWidth * aRatio.height / aRatio.width + totalBubbleH
-                        cSize = CGSize(width: cWidth, height: cHeight)
-                    } else {
-                        //square
-                        let cWidth = availableWidth
-                        cSize = CGSize(width: cWidth, height: cWidth + totalBubbleH)
-                    }
-                    
-                    let pTopMargin = 0.0
-        //                let pContentHeight = 400.0 //280.0
-                    let pContentHeight = cSize.height
-                    let tTopMargin = 10.0
-        //                let tText = "Nice food, nice environment! Worth a visit. \nSo good!"
-                    let tContentHeight = estimateHeight(text: text, textWidth: collectionView.frame.width - 20.0 - 20.0, fontSize: 14)
-                    print("photo p text size: \(tContentHeight), \(text)")
-                    let pHeight = pTopMargin + pContentHeight + tTopMargin + tContentHeight
-                    contentHeight += pHeight
-                    
-                    if(l == "m") {
+                    else if(l == "m") {
+//                    if(l == "m") {
                         let soundTopMargin = 10.0
                         let soundHeight = 30.0
                         let pHeight = soundTopMargin + soundHeight
                         contentHeight += pHeight
                     }
-                    else if(l == "p") {
-
-                    }
+//                    else if(l == "p") {
+//
+//                    }
                 }
             }
             else if(d == "na") {
@@ -1729,7 +1746,7 @@ extension PhotoDetailPanelView: UICollectionViewDelegateFlowLayout {
             let text = vcDataList[indexPath.row].dataTextString
             let dataL = vcDataList[indexPath.row].dataArray
             let dataCL = vcDataList[indexPath.row].contentDataArray
-            let d = vcDataList[indexPath.row].dataType
+            let d = vcDataList[indexPath.row].dataCode
             
             var contentHeight = 0.0
             
@@ -1740,7 +1757,7 @@ extension PhotoDetailPanelView: UICollectionViewDelegateFlowLayout {
             
             if(d == "a") {
                 for cl in dataCL {
-                    let l = cl.dataType
+                    let l = cl.dataCode
 
                     if(l == "text") {
                         let tTopMargin = 20.0

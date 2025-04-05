@@ -567,8 +567,8 @@ class MePostListPanelView: PanelView{
 
         let id_ = "post"
         let isPaginate = false
-        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
-//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+//        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+        DataFetchManager.shared.fetchPostFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -589,9 +589,10 @@ class MePostListPanelView: PanelView{
 //                    feed.vDataList.append(contentsOf: l)
                     for i in l {
                         let postData = PostData()
-                        postData.setDataType(data: i)
-                        postData.setData(data: i)
-                        postData.setTextString(data: i)
+//                        postData.setDataType(data: i)
+//                        postData.setData(data: i)
+//                        postData.setTextString(data: i)
+                        postData.setData(rData: i)
                         feed.vDataList.append(postData)
                     }
                     feed.vCV?.reloadData()
@@ -642,8 +643,8 @@ class MePostListPanelView: PanelView{
 
         let id_ = "post"
         let isPaginate = true
-        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
-//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+//        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+        DataFetchManager.shared.fetchPostFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -673,9 +674,10 @@ class MePostListPanelView: PanelView{
 //                        feed.vDataList.append(i)
                         
                         let postData = PostData()
-                        postData.setDataType(data: i)
-                        postData.setData(data: i)
-                        postData.setTextString(data: i)
+//                        postData.setDataType(data: i)
+//                        postData.setData(data: i)
+//                        postData.setTextString(data: i)
+                        postData.setData(rData: i)
                         feed.vDataList.append(postData)
 
                         let idx = IndexPath(item: dataCount - 1 + j, section: 0)

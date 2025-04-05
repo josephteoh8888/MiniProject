@@ -7,6 +7,15 @@
 
 import Foundation
 
+enum DataTypes {
+    static let LOOP = "video"
+    static let POST = "post"
+    static let SHOT = "photo"
+    static let USER = "u"
+    static let LOCATION = "p"
+    static let SOUND = "s"
+}
+
 //test > use enum to define constants for originator type
 enum OriginatorTypes {
     static let MARKER = "OMarker"

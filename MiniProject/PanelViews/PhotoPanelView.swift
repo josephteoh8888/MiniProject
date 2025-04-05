@@ -96,7 +96,8 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
     //test page transition => track user journey in creating short video
     var pageList = [PanelView]()
     
-    var predeterminedDatasets = [String]()
+//    var predeterminedDatasets = [String]()
+    var predeterminedDatasets = [PhotoDataset]()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -608,7 +609,7 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
         self.photoPanel.layer.cornerRadius = 10
 
         if(isAnimated) {
-//            self.delegate?.didStartOpenVideoPanel()
+            self.delegate?.didStartOpenPhotoPanel()
 
             offsetX = offX
             offsetY = offY
@@ -625,7 +626,7 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
 //                    self.asyncInitPredeterminedDatasets(dataset: self.predeterminedDatasets)
 //                }
             }, completion: { finished in
-//                self.delegate?.didFinishOpenVideoPanel()
+                self.delegate?.didFinishOpenPhotoPanel()
 
                 //test
                 self.initialize()
@@ -819,7 +820,14 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
     }
     
     func setPreterminedDatasets(datasets: [String]){
-        predeterminedDatasets.append(contentsOf: datasets)
+//        predeterminedDatasets.append(contentsOf: datasets)
+        
+        //test 2
+        for r in datasets {
+            let vData = PhotoDataset()
+            vData.setupData(data: r)
+            predeterminedDatasets.append(vData)
+        }
     }
     
     var isMultipleTab = false
@@ -1030,7 +1038,8 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
         }
     }
     
-    func asyncInitPredeterminedDatasets(dataset: [String]) {
+//    func asyncInitPredeterminedDatasets(dataset: [String]) {
+    func asyncInitPredeterminedDatasets(dataset: [PhotoDataset]) {
         
         if(!self.feedList.isEmpty) {
             let feed = feedList[currentIndex]
@@ -1040,9 +1049,10 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
             var tempDataList = [PhotoData]()
             for i in dataset {
                 let photoData = PhotoData()
-                photoData.setDataType(data: i)
-                photoData.setData(data: i)
-                photoData.setTextString(data: i)
+//                photoData.setDataType(data: i)
+//                photoData.setData(data: i)
+//                photoData.setTextString(data: i)
+                photoData.setData(rData: i)
                 tempDataList.append(photoData)
             }
             feed.vDataList.append(contentsOf: tempDataList)
@@ -1108,8 +1118,8 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
 
         let id_ = "post"
         let isPaginate = false
-        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
-//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+//        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+        DataFetchManager.shared.fetchPhotoFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -1127,9 +1137,10 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
                     for i in l {
                         
                         let photoData = PhotoData()
-                        photoData.setDataType(data: i)
-                        photoData.setData(data: i)
-                        photoData.setTextString(data: i)
+//                        photoData.setDataType(data: i)
+//                        photoData.setData(data: i)
+//                        photoData.setTextString(data: i)
+                        photoData.setData(rData: i)
                         feed.vDataList.append(photoData)
                     }
                     
@@ -1181,8 +1192,8 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
 
         let id_ = "post"
         let isPaginate = true
-        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
-//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+//        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+        DataFetchManager.shared.fetchPhotoFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -1206,9 +1217,10 @@ class PhotoPanelView: PanelView, UIGestureRecognizerDelegate{
                     var j = 1
                     for i in l {
                         let photoData = PhotoData()
-                        photoData.setDataType(data: i)
-                        photoData.setData(data: i)
-                        photoData.setTextString(data: i)
+//                        photoData.setDataType(data: i)
+//                        photoData.setData(data: i)
+//                        photoData.setTextString(data: i)
+                        photoData.setData(rData: i)
                         feed.vDataList.append(photoData)
 
                         let idx = IndexPath(item: dataCount - 1 + j, section: 0)

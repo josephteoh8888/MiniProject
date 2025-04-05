@@ -509,7 +509,7 @@ class HPostListAViewCell: UICollectionViewCell {
     
     //*test > async fetch images/names/videos
     func asyncConfigure(data: String) {
-        let id = "u_"
+        let id = "u" //u_
         DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -522,11 +522,27 @@ class HPostListAViewCell: UICollectionViewCell {
                         return
                     }
 
-                    self.aGridNameText.text = "Michael Kins"
-                    self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
+                    if(!l.isEmpty) {
+                        let l_0 = l[0]
+                        let uData = UserData()
+                        uData.setData(rData: l_0)
+                        let l_ = uData.dataCode
+                        
+                        self.aGridNameText.text = uData.dataTextString
+                        
+                        let eImageUrl = URL(string: uData.coverPhotoString)
+                        self.aUserPhoto.sd_setImage(with: eImageUrl)
+                        
+                        if(uData.isAccountVerified) {
+                            self.vBtn.image = UIImage(named:"icon_round_verified_b")?.withRenderingMode(.alwaysTemplate)
+                        }
+                    }
                     
-                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-                    self.aUserPhoto.sd_setImage(with: imageUrl)
+//                    self.aGridNameText.text = "Michael Kins"
+//                    self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
+//                    
+//                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//                    self.aUserPhoto.sd_setImage(with: imageUrl)
                 }
 
                 case .failure(let error):
@@ -547,10 +563,52 @@ class HPostListAViewCell: UICollectionViewCell {
         }
     }
     //*
+    //*test > async fetch place profile
+    func asyncConfigurePlace(data: String) {
+        let id = "p4"
+        DataFetchManager.shared.fetchPlaceData2(id: id) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    print("pdp api success \(id), \(l)")
+                    
+                    guard let self = self else {
+                        return
+                    }
+
+                    let pData = PlaceData()
+                    pData.setData(rData: l)
+                    let l_ = pData.dataCode
+                    
+                    if(l_ == "a") {
+                        self.aaText.text = pData.dataTextString
+                    }
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    self.aaText.text = "-"
+                }
+                break
+            }
+        }
+    }
     
-    func configure(data: PostData) {
+//    func configure(data: PostData) {
+    func configure(data: BaseData) {
+        
+        guard let a = data as? PostData else {
+            return
+        }
+        
 //        aGridNameText.text = "Michael Kins"
-        asyncConfigure(data: "")
+//        asyncConfigure(data: "")
         
         aUserNameText.text = "-"
         aaText.text = "-"
@@ -570,14 +628,20 @@ class HPostListAViewCell: UICollectionViewCell {
 //        aGridNameText.attributedText = attributedText
         
         //test > dynamic create ui for various data types in sequence
-        let d = data.dataType
+//        let d = data.dataType
+        let d = a.dataCode
         if(d == "a") {
             aUserNameText.text = "3hr . 1.2m views"
-            aaText.text = "Petronas Twin Tower"
+//            aaText.text = "Petronas Twin Tower"
             
-            let dataCL = data.contentDataArray
+            asyncConfigure(data: "")
+            asyncConfigurePlace(data: "")
+            
+//            let dataCL = data.contentDataArray
+            let dataCL = a.contentDataArray
             for cl in dataCL {
-                let l = cl.dataType
+                let l = cl.dataCode
+                let da = cl.dataArray
 
                 if(l == "text") {
                     let aaText = UILabel()
@@ -594,9 +658,10 @@ class HPostListAViewCell: UICollectionViewCell {
                         aaText.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
                     }
                     aaText.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
-                    aaText.trailingAnchor.constraint(equalTo: aTest.trailingAnchor, constant: -20).isActive = true //-30
+                    aaText.trailingAnchor.constraint(equalTo: aTest.trailingAnchor, constant: -20).isActive = true 
     //                aaText.bottomAnchor.constraint(equalTo: aTest.bottomAnchor, constant: 0).isActive = true
-                    aaText.text = data.dataTextString
+//                    aaText.text = data.dataTextString
+                    aaText.text = a.dataTextString
                     aTestArray.append(aaText)
                 }
                 else if(l == "photo") {
@@ -605,7 +670,7 @@ class HPostListAViewCell: UICollectionViewCell {
                     let rhsMargin = 20.0
                     let availableWidth = cellWidth - lhsMargin - rhsMargin
                     
-    //                let assetSize = CGSize(width: 4, height: 3)//landscape
+//                    let assetSize = CGSize(width: 4, height: 3)//landscape
                     let assetSize = CGSize(width: 3, height: 4)
                     var cSize = CGSize(width: 0, height: 0)
                     if(assetSize.width > assetSize.height) {
@@ -646,7 +711,8 @@ class HPostListAViewCell: UICollectionViewCell {
                     contentCell.layer.cornerRadius = 10 //5
                     aTestArray.append(contentCell)
                     contentCell.redrawUI()
-                    contentCell.configure(data: "a")
+//                    contentCell.configure(data: "a")
+                    contentCell.configure(data: da)
     //                contentCell.setState(p: data.p_s)
                     contentCell.setState(p: cl.p_s)
                     contentCell.aDelegate = self
@@ -696,11 +762,15 @@ class HPostListAViewCell: UICollectionViewCell {
                     contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //320
                     contentCell.layer.cornerRadius = 10 //5
                     aTestArray.append(contentCell)
-                    contentCell.setDescHeight(lHeight: descHeight, txt: data.dataTextString)
+//                    contentCell.setDescHeight(lHeight: descHeight, txt: data.dataTextString)
+                    contentCell.setDescHeight(lHeight: descHeight, txt: a.dataTextString)
                     contentCell.redrawUI()
-                    contentCell.configure(data: "a")
-    //                contentCell.setState(p: data.p_s)
-                    contentCell.setState(p: cl.p_s)
+                    contentCell.configure(data: "a") //ori
+//                    contentCell.configure(data: "a", state: cl.p_s)
+//                    var da = [String]() //temp solution
+//                    da.append("https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+//                    contentCell.configure(data: da)
+                    contentCell.setState(p: cl.p_s) //ori
                     contentCell.aDelegate = self
                 }
                 else if(l == "video_l") {//loop videos
@@ -748,7 +818,8 @@ class HPostListAViewCell: UICollectionViewCell {
                     contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //390
                     contentCell.layer.cornerRadius = 10 //5
                     aTestArray.append(contentCell)
-                    contentCell.setDescHeight(lHeight: descHeight, txt: data.dataTextString)
+//                    contentCell.setDescHeight(lHeight: descHeight, txt: data.dataTextString)
+                    contentCell.setDescHeight(lHeight: descHeight, txt: a.dataTextString)
                     contentCell.redrawUI()
                     contentCell.configure(data: "a")
     //                contentCell.setState(t: data.t_s)
@@ -831,7 +902,8 @@ class HPostListAViewCell: UICollectionViewCell {
     //                contentCell.heightAnchor.constraint(equalToConstant: 120).isActive = true  //350
                     contentCell.layer.cornerRadius = 10 //5
                     aTestArray.append(contentCell)
-                    contentCell.configure(data: "a", text: data.dataTextString)
+//                    contentCell.configure(data: "a", text: data.dataTextString)
+                    contentCell.configure(data: "a", text: a.dataTextString)
                     contentCell.aDelegate = self //test
                     
                     //test
@@ -891,7 +963,8 @@ class HPostListAViewCell: UICollectionViewCell {
         }
         
         //populate data count
-        let dataC = data.dataCount
+//        let dataC = data.dataCount
+        let dataC = a.dataCount
         if let loveC = dataC["love"] {
             bText.text = String(loveC)
         }

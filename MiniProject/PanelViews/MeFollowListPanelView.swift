@@ -560,7 +560,7 @@ class MeFollowListPanelView: PanelView{
         
         cell?.dataPaginateStatus = "fetch"
 
-        let id_ = "post"
+        let id_ = "u"
         let isPaginate = false
         DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
 //        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
@@ -583,12 +583,22 @@ class MeFollowListPanelView: PanelView{
                     //test 1
 //                    feed.vDataList.append(contentsOf: l)
                     
+                    //ori
+//                    for i in l {
+//                        let postData = PostData()
+//                        postData.setDataType(data: i)
+//                        postData.setData(data: i)
+//                        postData.setTextString(data: i)
+//                        feed.vDataList.append(postData)
+//                    }
+                    
+                    //test 2 > new method
                     for i in l {
-                        let postData = PostData()
-                        postData.setDataType(data: i)
-                        postData.setData(data: i)
-                        postData.setTextString(data: i)
-                        feed.vDataList.append(postData)
+                        if let u = i as? UserDataset {
+                            let uData = UserData()
+                            uData.setData(rData: u)
+                            feed.vDataList.append(uData)
+                        }
                     }
                     feed.vCV?.reloadData()
                     
@@ -636,7 +646,7 @@ class MeFollowListPanelView: PanelView{
 
         cell?.bSpinner.startAnimating()
 
-        let id_ = "post"
+        let id_ = "u"
         let isPaginate = true
         DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
 //        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
@@ -661,19 +671,35 @@ class MeFollowListPanelView: PanelView{
                     let dataCount = feed.vDataList.count
                     var indexPaths = [IndexPath]()
                     var j = 1
+                    
+                    //ori
+//                    for i in l {
+////                        feed.vDataList.append(i)
+//                        
+//                        let postData = PostData()
+//                        postData.setDataType(data: i)
+//                        postData.setData(data: i)
+//                        postData.setTextString(data: i)
+//                        feed.vDataList.append(postData)
+//
+//                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+//                        indexPaths.append(idx)
+//                        j += 1
+//                    }
+                    
+                    //test 2 > new method
                     for i in l {
-//                        feed.vDataList.append(i)
-                        
-                        let postData = PostData()
-                        postData.setDataType(data: i)
-                        postData.setData(data: i)
-                        postData.setTextString(data: i)
-                        feed.vDataList.append(postData)
-
-                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
-                        indexPaths.append(idx)
-                        j += 1
+                        if let u = i as? UserDataset {
+                            let uData = UserData()
+                            uData.setData(rData: u)
+                            feed.vDataList.append(uData)
+                            
+                            let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+                            indexPaths.append(idx)
+                            j += 1
+                        }
                     }
+                    
                     feed.vCV?.insertItems(at: indexPaths)
                     //*
                     

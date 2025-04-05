@@ -606,7 +606,7 @@ class PostPanelView: PanelView, UIGestureRecognizerDelegate{
         self.postPanel.layer.cornerRadius = 10
 
         if(isAnimated) {
-//            self.delegate?.didStartOpenVideoPanel()
+            self.delegate?.didStartOpenPostPanel()
 
             offsetX = offX
             offsetY = offY
@@ -618,7 +618,7 @@ class PostPanelView: PanelView, UIGestureRecognizerDelegate{
                 self.postPanel.transform = CGAffineTransform.identity
                 self.postPanel.layer.cornerRadius = 10
             }, completion: { finished in
-//                self.delegate?.didFinishOpenVideoPanel()
+                self.delegate?.didFinishOpenPostPanel()
 
                 //test > async fetch data
 //                self.asyncFetchFeed(id: "post_feed")
@@ -1105,9 +1105,10 @@ class PostPanelView: PanelView, UIGestureRecognizerDelegate{
 
         let id_ = "post"
         let isPaginate = false
+        
 //        let isPaginate = true
-        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
-//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+//        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+        DataFetchManager.shared.fetchPostFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -1126,9 +1127,10 @@ class PostPanelView: PanelView, UIGestureRecognizerDelegate{
                     for i in l {
                         
                         let postData = PostData()
-                        postData.setDataType(data: i)
-                        postData.setData(data: i)
-                        postData.setTextString(data: i)
+//                        postData.setDataType(data: i)
+//                        postData.setData(data: i)
+//                        postData.setTextString(data: i)
+                        postData.setData(rData: i)
                         feed.vDataList.append(postData)
                     }
                     
@@ -1180,8 +1182,8 @@ class PostPanelView: PanelView, UIGestureRecognizerDelegate{
 
         let id_ = "post"
         let isPaginate = true
-        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
-//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+//        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+        DataFetchManager.shared.fetchPostFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -1205,9 +1207,10 @@ class PostPanelView: PanelView, UIGestureRecognizerDelegate{
                     var j = 1
                     for i in l {
                         let postData = PostData()
-                        postData.setDataType(data: i)
-                        postData.setData(data: i)
-                        postData.setTextString(data: i)
+//                        postData.setDataType(data: i)
+//                        postData.setData(data: i)
+//                        postData.setTextString(data: i)
+                        postData.setData(rData: i)
                         feed.vDataList.append(postData)
 
                         let idx = IndexPath(item: dataCount - 1 + j, section: 0)

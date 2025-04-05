@@ -189,6 +189,7 @@ class PulseWave: QueueableView {
         
         self.frame.size.height = newSize
         self.frame.size.width = newSize
+//        self.widthOriginOffset = newSize //will not be executed as map remove pulsewave when moved
         
         for entry in pulseWaveViews {
             entry.layer.cornerRadius = newSize/2

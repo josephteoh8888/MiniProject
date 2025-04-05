@@ -129,11 +129,11 @@ class MeBookmarkListPanelView: PanelView{
 //        aTitleText.trailingAnchor.constraint(equalTo: aLoggedOutTextBox.trailingAnchor, constant: -10).isActive = true
         aTitleText.text = "Bookmarks" //Profile
         
-        tabDataList.append("p") //posts
-        tabDataList.append("v") //video
-        tabDataList.append("i") //shot
-        tabDataList.append("l") //location
-        tabDataList.append("s") //sound
+        tabDataList.append(DataTypes.POST) //posts
+        tabDataList.append(DataTypes.LOOP) //video
+        tabDataList.append(DataTypes.SHOT) //shot
+        tabDataList.append(DataTypes.LOCATION) //location
+        tabDataList.append(DataTypes.SOUND) //sound
 //        tabDataList.append("dm") //chat
 //        tabDataList.append("o") //chat
         
@@ -416,15 +416,15 @@ class MeBookmarkListPanelView: PanelView{
             stack.setArrowAdded(isArrowAdd: false)
             stack.delegate = self
 
-            if(d == "p") {
+            if(d == DataTypes.POST) {
                 stack.setText(code: d, d: "Posts") //Messages
-            } else if(d == "v") {
+            } else if(d == DataTypes.LOOP) {
                 stack.setText(code: d, d: "Videos")
-            } else if(d == "i") {
+            } else if(d == DataTypes.SHOT) {
                 stack.setText(code: d, d: "Shots")
-            } else if(d == "l") {
+            } else if(d == DataTypes.LOCATION) {
                 stack.setText(code: d, d: "Locations")
-            } else if(d == "s") {
+            } else if(d == DataTypes.SOUND) {
                 stack.setText(code: d, d: "Sounds")
             }
         }
@@ -438,15 +438,15 @@ class MeBookmarkListPanelView: PanelView{
             
             var stack: ScrollFeedHResultListCell?
             
-            if(d == "p") {
+            if(d == DataTypes.POST) {
                 stack = ScrollFeedHResultPostListCell()
-            } else if(d == "v") {
+            } else if(d == DataTypes.LOOP) {
                 stack = ScrollFeedHResultVideoListCell()
-            } else if(d == "i") {
+            } else if(d == DataTypes.SHOT) {
                 stack = ScrollFeedHResultPhotoListCell()
-            } else if(d == "l") {
+            } else if(d == DataTypes.LOCATION) {
                 stack = ScrollFeedHResultLocationListCell()
-            } else if(d == "s") {
+            } else if(d == DataTypes.SOUND) {
                 stack = ScrollFeedHResultSoundListCell()
             } else {
                 stack = ScrollFeedHResultUserListCell()
@@ -539,7 +539,11 @@ class MeBookmarkListPanelView: PanelView{
                     if(!self.feedList.isEmpty) {
                         let feed = self.feedList[self.currentIndex]
                         if(self.isUserLoggedIn) {
-                            self.asyncFetchFeed(cell: feed, id: "notify_feed")
+//                            self.asyncFetchFeed(cell: feed, id: "notify_feed")
+                            
+                            //test 2 > new method
+                            let feedCode = feed.feedCode
+                            self.asyncFetchFeed(cell: feed, id: feedCode)
                         }
                     }
                 }
@@ -583,7 +587,11 @@ class MeBookmarkListPanelView: PanelView{
             feed.configureFooterUI(data: "")
             
             feed.dataPaginateStatus = ""
-            asyncFetchFeed(cell: feed, id: "notify_feed")
+//            asyncFetchFeed(cell: feed, id: "notify_feed")
+            
+            //test 2 > new method
+            let feedCode = feed.feedCode
+            self.asyncFetchFeed(cell: feed, id: feedCode)
         }
     }
     
@@ -615,7 +623,7 @@ class MeBookmarkListPanelView: PanelView{
 
         let id_ = "post"
         let isPaginate = false
-        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+        DataFetchManager.shared.fetchFeedData(id: id, isPaginate: isPaginate) { [weak self]result in
 //        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -635,13 +643,49 @@ class MeBookmarkListPanelView: PanelView{
                     
                     //test 1
 //                    feed.vDataList.append(contentsOf: l)
+                    
+//                    for i in l {
+//                        let postData = PostData()
+//                        postData.setDataType(data: i)
+//                        postData.setData(data: i)
+//                        postData.setTextString(data: i)
+//                        feed.vDataList.append(postData)
+//                    }
+                    
+                    //test 3 > new method
                     for i in l {
-                        let postData = PostData()
-                        postData.setDataType(data: i)
-                        postData.setData(data: i)
-                        postData.setTextString(data: i)
-                        feed.vDataList.append(postData)
+                        if let u = i as? UserDataset {
+                            let uData = UserData()
+                            uData.setData(rData: u)
+                            feed.vDataList.append(uData)
+                        }
+                        else if let p = i as? PlaceDataset {
+                            let pData = PlaceData()
+                            pData.setData(rData: p)
+                            feed.vDataList.append(pData)
+                        }
+                        else if let s = i as? SoundDataset {
+                            let sData = SoundData()
+                            sData.setData(rData: s)
+                            feed.vDataList.append(sData)
+                        }
+                        else if let post = i as? PostDataset {
+                            let postData = PostData()
+                            postData.setData(rData: post)
+                            feed.vDataList.append(postData)
+                        }
+                        else if let photo = i as? PhotoDataset {
+                            let photoData = PhotoData()
+                            photoData.setData(rData: photo)
+                            feed.vDataList.append(photoData)
+                        }
+                        else if let video = i as? VideoDataset {
+                            let videoData = VideoData()
+                            videoData.setData(rData: video)
+                            feed.vDataList.append(videoData)
+                        }
                     }
+                    
                     feed.vCV?.reloadData()
 
                     //*test 3 > reload only appended data, not entire dataset
@@ -690,7 +734,7 @@ class MeBookmarkListPanelView: PanelView{
 
         let id_ = "post"
         let isPaginate = true
-        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+        DataFetchManager.shared.fetchFeedData(id: id, isPaginate: isPaginate) { [weak self]result in
 //        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -717,19 +761,78 @@ class MeBookmarkListPanelView: PanelView{
                     let dataCount = feed.vDataList.count
                     var indexPaths = [IndexPath]()
                     var j = 1
+//                    for i in l {
+////                        feed.vDataList.append(i)
+//                        
+//                        let postData = PostData()
+//                        postData.setDataType(data: i)
+//                        postData.setData(data: i)
+//                        postData.setTextString(data: i)
+//                        feed.vDataList.append(postData)
+//
+//                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+//                        indexPaths.append(idx)
+//                        j += 1
+//                    }
+                    
+                    //test 3 > new method
                     for i in l {
-//                        feed.vDataList.append(i)
-                        
-                        let postData = PostData()
-                        postData.setDataType(data: i)
-                        postData.setData(data: i)
-                        postData.setTextString(data: i)
-                        feed.vDataList.append(postData)
-
-                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
-                        indexPaths.append(idx)
-                        j += 1
+                        if let u = i as? UserDataset {
+                            let uData = UserData()
+                            uData.setData(rData: u)
+                            feed.vDataList.append(uData)
+                            
+                            let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+                            indexPaths.append(idx)
+                            j += 1
+                        }
+                        else if let p = i as? PlaceDataset {
+                            let pData = PlaceData()
+                            pData.setData(rData: p)
+                            feed.vDataList.append(pData)
+                            
+                            let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+                            indexPaths.append(idx)
+                            j += 1
+                        }
+                        else if let s = i as? SoundDataset {
+                            let sData = SoundData()
+                            sData.setData(rData: s)
+                            feed.vDataList.append(sData)
+                            
+                            let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+                            indexPaths.append(idx)
+                            j += 1
+                        }
+                        else if let post = i as? PostDataset {
+                            let postData = PostData()
+                            postData.setData(rData: post)
+                            feed.vDataList.append(postData)
+                            
+                            let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+                            indexPaths.append(idx)
+                            j += 1
+                        }
+                        else if let photo = i as? PhotoDataset {
+                            let photoData = PhotoData()
+                            photoData.setData(rData: photo)
+                            feed.vDataList.append(photoData)
+                            
+                            let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+                            indexPaths.append(idx)
+                            j += 1
+                        }
+                        else if let video = i as? VideoDataset {
+                            let videoData = VideoData()
+                            videoData.setData(rData: video)
+                            feed.vDataList.append(videoData)
+                            
+                            let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+                            indexPaths.append(idx)
+                            j += 1
+                        }
                     }
+                    
                     feed.vCV?.insertItems(at: indexPaths)
                     //*
 
@@ -875,7 +978,11 @@ extension MeBookmarkListPanelView: UIScrollViewDelegate {
                 let feed = self.feedList[rIndex]
                 if(feed.dataPaginateStatus == "") {
                     if(isUserLoggedIn) {
-                        self.asyncFetchFeed(cell: feed, id: "notify_feed")
+//                        self.asyncFetchFeed(cell: feed, id: "notify_feed")
+                        
+                        //test 2 > new method
+                        let feedCode = feed.feedCode
+                        self.asyncFetchFeed(cell: feed, id: feedCode)
                     }
                 }
             }
@@ -1041,7 +1148,11 @@ extension MeBookmarkListPanelView: ScrollFeedCellDelegate {
         print("feedhresultlistcell real paginate async")
         if let d = cell as? ScrollFeedHResultListCell {
             if(isUserLoggedIn) {
-                self.asyncPaginateFetchFeed(cell: d, id: "notify_feed_end")
+//                self.asyncPaginateFetchFeed(cell: d, id: "notify_feed_end")
+                
+                //test 2 > new method
+                let feedCode = d.feedCode
+                self.asyncPaginateFetchFeed(cell: d, id: feedCode)
             }
         }
     }

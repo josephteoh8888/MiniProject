@@ -113,17 +113,23 @@ class HPlacesListViewCell: UICollectionViewCell {
         aNameText.text = "-"
     }
     
-    func configure(data: String) {
+//    func configure(data: String) {
+    func configure(data: BaseData) {
 
-        if(data == "a") {
+        guard let a = data as? PlaceData else {
+            return
+        }
+        let l = a.dataCode
+        
+        if(l == "a") {
             asyncConfigure(data: "")
             
             self.aNameText.text = "Petronas Twin Towers"
         }
-        else if(data == "na") {
+        else if(l == "na") {
             
         }
-        else if(data == "us") {
+        else if(l == "us") {
             
         }
     }

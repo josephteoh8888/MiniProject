@@ -883,10 +883,18 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
         var indexPaths = [IndexPath]()
         
         let i = "b"
+        //ori
+//        let commentData = CommentData()
+//        commentData.setDataType(data: i)
+//        commentData.setData(data: i)
+//        commentData.setTextString(data: i)
+        
+        //test 2 > real data structure
+        let vData = CommentDataset() //temp workaround
+        vData.setupData(data: i)
         let commentData = CommentData()
-        commentData.setDataType(data: i)
-        commentData.setData(data: i)
-        commentData.setTextString(data: i)
+        commentData.setData(rData: vData)
+        
         self.vDataList.insert(commentData, at: 0)
         
         let idx = IndexPath(item: 0, section: 0)
@@ -910,7 +918,6 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
         let id_ = "comment"
         let isPaginate = false
         DataFetchManager.shared.fetchCommentFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
-//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -930,9 +937,7 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
                     //test 2 > new append method
                     for i in l {
                         let commentData = CommentData()
-                        commentData.setDataType(data: i)
-                        commentData.setData(data: i)
-                        commentData.setTextString(data: i)
+                        commentData.setData(rData: i)
                         self.vDataList.append(commentData)
                     }
                     self.vCV?.reloadData()
@@ -989,7 +994,6 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
         let id_ = "comment"
         let isPaginate = true
         DataFetchManager.shared.fetchCommentFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
-//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -1027,9 +1031,7 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
                     var j = 1
                     for i in l {
                         let commentData = CommentData()
-                        commentData.setDataType(data: i)
-                        commentData.setData(data: i)
-                        commentData.setTextString(data: i)
+                        commentData.setData(rData: i)
                         self.vDataList.append(commentData)
 
                         let idx = IndexPath(item: dataCount - 1 + j, section: 0)
@@ -1324,7 +1326,7 @@ extension CommentScrollableView: UICollectionViewDelegateFlowLayout {
         let text = vDataList[indexPath.row].dataTextString
         let dataL = vDataList[indexPath.row].dataArray
         let dataCL = vDataList[indexPath.row].contentDataArray
-        let d = vDataList[indexPath.row].dataType
+        let d = vDataList[indexPath.row].dataCode
         
         var contentHeight = 0.0
         
@@ -1335,7 +1337,7 @@ extension CommentScrollableView: UICollectionViewDelegateFlowLayout {
         
         if(d == "a") {
             for cl in dataCL {
-                let l = cl.dataType
+                let l = cl.dataCode
 
                 if(l == "text") {
                     let tTopMargin = 20.0

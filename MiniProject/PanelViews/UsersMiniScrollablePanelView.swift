@@ -50,7 +50,8 @@ class UsersMiniScrollablePanelView: ScrollablePanelView, UIGestureRecognizerDele
     var currentMapPaddingBottom: CGFloat = 0
     
     let pillBtn = UIView()
-    var vDataList = [String]()
+//    var vDataList = [String]()
+    var vDataList = [BaseData]()
     
     var vcvTopCons: NSLayoutConstraint?
     var vcvBottomCons: NSLayoutConstraint?
@@ -383,7 +384,8 @@ class UsersMiniScrollablePanelView: ScrollablePanelView, UIGestureRecognizerDele
         
         //test > async fetch data
         if(!isInitialized) {
-            self.asyncFetchFeed(id: "post_feed")
+//            self.asyncFetchFeed(id: "post_feed")
+            self.asyncFetchFeed(id: DataTypes.USER)
         }
         
         isInitialized = true
@@ -578,7 +580,9 @@ class UsersMiniScrollablePanelView: ScrollablePanelView, UIGestureRecognizerDele
         //test > adjust contentInset to y = 50 to move cv downward to accomodate spinner
         self.adjustContentInset(topInset: CGFloat(50), bottomInset: CGFloat(50))
         
-        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+//        let id_ = "u"
+        let isPaginate = false
+        DataFetchManager.shared.fetchFeedData(id: id, isPaginate: isPaginate) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -593,8 +597,17 @@ class UsersMiniScrollablePanelView: ScrollablePanelView, UIGestureRecognizerDele
                     self.aSpinner.stopAnimating()
                     
                     //test 2 > reload entire dataset
+//                    for i in l {
+//                        self.vDataList.append(i)
+//                    }
+                    
+                    //test 3 > new method
                     for i in l {
-                        self.vDataList.append(i)
+                        if let u = i as? UserDataset {
+                            let uData = UserData()
+                            uData.setData(rData: u)
+                            self.vDataList.append(uData)
+                        }
                     }
                     self.vCV?.reloadData()
                     
@@ -643,7 +656,16 @@ class UsersMiniScrollablePanelView: ScrollablePanelView, UIGestureRecognizerDele
         
         pageNumber += 1
         
-        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+//        let id_ = "u"
+        var isPaginate = false
+        
+        if(pageNumber >= 2) {
+            isPaginate = true
+        } else {
+            isPaginate = false
+        }
+        
+        DataFetchManager.shared.fetchFeedData(id: id, isPaginate: isPaginate) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -666,7 +688,13 @@ class UsersMiniScrollablePanelView: ScrollablePanelView, UIGestureRecognizerDele
                     var indexPaths = [IndexPath]()
                     var j = 1
                     for i in l {
-                        self.vDataList.append(i)
+//                        self.vDataList.append(i)
+                        
+                        if let u = i as? UserDataset {
+                            let uData = UserData()
+                            uData.setData(rData: u)
+                            self.vDataList.append(uData)
+                        }
 
                         let idx = IndexPath(item: dataCount - 1 + j, section: 0)
                         indexPaths.append(idx)
@@ -700,7 +728,8 @@ class UsersMiniScrollablePanelView: ScrollablePanelView, UIGestureRecognizerDele
         configureFooterUI(data: "")
         
         dataPaginateStatus = ""
-        self.asyncFetchFeed(id: "post_feed")
+//        self.asyncFetchFeed(id: "post_feed")
+        self.asyncFetchFeed(id: DataTypes.USER)
     }
     
     //test > footer error handling for refresh feed
@@ -909,12 +938,13 @@ extension UsersMiniScrollablePanelView: UICollectionViewDelegateFlowLayout {
             print("postpanel willdisplay: \(indexPath.row)")
 
             if(dataPaginateStatus != "end") {
-                if(pageNumber >= 3) {
-                    asyncPaginateFetchFeed(id: "post_feed_end")
-                } else {
-                    asyncPaginateFetchFeed(id: "post_feed")
-                }
+//                if(pageNumber >= 3) {
+//                    asyncPaginateFetchFeed(id: "post_feed_end")
+//                } else {
+//                    asyncPaginateFetchFeed(id: "post_feed")
+//                }
 
+                asyncPaginateFetchFeed(id: DataTypes.USER)
             }
         }
     }
@@ -967,6 +997,10 @@ extension ViewController: UsersMiniScrollablePanelDelegate{
     //test > initialize
     func didFinishInitializeUsersMini(pv: UsersMiniScrollablePanelView) {
         showUsersMiniPoints(pv: pv)
+        
+        //test > remove pulsewave when open panel
+        stopPulseWave()
+        dequeueObject()  //activateQueueState() cannot be used as it prevents adding queue objects on map
     }
     
     func didUsersMiniClickUser(){

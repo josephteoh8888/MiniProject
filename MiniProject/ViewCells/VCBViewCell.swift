@@ -298,8 +298,8 @@ class VCBViewCell: VCViewCell {
         
         startFlashLoaderAnimation()
         
-        let id = "s_"
-        DataFetchManager.shared.fetchSoundData(id: id) { [weak self]result in
+        let id = "a_"
+        DataFetchManager.shared.fetchDummyDataTimeDelay(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -315,7 +315,7 @@ class VCBViewCell: VCViewCell {
                     
                     //test 2 > try video without looper, use conventional avplayer
                     var videoURL = ""
-                    if(data.dataType == "a") {
+                    if(data.dataCode == "a") {
                         videoURL = "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_video_4.mp4?alt=media"
                     }
 
@@ -376,29 +376,29 @@ class VCBViewCell: VCViewCell {
         let dataText = data.dataTextString
         
         //test > change ui with data accordingly
-        if(data.dataType == "b") { // b - loading data
+        if(data.dataCode == "b") { // b - loading data
             aSpinner.startAnimating()
-        } else if(data.dataType == "c") { // c - no more data
+        } else if(data.dataCode == "c") { // c - no more data
             aaText.text = dataText
             aaText.isHidden = false
-        } else if(data.dataType == "d") { // d - empty data
+        } else if(data.dataCode == "d") { // d - empty data
             aaText.text = dataText
             aaText.isHidden = false
-        } else if(data.dataType == "e") { // e - something went wrong
+        } else if(data.dataCode == "e") { // e - something went wrong
             errorText.text = dataText
             errorText.isHidden = false
             errorRefreshBtn.isHidden = false
         }
         //*test > post suspended and not found
-        else if(data.dataType == "na") { // na - not found
+        else if(data.dataCode == "na") { // na - not found
             aaText.text = "Video does not exist."
             aaText.isHidden = false
         }
-        else if(data.dataType == "us") { // us - suspended
+        else if(data.dataCode == "us") { // us - suspended
             aaText.text = "Video violated community rules."
             aaText.isHidden = false
         }
-        else if(data.dataType == "a") { // a - video play
+        else if(data.dataCode == "a") { // a - video play
             aContainer.isHidden = false
             
             let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")

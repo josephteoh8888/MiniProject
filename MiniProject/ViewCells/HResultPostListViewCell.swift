@@ -54,14 +54,27 @@ class HResultPostListViewCell: UICollectionViewCell {
         aResult.isUserInteractionEnabled = true
         aResult.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPostClicked)))
         
+        contentText.textAlignment = .left
+        contentText.textColor = .white
+        contentText.font = .systemFont(ofSize: 14)
+        contentView.addSubview(contentText)
+        contentText.translatesAutoresizingMaskIntoConstraints = false
+        contentText.topAnchor.constraint(equalTo: aResult.topAnchor, constant: 10).isActive = true
+//        contentText.topAnchor.constraint(equalTo: aResult.topAnchor, constant: 10).isActive = true //10
+        contentText.leadingAnchor.constraint(equalTo: aResult.leadingAnchor, constant: 20).isActive = true
+        contentText.trailingAnchor.constraint(equalTo: aResult.trailingAnchor, constant: -20).isActive = true //-30
+//        contentText.trailingAnchor.constraint(equalTo: contentPhoto.leadingAnchor, constant: -20).isActive = true //-30
+        contentText.text = "-"
+        contentText.numberOfLines = 5 //3
+        
         let eUserCover = UIView()
 //        eUserCover.backgroundColor = .ddmBlackOverlayColor
 //        eUserCover.backgroundColor = .white
         eUserCover.backgroundColor = .clear
         contentView.addSubview(eUserCover)
         eUserCover.translatesAutoresizingMaskIntoConstraints = false
-        eUserCover.topAnchor.constraint(equalTo: aResult.topAnchor, constant: 10).isActive = true //10
-//        eUserCover.topAnchor.constraint(equalTo: contentText.bottomAnchor, constant: 5).isActive = true //10
+//        eUserCover.topAnchor.constraint(equalTo: aResult.topAnchor, constant: 10).isActive = true //10
+        eUserCover.topAnchor.constraint(equalTo: contentText.bottomAnchor, constant: 10).isActive = true //10
         eUserCover.leadingAnchor.constraint(equalTo: aResult.leadingAnchor, constant: 20).isActive = true //20
         eUserCover.heightAnchor.constraint(equalToConstant: 24).isActive = true //30
         eUserCover.widthAnchor.constraint(equalToConstant: 24).isActive = true
@@ -114,31 +127,18 @@ class HResultPostListViewCell: UICollectionViewCell {
         vBtn.widthAnchor.constraint(equalToConstant: 14).isActive = true
         //
         
-        contentText.textAlignment = .left
-        contentText.textColor = .white
-        contentText.font = .systemFont(ofSize: 14)
-        contentView.addSubview(contentText)
-        contentText.translatesAutoresizingMaskIntoConstraints = false
-        contentText.topAnchor.constraint(equalTo: eUserCover.bottomAnchor, constant: 10).isActive = true
-//        contentText.topAnchor.constraint(equalTo: aResult.topAnchor, constant: 10).isActive = true //10
-        contentText.leadingAnchor.constraint(equalTo: aResult.leadingAnchor, constant: 20).isActive = true
-        contentText.trailingAnchor.constraint(equalTo: aResult.trailingAnchor, constant: -20).isActive = true //-30
-//        contentText.trailingAnchor.constraint(equalTo: contentPhoto.leadingAnchor, constant: -20).isActive = true //-30
-        contentText.text = "-"
-        contentText.numberOfLines = 5 //3
-        
-////        let bMiniBtn = UIImageView(image: UIImage(named:"icon_love")?.withRenderingMode(.alwaysTemplate))
-////        bMiniBtn.image = UIImage(named:"icon_love")?.withRenderingMode(.alwaysTemplate)
-//        bMiniBtn.tintColor = .ddmDarkGrayColor
-////        bMiniBtn.tintColor = .red
-////        contentView.addSubview(bMiniBtn)
-////        aCon.addSubview(bMiniBtn)
-//        contentView.addSubview(bMiniBtn)
-//        bMiniBtn.translatesAutoresizingMaskIntoConstraints = false
-//        bMiniBtn.leadingAnchor.constraint(equalTo: contentText.leadingAnchor, constant: 0).isActive = true
-//        bMiniBtn.topAnchor.constraint(equalTo: contentText.bottomAnchor, constant: 10).isActive = true
-//        bMiniBtn.heightAnchor.constraint(equalToConstant: 14).isActive = true //14
-//        bMiniBtn.widthAnchor.constraint(equalToConstant: 14).isActive = true
+//        contentText.textAlignment = .left
+//        contentText.textColor = .white
+//        contentText.font = .systemFont(ofSize: 14)
+//        contentView.addSubview(contentText)
+//        contentText.translatesAutoresizingMaskIntoConstraints = false
+//        contentText.topAnchor.constraint(equalTo: eUserCover.bottomAnchor, constant: 10).isActive = true
+////        contentText.topAnchor.constraint(equalTo: aResult.topAnchor, constant: 10).isActive = true //10
+//        contentText.leadingAnchor.constraint(equalTo: aResult.leadingAnchor, constant: 20).isActive = true
+//        contentText.trailingAnchor.constraint(equalTo: aResult.trailingAnchor, constant: -20).isActive = true //-30
+////        contentText.trailingAnchor.constraint(equalTo: contentPhoto.leadingAnchor, constant: -20).isActive = true //-30
+//        contentText.text = "-"
+//        contentText.numberOfLines = 5 //3
         
 //        let aCountText = UILabel()
         aCountText.textAlignment = .left
@@ -177,6 +177,7 @@ class HResultPostListViewCell: UICollectionViewCell {
         aUserNameText.text = ""
 //        aUserNameText.text = "@mic1809"
 //        aUserNameText.layer.opacity = 0.3 //0.5
+        aUserNameText.isHidden = true
         
 //        let contentPhoto = SDAnimatedImageView()
         contentView.addSubview(contentPhoto)
@@ -213,16 +214,21 @@ class HResultPostListViewCell: UICollectionViewCell {
         aCountText.text = ""
         bMiniBtn.image = nil
     }
-    func configure(data: PostData) {
+//    func configure(data: PostData) {
+    func configure(data: BaseData) {
         
-        let l = data.dataType
-        let s = data.dataTextString
+        guard let a = data as? PostData else {
+            return
+        }
+        
+//        let l = data.dataType
+        let l = a.dataCode
 
         if(l == "a") {
             asyncConfigure(data: "")
             
-            self.aNameText.text = "Michael Kins"
-            self.contentText.text = s
+//            self.aNameText.text = "Michael Kins"
+            self.contentText.text = data.dataTextString
             
             aCountText.text = "43" //43
             bMiniBtn.image = UIImage(named:"icon_comment")?.withRenderingMode(.alwaysTemplate) //icon_round_play
@@ -247,8 +253,8 @@ class HResultPostListViewCell: UICollectionViewCell {
     }
     //*test > async fetch images/names/videos
     func asyncConfigure(data: String) {
-        let id = "p"
-        DataFetchManager.shared.fetchPlaceData(id: id) { [weak self]result in
+        let id = "u"
+        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -260,8 +266,20 @@ class HResultPostListViewCell: UICollectionViewCell {
                         return
                     }
 
-                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-                    self.aUserPhoto.sd_setImage(with: imageUrl)
+                    if(!l.isEmpty) {
+                        let l_0 = l[0]
+                        let uData = UserData()
+                        uData.setData(rData: l_0)
+                        let l_ = uData.dataCode
+                        
+                        self.aNameText.text = uData.dataTextString
+                        
+                        let imageUrl2 = URL(string: uData.coverPhotoString)
+                        self.aUserPhoto.sd_setImage(with: imageUrl2)
+                    }
+                    
+//                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//                    self.aUserPhoto.sd_setImage(with: imageUrl)
 //                    let imageUrl1 = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
 //                    self.contentPhoto.sd_setImage(with: imageUrl1)
                     
@@ -285,8 +303,8 @@ class HResultPostListViewCell: UICollectionViewCell {
                     let imageUrl = URL(string: "")
                     self.aUserPhoto.sd_setImage(with: imageUrl)
                     
-                    let imageUrl1 = URL(string: "")
-                    self.contentPhoto.sd_setImage(with: imageUrl1)
+//                    let imageUrl1 = URL(string: "")
+//                    self.contentPhoto.sd_setImage(with: imageUrl1)
                 }
                 break
             }

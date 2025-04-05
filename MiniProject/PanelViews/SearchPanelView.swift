@@ -210,12 +210,12 @@ class SearchPanelView: PanelView{
 
         //test > try uicollectionview
 //        tabDataList.append("a")
-        tabDataList.append("u")
-        tabDataList.append("v")
-        tabDataList.append("i")
-        tabDataList.append("p")
-        tabDataList.append("l")
-        tabDataList.append("s")
+        tabDataList.append(DataTypes.USER)
+        tabDataList.append(DataTypes.LOOP)
+        tabDataList.append(DataTypes.SHOT)
+        tabDataList.append(DataTypes.POST)
+        tabDataList.append(DataTypes.LOCATION)
+        tabDataList.append(DataTypes.SOUND)
 //        tabDataList.append("h")//temp disable hashtag search
 
         //test > add sections tab
@@ -317,17 +317,17 @@ class SearchPanelView: PanelView{
 
             if(d == "a") {
                 stack.setText(code: d, d: "All")
-            } else if(d == "v") {
+            } else if(d == DataTypes.LOOP) {
                 stack.setText(code: d, d: "Videos")
-            } else if(d == "p") {
+            } else if(d == DataTypes.POST) {
                 stack.setText(code: d, d: "Posts")
-            } else if(d == "i") {
+            } else if(d == DataTypes.SHOT) {
                 stack.setText(code: d, d: "Shots")
-            } else if(d == "u") {
+            } else if(d == DataTypes.USER) {
                 stack.setText(code: d, d: "Users")
-            } else if(d == "l") {
+            } else if(d == DataTypes.LOCATION) {
                 stack.setText(code: d, d: "Locations")
-            } else if(d == "s") {
+            } else if(d == DataTypes.SOUND) {
                 stack.setText(code: d, d: "Sounds")
             } else if(d == "h") {
                 stack.setText(code: d, d: "Hashtags")
@@ -342,17 +342,17 @@ class SearchPanelView: PanelView{
 
             var stackFeed: ScrollFeedHResultListCell?
             
-            if(d == "u") {
+            if(d == DataTypes.USER) {
                 stackFeed = ScrollFeedHResultUserListCell()
-            } else if(d == "v") {
+            } else if(d == DataTypes.LOOP) {
                 stackFeed = ScrollFeedHResultVideoListCell()
-            } else if(d == "i") {
+            } else if(d == DataTypes.SHOT) {
                 stackFeed = ScrollFeedHResultPhotoListCell()
-            } else if(d == "p") {
+            } else if(d == DataTypes.POST) {
                 stackFeed = ScrollFeedHResultPostListCell()
-            }  else if(d == "l") {
+            }  else if(d == DataTypes.LOCATION) {
                 stackFeed = ScrollFeedHResultLocationListCell()
-            } else if(d == "s") {
+            } else if(d == DataTypes.SOUND) {
                 stackFeed = ScrollFeedHResultSoundListCell()
             } else if(d == "h") {
                 stackFeed = ScrollFeedHResultHashtagListCell()
@@ -536,21 +536,6 @@ class SearchPanelView: PanelView{
                     guard let self = self else {
                         return
                     }
-
-//                    //test > tab select
-//                    if(!self.tabList.isEmpty) {
-//                        for l in self.tabList {
-//                            self.stackviewUsableLength += l.frame.width
-//                        }
-////                        self.stackviewUsableLength += 10.0 //leading constraint on tabscrollview
-//                        self.tabScrollView.contentSize = CGSize(width: self.stackviewUsableLength, height: 40)
-//
-//                        let tab = self.tabList[0]
-//                        self.tabSelectWidthCons?.constant = tab.frame.width
-//                        self.tabSelect.isHidden = false
-//                    }
-//                    
-//                    self.measureTabScroll()
                     
                     //test > init tabscroll UI e.g. measure width
                     self.activateTabUI()
@@ -560,9 +545,11 @@ class SearchPanelView: PanelView{
                     //test > async fetch feed
                     if(!self.feedList.isEmpty) {
                         let feed = self.feedList[self.currentIndex]
-    //                    if(self.isUserLoggedIn) {
-                            self.asyncFetchFeed(cell: feed, id: "search_feed")
-    //                    }
+//                            self.asyncFetchFeed(cell: feed, id: "search_feed") //ori
+                        
+                        //test 2 > new method
+                        let feedCode = feed.feedCode
+                        self.asyncFetchFeed(cell: feed, id: feedCode)
                     }
                 }
 
@@ -606,8 +593,11 @@ class SearchPanelView: PanelView{
             feed.configureFooterUI(data: "")
             
             feed.dataPaginateStatus = ""
-            asyncFetchFeed(cell: feed, id: "search_feed")
+//            asyncFetchFeed(cell: feed, id: "search_feed") //ori
 //            asyncFetchFeed(cell: feed, id: "post")
+            
+            let feedCode = feed.feedCode
+            asyncFetchFeed(cell: feed, id: feedCode)
         }
     }
 
@@ -625,8 +615,7 @@ class SearchPanelView: PanelView{
         let id_ = "post"
 //        let id_ = id
         let isPaginate = false
-        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
-//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+        DataFetchManager.shared.fetchFeedData(id: id, isPaginate: isPaginate) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -642,13 +631,67 @@ class SearchPanelView: PanelView{
                     feed.aSpinner.stopAnimating()
                     
                     //test 1
+//                    for i in l {
+//                        let postData = PostData()
+//                        postData.setDataType(data: i)
+//                        postData.setData(data: i)
+//                        postData.setTextString(data: i)
+//                        feed.vDataList.append(postData)
+//                    }
+                    
+                    //test 2 > variation in data types
+//                    if let a = feed as? ScrollFeedHResultVideoListCell {
+//                        for i in l {
+//                            let vData = VideoDataset() //temporary workaround
+//                            vData.setupData(data: i)
+//                            let postData = VideoData()
+//                            postData.setData(rData: vData)
+//                            feed.vDataList.append(postData)
+//                        }
+//                    } else {
+//                        for i in l {
+//                            let postData = PostData()
+//                            postData.setDataType(data: i)
+//                            postData.setData(data: i)
+//                            postData.setTextString(data: i)
+//                            feed.vDataList.append(postData)
+//                        }
+//                    }
+                    
+                    //test 3 > new method
                     for i in l {
-                        let postData = PostData()
-                        postData.setDataType(data: i)
-                        postData.setData(data: i)
-                        postData.setTextString(data: i)
-                        feed.vDataList.append(postData)
+                        if let u = i as? UserDataset {
+                            let uData = UserData()
+                            uData.setData(rData: u)
+                            feed.vDataList.append(uData)
+                        }
+                        else if let p = i as? PlaceDataset {
+                            let pData = PlaceData()
+                            pData.setData(rData: p)
+                            feed.vDataList.append(pData)
+                        }
+                        else if let s = i as? SoundDataset {
+                            let sData = SoundData()
+                            sData.setData(rData: s)
+                            feed.vDataList.append(sData)
+                        }
+                        else if let post = i as? PostDataset {
+                            let postData = PostData()
+                            postData.setData(rData: post)
+                            feed.vDataList.append(postData)
+                        }
+                        else if let photo = i as? PhotoDataset {
+                            let photoData = PhotoData()
+                            photoData.setData(rData: photo)
+                            feed.vDataList.append(photoData)
+                        }
+                        else if let video = i as? VideoDataset {
+                            let videoData = VideoData()
+                            videoData.setData(rData: video)
+                            feed.vDataList.append(videoData)
+                        }
                     }
+                    
                     feed.vCV?.reloadData()
 
                     //*test 3 > reload only appended data, not entire dataset
@@ -698,8 +741,7 @@ class SearchPanelView: PanelView{
 
         let id_ = "post"
         let isPaginate = true
-        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
-//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+        DataFetchManager.shared.fetchFeedData(id: id, isPaginate: isPaginate) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -721,18 +763,105 @@ class SearchPanelView: PanelView{
                     let dataCount = feed.vDataList.count
                     var indexPaths = [IndexPath]()
                     var j = 1
+                    
+                    //test 1
+//                    for i in l {
+//                        let postData = PostData()
+//                        postData.setDataType(data: i)
+//                        postData.setData(data: i)
+//                        postData.setTextString(data: i)
+//                        feed.vDataList.append(postData)
+//
+//                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+//                        indexPaths.append(idx)
+//                        j += 1
+//                    }
+                    
+                    //test 2 > variation in data types
+//                    if let a = feed as? ScrollFeedHResultVideoListCell {
+//                        for i in l {
+//                            let vData = VideoDataset() //temporary workaround
+//                            vData.setupData(data: i)
+//                            let postData = VideoData()
+//                            postData.setData(rData: vData)
+//                            feed.vDataList.append(postData)
+//                            
+//                            let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+//                            indexPaths.append(idx)
+//                            j += 1
+//                        }
+//                    } else {
+//                        for i in l {
+//                            let postData = PostData()
+//                            postData.setDataType(data: i)
+//                            postData.setData(data: i)
+//                            postData.setTextString(data: i)
+//                            feed.vDataList.append(postData)
+//
+//                            let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+//                            indexPaths.append(idx)
+//                            j += 1
+//                        }
+//                    }
+                    
+                    //test 3 > new method
                     for i in l {
-//                        feed.vDataList.append(i)
-                        let postData = PostData()
-                        postData.setDataType(data: i)
-                        postData.setData(data: i)
-                        postData.setTextString(data: i)
-                        feed.vDataList.append(postData)
-
-                        let idx = IndexPath(item: dataCount - 1 + j, section: 0)
-                        indexPaths.append(idx)
-                        j += 1
+                        if let u = i as? UserDataset {
+                            let uData = UserData()
+                            uData.setData(rData: u)
+                            feed.vDataList.append(uData)
+                            
+                            let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+                            indexPaths.append(idx)
+                            j += 1
+                        }
+                        else if let p = i as? PlaceDataset {
+                            let pData = PlaceData()
+                            pData.setData(rData: p)
+                            feed.vDataList.append(pData)
+                            
+                            let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+                            indexPaths.append(idx)
+                            j += 1
+                        }
+                        else if let s = i as? SoundDataset {
+                            let sData = SoundData()
+                            sData.setData(rData: s)
+                            feed.vDataList.append(sData)
+                            
+                            let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+                            indexPaths.append(idx)
+                            j += 1
+                        }
+                        else if let post = i as? PostDataset {
+                            let postData = PostData()
+                            postData.setData(rData: post)
+                            feed.vDataList.append(postData)
+                            
+                            let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+                            indexPaths.append(idx)
+                            j += 1
+                        }
+                        else if let photo = i as? PhotoDataset {
+                            let photoData = PhotoData()
+                            photoData.setData(rData: photo)
+                            feed.vDataList.append(photoData)
+                            
+                            let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+                            indexPaths.append(idx)
+                            j += 1
+                        }
+                        else if let video = i as? VideoDataset {
+                            let videoData = VideoData()
+                            videoData.setData(rData: video)
+                            feed.vDataList.append(videoData)
+                            
+                            let idx = IndexPath(item: dataCount - 1 + j, section: 0)
+                            indexPaths.append(idx)
+                            j += 1
+                        }
                     }
+                    
                     feed.vCV?.insertItems(at: indexPaths)
                     //*
 
@@ -883,8 +1012,12 @@ extension SearchPanelView: UIScrollViewDelegate {
             if(!self.feedList.isEmpty) {
                 let feed = self.feedList[rIndex]
                 if(feed.dataPaginateStatus == "") {
-                    self.asyncFetchFeed(cell: feed, id: "search_feed")
+//                    self.asyncFetchFeed(cell: feed, id: "search_feed") //ori
 //                    self.asyncFetchFeed(cell: feed, id: "post_")
+                    
+                    //test 2 > new method
+                    let feedCode = feed.feedCode
+                    self.asyncFetchFeed(cell: feed, id: feedCode)
                 }
             }
         }
@@ -1029,7 +1162,10 @@ extension SearchPanelView: ScrollFeedCellDelegate {
         print("feedhresultlistcell real paginate async")
 
         if let d = cell as? ScrollFeedHResultListCell {
-            self.asyncPaginateFetchFeed(cell: d, id: "search_feed_end")
+//            self.asyncPaginateFetchFeed(cell: d, id: "search_feed_end")
+            
+            let feedCode = d.feedCode
+            self.asyncPaginateFetchFeed(cell: d, id: feedCode)
         }
         
 //        if let d = cell {

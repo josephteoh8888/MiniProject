@@ -91,8 +91,8 @@ class ScrollFeedCell: UIView {
 }
 
 class ScrollDataFeedCell: ScrollFeedCell {
-    var vDataList = [PostData]()
-
+//    var vDataList = [PostData]()
+    var vDataList = [BaseData]()
 }
 
 class ScrollPhotoDataFeedCell: ScrollFeedCell {
@@ -101,12 +101,14 @@ class ScrollPhotoDataFeedCell: ScrollFeedCell {
 }
 
 class ScrollFeedHResultListCell: ScrollFeedCell {
-    var vDataList = [PostData]()
-    
+//    var vDataList = [PostData]()
+    var vDataList = [BaseData]()
+
     //test > additional delegate
     weak var bDelegate : ScrollFeedHResultListCellDelegate?
 }
 
 class ScrollFeedHNotifyListCell: ScrollFeedCell {
-    var vDataList = [String]()
+//    var vDataList = [String]()
+    var vDataList = [NotifyData]()
 }

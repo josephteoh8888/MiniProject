@@ -245,13 +245,13 @@ extension ScrollFeedHPostListCell: UICollectionViewDelegateFlowLayout {
         let text = vDataList[indexPath.row].dataTextString
         let dataL = vDataList[indexPath.row].dataArray
         let dataCL = vDataList[indexPath.row].contentDataArray
-        let d = vDataList[indexPath.row].dataType
+        let d = vDataList[indexPath.row].dataCode
         
         var contentHeight = 0.0
         
         if(d == "a") {
             for cl in dataCL {
-                let l = cl.dataType
+                let l = cl.dataCode
 
                 if(l == "text") {
                     let tTopMargin = 20.0

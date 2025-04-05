@@ -105,38 +105,35 @@ class GridVideoViewCell: UICollectionViewCell {
         bMiniBtn.image = nil
     }
     
-    func configure(data: PostData) {
+//    func configure(data: PostData) {
+    func configure(data: BaseData) {
         
-//        aCountText.text = "395" //3.9m
-//        bMiniBtn.image = UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate) //icon_round_play
-        let l = data.dataType
-//        let s = data.dataTextString
+        guard let a = data as? VideoData else {
+            return
+        }
+        
+//        let l = data.dataType //ori
+        let l = a.dataCode
         
         if(l == "a") {
-            asyncConfigure(data: data)
+//            asyncConfigure(data: "")
+            
+            let imageUrl = URL(string: a.coverPhotoString)
+            self.gifImage.sd_setImage(with: imageUrl)
             
             aCountText.text = "395"
             bMiniBtn.image = UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate)
         } 
         else if(l == "na") {
-            
+
         }
         else if(l == "us") {
             
         }
-//        else if(l == "b") {
-//            aCountText.text = "7.8m"
-//            bMiniBtn.image = UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate)
-//        } else if(l == "c") {
-//            aCountText.text = "34k"
-//            bMiniBtn.image = UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate)
-//        } else if(l == "d") {
-//            aCountText.text = "981"
-//            bMiniBtn.image = UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate)
-//        }
     }
     
-    func asyncConfigure(data: PostData) {
+//    func asyncConfigure(data: PostData) {
+    func asyncConfigure(data: String) {
         let id = "u"
         DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
             switch result {
@@ -150,8 +147,8 @@ class GridVideoViewCell: UICollectionViewCell {
                         return
                     }
 
-                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
-                    self.gifImage.sd_setImage(with: imageUrl)
+//                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
+//                    self.gifImage.sd_setImage(with: imageUrl)
                 }
 
                 case .failure(let error):
@@ -161,8 +158,8 @@ class GridVideoViewCell: UICollectionViewCell {
                         return
                     }
                     
-                    let imageUrl = URL(string: "")
-                    self.gifImage.sd_setImage(with: imageUrl)
+//                    let imageUrl = URL(string: "")
+//                    self.gifImage.sd_setImage(with: imageUrl)
                     
                 }
                 break

@@ -548,7 +548,7 @@ class HPostListBViewCell: UICollectionViewCell {
     
     //*test > async fetch images/names/videos
     func asyncConfigure(data: String) {
-        let id = "u_"
+        let id = "u" //u_
         DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -560,12 +560,28 @@ class HPostListBViewCell: UICollectionViewCell {
                     guard let self = self else {
                         return
                     }
-
-                    self.aGridNameText.text = "Michael Kins"
-                    self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
                     
-                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-                    self.aUserPhoto.sd_setImage(with: imageUrl)
+                    if(!l.isEmpty) {
+                        let l_0 = l[0]
+                        let uData = UserData()
+                        uData.setData(rData: l_0)
+                        let l_ = uData.dataCode
+                        
+                        self.aGridNameText.text = uData.dataTextString
+                        
+                        let eImageUrl = URL(string: uData.coverPhotoString)
+                        self.aUserPhoto.sd_setImage(with: eImageUrl)
+                        
+                        if(uData.isAccountVerified) {
+                            self.vBtn.image = UIImage(named:"icon_round_verified_b")?.withRenderingMode(.alwaysTemplate)
+                        }
+                    }
+
+//                    self.aGridNameText.text = "Michael Kins"
+//                    self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
+//                    
+//                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//                    self.aUserPhoto.sd_setImage(with: imageUrl)
                 }
 
                 case .failure(let error):
@@ -586,9 +602,45 @@ class HPostListBViewCell: UICollectionViewCell {
         }
     }
     //*
+    //*test > async fetch place profile
+    func asyncConfigurePlace(data: String) {
+        let id = "p1"
+        DataFetchManager.shared.fetchPlaceData2(id: id) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    print("pdp api success \(id), \(l)")
+                    
+                    guard let self = self else {
+                        return
+                    }
+
+                    let pData = PlaceData()
+                    pData.setData(rData: l)
+                    let l_ = pData.dataCode
+                    
+                    if(l_ == "a") {
+                        self.aaText.text = pData.dataTextString
+                    }
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    self.aaText.text = "-"
+                }
+                break
+            }
+        }
+    }
     
     func configure(data: PostData) {
-        asyncConfigure(data: "")
+//        asyncConfigure(data: "")
         
         aUserNameText.text = "-"
         aaText.text = "-"
@@ -607,15 +659,19 @@ class HPostListBViewCell: UICollectionViewCell {
 //        aGridNameText.attributedText = attributedText
         
         //test > dynamic create ui for various data types in sequence
-        let d = data.dataType
+        let d = data.dataCode
         if(d == "a") {
             aUserNameText.text = "3hr . 1.2m views"
-            aaText.text = "Petronas Twin Tower"
+//            aaText.text = "Petronas Twin Tower"
+            
+            asyncConfigure(data: "")
+            asyncConfigurePlace(data: "")
             
             let dataCL = data.contentDataArray
             for cl in dataCL {
-                let l = cl.dataType
-
+                let l = cl.dataCode
+                let da = cl.dataArray
+                
                 if(l == "text") {
                     let aaText = UILabel()
                     aaText.textAlignment = .left
@@ -681,7 +737,8 @@ class HPostListBViewCell: UICollectionViewCell {
                     contentCell.layer.cornerRadius = 10 //5
                     aTestArray.append(contentCell)
                     contentCell.redrawUI()
-                    contentCell.configure(data: "a")
+//                    contentCell.configure(data: "a")
+                    contentCell.configure(data: da)
     //                contentCell.setState(p: data.p_s)
                     contentCell.setState(p: cl.p_s)
                     contentCell.aDelegate = self
@@ -733,9 +790,12 @@ class HPostListBViewCell: UICollectionViewCell {
                     aTestArray.append(contentCell)
                     contentCell.setDescHeight(lHeight: 40, txt: data.dataTextString)
                     contentCell.redrawUI()
-                    contentCell.configure(data: "a")
-    //                contentCell.setState(p: data.p_s)
-                    contentCell.setState(p: cl.p_s)
+                    contentCell.configure(data: "a") //ori
+//                    contentCell.configure(data: "a", state: cl.p_s)
+//                    var da = [String]() //temp solution
+//                    da.append("https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+//                    contentCell.configure(data: da)
+                    contentCell.setState(p: cl.p_s) //ori
                     contentCell.aDelegate = self
                 }
                 else if(l == "video_l") {//loop videos

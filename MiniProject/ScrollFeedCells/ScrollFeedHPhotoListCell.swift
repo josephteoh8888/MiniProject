@@ -246,58 +246,62 @@ extension ScrollFeedHPhotoListCell: UICollectionViewDelegateFlowLayout {
         let text = vDataList[indexPath.row].dataTextString
         let dataL = vDataList[indexPath.row].dataArray
         let dataCL = vDataList[indexPath.row].contentDataArray
-        let d = vDataList[indexPath.row].dataType
+        let d = vDataList[indexPath.row].dataCode
         
         let statText = "1.2m views . 3hr"
         var contentHeight = 0.0
         
         if(d == "a") {
             for cl in dataCL {
-                let l = cl.dataType
+                let l = cl.dataCode
 
                 let availableWidth = self.frame.width
-                let bubbleHeight = 3.0
-                let bubbleTopMargin = 10.0
-                let totalBubbleH = bubbleHeight + bubbleTopMargin
-    //            let totalBubbleH = bubbleHeight + bubbleTopMargin + 40.0 //test for sound section
+                
+                //test > with "p"
+                if(l == "p") {
+                    let bubbleHeight = 3.0
+                    let bubbleTopMargin = 10.0
+                    let totalBubbleH = bubbleHeight + bubbleTopMargin
+        //            let totalBubbleH = bubbleHeight + bubbleTopMargin + 40.0 //test for sound section
 
-                let assetSize = CGSize(width: 3, height: 4) //4:3
-                var cSize = CGSize(width: 0, height: 0)
-                if(assetSize.width > assetSize.height) {
-                    //1 > landscape photo 4:3 w:h
-                    let aRatio = CGSize(width: 4, height: 3) //aspect ratio
-                    let cHeight = availableWidth * aRatio.height / aRatio.width + totalBubbleH
-                    cSize = CGSize(width: availableWidth, height: cHeight)
+                    let assetSize = CGSize(width: 3, height: 4) //4:3
+                    var cSize = CGSize(width: 0, height: 0)
+                    if(assetSize.width > assetSize.height) {
+                        //1 > landscape photo 4:3 w:h
+                        let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                        let cHeight = availableWidth * aRatio.height / aRatio.width + totalBubbleH
+                        cSize = CGSize(width: availableWidth, height: cHeight)
+                    }
+                    else if (assetSize.width < assetSize.height){
+                        //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                        let aRatio = CGSize(width: 5, height: 6) //aspect ratio 2:3, 3:4
+                        let cWidth = availableWidth
+                        let cHeight = cWidth * aRatio.height / aRatio.width + totalBubbleH
+                        cSize = CGSize(width: cWidth, height: cHeight)
+                    } else {
+                        //square
+                        let cWidth = availableWidth
+                        cSize = CGSize(width: cWidth, height: cWidth + totalBubbleH)
+                    }
+                    
+                    let pTopMargin = 0.0
+                    let pContentHeight = cSize.height
+                    let tTopMargin = 10.0
+                    let tContentHeight = estimateHeight(text: text, textWidth: collectionView.frame.width - 20.0 - 20.0, fontSize: 14)
+                    print("photo p text size: \(tContentHeight), \(text)")
+                    let pHeight = pTopMargin + pContentHeight + tTopMargin + tContentHeight
+                    contentHeight += pHeight
                 }
-                else if (assetSize.width < assetSize.height){
-                    //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
-                    let aRatio = CGSize(width: 5, height: 6) //aspect ratio 2:3, 3:4
-                    let cWidth = availableWidth
-                    let cHeight = cWidth * aRatio.height / aRatio.width + totalBubbleH
-                    cSize = CGSize(width: cWidth, height: cHeight)
-                } else {
-                    //square
-                    let cWidth = availableWidth
-                    cSize = CGSize(width: cWidth, height: cWidth + totalBubbleH)
-                }
-                
-                let pTopMargin = 0.0
-                let pContentHeight = cSize.height
-                let tTopMargin = 10.0
-                let tContentHeight = estimateHeight(text: text, textWidth: collectionView.frame.width - 20.0 - 20.0, fontSize: 14)
-                print("photo p text size: \(tContentHeight), \(text)")
-                let pHeight = pTopMargin + pContentHeight + tTopMargin + tContentHeight
-                contentHeight += pHeight
-                
-                if(l == "m") {
+                else if(l == "m") {
+//                if(l == "m") {
                     let soundTopMargin = 10.0
                     let soundHeight = 30.0
                     let pHeight = soundTopMargin + soundHeight
                     contentHeight += pHeight
                 }
-                else if(l == "p") {
-                    
-                }
+//                else if(l == "p") {
+//                    
+//                }
             }
         }
         else if(d == "na") {

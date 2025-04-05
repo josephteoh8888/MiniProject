@@ -2238,8 +2238,8 @@ class BaseLocationHighlightBox: HighlightCell {
         isInitialized = true
     }
     func asyncConfigure(data: String) {
-        let id = "p_"
-        DataFetchManager.shared.fetchPlaceData(id: id) { [weak self]result in
+        let id = "p1"
+        DataFetchManager.shared.fetchPlaceData2(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -2253,12 +2253,18 @@ class BaseLocationHighlightBox: HighlightCell {
 
                     self.bSpinner.stopAnimating()
                     
-                    self.aHSubDesc.text = "Petronas Twin Tower"
-                    self.aHSubDesc2.text = "Base"
+                    let pData = PlaceData()
+                    pData.setData(rData: l)
+                    let l_ = pData.dataCode
                     
-                    let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
-                    self.rGridBG.sd_setImage(with: imageUrl)
-                    self.rArrowBtn.isHidden = false
+                    if(l_ == "a") {
+                        self.aHSubDesc.text = "Petronas Twin Tower"
+                        self.aHSubDesc2.text = "Base"
+                        
+                        let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+                        self.rGridBG.sd_setImage(with: imageUrl)
+                        self.rArrowBtn.isHidden = false
+                    }
                 }
 
                 case .failure(let error):

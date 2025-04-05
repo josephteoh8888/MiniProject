@@ -148,6 +148,8 @@ class HResultSoundListViewCell: UICollectionViewCell {
         aNameText.topAnchor.constraint(equalTo: eUserCover.topAnchor, constant: 5).isActive = true
         aNameText.leadingAnchor.constraint(equalTo: aUserPhoto.trailingAnchor, constant: 10).isActive = true
         aNameText.text = "-"
+//        aNameText.trailingAnchor.constraint(equalTo: playBtn.trailingAnchor, constant: -10).isActive = true
+        aNameText.trailingAnchor.constraint(lessThanOrEqualTo: playBtn.leadingAnchor, constant: -50).isActive = true
         
         //test > verified badge
 //        let vBtn = UIImageView(image: UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate))
@@ -191,14 +193,21 @@ class HResultSoundListViewCell: UICollectionViewCell {
         playBtn.isHidden = true
     }
     
-    func configure(data: PostData) {
-        
-        let l = data.dataType
+//    func configure(data: PostData) {
+    func configure(data: BaseData) {
+        guard let a = data as? SoundData else {
+            return
+        }
+//        let l = data.dataType //ori
+        let l = a.dataCode
         
         if(l == "a") {
             asyncConfigure(data: "")
             
-            self.aNameText.text = "明知故犯"
+//            self.aNameText.text = "明知故犯"
+            self.aNameText.text = a.dataTextString
+            let imageUrl = URL(string: a.coverPhotoString)
+            self.aUserPhoto.sd_setImage(with: imageUrl)
         }
         else if(l == "na") {
             
@@ -210,8 +219,8 @@ class HResultSoundListViewCell: UICollectionViewCell {
     
     //*test > async fetch images/names/videos
     func asyncConfigure(data: String) {
-        let id = "s"
-        DataFetchManager.shared.fetchSoundData(id: id) { [weak self]result in
+        let id = "a"
+        DataFetchManager.shared.fetchDummyDataTimeDelay(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -226,8 +235,8 @@ class HResultSoundListViewCell: UICollectionViewCell {
                     self.aUserNameText.text = "Hubert Wu"
                     self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
                     
-                    let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
-                    self.aUserPhoto.sd_setImage(with: imageUrl)
+//                    let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+//                    self.aUserPhoto.sd_setImage(with: imageUrl)
                     
                     self.playBtn.isHidden = false
                 }
@@ -243,8 +252,8 @@ class HResultSoundListViewCell: UICollectionViewCell {
                     self.aUserNameText.text = "-"
                     self.vBtn.image = nil
                     
-                    let imageUrl = URL(string: "")
-                    self.aUserPhoto.sd_setImage(with: imageUrl)
+//                    let imageUrl = URL(string: "")
+//                    self.aUserPhoto.sd_setImage(with: imageUrl)
                     
                     self.playBtn.isHidden = true
                 }

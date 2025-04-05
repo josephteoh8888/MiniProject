@@ -117,13 +117,6 @@ class PostDetailPanelView: PanelView, UIGestureRecognizerDelegate{
         panelLeadingCons = panel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0)
         panelLeadingCons?.isActive = true
         
-        //test > try uicollectionview
-//        let postData = PostData()
-//        postData.setDataType(data: "b")
-//        postData.setData(data: "b")
-//        postData.setTextString(data: "b")
-//        vcDataList.append(postData)
-        
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         layout.itemSize = CGSize(width: self.frame.size.width, height: self.frame.size.height)
@@ -806,11 +799,19 @@ class PostDetailPanelView: PanelView, UIGestureRecognizerDelegate{
     func addData() {
         var indexPaths = [IndexPath]()
         
-        let i = "b"
+        //test 1 > ori
+//        let i = "b"
+//        let postData = PostData()
+//        postData.setDataCode(data: i)
+//        postData.setData(data: i)
+//        postData.setTextString(data: i)
+        
+        //test 2 > add postdata to datamanager
+        let text = "aaaaa"
+        let postDataset = DataManager.shared.addPostData(text: text)
         let postData = PostData()
-        postData.setDataType(data: i)
-        postData.setData(data: i)
-        postData.setTextString(data: i)
+        postData.setData(rData: postDataset)
+        
         self.vcDataList.insert(postData, at: 1) //second item
         
         let idx = IndexPath(item: 1, section: 0) //second item
@@ -834,7 +835,8 @@ class PostDetailPanelView: PanelView, UIGestureRecognizerDelegate{
     func asyncFetchPost(id: String) {
         aSpinner.startAnimating()
         
-        DataFetchManager.shared.fetchPostData(id: id) { [weak self]result in
+//        DataFetchManager.shared.fetchPostData(id: id) { [weak self]result in
+        DataFetchManager.shared.fetchPostFeedData(id: id, isPaginate: false) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -853,14 +855,17 @@ class PostDetailPanelView: PanelView, UIGestureRecognizerDelegate{
                         
                         //test 1
                         let postData = PostData()
-                        postData.setDataType(data: l_) //"d"
-                        postData.setData(data: l_)
-                        postData.setTextString(data: l_)
+//                        postData.setDataType(data: l_) //"d"
+//                        postData.setData(data: l_)
+//                        postData.setTextString(data: l_)
+                        postData.setData(rData: l_)
                         self.vcDataList.append(postData)
                         self.postCV?.reloadData()
 
                         //test
-                        self.configureUI(data: l_)
+//                        self.configureUI(data: l_)
+                        let dataType = l_.dataCode
+                        self.configureUI(data: dataType)
                     }
                     
                     self.asyncFetchFeed(id: "comment_feed")
@@ -890,10 +895,11 @@ class PostDetailPanelView: PanelView, UIGestureRecognizerDelegate{
         dataFetchState = "start"
         bSpinner.startAnimating()
         
-        let id_ = "post"
+//        let id_ = "post"
+        let id_ = "comment" //test > transition from "fetchfeeddata" to "fetchcomment"
         let isPaginate = false
-        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
-//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+//        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+        DataFetchManager.shared.fetchCommentFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -916,9 +922,10 @@ class PostDetailPanelView: PanelView, UIGestureRecognizerDelegate{
                     var j = 1
                     for i in l {
                         let postData = PostData()
-                        postData.setDataType(data: i)
-                        postData.setData(data: i)
-                        postData.setTextString(data: i)
+//                        postData.setDataType(data: i)
+//                        postData.setData(data: i)
+//                        postData.setTextString(data: i)
+                        postData.setData(rData: i)
                         self.vcDataList.append(postData)
 
                         let idx = IndexPath(item: dataCount - 1 + j, section: 0)
@@ -954,10 +961,11 @@ class PostDetailPanelView: PanelView, UIGestureRecognizerDelegate{
         
         pageNumber += 1
         
-        let id_ = "post"
+//        let id_ = "post"
+        let id_ = "comment" //test > transition from "fetchfeeddata" to "fetchcomment"
         let isPaginate = true
-        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
-//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+//        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+        DataFetchManager.shared.fetchCommentFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -982,9 +990,10 @@ class PostDetailPanelView: PanelView, UIGestureRecognizerDelegate{
                     var j = 1
                     for i in l {
                         let postData = PostData()
-                        postData.setDataType(data: i)
-                        postData.setData(data: i)
-                        postData.setTextString(data: i)
+//                        postData.setDataType(data: i)
+//                        postData.setData(data: i)
+//                        postData.setTextString(data: i)
+                        postData.setData(rData: i)
                         self.vcDataList.append(postData)
 
                         let idx = IndexPath(item: dataCount - 1 + j, section: 0)
@@ -1546,7 +1555,7 @@ class PostDetailPanelView: PanelView, UIGestureRecognizerDelegate{
         
         isStatusUploading = true
         
-        let id = "c_"
+        let id = "c" //c_ => error adding data
         DataUploadManager.shared.sendCommentData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -1615,7 +1624,7 @@ class PostDetailPanelView: PanelView, UIGestureRecognizerDelegate{
     func getVCDataType() -> String {
         let postIdx = 0
         if(!self.vcDataList.isEmpty) {
-            let d = self.vcDataList[postIdx].dataType
+            let d = self.vcDataList[postIdx].dataCode
             return d
         }
         
@@ -1649,13 +1658,13 @@ extension PostDetailPanelView: UICollectionViewDelegateFlowLayout {
             let text = vcDataList[indexPath.row].dataTextString
             let dataL = vcDataList[indexPath.row].dataArray
             let dataCL = vcDataList[indexPath.row].contentDataArray
-            let d = vcDataList[indexPath.row].dataType
+            let d = vcDataList[indexPath.row].dataCode
             
             var contentHeight = 0.0
             
             if(d == "a") {
                 for cl in dataCL {
-                    let l = cl.dataType
+                    let l = cl.dataCode
 
                     if(l == "text") {
                         let tTopMargin = 20.0
@@ -1989,7 +1998,7 @@ extension PostDetailPanelView: UICollectionViewDelegateFlowLayout {
             let text = vcDataList[indexPath.row].dataTextString
             let dataL = vcDataList[indexPath.row].dataArray
             let dataCL = vcDataList[indexPath.row].contentDataArray
-            let d = vcDataList[indexPath.row].dataType
+            let d = vcDataList[indexPath.row].dataCode
             
             var contentHeight = 0.0
             
@@ -2000,7 +2009,7 @@ extension PostDetailPanelView: UICollectionViewDelegateFlowLayout {
             
             if(d == "a") {
                 for cl in dataCL {
-                    let l = cl.dataType
+                    let l = cl.dataCode
 
                     if(l == "text") {
                         let tTopMargin = 20.0

@@ -27,7 +27,8 @@ class PlaceSelectPanelView: PanelView, UIGestureRecognizerDelegate{
     let bTextField = UITextField()
     let bTextBox = UIView()
     
-    var vDataList = [String]()
+//    var vDataList = [String]()
+    var vDataList = [BaseData]()
     var isScrollViewAtTop = true
     var currentPanelMode = ""
     let PANEL_MODE_HALF: String = "half"
@@ -519,8 +520,8 @@ class PlaceSelectPanelView: PanelView, UIGestureRecognizerDelegate{
         
         let id_ = "post"
         let isPaginate = false
-        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
-//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+//        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+        DataFetchManager.shared.fetchPlaceFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -537,7 +538,11 @@ class PlaceSelectPanelView: PanelView, UIGestureRecognizerDelegate{
                     
                     //test 2 > reload entire dataset
                     for i in l {
-                        self.vDataList.append(i)
+//                        self.vDataList.append(i)
+                        
+                        let pData = PlaceData()
+                        pData.setData(rData: i)
+                        self.vDataList.append(pData)
                     }
                     self.vCV?.reloadData()
                     
@@ -588,8 +593,8 @@ class PlaceSelectPanelView: PanelView, UIGestureRecognizerDelegate{
         
         let id_ = "post"
         let isPaginate = true
-        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
-//        DataFetchManager.shared.fetchData(id: id) { [weak self]result in
+//        DataFetchManager.shared.fetchFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+        DataFetchManager.shared.fetchPlaceFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -616,7 +621,11 @@ class PlaceSelectPanelView: PanelView, UIGestureRecognizerDelegate{
                     var indexPaths = [IndexPath]()
                     var j = 1
                     for i in l {
-                        self.vDataList.append(i)
+//                        self.vDataList.append(i)
+                        
+                        let pData = PlaceData()
+                        pData.setData(rData: i)
+                        self.vDataList.append(pData)
 
                         let idx = IndexPath(item: dataCount - 1 + j, section: 0)
                         indexPaths.append(idx)

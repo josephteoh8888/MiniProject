@@ -115,14 +115,18 @@ class PostPhotoContentCell: ContentCell {
     
     var vDataList = [String]()
     var aHLightViewArray = [UIView]()
-    func configure(data: String) {
-        if(data == "a") {
-            vDataList.append("p")
+    func configure(data: [String]) {
+//    func configure(data: String) {
+//        if(data == "a") {
 //            vDataList.append("p")
-            for _ in vDataList {
+        
+            for p in data {
+                vDataList.append(p)
+            }
+
+            for p_ in vDataList {
                 
-//                let gifUrl = "https://i3.ytimg.com/vi/2mcGhpbWlyg/maxresdefault.jpg"
-                let gifUrl = "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg"
+//                let gifUrl = "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg"
                 
 //                let gifImage1 = SDAnimatedImageView()
 //                gifImage1.contentMode = .scaleAspectFill
@@ -130,7 +134,8 @@ class PostPhotoContentCell: ContentCell {
 //                gifImage1.sd_setImage(with: gifUrl)
                 let gifImage1 = CustomImageView()
                 gifImage1.setupViews()
-                gifImage1.setImage(url: gifUrl)
+//                gifImage1.setImage(url: gifUrl)
+                gifImage1.setImage(url: p_)
                 scrollView.addSubview(gifImage1)
                 gifImage1.translatesAutoresizingMaskIntoConstraints = false
                 gifImage1.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true //180
@@ -157,7 +162,7 @@ class PostPhotoContentCell: ContentCell {
             
             let totalWidth = CGFloat(dataCount) * viewWidth
             scrollView.contentSize = CGSize(width: totalWidth, height: viewHeight) //800, 280
-        }
+//        }
     }
     
     //test > revert to last viewed photo in carousel
@@ -520,14 +525,20 @@ class PostPhotoShotContentCell: ContentCell {
     
     var vDataList = [String]()
     var aHLightViewArray = [UIView]()
-    func configure(data: String) {
-        if(data == "a") {
-            vDataList.append("p")
-            vDataList.append("p")
-            for _ in vDataList {
+//    func configure(data: [String], state: Int) {
+    func configure(data: [String]) {
+//    func configure(data: String) {
+//        if(data == "a") {
+//            vDataList.append("p")
+//            vDataList.append("p")
+        
+            for p in data {
+                vDataList.append(p)
+            }
+        
+            for p_ in vDataList {
                 
-                let gifUrl = "https://i3.ytimg.com/vi/2mcGhpbWlyg/maxresdefault.jpg"
-//              let gifUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+//                let gifUrl = "https://i3.ytimg.com/vi/2mcGhpbWlyg/maxresdefault.jpg"
                 
 //                let gifImage1 = SDAnimatedImageView()
 //                gifImage1.contentMode = .scaleAspectFill
@@ -535,7 +546,8 @@ class PostPhotoShotContentCell: ContentCell {
 //                gifImage1.sd_setImage(with: gifUrl)
                 let gifImage1 = CustomImageView()
                 gifImage1.setupViews()
-                gifImage1.setImage(url: gifUrl)
+//                gifImage1.setImage(url: gifUrl)
+                gifImage1.setImage(url: p_)
                 scrollView.addSubview(gifImage1)
                 gifImage1.translatesAutoresizingMaskIntoConstraints = false
                 gifImage1.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true //180
@@ -563,22 +575,89 @@ class PostPhotoShotContentCell: ContentCell {
             let totalWidth = CGFloat(dataCount) * viewWidth
             scrollView.contentSize = CGSize(width: totalWidth, height: viewHeight - descHeight) //800, 280
             
-            //test > populate description text and label
-            aaText.text = descTxt
-            let image2Url = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-            a2UserPhoto.sd_setImage(with: image2Url)
+            //test > set state p_s asynchronously
+//            setState(p: state)
+            refreshStateUI()
+    }
+    
+//    func configure(data: String, state: Int) {
+    func configure(data: String) {
+        asyncConfigure(data: data)
+    }
+    
+    //*test > async fetch photo shot data
+//    func asyncConfigure(data: String, state: Int) {
+    func asyncConfigure(data: String) {
+//        let id_ = "post"
+//        DataFetchManager.shared.fetchPhotoFeedData(id: id_, isPaginate: false) { [weak self]result in
+        let id_ = "photo1"
+        DataFetchManager.shared.fetchPhotoData2(id: id_) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    guard let self = self else {
+                        return
+                    }
+//                    if(!l.isEmpty) {
+//                        let l_0 = l[0]
+                        let uData = PhotoData()
+//                        uData.setData(rData: l_0)
+                        uData.setData(rData: l)
+                        let l_ = uData.dataCode
+                        
+                        if(l_ == "a") {
+                            let t = uData.dataTextString
+                            let dataCL = uData.contentDataArray
+                            
+                            self.aaText.text = t
+
+                            let image2Url = URL(string: "")
+                            self.a2UserPhoto.sd_setImage(with: image2Url)
+                            
+                            for cl in dataCL {
+                                let l = cl.dataCode
+                                if(l == "p") {
+                                    let da = cl.dataArray
+                                    print("postphotoshot da: \(da)")
+//                                    self.configure(data: da, state: state)
+                                    self.configure(data: da)
+                                }
+                            }
+                        }
+//                    }
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    print("api fail")
+                    guard let self = self else {
+                        return
+                    }
+                }
+                break
+            }
         }
     }
     
     //test > revert to last viewed photo in carousel
     func setState(p: Int) {
-        bubbleBox.setIndicatorSelected(index: p)
-        
-        let xOffset = CGFloat(p) * viewWidth
-        scrollView.setContentOffset(CGPoint(x: xOffset, y: 0), animated: false)
+//        bubbleBox.setIndicatorSelected(index: p)
+//        
+//        let xOffset = CGFloat(p) * viewWidth
+//        scrollView.setContentOffset(CGPoint(x: xOffset, y: 0), animated: false)
         
         //test
         current_p_s = p
+    }
+    
+    //test > new method to revert to last viewed photo in carousel
+    func refreshStateUI() {
+        bubbleBox.setIndicatorSelected(index: current_p_s)
+        
+        let xOffset = CGFloat(current_p_s) * viewWidth
+        scrollView.setContentOffset(CGPoint(x: xOffset, y: 0), animated: false)
     }
     
     func setAutohide(isEnabled: Bool) {
@@ -854,8 +933,8 @@ class PostVideoContentCell: MediaContentCell {
     //test > async fetch asset
     func asyncConfigure(data: String) {
         
-        let id = "s"
-        DataFetchManager.shared.fetchSoundData(id: id) { [weak self]result in
+        let id = "a"
+        DataFetchManager.shared.fetchDummyDataTimeDelay(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -1341,19 +1420,22 @@ class PostVideoLoopContentCell: MediaContentCell {
     
     //test > async fetch asset
     func asyncConfigure(data: String) {
-        
-        let id = "s"
-        DataFetchManager.shared.fetchSoundData(id: id) { [weak self]result in
+        //test 2 > new method to fetch video data
+        let id = "video1"
+        DataFetchManager.shared.fetchVideoData2(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
                 //update UI on main thread
                 DispatchQueue.main.async {
-                    print("pdp api success \(id), \(l)")
-                    
+//                    print("222 pdp api success \(id), \(l)")
+
                     guard let self = self else {
                         return
                     }
+                    let uData = VideoData()
+                    uData.setData(rData: l)
+                    let l_ = uData.dataCode
                     
                     //UI change
                     self.bSpinner.stopAnimating()
@@ -1367,14 +1449,19 @@ class PostVideoLoopContentCell: MediaContentCell {
                     self.errorText.isHidden = true
                     self.errorRefreshBtn.isHidden = true
                     
-                    //test > populate description text and label
-                    self.aaText.text = self.descTxt
-                    let image2Url = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-                    self.a2UserPhoto.sd_setImage(with: image2Url)
-                    
                     //populate video
                     var videoURL = ""
-                    videoURL = "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_video_4.mp4?alt=media"
+                    if(l_ == "a") {
+                        videoURL = "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_video_4.mp4?alt=media"
+                        
+                        //test > populate description text and label
+                        let t = uData.dataTextString
+                        self.aaText.text = t
+
+                        let image2Url = URL(string: "")
+                        self.a2UserPhoto.sd_setImage(with: image2Url)
+                    }
+                    
                     let url = CacheManager.shared.getCacheUrlFor(videoUrl: videoURL)
                     
                     if(self.player != nil && self.player.currentItem != nil) {
@@ -1407,7 +1494,7 @@ class PostVideoLoopContentCell: MediaContentCell {
 
                 case .failure(let error):
                 DispatchQueue.main.async {
-                    
+
                     guard let self = self else {
                         return
                     }
@@ -1619,7 +1706,6 @@ class PostVideoLoopContentCell: MediaContentCell {
             playBtn.image = UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate)
         }
     }
-
 }
 
 class ShotPhotoContentCell: ContentCell {
@@ -1700,30 +1786,31 @@ class ShotPhotoContentCell: ContentCell {
         bubbleBox.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor, constant: 0).isActive = true
         bubbleBox.heightAnchor.constraint(equalToConstant: 3).isActive = true //30
         bubbleBox.isHidden = true
-        
     }
     
     var vDataList = [String]()
     var aHLightViewArray = [UIView]()
-    func configure(data: String) {
-        if(data == "a") {
-            vDataList.append("p")
-            vDataList.append("p")
-            vDataList.append("p")
+    func configure(data: [String]) {
+//    func configure(data: String) {
+//        if(data == "a") {
+//            vDataList.append("p")
+//            vDataList.append("p")
+//            vDataList.append("p")
+        
+            for p in data {
+                vDataList.append(p)
+            }
 
-            for _ in vDataList {
+            for p_ in vDataList {
                 
 //                let gifUrl = "https://i3.ytimg.com/vi/2mcGhpbWlyg/maxresdefault.jpg"
 //                let gifUrl = "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg"
-                let gifUrl = "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media"
+//                let gifUrl = "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media"
                 
-//                let gifImage1 = SDAnimatedImageView()
-//                gifImage1.contentMode = .scaleAspectFill
-//                gifImage1.clipsToBounds = true
-//                gifImage1.sd_setImage(with: gifUrl)
                 let gifImage1 = CustomDoubleTapImageView()
                 gifImage1.setupViews()
-                gifImage1.setImage(url: gifUrl)
+//                gifImage1.setImage(url: gifUrl)
+                gifImage1.setImage(url: p_)
                 scrollView.addSubview(gifImage1)
                 gifImage1.translatesAutoresizingMaskIntoConstraints = false
                 gifImage1.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true //180
@@ -1750,7 +1837,7 @@ class ShotPhotoContentCell: ContentCell {
             
             let totalWidth = CGFloat(dataCount) * viewWidth
             scrollView.contentSize = CGSize(width: totalWidth, height: viewHeight - bubbleHeight) //800, 280
-        }
+//        }
     }
     
     //test > revert to last viewed photo in carousel
@@ -2036,8 +2123,10 @@ class ShotSoundContentCell: MediaContentCell {
     
     func asyncConfigure(data: String) {
         
-        let id = "s"
-        DataFetchManager.shared.fetchSoundData(id: id) { [weak self]result in
+//        let id = "s"
+        let id = "s4"
+//        DataFetchManager.shared.fetchSoundData(id: id) { [weak self]result in
+        DataFetchManager.shared.fetchSoundData2(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -2051,17 +2140,28 @@ class ShotSoundContentCell: MediaContentCell {
                     
                     self.bSpinner.stopAnimating()
                     
-                    //test > populate description text and label
-                    self.mText.text = "明知故犯 - HubertWu"
-                    self.mText.isHidden = false
-                    self.dMiniCon.isHidden = false
-                    
-                    //error handling e.g. refetch button
-                    self.errorText.text = "-"
-                    self.errorText.isHidden = true
-                    self.errorRefreshBtn.isHidden = true
-                    
                     var videoURL = ""
+//                    if(!l.isEmpty) {
+//                        let l_0 = l[0]
+                        let pData = SoundData()
+//                        pData.setData(rData: l_0)
+                        pData.setData(rData: l)
+                        let l_ = pData.dataCode
+                        if(l_ == "a") {
+                            self.mText.text  = pData.dataTextString
+                            self.mText.isHidden = false
+                            self.dMiniCon.isHidden = false
+                            
+                            self.errorText.text = "-"
+                            self.errorText.isHidden = true
+                            self.errorRefreshBtn.isHidden = true
+                            
+                            videoURL = ""
+//                            videoURL = "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_video_4.mp4?alt=media"
+                        }
+//                    }
+                    
+//                    var videoURL = ""
 //                    videoURL = "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_audio_4.m4a?alt=media"
                     let audioUrl = CacheManager.shared.getCacheUrlFor(videoUrl: videoURL)
                     
@@ -2501,7 +2601,11 @@ class PostQuoteContentCell: MediaContentCell {
                 contentCell.layer.cornerRadius = 10 //5
                 aTestArray.append(contentCell)
                 contentCell.redrawUI()
-                contentCell.configure(data: "a")
+//                contentCell.configure(data: "a") //ori
+                var da = [String]() //temp solution
+                da.append("https://i3.ytimg.com/vi/2mcGhpbWlyg/maxresdefault.jpg")
+                da.append("https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+                contentCell.configure(data: da)
 //                contentCell.setState(p: data.p_s)
                 contentCell.setState(p: 0) //do not revert state for simplicity
                 contentCell.aDelegate = self
@@ -2555,6 +2659,10 @@ class PostQuoteContentCell: MediaContentCell {
                 contentCell.setDescHeight(lHeight: descHeight, txt: text)
                 contentCell.redrawUI()
                 contentCell.configure(data: "a")
+//                contentCell.configure(data: "a", state: 0)
+//                var da = [String]() //temp solution
+//                da.append("https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+//                contentCell.configure(data: da)
                 contentCell.setState(p: 0) //do not revert state for simplicity
                 contentCell.aDelegate = self
                 contentCell.setAutohide(isEnabled: isAutohideEnabled)
