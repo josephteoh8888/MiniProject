@@ -291,13 +291,13 @@ extension ScrollFeedHNotifyInboxListCell: UICollectionViewDataSource {
 
 extension ScrollFeedHNotifyInboxListCell: HNotifyListViewDelegate{
     func didHNotifyClickUser(){
-        aDelegate?.sfcDidClickVcvClickUser()
+        aDelegate?.sfcDidClickVcvClickUser(id: "")
     }
     func didHNotifyClickPlace(){
-        aDelegate?.sfcDidClickVcvClickPlace()
+        aDelegate?.sfcDidClickVcvClickPlace(id: "")
     }
     func didHNotifyClickSound(){
-        aDelegate?.sfcDidClickVcvClickSound()
+        aDelegate?.sfcDidClickVcvClickSound(id: "")
     }
     func didHNotifyClickHashtag(){
         

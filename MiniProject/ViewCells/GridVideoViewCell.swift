@@ -10,8 +10,8 @@ import UIKit
 import SDWebImage
 
 protocol GridViewCellDelegate : AnyObject {
-    func gridViewClick(vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String)
-    func gridViewClickUser()
+    func gridViewClick(id: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String)
+    func gridViewClickUser(id: String)
 }
 //test > grid viewcell for user panel
 class GridVideoViewCell: UICollectionViewCell {
@@ -96,6 +96,9 @@ class GridVideoViewCell: UICollectionViewCell {
         super.prepareForReuse()
         print("upv gridvideo prepare for reuse")
         
+        //test > clear id
+        setId(id: "")
+        
         let imageUrl = URL(string: "")
         gifImage.sd_setImage(with: imageUrl)
         
@@ -105,14 +108,20 @@ class GridVideoViewCell: UICollectionViewCell {
         bMiniBtn.image = nil
     }
     
-//    func configure(data: PostData) {
+    //test > set id for init
+    var id = ""
+    func setId(id: String) {
+        self.id = id
+    }
+    
     func configure(data: BaseData) {
         
         guard let a = data as? VideoData else {
             return
         }
         
-//        let l = data.dataType //ori
+        setId(id: a.id)
+        
         let l = a.dataCode
         
         if(l == "a") {
@@ -135,7 +144,7 @@ class GridVideoViewCell: UICollectionViewCell {
 //    func asyncConfigure(data: PostData) {
     func asyncConfigure(data: String) {
         let id = "u"
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+        DataFetchManager.shared.fetchDummyDataTimeDelay(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -171,7 +180,7 @@ class GridVideoViewCell: UICollectionViewCell {
         let pFrame = gifImage.frame.origin
         let pointX = pFrame.x
         let pointY = pFrame.y
-        aDelegate?.gridViewClick(vc: self, pointX: pointX, pointY: pointY, view: gifImage, mode:VideoTypes.V_LOOP)
+        aDelegate?.gridViewClick(id: id, vc: self, pointX: pointX, pointY: pointY, view: gifImage, mode:VideoTypes.V_LOOP)
     }
     
 }

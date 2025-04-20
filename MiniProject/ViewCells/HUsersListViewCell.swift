@@ -10,7 +10,7 @@ import UIKit
 import SDWebImage
 
 protocol HUsersListDelegate : AnyObject {
-    func didHUsersClickUser()
+    func didHUsersClickUser(id: String)
     func didHUsersClickVideo()
 }
 class HUsersListViewCell: UICollectionViewCell {
@@ -187,7 +187,15 @@ class HUsersListViewCell: UICollectionViewCell {
         if(l == "a") {
             asyncConfigure(data: "")
             
-            self.aNameText.text = "Michael Kins"
+            self.aNameText.text = a.dataTextString
+            self.aUserNameText.text = "140k followers" //"@mic1809"
+            
+            let imageUrl = URL(string: a.coverPhotoString)
+            self.aUserPhoto.sd_setImage(with: imageUrl)
+            
+            if(a.isAccountVerified) {
+                self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
+            }
         }
         else if(l == "na") {
             
@@ -198,8 +206,8 @@ class HUsersListViewCell: UICollectionViewCell {
     }
     
     func asyncConfigure(data: String) {
-        let id = "u"
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+        let id = "a"
+        DataFetchManager.shared.fetchDummyDataTimeDelay(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -211,13 +219,13 @@ class HUsersListViewCell: UICollectionViewCell {
                         return
                     }
 
-                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-                    self.aUserPhoto.sd_setImage(with: imageUrl)
+//                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//                    self.aUserPhoto.sd_setImage(with: imageUrl)
                     
 //                    self.aNameText.text = "Michael Kins"
-                    self.aUserNameText.text = "140k followers" //"@mic1809"
+//                    self.aUserNameText.text = "140k followers" //"@mic1809"
                     
-                    self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
+//                    self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
                 }
 
                 case .failure(let error):
@@ -228,11 +236,11 @@ class HUsersListViewCell: UICollectionViewCell {
                     }
                     
 //                    self.aNameText.text = "-"
-                    self.aUserNameText.text = "-"
-                    self.vBtn.image = nil
+//                    self.aUserNameText.text = "-"
+//                    self.vBtn.image = nil
                     
-                    let imageUrl = URL(string: "")
-                    self.aUserPhoto.sd_setImage(with: imageUrl)
+//                    let imageUrl = URL(string: "")
+//                    self.aUserPhoto.sd_setImage(with: imageUrl)
                     
                 }
                 break
@@ -241,13 +249,13 @@ class HUsersListViewCell: UICollectionViewCell {
     }
     
     @objc func onUserClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.didHUsersClickUser()
+        aDelegate?.didHUsersClickUser(id: "")
     }
 }
 
 extension UsersMiniScrollablePanelView: HUsersListDelegate{
-    func didHUsersClickUser(){
-        delegate?.didUsersMiniClickUser()
+    func didHUsersClickUser(id: String){
+        delegate?.didUsersMiniClickUser(id: id)
     }
     func didHUsersClickVideo(){
 

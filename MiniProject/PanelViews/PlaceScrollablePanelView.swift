@@ -21,12 +21,12 @@ protocol PlaceScrollablePanelDelegate : AnyObject {
     func didFinishMapChangePlaceScrollable()
     
     //test > connect to other panel
-    func didPClickUserPlaceScrollable()
-    func didPClickPlacePlaceScrollable()
-    func didPClickSoundPlaceScrollable()
-    func didPClickPlaceScrollableVcvClickPost()
-    func didPClickPlaceScrollableVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
-    func didPClickPlaceScrollableVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
+    func didPClickUserPlaceScrollable(id: String)
+    func didPClickPlacePlaceScrollable(id: String)
+    func didPClickSoundPlaceScrollable(id: String)
+    func didPClickPlaceScrollableVcvClickPost(id: String)
+    func didPClickPlaceScrollableVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
+    func didPClickPlaceScrollableVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     func didPClickPlaceSignIn()
     func didPClickPlaceShare()
     
@@ -1165,13 +1165,13 @@ class PlaceScrollablePanelView: ScrollablePanelView{
     }
 
     @objc func onAPhotoClicked(gesture: UITapGestureRecognizer) {
-        delegate?.didPClickPlacePlaceScrollable()
+        delegate?.didPClickPlacePlaceScrollable(id: "")
     }
     @objc func onBPhotoClicked(gesture: UITapGestureRecognizer) {
-        delegate?.didPClickUserPlaceScrollable()
+        delegate?.didPClickUserPlaceScrollable(id: "")
     }
     @objc func onCPhotoClicked(gesture: UITapGestureRecognizer) {
-        delegate?.didPClickSoundPlaceScrollable()
+        delegate?.didPClickSoundPlaceScrollable(id: "")
     }
 
     override func setStateTarget(target: CLLocationCoordinate2D) {
@@ -1332,11 +1332,13 @@ class PlaceScrollablePanelView: ScrollablePanelView{
     }
     
     //test > populate UI when data fetched
-    func configureUI(data: String) {
-        if(data == "a") {
-            self.aNameText.text = "Petronas Twin Tower"
-            self.aNameTextB.text = "Petronas Twin Tower"
-            self.aNameTextC.text = "Petronas Twin Tower"
+//    func configureUI(data: String) {
+    func configureUI(data: PlaceData) {
+        if(data.dataCode == "a") {
+//        if(data == "a") {
+            self.aNameText.text = data.dataTextString
+            self.aNameTextB.text = data.dataTextString
+            self.aNameTextC.text = data.dataTextString
             
             self.aUsernameAText.text = "@michael"
             
@@ -1348,7 +1350,8 @@ class PlaceScrollablePanelView: ScrollablePanelView{
             self.aMoreBtn.isHidden = false
             self.aMoreCBtn.isHidden = false
             
-            let aImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//            let aImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+            let aImageUrl = URL(string: data.coverPhotoString)
             aPhoto.sd_setImage(with: aImageUrl)
             aPhotoB.sd_setImage(with: aImageUrl)
             
@@ -1456,10 +1459,8 @@ class PlaceScrollablePanelView: ScrollablePanelView{
         
         self.isFetchFeedAllowed = false
         layoutTabUI()
-//        asyncFetchPlaceProfile(id: getObjectId())
         
-        //test for error handling
-        asyncFetchPlaceProfile(id: "p_")
+        asyncFetchPlaceProfile(id: getObjectId()) //"p_" for error handling
     }
     
     //test > async fetch data place profile => temp testing
@@ -1470,7 +1471,7 @@ class PlaceScrollablePanelView: ScrollablePanelView{
         self.bSpinner.startAnimating()
         
         //test > new fetch method for testing error handling
-        let id_ = "p1"
+        let id_ = id //p1
         DataFetchManager.shared.fetchPlaceData2(id: id_) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -1496,11 +1497,10 @@ class PlaceScrollablePanelView: ScrollablePanelView{
                         //test > lay out halfmode highlight box
                         self.aHLightBoxArray.append("b") //base location
                         self.aHLightBoxArray.append("d_p") //discover more places
-                        
-                        //test > lay out highlight section
 //                            self.aHLightDataArray.append("b") //booking *
                         
-                        self.configureUI(data: "a")
+//                        self.configureUI(data: "a")
+                        self.configureUI(data: pData)
                     }
                     else if(l_ == "us"){
 //                        else if(l_ == "b"){
@@ -1508,12 +1508,14 @@ class PlaceScrollablePanelView: ScrollablePanelView{
                         self.aHLightDataArray.append("us") //
                         //suspended
 //                            self.configureUI(data: "b")
-                        self.configureUI(data: "us")
+//                        self.configureUI(data: "us")
+                        self.deconfigureUI()
                     } else {
                         //deleted
                         self.aHLightBoxArray.append("na") //not found highlight box
                         self.aHLightDataArray.append("na")
-                        self.configureUI(data: "na")//na - data not available
+//                        self.configureUI(data: "na")//na - data not available
+                        self.deconfigureUI()
                     }
 
                     //test > half mode highlight box
@@ -1552,17 +1554,20 @@ class PlaceScrollablePanelView: ScrollablePanelView{
                     if let a = error as? FetchDataError{
                         
                         if(a == .dataNotFound) {
-                            self.configureUI(data: "na")//na - user data not available
+//                            self.configureUI(data: "na")//na - user data not available
+                            self.deconfigureUI()
                             
                             self.aHLightBoxArray.append("na") //user not found highlight box
                             self.aHLightDataArray.append("na")
                         } else if(a == .invalidResponse) {
-                            self.configureUI(data: "e")//na - user data not available
+//                            self.configureUI(data: "e")//na - user data not available
+                            self.deconfigureUI()
                             
                             self.aHLightBoxArray.append("e") //user not found highlight box
                             self.aHLightDataArray.append("e")
                         } else if(a == .networkError) {
-                            self.configureUI(data: "e")//na - user data not available
+//                            self.configureUI(data: "e")//na - user data not available
+                            self.deconfigureUI()
                             
                             self.aHLightBoxArray.append("e") //user not found highlight box
                             self.aHLightDataArray.append("e")
@@ -2512,7 +2517,7 @@ extension PlaceScrollablePanelView: HighlightCellDelegate {
         
     }
     func didHighlightClickPlace(id: String) {
-        delegate?.didPClickPlacePlaceScrollable()
+        delegate?.didPClickPlacePlaceScrollable(id: id)
     }
     func didHighlightClickSound(id: String) {
         
@@ -2590,22 +2595,22 @@ extension PlaceScrollablePanelView: ScrollFeedCellDelegate {
         openShareSheet()
     }
 
-    func sfcDidClickVcvClickUser() {
+    func sfcDidClickVcvClickUser(id: String) {
         pauseFeedPlayingMedia()
-        delegate?.didPClickUserPlaceScrollable()
+        delegate?.didPClickUserPlaceScrollable(id: id)
     }
-    func sfcDidClickVcvClickPlace() {
+    func sfcDidClickVcvClickPlace(id: String) {
         pauseFeedPlayingMedia()
-        delegate?.didPClickPlacePlaceScrollable()
+        delegate?.didPClickPlacePlaceScrollable(id: id)
     }
-    func sfcDidClickVcvClickSound() {
+    func sfcDidClickVcvClickSound(id: String) {
 
     }
-    func sfcDidClickVcvClickPost() {
+    func sfcDidClickVcvClickPost(id: String) {
         pauseFeedPlayingMedia()
-        delegate?.didPClickPlaceScrollableVcvClickPost()
+        delegate?.didPClickPlaceScrollableVcvClickPost(id: id)
     }
-    func sfcDidClickVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func sfcDidClickVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         
         pauseFeedPlayingMedia()
         
@@ -2614,10 +2619,10 @@ extension PlaceScrollablePanelView: ScrollFeedCellDelegate {
             let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
             
             let adjustY = pointY + originInRootView.y
-            delegate?.didPClickPlaceScrollableVcvClickPhoto(pointX: pointX, pointY: adjustY, view: view, mode: mode)
+            delegate?.didPClickPlaceScrollableVcvClickPhoto(id: id, pointX: pointX, pointY: adjustY, view: view, mode: mode)
         }
     }
-    func sfcDidClickVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func sfcDidClickVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         
         pauseFeedPlayingMedia()
         
@@ -2626,7 +2631,7 @@ extension PlaceScrollablePanelView: ScrollFeedCellDelegate {
             let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
             
             let adjustY = pointY + originInRootView.y
-            delegate?.didPClickPlaceScrollableVcvClickVideo(pointX: pointX, pointY: adjustY, view: view, mode: mode)
+            delegate?.didPClickPlaceScrollableVcvClickVideo(id: id, pointX: pointX, pointY: adjustY, view: view, mode: mode)
         }
     }
 
@@ -2661,7 +2666,6 @@ extension PlaceScrollablePanelView: ScrollFeedCellDelegate {
 //test
 extension ViewController: PlaceScrollablePanelDelegate{
     func didClickClosePlaceScrollablePanel() {
-        
         //test > reappear video when back from place panel
         backPage(isCurrentPageScrollable: true)
     }
@@ -2670,7 +2674,6 @@ extension ViewController: PlaceScrollablePanelDelegate{
         print("click vcv in VC \(pointX), \(pointY), \(view.frame)")
 //        let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
 //        let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
-        
     }
     
     func didChangeMapPaddingPlaceScrollable(y: CGFloat) {
@@ -2679,7 +2682,6 @@ extension ViewController: PlaceScrollablePanelDelegate{
         //test > try move redView of collision check according to map padding
         //-ve as y direction is inverse
         redViewTopCons?.constant = -y
-
     }
     
     func didStartMapChangePlaceScrollable(){
@@ -2689,25 +2691,28 @@ extension ViewController: PlaceScrollablePanelDelegate{
         mapReappearMarkers()
     }
     
-    func didPClickUserPlaceScrollable() {
-        
-        //test
-        openUserPanel()
+    func didPClickUserPlaceScrollable(id: String) {
+//        openUserPanel()
+        //test > real id for fetching data
+        openUserPanel(id: id)
     }
-    func didPClickPlacePlaceScrollable(){
-        
-        openPlacePanel()
+    func didPClickPlacePlaceScrollable(id: String){
+//        openPlacePanel()
+        //test > real id for fetching data
+        openPlacePanel(id: id)
     }
-    func didPClickSoundPlaceScrollable(){
-        
-        //test
-        openSoundPanel()
+    func didPClickSoundPlaceScrollable(id: String){
+//        openSoundPanel()
+        //test > real id for fetching data
+        openSoundPanel(id: id)
     }
     
-    func didPClickPlaceScrollableVcvClickPost(){
-        openPostDetailPanel()
+    func didPClickPlaceScrollableVcvClickPost(id: String){
+//        openPostDetailPanel()
+        //test > real id for fetching data
+        openPostDetailPanel(id: id)
     }
-    func didPClickPlaceScrollableVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
+    func didPClickPlaceScrollableVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
         let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
         let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
         
@@ -2720,10 +2725,12 @@ extension ViewController: PlaceScrollablePanelDelegate{
         } else if(mode == PhotoTypes.P_0){
             openPhotoZoomPanel(offX: offsetX, offY: offsetY)
         } else if(mode == PhotoTypes.P_SHOT_DETAIL) {
-            openPhotoDetailPanel()
+//            openPhotoDetailPanel()
+            //test > real id for fetching data
+            openPhotoDetailPanel(id: id)
         }
     }
-    func didPClickPlaceScrollableVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
+    func didPClickPlaceScrollableVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
         let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
         let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
 
@@ -2858,14 +2865,14 @@ extension PlaceScrollablePanelView: ShareSheetScrollableDelegate{
     }
 }
 extension PlaceScrollablePanelView: CommentScrollableDelegate{
-    func didCClickUser(){
-        delegate?.didPClickUserPlaceScrollable()
+    func didCClickUser(id: String){
+        delegate?.didPClickUserPlaceScrollable(id: id)
     }
-    func didCClickPlace(){
-        delegate?.didPClickPlacePlaceScrollable()
+    func didCClickPlace(id: String){
+        delegate?.didPClickPlacePlaceScrollable(id: id)
     }
-    func didCClickSound(){
-        delegate?.didPClickSoundPlaceScrollable()
+    func didCClickSound(id: String){
+        delegate?.didPClickSoundPlaceScrollable(id: id)
     }
     func didCClickClosePanel(){
 //        bottomBox.isHidden = true
@@ -2894,14 +2901,14 @@ extension PlaceScrollablePanelView: CommentScrollableDelegate{
     func didCClickShare(){
         openShareSheet()
     }
-    func didCClickPost(){
-        delegate?.didPClickPlaceScrollableVcvClickPost()
+    func didCClickPost(id: String){
+        delegate?.didPClickPlaceScrollableVcvClickPost(id: id)
     }
-    func didCClickClickPhoto(pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
-        delegate?.didPClickPlaceScrollableVcvClickPhoto(pointX: pointX, pointY: pointY, view: view, mode: mode)
+    func didCClickClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        delegate?.didPClickPlaceScrollableVcvClickPhoto(id: id, pointX: pointX, pointY: pointY, view: view, mode: mode)
     }
-    func didCClickClickVideo(pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
-        delegate?.didPClickPlaceScrollableVcvClickVideo(pointX: pointX, pointY: pointY, view: view, mode: mode)
+    func didCClickClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        delegate?.didPClickPlaceScrollableVcvClickVideo(id: id, pointX: pointX, pointY: pointY, view: view, mode: mode)
     }
 }
 extension PlaceScrollablePanelView: TabStackDelegate {

@@ -4776,24 +4776,9 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
     }
     
     func openUserPanel() {
-//        //test 1 > dequeue before transition
-//        stopPulseWave()
-//        dequeueVideo()
-//
-//        //test
-//        nextPage(isNextPageScrollable: false)
-//
-//        //test > use reusable method
-//        let userPanel = UserPanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
-//        self.view.addSubview(userPanel)
-//        userPanel.translatesAutoresizingMaskIntoConstraints = false
-//        userPanel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
-//        userPanel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
-//        userPanel.delegate = self
-////        userPanel.layer.opacity = 0.3
-//
-//        pageList.append(userPanel)
-        
+        openUserPanel(id: "") //default
+    }
+    func openUserPanel(id: String) {
         
         //test 2 > user scrollable
         stopPulseWave()
@@ -4821,16 +4806,18 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         panel.setScrollableId(id: appScrollableId)
         
         //test > set objectid for fetching data
-        panel.setObjectId(id: "u")
+        panel.setObjectId(id: id) //"u"
         
         //test > initialize panel
         panel.panelTopCons = panel.topAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 0)
         panel.panelTopCons?.isActive = true
         panel.initialize()
-
     }
     
     func openPlacePanel() {
+        openPlacePanel(id: "") //default
+    }
+    func openPlacePanel(id: String) {
         //test > dequeue before transition
         stopPulseWave()
         dequeueObject()
@@ -4857,7 +4844,7 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         panel.setScrollableId(id: appScrollableId)
         
         //test > set objectid for fetching data
-        panel.setObjectId(id: "p")
+        panel.setObjectId(id: id) //"p"
         
         //test > initialize panel
         panel.panelTopCons = panel.topAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 0)
@@ -4891,7 +4878,7 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         }
     }
     
-    //test > method 2 => non-scrollable
+//test > method 2 => non-scrollable
 //    func openSoundPanel() {
 //        //test > dequeue before transition
 //        stopPulseWave()
@@ -4919,6 +4906,9 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
     
     //test > method 2 => try scrollable for sound panel
     func openSoundPanel() {
+        openSoundPanel(id: "") //default
+    }
+    func openSoundPanel(id: String) {
         //test > dequeue before transition
         stopPulseWave()
         dequeueObject()
@@ -4945,7 +4935,7 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         panel.setScrollableId(id: appScrollableId)
 
         //test > set objectid for fetching data
-        panel.setObjectId(id: "s")
+        panel.setObjectId(id: id) //"s"
 
         //test > initialize panel
         panel.panelTopCons = panel.topAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 0)
@@ -5162,22 +5152,6 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
     
     //test > open draft panel
     func openPostDraftPanel() {
-        
-        //test
-//        nextPage(isNextPageScrollable: false)
-//
-//        //test > use reusable method
-//        let panel = DraftPanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
-//        self.view.addSubview(panel)
-//        panel.translatesAutoresizingMaskIntoConstraints = false
-//        panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
-//        panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
-//        panel.delegate = self
-//
-//        pageList.append(panel)
-//
-//        panel.initialize()
-        
         let panel = PostDraftPanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
         self.view.addSubview(panel)
         panel.translatesAutoresizingMaskIntoConstraints = false
@@ -5219,6 +5193,10 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
     
     //test > shift post detail to viewcontroller and include in [page] array
     func openPostDetailPanel() {
+        openPostDetailPanel(id: "") //default
+    }
+    //test > real id for fetching data
+    func openPostDetailPanel(id: String) {
         
         //test 1 > as not scrollable panel
         nextPage(isNextPageScrollable: false)
@@ -5229,6 +5207,7 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         panel.translatesAutoresizingMaskIntoConstraints = false
         panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
         panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
+        panel.setId(id: id)
         panel.initialize()
         panel.delegate = self
         
@@ -5237,6 +5216,9 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         print("pagelist : \(pageList)")
     }
     func openPhotoDetailPanel() {
+        openPhotoDetailPanel(id: "") //default
+    }
+    func openPhotoDetailPanel(id: String) {
         
         //test 1 > as not scrollable panel
         nextPage(isNextPageScrollable: false)
@@ -5247,6 +5229,7 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         panel.translatesAutoresizingMaskIntoConstraints = false
         panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
         panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
+        panel.setId(id: id)
         panel.initialize()
         panel.delegate = self
         

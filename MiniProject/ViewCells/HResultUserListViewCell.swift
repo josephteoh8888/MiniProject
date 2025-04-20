@@ -163,6 +163,9 @@ class HResultUserListViewCell: UICollectionViewCell {
         super.prepareForReuse()
         print("HResultUserListViewCell prepare for reuse")
         
+        //test > clear id
+        setId(id: "")
+        
         let imageUrl = URL(string: "")
         aUserPhoto.sd_setImage(with: imageUrl)
         
@@ -177,14 +180,20 @@ class HResultUserListViewCell: UICollectionViewCell {
         actionUI(doneState: false)
     }
     
-//    func configure(data: PostData) {
+    //test > set id for init
+    var id = ""
+    func setId(id: String) {
+        self.id = id
+    }
+    
     func configure(data: BaseData) {
         
         guard let a = data as? UserData else {
             return
         }
         
-//        let l = data.dataType
+        setId(id: data.id)
+        
         let l = a.dataCode
         
         if(l == "a") {
@@ -215,8 +224,8 @@ class HResultUserListViewCell: UICollectionViewCell {
     
     //*test > async fetch images/names/videos
     func asyncConfigure(data: String) {
-        let id = "u"
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+        let id = "a"
+        DataFetchManager.shared.fetchDummyDataTimeDelay(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -254,7 +263,7 @@ class HResultUserListViewCell: UICollectionViewCell {
     //*
     
     @objc func onUserClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.didHResultClickUser()
+        aDelegate?.didHResultClickUser(id: id)
     }
     
     func actionUI(doneState: Bool) {

@@ -182,55 +182,55 @@ class SoundMarker: Marker {
     }
 
     override func configure(data: String) {
-//        if(data == "a") {
-//            let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
-//            guard let imageUrl = imageUrl else {
-//                return
-//            }
-//            self.gifImage.sd_setImage(with: imageUrl)
-//        }
+        if(data == "a") {
+            let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+            guard let imageUrl = imageUrl else {
+                return
+            }
+            self.gifImage.sd_setImage(with: imageUrl)
+        }
         
-        asyncConfigure(data: "")
+//        asyncConfigure(data: "")
     }
     
     //*test > async fetch images/names/videos
-    func asyncConfigure(data: String) {
-        let id = "u" //u_
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
-            switch result {
-                case .success(let l):
-
-                //update UI on main thread
-                DispatchQueue.main.async {
-                    print("pdp api success \(id), \(l)")
-                    
-                    guard let self = self else {
-                        return
-                    }
-                    
-                    let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
-                    guard let imageUrl = imageUrl else {
-                        return
-                    }
-                    self.gifImage.sd_setImage(with: imageUrl)
-                }
-
-                case .failure(let error):
-                DispatchQueue.main.async {
-                    
-                    guard let self = self else {
-                        return
-                    }
-                    let imageUrl = URL(string: "")
-                    guard let imageUrl = imageUrl else {
-                        return
-                    }
-                    self.gifImage.sd_setImage(with: imageUrl)
-                }
-                break
-            }
-        }
-    }
+//    func asyncConfigure(data: String) {
+//        let id = "a" //u_
+//        DataFetchManager.shared.fetchDummyDataTimeDelay(id: id) { [weak self]result in
+//            switch result {
+//                case .success(let l):
+//
+//                //update UI on main thread
+//                DispatchQueue.main.async {
+//                    print("pdp api success \(id), \(l)")
+//                    
+//                    guard let self = self else {
+//                        return
+//                    }
+//                    
+//                    let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+//                    guard let imageUrl = imageUrl else {
+//                        return
+//                    }
+//                    self.gifImage.sd_setImage(with: imageUrl)
+//                }
+//
+//                case .failure(let error):
+//                DispatchQueue.main.async {
+//                    
+//                    guard let self = self else {
+//                        return
+//                    }
+//                    let imageUrl = URL(string: "")
+//                    guard let imageUrl = imageUrl else {
+//                        return
+//                    }
+//                    self.gifImage.sd_setImage(with: imageUrl)
+//                }
+//                break
+//            }
+//        }
+//    }
     //*
     
     @objc func onMarkerClicked(gesture: UITapGestureRecognizer) {

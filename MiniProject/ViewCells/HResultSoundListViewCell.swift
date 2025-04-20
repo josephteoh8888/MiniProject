@@ -12,13 +12,13 @@ import SDWebImage
 protocol HResultListViewDelegate : AnyObject {
 
     //test > connect to other panel
-    func didHResultClickUser()
-    func didHResultClickPlace()
-    func didHResultClickSound()
+    func didHResultClickUser(id: String)
+    func didHResultClickPlace(id: String)
+    func didHResultClickSound(id: String)
     func didHResultClickHashtag()
-    func didHResultClickPhoto()
-    func didHResultClickVideo()
-    func didHResultClickPost()
+    func didHResultClickPhoto(id: String)
+    func didHResultClickVideo(id: String)
+    func didHResultClickPost(id: String)
     
     func didHResultClickSignIn()
 }
@@ -183,6 +183,9 @@ class HResultSoundListViewCell: UICollectionViewCell {
         super.prepareForReuse()
         print("sfvideo prepare for reuse")
         
+        //test > clear id
+        setId(id: "")
+        
         vBtn.image = nil
         aNameText.text = "-"
         aUserNameText.text = "-"
@@ -193,21 +196,31 @@ class HResultSoundListViewCell: UICollectionViewCell {
         playBtn.isHidden = true
     }
     
-//    func configure(data: PostData) {
+    //test > set id for init
+    var id = ""
+    func setId(id: String) {
+        self.id = id
+    }
+    
     func configure(data: BaseData) {
         guard let a = data as? SoundData else {
             return
         }
-//        let l = data.dataType //ori
+        
+        setId(id: data.id)
+        
         let l = a.dataCode
         
         if(l == "a") {
             asyncConfigure(data: "")
             
-//            self.aNameText.text = "明知故犯"
             self.aNameText.text = a.dataTextString
             let imageUrl = URL(string: a.coverPhotoString)
             self.aUserPhoto.sd_setImage(with: imageUrl)
+            
+            if(a.isAccountVerified) {
+                self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
+            }
         }
         else if(l == "na") {
             
@@ -233,7 +246,7 @@ class HResultSoundListViewCell: UICollectionViewCell {
                     }
 
                     self.aUserNameText.text = "Hubert Wu"
-                    self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
+//                    self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
                     
 //                    let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
 //                    self.aUserPhoto.sd_setImage(with: imageUrl)
@@ -250,7 +263,7 @@ class HResultSoundListViewCell: UICollectionViewCell {
                     
 //                    self.aNameText.text = "-"
                     self.aUserNameText.text = "-"
-                    self.vBtn.image = nil
+//                    self.vBtn.image = nil
                     
 //                    let imageUrl = URL(string: "")
 //                    self.aUserPhoto.sd_setImage(with: imageUrl)
@@ -264,6 +277,6 @@ class HResultSoundListViewCell: UICollectionViewCell {
     //*
     
     @objc func onUserClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.didHResultClickSound()
+        aDelegate?.didHResultClickSound(id: id)
     }
 }

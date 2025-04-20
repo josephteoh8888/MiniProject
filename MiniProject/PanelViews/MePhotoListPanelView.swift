@@ -10,7 +10,7 @@ import UIKit
 import SDWebImage
 
 protocol MePhotoPanelDelegate : AnyObject {
-    func didMePhotoClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
+    func didMePhotoClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     func didMePhotoClickClose()
 }
 //test > new method with uiscrollview of feedcells
@@ -971,30 +971,30 @@ extension MePhotoListPanelView: ScrollFeedCellDelegate {
         print("fcDidClickVcvShare ")
     }
 
-    func sfcDidClickVcvClickUser() {
+    func sfcDidClickVcvClickUser(id: String) {
         //test
 //        delegate?.didNotifyClickUser()
     }
-    func sfcDidClickVcvClickPlace() {
+    func sfcDidClickVcvClickPlace(id: String) {
 //        delegate?.didNotifyClickPlace()
     }
-    func sfcDidClickVcvClickSound() {
+    func sfcDidClickVcvClickSound(id: String) {
 //        delegate?.didNotifyClickSound()
     }
-    func sfcDidClickVcvClickPost() {
+    func sfcDidClickVcvClickPost(id: String) {
 //        openPostDetail()
     }
-    func sfcDidClickVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func sfcDidClickVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         //test
         if(!feedList.isEmpty) {
             let b = self.feedList[self.currentIndex]
             let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
             
             let adjustY = pointY + originInRootView.y
-            delegate?.didMePhotoClickPhoto(pointX: pointX, pointY: adjustY, view: view, mode: mode)
+            delegate?.didMePhotoClickPhoto(id: id, pointX: pointX, pointY: adjustY, view: view, mode: mode)
         }
     }
-    func sfcDidClickVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func sfcDidClickVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
 
     }
 
@@ -1041,7 +1041,7 @@ extension MePhotoListPanelView: TabStackDelegate {
 
 //test
 extension ViewController: MePhotoPanelDelegate{
-    func didMePhotoClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
+    func didMePhotoClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
         let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
         let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
         

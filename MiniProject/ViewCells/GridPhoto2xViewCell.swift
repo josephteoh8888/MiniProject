@@ -119,6 +119,8 @@ class GridPhoto2xViewCell: UICollectionViewCell {
         vConBottom.heightAnchor.constraint(equalToConstant: descHeight).isActive = true
         vConBottom.trailingAnchor.constraint(equalTo: vConBg.trailingAnchor, constant: 0).isActive = true
         vConBottom.bottomAnchor.constraint(equalTo: vConBg.bottomAnchor, constant: 0).isActive = true //0
+        vConBottom.isUserInteractionEnabled = true
+        vConBottom.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onGifImageClicked)))
         
 //        let aaText = UILabel()
         aaText.textAlignment = .left
@@ -225,6 +227,9 @@ class GridPhoto2xViewCell: UICollectionViewCell {
         super.prepareForReuse()
         print("upv gridphoto prepare for reuse")
         
+        //test > clear id
+        setId(id: "")
+        
         let imageUrl = URL(string: "")
         gifImage.sd_setImage(with: imageUrl)
         
@@ -242,21 +247,25 @@ class GridPhoto2xViewCell: UICollectionViewCell {
         bCountText.text = ""
     }
     
-//    func configure(data: PostData) {
+    //test > set id for init
+    var id = ""
+    func setId(id: String) {
+        self.id = id
+    }
+    
     func configure(data: BaseData) {
-        
-//        guard let a = data as? PostData else {
-//            return
-//        }
+
         guard let a = data as? PhotoData else {
             return
         }
         
-//        let l = data.dataType
+        setId(id: a.id)
+        
         let l = a.dataCode
         
         if(l == "a") {
-            asyncConfigure(data: "")
+            let u = a.userId
+            asyncConfigure(data: u)
             
 //            aaText.text = "#Tokyo trip"
             aaText.text = a.dataTextString
@@ -277,8 +286,8 @@ class GridPhoto2xViewCell: UICollectionViewCell {
     }
 //    func asyncConfigure(data: PostData) {
     func asyncConfigure(data: String) {
-        let id = "u"
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+        let id = data //u1
+        DataFetchManager.shared.fetchUserData2(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -290,17 +299,19 @@ class GridPhoto2xViewCell: UICollectionViewCell {
                         return
                     }
                     
-                    if(!l.isEmpty) {
-                        let l_0 = l[0]
+//                    if(!l.isEmpty) {
+//                        let l_0 = l[0]
                         let uData = UserData()
-                        uData.setData(rData: l_0)
+                        uData.setData(rData: l)
                         let l_ = uData.dataCode
                         
-                        self.aUserNameText.text = uData.dataTextString
-                        
-                        let imageUrl2 = URL(string: uData.coverPhotoString)
-                        self.aUserPhoto.sd_setImage(with: imageUrl2)
-                    }
+                        if(l_ == "a") {
+                            self.aUserNameText.text = uData.dataTextString
+                            
+                            let imageUrl2 = URL(string: uData.coverPhotoString)
+                            self.aUserPhoto.sd_setImage(with: imageUrl2)
+                        }
+//                    }
                 }
 
                 case .failure(let error):
@@ -326,9 +337,9 @@ class GridPhoto2xViewCell: UICollectionViewCell {
         let pFrame = gifImage.frame.origin
         let pointX = pFrame.x
         let pointY = pFrame.y
-        aDelegate?.gridViewClick(vc: self, pointX: pointX, pointY: pointY, view: gifImage, mode:PhotoTypes.P_SHOT)
+        aDelegate?.gridViewClick(id: id, vc: self, pointX: pointX, pointY: pointY, view: gifImage, mode:PhotoTypes.P_SHOT)
     }
     @objc func onUserImageClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.gridViewClickUser()
+        aDelegate?.gridViewClickUser(id: "")
     }
 }

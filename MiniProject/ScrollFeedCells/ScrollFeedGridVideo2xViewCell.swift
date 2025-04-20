@@ -316,7 +316,7 @@ extension ScrollFeedGridVideo2xViewCell: UICollectionViewDataSource {
 }
 
 extension ScrollFeedGridVideo2xViewCell: GridViewCellDelegate {
-    func gridViewClick(vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+    func gridViewClick(id: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         print("gridviewclick")
         if let a = vCV {
             for cell in a.visibleCells {
@@ -330,7 +330,7 @@ extension ScrollFeedGridVideo2xViewCell: GridViewCellDelegate {
                     let pointY1 = originInRootView.y + pointY
                     
                     if let indexPath = visibleIndexPath {
-                        aDelegate?.sfcDidClickVcvClickVideo(pointX: pointX1, pointY: pointY1, view: view, mode: mode)
+                        aDelegate?.sfcDidClickVcvClickVideo(id: id, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
                         hideCellAt(itemIndex: indexPath.row)
                     }
                     
@@ -339,7 +339,7 @@ extension ScrollFeedGridVideo2xViewCell: GridViewCellDelegate {
             }
         }
     }
-    func gridViewClickUser(){
-        aDelegate?.sfcDidClickVcvClickUser()
+    func gridViewClickUser(id: String){
+        aDelegate?.sfcDidClickVcvClickUser(id: id)
     }
 }

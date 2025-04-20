@@ -10,9 +10,9 @@ import UIKit
 import SDWebImage
 
 protocol MeLikePanelDelegate : AnyObject {
-    func didMeLikeClickPost()
-    func didMeLikeClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
-    func didMeLikeClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
+    func didMeLikeClickPost(id: String)
+    func didMeLikeClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
+    func didMeLikeClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     func didMeLikeClickClose()
 }
 //test > new method with uiscrollview of feedcells
@@ -1030,36 +1030,36 @@ extension MeLikeListPanelView: ScrollFeedCellDelegate {
         print("fcDidClickVcvShare ")
     }
 
-    func sfcDidClickVcvClickUser() {
+    func sfcDidClickVcvClickUser(id: String) {
 
     }
-    func sfcDidClickVcvClickPlace() {
+    func sfcDidClickVcvClickPlace(id: String) {
 
     }
-    func sfcDidClickVcvClickSound() {
+    func sfcDidClickVcvClickSound(id: String) {
 
     }
-    func sfcDidClickVcvClickPost() {
-        delegate?.didMeLikeClickPost()
+    func sfcDidClickVcvClickPost(id: String) {
+        delegate?.didMeLikeClickPost(id: id)
     }
-    func sfcDidClickVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func sfcDidClickVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         //test
         if(!feedList.isEmpty) {
             let b = self.feedList[self.currentIndex]
             let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
             
             let adjustY = pointY + originInRootView.y
-            delegate?.didMeLikeClickPhoto(pointX: pointX, pointY: adjustY, view: view, mode: mode)
+            delegate?.didMeLikeClickPhoto(id: id, pointX: pointX, pointY: adjustY, view: view, mode: mode)
         }
     }
-    func sfcDidClickVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func sfcDidClickVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         //test
         if(!feedList.isEmpty) {
             let b = self.feedList[self.currentIndex]
             let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
             
             let adjustY = pointY + originInRootView.y
-            delegate?.didMeLikeClickVideo(pointX: pointX, pointY: adjustY, view: view, mode: mode)
+            delegate?.didMeLikeClickVideo(id: id, pointX: pointX, pointY: adjustY, view: view, mode: mode)
         }
     }
 
@@ -1110,10 +1110,12 @@ extension MeLikeListPanelView: TabStackDelegate {
 
 //test
 extension ViewController: MeLikePanelDelegate{
-    func didMeLikeClickPost(){
-        openPostDetailPanel()
+    func didMeLikeClickPost(id: String){
+//        openPostDetailPanel()
+        //test > real id for fetching data
+        openPostDetailPanel(id: id)
     }
-    func didMeLikeClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
+    func didMeLikeClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
         let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
         let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
         
@@ -1128,7 +1130,7 @@ extension ViewController: MeLikePanelDelegate{
             openPhotoZoomPanel(offX: offsetX, offY: offsetY)
         }
     }
-    func didMeLikeClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
+    func didMeLikeClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
         let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
         let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
 

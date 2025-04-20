@@ -10,11 +10,11 @@ import UIKit
 import SDWebImage
 
 protocol PostDetailPanelDelegate : AnyObject {
-    func didClickPostDetailPanelVcvClickPost() //try
-    func didClickPostDetailPanelVcvClickUser() //try
+    func didClickPostDetailPanelVcvClickPost(id: String) //try
+    func didClickPostDetailPanelVcvClickUser(id: String) //try
     func didClickPostDetailClosePanel()
-    func didClickPostDetailPanelVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
-    func didClickPostDetailPanelVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
+    func didClickPostDetailPanelVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
+    func didClickPostDetailPanelVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     
     //test > click to create new post
     func didClickPostDetailPanelVcvClickCreate(type: String)
@@ -31,7 +31,8 @@ class PostDetailPanelView: PanelView, UIGestureRecognizerDelegate{
     let aStickyHeader = UIView()
     let aMoreCBtn = UIView()
     var postCV : UICollectionView?
-    var vcDataList = [PostData]()
+//    var vcDataList = [PostData]()
+    var vcDataList = [BaseData]()
     
     var isScrollViewAtTop = true
     var scrollViewInitialY : CGFloat = 0.0
@@ -701,13 +702,19 @@ class PostDetailPanelView: PanelView, UIGestureRecognizerDelegate{
 //        bbText.layer.opacity = 0.5
     }
     
+    //test > set id for init
+    var id = ""
+    func setId(id: String) {
+        self.id = id
+    }
+    
     //test > initialization state
     var isInitialized = false
     func initialize() {
         
         if(!isInitialized) {
-//            self.asyncFetchFeed(id: "comment_feed")
-            self.asyncFetchPost(id: "post")
+//            self.asyncFetchPost(id: "post")
+            self.asyncFetchPost(id: id)
         }
         
         isInitialized = true
@@ -835,8 +842,9 @@ class PostDetailPanelView: PanelView, UIGestureRecognizerDelegate{
     func asyncFetchPost(id: String) {
         aSpinner.startAnimating()
         
-//        DataFetchManager.shared.fetchPostData(id: id) { [weak self]result in
-        DataFetchManager.shared.fetchPostFeedData(id: id, isPaginate: false) { [weak self]result in
+        let id_ = id //"post4"
+        DataFetchManager.shared.fetchPostData2(id: id_) { [weak self]result in
+//        DataFetchManager.shared.fetchPostFeedData(id: id, isPaginate: false) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -850,23 +858,30 @@ class PostDetailPanelView: PanelView, UIGestureRecognizerDelegate{
                     
                     self.aSpinner.stopAnimating()
                     
-                    if(!l.isEmpty) {
-                        let l_ = l[0]
-                        
-                        //test 1
-                        let postData = PostData()
-//                        postData.setDataType(data: l_) //"d"
-//                        postData.setData(data: l_)
-//                        postData.setTextString(data: l_)
-                        postData.setData(rData: l_)
-                        self.vcDataList.append(postData)
-                        self.postCV?.reloadData()
-
-                        //test
-//                        self.configureUI(data: l_)
-                        let dataType = l_.dataCode
-                        self.configureUI(data: dataType)
-                    }
+//                    if(!l.isEmpty) {
+//                        let l_ = l[0]
+//                        
+//                        //test 1
+//                        let postData = PostData()
+//                        postData.setData(rData: l_)
+//                        self.vcDataList.append(postData)
+//                        self.postCV?.reloadData()
+//
+//                        //test
+////                        self.configureUI(data: l_)
+//                        let dataType = l_.dataCode
+//                        self.configureUI(data: dataType)
+//                    }
+                    
+                    //*test 2 > new method
+                    let pData = PostData()
+                    pData.setData(rData: l)
+                    self.vcDataList.append(pData)
+                    self.postCV?.reloadData()
+                    
+                    let dataType = pData.dataCode
+                    self.configureUI(data: dataType)
+                    //*
                     
                     self.asyncFetchFeed(id: "comment_feed")
                 }
@@ -921,12 +936,14 @@ class PostDetailPanelView: PanelView, UIGestureRecognizerDelegate{
                     var indexPaths = [IndexPath]()
                     var j = 1
                     for i in l {
-                        let postData = PostData()
-//                        postData.setDataType(data: i)
-//                        postData.setData(data: i)
-//                        postData.setTextString(data: i)
-                        postData.setData(rData: i)
-                        self.vcDataList.append(postData)
+//                        let postData = PostData()
+//                        postData.setData(rData: i)
+//                        self.vcDataList.append(postData)
+                        
+                        //test 2 > use commentdata
+                        let commentData = CommentData()
+                        commentData.setData(rData: i)
+                        self.vcDataList.append(commentData)
 
                         let idx = IndexPath(item: dataCount - 1 + j, section: 0)
                         indexPaths.append(idx)
@@ -989,12 +1006,14 @@ class PostDetailPanelView: PanelView, UIGestureRecognizerDelegate{
                     var indexPaths = [IndexPath]()
                     var j = 1
                     for i in l {
-                        let postData = PostData()
-//                        postData.setDataType(data: i)
-//                        postData.setData(data: i)
-//                        postData.setTextString(data: i)
-                        postData.setData(rData: i)
-                        self.vcDataList.append(postData)
+//                        let postData = PostData()
+//                        postData.setData(rData: i)
+//                        self.vcDataList.append(postData)
+                        
+                        //test 2 > use commentdata
+                        let commentData = CommentData()
+                        commentData.setData(rData: i)
+                        self.vcDataList.append(commentData)
 
                         let idx = IndexPath(item: dataCount - 1 + j, section: 0)
                         indexPaths.append(idx)
@@ -1032,7 +1051,7 @@ class PostDetailPanelView: PanelView, UIGestureRecognizerDelegate{
         dataFetchState = ""
         dataPaginateStatus = ""
         
-        asyncFetchPost(id: "post")
+        asyncFetchPost(id: id) //"post"
     }
     func refreshFetchCommentData() {
         if(self.vcDataList.count > 1) {
@@ -1668,7 +1687,9 @@ extension PostDetailPanelView: UICollectionViewDelegateFlowLayout {
 
                     if(l == "text") {
                         let tTopMargin = 20.0
-                        let tContentHeight = estimateHeight(text: text, textWidth: collectionView.frame.width - 20.0 - 30.0, fontSize: 14)
+//                        let tContentHeight = estimateHeight(text: text, textWidth: collectionView.frame.width - 20.0 - 30.0, fontSize: 14)
+                        let t = cl.dataTextString
+                        let tContentHeight = estimateHeight(text: t, textWidth: collectionView.frame.width - 20.0 - 20.0, fontSize: 14) //-20-30
                         let tHeight = tTopMargin + tContentHeight
                         contentHeight += tHeight
                     }
@@ -1684,18 +1705,24 @@ extension PostDetailPanelView: UICollectionViewDelegateFlowLayout {
                             //1 > landscape photo 4:3 w:h
                             let aRatio = CGSize(width: 4, height: 3) //aspect ratio
                             let cHeight = availableWidth * aRatio.height / aRatio.width
-                            cSize = CGSize(width: availableWidth, height: cHeight)
+//                            cSize = CGSize(width: availableWidth, height: cHeight)
+                            //test > round to int to prevent incomplete photo scroll
+                            cSize = CGSize(width: round(availableWidth), height: round(cHeight))
                         }
                         else if (assetSize.width < assetSize.height){
                             //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
                             let aRatio = CGSize(width: 2, height: 3) //aspect ratio
                             let cWidth = availableWidth * 2 / 3
                             let cHeight = cWidth * aRatio.height / aRatio.width
-                            cSize = CGSize(width: cWidth, height: cHeight)
+//                            cSize = CGSize(width: cWidth, height: cHeight)
+                            //test > round to int to prevent incomplete photo scroll
+                            cSize = CGSize(width: round(cWidth), height: round(cHeight))
                         } else {
                             //square
                             let cWidth = availableWidth
-                            cSize = CGSize(width: cWidth, height: cWidth)
+//                            cSize = CGSize(width: cWidth, height: cWidth)
+                            //test > round to int to prevent incomplete photo scroll
+                            cSize = CGSize(width: round(cWidth), height: round(cWidth))
                         }
                         
                         let pTopMargin = 20.0
@@ -1716,18 +1743,24 @@ extension PostDetailPanelView: UICollectionViewDelegateFlowLayout {
                             //1 > landscape photo 4:3 w:h
                             let aRatio = CGSize(width: 4, height: 3) //aspect ratio
                             let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
-                            cSize = CGSize(width: availableWidth, height: cHeight)
+//                            cSize = CGSize(width: availableWidth, height: cHeight)
+                            //test > round to int to prevent incomplete photo scroll
+                            cSize = CGSize(width: round(availableWidth), height: round(cHeight))
                         }
                         else if (assetSize.width < assetSize.height){
                             //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
                             let aRatio = CGSize(width: 2, height: 3) //aspect ratio
                             let cWidth = availableWidth * 2 / 3
                             let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
-                            cSize = CGSize(width: cWidth, height: cHeight)
+//                            cSize = CGSize(width: cWidth, height: cHeight)
+                            //test > round to int to prevent incomplete photo scroll
+                            cSize = CGSize(width: round(cWidth), height: round(cHeight))
                         } else {
                             //square
                             let cWidth = availableWidth
-                            cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+//                            cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                            //test > round to int to prevent incomplete photo scroll
+                            cSize = CGSize(width: round(cWidth), height: round(cWidth + descHeight))
                         }
                         
                         let pTopMargin = 20.0
@@ -1747,18 +1780,24 @@ extension PostDetailPanelView: UICollectionViewDelegateFlowLayout {
                             //1 > landscape photo 4:3 w:h
                             let aRatio = CGSize(width: 4, height: 3) //aspect ratio
                             let cHeight = availableWidth * aRatio.height / aRatio.width
-                            cSize = CGSize(width: availableWidth, height: cHeight)
+//                            cSize = CGSize(width: availableWidth, height: cHeight)
+                            //test > round to int to prevent incomplete photo scroll
+                            cSize = CGSize(width: round(availableWidth), height: round(cHeight))
                         }
                         else if (assetSize.width < assetSize.height){
                             //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
                             let aRatio = CGSize(width: 2, height: 3) //aspect ratio
                             let cWidth = availableWidth * 2 / 3
                             let cHeight = cWidth * aRatio.height / aRatio.width
-                            cSize = CGSize(width: cWidth, height: cHeight)
+//                            cSize = CGSize(width: cWidth, height: cHeight)
+                            //test > round to int to prevent incomplete photo scroll
+                            cSize = CGSize(width: round(cWidth), height: round(cHeight))
                         } else {
                             //square
                             let cWidth = availableWidth
-                            cSize = CGSize(width: cWidth, height: cWidth)
+//                            cSize = CGSize(width: cWidth, height: cWidth)
+                            //test > round to int to prevent incomplete photo scroll
+                            cSize = CGSize(width: round(cWidth), height: round(cWidth))
                         }
                         
                         let vTopMargin = 20.0
@@ -1779,18 +1818,24 @@ extension PostDetailPanelView: UICollectionViewDelegateFlowLayout {
                             //1 > landscape photo 4:3 w:h
                             let aRatio = CGSize(width: 4, height: 3) //aspect ratio
                             let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
-                            cSize = CGSize(width: availableWidth, height: cHeight)
+//                            cSize = CGSize(width: availableWidth, height: cHeight)
+                            //test > round to int to prevent incomplete photo scroll
+                            cSize = CGSize(width: round(availableWidth), height: round(cHeight))
                         }
                         else if (assetSize.width < assetSize.height){
                             //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
                             let aRatio = CGSize(width: 2, height: 3) //aspect ratio
                             let cWidth = availableWidth * 2 / 3
                             let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
-                            cSize = CGSize(width: cWidth, height: cHeight)
+//                            cSize = CGSize(width: cWidth, height: cHeight)
+                            //test > round to int to prevent incomplete photo scroll
+                            cSize = CGSize(width: round(cWidth), height: round(cHeight))
                         } else {
                             //square
                             let cWidth = availableWidth
-                            cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+//                            cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                            //test > round to int to prevent incomplete photo scroll
+                            cSize = CGSize(width: round(cWidth), height: round(cWidth + descHeight))
                         }
                         
                         let vTopMargin = 20.0
@@ -1831,7 +1876,9 @@ extension PostDetailPanelView: UICollectionViewDelegateFlowLayout {
                                     //1 > landscape photo 4:3 w:h
                                     let aRatio = CGSize(width: 4, height: 3) //aspect ratio
                                     let cHeight = availableWidth * aRatio.height / aRatio.width
-                                    cSize = CGSize(width: availableWidth, height: cHeight)
+//                                    cSize = CGSize(width: availableWidth, height: cHeight)
+                                    //test > round to int to prevent incomplete photo scroll
+                                    cSize = CGSize(width: round(availableWidth), height: round(cHeight))
                                 }
                                 else if (assetSize.width < assetSize.height){
                                     //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
@@ -1839,11 +1886,15 @@ extension PostDetailPanelView: UICollectionViewDelegateFlowLayout {
                                     let cWidth = availableWidth * 2 / 3
                 //                    let cWidth = availableWidth //test full width for portrait
                                     let cHeight = cWidth * aRatio.height / aRatio.width
-                                    cSize = CGSize(width: cWidth, height: cHeight)
+//                                    cSize = CGSize(width: cWidth, height: cHeight)
+                                    //test > round to int to prevent incomplete photo scroll
+                                    cSize = CGSize(width: round(cWidth), height: round(cHeight))
                                 } else {
                                     //square
                                     let cWidth = availableWidth
-                                    cSize = CGSize(width: cWidth, height: cWidth)
+//                                    cSize = CGSize(width: cWidth, height: cWidth)
+                                    //test > round to int to prevent incomplete photo scroll
+                                    cSize = CGSize(width: round(cWidth), height: round(cWidth))
                                 }
 
                                 let pTopMargin = 20.0
@@ -1864,18 +1915,24 @@ extension PostDetailPanelView: UICollectionViewDelegateFlowLayout {
                                     //1 > landscape photo 4:3 w:h
                                     let aRatio = CGSize(width: 4, height: 3) //aspect ratio
                                     let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
-                                    cSize = CGSize(width: availableWidth, height: cHeight)
+//                                    cSize = CGSize(width: availableWidth, height: cHeight)
+                                    //test > round to int to prevent incomplete photo scroll
+                                    cSize = CGSize(width: round(availableWidth), height: round(cHeight))
                                 }
                                 else if (assetSize.width < assetSize.height){
                                     //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
                                     let aRatio = CGSize(width: 2, height: 3) //aspect ratio
                                     let cWidth = availableWidth * 2 / 3
                                     let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
-                                    cSize = CGSize(width: cWidth, height: cHeight)
+//                                    cSize = CGSize(width: cWidth, height: cHeight)
+                                    //test > round to int to prevent incomplete photo scroll
+                                    cSize = CGSize(width: round(cWidth), height: round(cHeight))
                                 } else {
                                     //square
                                     let cWidth = availableWidth
-                                    cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+//                                    cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                                    //test > round to int to prevent incomplete photo scroll
+                                    cSize = CGSize(width: round(cWidth), height: round(cWidth + descHeight))
                                 }
                                 
                                 let pTopMargin = 20.0
@@ -1895,18 +1952,24 @@ extension PostDetailPanelView: UICollectionViewDelegateFlowLayout {
                                     //1 > landscape photo 4:3 w:h
                                     let aRatio = CGSize(width: 4, height: 3) //aspect ratio
                                     let cHeight = availableWidth * aRatio.height / aRatio.width
-                                    cSize = CGSize(width: availableWidth, height: cHeight)
+//                                    cSize = CGSize(width: availableWidth, height: cHeight)
+                                    //test > round to int to prevent incomplete photo scroll
+                                    cSize = CGSize(width: round(availableWidth), height: round(cHeight))
                                 }
                                 else if (assetSize.width < assetSize.height){
                                     //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
                                     let aRatio = CGSize(width: 2, height: 3) //aspect ratio
                                     let cWidth = availableWidth * 2 / 3
                                     let cHeight = cWidth * aRatio.height / aRatio.width
-                                    cSize = CGSize(width: cWidth, height: cHeight)
+//                                    cSize = CGSize(width: cWidth, height: cHeight)
+                                    //test > round to int to prevent incomplete photo scroll
+                                    cSize = CGSize(width: round(cWidth), height: round(cHeight))
                                 } else {
                                     //square
                                     let cWidth = availableWidth
-                                    cSize = CGSize(width: cWidth, height: cWidth)
+//                                    cSize = CGSize(width: cWidth, height: cWidth)
+                                    //test > round to int to prevent incomplete photo scroll
+                                    cSize = CGSize(width: round(cWidth), height: round(cWidth))
                                 }
                                 
                                 let vTopMargin = 20.0
@@ -1927,18 +1990,24 @@ extension PostDetailPanelView: UICollectionViewDelegateFlowLayout {
                                     //1 > landscape photo 4:3 w:h
                                     let aRatio = CGSize(width: 4, height: 3) //aspect ratio
                                     let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
-                                    cSize = CGSize(width: availableWidth, height: cHeight)
+//                                    cSize = CGSize(width: availableWidth, height: cHeight)
+                                    //test > round to int to prevent incomplete photo scroll
+                                    cSize = CGSize(width: round(availableWidth), height: round(cHeight))
                                 }
                                 else if (assetSize.width < assetSize.height){
                                     //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
                                     let aRatio = CGSize(width: 2, height: 3) //aspect ratio
                                     let cWidth = availableWidth * 2 / 3
                                     let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
-                                    cSize = CGSize(width: cWidth, height: cHeight)
+//                                    cSize = CGSize(width: cWidth, height: cHeight)
+                                    //test > round to int to prevent incomplete photo scroll
+                                    cSize = CGSize(width: round(cWidth), height: round(cHeight))
                                 } else {
                                     //square
                                     let cWidth = availableWidth
-                                    cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+//                                    cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                                    //test > round to int to prevent incomplete photo scroll
+                                    cSize = CGSize(width: round(cWidth), height: round(cWidth + descHeight))
                                 }
                                 
                                 let vTopMargin = 20.0
@@ -2013,7 +2082,9 @@ extension PostDetailPanelView: UICollectionViewDelegateFlowLayout {
 
                     if(l == "text") {
                         let tTopMargin = 20.0
-                        let tContentHeight = estimateHeight(text: text, textWidth: collectionView.frame.width - indentSize - 30.0, fontSize: 13)
+//                        let tContentHeight = estimateHeight(text: text, textWidth: collectionView.frame.width - indentSize - 30.0, fontSize: 13)
+                        let t = cl.dataTextString
+                        let tContentHeight = estimateHeight(text: t, textWidth: collectionView.frame.width - indentSize - 20.0, fontSize: 13) //-indentSize - 30.0
                         let tHeight = tTopMargin + tContentHeight
                         contentHeight += tHeight
                     }
@@ -2029,18 +2100,24 @@ extension PostDetailPanelView: UICollectionViewDelegateFlowLayout {
                             //1 > landscape photo 4:3 w:h
                             let aRatio = CGSize(width: 4, height: 3) //aspect ratio
                             let cHeight = availableWidth * aRatio.height / aRatio.width
-                            cSize = CGSize(width: availableWidth, height: cHeight)
+//                            cSize = CGSize(width: availableWidth, height: cHeight)
+                            //test > round to int to prevent incomplete photo scroll
+                            cSize = CGSize(width: round(availableWidth), height: round(cHeight))
                         }
                         else if (assetSize.width < assetSize.height){
                             //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
                             let aRatio = CGSize(width: 2, height: 3) //aspect ratio
                             let cWidth = availableWidth * 2 / 3
                             let cHeight = cWidth * aRatio.height / aRatio.width
-                            cSize = CGSize(width: cWidth, height: cHeight)
+//                            cSize = CGSize(width: cWidth, height: cHeight)
+                            //test > round to int to prevent incomplete photo scroll
+                            cSize = CGSize(width: round(cWidth), height: round(cHeight))
                         } else {
                             //square
                             let cWidth = availableWidth
-                            cSize = CGSize(width: cWidth, height: cWidth)
+//                            cSize = CGSize(width: cWidth, height: cWidth)
+                            //test > round to int to prevent incomplete photo scroll
+                            cSize = CGSize(width: round(cWidth), height: round(cWidth))
                         }
                         
                         let pTopMargin = 20.0
@@ -2061,18 +2138,24 @@ extension PostDetailPanelView: UICollectionViewDelegateFlowLayout {
                             //1 > landscape photo 4:3 w:h
                             let aRatio = CGSize(width: 4, height: 3) //aspect ratio
                             let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
-                            cSize = CGSize(width: availableWidth, height: cHeight)
+//                            cSize = CGSize(width: availableWidth, height: cHeight)
+                            //test > round to int to prevent incomplete photo scroll
+                            cSize = CGSize(width: round(availableWidth), height: round(cHeight))
                         }
                         else if (assetSize.width < assetSize.height){
                             //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
                             let aRatio = CGSize(width: 2, height: 3) //aspect ratio
                             let cWidth = availableWidth * 2 / 3
                             let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
-                            cSize = CGSize(width: cWidth, height: cHeight)
+//                            cSize = CGSize(width: cWidth, height: cHeight)
+                            //test > round to int to prevent incomplete photo scroll
+                            cSize = CGSize(width: round(cWidth), height: round(cHeight))
                         } else {
                             //square
                             let cWidth = availableWidth
-                            cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+//                            cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                            //test > round to int to prevent incomplete photo scroll
+                            cSize = CGSize(width: round(cWidth), height: round(cWidth + descHeight))
                         }
                         
                         let pTopMargin = 20.0
@@ -2092,18 +2175,24 @@ extension PostDetailPanelView: UICollectionViewDelegateFlowLayout {
                             //1 > landscape photo 4:3 w:h
                             let aRatio = CGSize(width: 4, height: 3) //aspect ratio
                             let cHeight = availableWidth * aRatio.height / aRatio.width
-                            cSize = CGSize(width: availableWidth, height: cHeight)
+//                            cSize = CGSize(width: availableWidth, height: cHeight)
+                            //test > round to int to prevent incomplete photo scroll
+                            cSize = CGSize(width: round(availableWidth), height: round(cHeight))
                         }
                         else if (assetSize.width < assetSize.height){
                             //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
                             let aRatio = CGSize(width: 2, height: 3) //aspect ratio
                             let cWidth = availableWidth * 2 / 3
                             let cHeight = cWidth * aRatio.height / aRatio.width
-                            cSize = CGSize(width: cWidth, height: cHeight)
+//                            cSize = CGSize(width: cWidth, height: cHeight)
+                            //test > round to int to prevent incomplete photo scroll
+                            cSize = CGSize(width: round(cWidth), height: round(cHeight))
                         } else {
                             //square
                             let cWidth = availableWidth
-                            cSize = CGSize(width: cWidth, height: cWidth)
+//                            cSize = CGSize(width: cWidth, height: cWidth)
+                            //test > round to int to prevent incomplete photo scroll
+                            cSize = CGSize(width: round(cWidth), height: round(cWidth))
                         }
                         
                         let vTopMargin = 20.0
@@ -2124,18 +2213,24 @@ extension PostDetailPanelView: UICollectionViewDelegateFlowLayout {
                             //1 > landscape photo 4:3 w:h
                             let aRatio = CGSize(width: 4, height: 3) //aspect ratio
                             let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
-                            cSize = CGSize(width: availableWidth, height: cHeight)
+//                            cSize = CGSize(width: availableWidth, height: cHeight)
+                            //test > round to int to prevent incomplete photo scroll
+                            cSize = CGSize(width: round(availableWidth), height: round(cHeight))
                         }
                         else if (assetSize.width < assetSize.height){
                             //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
                             let aRatio = CGSize(width: 2, height: 3) //aspect ratio
                             let cWidth = availableWidth * 2 / 3
                             let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
-                            cSize = CGSize(width: cWidth, height: cHeight)
+//                            cSize = CGSize(width: cWidth, height: cHeight)
+                            //test > round to int to prevent incomplete photo scroll
+                            cSize = CGSize(width: round(cWidth), height: round(cHeight))
                         } else {
                             //square
                             let cWidth = availableWidth
-                            cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+//                            cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                            //test > round to int to prevent incomplete photo scroll
+                            cSize = CGSize(width: round(cWidth), height: round(cWidth + descHeight))
                         }
                         
                         let vTopMargin = 20.0
@@ -2176,7 +2271,9 @@ extension PostDetailPanelView: UICollectionViewDelegateFlowLayout {
                                     //1 > landscape photo 4:3 w:h
                                     let aRatio = CGSize(width: 4, height: 3) //aspect ratio
                                     let cHeight = availableWidth * aRatio.height / aRatio.width
-                                    cSize = CGSize(width: availableWidth, height: cHeight)
+//                                    cSize = CGSize(width: availableWidth, height: cHeight)
+                                    //test > round to int to prevent incomplete photo scroll
+                                    cSize = CGSize(width: round(availableWidth), height: round(cHeight))
                                 }
                                 else if (assetSize.width < assetSize.height){
                                     //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
@@ -2184,11 +2281,15 @@ extension PostDetailPanelView: UICollectionViewDelegateFlowLayout {
                                     let cWidth = availableWidth * 2 / 3
                 //                    let cWidth = availableWidth //test full width for portrait
                                     let cHeight = cWidth * aRatio.height / aRatio.width
-                                    cSize = CGSize(width: cWidth, height: cHeight)
+//                                    cSize = CGSize(width: cWidth, height: cHeight)
+                                    //test > round to int to prevent incomplete photo scroll
+                                    cSize = CGSize(width: round(cWidth), height: round(cHeight))
                                 } else {
                                     //square
                                     let cWidth = availableWidth
-                                    cSize = CGSize(width: cWidth, height: cWidth)
+//                                    cSize = CGSize(width: cWidth, height: cWidth)
+                                    //test > round to int to prevent incomplete photo scroll
+                                    cSize = CGSize(width: round(cWidth), height: round(cWidth))
                                 }
 
                                 let pTopMargin = 20.0
@@ -2209,18 +2310,24 @@ extension PostDetailPanelView: UICollectionViewDelegateFlowLayout {
                                     //1 > landscape photo 4:3 w:h
                                     let aRatio = CGSize(width: 4, height: 3) //aspect ratio
                                     let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
-                                    cSize = CGSize(width: availableWidth, height: cHeight)
+//                                    cSize = CGSize(width: availableWidth, height: cHeight)
+                                    //test > round to int to prevent incomplete photo scroll
+                                    cSize = CGSize(width: round(availableWidth), height: round(cHeight))
                                 }
                                 else if (assetSize.width < assetSize.height){
                                     //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
                                     let aRatio = CGSize(width: 2, height: 3) //aspect ratio
                                     let cWidth = availableWidth * 2 / 3
                                     let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
-                                    cSize = CGSize(width: cWidth, height: cHeight)
+//                                    cSize = CGSize(width: cWidth, height: cHeight)
+                                    //test > round to int to prevent incomplete photo scroll
+                                    cSize = CGSize(width: round(cWidth), height: round(cHeight))
                                 } else {
                                     //square
                                     let cWidth = availableWidth
-                                    cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+//                                    cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                                    //test > round to int to prevent incomplete photo scroll
+                                    cSize = CGSize(width: round(cWidth), height: round(cWidth + descHeight))
                                 }
                                 
                                 let pTopMargin = 20.0
@@ -2240,18 +2347,24 @@ extension PostDetailPanelView: UICollectionViewDelegateFlowLayout {
                                     //1 > landscape photo 4:3 w:h
                                     let aRatio = CGSize(width: 4, height: 3) //aspect ratio
                                     let cHeight = availableWidth * aRatio.height / aRatio.width
-                                    cSize = CGSize(width: availableWidth, height: cHeight)
+//                                    cSize = CGSize(width: availableWidth, height: cHeight)
+                                    //test > round to int to prevent incomplete photo scroll
+                                    cSize = CGSize(width: round(availableWidth), height: round(cHeight))
                                 }
                                 else if (assetSize.width < assetSize.height){
                                     //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
                                     let aRatio = CGSize(width: 2, height: 3) //aspect ratio
                                     let cWidth = availableWidth * 2 / 3
                                     let cHeight = cWidth * aRatio.height / aRatio.width
-                                    cSize = CGSize(width: cWidth, height: cHeight)
+//                                    cSize = CGSize(width: cWidth, height: cHeight)
+                                    //test > round to int to prevent incomplete photo scroll
+                                    cSize = CGSize(width: round(cWidth), height: round(cHeight))
                                 } else {
                                     //square
                                     let cWidth = availableWidth
-                                    cSize = CGSize(width: cWidth, height: cWidth)
+//                                    cSize = CGSize(width: cWidth, height: cWidth)
+                                    //test > round to int to prevent incomplete photo scroll
+                                    cSize = CGSize(width: round(cWidth), height: round(cWidth))
                                 }
                                 
                                 let vTopMargin = 20.0
@@ -2272,18 +2385,24 @@ extension PostDetailPanelView: UICollectionViewDelegateFlowLayout {
                                     //1 > landscape photo 4:3 w:h
                                     let aRatio = CGSize(width: 4, height: 3) //aspect ratio
                                     let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
-                                    cSize = CGSize(width: availableWidth, height: cHeight)
+//                                    cSize = CGSize(width: availableWidth, height: cHeight)
+                                    //test > round to int to prevent incomplete photo scroll
+                                    cSize = CGSize(width: round(availableWidth), height: round(cHeight))
                                 }
                                 else if (assetSize.width < assetSize.height){
                                     //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
                                     let aRatio = CGSize(width: 2, height: 3) //aspect ratio
                                     let cWidth = availableWidth * 2 / 3
                                     let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
-                                    cSize = CGSize(width: cWidth, height: cHeight)
+//                                    cSize = CGSize(width: cWidth, height: cHeight)
+                                    //test > round to int to prevent incomplete photo scroll
+                                    cSize = CGSize(width: round(cWidth), height: round(cHeight))
                                 } else {
                                     //square
                                     let cWidth = availableWidth
-                                    cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+//                                    cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                                    //test > round to int to prevent incomplete photo scroll
+                                    cSize = CGSize(width: round(cWidth), height: round(cWidth + descHeight))
                                 }
                                 
                                 let vTopMargin = 20.0
@@ -2590,25 +2709,25 @@ extension PostDetailPanelView: HListCellDelegate {
             }
         }
     }
-    func hListDidClickVcvClickUser(){
+    func hListDidClickVcvClickUser(id: String){
         print("PostDetailPanelView user clicked")
         
         pausePlayingMedia()
-        delegate?.didClickPostDetailPanelVcvClickUser()
+        delegate?.didClickPostDetailPanelVcvClickUser(id: id)
     }
-    func hListDidClickVcvClickPlace(){
+    func hListDidClickVcvClickPlace(id: String){
 //        delegate?.didClickPostPanelVcvClickPlace()
     }
-    func hListDidClickVcvClickSound(){
+    func hListDidClickVcvClickSound(id: String){
 //        delegate?.didClickPostPanelVcvClickSound()
     }
-    func hListDidClickVcvClickPost() {
+    func hListDidClickVcvClickPost(id: String) {
         print("PostDetailPanelView post clicked")
 
         pausePlayingMedia()
-        delegate?.didClickPostDetailPanelVcvClickPost()
+        delegate?.didClickPostDetailPanelVcvClickPost(id: id)
     }
-    func hListDidClickVcvClickPhoto(vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+    func hListDidClickVcvClickPhoto(id: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         
         pausePlayingMedia()
         
@@ -2622,7 +2741,7 @@ extension PostDetailPanelView: HListCellDelegate {
                     let pointX1 = originInRootView.x + pointX
                     let pointY1 = originInRootView.y + pointY
                     
-                    delegate?.didClickPostDetailPanelVcvClickPhoto(pointX: pointX1, pointY: pointY1, view: view, mode: mode)
+                    delegate?.didClickPostDetailPanelVcvClickPhoto(id: id, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
                     
                     if let c = visibleIndexPath {
                         hideCellIndex = c.row
@@ -2633,7 +2752,7 @@ extension PostDetailPanelView: HListCellDelegate {
             }
         }
     }
-    func hListDidClickVcvClickVideo(vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+    func hListDidClickVcvClickVideo(id: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         
         pausePlayingMedia()
         
@@ -2647,7 +2766,7 @@ extension PostDetailPanelView: HListCellDelegate {
                     let pointX1 = originInRootView.x + pointX
                     let pointY1 = originInRootView.y + pointY
                     
-                    delegate?.didClickPostDetailPanelVcvClickVideo(pointX: pointX1, pointY: pointY1, view: view, mode: mode)
+                    delegate?.didClickPostDetailPanelVcvClickVideo(id: id, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
                     
                     if let c = visibleIndexPath {
                         hideCellIndex = c.row
@@ -2811,13 +2930,13 @@ extension PostDetailPanelView: ShareSheetScrollableDelegate{
 }
 
 extension PostDetailPanelView: CommentScrollableDelegate{
-    func didCClickUser(){
-        delegate?.didClickPostDetailPanelVcvClickUser()
+    func didCClickUser(id: String){
+        delegate?.didClickPostDetailPanelVcvClickUser(id: id)
     }
-    func didCClickPlace(){
+    func didCClickPlace(id: String){
 
     }
-    func didCClickSound(){
+    func didCClickSound(id: String){
         
     }
     func didCClickClosePanel(){
@@ -2847,13 +2966,13 @@ extension PostDetailPanelView: CommentScrollableDelegate{
     func didCClickShare(){
         openShareSheet()
     }
-    func didCClickPost(){
-        delegate?.didClickPostDetailPanelVcvClickPost()
+    func didCClickPost(id: String){
+        delegate?.didClickPostDetailPanelVcvClickPost(id: id)
     }
-    func didCClickClickPhoto(pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
-        delegate?.didClickPostDetailPanelVcvClickPhoto(pointX: pointX, pointY: pointY, view: view, mode: mode)
+    func didCClickClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        delegate?.didClickPostDetailPanelVcvClickPhoto(id: id, pointX: pointX, pointY: pointY, view: view, mode: mode)
     }
-    func didCClickClickVideo(pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+    func didCClickClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         
     }
 }
@@ -2975,26 +3094,32 @@ extension PostDetailPanelView: UITextViewDelegate {
 }
 
 extension ViewController: PostDetailPanelDelegate{
-    func didClickPostDetailPanelVcvClickPost() {
-        openPostDetailPanel()
+    func didClickPostDetailPanelVcvClickPost(id: String) {
+//        openPostDetailPanel()
+        //test > real id for fetching data
+        openPostDetailPanel(id: id)
     }
-    func didClickPostDetailPanelVcvClickUser() {
+    func didClickPostDetailPanelVcvClickUser(id: String) {
         openUserPanel()
+        //test > real id for fetching data
+        openUserPanel(id: id)
     }
     func didClickPostDetailClosePanel() {
         backPage(isCurrentPageScrollable: false)
     }
-    func didClickPostDetailPanelVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func didClickPostDetailPanelVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
         let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
 
         if(mode == PhotoTypes.P_SHOT_DETAIL) {
-            openPhotoDetailPanel()
+//            openPhotoDetailPanel()
+            //test > real id for fetching data
+            openPhotoDetailPanel(id: id)
         } else if(mode == PhotoTypes.P_0){
             openPhotoZoomPanel(offX: offsetX, offY: offsetY)
         }
     }
-    func didClickPostDetailPanelVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func didClickPostDetailPanelVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         
         let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
         let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2

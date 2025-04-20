@@ -310,28 +310,28 @@ extension ScrollFeedHResultSoundListCell: UICollectionViewDataSource {
 
 extension ScrollFeedHResultSoundListCell: HResultListViewDelegate{
 
-    func didHResultClickUser(){
+    func didHResultClickUser(id: String){
 
     }
-    func didHResultClickPlace(){
+    func didHResultClickPlace(id: String){
         
     }
-    func didHResultClickSound(){
+    func didHResultClickSound(id: String){
         //test > additional delegate
         bDelegate?.didScrollFeedHResultResignKeyboard()
         
-        aDelegate?.sfcDidClickVcvClickSound()
+        aDelegate?.sfcDidClickVcvClickSound(id: id)
     }
     func didHResultClickHashtag() {
         
     }
-    func didHResultClickPhoto(){
+    func didHResultClickPhoto(id: String){
         
     }
-    func didHResultClickVideo(){
+    func didHResultClickVideo(id: String){
         
     }
-    func didHResultClickPost(){
+    func didHResultClickPost(id: String){
         
     }
     func didHResultClickSignIn(){

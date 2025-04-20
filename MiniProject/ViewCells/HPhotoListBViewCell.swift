@@ -41,7 +41,7 @@ class HPhotoListBViewCell: UICollectionViewCell {
     //test > new method for storing hiding asset
     var hiddenAssetIdx = -1
     var playingMediaAssetIdx = -1
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -533,6 +533,9 @@ class HPhotoListBViewCell: UICollectionViewCell {
         super.prepareForReuse()
         print("prepare for reuse")
         
+        //test > clear id
+        setId(id: "")
+        
         aGridNameText.text = "-"
         photoText.text = "-"
         vBtn.image = nil
@@ -573,8 +576,8 @@ class HPhotoListBViewCell: UICollectionViewCell {
     
     //*test > async fetch images/names/videos
     func asyncConfigure(data: String) {
-        let id = "u" //u_
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+        let id = data //u_
+        DataFetchManager.shared.fetchUserData2(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -586,27 +589,23 @@ class HPhotoListBViewCell: UICollectionViewCell {
                         return
                     }
 
-                    if(!l.isEmpty) {
-                        let l_0 = l[0]
+//                    if(!l.isEmpty) {
+//                        let l_0 = l[0]
                         let uData = UserData()
-                        uData.setData(rData: l_0)
+                        uData.setData(rData: l)
                         let l_ = uData.dataCode
                         
-                        self.aGridNameText.text = uData.dataTextString
-                        
-                        let eImageUrl = URL(string: uData.coverPhotoString)
-                        self.aUserPhoto.sd_setImage(with: eImageUrl)
-                        
-                        if(uData.isAccountVerified) {
-                            self.vBtn.image = UIImage(named:"icon_round_verified_b")?.withRenderingMode(.alwaysTemplate)
+                        if(l_ == "a") {
+                            self.aGridNameText.text = uData.dataTextString
+                            
+                            let eImageUrl = URL(string: uData.coverPhotoString)
+                            self.aUserPhoto.sd_setImage(with: eImageUrl)
+                            
+                            if(uData.isAccountVerified) {
+                                self.vBtn.image = UIImage(named:"icon_round_verified_b")?.withRenderingMode(.alwaysTemplate)
+                            }
                         }
-                    }
-                    
-//                    self.aGridNameText.text = "Michael Kins"
-//                    self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
-//                    
-//                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-//                    self.aUserPhoto.sd_setImage(with: imageUrl)
+//                    }
                 }
 
                 case .failure(let error):
@@ -629,7 +628,7 @@ class HPhotoListBViewCell: UICollectionViewCell {
     //*
     //*test > async fetch place profile
     func asyncConfigurePlace(data: String) {
-        let id = "p4"
+        let id = data //p4
         DataFetchManager.shared.fetchPlaceData2(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -664,8 +663,19 @@ class HPhotoListBViewCell: UICollectionViewCell {
         }
     }
     
+    //test > set id for init
+    var id = ""
+    func setId(id: String) {
+        self.id = id
+    }
+    
     func configure(data: BaseData, width: CGFloat) {
-//        asyncConfigure(data: "")
+
+        guard let a = data as? PhotoData else {
+            return
+        }
+        
+        setId(id: a.id)
         
         aUserNameText.text = "-"
         aaText.text = "-"
@@ -685,16 +695,18 @@ class HPhotoListBViewCell: UICollectionViewCell {
         
         //test > dynamic create ui for various data types in sequence
 //        let dataL = data.dataArray
-        let dataCL = data.contentDataArray
-        let d = data.dataCode
+        let d = a.dataCode
         
         if(d == "a") {
             aUserNameText.text = "1.2m views . 3hr"
 //            aaText.text = "Nvidia GPU Lab"
             
-            asyncConfigure(data: "")
-            asyncConfigurePlace(data: "")
+            let u = a.userId
+            let p = a.placeId
+            asyncConfigure(data: u)
+            asyncConfigurePlace(data: p)
             
+            let dataCL = a.contentDataArray
             for cl in dataCL {
                 let l = cl.dataCode
                 let da = cl.dataArray
@@ -871,11 +883,11 @@ class HPhotoListBViewCell: UICollectionViewCell {
     }
     @objc func onUserClicked(gesture: UITapGestureRecognizer) {
         print("click open user panel:")
-        aDelegate?.hListDidClickVcvClickUser()
+        aDelegate?.hListDidClickVcvClickUser(id: "")
     }
     @objc func onPlaceClicked(gesture: UITapGestureRecognizer) {
         print("click open place panel:")
-        aDelegate?.hListDidClickVcvClickPlace()
+        aDelegate?.hListDidClickVcvClickPlace(id: "")
     }
     
     //test > single and double clicked
@@ -983,13 +995,13 @@ extension HPhotoListBViewCell: ContentCellDelegate {
         }
     }
     
-    func contentCellDidClickVcvClickPhoto(cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+    func contentCellDidClickVcvClickPhoto(id: String, cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         let aTestFrame = aTest.frame.origin
         let ccFrame = cc.frame.origin
         
         let pointX1 = pointX + aTestFrame.x + ccFrame.x
         let pointY1 = pointY + aTestFrame.y + ccFrame.y
-        aDelegate?.hListDidClickVcvClickPhoto(vc: self, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
+        aDelegate?.hListDidClickVcvClickPhoto(id: id, vc: self, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
         
         //test 2 > new method to store hide asset
         if let j = aTestArray.firstIndex(of: cc) {
@@ -997,13 +1009,13 @@ extension HPhotoListBViewCell: ContentCellDelegate {
             hiddenAssetIdx = j
         }
     }
-    func contentCellDidClickVcvClickVideo(cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+    func contentCellDidClickVcvClickVideo(id: String, cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         let aTestFrame = aTest.frame.origin
         let ccFrame = cc.frame.origin
         
         let pointX1 = pointX + aTestFrame.x + ccFrame.x
         let pointY1 = pointY + aTestFrame.y + ccFrame.y
-        aDelegate?.hListDidClickVcvClickVideo(vc: self, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
+        aDelegate?.hListDidClickVcvClickVideo(id: id, vc: self, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
         
         //test 2 > new method to store hide asset
         if let j = aTestArray.firstIndex(of: cc) {
@@ -1034,16 +1046,16 @@ extension HPhotoListBViewCell: ContentCellDelegate {
             print("photo content cell double clicked: \(pointX), \(pointY)")
         }
     }
-    func contentCellDidClickSound(){
-        aDelegate?.hListDidClickVcvClickSound()
+    func contentCellDidClickSound(id: String){
+        aDelegate?.hListDidClickVcvClickSound(id: id)
     }
-    func contentCellDidClickUser(){
+    func contentCellDidClickUser(id: String){
         
     }
-    func contentCellDidClickPlace(){
+    func contentCellDidClickPlace(id: String){
         
     }
-    func contentCellDidClickPost(){
+    func contentCellDidClickPost(id: String){
         
     }
     func contentCellDidClickVcvClickPlay(cc: UIView, isPlay: Bool){

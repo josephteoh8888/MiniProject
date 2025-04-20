@@ -326,7 +326,7 @@ extension ScrollFeedHResultPhotoListCell: UICollectionViewDataSource {
 }
 
 extension ScrollFeedHResultPhotoListCell: GridViewCellDelegate {
-    func gridViewClick(vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+    func gridViewClick(id: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         print("gridviewclick")
         if let a = vCV {
             for cell in a.visibleCells {
@@ -346,7 +346,7 @@ extension ScrollFeedHResultPhotoListCell: GridViewCellDelegate {
                         
                         //test 2 > override mode of phototype
                         let o_mode = PhotoTypes.P_SHOT_DETAIL
-                        aDelegate?.sfcDidClickVcvClickPhoto(pointX: pointX1, pointY: pointY1, view: view, mode: o_mode)
+                        aDelegate?.sfcDidClickVcvClickPhoto(id: id, pointX: pointX1, pointY: pointY1, view: view, mode: o_mode)
                         
                         //test > additional delegate
                         bDelegate?.didScrollFeedHResultResignKeyboard()
@@ -357,11 +357,11 @@ extension ScrollFeedHResultPhotoListCell: GridViewCellDelegate {
             }
         }
     }
-    func gridViewClickUser(){
+    func gridViewClickUser(id: String){
         //test > additional delegate
         bDelegate?.didScrollFeedHResultResignKeyboard()
         
-        aDelegate?.sfcDidClickVcvClickUser()
+        aDelegate?.sfcDidClickVcvClickUser(id: id)
     }
 }
 

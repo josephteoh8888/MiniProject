@@ -22,12 +22,12 @@ protocol SoundScrollablePanelDelegate : AnyObject {
     func didFinishMapChangeSoundScrollable()
     
     //test > connect to other panel
-    func didSClickUserSoundScrollable()
-    func didSClickPlaceSoundScrollable()
-    func didSClickSoundSoundScrollable()
-    func didSClickSoundScrollableVcvClickPost()
-    func didSClickSoundScrollableVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
-    func didSClickSoundScrollableVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
+    func didSClickUserSoundScrollable(id: String)
+    func didSClickPlaceSoundScrollable(id: String)
+    func didSClickSoundSoundScrollable(id: String)
+    func didSClickSoundScrollableVcvClickPost(id: String)
+    func didSClickSoundScrollableVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
+    func didSClickSoundScrollableVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     func didSClickSoundSignIn()
     func didSClickSoundShare()
     
@@ -1249,13 +1249,13 @@ class SoundScrollablePanelView: ScrollablePanelView{
     }
 
     @objc func onAPhotoClicked(gesture: UITapGestureRecognizer) {
-        delegate?.didSClickSoundSoundScrollable()
+        delegate?.didSClickSoundSoundScrollable(id: "")
     }
     @objc func onBPhotoClicked(gesture: UITapGestureRecognizer) {
-        delegate?.didSClickUserSoundScrollable()
+        delegate?.didSClickUserSoundScrollable(id: "")
     }
     @objc func onCPhotoClicked(gesture: UITapGestureRecognizer) {
-        delegate?.didSClickSoundSoundScrollable()
+        delegate?.didSClickSoundSoundScrollable(id: "")
     }
 
     override func setStateTarget(target: CLLocationCoordinate2D) {
@@ -1416,11 +1416,14 @@ class SoundScrollablePanelView: ScrollablePanelView{
     }
     
     //test > populate UI when data fetched
-    func configureUI(data: String) {
-        if(data == "a") {
-            self.aNameText.text = "明知故犯 - Hubert Wu"
-            self.aNameTextB.text = "明知故犯 - Hubert Wu"
-            self.aNameTextC.text = "明知故犯 - Hubert Wu"
+//    func configureUI(data: String) {
+    func configureUI(data: SoundData) {
+        let l_ = data.dataCode
+//        if(data == "a") {
+        if(l_ == "a") {
+            self.aNameText.text = data.dataTextString //"明知故犯 - Hubert Wu"
+            self.aNameTextB.text = data.dataTextString //"明知故犯 - Hubert Wu"
+            self.aNameTextC.text = data.dataTextString //"明知故犯 - Hubert Wu"
             self.objectSymbol.isHidden = false
             self.aSubDesc.text = "00:29"
             
@@ -1433,7 +1436,8 @@ class SoundScrollablePanelView: ScrollablePanelView{
             self.aMoreBtn.isHidden = false
             self.aMoreCBtn.isHidden = false
             
-            let aImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//            let aImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+            let aImageUrl = URL(string: data.coverPhotoString)
             aPhoto.sd_setImage(with: aImageUrl)
             aPhotoB.sd_setImage(with: aImageUrl)
             
@@ -1540,10 +1544,8 @@ class SoundScrollablePanelView: ScrollablePanelView{
         
         self.isFetchFeedAllowed = false
         layoutTabUI()
-//        asyncFetchSoundProfile(id: getObjectId())
         
-        //test for error handling
-        asyncFetchSoundProfile(id: "s_")
+        asyncFetchSoundProfile(id: getObjectId()) //"s_" for error handling
     }
     //test > async fetch data sound profile => temp testing
     var isFetchFeedAllowed = false
@@ -1553,8 +1555,8 @@ class SoundScrollablePanelView: ScrollablePanelView{
         self.bSpinner.startAnimating()
         
         //test > new fetch method for testing error handling
-        let id = "s1"
-        DataFetchManager.shared.fetchSoundData2(id: id) { [weak self]result in
+        let id_ = id //s1
+        DataFetchManager.shared.fetchSoundData2(id: id_) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -1583,25 +1585,26 @@ class SoundScrollablePanelView: ScrollablePanelView{
                         //test > lay out halfmode highlight box
                         self.aHLightBoxArray.append("np") //no posts
                         self.aHLightBoxArray.append("d_s") //discover more places
-                        
-                        //test > lay out highlight section
 //                            self.aHLightDataArray.append("r") //ranking *
                         
-                        self.configureUI(data: "a")
+//                        self.configureUI(data: "a")
+                        self.configureUI(data: pData)
                     }
                     else if(l_ == "us"){
 //                        else if(l_ == "b"){
                         self.aHLightBoxArray.append("us") //suspended
                         self.aHLightDataArray.append("us") //job //*
                         //suspended
-//                            self.configureUI(data: "b")
-                        self.configureUI(data: "us")
+
+//                        self.configureUI(data: "us")
+                        self.deconfigureUI()
                     }
                     else {
                         //deleted
                         self.aHLightBoxArray.append("na") //not found highlight box
                         self.aHLightDataArray.append("na")
-                        self.configureUI(data: "na")//na - data not available
+//                        self.configureUI(data: "na")//na - data not available
+                        self.deconfigureUI()
                     }
                     
                     //test > half mode highlight box
@@ -1640,17 +1643,20 @@ class SoundScrollablePanelView: ScrollablePanelView{
                     if let a = error as? FetchDataError{
                         
                         if(a == .dataNotFound) {
-                            self.configureUI(data: "na")//na - user data not available
+//                            self.configureUI(data: "na")//na - user data not available
+                            self.deconfigureUI()
                             
                             self.aHLightBoxArray.append("na") //user not found highlight box
                             self.aHLightDataArray.append("na")
                         } else if(a == .invalidResponse) {
-                            self.configureUI(data: "e")//na - user data not available
+//                            self.configureUI(data: "e")//na - user data not available
+                            self.deconfigureUI()
                             
                             self.aHLightBoxArray.append("e") //user not found highlight box
                             self.aHLightDataArray.append("e")
                         } else if(a == .networkError) {
-                            self.configureUI(data: "e")//na - user data not available
+//                            self.configureUI(data: "e")//na - user data not available
+                            self.deconfigureUI()
                             
                             self.aHLightBoxArray.append("e") //user not found highlight box
                             self.aHLightDataArray.append("e")
@@ -2624,7 +2630,7 @@ extension SoundScrollablePanelView: HighlightCellDelegate {
         
     }
     func didHighlightClickSound(id: String) {
-        delegate?.didSClickSoundSoundScrollable()
+        delegate?.didSClickSoundSoundScrollable(id: id)
     }
     
     func didHighlightClickRefresh(){
@@ -2699,22 +2705,22 @@ extension SoundScrollablePanelView: ScrollFeedCellDelegate {
         openShareSheet()
     }
 
-    func sfcDidClickVcvClickUser() {
+    func sfcDidClickVcvClickUser(id: String) {
         pauseFeedPlayingMedia()
-        delegate?.didSClickUserSoundScrollable()
+        delegate?.didSClickUserSoundScrollable(id: id)
     }
-    func sfcDidClickVcvClickPlace() {
+    func sfcDidClickVcvClickPlace(id: String) {
         pauseFeedPlayingMedia()
-        delegate?.didSClickPlaceSoundScrollable()
+        delegate?.didSClickPlaceSoundScrollable(id: id)
     }
-    func sfcDidClickVcvClickSound() {
+    func sfcDidClickVcvClickSound(id: String) {
 
     }
-    func sfcDidClickVcvClickPost() {
+    func sfcDidClickVcvClickPost(id: String) {
         pauseFeedPlayingMedia()
-        delegate?.didSClickSoundScrollableVcvClickPost()
+        delegate?.didSClickSoundScrollableVcvClickPost(id: id)
     }
-    func sfcDidClickVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func sfcDidClickVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         
         pauseFeedPlayingMedia()
         
@@ -2723,10 +2729,10 @@ extension SoundScrollablePanelView: ScrollFeedCellDelegate {
             let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
             
             let adjustY = pointY + originInRootView.y
-            delegate?.didSClickSoundScrollableVcvClickPhoto(pointX: pointX, pointY: adjustY, view: view, mode: mode)
+            delegate?.didSClickSoundScrollableVcvClickPhoto(id: id, pointX: pointX, pointY: adjustY, view: view, mode: mode)
         }
     }
-    func sfcDidClickVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func sfcDidClickVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         
         pauseFeedPlayingMedia()
         
@@ -2735,7 +2741,7 @@ extension SoundScrollablePanelView: ScrollFeedCellDelegate {
             let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
             
             let adjustY = pointY + originInRootView.y
-            delegate?.didSClickSoundScrollableVcvClickVideo(pointX: pointX, pointY: adjustY, view: view, mode: mode)
+            delegate?.didSClickSoundScrollableVcvClickVideo(id: id, pointX: pointX, pointY: adjustY, view: view, mode: mode)
         }
     }
 
@@ -2785,7 +2791,6 @@ extension ViewController: SoundScrollablePanelDelegate{
         //test > try move redView of collision check according to map padding
         //-ve as y direction is inverse
         redViewTopCons?.constant = -y
-
     }
     
     func didStartMapChangeSoundScrollable(){
@@ -2795,24 +2800,27 @@ extension ViewController: SoundScrollablePanelDelegate{
         mapReappearMarkers()
     }
     
-    func didSClickUserSoundScrollable() {
-        
-        //test
-        openUserPanel()
+    func didSClickUserSoundScrollable(id: String) {
+//        openUserPanel()
+        //test > real id for fetching data
+        openUserPanel(id: id)
     }
-    func didSClickPlaceSoundScrollable(){
-        
-        openPlacePanel()
+    func didSClickPlaceSoundScrollable(id: String){
+//        openPlacePanel()
+        //test > real id for fetching data
+        openPlacePanel(id: id)
     }
-    func didSClickSoundSoundScrollable(){
-        
-        //test
-        openSoundPanel()
+    func didSClickSoundSoundScrollable(id: String){
+//        openSoundPanel()
+        //test > real id for fetching data
+        openSoundPanel(id: id)
     }
-    func didSClickSoundScrollableVcvClickPost(){
-        openPostDetailPanel()
+    func didSClickSoundScrollableVcvClickPost(id: String){
+//        openPostDetailPanel()
+        //test > real id for fetching data
+        openPostDetailPanel(id: id)
     }
-    func didSClickSoundScrollableVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
+    func didSClickSoundScrollableVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
         let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
         let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
         
@@ -2825,10 +2833,12 @@ extension ViewController: SoundScrollablePanelDelegate{
         } else if(mode == PhotoTypes.P_0){
             openPhotoZoomPanel(offX: offsetX, offY: offsetY)
         } else if(mode == PhotoTypes.P_SHOT_DETAIL) {
-            openPhotoDetailPanel()
+//            openPhotoDetailPanel()
+            //test > real id for fetching data
+            openPhotoDetailPanel(id: id)
         }
     }
-    func didSClickSoundScrollableVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
+    func didSClickSoundScrollableVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
         let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
         let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
 
@@ -2962,14 +2972,14 @@ extension SoundScrollablePanelView: ShareSheetScrollableDelegate{
     }
 }
 extension SoundScrollablePanelView: CommentScrollableDelegate{
-    func didCClickUser(){
-        delegate?.didSClickUserSoundScrollable()
+    func didCClickUser(id: String){
+        delegate?.didSClickUserSoundScrollable(id: id)
     }
-    func didCClickPlace(){
-        delegate?.didSClickPlaceSoundScrollable()
+    func didCClickPlace(id: String){
+        delegate?.didSClickPlaceSoundScrollable(id: id)
     }
-    func didCClickSound(){
-        delegate?.didSClickSoundSoundScrollable()
+    func didCClickSound(id: String){
+        delegate?.didSClickSoundSoundScrollable(id: id)
     }
     func didCClickClosePanel(){
 //        bottomBox.isHidden = true
@@ -2998,14 +3008,14 @@ extension SoundScrollablePanelView: CommentScrollableDelegate{
     func didCClickShare(){
         openShareSheet()
     }
-    func didCClickPost(){
-        delegate?.didSClickSoundScrollableVcvClickPost()
+    func didCClickPost(id: String){
+        delegate?.didSClickSoundScrollableVcvClickPost(id: id)
     }
-    func didCClickClickPhoto(pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
-        delegate?.didSClickSoundScrollableVcvClickPhoto(pointX: pointX, pointY: pointY, view: view, mode: mode)
+    func didCClickClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        delegate?.didSClickSoundScrollableVcvClickPhoto(id: id, pointX: pointX, pointY: pointY, view: view, mode: mode)
     }
-    func didCClickClickVideo(pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
-        delegate?.didSClickSoundScrollableVcvClickVideo(pointX: pointX, pointY: pointY, view: view, mode: mode)
+    func didCClickClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        delegate?.didSClickSoundScrollableVcvClickVideo(id: id, pointX: pointX, pointY: pointY, view: view, mode: mode)
     }
 }
 extension SoundScrollablePanelView: TabStackDelegate {

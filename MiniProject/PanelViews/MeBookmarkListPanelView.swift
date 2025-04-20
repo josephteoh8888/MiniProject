@@ -10,12 +10,12 @@ import UIKit
 import SDWebImage
 
 protocol MeBookmarkPanelDelegate : AnyObject {
-    func didMeBookmarkClickPost()
-    func didMeBookmarkClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
-    func didMeBookmarkClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
-    func didMeBookmarkClickUser()
-    func didMeBookmarkClickPlace()
-    func didMeBookmarkClickSound()
+    func didMeBookmarkClickPost(id: String)
+    func didMeBookmarkClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
+    func didMeBookmarkClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
+    func didMeBookmarkClickUser(id: String)
+    func didMeBookmarkClickPlace(id: String)
+    func didMeBookmarkClickSound(id: String)
     func didMeBookmarkClickClose()
 }
 //test > new method with uiscrollview of feedcells
@@ -1105,37 +1105,37 @@ extension MeBookmarkListPanelView: ScrollFeedCellDelegate {
         print("fcDidClickVcvShare ")
     }
 
-    func sfcDidClickVcvClickUser() {
+    func sfcDidClickVcvClickUser(id: String) {
         //test
-        delegate?.didMeBookmarkClickUser()
+        delegate?.didMeBookmarkClickUser(id: id)
     }
-    func sfcDidClickVcvClickPlace() {
-        delegate?.didMeBookmarkClickPlace()
+    func sfcDidClickVcvClickPlace(id: String) {
+        delegate?.didMeBookmarkClickPlace(id: id)
     }
-    func sfcDidClickVcvClickSound() {
-        delegate?.didMeBookmarkClickSound()
+    func sfcDidClickVcvClickSound(id: String) {
+        delegate?.didMeBookmarkClickSound(id: id)
     }
-    func sfcDidClickVcvClickPost() {
-        delegate?.didMeBookmarkClickPost()
+    func sfcDidClickVcvClickPost(id: String) {
+        delegate?.didMeBookmarkClickPost(id: id)
     }
-    func sfcDidClickVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func sfcDidClickVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         //test
         if(!feedList.isEmpty) {
             let b = self.feedList[self.currentIndex]
             let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
             
             let adjustY = pointY + originInRootView.y
-            delegate?.didMeBookmarkClickPhoto(pointX: pointX, pointY: adjustY, view: view, mode: mode)
+            delegate?.didMeBookmarkClickPhoto(id: id, pointX: pointX, pointY: adjustY, view: view, mode: mode)
         }
     }
-    func sfcDidClickVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func sfcDidClickVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         //test
         if(!feedList.isEmpty) {
             let b = self.feedList[self.currentIndex]
             let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
             
             let adjustY = pointY + originInRootView.y
-            delegate?.didMeBookmarkClickVideo(pointX: pointX, pointY: adjustY, view: view, mode: mode)
+            delegate?.didMeBookmarkClickVideo(id: id, pointX: pointX, pointY: adjustY, view: view, mode: mode)
         }
     }
 
@@ -1186,10 +1186,12 @@ extension MeBookmarkListPanelView: TabStackDelegate {
 
 //test
 extension ViewController: MeBookmarkPanelDelegate{
-    func didMeBookmarkClickPost(){
-        openPostDetailPanel()
+    func didMeBookmarkClickPost(id: String){
+//        openPostDetailPanel()
+        //test > real id for fetching data
+        openPostDetailPanel(id: id)
     }
-    func didMeBookmarkClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
+    func didMeBookmarkClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
         let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
         let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
         
@@ -1204,7 +1206,7 @@ extension ViewController: MeBookmarkPanelDelegate{
             openPhotoZoomPanel(offX: offsetX, offY: offsetY)
         }
     }
-    func didMeBookmarkClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
+    func didMeBookmarkClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
         let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
         let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
 
@@ -1214,14 +1216,20 @@ extension ViewController: MeBookmarkPanelDelegate{
         dataset.append("a")
         self.openVideoPanel(offX: offsetX, offY: offsetY, originatorView: view, originatorViewType: OriginatorTypes.UIVIEW, id: 0, originatorViewId: "", preterminedDatasets: dataset, mode: mode)
     }
-    func didMeBookmarkClickUser(){
-        openUserPanel()
+    func didMeBookmarkClickUser(id: String){
+//        openUserPanel()
+        //test > real id for fetching data
+        openUserPanel(id: id)
     }
-    func didMeBookmarkClickPlace(){
-        openPlacePanel()
+    func didMeBookmarkClickPlace(id: String){
+//        openPlacePanel()
+        //test > real id for fetching data
+        openPlacePanel(id: id)
     }
-    func didMeBookmarkClickSound(){
-        openSoundPanel()
+    func didMeBookmarkClickSound(id: String){
+//        openSoundPanel()
+        //test > real id for fetching data
+        openSoundPanel(id: id)
     }
     func didMeBookmarkClickClose() {
         backPage(isCurrentPageScrollable: false)

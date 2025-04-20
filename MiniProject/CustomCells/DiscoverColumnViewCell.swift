@@ -107,8 +107,8 @@ class HDiscoverUserSizeMColumnViewCell: UIView {
 
     //*test > async load photo
     func asyncConfigure(data: String) {
-        let id = "u"
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+        let id = "a"
+        DataFetchManager.shared.fetchDummyDataTimeDelay(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -241,8 +241,8 @@ class HDiscoverSoundSizeMColumnViewCell: UIView {
 
     //*test > async load photo
     func asyncConfigure(data: String) {
-        let id = "u"
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+        let id = "a"
+        DataFetchManager.shared.fetchDummyDataTimeDelay(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -375,8 +375,8 @@ class HDiscoverPlaceSizeMColumnViewCell: UIView {
 
     //*test > async load photo
     func asyncConfigure(data: String) {
-        let id = "u"
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+        let id = "a"
+        DataFetchManager.shared.fetchDummyDataTimeDelay(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 

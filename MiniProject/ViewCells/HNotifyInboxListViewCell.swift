@@ -200,7 +200,8 @@ class HNotifyInboxListViewCell: UICollectionViewCell {
         let d = data.dataCode
 //        if(data == "a") {
         if(d == "a") {
-            asyncConfigure(data: "")
+            let u = data.userId
+            asyncConfigure(data: u)
             
 //            aNameText.text = "YikCai"
 //            contentText.text = "started following you."
@@ -219,8 +220,8 @@ class HNotifyInboxListViewCell: UICollectionViewCell {
     }
     //*test > async fetch images/names/videos
     func asyncConfigure(data: String) {
-        let id = "u"
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+        let id = data //u1
+        DataFetchManager.shared.fetchUserData2(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -232,24 +233,21 @@ class HNotifyInboxListViewCell: UICollectionViewCell {
                         return
                     }
 
-                    if(!l.isEmpty) {
-                        let l_0 = l[0]
+//                    if(!l.isEmpty) {
+//                        let l_0 = l[0]
                         let uData = UserData()
-                        uData.setData(rData: l_0)
+                        uData.setData(rData: l)
                         let l_ = uData.dataCode
                         
-                        self.aNameText.text = uData.dataTextString
-                        
-                        let eImageUrl = URL(string: uData.coverPhotoString)
-                        self.aUserPhoto.sd_setImage(with: eImageUrl)
-                        
-                        self.aFollowA.isHidden = false
-                    }
-                    
-//                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-//                    self.aUserPhoto.sd_setImage(with: imageUrl)
-//                    
-//                    self.aFollowA.isHidden = false
+                        if(l_ == "a") {
+                            self.aNameText.text = uData.dataTextString
+                            
+                            let eImageUrl = URL(string: uData.coverPhotoString)
+                            self.aUserPhoto.sd_setImage(with: eImageUrl)
+                            
+                            self.aFollowA.isHidden = false
+                        }
+//                    }
                 }
 
                 case .failure(let error):

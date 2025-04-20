@@ -270,7 +270,7 @@ extension PostClipCell: ContentCellDelegate {
 //        }
     }
     
-    func contentCellDidClickVcvClickPhoto(cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+    func contentCellDidClickVcvClickPhoto(id: String, cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         let aTestFrame = aHLightRect1.frame.origin
         let ccFrame = cc.frame.origin
         
@@ -278,7 +278,7 @@ extension PostClipCell: ContentCellDelegate {
         let pointY1 = pointY + aTestFrame.y + ccFrame.y
         aDelegate?.pcDidClickPcClickPhoto(pc: self, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
     }
-    func contentCellDidClickVcvClickVideo(cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+    func contentCellDidClickVcvClickVideo(id: String, cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         let aTestFrame = aHLightRect1.frame.origin
         let ccFrame = cc.frame.origin
         
@@ -289,16 +289,16 @@ extension PostClipCell: ContentCellDelegate {
     func contentCellDidDoubleClickPhoto(pointX: CGFloat, pointY: CGFloat){
         
     }
-    func contentCellDidClickSound(){
+    func contentCellDidClickSound(id: String){
         
     }
-    func contentCellDidClickUser(){
+    func contentCellDidClickUser(id: String){
         
     }
-    func contentCellDidClickPlace(){
+    func contentCellDidClickPlace(id: String){
         
     }
-    func contentCellDidClickPost(){
+    func contentCellDidClickPost(id: String){
 //        aDelegate?.hListDidClickVcvClickPost()
     }
     func contentCellDidClickVcvClickPlay(cc: UIView, isPlay: Bool){

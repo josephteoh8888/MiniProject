@@ -44,7 +44,7 @@ class GridVideo2xViewCell: UICollectionViewCell {
 //        self.layer.cornerRadius = 5
         
         let vConBg = UIView()
-//        vConBg.backgroundColor = .ddmDarkBlack //ddmBlackDark 
+//        vConBg.backgroundColor = .blue //ddmBlackDark
         self.addSubview(vConBg)
         vConBg.translatesAutoresizingMaskIntoConstraints = false
         vConBg.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
@@ -120,6 +120,8 @@ class GridVideo2xViewCell: UICollectionViewCell {
         vConBottom.heightAnchor.constraint(equalToConstant: descHeight).isActive = true
         vConBottom.trailingAnchor.constraint(equalTo: vConBg.trailingAnchor, constant: 0).isActive = true
         vConBottom.bottomAnchor.constraint(equalTo: vConBg.bottomAnchor, constant: 0).isActive = true //0
+        vConBottom.isUserInteractionEnabled = true
+        vConBottom.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onGifImageClicked)))
         
 //        let aaText = UILabel()
         aaText.textAlignment = .left
@@ -229,6 +231,9 @@ class GridVideo2xViewCell: UICollectionViewCell {
         super.prepareForReuse()
         print("upv gridvideo2x prepare for reuse")
         
+        //test > clear id
+        setId(id: "")
+        
         let imageUrl = URL(string: "")
         gifImage.sd_setImage(with: imageUrl)
         
@@ -246,21 +251,25 @@ class GridVideo2xViewCell: UICollectionViewCell {
         bCountText.text = ""
     }
     
-//    func configure(data: PostData) {
+    //test > set id for init
+    var id = ""
+    func setId(id: String) {
+        self.id = id
+    }
+    
     func configure(data: BaseData) {
-        
-//        guard let a = data as? PostData else {
-//            return
-//        }
+
         guard let a = data as? VideoData else {
             return
         }
         
-//        let l = data.dataType
+        setId(id: a.id)
+        
         let l = a.dataCode
         
         if(l == "a") {
-            asyncConfigure(data: "")
+            let u = a.userId
+            asyncConfigure(data: u)
             
 //            aaText.text = "What a wonderful day in Tokyo"
             aaText.text = a.dataTextString
@@ -282,8 +291,8 @@ class GridVideo2xViewCell: UICollectionViewCell {
     }
 //    func asyncConfigure(data: PostData) {
     func asyncConfigure(data: String) {
-        let id = "u"
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+        let id = data //u4
+        DataFetchManager.shared.fetchUserData2(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -295,24 +304,19 @@ class GridVideo2xViewCell: UICollectionViewCell {
                         return
                     }
 
-                    if(!l.isEmpty) {
-                        let l_0 = l[0]
+//                    if(!l.isEmpty) {
+//                        let l_0 = l[0]
                         let uData = UserData()
-                        uData.setData(rData: l_0)
+                        uData.setData(rData: l)
                         let l_ = uData.dataCode
                         
-                        self.aUserNameText.text = uData.dataTextString
-                        
-                        let imageUrl2 = URL(string: uData.coverPhotoString)
-                        self.aUserPhoto.sd_setImage(with: imageUrl2)
-                    }
-                    
-//                    self.aUserNameText.text = "JennyBaby"
-//                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-//                    self.gifImage.sd_setImage(with: imageUrl)
-//                    
-//                    let imageUrl2 = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
-//                    self.aUserPhoto.sd_setImage(with: imageUrl2)
+                        if(l_ == "a") {
+                            self.aUserNameText.text = uData.dataTextString
+                            
+                            let imageUrl2 = URL(string: uData.coverPhotoString)
+                            self.aUserPhoto.sd_setImage(with: imageUrl2)
+                        }
+//                    }
                 }
 
                 case .failure(let error):
@@ -338,10 +342,15 @@ class GridVideo2xViewCell: UICollectionViewCell {
         let pFrame = gifImage.frame.origin
         let pointX = pFrame.x
         let pointY = pFrame.y
-        aDelegate?.gridViewClick(vc: self, pointX: pointX, pointY: pointY, view: gifImage, mode:VideoTypes.V_LOOP)
+        aDelegate?.gridViewClick(id: id, vc: self, pointX: pointX, pointY: pointY, view: gifImage, mode:VideoTypes.V_LOOP)
     }
     
     @objc func onUserImageClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.gridViewClickUser()
+        aDelegate?.gridViewClickUser(id: "")
+    }
+    
+    //test
+    @objc func onBgClicked(gesture: UITapGestureRecognizer) {
+        print("gridvid2x bg clicked")
     }
 }

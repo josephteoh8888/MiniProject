@@ -10,7 +10,7 @@ import UIKit
 import SDWebImage
 
 protocol HPlacesListDelegate : AnyObject {
-    func didHPlacesClickPlace()
+    func didHPlacesClickPlace(id: String)
     func didHPlacesClickVideo()
 }
 class HPlacesListViewCell: UICollectionViewCell {
@@ -124,7 +124,7 @@ class HPlacesListViewCell: UICollectionViewCell {
         if(l == "a") {
             asyncConfigure(data: "")
             
-            self.aNameText.text = "Petronas Twin Towers"
+            self.aNameText.text = a.dataTextString //"Petronas Twin Towers"
         }
         else if(l == "na") {
             
@@ -134,8 +134,8 @@ class HPlacesListViewCell: UICollectionViewCell {
         }
     }
     func asyncConfigure(data: String) {
-        let id = "p"
-        DataFetchManager.shared.fetchPlaceData(id: id) { [weak self]result in
+        let id = "a"
+        DataFetchManager.shared.fetchDummyDataTimeDelay(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -165,13 +165,13 @@ class HPlacesListViewCell: UICollectionViewCell {
     }
     
     @objc func onPlaceClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.didHPlacesClickPlace()
+        aDelegate?.didHPlacesClickPlace(id: "")
     }
 }
 
 extension PlacesMiniScrollablePanelView: HPlacesListDelegate{
-    func didHPlacesClickPlace(){
-        delegate?.didPlacesMiniClickPlace()
+    func didHPlacesClickPlace(id: String){
+        delegate?.didPlacesMiniClickPlace(id: id)
     }
     func didHPlacesClickVideo(){
 

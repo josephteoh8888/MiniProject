@@ -148,11 +148,21 @@ extension ScrollFeedHResultPostListCell: UICollectionViewDelegateFlowLayout {
         var contentHeight = 0.0
         let contentTopMargin = 10.0
         let l = vDataList[indexPath.row].dataCode
-        let s = vDataList[indexPath.row].dataTextString
+//        let s = vDataList[indexPath.row].dataTextString
         
         let maxContentDummyText = "\n\n\n\n" //4 lines of text
         let maxContentHeight = estimateHeight(text: maxContentDummyText, textWidth: availTextWidth, fontSize: 14)
         if(l == "a") {
+            var s = ""
+            let dataCL = vDataList[indexPath.row].contentDataArray
+            for cl in dataCL {
+                let l = cl.dataCode
+                if(l == "text") {
+                    s = cl.dataTextString
+                    break
+                }
+            }
+            
             var tContentHeight = estimateHeight(text: s, textWidth: availTextWidth, fontSize: 14)
             if(tContentHeight > maxContentHeight) {
                 tContentHeight = maxContentHeight
@@ -338,32 +348,32 @@ extension ScrollFeedHResultPostListCell: UICollectionViewDataSource {
 
 extension ScrollFeedHResultPostListCell: HResultListViewDelegate{
 
-    func didHResultClickUser(){
+    func didHResultClickUser(id: String){
         //test > additional delegate
         bDelegate?.didScrollFeedHResultResignKeyboard()
         
-        aDelegate?.sfcDidClickVcvClickUser()
+        aDelegate?.sfcDidClickVcvClickUser(id: id)
     }
-    func didHResultClickPlace(){
+    func didHResultClickPlace(id: String){
         
     }
-    func didHResultClickSound(){
+    func didHResultClickSound(id: String){
 //        aDelegate?.sfcDidClickVcvClickSound()
     }
     func didHResultClickHashtag() {
         
     }
-    func didHResultClickPhoto(){
+    func didHResultClickPhoto(id: String){
         
     }
-    func didHResultClickVideo(){
+    func didHResultClickVideo(id: String){
         
     }
-    func didHResultClickPost(){
+    func didHResultClickPost(id: String){
         //test > additional delegate
         bDelegate?.didScrollFeedHResultResignKeyboard()
         
-        aDelegate?.sfcDidClickVcvClickPost()
+        aDelegate?.sfcDidClickVcvClickPost(id: id)
     }
     func didHResultClickSignIn(){
         

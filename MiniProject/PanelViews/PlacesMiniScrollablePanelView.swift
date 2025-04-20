@@ -21,7 +21,7 @@ protocol PlacesMiniScrollablePanelDelegate : AnyObject {
     //test > initialize
     func didFinishInitializePlacesMini(pv: PlacesMiniScrollablePanelView)
     
-    func didPlacesMiniClickPlace()
+    func didPlacesMiniClickPlace(id: String)
 }
 
 class PlacesMiniScrollablePanelView: ScrollablePanelView, UIGestureRecognizerDelegate{
@@ -1073,7 +1073,9 @@ extension ViewController: PlacesMiniScrollablePanelDelegate{
         dequeueObject()  //activateQueueState() cannot be used as it prevents adding queue objects on map
     }
     
-    func didPlacesMiniClickPlace(){
-        openPlacePanel()
+    func didPlacesMiniClickPlace(id: String){
+//        openPlacePanel()
+        //test > real id for fetching data
+        openPlacePanel(id: id)
     }
 }

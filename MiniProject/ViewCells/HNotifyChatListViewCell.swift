@@ -187,7 +187,8 @@ class HNotifyChatListViewCell: UICollectionViewCell {
         let d = data.dataCode
 //        if(data == "a") {
         if(d == "a") {
-            asyncConfigure(data: "")
+            let u = data.userId
+            asyncConfigure(data: u)
             
 //            messageText.text = "Happy Birthday!!"
             messageText.text = data.dataTextString
@@ -210,8 +211,8 @@ class HNotifyChatListViewCell: UICollectionViewCell {
     }
     //*test > async fetch images/names/videos
     func asyncConfigure(data: String) {
-        let id = "u"
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+        let id = data //u4
+        DataFetchManager.shared.fetchUserData2(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -223,28 +224,23 @@ class HNotifyChatListViewCell: UICollectionViewCell {
                         return
                     }
 
-                    if(!l.isEmpty) {
-                        let l_0 = l[0]
+//                    if(!l.isEmpty) {
+//                        let l_0 = l[0]
                         let uData = UserData()
-                        uData.setData(rData: l_0)
+                        uData.setData(rData: l)
                         let l_ = uData.dataCode
                         
-                        self.aNameText.text = uData.dataTextString
-                        
-                        let eImageUrl = URL(string: uData.coverPhotoString)
-                        self.aUserPhoto.sd_setImage(with: eImageUrl)
-                        
-                        if(uData.isAccountVerified) {
-                            self.vBtn.image = UIImage(named:"icon_round_verified_b")?.withRenderingMode(.alwaysTemplate)
+                        if(l_ == "a") {
+                            self.aNameText.text = uData.dataTextString
+                            
+                            let eImageUrl = URL(string: uData.coverPhotoString)
+                            self.aUserPhoto.sd_setImage(with: eImageUrl)
+                            
+                            if(uData.isAccountVerified) {
+                                self.vBtn.image = UIImage(named:"icon_round_verified_b")?.withRenderingMode(.alwaysTemplate)
+                            }
                         }
-                    }
-                    
-//                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-//                    self.aUserPhoto.sd_setImage(with: imageUrl)
-//                    
-//                    self.aNameText.text = "Michael Kins"
-//                    
-//                    self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
+//                    }
                 }
 
                 case .failure(let error):
@@ -271,7 +267,7 @@ class HNotifyChatListViewCell: UICollectionViewCell {
 extension NotifyPanelView: NotifyHListCellDelegate {
     
     func fcNotifyHListDidClickVcvClickUser() {
-        delegate?.didNotifyClickUser()
+        delegate?.didNotifyClickUser(id: "")
     }
     func fcNotifyHListDidClickVcvClickPlace() {
         

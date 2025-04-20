@@ -19,12 +19,12 @@ protocol PhotoPanelDelegate : AnyObject {
     func didClickPhotoPanelVcvComment() //try
     func didClickPhotoPanelVcvLove() //try
     func didClickPhotoPanelVcvShare() //try
-    func didClickPhotoPanelVcvClickUser() //try
-    func didClickPhotoPanelVcvClickPlace() //try
-    func didClickPhotoPanelVcvClickSound() //try
-    func didClickPhotoPanelVcvClickPost() //try
-    func didClickPhotoPanelVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) //try
-    func didClickPhotoPanelVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) //try
+    func didClickPhotoPanelVcvClickUser(id: String) //try
+    func didClickPhotoPanelVcvClickPlace(id: String) //try
+    func didClickPhotoPanelVcvClickSound(id: String) //try
+    func didClickPhotoPanelVcvClickPost(id: String) //try
+    func didClickPhotoPanelVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) //try
+    func didClickPhotoPanelVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) //try
     
     //test > click to create new post
     func didClickPhotoPanelVcvClickCreate(type: String)
@@ -1777,35 +1777,44 @@ extension ViewController: PhotoPanelDelegate{
     func didClickPhotoPanelVcvShare() {
 
     }
-    func didClickPhotoPanelVcvClickUser() {
+    func didClickPhotoPanelVcvClickUser(id: String) {
         deactivateQueueState()
-        //test
-        openUserPanel()
+//        openUserPanel()
+        //test > real id for fetching data
+        openUserPanel(id: id)
     }
-    func didClickPhotoPanelVcvClickPlace() {
+    func didClickPhotoPanelVcvClickPlace(id: String) {
         deactivateQueueState()
-        openPlacePanel()
+//        openPlacePanel()
+        //test > real id for fetching data
+        openPlacePanel(id: id)
     }
-    func didClickPhotoPanelVcvClickSound() {
+    func didClickPhotoPanelVcvClickSound(id: String) {
         deactivateQueueState()
-        openSoundPanel()
+//        openSoundPanel()
+        //test > real id for fetching data
+        openSoundPanel(id: id)
     }
-    func didClickPhotoPanelVcvClickPost() {
-        openPostDetailPanel()
+    func didClickPhotoPanelVcvClickPost(id: String) {
+//        openPostDetailPanel()
+        //test > real id for fetching data
+        openPostDetailPanel(id: id)
     }
-    func didClickPhotoPanelVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func didClickPhotoPanelVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         
         let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
         let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
         
         if(mode == PhotoTypes.P_SHOT_DETAIL) {
-            openPhotoDetailPanel()
+//            openPhotoDetailPanel()
+            //test > real id for fetching data
+            openPhotoDetailPanel(id: id)
         } else if(mode == PhotoTypes.P_0){
             openPhotoZoomPanel(offX: offsetX, offY: offsetY)
         }
     }
     
-    func didClickPhotoPanelVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func didClickPhotoPanelVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
         let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
 
@@ -1913,14 +1922,14 @@ extension PhotoPanelView: ShareSheetScrollableDelegate{
 }
 
 extension PhotoPanelView: CommentScrollableDelegate{
-    func didCClickUser(){
-        delegate?.didClickPhotoPanelVcvClickUser()
+    func didCClickUser(id: String){
+        delegate?.didClickPhotoPanelVcvClickUser(id: id)
     }
-    func didCClickPlace(){
-        delegate?.didClickPhotoPanelVcvClickPlace()
+    func didCClickPlace(id: String){
+        delegate?.didClickPhotoPanelVcvClickPlace(id: id)
     }
-    func didCClickSound(){
-        delegate?.didClickPhotoPanelVcvClickSound()
+    func didCClickSound(id: String){
+        delegate?.didClickPhotoPanelVcvClickSound(id: id)
     }
     func didCClickClosePanel(){
 //        bottomBox.isHidden = true
@@ -1950,14 +1959,14 @@ extension PhotoPanelView: CommentScrollableDelegate{
     func didCClickShare(){
         openShareSheet()
     }
-    func didCClickPost(){
-        delegate?.didClickPhotoPanelVcvClickPost()
+    func didCClickPost(id: String){
+        delegate?.didClickPhotoPanelVcvClickPost(id: id)
     }
-    func didCClickClickPhoto(pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
-        delegate?.didClickPhotoPanelVcvClickPhoto(pointX: pointX, pointY: pointY, view: view, mode: mode)
+    func didCClickClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        delegate?.didClickPhotoPanelVcvClickPhoto(id: id, pointX: pointX, pointY: pointY, view: view, mode: mode)
     }
-    func didCClickClickVideo(pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
-        delegate?.didClickPhotoPanelVcvClickVideo(pointX: pointX, pointY: pointY, view: view, mode: mode)
+    func didCClickClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        delegate?.didClickPhotoPanelVcvClickVideo(id: id, pointX: pointX, pointY: pointY, view: view, mode: mode)
     }
 }
 
@@ -2021,22 +2030,22 @@ extension PhotoPanelView: ScrollFeedCellDelegate {
         openShareSheet()
     }
 
-    func sfcDidClickVcvClickUser() {
+    func sfcDidClickVcvClickUser(id: String) {
         pausePlayingMedia()
-        delegate?.didClickPhotoPanelVcvClickUser()
+        delegate?.didClickPhotoPanelVcvClickUser(id: id)
     }
-    func sfcDidClickVcvClickPlace() {
+    func sfcDidClickVcvClickPlace(id: String) {
         pausePlayingMedia()
-        delegate?.didClickPhotoPanelVcvClickPlace()
+        delegate?.didClickPhotoPanelVcvClickPlace(id: id)
     }
-    func sfcDidClickVcvClickSound() {
+    func sfcDidClickVcvClickSound(id: String) {
         pausePlayingMedia()
-        delegate?.didClickPhotoPanelVcvClickSound()
+        delegate?.didClickPhotoPanelVcvClickSound(id: id)
     }
-    func sfcDidClickVcvClickPost() {
+    func sfcDidClickVcvClickPost(id: String) {
 
     }
-    func sfcDidClickVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func sfcDidClickVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         print("photopanelview click post")
         //test > pause current playing video when go to user
         pausePlayingMedia()
@@ -2048,10 +2057,10 @@ extension PhotoPanelView: ScrollFeedCellDelegate {
             
             let adjustY = pointY + originInRootView.y
             
-            delegate?.didClickPhotoPanelVcvClickPhoto(pointX: pointX, pointY: adjustY, view: view, mode: mode)
+            delegate?.didClickPhotoPanelVcvClickPhoto(id: id, pointX: pointX, pointY: adjustY, view: view, mode: mode)
         }
     }
-    func sfcDidClickVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func sfcDidClickVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         
     }
 

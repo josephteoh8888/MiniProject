@@ -12,9 +12,9 @@ import AVFoundation
 
 //test > uicollectionview for videopanel VC-videocollectionview
 protocol VCViewCellDelegate : AnyObject {
-    func didClickUser()
-    func didClickPlace()
-    func didClickSound()
+    func didClickUser(id: String)
+    func didClickPlace(id: String)
+    func didClickSound(id: String)
     func didClickComment()
     func didClickShare(vc: VCViewCell)
     func didClickRefresh()
@@ -801,6 +801,9 @@ class VCAViewCell: VCViewCell {
         super.prepareForReuse()
         print("videocv prepare for reuse A")
         
+        //test > clear id
+        setId(id: "")
+        
         //*test > remove time observer
         removeTimeObserverVideo()
         
@@ -854,15 +857,15 @@ class VCAViewCell: VCViewCell {
     
     @objc func onUserClicked(gesture: UITapGestureRecognizer) {
         print("click open user panel:")
-        aDelegate?.didClickUser()
+        aDelegate?.didClickUser(id: "")
     }
     @objc func onPlaceClicked(gesture: UITapGestureRecognizer) {
         print("click open place panel:")
-        aDelegate?.didClickPlace()
+        aDelegate?.didClickPlace(id: "")
     }
     @objc func onSoundClicked(gesture: UITapGestureRecognizer) {
         print("click open sound panel:")
-        aDelegate?.didClickSound()
+        aDelegate?.didClickSound(id: "")
     }
     @objc func onCommentClicked(gesture: UITapGestureRecognizer) {
         print("click open comment panel:")
@@ -959,8 +962,8 @@ class VCAViewCell: VCViewCell {
     
     //*test > async fetch user profile, name, follow status etc
     func asyncConfigure(data: String) {
-        let id = "u"
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+        let id = data //u1
+        DataFetchManager.shared.fetchUserData2(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -972,27 +975,23 @@ class VCAViewCell: VCViewCell {
                         return
                     }
 
-                    if(!l.isEmpty) {
-                        let l_0 = l[0]
+//                    if(!l.isEmpty) {
+//                        let l_0 = l[0]
                         let uData = UserData()
-                        uData.setData(rData: l_0)
+                        uData.setData(rData: l)
                         let l_ = uData.dataCode
                         
-                        self.aNameText.text = uData.dataTextString
-                        
-                        let eImageUrl = URL(string: uData.coverPhotoString)
-                        self.eImage.sd_setImage(with: eImageUrl)
-                        
-                        if(uData.isAccountVerified) {
-                            self.vBtn.image = UIImage(named:"icon_round_verified_b")?.withRenderingMode(.alwaysTemplate)
+                        if(l_ == "a") {
+                            self.aNameText.text = uData.dataTextString
+                            
+                            let eImageUrl = URL(string: uData.coverPhotoString)
+                            self.eImage.sd_setImage(with: eImageUrl)
+                            
+                            if(uData.isAccountVerified) {
+                                self.vBtn.image = UIImage(named:"icon_round_verified_b")?.withRenderingMode(.alwaysTemplate)
+                            }
                         }
-                    }
-                    
-//                    self.aNameText.text = "Michael Kins"
-//                    self.vBtn.image = UIImage(named:"icon_round_verified_b")?.withRenderingMode(.alwaysTemplate)
-                    
-//                    let eImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
-//                    self.eImage.sd_setImage(with: eImageUrl)
+//                    }
                 }
 
                 case .failure(let error):
@@ -1015,7 +1014,7 @@ class VCAViewCell: VCViewCell {
     //*
     //*test > async fetch sound profile
     func asyncConfigureSound(data: String) {
-        let id = "s4"
+        let id = data //s4
         DataFetchManager.shared.fetchSoundData2(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -1058,7 +1057,7 @@ class VCAViewCell: VCViewCell {
     //*
     //*test > async fetch place profile
     func asyncConfigurePlace(data: String) {
-        let id = "p1"
+        let id = data //p1
         DataFetchManager.shared.fetchPlaceData2(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -1176,8 +1175,16 @@ class VCAViewCell: VCViewCell {
         }
     }
     
+    //test > set id for init
+    var id = ""
+    func setId(id: String) {
+        self.id = id
+    }
+    
     //test > configure cell
     func configure(data: VideoData) {
+        
+        setId(id: data.id)
         
         //test > change ui with data accordingly
         aSpinner.stopAnimating()
@@ -1218,14 +1225,15 @@ class VCAViewCell: VCViewCell {
         else if(data.dataCode == "a") { // a - video play
             aContainer.isHidden = false
             
-            asyncConfigure(data: "") //get creator data, e.g. name
-            asyncConfigureSound(data: "")
-            asyncConfigurePlace(data: "")
+            let u = data.userId
+            let p = data.placeId
+            let s = data.soundId
+            asyncConfigure(data: u) //get creator data, e.g. name
+            asyncConfigureSound(data: s)
+            asyncConfigurePlace(data: p)
             
             aTitleText.text = dataText
-//            aText.text = "Suntec City Hall 1B"
-//            mText.text = "明知故犯 - HubertWu 明知故犯 - HubertWu 明知故犯 - HubertWu 明知故犯 - HubertWu"
-            
+      
             //populate data count
             let dataC = data.dataCount
             if let loveC = dataC["love"] {

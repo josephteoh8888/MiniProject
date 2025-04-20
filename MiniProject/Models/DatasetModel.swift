@@ -45,6 +45,9 @@ class ContentDataset : BaseDataset {
 class VideoDataset: BaseDataset {
     
     var coverPhotoString: String = ""
+    var userId: String = "" //creator
+    var placeId: String = ""
+    var soundId: String = ""
     
     func setId(dataId: String) {
         id = dataId
@@ -141,12 +144,37 @@ class VideoDataset: BaseDataset {
         else if(data == "d") {
             coverPhotoString = "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media"
         }
+        
+        //creator id, sound and place id
+        if(data == "a") {
+            userId = "u2"
+            placeId = "p3"
+            soundId = "s4"
+        }
+        else if(data == "b") {
+            userId = "u1"
+            placeId = "p4"
+            soundId = "s1"
+        }
+        else if(data == "c") {
+            userId = "u4"
+            placeId = "p1"
+            soundId = "s2"
+        }
+        else if(data == "d") {
+            userId = "u3"
+            placeId = "p2"
+            soundId = "s3"
+        }
     }
 }
 
 class PhotoDataset: BaseDataset {
     
     var coverPhotoString: String = ""
+    var userId: String = "" //creator
+    var placeId: String = ""
+    var soundId: String = ""
     
     func setId(dataId: String) {
         id = dataId
@@ -243,10 +271,36 @@ class PhotoDataset: BaseDataset {
         else if(data == "d") {
             coverPhotoString = "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media"
         }
+        
+        //creator id, sound and place id
+        if(data == "a") {
+            userId = "u1"
+            placeId = "p2"
+            soundId = "s3"
+        }
+        else if(data == "b") {
+            userId = "u2"
+            placeId = "p3"
+            soundId = "s4"
+        }
+        else if(data == "c") {
+            userId = "u3"
+            placeId = "p4"
+            soundId = "s1"
+        }
+        else if(data == "d") {
+            userId = "u4"
+            placeId = "p1"
+            soundId = "s2"
+        }
     }
 }
 
 class PostDataset: BaseDataset {
+    
+    var userId: String = "" //creator
+    var placeId: String = ""
+    var soundId: String = ""
     
     func setId(dataId: String) {
         id = dataId
@@ -284,6 +338,8 @@ class PostDataset: BaseDataset {
             
 //            //test > error handling
 //            dataArray.append("us")
+            
+//            dataArray.append("quote") //quote
         }
         else if(data == "c") {
 //            dataArray.append("t")
@@ -319,6 +375,16 @@ class PostDataset: BaseDataset {
                 cData.setDataCode(data: i)
                 cData.setData(data: data) //test
                 contentDataArray.append(cData)
+            } else if(i == "quote"){
+                let cData = QuoteContentDataset()
+                cData.setDataCode(data: i)
+                cData.setData(data: data) //test
+                contentDataArray.append(cData)
+            } else if(i == "text"){
+                let cData = TextContentDataset()
+                cData.setDataCode(data: i)
+                cData.setTextString(data: data) //test
+                contentDataArray.append(cData)
             } else {
                 let cData = ContentDataset()
                 cData.setDataCode(data: i)
@@ -352,6 +418,28 @@ class PostDataset: BaseDataset {
         }
         else if(data == "d") {
             dataTextString = "A defiant Vladimir Putin said Russia won’t be stopped from pursuing its goals after he swept to a record victory in a presidential election whose outcome was pre-determined."
+        }
+        
+        //creator id, sound and place id
+        if(data == "a") {
+            userId = "u2"
+            placeId = "p3"
+            soundId = "s4"
+        }
+        else if(data == "b") {
+            userId = "u1"
+            placeId = "p2"
+            soundId = "s3"
+        }
+        else if(data == "c") {
+            userId = "u4"
+            placeId = "p1"
+            soundId = "s2"
+        }
+        else if(data == "d") {
+            userId = "u3"
+            placeId = "p4"
+            soundId = "s1"
         }
     }
     
@@ -389,6 +477,10 @@ class PostDataset: BaseDataset {
 }
 
 class CommentDataset: BaseDataset {
+    
+    var userId: String = "" //creator
+    var placeId: String = ""
+    var soundId: String = ""
     
     func setId(dataId: String) {
         id = dataId
@@ -450,6 +542,16 @@ class CommentDataset: BaseDataset {
                 cData.setDataCode(data: i)
                 cData.setData(data: data) //test
                 contentDataArray.append(cData)
+            } else if(i == "quote"){
+                let cData = QuoteContentDataset()
+                cData.setDataCode(data: i)
+                cData.setData(data: data) //test
+                contentDataArray.append(cData)
+            } else if(i == "text"){
+                let cData = TextContentDataset()
+                cData.setDataCode(data: i)
+                cData.setTextString(data: data) //test
+                contentDataArray.append(cData)
             } else {
                 let cData = ContentDataset()
                 cData.setDataCode(data: i)
@@ -472,6 +574,28 @@ class CommentDataset: BaseDataset {
         //test
         else if(data == "d") {
             dataTextString = "A defiant Vladimir Putin said Russia won’t be stopped from pursuing its goals after he swept to a record victory in a presidential election whose outcome was pre-determined."
+        }
+        
+        //creator id, sound and place id
+        if(data == "a") {
+            userId = "u2"
+            placeId = "p3"
+            soundId = "s4"
+        }
+        else if(data == "b") {
+            userId = "u1"
+            placeId = "p2"
+            soundId = "s3"
+        }
+        else if(data == "c") {
+            userId = "u4"
+            placeId = "p1"
+            soundId = "s2"
+        }
+        else if(data == "d") {
+            userId = "u3"
+            placeId = "p4"
+            soundId = "s1"
         }
     }
     
@@ -519,6 +643,9 @@ class CommentDataset: BaseDataset {
 class NotifyDataset: BaseDataset {
     
     var notifyTextString: String = "" //temp solution
+    var userId: String = "" //creator
+    var placeId: String = ""
+    var soundId: String = ""
     
     func setupData(data: String) {
         dataCode = data
@@ -563,12 +690,35 @@ class NotifyDataset: BaseDataset {
         else if(data == "d") {
             notifyTextString = "liked your shot."
         }
+        
+        //creator id, sound and place id
+        if(data == "a") {
+            userId = "u2"
+            placeId = "p3"
+            soundId = "s4"
+        }
+        else if(data == "b") {
+            userId = "u1"
+            placeId = "p2"
+            soundId = "s3"
+        }
+        else if(data == "c") {
+            userId = "u4"
+            placeId = "p1"
+            soundId = "s2"
+        }
+        else if(data == "d") {
+            userId = "u3"
+            placeId = "p4"
+            soundId = "s1"
+        }
     }
 }
 
 class PlaceDataset: BaseDataset {
     
     var coverPhotoString: String = ""
+    var isAccountVerified = false
     
     func setupData(data: String) {
         dataCode = data
@@ -631,12 +781,27 @@ class PlaceDataset: BaseDataset {
         else if(data == "d") {
             coverPhotoString = "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media"
         }
+        
+        //account verified
+        if(data == "a") {
+            isAccountVerified = false
+        }
+        else if(data == "b") {
+            isAccountVerified = true
+        }
+        else if(data == "c") {
+            isAccountVerified = false
+        }
+        else if(data == "d") {
+            isAccountVerified = true
+        }
     }
 }
 
 class SoundDataset: BaseDataset {
     
     var coverPhotoString: String = ""
+    var isAccountVerified = false
     
     func setupData(data: String) {
         dataCode = data
@@ -697,6 +862,20 @@ class SoundDataset: BaseDataset {
         }
         else if(data == "d") {
             coverPhotoString = "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media"
+        }
+        
+        //account verified
+        if(data == "a") {
+            isAccountVerified = false
+        }
+        else if(data == "b") {
+            isAccountVerified = true
+        }
+        else if(data == "c") {
+            isAccountVerified = false
+        }
+        else if(data == "d") {
+            isAccountVerified = true
         }
     }
 }
@@ -824,6 +1003,57 @@ class PhotoContentDataset : ContentDataset {
             dataArray.append("https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
             dataArray.append("https://i3.ytimg.com/vi/2mcGhpbWlyg/maxresdefault.jpg")
         }
+    }
+}
+
+class QuoteContentDataset : ContentDataset {
+    func setData(data: String) {
+        if(data == "a") {
+            dataArray.append("photo") //photo
+            dataArray.append("video") //video
+        }
+        else if(data == "b") {
+            dataArray.append("text")
+            dataArray.append("video_l") //photo
+        }
+        else if(data == "c") {
+            dataArray.append("photo_s") //photo
+        }
+        else if(data == "d") {
+            dataArray.append("text")
+        }
+    }
+    //to be substituted with real data #post1 etc
+}
+
+class TextContentDataset : ContentDataset {
+    func setTextString(data: String) {
+        if(data == "a") {
+            dataTextString = "韩国前总统尹锡悦涉嫌带头发动内乱刑事案件将于当地时间14日正式启动审理."
+        }
+        else if(data == "b") {
+            dataTextString = "The growth outlook of economies in the region will be negatively affected by a fall in external demand partly due to the tariffs’ wider impact on global trade and growth."
+        }
+        else if(data == "c") {
+            dataTextString = "接收来自宇宙诗人@刘宇Yu_ 的仪式感约定吧"
+        }
+        else if(data == "d") {
+//            dataTextString = "The 52-year-old Malaysian, who works in a mosque in Malaysia’s Johor state, admitted that many of his friends and family perceived China to be a “greedy country” that would take what it wanted with little regard to the sovereignty of others."
+            dataTextString = "China to be a “greedy country” that would take what it wanted"
+        }
+        
+//        if(data == "a") {
+//            dataTextString = "Nice food, nice environment! Worth a visit. \n\nSo Good.\n.\n..\n...\n....\n...\n..\n.\n.\n."
+//        }
+//        else if(data == "b") {
+//            dataTextString = "往年的这个时候，iPhone 虽然也是位列销量榜榜首，但那都是上一代的旧机型呀...\n只能说这次 11.11 各家给的优惠都太给力了."
+//        }
+//        else if(data == "c") {
+//            dataTextString = "Vấn đề đã rõ, đã chín, được thực tiễn chứng minh là đúng, thực hiện hiệu quả, đa số đồng tình thì tiếp tục thực hiện"
+//        }
+//        else if(data == "d") {
+//            dataTextString = "A defiant Vladimir Putin said Russia won’t be stopped from pursuing its goals after he swept to a record victory in a presidential election whose outcome was pre-determined."
+//        }
     }
 }
 

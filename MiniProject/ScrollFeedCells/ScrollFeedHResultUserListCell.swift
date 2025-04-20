@@ -314,28 +314,28 @@ extension ScrollFeedHResultUserListCell: UICollectionViewDataSource {
 
 extension ScrollFeedHResultUserListCell: HResultListViewDelegate{
 
-    func didHResultClickUser(){
+    func didHResultClickUser(id: String){
         //test > additional delegate
         bDelegate?.didScrollFeedHResultResignKeyboard()
         
-        aDelegate?.sfcDidClickVcvClickUser()
+        aDelegate?.sfcDidClickVcvClickUser(id: id)
     }
-    func didHResultClickPlace(){
+    func didHResultClickPlace(id: String){
         
     }
-    func didHResultClickSound(){
+    func didHResultClickSound(id: String){
 //        aDelegate?.sfcDidClickVcvClickSound()
     }
     func didHResultClickHashtag() {
         
     }
-    func didHResultClickPhoto(){
+    func didHResultClickPhoto(id: String){
         
     }
-    func didHResultClickVideo(){
+    func didHResultClickVideo(id: String){
         
     }
-    func didHResultClickPost(){
+    func didHResultClickPost(id: String){
         
     }
     func didHResultClickSignIn(){

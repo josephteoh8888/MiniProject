@@ -20,7 +20,7 @@ class DataManager {
     public var soundDatasetList = [String : SoundDataset]()
     public var commentDatasetList = [String : CommentDataset]()
     public var notifyDatasetList = [String : NotifyDataset]()
-    public var postDataList = [String : PostData]()
+//    public var postDataList = [String : PostData]()
     public var isDataInitialized = false
     
     func initData() {
@@ -48,7 +48,7 @@ class DataManager {
                 vData.setDataCode(data: "a")
                 vData.setData(data: "b")
                 vData.setDataCount(data: "b")
-                vData.setTextString(data: "a") //b
+                vData.setTextString(data: "b") //b
             }
             else if(r == "post2") {
                 vData.setDataCode(data: "na") //na

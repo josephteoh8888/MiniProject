@@ -108,6 +108,9 @@ class GridPhotoViewCell: UICollectionViewCell {
         super.prepareForReuse()
         print("upv gridphoto prepare for reuse")
         
+        //test > clear id
+        setId(id: "")
+        
         let imageUrl = URL(string: "")
         gifImage.sd_setImage(with: imageUrl)
         
@@ -119,14 +122,20 @@ class GridPhotoViewCell: UICollectionViewCell {
         cMiniBtn.image = nil
     }
     
-//    func configure(data: PostData) {
+    //test > set id for init
+    var id = ""
+    func setId(id: String) {
+        self.id = id
+    }
+    
     func configure(data: BaseData) {
         
         guard let a = data as? PhotoData else {
             return
         }
         
-//        let l = data.dataType
+        setId(id: a.id)
+        
         let l = a.dataCode
         
         if(l == "a") {
@@ -147,8 +156,8 @@ class GridPhotoViewCell: UICollectionViewCell {
     }
 //    func asyncConfigure(data: PostData) {
     func asyncConfigure(data: String) {
-        let id = "u"
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+        let id = "a"
+        DataFetchManager.shared.fetchDummyDataTimeDelay(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -183,6 +192,6 @@ class GridPhotoViewCell: UICollectionViewCell {
         let pFrame = gifImage.frame.origin
         let pointX = pFrame.x
         let pointY = pFrame.y
-        aDelegate?.gridViewClick(vc: self, pointX: pointX, pointY: pointY, view: gifImage, mode:PhotoTypes.P_SHOT)
+        aDelegate?.gridViewClick(id: id, vc: self, pointX: pointX, pointY: pointY, view: gifImage, mode:PhotoTypes.P_SHOT)
     }
 }

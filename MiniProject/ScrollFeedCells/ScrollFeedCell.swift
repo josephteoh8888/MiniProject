@@ -22,12 +22,12 @@ protocol ScrollFeedCellDelegate : AnyObject {
     func sfcDidClickVcvComment() //try
     func sfcDidClickVcvLove() //try
     func sfcDidClickVcvShare() //try
-    func sfcDidClickVcvClickUser() //try
-    func sfcDidClickVcvClickPlace() //try
-    func sfcDidClickVcvClickSound() //try
-    func sfcDidClickVcvClickPost() //try
-    func sfcDidClickVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) //try
-    func sfcDidClickVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) //try
+    func sfcDidClickVcvClickUser(id: String) //try
+    func sfcDidClickVcvClickPlace(id: String) //try
+    func sfcDidClickVcvClickSound(id: String) //try
+    func sfcDidClickVcvClickPost(id: String) //try
+    func sfcDidClickVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) //try
+    func sfcDidClickVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) //try
     
     func sfcAsyncFetchFeed()
     func sfcAsyncPaginateFeed(cell: ScrollFeedCell?)

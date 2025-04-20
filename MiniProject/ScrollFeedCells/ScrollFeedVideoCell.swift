@@ -19,9 +19,9 @@ protocol ScrollFeedVideoCellDelegate : AnyObject {
     func sfvcAsyncPaginateFeed(cell: ScrollFeedVideoCell?)
     func sfvcAutoplayVideo(cell: ScrollFeedVideoCell?, vCCell: VCViewCell?)
     
-    func sfvcDidClickUser()
-    func sfvcDidClickPlace()
-    func sfvcDidClickSound()
+    func sfvcDidClickUser(id: String)
+    func sfvcDidClickPlace(id: String)
+    func sfvcDidClickSound(id: String)
     func sfvcDidClickComment()
     func sfvcDidClickShare()
     
@@ -377,16 +377,16 @@ extension ScrollFeedVideoCell: UICollectionViewDelegate {
 }
 
 extension ScrollFeedVideoCell: VCViewCellDelegate{
-    func didClickUser() {
-        aDelegate?.sfvcDidClickUser()
+    func didClickUser(id: String) {
+        aDelegate?.sfvcDidClickUser(id: id)
     }
     
-    func didClickPlace() {
-        aDelegate?.sfvcDidClickPlace()
+    func didClickPlace(id: String) {
+        aDelegate?.sfvcDidClickPlace(id: id)
     }
     
-    func didClickSound() {
-        aDelegate?.sfvcDidClickSound()
+    func didClickSound(id: String) {
+        aDelegate?.sfvcDidClickSound(id: id)
     }
     
     func didClickComment() {

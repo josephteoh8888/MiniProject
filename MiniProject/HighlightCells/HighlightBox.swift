@@ -169,8 +169,8 @@ class DiscoverUserSizeLHighlightCell: HighlightCell {
         isInitialized = true
     }
     func asyncConfigure(data: String) {
-        let id = "u"
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+        let id = "a"
+        DataFetchManager.shared.fetchDummyDataTimeDelay(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -373,8 +373,8 @@ class DiscoverUserSizeMHighlightCell: HighlightCell {
         isInitialized = true
     }
     func asyncConfigure(data: String) {
-        let id = "u_"
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+        let id = "a_"
+        DataFetchManager.shared.fetchDummyDataTimeDelay(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -627,8 +627,8 @@ class DiscoverSoundSizeLHighlightCell: HighlightCell {
         isInitialized = true
     }
     func asyncConfigure(data: String) {
-        let id = "u"
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+        let id = "a"
+        DataFetchManager.shared.fetchDummyDataTimeDelay(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -829,8 +829,8 @@ class DiscoverSoundSizeMHighlightCell: HighlightCell {
         isInitialized = true
     }
     func asyncConfigure(data: String) {
-        let id = "u_"
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+        let id = "a"
+        DataFetchManager.shared.fetchDummyDataTimeDelay(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -1084,8 +1084,8 @@ class DiscoverPlaceSizeLHighlightCell: HighlightCell {
         isInitialized = true
     }
     func asyncConfigure(data: String) {
-        let id = "u"
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+        let id = "a"
+        DataFetchManager.shared.fetchDummyDataTimeDelay(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -1287,8 +1287,8 @@ class DiscoverPlaceSizeMHighlightCell: HighlightCell {
         isInitialized = true
     }
     func asyncConfigure(data: String) {
-        let id = "u_"
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+        let id = "a" //a_
+        DataFetchManager.shared.fetchDummyDataTimeDelay(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -1525,8 +1525,8 @@ class LatestMultiLoopsSizeMHighlightCell: HighlightCell {
         isInitialized = true
     }
     func asyncConfigure(data: String) {
-        let id = "u_"
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+        let id = "a" //a_
+        DataFetchManager.shared.fetchDummyDataTimeDelay(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -1760,8 +1760,8 @@ class LatestLoopSizeMHighlightCell: HighlightCell {
         isInitialized = true
     }
     func asyncConfigure(data: String) {
-        let id = "u"
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+        let id = "a"
+        DataFetchManager.shared.fetchDummyDataTimeDelay(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -1933,8 +1933,8 @@ class LatestMultiPhotosSizeMHighlightCell: HighlightCell {
         isInitialized = true
     }
     func asyncConfigure(data: String) {
-        let id = "u_"
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+        let id = "a_"
+        DataFetchManager.shared.fetchDummyDataTimeDelay(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -2490,8 +2490,8 @@ class AboutUserHighlightBox: HighlightCell {
         isInitialized = true
     }
     func asyncConfigure(data: String) {
-        let id = "u_"
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+        let id = "a_"
+        DataFetchManager.shared.fetchDummyDataTimeDelay(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -2707,8 +2707,8 @@ class AboutSoundHighlightBox: HighlightCell {
         isInitialized = true
     }
     func asyncConfigure(data: String) {
-        let id = "u"
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+        let id = "a"
+        DataFetchManager.shared.fetchDummyDataTimeDelay(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -2894,8 +2894,8 @@ class UserEmptyPostHighlightBox: HighlightCell {
         isInitialized = true
     }
     func asyncConfigure(data: String) {
-        let id = "u"
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+        let id = "a"
+        DataFetchManager.shared.fetchDummyDataTimeDelay(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -3105,8 +3105,8 @@ class SoundEmptyPostHighlightBox: HighlightCell {
         isInitialized = true
     }
     func asyncConfigure(data: String) {
-        let id = "u_"
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+        let id = "a_"
+        DataFetchManager.shared.fetchDummyDataTimeDelay(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 

@@ -10,7 +10,7 @@ import UIKit
 import SDWebImage
 
 protocol MeLocationPanelDelegate : AnyObject {
-    func didMeLocationClickLocation()
+    func didMeLocationClickLocation(id: String)
     func didMeLocationClickClose()
 }
 //test > new method with uiscrollview of feedcells
@@ -973,23 +973,23 @@ extension MeLocationListPanelView: ScrollFeedCellDelegate {
         print("fcDidClickVcvShare ")
     }
 
-    func sfcDidClickVcvClickUser() {
+    func sfcDidClickVcvClickUser(id: String) {
         //test
 //        delegate?.didNotifyClickUser()
     }
-    func sfcDidClickVcvClickPlace() {
-        delegate?.didMeLocationClickLocation()
+    func sfcDidClickVcvClickPlace(id: String) {
+        delegate?.didMeLocationClickLocation(id: id)
     }
-    func sfcDidClickVcvClickSound() {
+    func sfcDidClickVcvClickSound(id: String) {
 //        delegate?.didNotifyClickSound()
     }
-    func sfcDidClickVcvClickPost() {
+    func sfcDidClickVcvClickPost(id: String) {
 //        openPostDetail()
     }
-    func sfcDidClickVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func sfcDidClickVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
 
     }
-    func sfcDidClickVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func sfcDidClickVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
 
     }
 
@@ -1036,8 +1036,10 @@ extension MeLocationListPanelView: TabStackDelegate {
 
 //test
 extension ViewController: MeLocationPanelDelegate{
-    func didMeLocationClickLocation(){
-        openPlacePanel()
+    func didMeLocationClickLocation(id: String){
+//        openPlacePanel()
+        //test > real id for fetching data
+        openPlacePanel(id: id)
     }
     func didMeLocationClickClose() {
         backPage(isCurrentPageScrollable: false)

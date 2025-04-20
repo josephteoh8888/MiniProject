@@ -508,6 +508,9 @@ class HPostListBViewCell: UICollectionViewCell {
         super.prepareForReuse()
         print("prepare for reuse")
         
+        //test > clear id
+        setId(id: "")
+        
         mediaArray.removeAll()
 
         //test > new method to store hidden asset
@@ -548,8 +551,8 @@ class HPostListBViewCell: UICollectionViewCell {
     
     //*test > async fetch images/names/videos
     func asyncConfigure(data: String) {
-        let id = "u" //u_
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+        let id = data //u_
+        DataFetchManager.shared.fetchUserData2(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -561,27 +564,23 @@ class HPostListBViewCell: UICollectionViewCell {
                         return
                     }
                     
-                    if(!l.isEmpty) {
-                        let l_0 = l[0]
+//                    if(!l.isEmpty) {
+//                        let l_0 = l[0]
                         let uData = UserData()
-                        uData.setData(rData: l_0)
+                        uData.setData(rData: l)
                         let l_ = uData.dataCode
                         
-                        self.aGridNameText.text = uData.dataTextString
-                        
-                        let eImageUrl = URL(string: uData.coverPhotoString)
-                        self.aUserPhoto.sd_setImage(with: eImageUrl)
-                        
-                        if(uData.isAccountVerified) {
-                            self.vBtn.image = UIImage(named:"icon_round_verified_b")?.withRenderingMode(.alwaysTemplate)
+                        if(l_ == "a") {
+                            self.aGridNameText.text = uData.dataTextString
+                            
+                            let eImageUrl = URL(string: uData.coverPhotoString)
+                            self.aUserPhoto.sd_setImage(with: eImageUrl)
+                            
+                            if(uData.isAccountVerified) {
+                                self.vBtn.image = UIImage(named:"icon_round_verified_b")?.withRenderingMode(.alwaysTemplate)
+                            }
                         }
-                    }
-
-//                    self.aGridNameText.text = "Michael Kins"
-//                    self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
-//                    
-//                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-//                    self.aUserPhoto.sd_setImage(with: imageUrl)
+//                    }
                 }
 
                 case .failure(let error):
@@ -604,7 +603,7 @@ class HPostListBViewCell: UICollectionViewCell {
     //*
     //*test > async fetch place profile
     func asyncConfigurePlace(data: String) {
-        let id = "p1"
+        let id = data //p1
         DataFetchManager.shared.fetchPlaceData2(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -639,8 +638,18 @@ class HPostListBViewCell: UICollectionViewCell {
         }
     }
     
-    func configure(data: PostData) {
-//        asyncConfigure(data: "")
+    //test > set id for init
+    var id = ""
+    func setId(id: String) {
+        self.id = id
+    }
+    
+    func configure(data: BaseData) {
+        guard let a = data as? PostData else {
+            return
+        }
+        
+        setId(id: a.id)
         
         aUserNameText.text = "-"
         aaText.text = "-"
@@ -659,15 +668,17 @@ class HPostListBViewCell: UICollectionViewCell {
 //        aGridNameText.attributedText = attributedText
         
         //test > dynamic create ui for various data types in sequence
-        let d = data.dataCode
+        let d = a.dataCode
         if(d == "a") {
             aUserNameText.text = "3hr . 1.2m views"
 //            aaText.text = "Petronas Twin Tower"
             
-            asyncConfigure(data: "")
-            asyncConfigurePlace(data: "")
+            let u = a.userId
+            let p = a.placeId
+            asyncConfigure(data: u)
+            asyncConfigurePlace(data: p)
             
-            let dataCL = data.contentDataArray
+            let dataCL = a.contentDataArray
             for cl in dataCL {
                 let l = cl.dataCode
                 let da = cl.dataArray
@@ -689,7 +700,8 @@ class HPostListBViewCell: UICollectionViewCell {
                     aaText.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
                     aaText.trailingAnchor.constraint(equalTo: aTest.trailingAnchor, constant: -20).isActive = true //-30
     //                aaText.bottomAnchor.constraint(equalTo: aTest.bottomAnchor, constant: 0).isActive = true
-                    aaText.text = data.dataTextString
+//                    aaText.text = a.dataTextString
+                    aaText.text = cl.dataTextString
                     aTestArray.append(aaText)
                 }
                 else if(l == "photo") {
@@ -704,18 +716,24 @@ class HPostListBViewCell: UICollectionViewCell {
                         //1 > landscape photo 4:3 w:h
                         let aRatio = CGSize(width: 4, height: 3) //aspect ratio
                         let cHeight = availableWidth * aRatio.height / aRatio.width
-                        cSize = CGSize(width: availableWidth, height: cHeight)
+//                        cSize = CGSize(width: availableWidth, height: cHeight)
+                        //test > round to int to prevent incomplete photo scroll
+                        cSize = CGSize(width: round(availableWidth), height: round(cHeight))
                     }
                     else if (assetSize.width < assetSize.height){
                         //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
                         let aRatio = CGSize(width: 2, height: 3) //aspect ratio
                         let cWidth = availableWidth * 2 / 3
                         let cHeight = cWidth * aRatio.height / aRatio.width
-                        cSize = CGSize(width: cWidth, height: cHeight)
+//                        cSize = CGSize(width: cWidth, height: cHeight)
+                        //test > round to int to prevent incomplete photo scroll
+                        cSize = CGSize(width: round(cWidth), height: round(cHeight))
                     } else {
                         //square
                         let cWidth = availableWidth
-                        cSize = CGSize(width: cWidth, height: cWidth)
+//                        cSize = CGSize(width: cWidth, height: cWidth)
+                        //test > round to int to prevent incomplete photo scroll
+                        cSize = CGSize(width: round(cWidth), height: round(cWidth))
                     }
                     
                     //test 2 > reusable custom view
@@ -756,18 +774,24 @@ class HPostListBViewCell: UICollectionViewCell {
                         //1 > landscape photo 4:3 w:h
                         let aRatio = CGSize(width: 4, height: 3) //aspect ratio
                         let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
-                        cSize = CGSize(width: availableWidth, height: cHeight)
+//                        cSize = CGSize(width: availableWidth, height: cHeight)
+                        //test > round to int to prevent incomplete photo scroll
+                        cSize = CGSize(width: round(availableWidth), height: round(cHeight))
                     }
                     else if (assetSize.width < assetSize.height){
                         //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
                         let aRatio = CGSize(width: 2, height: 3) //aspect ratio
                         let cWidth = availableWidth * 2 / 3
                         let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
-                        cSize = CGSize(width: cWidth, height: cHeight)
+//                        cSize = CGSize(width: cWidth, height: cHeight)
+                        //test > round to int to prevent incomplete photo scroll
+                        cSize = CGSize(width: round(cWidth), height: round(cHeight))
                     } else {
                         //square
                         let cWidth = availableWidth
-                        cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+//                        cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                        //test > round to int to prevent incomplete photo scroll
+                        cSize = CGSize(width: round(cWidth), height: round(cWidth + descHeight))
                     }
                     
                     //test 2 > reusable custom view
@@ -811,18 +835,24 @@ class HPostListBViewCell: UICollectionViewCell {
                         //1 > landscape photo 4:3 w:h
                         let aRatio = CGSize(width: 4, height: 3) //aspect ratio
                         let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
-                        cSize = CGSize(width: availableWidth, height: cHeight)
+//                        cSize = CGSize(width: availableWidth, height: cHeight)
+                        //test > round to int to prevent incomplete photo scroll
+                        cSize = CGSize(width: round(availableWidth), height: round(cHeight))
                     }
                     else if (assetSize.width < assetSize.height){
                         //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
                         let aRatio = CGSize(width: 2, height: 3) //aspect ratio
                         let cWidth = availableWidth * 2 / 3
                         let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
-                        cSize = CGSize(width: cWidth, height: cHeight)
+//                        cSize = CGSize(width: cWidth, height: cHeight)
+                        //test > round to int to prevent incomplete photo scroll
+                        cSize = CGSize(width: round(cWidth), height: round(cHeight))
                     } else {
                         //square
                         let cWidth = availableWidth
-                        cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+//                        cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                        //test > round to int to prevent incomplete photo scroll
+                        cSize = CGSize(width: round(cWidth), height: round(cWidth + descHeight))
                     }
                     
                     //test 2 > reusable custom view
@@ -864,18 +894,24 @@ class HPostListBViewCell: UICollectionViewCell {
                         //1 > landscape photo 4:3 w:h
                         let aRatio = CGSize(width: 4, height: 3) //aspect ratio
                         let cHeight = availableWidth * aRatio.height / aRatio.width
-                        cSize = CGSize(width: availableWidth, height: cHeight)
+//                        cSize = CGSize(width: availableWidth, height: cHeight)
+                        //test > round to int to prevent incomplete photo scroll
+                        cSize = CGSize(width: round(availableWidth), height: round(cHeight))
                     }
                     else if (assetSize.width < assetSize.height){
                         //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
                         let aRatio = CGSize(width: 2, height: 3) //aspect ratio
                         let cWidth = availableWidth * 2 / 3
                         let cHeight = cWidth * aRatio.height / aRatio.width
-                        cSize = CGSize(width: cWidth, height: cHeight)
+//                        cSize = CGSize(width: cWidth, height: cHeight)
+                        //test > round to int to prevent incomplete photo scroll
+                        cSize = CGSize(width: round(cWidth), height: round(cHeight))
                     } else {
                         //square
                         let cWidth = availableWidth
-                        cSize = CGSize(width: cWidth, height: cWidth)
+//                        cSize = CGSize(width: cWidth, height: cWidth)
+                        //test > round to int to prevent incomplete photo scroll
+                        cSize = CGSize(width: round(cWidth), height: round(cWidth))
                     }
                     
                     //test 2 > reusable custom view
@@ -1014,11 +1050,11 @@ class HPostListBViewCell: UICollectionViewCell {
     }
     @objc func onUserClicked(gesture: UITapGestureRecognizer) {
         print("click open user panel:")
-        aDelegate?.hListDidClickVcvClickUser()
+        aDelegate?.hListDidClickVcvClickUser(id: "")
     }
     @objc func onPlaceClicked(gesture: UITapGestureRecognizer) {
         print("click open place panel:")
-        aDelegate?.hListDidClickVcvClickPlace()
+        aDelegate?.hListDidClickVcvClickPlace(id: "")
     }
     
     //test > single and double clicked
@@ -1127,13 +1163,13 @@ extension HPostListBViewCell: ContentCellDelegate {
         }
     }
     
-    func contentCellDidClickVcvClickPhoto(cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+    func contentCellDidClickVcvClickPhoto(id: String, cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         let aTestFrame = aTest.frame.origin
         let ccFrame = cc.frame.origin
         
         let pointX1 = pointX + aTestFrame.x + ccFrame.x
         let pointY1 = pointY + aTestFrame.y + ccFrame.y
-        aDelegate?.hListDidClickVcvClickPhoto(vc: self, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
+        aDelegate?.hListDidClickVcvClickPhoto(id: id, vc: self, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
         
         //test 2 > new method to store hide asset
         if let j = aTestArray.firstIndex(of: cc) {
@@ -1141,13 +1177,13 @@ extension HPostListBViewCell: ContentCellDelegate {
             hiddenAssetIdx = j
         }
     }
-    func contentCellDidClickVcvClickVideo(cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+    func contentCellDidClickVcvClickVideo(id: String, cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         let aTestFrame = aTest.frame.origin
         let ccFrame = cc.frame.origin
         
         let pointX1 = pointX + aTestFrame.x + ccFrame.x
         let pointY1 = pointY + aTestFrame.y + ccFrame.y
-        aDelegate?.hListDidClickVcvClickVideo(vc: self, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
+        aDelegate?.hListDidClickVcvClickVideo(id: id, vc: self, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
         
         //test 2 > new method to store hide asset
         if let j = aTestArray.firstIndex(of: cc) {
@@ -1158,16 +1194,16 @@ extension HPostListBViewCell: ContentCellDelegate {
     func contentCellDidDoubleClickPhoto(pointX: CGFloat, pointY: CGFloat){
         
     }
-    func contentCellDidClickSound(){
+    func contentCellDidClickSound(id: String){
         
     }
-    func contentCellDidClickUser(){
+    func contentCellDidClickUser(id: String){
         
     }
-    func contentCellDidClickPlace(){
+    func contentCellDidClickPlace(id: String){
         
     }
-    func contentCellDidClickPost(){
+    func contentCellDidClickPost(id: String){
         
     }
     func contentCellDidClickVcvClickPlay(cc: UIView, isPlay: Bool){

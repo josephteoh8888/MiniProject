@@ -12,7 +12,7 @@ import SDWebImage
 protocol MePanelDelegate : AnyObject {
 
     //test > connect to other panel
-    func didMeClickUser()
+    func didMeClickUser(id: String)
     func didMeClickEditProfile()
     func didMeClickFollowList()
     func didMeClickHistoryList()
@@ -799,15 +799,17 @@ extension MePanelView: MeCellDelegate{
     func didMeCellClickVideos(){
         delegate?.didMeClickMultiVideoList()
     }
-    func didMeCellClickUser() {
-        delegate?.didMeClickUser()
+    func didMeCellClickUser(id: String) {
+        delegate?.didMeClickUser(id: id)
     }
 }
 
 extension ViewController: MePanelDelegate{
 
-    func didMeClickUser() {
-        openUserPanel()
+    func didMeClickUser(id: String) {
+//        openUserPanel()
+        //test > real id for fetching data
+        openUserPanel(id: id)
     }
     func didMeClickEditProfile(){
         openMeListPanel(l: "ep")

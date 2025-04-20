@@ -21,12 +21,12 @@ protocol UserScrollablePanelDelegate : AnyObject {
     func didFinishMapChangeUserScrollable()
 
     //test > connect to other panel
-    func didUClickUserUserScrollable()
-    func didUClickPlaceUserScrollable()
-    func didUClickSoundUserScrollable()
-    func didUClickUserScrollableVcvClickPost()
-    func didUClickUserScrollableVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
-    func didUClickUserScrollableVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
+    func didUClickUserUserScrollable(id: String)
+    func didUClickPlaceUserScrollable(id: String)
+    func didUClickSoundUserScrollable(id: String)
+    func didUClickUserScrollableVcvClickPost(id: String)
+    func didUClickUserScrollableVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
+    func didUClickUserScrollableVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     func didUClickUserSignIn()
     func didUClickUserShare()
     
@@ -1471,11 +1471,8 @@ class UserScrollablePanelView: ScrollablePanelView{
     func configureUI(data: UserData) {
 //        if(data == "a") {
         if(data.dataCode == "a") {
-//            self.aNameText.text = "Michael Kins"
             self.aNameText.text = data.dataTextString
-//            self.aNameTextB.text = "Michael Kins"
             self.aNameTextB.text = data.dataTextString
-//            self.aNameTextC.text = "Michael Kins"
             self.aNameTextC.text = data.dataTextString
             
             self.aUsernameAText.text = "@mic1809"
@@ -1609,10 +1606,9 @@ class UserScrollablePanelView: ScrollablePanelView{
         
         self.isFetchFeedAllowed = false
         layoutTabUI()
-//        asyncFetchUserProfile(id: getObjectId())
         
         //test for error handling
-        asyncFetchUserProfile(id: "u_")
+        asyncFetchUserProfile(id: getObjectId()) //"u_" for error handling
     }
     
     //test > async fetch data user profile => temp testing
@@ -1623,7 +1619,8 @@ class UserScrollablePanelView: ScrollablePanelView{
         self.bSpinner.startAnimating()
         
         //test > new fetch method for testing error handling
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+        let id_ = id //u4
+        DataFetchManager.shared.fetchUserData2(id: id_) { [weak self]result in
             
             switch result {
                 case .success(let l):
@@ -1639,12 +1636,12 @@ class UserScrollablePanelView: ScrollablePanelView{
                     self.aSpinner.stopAnimating()
                     self.bSpinner.stopAnimating()
                     
-                    if(!l.isEmpty) {
+//                    if(!l.isEmpty) {
 //                        let l_ = l[0]
-                        let l_0 = l[0]
+//                        let l_0 = l[0]
                         let uData = UserData()
-                        uData.setData(rData: l_0)
-                        let l_ = l_0.dataCode
+                        uData.setData(rData: l)
+                        let l_ = uData.dataCode
                         
                         if(l_ == "a") {
                             //user account exists
@@ -1679,7 +1676,7 @@ class UserScrollablePanelView: ScrollablePanelView{
 //                            self.configureUI(data: "na")//na - user data not available
                             self.deconfigureUI()
                         }
-                    }
+//                    }
                     
                     //test > half mode highlight box
                     self.configureHLightBox()
@@ -2375,7 +2372,7 @@ extension UserScrollablePanelView: HighlightCellDelegate {
     }
     
     func didHighlightClickUser(id: String) {
-        delegate?.didUClickUserUserScrollable()
+        delegate?.didUClickUserUserScrollable(id: id)
     }
     func didHighlightClickPlace(id: String) {
         
@@ -2769,22 +2766,22 @@ extension UserScrollablePanelView: ScrollFeedCellDelegate {
         openShareSheet()
     }
 
-    func sfcDidClickVcvClickUser() {
+    func sfcDidClickVcvClickUser(id: String) {
         pauseFeedPlayingMedia()
-        delegate?.didUClickUserUserScrollable()
+        delegate?.didUClickUserUserScrollable(id: id)
     }
-    func sfcDidClickVcvClickPlace() {
+    func sfcDidClickVcvClickPlace(id: String) {
         pauseFeedPlayingMedia()
-        delegate?.didUClickPlaceUserScrollable()
+        delegate?.didUClickPlaceUserScrollable(id: id)
     }
-    func sfcDidClickVcvClickSound() {
+    func sfcDidClickVcvClickSound(id: String) {
 
     }
-    func sfcDidClickVcvClickPost() {
+    func sfcDidClickVcvClickPost(id: String) {
         pauseFeedPlayingMedia()
-        delegate?.didUClickUserScrollableVcvClickPost()
+        delegate?.didUClickUserScrollableVcvClickPost(id: id)
     }
-    func sfcDidClickVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func sfcDidClickVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         print("userscroll click photo \(mode)")
         
         pauseFeedPlayingMedia()
@@ -2794,10 +2791,10 @@ extension UserScrollablePanelView: ScrollFeedCellDelegate {
             let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
             
             let adjustY = pointY + originInRootView.y
-            delegate?.didUClickUserScrollableVcvClickPhoto(pointX: pointX, pointY: adjustY, view: view, mode: mode)
+            delegate?.didUClickUserScrollableVcvClickPhoto(id: id, pointX: pointX, pointY: adjustY, view: view, mode: mode)
         }
     }
-    func sfcDidClickVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func sfcDidClickVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         print("userscroll click video \(mode)")
         
         pauseFeedPlayingMedia()
@@ -2807,7 +2804,7 @@ extension UserScrollablePanelView: ScrollFeedCellDelegate {
             let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
             
             let adjustY = pointY + originInRootView.y
-            delegate?.didUClickUserScrollableVcvClickVideo(pointX: pointX, pointY: adjustY, view: view, mode: mode)
+            delegate?.didUClickUserScrollableVcvClickVideo(id: id, pointX: pointX, pointY: adjustY, view: view, mode: mode)
         }
     }
 
@@ -2867,19 +2864,27 @@ extension ViewController: UserScrollablePanelDelegate{
         mapReappearMarkers()
     }
 
-    func didUClickUserUserScrollable() {
-        openUserPanel()
+    func didUClickUserUserScrollable(id: String) {
+//        openUserPanel()
+        //test > real id for fetching data
+        openUserPanel(id: id)
     }
-    func didUClickPlaceUserScrollable(){
-        openPlacePanel()
+    func didUClickPlaceUserScrollable(id: String){
+//        openPlacePanel()
+        //test > real id for fetching data
+        openPlacePanel(id: id)
     }
-    func didUClickSoundUserScrollable(){
-        openSoundPanel()
+    func didUClickSoundUserScrollable(id: String){
+//        openSoundPanel()
+        //test > real id for fetching data
+        openSoundPanel(id: id)
     }
-    func didUClickUserScrollableVcvClickPost(){
-        openPostDetailPanel()
+    func didUClickUserScrollableVcvClickPost(id: String){
+//        openPostDetailPanel()
+        //test > real id for fetching data
+        openPostDetailPanel(id: id)
     }
-    func didUClickUserScrollableVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
+    func didUClickUserScrollableVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
         let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
         let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
         
@@ -2892,10 +2897,12 @@ extension ViewController: UserScrollablePanelDelegate{
         } else if(mode == PhotoTypes.P_0){
             openPhotoZoomPanel(offX: offsetX, offY: offsetY)
         } else if(mode == PhotoTypes.P_SHOT_DETAIL) {
-            openPhotoDetailPanel()
+//            openPhotoDetailPanel()
+            //test > real id for fetching data
+            openPhotoDetailPanel(id: id)
         }
     }
-    func didUClickUserScrollableVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
+    func didUClickUserScrollableVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
         let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
         let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
 
@@ -3035,14 +3042,14 @@ extension UserScrollablePanelView: ShareSheetScrollableDelegate{
     }
 }
 extension UserScrollablePanelView: CommentScrollableDelegate{
-    func didCClickUser(){
-        delegate?.didUClickUserUserScrollable()
+    func didCClickUser(id: String){
+        delegate?.didUClickUserUserScrollable(id: id)
     }
-    func didCClickPlace(){
-        delegate?.didUClickPlaceUserScrollable()
+    func didCClickPlace(id: String){
+        delegate?.didUClickPlaceUserScrollable(id: id)
     }
-    func didCClickSound(){
-        delegate?.didUClickSoundUserScrollable()
+    func didCClickSound(id: String){
+        delegate?.didUClickSoundUserScrollable(id: id)
     }
     func didCClickClosePanel(){
 //        bottomBox.isHidden = true
@@ -3071,14 +3078,14 @@ extension UserScrollablePanelView: CommentScrollableDelegate{
     func didCClickShare(){
         openShareSheet()
     }
-    func didCClickPost(){
-        delegate?.didUClickUserScrollableVcvClickPost()
+    func didCClickPost(id: String){
+        delegate?.didUClickUserScrollableVcvClickPost(id: id)
     }
-    func didCClickClickPhoto(pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
-        delegate?.didUClickUserScrollableVcvClickPhoto(pointX: pointX, pointY: pointY, view: view, mode: mode)
+    func didCClickClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        delegate?.didUClickUserScrollableVcvClickPhoto(id: id, pointX: pointX, pointY: pointY, view: view, mode: mode)
     }
-    func didCClickClickVideo(pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
-        delegate?.didUClickUserScrollableVcvClickVideo(pointX: pointX, pointY: pointY, view: view, mode: mode)
+    func didCClickClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        delegate?.didUClickUserScrollableVcvClickVideo(id: id, pointX: pointX, pointY: pointY, view: view, mode: mode)
     }
 }
 extension UserScrollablePanelView: TabStackDelegate {

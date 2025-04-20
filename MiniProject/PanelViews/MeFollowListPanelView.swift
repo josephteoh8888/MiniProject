@@ -10,7 +10,7 @@ import UIKit
 import SDWebImage
 
 protocol MeFollowPanelDelegate : AnyObject {
-    func didMeFollowClickUser()
+    func didMeFollowClickUser(id: String)
     func didMeFollowClickClose()
     func didMeFollowClickSignIn()
 }
@@ -968,24 +968,23 @@ extension MeFollowListPanelView: ScrollFeedCellDelegate {
         print("fcDidClickVcvShare ")
     }
 
-    func sfcDidClickVcvClickUser() {
+    func sfcDidClickVcvClickUser(id: String) {
         //test
         print("sfcDidClickVcvClickUser ")
-        delegate?.didMeFollowClickUser()
+        delegate?.didMeFollowClickUser(id: id)
     }
-    func sfcDidClickVcvClickPlace() {
+    func sfcDidClickVcvClickPlace(id: String) {
 //        delegate?.didNotifyClickPlace()
     }
-    func sfcDidClickVcvClickSound() {
+    func sfcDidClickVcvClickSound(id: String) {
 //        delegate?.didNotifyClickSound()
     }
-    func sfcDidClickVcvClickPost() {
-//        openPostDetail()
+    func sfcDidClickVcvClickPost(id: String) {
     }
-    func sfcDidClickVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func sfcDidClickVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
 
     }
-    func sfcDidClickVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func sfcDidClickVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
 
     }
 
@@ -1043,9 +1042,11 @@ extension MeFollowListPanelView: TabStackDelegate {
 //test
 extension ViewController: MeFollowPanelDelegate{
 
-    func didMeFollowClickUser() {
+    func didMeFollowClickUser(id: String) {
         print("mefollow openuserpanel ")
-        openUserPanel()
+//        openUserPanel()
+        //test > real id for fetching data
+        openUserPanel(id: id)
     }
     func didMeFollowClickClose() {
         backPage(isCurrentPageScrollable: false)

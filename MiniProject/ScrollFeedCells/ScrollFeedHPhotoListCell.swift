@@ -545,19 +545,19 @@ extension ScrollFeedHPhotoListCell: HListCellDelegate {
             }
         }
     }
-    func hListDidClickVcvClickUser() {
-        aDelegate?.sfcDidClickVcvClickUser()
+    func hListDidClickVcvClickUser(id: String) {
+        aDelegate?.sfcDidClickVcvClickUser(id: id)
     }
-    func hListDidClickVcvClickPlace() {
-        aDelegate?.sfcDidClickVcvClickPlace()
+    func hListDidClickVcvClickPlace(id: String) {
+        aDelegate?.sfcDidClickVcvClickPlace(id: id)
     }
-    func hListDidClickVcvClickSound() {
-        aDelegate?.sfcDidClickVcvClickSound()
+    func hListDidClickVcvClickSound(id: String) {
+        aDelegate?.sfcDidClickVcvClickSound(id: id)
     }
-    func hListDidClickVcvClickPost() {
+    func hListDidClickVcvClickPost(id: String) {
 //        aDelegate?.sfcDidClickVcvClickPost()
     }
-    func hListDidClickVcvClickPhoto(vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+    func hListDidClickVcvClickPhoto(id: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
 //        aDelegate?.sfcDidClickVcvClickPhoto()
         
         if let a = vCV {
@@ -570,7 +570,7 @@ extension ScrollFeedHPhotoListCell: HListCellDelegate {
                     let pointX1 = originInRootView.x + pointX
                     let pointY1 = originInRootView.y + pointY
                     print("sfpost idx frame origin: \(cell.frame.origin), \(originInRootView)")
-                    aDelegate?.sfcDidClickVcvClickPhoto(pointX: pointX1, pointY: pointY1, view: view, mode: mode)
+                    aDelegate?.sfcDidClickVcvClickPhoto(id: id, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
                     
                     if let c = visibleIndexPath {
                         hideCellIndex = c.row
@@ -581,7 +581,7 @@ extension ScrollFeedHPhotoListCell: HListCellDelegate {
             }
         }
     }
-    func hListDidClickVcvClickVideo(vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+    func hListDidClickVcvClickVideo(id: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         
     }
     func hListDidClickVcvSortComment(){

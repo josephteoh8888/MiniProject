@@ -10,7 +10,7 @@ import UIKit
 import SDWebImage
 
 protocol MePostPanelDelegate : AnyObject {
-    func didMePostClickPost()
+    func didMePostClickPost(id: String)
     func didMePostClickClose()
 }
 //test > new method with uiscrollview of feedcells
@@ -952,23 +952,23 @@ extension MePostListPanelView: ScrollFeedCellDelegate {
         print("fcDidClickVcvShare ")
     }
 
-    func sfcDidClickVcvClickUser() {
+    func sfcDidClickVcvClickUser(id: String) {
         //test
 //        delegate?.didNotifyClickUser()
     }
-    func sfcDidClickVcvClickPlace() {
+    func sfcDidClickVcvClickPlace(id: String) {
 //        delegate?.didNotifyClickPlace()
     }
-    func sfcDidClickVcvClickSound() {
+    func sfcDidClickVcvClickSound(id: String) {
 //        delegate?.didNotifyClickSound()
     }
-    func sfcDidClickVcvClickPost() {
-        delegate?.didMePostClickPost()
+    func sfcDidClickVcvClickPost(id: String) {
+        delegate?.didMePostClickPost(id: id)
     }
-    func sfcDidClickVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func sfcDidClickVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
 
     }
-    func sfcDidClickVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func sfcDidClickVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
 
     }
 
@@ -1015,8 +1015,10 @@ extension MePostListPanelView: TabStackDelegate {
 
 //test
 extension ViewController: MePostPanelDelegate{
-    func didMePostClickPost(){
-        openPostDetailPanel()
+    func didMePostClickPost(id: String){
+//        openPostDetailPanel()
+        //test > real id for fetching data
+        openPostDetailPanel(id: id)
     }
     func didMePostClickClose() {
         backPage(isCurrentPageScrollable: false)

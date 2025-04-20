@@ -199,6 +199,9 @@ class HResultPostListViewCell: UICollectionViewCell {
         super.prepareForReuse()
         print("HResultUserListViewCell prepare for reuse")
         
+        //test > clear id
+        setId(id: "")
+        
         let imageUrl = URL(string: "")
         aUserPhoto.sd_setImage(with: imageUrl)
         let imageUrl1 = URL(string: "")
@@ -214,21 +217,36 @@ class HResultPostListViewCell: UICollectionViewCell {
         aCountText.text = ""
         bMiniBtn.image = nil
     }
-//    func configure(data: PostData) {
+    
+    //test > set id for init
+    var id = ""
+    func setId(id: String) {
+        self.id = id
+    }
+    
     func configure(data: BaseData) {
         
         guard let a = data as? PostData else {
             return
         }
         
-//        let l = data.dataType
+        setId(id: data.id)
+        
         let l = a.dataCode
 
         if(l == "a") {
-            asyncConfigure(data: "")
+            let u = a.userId
+            asyncConfigure(data: u)
             
-//            self.aNameText.text = "Michael Kins"
-            self.contentText.text = data.dataTextString
+            let dataCL = a.contentDataArray
+            for cl in dataCL {
+                let l = cl.dataCode
+                if(l == "text") {
+                    self.contentText.text = cl.dataTextString
+                    break
+                }
+            }
+//            self.contentText.text = data.dataTextString
             
             aCountText.text = "43" //43
             bMiniBtn.image = UIImage(named:"icon_comment")?.withRenderingMode(.alwaysTemplate) //icon_round_play
@@ -253,8 +271,8 @@ class HResultPostListViewCell: UICollectionViewCell {
     }
     //*test > async fetch images/names/videos
     func asyncConfigure(data: String) {
-        let id = "u"
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+        let id = data //"u4"
+        DataFetchManager.shared.fetchUserData2(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -266,27 +284,19 @@ class HResultPostListViewCell: UICollectionViewCell {
                         return
                     }
 
-                    if(!l.isEmpty) {
-                        let l_0 = l[0]
+//                    if(!l.isEmpty) {
+//                        let l_0 = l[0]
                         let uData = UserData()
-                        uData.setData(rData: l_0)
+                        uData.setData(rData: l)
                         let l_ = uData.dataCode
                         
-                        self.aNameText.text = uData.dataTextString
-                        
-                        let imageUrl2 = URL(string: uData.coverPhotoString)
-                        self.aUserPhoto.sd_setImage(with: imageUrl2)
-                    }
-                    
-//                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-//                    self.aUserPhoto.sd_setImage(with: imageUrl)
-//                    let imageUrl1 = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
-//                    self.contentPhoto.sd_setImage(with: imageUrl1)
-                    
-//                    self.aNameText.text = "Michael Kins"
-//                    self.aUserNameText.text = "2hr"
-                    
-//                    self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
+                        if(l_ == "a") {
+                            self.aNameText.text = uData.dataTextString
+                            
+                            let imageUrl2 = URL(string: uData.coverPhotoString)
+                            self.aUserPhoto.sd_setImage(with: imageUrl2)
+                        }
+//                    }
                 }
 
                 case .failure(let error):
@@ -312,9 +322,10 @@ class HResultPostListViewCell: UICollectionViewCell {
     }
     //*
     @objc func onPostClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.didHResultClickPost()
+        aDelegate?.didHResultClickPost(id: id)
+        print("hresultpost clicked \(id)")
     }
     @objc func onUserClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.didHResultClickUser()
+        aDelegate?.didHResultClickUser(id: "")
     }
 }

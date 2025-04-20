@@ -255,7 +255,9 @@ extension ScrollFeedHPostListCell: UICollectionViewDelegateFlowLayout {
 
                 if(l == "text") {
                     let tTopMargin = 20.0
-                    let tContentHeight = estimateHeight(text: text, textWidth: collectionView.frame.width - 20.0 - 30.0, fontSize: 14)
+//                    let tContentHeight = estimateHeight(text: text, textWidth: collectionView.frame.width - 20.0 - 30.0, fontSize: 14)
+                    let t = cl.dataTextString
+                    let tContentHeight = estimateHeight(text: t, textWidth: collectionView.frame.width - 20.0 - 20.0, fontSize: 14) //-20-30
                     let tHeight = tTopMargin + tContentHeight
                     contentHeight += tHeight
                 }
@@ -272,19 +274,24 @@ extension ScrollFeedHPostListCell: UICollectionViewDelegateFlowLayout {
                         //1 > landscape photo 4:3 w:h
                         let aRatio = CGSize(width: 4, height: 3) //aspect ratio
                         let cHeight = availableWidth * aRatio.height / aRatio.width
-                        cSize = CGSize(width: availableWidth, height: cHeight)
+//                        cSize = CGSize(width: availableWidth, height: cHeight) //ori
+                        //test > round to int to prevent incomplete photo scroll
+                        cSize = CGSize(width: round(availableWidth), height: round(cHeight))
                     }
                     else if (assetSize.width < assetSize.height){
                         //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
                         let aRatio = CGSize(width: 2, height: 3) //aspect ratio
                         let cWidth = availableWidth * 2 / 3
-    //                    let cWidth = availableWidth //test full width for portrait
                         let cHeight = cWidth * aRatio.height / aRatio.width
-                        cSize = CGSize(width: cWidth, height: cHeight)
+//                        cSize = CGSize(width: cWidth, height: cHeight) //ori
+                        //test > round to int to prevent incomplete photo scroll
+                        cSize = CGSize(width: round(cWidth), height: round(cHeight))
                     } else {
                         //square
                         let cWidth = availableWidth
-                        cSize = CGSize(width: cWidth, height: cWidth)
+//                        cSize = CGSize(width: cWidth, height: cWidth) //ori
+                        //test > round to int to prevent incomplete photo scroll
+                        cSize = CGSize(width: round(cWidth), height: round(cWidth))
                     }
 
                     let pTopMargin = 20.0
@@ -306,18 +313,24 @@ extension ScrollFeedHPostListCell: UICollectionViewDelegateFlowLayout {
                         //1 > landscape photo 4:3 w:h
                         let aRatio = CGSize(width: 4, height: 3) //aspect ratio
                         let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
-                        cSize = CGSize(width: availableWidth, height: cHeight)
+//                        cSize = CGSize(width: availableWidth, height: cHeight)
+                        //test > round to int to prevent incomplete photo scroll
+                        cSize = CGSize(width: round(availableWidth), height: round(cHeight))
                     }
                     else if (assetSize.width < assetSize.height){
                         //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
                         let aRatio = CGSize(width: 2, height: 3) //aspect ratio
                         let cWidth = availableWidth * 2 / 3
                         let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
-                        cSize = CGSize(width: cWidth, height: cHeight)
+//                        cSize = CGSize(width: cWidth, height: cHeight)
+                        //test > round to int to prevent incomplete photo scroll
+                        cSize = CGSize(width: round(cWidth), height: round(cHeight))
                     } else {
                         //square
                         let cWidth = availableWidth
-                        cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+//                        cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                        //test > round to int to prevent incomplete photo scroll
+                        cSize = CGSize(width: round(cWidth), height: round(cWidth + descHeight))
                     }
                     
                     let pTopMargin = 20.0
@@ -339,18 +352,24 @@ extension ScrollFeedHPostListCell: UICollectionViewDelegateFlowLayout {
                         //1 > landscape photo 4:3 w:h
                         let aRatio = CGSize(width: 4, height: 3) //aspect ratio
                         let cHeight = availableWidth * aRatio.height / aRatio.width
-                        cSize = CGSize(width: availableWidth, height: cHeight)
+//                        cSize = CGSize(width: availableWidth, height: cHeight)
+                        //test > round to int to prevent incomplete photo scroll
+                        cSize = CGSize(width: round(availableWidth), height: round(cHeight))
                     }
                     else if (assetSize.width < assetSize.height){
                         //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
                         let aRatio = CGSize(width: 2, height: 3) //aspect ratio
                         let cWidth = availableWidth * 2 / 3
                         let cHeight = cWidth * aRatio.height / aRatio.width
-                        cSize = CGSize(width: cWidth, height: cHeight)
+//                        cSize = CGSize(width: cWidth, height: cHeight)
+                        //test > round to int to prevent incomplete photo scroll
+                        cSize = CGSize(width: round(cWidth), height: round(cHeight))
                     } else {
                         //square
                         let cWidth = availableWidth
-                        cSize = CGSize(width: cWidth, height: cWidth)
+//                        cSize = CGSize(width: cWidth, height: cWidth)
+                        //test > round to int to prevent incomplete photo scroll
+                        cSize = CGSize(width: round(cWidth), height: round(cWidth))
                     }
                     
                     let vTopMargin = 20.0
@@ -372,18 +391,24 @@ extension ScrollFeedHPostListCell: UICollectionViewDelegateFlowLayout {
                         //1 > landscape photo 4:3 w:h
                         let aRatio = CGSize(width: 4, height: 3) //aspect ratio
                         let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
-                        cSize = CGSize(width: availableWidth, height: cHeight)
+//                        cSize = CGSize(width: availableWidth, height: cHeight)
+                        //test > round to int to prevent incomplete photo scroll
+                        cSize = CGSize(width: round(availableWidth), height: round(cHeight))
                     }
                     else if (assetSize.width < assetSize.height){
                         //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
                         let aRatio = CGSize(width: 2, height: 3) //aspect ratio
                         let cWidth = availableWidth * 2 / 3
                         let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
-                        cSize = CGSize(width: cWidth, height: cHeight)
+//                        cSize = CGSize(width: cWidth, height: cHeight)
+                        //test > round to int to prevent incomplete photo scroll
+                        cSize = CGSize(width: round(cWidth), height: round(cHeight))
                     } else {
                         //square
                         let cWidth = availableWidth
-                        cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+//                        cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                        //test > round to int to prevent incomplete photo scroll
+                        cSize = CGSize(width: round(cWidth), height: round(cWidth + descHeight))
                     }
                     
                     let vTopMargin = 20.0
@@ -426,7 +451,9 @@ extension ScrollFeedHPostListCell: UICollectionViewDelegateFlowLayout {
                                 //1 > landscape photo 4:3 w:h
                                 let aRatio = CGSize(width: 4, height: 3) //aspect ratio
                                 let cHeight = availableWidth * aRatio.height / aRatio.width
-                                cSize = CGSize(width: availableWidth, height: cHeight)
+//                                cSize = CGSize(width: availableWidth, height: cHeight)
+                                //test > round to int to prevent incomplete photo scroll
+                                cSize = CGSize(width: round(availableWidth), height: round(cHeight))
                             }
                             else if (assetSize.width < assetSize.height){
                                 //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
@@ -434,11 +461,15 @@ extension ScrollFeedHPostListCell: UICollectionViewDelegateFlowLayout {
                                 let cWidth = availableWidth * 2 / 3
             //                    let cWidth = availableWidth //test full width for portrait
                                 let cHeight = cWidth * aRatio.height / aRatio.width
-                                cSize = CGSize(width: cWidth, height: cHeight)
+//                                cSize = CGSize(width: cWidth, height: cHeight)
+                                //test > round to int to prevent incomplete photo scroll
+                                cSize = CGSize(width: round(cWidth), height: round(cHeight))
                             } else {
                                 //square
                                 let cWidth = availableWidth
-                                cSize = CGSize(width: cWidth, height: cWidth)
+//                                cSize = CGSize(width: cWidth, height: cWidth)
+                                //test > round to int to prevent incomplete photo scroll
+                                cSize = CGSize(width: round(cWidth), height: round(cWidth))
                             }
 
                             let pTopMargin = 20.0
@@ -459,18 +490,24 @@ extension ScrollFeedHPostListCell: UICollectionViewDelegateFlowLayout {
                                 //1 > landscape photo 4:3 w:h
                                 let aRatio = CGSize(width: 4, height: 3) //aspect ratio
                                 let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
-                                cSize = CGSize(width: availableWidth, height: cHeight)
+//                                cSize = CGSize(width: availableWidth, height: cHeight)
+                                //test > round to int to prevent incomplete photo scroll
+                                cSize = CGSize(width: round(availableWidth), height: round(cHeight))
                             }
                             else if (assetSize.width < assetSize.height){
                                 //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
                                 let aRatio = CGSize(width: 2, height: 3) //aspect ratio
                                 let cWidth = availableWidth * 2 / 3
                                 let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
-                                cSize = CGSize(width: cWidth, height: cHeight)
+//                                cSize = CGSize(width: cWidth, height: cHeight)
+                                //test > round to int to prevent incomplete photo scroll
+                                cSize = CGSize(width: round(cWidth), height: round(cHeight))
                             } else {
                                 //square
                                 let cWidth = availableWidth
-                                cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+//                                cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                                //test > round to int to prevent incomplete photo scroll
+                                cSize = CGSize(width: round(cWidth), height: round(cWidth + descHeight))
                             }
                             
                             let pTopMargin = 20.0
@@ -490,18 +527,24 @@ extension ScrollFeedHPostListCell: UICollectionViewDelegateFlowLayout {
                                 //1 > landscape photo 4:3 w:h
                                 let aRatio = CGSize(width: 4, height: 3) //aspect ratio
                                 let cHeight = availableWidth * aRatio.height / aRatio.width
-                                cSize = CGSize(width: availableWidth, height: cHeight)
+//                                cSize = CGSize(width: availableWidth, height: cHeight)
+                                //test > round to int to prevent incomplete photo scroll
+                                cSize = CGSize(width: round(availableWidth), height: round(cHeight))
                             }
                             else if (assetSize.width < assetSize.height){
                                 //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
                                 let aRatio = CGSize(width: 2, height: 3) //aspect ratio
                                 let cWidth = availableWidth * 2 / 3
                                 let cHeight = cWidth * aRatio.height / aRatio.width
-                                cSize = CGSize(width: cWidth, height: cHeight)
+//                                cSize = CGSize(width: cWidth, height: cHeight)
+                                //test > round to int to prevent incomplete photo scroll
+                                cSize = CGSize(width: round(cWidth), height: round(cHeight))
                             } else {
                                 //square
                                 let cWidth = availableWidth
-                                cSize = CGSize(width: cWidth, height: cWidth)
+//                                cSize = CGSize(width: cWidth, height: cWidth)
+                                //test > round to int to prevent incomplete photo scroll
+                                cSize = CGSize(width: round(cWidth), height: round(cWidth))
                             }
                             
                             let vTopMargin = 20.0
@@ -522,18 +565,24 @@ extension ScrollFeedHPostListCell: UICollectionViewDelegateFlowLayout {
                                 //1 > landscape photo 4:3 w:h
                                 let aRatio = CGSize(width: 4, height: 3) //aspect ratio
                                 let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
-                                cSize = CGSize(width: availableWidth, height: cHeight)
+//                                cSize = CGSize(width: availableWidth, height: cHeight)
+                                //test > round to int to prevent incomplete photo scroll
+                                cSize = CGSize(width: round(availableWidth), height: round(cHeight))
                             }
                             else if (assetSize.width < assetSize.height){
                                 //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
                                 let aRatio = CGSize(width: 2, height: 3) //aspect ratio
                                 let cWidth = availableWidth * 2 / 3
                                 let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
-                                cSize = CGSize(width: cWidth, height: cHeight)
+//                                cSize = CGSize(width: cWidth, height: cHeight)
+                                //test > round to int to prevent incomplete photo scroll
+                                cSize = CGSize(width: round(cWidth), height: round(cHeight))
                             } else {
                                 //square
                                 let cWidth = availableWidth
-                                cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+//                                cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                                //test > round to int to prevent incomplete photo scroll
+                                cSize = CGSize(width: round(cWidth), height: round(cWidth + descHeight))
                             }
                             
                             let vTopMargin = 20.0
@@ -786,19 +835,19 @@ extension ScrollFeedHPostListCell: HListCellDelegate {
             }
         }
     }
-    func hListDidClickVcvClickUser() {
-        aDelegate?.sfcDidClickVcvClickUser()
+    func hListDidClickVcvClickUser(id: String) {
+        aDelegate?.sfcDidClickVcvClickUser(id: id)
     }
-    func hListDidClickVcvClickPlace() {
-        aDelegate?.sfcDidClickVcvClickPlace()
+    func hListDidClickVcvClickPlace(id: String) {
+        aDelegate?.sfcDidClickVcvClickPlace(id: id)
     }
-    func hListDidClickVcvClickSound() {
-        aDelegate?.sfcDidClickVcvClickSound()
+    func hListDidClickVcvClickSound(id: String) {
+        aDelegate?.sfcDidClickVcvClickSound(id: id)
     }
-    func hListDidClickVcvClickPost() {
-        aDelegate?.sfcDidClickVcvClickPost()
+    func hListDidClickVcvClickPost(id: String) {
+        aDelegate?.sfcDidClickVcvClickPost(id: id)
     }
-    func hListDidClickVcvClickPhoto(vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+    func hListDidClickVcvClickPhoto(id: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         
         if let a = vCV {
             for cell in a.visibleCells {
@@ -810,7 +859,7 @@ extension ScrollFeedHPostListCell: HListCellDelegate {
                     let pointX1 = originInRootView.x + pointX
                     let pointY1 = originInRootView.y + pointY
                     
-                    aDelegate?.sfcDidClickVcvClickPhoto(pointX: pointX1, pointY: pointY1, view: view, mode: mode)
+                    aDelegate?.sfcDidClickVcvClickPhoto(id: id, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
                     
                     if let c = visibleIndexPath {
                         hideCellIndex = c.row
@@ -821,7 +870,7 @@ extension ScrollFeedHPostListCell: HListCellDelegate {
             }
         }
     }
-    func hListDidClickVcvClickVideo(vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+    func hListDidClickVcvClickVideo(id: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         if let a = vCV {
             for cell in a.visibleCells {
                 
@@ -832,7 +881,7 @@ extension ScrollFeedHPostListCell: HListCellDelegate {
                     let pointX1 = originInRootView.x + pointX
                     let pointY1 = originInRootView.y + pointY
                     
-                    aDelegate?.sfcDidClickVcvClickVideo(pointX: pointX1, pointY: pointY1, view: view, mode: mode)
+                    aDelegate?.sfcDidClickVcvClickVideo(id: id, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
                     
                     if let c = visibleIndexPath {
                         hideCellIndex = c.row

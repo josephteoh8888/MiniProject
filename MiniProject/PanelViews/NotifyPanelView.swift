@@ -12,9 +12,9 @@ import SDWebImage
 protocol NotifyPanelDelegate : AnyObject {
     
     //test > connect to other panel
-    func didNotifyClickUser()
-    func didNotifyClickPlace()
-    func didNotifyClickSound()
+    func didNotifyClickUser(id: String)
+    func didNotifyClickPlace(id: String)
+    func didNotifyClickSound(id: String)
     func didNotifyClickLogin()
 }
 
@@ -900,23 +900,23 @@ extension NotifyPanelView: ScrollFeedCellDelegate {
         print("fcDidClickVcvShare ")
     }
 
-    func sfcDidClickVcvClickUser() {
+    func sfcDidClickVcvClickUser(id: String) {
         //test
-        delegate?.didNotifyClickUser()
+        delegate?.didNotifyClickUser(id: id)
     }
-    func sfcDidClickVcvClickPlace() {
-        delegate?.didNotifyClickPlace()
+    func sfcDidClickVcvClickPlace(id: String) {
+        delegate?.didNotifyClickPlace(id: id)
     }
-    func sfcDidClickVcvClickSound() {
-        delegate?.didNotifyClickSound()
+    func sfcDidClickVcvClickSound(id: String) {
+        delegate?.didNotifyClickSound(id: id)
     }
-    func sfcDidClickVcvClickPost() {
+    func sfcDidClickVcvClickPost(id: String) {
 //        openPostDetail()
     }
-    func sfcDidClickVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func sfcDidClickVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
 
     }
-    func sfcDidClickVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func sfcDidClickVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
 
     }
 
@@ -964,16 +964,21 @@ extension NotifyPanelView: TabStackDelegate {
 //test
 extension ViewController: NotifyPanelDelegate{
 
-    func didNotifyClickUser() {
+    func didNotifyClickUser(id: String) {
         //test
-        openUserPanel()
+//        openUserPanel()
+        //test > real id for fetching data
+        openUserPanel(id: id)
     }
-    func didNotifyClickPlace() {
-        openPlacePanel()
+    func didNotifyClickPlace(id: String) {
+//        openPlacePanel()
+        //test > real id for fetching data
+        openPlacePanel(id: id)
     }
-    func didNotifyClickSound() {
-        //test
-        openSoundPanel()
+    func didNotifyClickSound(id: String) {
+//        openSoundPanel()
+        //test > real id for fetching data
+        openSoundPanel(id: id)
     }
     func didNotifyClickLogin() {
         //test

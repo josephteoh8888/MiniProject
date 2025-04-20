@@ -10,7 +10,7 @@ import UIKit
 import SDWebImage
 
 protocol MeVideoPanelDelegate : AnyObject {
-    func didMeVideoClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
+    func didMeVideoClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     func didMeVideoClickClose()
 }
 //test > new method with uiscrollview of feedcells
@@ -986,30 +986,30 @@ extension MeVideoListPanelView: ScrollFeedCellDelegate {
         print("fcDidClickVcvShare ")
     }
 
-    func sfcDidClickVcvClickUser() {
+    func sfcDidClickVcvClickUser(id: String) {
         //test
 //        delegate?.didNotifyClickUser()
     }
-    func sfcDidClickVcvClickPlace() {
+    func sfcDidClickVcvClickPlace(id: String) {
 //        delegate?.didNotifyClickPlace()
     }
-    func sfcDidClickVcvClickSound() {
+    func sfcDidClickVcvClickSound(id: String) {
 //        delegate?.didNotifyClickSound()
     }
-    func sfcDidClickVcvClickPost() {
+    func sfcDidClickVcvClickPost(id: String) {
 //        openPostDetail()
     }
-    func sfcDidClickVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func sfcDidClickVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
 
     }
-    func sfcDidClickVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func sfcDidClickVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         //test
         if(!self.feedList.isEmpty) {
             let b = self.feedList[self.currentIndex]
             let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
             
             let adjustY = pointY + originInRootView.y
-            delegate?.didMeVideoClickVideo(pointX: pointX, pointY: adjustY, view: view, mode: mode)
+            delegate?.didMeVideoClickVideo(id: id, pointX: pointX, pointY: adjustY, view: view, mode: mode)
         }
     }
 
@@ -1056,7 +1056,7 @@ extension MeVideoListPanelView: TabStackDelegate {
 
 //test
 extension ViewController: MeVideoPanelDelegate{
-    func didMeVideoClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
+    func didMeVideoClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
         let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
         let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
 

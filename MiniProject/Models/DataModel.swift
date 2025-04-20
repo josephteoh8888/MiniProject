@@ -29,20 +29,32 @@ class BaseData {
 
 class PostData: BaseData {
     
+    var userId: String = "" //creator
+    var placeId: String = ""
+    var soundId: String = ""
+    
     func setDataCode(data: String) {
         dataCode = data
     }
     
     func setData(rData: PostDataset) {
+        let rDataId = rData.id
         let rDataType = rData.dataCode
         let rDataText = rData.dataTextString
         let rDataC = rData.dataCount
         let rDataArray = rData.dataArray
         let rContentDataArray = rData.contentDataArray
+        let rDataUserId = rData.userId
+        let rDataPlaceId = rData.placeId
+        let rDataSoundId = rData.soundId
         
         //populate data
+        id = rDataId
         dataCode = rDataType
         dataTextString = rDataText
+        userId = rDataUserId
+        placeId = rDataPlaceId
+        soundId = rDataSoundId
         
         if let loveC = rDataC["love"] {
             dataCount["love"] = loveC
@@ -72,6 +84,7 @@ class PostData: BaseData {
     
     //map from comment dataset
     func setData(rData: CommentDataset) {
+        let rDataId = rData.id
         let rDataType = rData.dataCode
         let rDataText = rData.dataTextString
         let rDataC = rData.dataCount
@@ -79,6 +92,7 @@ class PostData: BaseData {
         let rContentDataArray = rData.contentDataArray
         
         //populate data
+        id = rDataId
         dataCode = rDataType
         dataTextString = rDataText
         
@@ -112,19 +126,30 @@ class PostData: BaseData {
 class PhotoData: BaseData {
     
     var coverPhotoString: String = ""
+    var userId: String = "" //creator
+    var placeId: String = ""
+    var soundId: String = ""
     
     func setData(rData: PhotoDataset) {
+        let rDataId = rData.id
         let rDataType = rData.dataCode
         let rDataText = rData.dataTextString
         let rDataC = rData.dataCount
         let rDataArray = rData.dataArray
         let rContentDataArray = rData.contentDataArray
         let rDataCover = rData.coverPhotoString
+        let rDataUserId = rData.userId
+        let rDataPlaceId = rData.placeId
+        let rDataSoundId = rData.soundId
         
         //populate data
+        id = rDataId
         dataCode = rDataType
         dataTextString = rDataText
         coverPhotoString = rDataCover
+        userId = rDataUserId
+        placeId = rDataPlaceId
+        soundId = rDataSoundId
         
         if let loveC = rDataC["love"] {
             dataCount["love"] = loveC
@@ -159,22 +184,33 @@ class VideoData: BaseData {
     var uiMode = VideoTypes.V_LOOP
     
     var coverPhotoString: String = ""
+    var userId: String = "" //creator
+    var placeId: String = ""
+    var soundId: String = ""
     
     func setUIMode(mode: String) {
         uiMode = mode
     }
     
     func setData(rData: VideoDataset) {
+        let rDataId = rData.id
         let rDataType = rData.dataCode
         let rDataText = rData.dataTextString
         let rDataC = rData.dataCount
         let rDataArray = rData.dataArray
         let rDataCover = rData.coverPhotoString
+        let rDataUserId = rData.userId
+        let rDataPlaceId = rData.placeId
+        let rDataSoundId = rData.soundId
         
         //populate data
+        id = rDataId
         dataCode = rDataType
         dataTextString = rDataText
         coverPhotoString = rDataCover
+        userId = rDataUserId
+        placeId = rDataPlaceId
+        soundId = rDataSoundId
         
         if let loveC = rDataC["love"] {
             dataCount["love"] = loveC
@@ -202,16 +238,28 @@ class VideoData: BaseData {
 
 class CommentData: BaseData {
     
+    var userId: String = "" //creator
+    var placeId: String = ""
+    var soundId: String = ""
+    
     func setData(rData: CommentDataset) {
+        let rDataId = rData.id
         let rDataType = rData.dataCode
         let rDataText = rData.dataTextString
         let rDataC = rData.dataCount
         let rDataArray = rData.dataArray
         let rContentDataArray = rData.contentDataArray
+        let rDataUserId = rData.userId
+        let rDataPlaceId = rData.placeId
+        let rDataSoundId = rData.soundId
         
         //populate data
+        id = rDataId
         dataCode = rDataType
         dataTextString = rDataText
+        userId = rDataUserId
+        placeId = rDataPlaceId
+        soundId = rDataSoundId
         
         if let loveC = rDataC["love"] {
             dataCount["love"] = loveC
@@ -243,16 +291,27 @@ class CommentData: BaseData {
 class NotifyData: BaseData {
     
     var notifyTextString: String = "" //temp solution
+    var userId: String = "" //creator
+    var placeId: String = ""
+    var soundId: String = ""
     
     func setData(rData: NotifyDataset) {
+        let rDataId = rData.id
         let rDataType = rData.dataCode
         let rDataArray = rData.dataArray
         let rDataText = rData.dataTextString
         let rDataNotifyText = rData.notifyTextString
+        let rDataUserId = rData.userId
+        let rDataPlaceId = rData.placeId
+        let rDataSoundId = rData.soundId
         
+        id = rDataId
         dataCode = rDataType
         dataTextString = rDataText
         notifyTextString = rDataNotifyText
+        userId = rDataUserId
+        placeId = rDataPlaceId
+        soundId = rDataSoundId
         
         for r in rDataArray {
             dataArray.append(r)
@@ -263,17 +322,22 @@ class NotifyData: BaseData {
 class PlaceData: BaseData {
     
     var coverPhotoString: String = ""
+    var isAccountVerified = false
     
     func setData(rData: PlaceDataset) {
+        let rDataId = rData.id
         let rDataType = rData.dataCode
         let rDataArray = rData.dataArray
         let rDataText = rData.dataTextString
         let rDataC = rData.dataCount
         let rDataP = rData.coverPhotoString
+        let rDataVerified = rData.isAccountVerified
         
+        id = rDataId
         dataCode = rDataType
         dataTextString = rDataText
         coverPhotoString = rDataP
+        isAccountVerified = rDataVerified
         
         if let loveC = rDataC["bookmark"] {
             dataCount["bookmark"] = loveC
@@ -287,17 +351,22 @@ class PlaceData: BaseData {
 class SoundData: BaseData {
     
     var coverPhotoString: String = ""
+    var isAccountVerified = false
     
     func setData(rData: SoundDataset) {
+        let rDataId = rData.id
         let rDataType = rData.dataCode
         let rDataArray = rData.dataArray
         let rDataText = rData.dataTextString
         let rDataC = rData.dataCount
         let rDataP = rData.coverPhotoString
+        let rDataVerified = rData.isAccountVerified
         
+        id = rDataId
         dataCode = rDataType
         dataTextString = rDataText
         coverPhotoString = rDataP
+        isAccountVerified = rDataVerified
         
         if let loveC = rDataC["bookmark"] {
             dataCount["bookmark"] = loveC
@@ -315,6 +384,7 @@ class UserData: BaseData {
     var isAccountVerified = false
     
     func setData(rData: UserDataset) {
+        let rDataId = rData.id
         let rDataType = rData.dataCode
         let rDataArray = rData.dataArray
         let rDataText = rData.dataTextString
@@ -323,6 +393,7 @@ class UserData: BaseData {
         let rDataP = rData.coverPhotoString
         let rDataVerified = rData.isAccountVerified
         
+        id = rDataId
         dataCode = rDataType
         dataTextString = rDataText
         bioTextString = rDataBio
@@ -361,6 +432,9 @@ class ContentData: BaseData {
     func setData(rData: ContentDataset) {
         let rDataType = rData.dataCode
         let rDataArray = rData.dataArray
+        let rDataText = rData.dataTextString
+        
+        dataTextString = rDataText
         dataCode = rDataType
         for r in rDataArray {
             dataArray.append(r)

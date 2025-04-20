@@ -152,6 +152,9 @@ class HResultLocationListViewCell: UICollectionViewCell {
         super.prepareForReuse()
         print("HResultUserListViewCell prepare for reuse")
         
+        //test > clear id
+        setId(id: "")
+        
         let imageUrl = URL(string: "")
         aUserPhoto.sd_setImage(with: imageUrl)
         
@@ -164,24 +167,32 @@ class HResultLocationListViewCell: UICollectionViewCell {
         actionUI(doneState: false)
     }
     
-//    func configure(data: PostData) {
+    //test > set id for init
+    var id = ""
+    func setId(id: String) {
+        self.id = id
+    }
+    
     func configure(data: BaseData) {
         
         guard let a = data as? PlaceData else {
             return
         }
         
-//        let l = data.dataType
+        setId(id: data.id)
+        
         let l = a.dataCode
         
         if(l == "a") {
             asyncConfigure(data: "")
             
-//            self.aNameText.text = "Petronas Twin Tower"
-//            self.aNameText.text = "." //test with ""
             self.aNameText.text = a.dataTextString
             let imageUrl = URL(string: a.coverPhotoString)
             self.aUserPhoto.sd_setImage(with: imageUrl)
+            
+            if(a.isAccountVerified) {
+                self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
+            }
         }
         else if(l == "na") {
             
@@ -194,8 +205,8 @@ class HResultLocationListViewCell: UICollectionViewCell {
     }
     //*test > async fetch images/names/videos
     func asyncConfigure(data: String) {
-        let id = "p"
-        DataFetchManager.shared.fetchPlaceData(id: id) { [weak self]result in
+        let id = "a"
+        DataFetchManager.shared.fetchDummyDataTimeDelay(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -212,7 +223,7 @@ class HResultLocationListViewCell: UICollectionViewCell {
 //                    self.aNameText.text = "Petronas Twin Tower"
                     self.aUserNameText.text = "101 posts"
                     
-                    self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
+//                    self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
                     
                     self.aFollowA.isHidden = false
                 }
@@ -226,7 +237,7 @@ class HResultLocationListViewCell: UICollectionViewCell {
                     
 //                    self.aNameText.text = "-"
                     self.aUserNameText.text = "-"
-                    self.vBtn.image = nil
+//                    self.vBtn.image = nil
                     
 //                    let imageUrl = URL(string: "")
 //                    self.aUserPhoto.sd_setImage(with: imageUrl)
@@ -240,7 +251,7 @@ class HResultLocationListViewCell: UICollectionViewCell {
     //*
     
     @objc func onUserClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.didHResultClickPlace()
+        aDelegate?.didHResultClickPlace(id: id)
     }
     
     func actionUI(doneState: Bool) {

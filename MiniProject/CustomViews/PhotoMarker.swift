@@ -143,55 +143,55 @@ class PhotoBMarker: ExploreMarker {
     }
     
     override func configure(data: String) {
-//        if(data == "a") {
-//            let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-//            guard let imageUrl = imageUrl else {
-//                return
-//            }
-//            self.gifImage.sd_setImage(with: imageUrl)
-//        }
+        if(data == "a") {
+            let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+            guard let imageUrl = imageUrl else {
+                return
+            }
+            self.gifImage.sd_setImage(with: imageUrl)
+        }
         
-        asyncConfigure(data: "")
+//        asyncConfigure(data: "")
     }
     
     //*test > async fetch images/names/videos
-    func asyncConfigure(data: String) {
-        let id = "u" //u_
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
-            switch result {
-                case .success(let l):
-
-                //update UI on main thread
-                DispatchQueue.main.async {
-                    print("pdp api success \(id), \(l)")
-                    
-                    guard let self = self else {
-                        return
-                    }
-                    
-                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-                    guard let imageUrl = imageUrl else {
-                        return
-                    }
-                    self.gifImage.sd_setImage(with: imageUrl)
-                }
-
-                case .failure(let error):
-                DispatchQueue.main.async {
-                    
-                    guard let self = self else {
-                        return
-                    }
-                    let imageUrl = URL(string: "")
-                    guard let imageUrl = imageUrl else {
-                        return
-                    }
-                    self.gifImage.sd_setImage(with: imageUrl)
-                }
-                break
-            }
-        }
-    }
+//    func asyncConfigure(data: String) {
+//        let id = "a" //u_
+//        DataFetchManager.shared.fetchDummyDataTimeDelay(id: id) { [weak self]result in
+//            switch result {
+//                case .success(let l):
+//
+//                //update UI on main thread
+//                DispatchQueue.main.async {
+//                    print("pdp api success \(id), \(l)")
+//                    
+//                    guard let self = self else {
+//                        return
+//                    }
+//                    
+//                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//                    guard let imageUrl = imageUrl else {
+//                        return
+//                    }
+//                    self.gifImage.sd_setImage(with: imageUrl)
+//                }
+//
+//                case .failure(let error):
+//                DispatchQueue.main.async {
+//                    
+//                    guard let self = self else {
+//                        return
+//                    }
+//                    let imageUrl = URL(string: "")
+//                    guard let imageUrl = imageUrl else {
+//                        return
+//                    }
+//                    self.gifImage.sd_setImage(with: imageUrl)
+//                }
+//                break
+//            }
+//        }
+//    }
     //*
     
     override func addLocation(coordinate : CLLocationCoordinate2D ) {

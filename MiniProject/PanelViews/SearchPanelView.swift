@@ -13,15 +13,15 @@ import SDWebImage
 protocol SearchPanelDelegate : AnyObject {
 
     //test > connect to other panel
-    func didSearchClickUser()
-    func didSearchClickPlace()
-    func didSearchClickSound()
+    func didSearchClickUser(id: String)
+    func didSearchClickPlace(id: String)
+    func didSearchClickSound(id: String)
     func didSearchClickHashtag()
-    func didSearchClickPost()
+    func didSearchClickPost(id: String)
 //    func didSearchClickPhoto()
-    func didSearchClickClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
+    func didSearchClickClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
 //    func didSearchClickVideo()
-    func didSearchClickClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
+    func didSearchClickClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     
     func didSearchClickSignIn()
 }
@@ -1110,26 +1110,19 @@ extension SearchPanelView: ScrollFeedCellDelegate {
         print("fcDidClickVcvShare ")
     }
 
-    func sfcDidClickVcvClickUser() {
-        
-        //test
-        delegate?.didSearchClickUser()
+    func sfcDidClickVcvClickUser(id: String) {
+        delegate?.didSearchClickUser(id: id)
     }
-    func sfcDidClickVcvClickPlace() {
-        
-        //test
-        delegate?.didSearchClickPlace()
+    func sfcDidClickVcvClickPlace(id: String) {
+        delegate?.didSearchClickPlace(id: id)
     }
-    func sfcDidClickVcvClickSound() {
-        
-        //test
-        delegate?.didSearchClickSound()
+    func sfcDidClickVcvClickSound(id: String) {
+        delegate?.didSearchClickSound(id: id)
     }
-    func sfcDidClickVcvClickPost() {
-        
-        delegate?.didSearchClickPost()
+    func sfcDidClickVcvClickPost(id: String) {
+        delegate?.didSearchClickPost(id: id)
     }
-    func sfcDidClickVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func sfcDidClickVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         
         //test
         if(!self.feedList.isEmpty) {
@@ -1138,10 +1131,10 @@ extension SearchPanelView: ScrollFeedCellDelegate {
             
             let adjustY = pointY + originInRootView.y
             print("searchphoto ori: \(pointY), \(originInRootView.y)")
-            delegate?.didSearchClickClickPhoto(pointX: pointX, pointY: adjustY, view: view, mode: mode)
+            delegate?.didSearchClickClickPhoto(id: id, pointX: pointX, pointY: adjustY, view: view, mode: mode)
         }
     }
-    func sfcDidClickVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func sfcDidClickVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         
         //test
         if(!self.feedList.isEmpty) {
@@ -1149,7 +1142,7 @@ extension SearchPanelView: ScrollFeedCellDelegate {
             let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
             
             let adjustY = pointY + originInRootView.y
-            delegate?.didSearchClickClickVideo(pointX: pointX, pointY: adjustY, view: view, mode: mode)
+            delegate?.didSearchClickClickVideo(id: id, pointX: pointX, pointY: adjustY, view: view, mode: mode)
         }
     }
 
@@ -1216,22 +1209,30 @@ extension SearchPanelView: TabStackDelegate {
 //test
 extension ViewController: SearchPanelDelegate{
 
-    func didSearchClickUser() {
-        openUserPanel()
+    func didSearchClickUser(id: String) {
+//        openUserPanel()
+        //test > real id for fetching data
+        openUserPanel(id: id)
     }
-    func didSearchClickPlace() {
-        openPlacePanel()
+    func didSearchClickPlace(id: String) {
+//        openPlacePanel()
+        //test > real id for fetching data
+        openPlacePanel(id: id)
     }
-    func didSearchClickSound() {
-        openSoundPanel()
+    func didSearchClickSound(id: String) {
+//        openSoundPanel()
+        //test > real id for fetching data
+        openSoundPanel(id: id)
     }
     func didSearchClickHashtag() {
         
     }
-    func didSearchClickPost(){
-        openPostDetailPanel()
+    func didSearchClickPost(id: String){
+//        openPostDetailPanel()
+        //test > real id for fetching data
+        openPostDetailPanel(id: id)
     }
-    func didSearchClickClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
+    func didSearchClickClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
         let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
         let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
         
@@ -1247,10 +1248,12 @@ extension ViewController: SearchPanelDelegate{
         }
         //test
         else if(mode == PhotoTypes.P_SHOT_DETAIL) {
-            openPhotoDetailPanel()
+//            openPhotoDetailPanel()
+            //test > real id for fetching data
+            openPhotoDetailPanel(id: id)
         }
     }
-    func didSearchClickClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
+    func didSearchClickClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
         let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
         let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
 

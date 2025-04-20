@@ -310,28 +310,28 @@ extension ScrollFeedHResultLocationListCell: UICollectionViewDataSource {
 
 extension ScrollFeedHResultLocationListCell: HResultListViewDelegate{
 
-    func didHResultClickUser(){
+    func didHResultClickUser(id: String){
 
     }
-    func didHResultClickPlace(){
+    func didHResultClickPlace(id: String){
         //test > additional delegate
         bDelegate?.didScrollFeedHResultResignKeyboard()
         
-        aDelegate?.sfcDidClickVcvClickPlace()
+        aDelegate?.sfcDidClickVcvClickPlace(id: id)
     }
-    func didHResultClickSound(){
+    func didHResultClickSound(id: String){
         
     }
     func didHResultClickHashtag() {
         
     }
-    func didHResultClickPhoto(){
+    func didHResultClickPhoto(id: String){
         
     }
-    func didHResultClickVideo(){
+    func didHResultClickVideo(id: String){
         
     }
-    func didHResultClickPost(){
+    func didHResultClickPost(id: String){
         
     }
     func didHResultClickSignIn(){

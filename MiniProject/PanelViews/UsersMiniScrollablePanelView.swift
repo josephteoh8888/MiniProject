@@ -21,7 +21,7 @@ protocol UsersMiniScrollablePanelDelegate : AnyObject {
     //test > initialize
     func didFinishInitializeUsersMini(pv: UsersMiniScrollablePanelView)
     
-    func didUsersMiniClickUser()
+    func didUsersMiniClickUser(id: String)
 }
 
 class UsersMiniScrollablePanelView: ScrollablePanelView, UIGestureRecognizerDelegate{
@@ -1003,7 +1003,9 @@ extension ViewController: UsersMiniScrollablePanelDelegate{
         dequeueObject()  //activateQueueState() cannot be used as it prevents adding queue objects on map
     }
     
-    func didUsersMiniClickUser(){
-        openUserPanel()
+    func didUsersMiniClickUser(id: String){
+//        openUserPanel()
+        //test > real id for fetching data
+        openUserPanel(id: id)
     }
 }

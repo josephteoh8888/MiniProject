@@ -219,6 +219,9 @@ class VCBViewCell: VCViewCell {
         super.prepareForReuse()
         print("videocv prepare for reuse B")
         
+        //test > clear id
+        setId(id: "")
+        
         //*test > remove time observer
         removeTimeObserverVideo()
         
@@ -364,7 +367,16 @@ class VCBViewCell: VCViewCell {
         }
     }
     
+    //test > set id for init
+    var id = ""
+    func setId(id: String) {
+        self.id = id
+    }
+    
     func configure(data: VideoData) {
+        
+        setId(id: data.id)
+        
         //test > change ui with data accordingly
         aSpinner.stopAnimating()
         gifImage.isHidden = true

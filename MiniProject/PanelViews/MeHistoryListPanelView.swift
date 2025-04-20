@@ -10,9 +10,9 @@ import UIKit
 import SDWebImage
 
 protocol MeHistoryPanelDelegate : AnyObject {
-    func didMeHistoryClickPost()
-    func didMeHistoryClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
-    func didMeHistoryClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
+    func didMeHistoryClickPost(id: String)
+    func didMeHistoryClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
+    func didMeHistoryClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     func didMeHistoryClickClose()
 }
 //test > new method with uiscrollview of feedcells
@@ -1031,36 +1031,36 @@ extension MeHistoryListPanelView: ScrollFeedCellDelegate {
         print("fcDidClickVcvShare ")
     }
 
-    func sfcDidClickVcvClickUser() {
+    func sfcDidClickVcvClickUser(id: String) {
 
     }
-    func sfcDidClickVcvClickPlace() {
+    func sfcDidClickVcvClickPlace(id: String) {
 
     }
-    func sfcDidClickVcvClickSound() {
+    func sfcDidClickVcvClickSound(id: String) {
 
     }
-    func sfcDidClickVcvClickPost() {
-        delegate?.didMeHistoryClickPost()
+    func sfcDidClickVcvClickPost(id: String) {
+        delegate?.didMeHistoryClickPost(id: id)
     }
-    func sfcDidClickVcvClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func sfcDidClickVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         //test
         if(!feedList.isEmpty) {
             let b = self.feedList[self.currentIndex]
             let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
             
             let adjustY = pointY + originInRootView.y
-            delegate?.didMeHistoryClickPhoto(pointX: pointX, pointY: adjustY, view: view, mode: mode)
+            delegate?.didMeHistoryClickPhoto(id: id, pointX: pointX, pointY: adjustY, view: view, mode: mode)
         }
     }
-    func sfcDidClickVcvClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func sfcDidClickVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         //test
         if(!feedList.isEmpty) {
             let b = self.feedList[self.currentIndex]
             let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
             
             let adjustY = pointY + originInRootView.y
-            delegate?.didMeHistoryClickVideo(pointX: pointX, pointY: adjustY, view: view, mode: mode)
+            delegate?.didMeHistoryClickVideo(id: id, pointX: pointX, pointY: adjustY, view: view, mode: mode)
         }
     }
 
@@ -1111,10 +1111,12 @@ extension MeHistoryListPanelView: TabStackDelegate {
 
 //test
 extension ViewController: MeHistoryPanelDelegate{
-    func didMeHistoryClickPost(){
-        openPostDetailPanel()
+    func didMeHistoryClickPost(id: String){
+//        openPostDetailPanel()
+        //test > real id for fetching data
+        openPostDetailPanel(id: id)
     }
-    func didMeHistoryClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
+    func didMeHistoryClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
         let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
         let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
         
@@ -1129,7 +1131,7 @@ extension ViewController: MeHistoryPanelDelegate{
             openPhotoZoomPanel(offX: offsetX, offY: offsetY)
         }
     }
-    func didMeHistoryClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
+    func didMeHistoryClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
         let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
         let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
 

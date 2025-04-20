@@ -11,7 +11,7 @@ import SDWebImage
 
 protocol MeCellDelegate : AnyObject {
     
-    func didMeCellClickUser()
+    func didMeCellClickUser(id: String)
     func didMeCellClickBase()
     func didMeCellClickEditProfile()
     func didMeCellClickAccountSetting()
@@ -184,7 +184,6 @@ class MultiPhotosMeCell: MeCell {
         let id_ = "post"
         let isPaginate = false
         DataFetchManager.shared.fetchPhotoFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
-//        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -451,7 +450,6 @@ class MultiLoopsMeCell: MeCell {
         let id_ = "video"
         let isPaginate = false
         DataFetchManager.shared.fetchVideoFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
-//        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -760,7 +758,6 @@ class MultiPostsMeCell: MeCell {
         let id_ = "post"
         let isPaginate = false
         DataFetchManager.shared.fetchPostFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
-//        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -940,8 +937,8 @@ class MultiCommentsMeCell: MeCell {
         isInitialized = true
     }
     func asyncConfigure(data: String) {
-        let id = "u"
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+        let id = "a"
+        DataFetchManager.shared.fetchDummyDataTimeDelay(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -1706,7 +1703,6 @@ class BaseMeCell: MeCell {
     func asyncConfigure(data: String) {
 //        let id = "u_"
         let id = "p1" //p_
-//        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
         DataFetchManager.shared.fetchPlaceData2(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -1977,7 +1973,6 @@ class LocationMeCell: MeCell {
         let id_ = "post"
         let isPaginate = false
         DataFetchManager.shared.fetchPlaceFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
-//        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -2271,8 +2266,8 @@ class ProfileMeCell: MeCell {
     }
     
     func asyncConfigure(data: String) {
-        let id = "u"
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+        let id = "u1"
+        DataFetchManager.shared.fetchUserData2(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -2286,10 +2281,10 @@ class ProfileMeCell: MeCell {
 
                     self.bSpinner.stopAnimating()
                     
-                    if(!l.isEmpty) {
-                        let l_0 = l[0]
+//                    if(!l.isEmpty) {
+//                        let l_0 = l[0]
                         let pData = UserData()
-                        pData.setData(rData: l_0)
+                        pData.setData(rData: l)
                         let l_ = pData.dataCode
                         if(l_ == "a") {
                             self.aNameText.text  = pData.dataTextString
@@ -2298,13 +2293,7 @@ class ProfileMeCell: MeCell {
                             let imageUrl = URL(string: pData.coverPhotoString)
                             self.aPhoto.sd_setImage(with: imageUrl)
                         }
-                    }
-                    
-//                    self.aNameText.text = "Michelle Lee"
-//                    self.aFollowAText.text = "@mic809"
-//                    
-//                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-//                    self.aPhoto.sd_setImage(with: imageUrl)
+//                    }
                 }
 
                 case .failure(let error):
@@ -2333,7 +2322,7 @@ class ProfileMeCell: MeCell {
     }
     
     @objc func onProfileClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.didMeCellClickUser()
+        aDelegate?.didMeCellClickUser(id: "")
     }
     @objc func onErrorRefreshClicked(gesture: UITapGestureRecognizer) {
         self.errorText.isHidden = true

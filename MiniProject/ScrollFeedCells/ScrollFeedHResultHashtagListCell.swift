@@ -310,25 +310,25 @@ extension ScrollFeedHResultHashtagListCell: UICollectionViewDataSource {
 
 extension ScrollFeedHResultHashtagListCell: HResultListViewDelegate{
 
-    func didHResultClickUser(){
+    func didHResultClickUser(id: String){
 
     }
-    func didHResultClickPlace(){
+    func didHResultClickPlace(id: String){
         
     }
-    func didHResultClickSound(){
+    func didHResultClickSound(id: String){
         
     }
     func didHResultClickHashtag() {
         
     }
-    func didHResultClickPhoto(){
+    func didHResultClickPhoto(id: String){
         
     }
-    func didHResultClickVideo(){
+    func didHResultClickVideo(id: String){
         
     }
-    func didHResultClickPost(){
+    func didHResultClickPost(id: String){
         
     }
     func didHResultClickSignIn(){

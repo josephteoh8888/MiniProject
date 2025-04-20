@@ -1053,8 +1053,8 @@ class LocationSelectScrollablePanelView: ScrollablePanelView{
     }
     
     func asyncConfigure(data: String) {
-        let id = "u"
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+        let id = "post"
+        DataFetchManager.shared.fetchPlaceFeedData(id: id, isPaginate: false) { [weak self]result in
             switch result {
                 case .success(let l):
 

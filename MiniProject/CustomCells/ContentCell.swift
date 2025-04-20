@@ -14,13 +14,13 @@ protocol ContentCellDelegate : AnyObject {
     func contentCellIsScrollCarousel(isScroll: Bool)
     func contentCellCarouselIdx(cc: UIView,idx: Int)
     func contentCellVideoStopTime(cc: UIView,ts: Double)
-    func contentCellDidClickVcvClickPhoto(cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String)
-    func contentCellDidClickVcvClickVideo(cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String)
+    func contentCellDidClickVcvClickPhoto(id: String, cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String)
+    func contentCellDidClickVcvClickVideo(id: String, cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String)
     func contentCellDidDoubleClickPhoto(pointX: CGFloat, pointY: CGFloat)
-    func contentCellDidClickSound()
-    func contentCellDidClickUser()
-    func contentCellDidClickPlace()
-    func contentCellDidClickPost()
+    func contentCellDidClickSound(id: String)
+    func contentCellDidClickUser(id: String)
+    func contentCellDidClickPlace(id: String)
+    func contentCellDidClickPost(id: String)
     func contentCellDidClickVcvClickPlay(cc: UIView, isPlay: Bool)
 }
 
@@ -194,7 +194,7 @@ extension PostPhotoContentCell: CustomImageViewDelegate {
         let pFrame = scrollView.frame.origin
         let pointX = pFrame.x
         let pointY = pFrame.y
-        aDelegate?.contentCellDidClickVcvClickPhoto(cc: self, pointX: pointX, pointY: pointY, view: scrollView, mode: PhotoTypes.P_0)
+        aDelegate?.contentCellDidClickVcvClickPhoto(id: "", cc: self, pointX: pointX, pointY: pointY, view: scrollView, mode: PhotoTypes.P_0)
         
         //test > hide photo
         if(isAutohideEnabled) {
@@ -689,7 +689,7 @@ class PostPhotoShotContentCell: ContentCell {
         let pFrame = scrollView.frame.origin
         let pointX = pFrame.x
         let pointY = pFrame.y
-        aDelegate?.contentCellDidClickVcvClickPhoto(cc: self, pointX: pointX, pointY: pointY, view: scrollView, mode: PhotoTypes.P_SHOT_DETAIL)
+        aDelegate?.contentCellDidClickVcvClickPhoto(id: "", cc: self, pointX: pointX, pointY: pointY, view: scrollView, mode: PhotoTypes.P_SHOT_DETAIL)
         
         //test > hide photo
 //        hideCell()
@@ -701,7 +701,7 @@ extension PostPhotoShotContentCell: CustomImageViewDelegate {
         let pFrame = scrollView.frame.origin
         let pointX = pFrame.x
         let pointY = pFrame.y
-        aDelegate?.contentCellDidClickVcvClickPhoto(cc: self, pointX: pointX, pointY: pointY, view: scrollView, mode: PhotoTypes.P_SHOT_DETAIL)
+        aDelegate?.contentCellDidClickVcvClickPhoto(id: "", cc: self, pointX: pointX, pointY: pointY, view: scrollView, mode: PhotoTypes.P_SHOT_DETAIL)
     }
     
     func customImageViewDoubleClickPhoto(pointX: CGFloat, pointY: CGFloat){
@@ -1090,7 +1090,7 @@ class PostVideoContentCell: MediaContentCell {
         let pFrame = videoContainer.frame.origin
         let pointX = pFrame.x
         let pointY = pFrame.y
-        aDelegate?.contentCellDidClickVcvClickVideo(cc: self, pointX: pointX, pointY: pointY, view: videoContainer, mode: VideoTypes.V_0)
+        aDelegate?.contentCellDidClickVcvClickVideo(id: "", cc: self, pointX: pointX, pointY: pointY, view: videoContainer, mode: VideoTypes.V_0)
         
         //test > hide photo
 //        hideCell() //disabled for testing only
@@ -1594,7 +1594,7 @@ class PostVideoLoopContentCell: MediaContentCell {
         let pFrame = videoContainer.frame.origin
         let pointX = pFrame.x
         let pointY = pFrame.y
-        aDelegate?.contentCellDidClickVcvClickVideo(cc: self, pointX: pointX, pointY: pointY, view: videoContainer, mode: VideoTypes.V_LOOP)
+        aDelegate?.contentCellDidClickVcvClickVideo(id: "", cc: self, pointX: pointX, pointY: pointY, view: videoContainer, mode: VideoTypes.V_LOOP)
         
         //test > hide photo
 //        hideCell() //disabled for testing only
@@ -1609,7 +1609,7 @@ class PostVideoLoopContentCell: MediaContentCell {
         let pFrame = videoContainer.frame.origin
         let pointX = pFrame.x
         let pointY = pFrame.y
-        aDelegate?.contentCellDidClickVcvClickVideo(cc: self, pointX: pointX, pointY: pointY, view: videoContainer, mode: VideoTypes.V_LOOP)
+        aDelegate?.contentCellDidClickVcvClickVideo(id: "", cc: self, pointX: pointX, pointY: pointY, view: videoContainer, mode: VideoTypes.V_LOOP)
         
         //test > hide photo
 //        hideCell() //disabled for testing only
@@ -1876,7 +1876,7 @@ extension ShotPhotoContentCell: CustomImageViewDelegate {
         let pFrame = scrollView.frame.origin
         let pointX = pFrame.x
         let pointY = pFrame.y
-        aDelegate?.contentCellDidClickVcvClickPhoto(cc: self, pointX: pointX, pointY: pointY, view: scrollView, mode: PhotoTypes.P_0)
+        aDelegate?.contentCellDidClickVcvClickPhoto(id: "", cc: self, pointX: pointX, pointY: pointY, view: scrollView, mode: PhotoTypes.P_0)
         
         //test > hide photo
         hideCell()
@@ -2122,17 +2122,15 @@ class ShotSoundContentCell: MediaContentCell {
     }
     
     func asyncConfigure(data: String) {
-        
-//        let id = "s"
-        let id = "s4"
+        let id_ = data //s4
 //        DataFetchManager.shared.fetchSoundData(id: id) { [weak self]result in
-        DataFetchManager.shared.fetchSoundData2(id: id) { [weak self]result in
+        DataFetchManager.shared.fetchSoundData2(id: id_) { [weak self]result in
             switch result {
                 case .success(let l):
 
                 //update UI on main thread
                 DispatchQueue.main.async {
-                    print("pdp api success \(id), \(l)")
+                    print("pdp api success \(id_), \(l)")
                     
                     guard let self = self else {
                         return
@@ -2216,7 +2214,16 @@ class ShotSoundContentCell: MediaContentCell {
         }
     }
     
+    //test > set id for init
+    var id = ""
+    func setId(id: String) {
+        self.id = id
+    }
+    
     func configure(data: String) {
+        
+        setId(id: data)
+        
         //test 2 > try async fetch sound data
         bSpinner.startAnimating()
         
@@ -2229,12 +2236,12 @@ class ShotSoundContentCell: MediaContentCell {
         self.mText.isHidden = false
         self.dMiniCon.isHidden = true
         
-        asyncConfigure(data: "")
+        asyncConfigure(data: id) //""
     }
     
     @objc func onSoundClicked(gesture: UITapGestureRecognizer) {
         print("postphoto click sound btn:")
-        aDelegate?.contentCellDidClickSound()
+        aDelegate?.contentCellDidClickSound(id: id)
     }
     
     @objc func onErrorRefreshClicked(gesture: UITapGestureRecognizer) {
@@ -2272,7 +2279,7 @@ class ShotSoundContentCell: MediaContentCell {
         self.mText.isHidden = false
         self.dMiniCon.isHidden = true
         
-        asyncConfigure(data: "")
+        asyncConfigure(data: id) //""
     }
     //test > resume to paused timestamp
     func setState(t: Double) {
@@ -2324,6 +2331,10 @@ class ShotSoundContentCell: MediaContentCell {
     
     override func destroyCell() {
         print("shotsoundcc destroy cell")
+        
+        //test > clear id
+        setId(id: "")
+        
         mText.text = "-"
         
         removeTimeObserverVideo()
@@ -2783,7 +2794,7 @@ class PostQuoteContentCell: MediaContentCell {
     
     @objc func onQuoteClicked(gesture: UITapGestureRecognizer) {
         print("quote post clicked")
-        aDelegate?.contentCellDidClickPost()
+        aDelegate?.contentCellDidClickPost(id: "")
     }
     
     override func pauseMedia() {
@@ -2810,8 +2821,8 @@ class PostQuoteContentCell: MediaContentCell {
     
     //*test > async fetch images/names/videos
     func asyncConfigure(data: String) {
-        let id = "u_"
-        DataFetchManager.shared.fetchUserData(id: id) { [weak self]result in
+        let id = "u1" //u_
+        DataFetchManager.shared.fetchUserData2(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -2823,11 +2834,18 @@ class PostQuoteContentCell: MediaContentCell {
                         return
                     }
 
-                    self.aGridNameText.text = "Michael Kins"
-                    self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
+                    let uData = UserData()
+                    uData.setData(rData: l)
+                    let l_ = uData.dataCode
                     
-                    let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-                    self.aUserPhoto.sd_setImage(with: imageUrl)
+                    if(l_ == "a") {
+                        self.aGridNameText.text = uData.dataTextString
+                        if(uData.isAccountVerified) {
+                            self.vBtn.image = UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate)
+                        }
+                        let imageUrl = URL(string: uData.coverPhotoString)
+                        self.aUserPhoto.sd_setImage(with: imageUrl)
+                    }
                 }
 
                 case .failure(let error):
@@ -2863,26 +2881,26 @@ extension PostQuoteContentCell: ContentCellDelegate {
         
     }
     
-    func contentCellDidClickVcvClickPhoto(cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+    func contentCellDidClickVcvClickPhoto(id: String, cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         let aTestFrame = aTest.frame.origin
         let ccFrame = cc.frame.origin
         
         let pointX1 = pointX + aTestFrame.x + ccFrame.x
         let pointY1 = pointY + aTestFrame.y + ccFrame.y
-        aDelegate?.contentCellDidClickVcvClickPhoto(cc: self, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
+        aDelegate?.contentCellDidClickVcvClickPhoto(id: id, cc: self, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
         
         //test 2 > new method to store hide asset
 //        if let j = aTestArray.firstIndex(of: cc) {
 //            hiddenAssetIdx = j
 //        }
     }
-    func contentCellDidClickVcvClickVideo(cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+    func contentCellDidClickVcvClickVideo(id: String, cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         let aTestFrame = aTest.frame.origin
         let ccFrame = cc.frame.origin
         
         let pointX1 = pointX + aTestFrame.x + ccFrame.x
         let pointY1 = pointY + aTestFrame.y + ccFrame.y
-        aDelegate?.contentCellDidClickVcvClickVideo(cc: self, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
+        aDelegate?.contentCellDidClickVcvClickVideo(id: id, cc: self, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
         
         //test 2 > new method to store hide asset
 //        if let j = aTestArray.firstIndex(of: cc) {
@@ -2892,15 +2910,15 @@ extension PostQuoteContentCell: ContentCellDelegate {
     func contentCellDidDoubleClickPhoto(pointX: CGFloat, pointY: CGFloat){
         
     }
-    func contentCellDidClickSound(){
+    func contentCellDidClickSound(id: String){
         
     }
-    func contentCellDidClickUser(){
+    func contentCellDidClickUser(id: String){
         
     }
-    func contentCellDidClickPlace(){
+    func contentCellDidClickPlace(id: String){
     }
-    func contentCellDidClickPost(){
+    func contentCellDidClickPost(id: String){
 
     }
     func contentCellDidClickVcvClickPlay(cc: UIView, isPlay: Bool){

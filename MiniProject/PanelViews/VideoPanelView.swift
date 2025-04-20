@@ -11,10 +11,10 @@ import SDWebImage
 import GoogleMaps
 
 protocol VideoPanelDelegate : AnyObject {
-    func didClickUser()
-    func didClickPlace()
-    func didClickSound()
-    func didClickPost()
+    func didClickUser(id: String)
+    func didClickPlace(id: String)
+    func didClickSound(id: String)
+    func didClickPost(id: String)
     func didStartOpenVideoPanel()
     func didFinishOpenVideoPanel()
     func didStartCloseVideoPanel(vpv : VideoPanelView)
@@ -24,8 +24,8 @@ protocol VideoPanelDelegate : AnyObject {
     func didStartVideoPanGesture(vpv : VideoPanelView)
     func didEndVideoPanGesture(vpv : VideoPanelView)
     
-    func didClickVideoPanelClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) //try
-    func didClickVideoPanelClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) //try
+    func didClickVideoPanelClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) //try
+    func didClickVideoPanelClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) //try
     
     //test > click to create new post
     func didClickVideoPanelVcvClickCreate(type: String)
@@ -1833,23 +1833,31 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
 
 //test > link delegate implementation in VideoPanelView with VC
 extension ViewController: VideoPanelDelegate{
-    func didClickUser() {
+    func didClickUser(id: String) {
         deactivateQueueState()
-        openUserPanel()
+//        openUserPanel()
+        //test > real id for fetching data
+        openUserPanel(id: id)
     }
 
-    func didClickPlace() {
+    func didClickPlace(id: String) {
         deactivateQueueState()
-        openPlacePanel()
+//        openPlacePanel()
+        //test > real id for fetching data
+        openPlacePanel(id: id)
     }
 
-    func didClickSound() {
+    func didClickSound(id: String) {
         deactivateQueueState()
-        openSoundPanel()
+//        openSoundPanel()
+        //test > real id for fetching data
+        openSoundPanel(id: id)
     }
     
-    func didClickPost(){
-        openPostDetailPanel()
+    func didClickPost(id: String){
+//        openPostDetailPanel()
+        //test > real id for fetching data
+        openPostDetailPanel(id: id)
     }
 
     func didStartOpenVideoPanel() {
@@ -1968,17 +1976,19 @@ extension ViewController: VideoPanelDelegate{
         }
     }
     
-    func didClickVideoPanelClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func didClickVideoPanelClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
         let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
         
         if(mode == PhotoTypes.P_SHOT_DETAIL) {
-            openPhotoDetailPanel()
+//            openPhotoDetailPanel()
+            //test > real id for fetching data
+            openPhotoDetailPanel(id: id)
         } else if(mode == PhotoTypes.P_0){
             openPhotoZoomPanel(offX: offsetX, offY: offsetY)
         }
     }
-    func didClickVideoPanelClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func didClickVideoPanelClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
         let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
 
@@ -2322,17 +2332,17 @@ extension VideoPanelView: ScrollFeedVideoCellDelegate {
         }
     }
     
-    func sfvcDidClickUser() {
+    func sfvcDidClickUser(id: String) {
         pausePlayingMedia()
-        delegate?.didClickUser()
+        delegate?.didClickUser(id: id)
     }
-    func sfvcDidClickPlace(){
+    func sfvcDidClickPlace(id: String){
         pausePlayingMedia()
-        delegate?.didClickPlace()
+        delegate?.didClickPlace(id: id)
     }
-    func sfvcDidClickSound(){
+    func sfvcDidClickSound(id: String){
         pausePlayingMedia()
-        delegate?.didClickSound()
+        delegate?.didClickSound(id: id)
     }
     func sfvcDidClickComment(){
         pausePlayingMedia()
@@ -2436,14 +2446,14 @@ extension VideoPanelView: ShareSheetScrollableDelegate{
 }
 
 extension VideoPanelView: CommentScrollableDelegate{
-    func didCClickUser(){
-        delegate?.didClickUser()
+    func didCClickUser(id: String){
+        delegate?.didClickUser(id: id)
     }
-    func didCClickPlace(){
-        delegate?.didClickPlace()
+    func didCClickPlace(id: String){
+        delegate?.didClickPlace(id: id)
     }
-    func didCClickSound(){
-        delegate?.didClickSound()
+    func didCClickSound(id: String){
+        delegate?.didClickSound(id: id)
     }
     func didCClickClosePanel(){
         
@@ -2473,14 +2483,14 @@ extension VideoPanelView: CommentScrollableDelegate{
     func didCClickShare(){
         openShareSheet()
     }
-    func didCClickPost(){
-        delegate?.didClickPost()
+    func didCClickPost(id: String){
+        delegate?.didClickPost(id: id)
     }
-    func didCClickClickPhoto(pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
-        delegate?.didClickVideoPanelClickPhoto(pointX: pointX, pointY: pointY, view: view, mode: mode)
+    func didCClickClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        delegate?.didClickVideoPanelClickPhoto(id: id, pointX: pointX, pointY: pointY, view: view, mode: mode)
     }
-    func didCClickClickVideo(pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
-        delegate?.didClickVideoPanelClickVideo(pointX: pointX, pointY: pointY, view: view, mode: mode)
+    func didCClickClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        delegate?.didClickVideoPanelClickVideo(id: id, pointX: pointX, pointY: pointY, view: view, mode: mode)
     }
 }
 

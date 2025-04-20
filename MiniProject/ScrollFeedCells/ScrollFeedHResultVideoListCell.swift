@@ -317,7 +317,7 @@ extension ScrollFeedHResultVideoListCell: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: GridVideo2xViewCell.identifier, for: indexPath) as! GridVideo2xViewCell
         let originInRootView = collectionView.convert(cell.frame.origin, to: self)
-        print("collectionView index: \(indexPath), \(cell.frame.origin.x), \(cell.frame.origin.y), \(originInRootView)")
+        print("collectionView index vid: \(indexPath), \(cell.frame.origin.x), \(cell.frame.origin.y), \(originInRootView)")
 
 //        aDelegate?.sfcDidClickVcvClickVideo(pointX: originInRootView.x, pointY: originInRootView.y, view: cell, mode: VideoTypes.V_LOOP)
 //        hideCellAt(itemIndex: indexPath.row)
@@ -325,7 +325,7 @@ extension ScrollFeedHResultVideoListCell: UICollectionViewDataSource {
 }
 
 extension ScrollFeedHResultVideoListCell: GridViewCellDelegate {
-    func gridViewClick(vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+    func gridViewClick(id: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         print("gridviewclick")
         if let a = vCV {
             for cell in a.visibleCells {
@@ -339,7 +339,7 @@ extension ScrollFeedHResultVideoListCell: GridViewCellDelegate {
                     let pointY1 = originInRootView.y + pointY
                     
                     if let indexPath = visibleIndexPath {
-                        aDelegate?.sfcDidClickVcvClickVideo(pointX: pointX1, pointY: pointY1, view: view, mode: mode)
+                        aDelegate?.sfcDidClickVcvClickVideo(id: id, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
                         hideCellAt(itemIndex: indexPath.row)
                         
                         //test > additional delegate
@@ -351,11 +351,11 @@ extension ScrollFeedHResultVideoListCell: GridViewCellDelegate {
             }
         }
     }
-    func gridViewClickUser(){
+    func gridViewClickUser(id: String){
         //test > additional delegate
         bDelegate?.didScrollFeedHResultResignKeyboard()
         
-        aDelegate?.sfcDidClickVcvClickUser()
+        aDelegate?.sfcDidClickVcvClickUser(id: id)
     }
 }
 
