@@ -106,6 +106,9 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     
     let abBox = UIView()
     
+    let textEditPanelHeight = 60.0
+    let bottomToolPanelHeight = 90.0
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -322,7 +325,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         scrollView.topAnchor.constraint(equalTo: panel.topAnchor, constant: topMargin).isActive = true
 //        scrollView.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 50).isActive = true
         scrollView.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true
-        let bottomMargin = 90.0 + bottomInset //90 => tool panel height
+        let bottomMargin = bottomToolPanelHeight + bottomInset //90 => tool panel height
         scrollViewBottomCons = scrollView.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: -bottomMargin)
 //        scrollViewBottomCons = scrollView.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: -120)
         scrollViewBottomCons?.isActive = true
@@ -692,7 +695,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         toolPanel.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: 0).isActive = true
         toolPanel.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
         toolPanel.layer.cornerRadius = 0
-        toolPanel.heightAnchor.constraint(equalToConstant: 90).isActive = true //120
+        toolPanel.heightAnchor.constraint(equalToConstant: bottomToolPanelHeight).isActive = true //120
         
         let toolPanelBg = UIView()
 //        toolPanelBg.backgroundColor = .ddmDarkColor //black
@@ -1444,6 +1447,14 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                 print("dehidecell \(hideCellIndex)")
                 hideCellIndex = -1
             }
+            
+            //test > use contentcell
+//            if let currentTBox = pcList[hideCellIndex].tBox as? ContentCell {
+//                currentTBox.dehideCell()
+//                
+//                print("dehidecell \(hideCellIndex)")
+//                hideCellIndex = -1
+//            }
         }
     }
     
@@ -1455,6 +1466,15 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                 playingMediaAssetIdx = -1
             }
         }
+        
+        //test > use contentcell
+//        if(playingMediaAssetIdx > -1) {
+//            if let currentTBox = pcList[playingMediaAssetIdx].tBox as? MediaContentCell {
+//                currentTBox.pauseMedia()
+//                
+//                playingMediaAssetIdx = -1
+//            }
+//        }
     }
     
     func resumeMediaAsset() {
@@ -1465,6 +1485,15 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                 playingMediaAssetIdx = -1
             }
         }
+        
+        //test > use contentcell
+//        if(playingMediaAssetIdx > -1) {
+//            if let currentTBox = pcList[playingMediaAssetIdx].tBox as? MediaContentCell {
+//                currentTBox.resumeMedia()
+//                
+//                playingMediaAssetIdx = -1
+//            }
+//        }
     }
     
     //test > destroy cell
@@ -1476,6 +1505,15 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                 playingMediaAssetIdx = -1
             }
         }
+        
+        //test > use contentcell
+//        if(playingMediaAssetIdx > -1) {
+//            if let tBox = pcList[playingMediaAssetIdx].tBox as? ContentCell {
+//                tBox.destroyCell()
+//                
+//                playingMediaAssetIdx = -1
+//            }
+//        }
     }
     func destroyCell(i: Int) {
         if(i > -1) {
@@ -1483,6 +1521,29 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                 tBox.destroyCell()
             }
         }
+        
+        //test > use contentcell
+//        if(i > -1) {
+//            if let tBox = pcList[i].tBox as? ContentCell {
+//                tBox.destroyCell()
+//            }
+//        }
+    }
+    
+    func unselectPostClip(i : Int) {
+        //test 1 > not limited to "p" content only
+        if(i > -1) {
+            if let currentTBox = pcList[i].tBox as? PostClipCell {
+                currentTBox.unselectCell()
+            }
+        }
+        
+        //test > use contentcell
+//        if(i > -1) {
+//            if let currentTBox = pcList[i].tBox as? ContentCell {
+//                currentTBox.unselectCell()
+//            }
+//        }
     }
     
     func getIntersect() {
@@ -1569,43 +1630,46 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     func initialize() {
         if(!isInitialized) {
             if(isUserLoggedIn) {
-                let pImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
-                pImage.sd_setImage(with: pImageUrl)
-                pImage.isHidden = false
-                aStickyPhoto.sd_setImage(with: pImageUrl)
-                pNameText.text = "Michael Kins"
-                abBox.isHidden = false
+                //test > async fetch user data
+                asyncConfigureUser(data: "a")
                 
                 //test > add first textview
                 addTextSection(i: 0, extraContentSize: 0.0, textToAdd: "", toSetCursor: true)
                 
                 //* special test > embed post within post
                 if(quoteObjectType != "") {
-                    let vUrls = [URL]()
-                    let textBoxHeight = 17.0
-                    let textBoxTopMargin = 20.0
-                    let extraMargin = textBoxTopMargin + textBoxHeight
-//                    attachContentAtInitialize(urls: vUrls, dataType: "q", extraYMargin: extraMargin)
-                    attachContentAtInitialize(urls: vUrls, dataType: quoteObjectType, extraYMargin: extraMargin)
+                    //test > measure content size of real comment
+                    if(quoteObjectType == "post") {
+                        asyncConfigurePost(id: "post4", contentPosition: "start")
+                    }
+                    else if(quoteObjectType == "comment") {
+                        asyncConfigureComment(id: "comment4", contentPosition: "start")
+                    }
+                    else if(quoteObjectType == "video_l") {
+                        asyncConfigureVideoLoop(id: "video1", contentPosition: "start")
+                    }
+                    else if(quoteObjectType == "photo_s") {
+                        asyncConfigurePhotoShot(id: "photo1", contentPosition: "start")
+                    }
                 }
                 //*
                 //test > refresh tagged location 
-//                refreshPlaceTitleUI()
                 if(!predesignatedPlaceList.isEmpty) {
                     setSelectedLocation(l: "p")
                 }
                 //
                 
-                aBox.isHidden = false //show add location
+                //show add location
+                aBox.isHidden = false
             } else {
                 let pImageUrl = URL(string: "")
                 pImage.sd_setImage(with: pImageUrl)
-                pImage.isHidden = true
                 aStickyPhoto.sd_setImage(with: pImageUrl)
-                pNameText.text = "-"
+                pImage.isHidden = true
                 abBox.isHidden = true
                 
-                aBox.isHidden = true //hide add location
+                //hide add location
+                aBox.isHidden = true
             }
         }
         isInitialized = true
@@ -1634,6 +1698,289 @@ class PostCreatorConsolePanelView: CreatorPanelView{
             self.initialize()
         }
     }
+    
+    //test > fetch user data
+    func asyncConfigureUser(data: String) {
+        let id = "u1"
+        DataFetchManager.shared.fetchUserData2(id: id) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    print("pdp api success \(id), \(l)")
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    let pData = UserData()
+                    pData.setData(rData: l)
+                    let l_ = pData.dataCode
+                    if(l_ == "a") {
+                        let imageUrl = URL(string: pData.coverPhotoString)
+                        self.pImage.sd_setImage(with: imageUrl)
+                        self.aStickyPhoto.sd_setImage(with: imageUrl)
+                        
+                        self.pImage.isHidden = false
+                        self.abBox.isHidden = false
+                    }
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    let imageUrl = URL(string: "")
+                    self.pImage.sd_setImage(with: imageUrl)
+                    self.aStickyPhoto.sd_setImage(with: imageUrl)
+                    
+                    self.pImage.isHidden = true
+                    self.abBox.isHidden = true
+                }
+                break
+            }
+        }
+    }
+    //**test > fetch quote object
+    func asyncConfigureComment(id: String, contentPosition: String) {
+        let id_ = id
+//        let id_ = "s"
+        DataFetchManager.shared.fetchCommentData2(id: id_) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    //test 1 > use base data
+                    let pData = CommentData()
+                    pData.setData(rData: l)
+//                    self.computeContentSize(dataType: "quote", bData: pData)
+                    
+                    //test 2 > use contentData
+                    let dataCL = pData.contentDataArray
+                    let d = pData.dataCode
+                    let cd = ContentData()
+                    cd.setDataCode(data: "quote")
+                    cd.setContentDataType(dataType: "comment")
+                    cd.setId(dataId: id_)
+                    var da = [String]()
+                    var i = 0
+                    for cl in dataCL {
+                        let l = cl.dataCode
+                        da.append(l)
+                        
+                        if(l == "text" && i == 0) {
+                            cd.setDataTextString(dataText: cl.dataTextString)
+                            i += 1
+                        }
+                    }
+                    cd.setDataArray(da: da)
+                    cd.setContentDataCode(data: d)
+                    
+                    //test > at initialization
+                    if(contentPosition == "start") {
+                        let textBoxHeight = 17.0
+                        let textBoxTopMargin = 20.0
+                        let extraMargin = textBoxTopMargin + textBoxHeight
+                        self.addContentAtMain(cData: cd, dataType: "quote", extraYMargin: extraMargin, toSetCursor: false)
+                    }
+                    else if(contentPosition == "middle") {
+                        self.addContentAtText(cData: cd, dataType: "quote")
+                    }
+                    else if(contentPosition == "end") {
+                        self.addContentAtMain(cData: cd, dataType: "quote", extraYMargin: 0.0, toSetCursor: true)
+                    }
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    print("api fail")
+                    guard let self = self else {
+                        return
+                    }
+                }
+                break
+            }
+        }
+    }
+    func asyncConfigurePost(id: String, contentPosition: String) {
+        let id_ = id
+//        let id_ = "s"
+        DataFetchManager.shared.fetchPostData2(id: id_) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    //test 1 > use base data
+                    let pData = PostData()
+                    pData.setData(rData: l)
+//                    self.computeContentSize(dataType: "quote", bData: pData)
+                    
+                    //test 2 > use contentData
+                    let dataCL = pData.contentDataArray
+                    let d = pData.dataCode
+                    let cd = ContentData()
+                    cd.setDataCode(data: "quote")
+                    cd.setContentDataType(dataType: "post")
+                    cd.setId(dataId: id_)
+                    var da = [String]()
+                    var i = 0
+                    for cl in dataCL {
+                        let l = cl.dataCode
+                        da.append(l)
+                        
+                        if(l == "text" && i == 0) {
+                            cd.setDataTextString(dataText: cl.dataTextString)
+                            i += 1
+                        }
+                    }
+                    cd.setDataArray(da: da)
+                    cd.setContentDataCode(data: d)
+                    
+                    //test > at initialization
+                    if(contentPosition == "start") {
+                        let textBoxHeight = 17.0
+                        let textBoxTopMargin = 20.0
+                        let extraMargin = textBoxTopMargin + textBoxHeight
+                        self.addContentAtMain(cData: cd, dataType: "quote", extraYMargin: extraMargin, toSetCursor: false)
+                    }
+                    else if(contentPosition == "middle") {
+                        self.addContentAtText(cData: cd, dataType: "quote")
+                    }
+                    else if(contentPosition == "end") {
+                        self.addContentAtMain(cData: cd, dataType: "quote", extraYMargin: 0.0, toSetCursor: true)
+                    }
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    print("api fail")
+                    guard let self = self else {
+                        return
+                    }
+                }
+                break
+            }
+        }
+    }
+    func asyncConfigureVideoLoop(id: String, contentPosition: String) {
+        let id_ = id
+//        let id_ = "s"
+        DataFetchManager.shared.fetchVideoData2(id: id_) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    //test 1 > use base data
+                    let pData = VideoData()
+                    pData.setData(rData: l)
+//                    self.computeContentSize(dataType: "quote", bData: pData)
+                    
+                    //test 2 > use contentData
+                    let dataCL = pData.contentDataArray
+                    let d = pData.dataCode
+                    let cd = ContentData()
+                    cd.setDataCode(data: "video_l")
+                    cd.setId(dataId: id_)
+                    cd.setContentDataCode(data: d)
+                    
+                    //test > at initialization
+                    if(contentPosition == "start") {
+                        let textBoxHeight = 17.0
+                        let textBoxTopMargin = 20.0
+                        let extraMargin = textBoxTopMargin + textBoxHeight
+                        self.addContentAtMain(cData: cd, dataType: "video_l", extraYMargin: extraMargin, toSetCursor: false)
+                    }
+                    else if(contentPosition == "middle") {
+                        self.addContentAtText(cData: cd, dataType: "video_l")
+                    }
+                    else if(contentPosition == "end") {
+                        self.addContentAtMain(cData: cd, dataType: "video_l", extraYMargin: 0.0, toSetCursor: true)
+                    }
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    print("api fail")
+                    guard let self = self else {
+                        return
+                    }
+                }
+                break
+            }
+        }
+    }
+    func asyncConfigurePhotoShot(id: String, contentPosition: String) {
+        let id_ = id
+//        let id_ = "s"
+        DataFetchManager.shared.fetchPhotoData2(id: id_) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    //test 1 > use base data
+                    let pData = PhotoData()
+                    pData.setData(rData: l)
+//                    self.computeContentSize(dataType: "quote", bData: pData)
+                    
+                    //test 2 > use contentData
+                    let dataCL = pData.contentDataArray
+                    let d = pData.dataCode
+                    let cd = ContentData()
+                    cd.setDataCode(data: "photo_s")
+                    cd.setId(dataId: id_)
+                    cd.setContentDataCode(data: d)
+                    
+                    //test > at initialization
+                    if(contentPosition == "start") {
+                        let textBoxHeight = 17.0
+                        let textBoxTopMargin = 20.0
+                        let extraMargin = textBoxTopMargin + textBoxHeight
+                        self.addContentAtMain(cData: cd, dataType: "photo_s", extraYMargin: extraMargin, toSetCursor: false)
+                    }
+                    else if(contentPosition == "middle") {
+                        self.addContentAtText(cData: cd, dataType: "photo_s")
+                    }
+                    else if(contentPosition == "end") {
+                        self.addContentAtMain(cData: cd, dataType: "photo_s", extraYMargin: 0.0, toSetCursor: true)
+                    }
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    print("api fail")
+                    guard let self = self else {
+                        return
+                    }
+                }
+                break
+            }
+        }
+    }
+    //**
     
     func setPredesignatedPlace(p: String) {
         predesignatedPlaceList.append("p")
@@ -1684,7 +2031,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         self.textEditPanel.transform = CGAffineTransform(translationX: 0, y: 0)
         
         //shift scrollview down
-        let bottomMargin = 90.0 + bottomInset //60
+        let bottomMargin = bottomToolPanelHeight + bottomInset //60
         scrollViewBottomCons?.constant = -bottomMargin
         
         isKeyboardUp = false
@@ -1900,7 +2247,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         
         clearErrorUI()
         
-        unselectPostClipCell(i: selectedPcIndex)
+        unselectPostClip(i: selectedPcIndex)
         activatePanel(panel: "mainEditPanel")
         
         removeContentSection(i: selectedPcIndex)
@@ -1910,7 +2257,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         
         clearErrorUI()
         
-        unselectPostClipCell(i: selectedPcIndex)
+        unselectPostClip(i: selectedPcIndex)
         selectedPcIndex = -1
         
         activatePanel(panel: "mainEditPanel")
@@ -1945,7 +2292,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         
         clearErrorUI()
         
-        unselectPostClipCell(i: selectedPcIndex)
+        unselectPostClip(i: selectedPcIndex)
         activatePanel(panel: "mainEditPanel")
         
         removeContentSection(i: selectedPcIndex)
@@ -1955,7 +2302,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         
         clearErrorUI()
         
-        unselectPostClipCell(i: selectedPcIndex)
+        unselectPostClip(i: selectedPcIndex)
         selectedPcIndex = -1
         
         activatePanel(panel: "mainEditPanel")
@@ -1968,7 +2315,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         
         clearErrorUI()
         
-        unselectPostClipCell(i: selectedPcIndex)
+        unselectPostClip(i: selectedPcIndex)
         activatePanel(panel: "mainEditPanel")
         
         removeContentSection(i: selectedPcIndex)
@@ -1978,7 +2325,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         
         clearErrorUI()
         
-        unselectPostClipCell(i: selectedPcIndex)
+        unselectPostClip(i: selectedPcIndex)
         selectedPcIndex = -1
 
         activatePanel(panel: "mainEditPanel")
@@ -2006,10 +2353,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     }
 
     //test > add photo/video section => in multiple format/layout
-    func addContentSection(i: Int, textToAdd: String, urls: [URL], cSize: CGSize, dataType: String, extraYMargin: CGFloat) {
-        addContentSection(i: i, textToAdd: textToAdd, urls: urls, cSize: cSize, dataType: dataType, extraYMargin: extraYMargin, toSetCursor: true)
-    }
-    func addContentSection(i: Int, textToAdd: String, urls: [URL], cSize: CGSize, dataType: String, extraYMargin: CGFloat, toSetCursor: Bool) {
+    func addContentSection(i: Int, textToAdd: String, cData: ContentData, cSize: CGSize, dataType: String, extraYMargin: CGFloat, toSetCursor: Bool) {
         //if index is last member
         var isIndexLastElement = false
         var isToAppendText = false
@@ -2020,31 +2364,31 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         
         //*test 2 > with reusable cell
         let a = PostClip()
-        a.tBoxType = dataType //p for photo
-        let cell = PostClipCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
+//        let cell = PostClipCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
+        //test CGSize
+        let cell = PostClipCell(frame: CGRect(x: 0 , y: 0, width: cSize.width, height: cSize.height))
         uView.addSubview(cell)
         cell.translatesAutoresizingMaskIntoConstraints = false
         cell.trailingAnchor.constraint(equalTo: uView.trailingAnchor, constant: 0).isActive = true
         cell.leadingAnchor.constraint(equalTo: uView.leadingAnchor, constant: 0).isActive = true
+        cell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //test
         cell.redrawUI()
-        a.tBox = cell
         cell.aDelegate = self
-        
-        //test > insert url for selected photo
-//        cell.setImage(url: url)//ori
-//        cell.configure(data: "a", cSize: cSize)
-        cell.configure(data: "a", dataType: dataType, cSize: cSize)
+//        cell.configure(data: "a", dataType: dataType, cSize: cSize)
+        cell.configure(cData: cData, dataType: dataType, cSize: cSize)
+        a.tBox = cell
+        a.tBoxType = dataType //p for photo
         //*
         
         if let currentTBox = pcList[i].tBox {
             //insert photo section below current selected index
-            a.tBoxTopCons = cell.topAnchor.constraint(equalTo: currentTBox.bottomAnchor, constant: 10) //20
+            a.tBoxTopCons = cell.topAnchor.constraint(equalTo: currentTBox.bottomAnchor, constant: 20) //10
             a.tBoxTopCons?.isActive = true
             
             if(i < pcList.count - 1) {
                 if let nextTBox = pcList[i + 1].tBox {
                     pcList[i + 1].tBoxTopCons?.isActive = false
-                    pcList[i + 1].tBoxTopCons = nextTBox.topAnchor.constraint(equalTo: cell.bottomAnchor, constant: 10)
+                    pcList[i + 1].tBoxTopCons = nextTBox.topAnchor.constraint(equalTo: cell.bottomAnchor, constant: 20) //10
                     pcList[i + 1].tBoxTopCons?.isActive = true
                 }
                 
@@ -2058,9 +2402,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         
         //to append text section if last element
         if(isIndexLastElement || isToAppendText) {
-//            let extraSize = cSize.height + 20.0
             let extraSize = cSize.height + 20.0 + extraYMargin
-//            addTextSection(i: i + 1, extraContentSize: extraSize, textToAdd: textToAdd, toSetCursor: true)
             addTextSection(i: i + 1, extraContentSize: extraSize, textToAdd: textToAdd, toSetCursor: toSetCursor)
         }
         else {
@@ -2084,7 +2426,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     }
     
     //test > add photo or video
-    func addContentAtText(urls: [URL], dataType: String) {
+    func addContentAtText(cData: ContentData, dataType: String) {
         let currentYPosition = computePcPosition(index: selectedPcIndex, isInclusive: true)
         print("addcontent at text a: \(selectedPcIndex), \(currentYPosition), \(stackView.frame.height)")
         let stackViewH = stackView.frame.height
@@ -2095,14 +2437,16 @@ class PostCreatorConsolePanelView: CreatorPanelView{
 //        print("xy addphoto: \(selectedPcIndex), \(textBeforeCursor), \(textAfterCursor)")
         
         //*test > compute asset size beforehand
-        let assetSize = computeContentSize(dataType: dataType)
+//        let assetSize = computeContentSize(dataType: dataType)
+        //test > new compute method
+        let assetSize = computeContentSize(dataType: dataType, cData: cData)
         print("addcontent at text: \(assetSize)")
         //*
         
         //test 3 > add photo in index i
         let initialSelectedIndex = selectedPcIndex
         //test > new url method
-        addContentSection(i: selectedPcIndex, textToAdd: aTextAfterCursor, urls: urls, cSize: assetSize, dataType: dataType, extraYMargin: 0.0)
+        addContentSection(i: selectedPcIndex, textToAdd: aTextAfterCursor, cData: cData, cSize: assetSize, dataType: dataType, extraYMargin: 0.0, toSetCursor: true)
         
         //TODO 1: remove empty text section when adding photo
         //case 1: textbeforecursor "", add photo and textview with text below, remove current textview
@@ -2155,7 +2499,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         
         //test > scroll to position if not visible
 //        let y = scrollView.contentOffset.y
-        let scrollViewBottomMargin = keyboardHeight + 60.0 //60 => texteditpanel height
+        let scrollViewBottomMargin = keyboardHeight + textEditPanelHeight //60 => texteditpanel height
         let stackViewHeight = stackViewH + assetSize.height + 20.0
         let scrollViewHeight = viewHeight - (50.0 + topInset) - scrollViewBottomMargin
         var scrollGap = stackViewHeight - scrollViewHeight
@@ -2169,26 +2513,20 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         print("xy txt+Photo b: \(selectedPcIndex), \(stackViewHeight), \(scrollViewHeight), \(scrollViewBottomMargin)")
     }
     
-    func attachContentAtInitialize(urls: [URL], dataType: String, extraYMargin: CGFloat) {
-        addContentAtMain(urls: urls, dataType: dataType, extraYMargin: extraYMargin, toSetCursor: false)
-    }
-    func addContentAtMain(urls: [URL], dataType: String){
-        addContentAtMain(urls: urls, dataType: dataType, extraYMargin: 0.0, toSetCursor: true)
-    }
-    func addContentAtMain(urls: [URL], dataType: String, extraYMargin: CGFloat, toSetCursor: Bool) {
+    func addContentAtMain(cData: ContentData, dataType: String, extraYMargin: CGFloat, toSetCursor: Bool) {
         print("addcontent at main a: \(stackView.frame.height), \(extraYMargin)")
         if(!pcList.isEmpty) {
             let initialSelectedIndex = pcList.count - 1
             
-            let assetSize = computeContentSize(dataType: dataType)
-            addContentSection(i: initialSelectedIndex, textToAdd: "", urls: urls, cSize: assetSize, dataType: dataType, extraYMargin: extraYMargin, toSetCursor: toSetCursor)
+//            let assetSize = computeContentSize(dataType: dataType)
+            //test > new compute method
+            let assetSize = computeContentSize(dataType: dataType, cData: cData)
+            
+            addContentSection(i: initialSelectedIndex, textToAdd: "", cData: cData, cSize: assetSize, dataType: dataType, extraYMargin: extraYMargin, toSetCursor: toSetCursor)
 
             if(pcList[initialSelectedIndex].tBoxType == "text") {
                 if let tBoxTv = pcList[initialSelectedIndex].tBox as? UITextView {
                     if(tBoxTv.text == "") {
-                        //ori => fatal error
-//                        removeTextSection(i: initialSelectedIndex)
-                        
                         //test 1 > prevent fatal error
                         if(initialSelectedIndex > 0) { //test > prevent index 0 from being removed
                             removeTextSection(i: initialSelectedIndex)
@@ -2204,10 +2542,20 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         }
     }
     
-    //test > to be replaced with multiple urls computation
-    func computeContentSize(dataType: String) -> CGSize {
+    private func estimateHeight(text: String, textWidth: CGFloat, fontSize: CGFloat) -> CGFloat {
+        if(text == ""){
+            return 0
+        } else {
+            let size = CGSize(width: textWidth, height: 1000) //1000 height is dummy
+            let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: fontSize)]
+            let estimatedFrame = NSString(string: text).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
+            
+            return estimatedFrame.height.rounded(.up)
+        }
+    }
+    
+    func computeContentSize(dataType: String, cData: ContentData) -> CGSize {
         var cSize = CGSize(width: 0, height: 0)
-        
         if(dataType == "photo") {
             let cellWidth = self.frame.width
             let lhsMargin = 20.0
@@ -2220,18 +2568,18 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                 //1 > landscape photo 4:3 w:h
                 let aRatio = CGSize(width: 4, height: 3) //aspect ratio
                 let cHeight = availableWidth * aRatio.height / aRatio.width
-                cSize = CGSize(width: availableWidth, height: cHeight)
+                cSize = CGSize(width: round(availableWidth), height: round(cHeight))
             }
             else if (assetSize.width < assetSize.height){
                 //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
                 let aRatio = CGSize(width: 2, height: 3) //aspect ratio
                 let cWidth = availableWidth * 2 / 3
                 let cHeight = cWidth * aRatio.height / aRatio.width
-                cSize = CGSize(width: cWidth, height: cHeight)
+                cSize = CGSize(width: round(cWidth), height: round(cHeight))
             } else {
                 //square
                 let cWidth = availableWidth
-                cSize = CGSize(width: cWidth, height: cWidth)
+                cSize = CGSize(width: round(cWidth), height: round(cWidth))
             }
         } else if(dataType == "photo_s") {
             let cellWidth = self.frame.width
@@ -2245,18 +2593,18 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                 //1 > landscape photo 4:3 w:h
                 let aRatio = CGSize(width: 4, height: 3) //aspect ratio
                 let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
-                cSize = CGSize(width: availableWidth, height: cHeight)
+                cSize = CGSize(width: round(availableWidth), height: round(cHeight))
             }
             else if (assetSize.width < assetSize.height){
                 //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
                 let aRatio = CGSize(width: 2, height: 3) //aspect ratio
                 let cWidth = availableWidth * 2 / 3
                 let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
-                cSize = CGSize(width: cWidth, height: cHeight)
+                cSize = CGSize(width: round(cWidth), height: round(cHeight))
             } else {
                 //square
                 let cWidth = availableWidth
-                cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                cSize = CGSize(width: round(cWidth), height: round(cWidth + descHeight))
             }
         } else if(dataType == "video") {
             let cellWidth = self.frame.width
@@ -2269,18 +2617,18 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                 //1 > landscape photo 4:3 w:h
                 let aRatio = CGSize(width: 4, height: 3) //aspect ratio
                 let cHeight = availableWidth * aRatio.height / aRatio.width
-                cSize = CGSize(width: availableWidth, height: cHeight)
+                cSize = CGSize(width: round(availableWidth), height: round(cHeight))
             }
             else if (assetSize.width < assetSize.height){
                 //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
                 let aRatio = CGSize(width: 2, height: 3) //aspect ratio
                 let cWidth = availableWidth * 2 / 3
                 let cHeight = cWidth * aRatio.height / aRatio.width
-                cSize = CGSize(width: cWidth, height: cHeight)
+                cSize = CGSize(width: round(cWidth), height: round(cHeight))
             } else {
                 //square
                 let cWidth = availableWidth
-                cSize = CGSize(width: cWidth, height: cWidth)
+                cSize = CGSize(width: round(cWidth), height: round(cWidth))
             }
         } else if(dataType == "video_l") {//loop videos
             let cellWidth = self.frame.width
@@ -2294,196 +2642,195 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                 //1 > landscape photo 4:3 w:h
                 let aRatio = CGSize(width: 4, height: 3) //aspect ratio
                 let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
-                cSize = CGSize(width: availableWidth, height: cHeight)
+                cSize = CGSize(width: round(availableWidth), height: round(cHeight))
             }
             else if (assetSize.width < assetSize.height){
                 //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
                 let aRatio = CGSize(width: 2, height: 3) //aspect ratio
                 let cWidth = availableWidth * 2 / 3
                 let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
-                cSize = CGSize(width: cWidth, height: cHeight)
+                cSize = CGSize(width: round(cWidth), height: round(cHeight))
             } else {
                 //square
                 let cWidth = availableWidth
-                cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                cSize = CGSize(width: round(cWidth), height: round(cWidth + descHeight))
             }
-        } else if(dataType == "quote") { //quote cell
-            //**test > fake data for quote post
-            var qDataArray = [String]()
-            qDataArray.append("text")
-//                qDataArray.append("p")
-//                qDataArray.append("p_s")
-            qDataArray.append("video")
-//                qDataArray.append("v_l")
-            //**
-
+        } else if(dataType == "quote") {
             let cellWidth = self.frame.width
             let qLhsMargin = 20.0
             let qRhsMargin = 20.0
             let quoteWidth = cellWidth - qLhsMargin - qRhsMargin
             var contentHeight = 0.0
             
-            for i in qDataArray {
-                if(i == "text") {
-                    let tTopMargin = 20.0
-                    let text = "Nice food, nice environment! Worth a visit. \nSo Good."
-                    let tContentHeight = estimateHeight(text: text, textWidth: quoteWidth - 20.0 - 20.0, fontSize: 14)
-                    let tHeight = tTopMargin + tContentHeight
-                    contentHeight += tHeight
-                }
-                else if(i == "photo") {
-                    let lhsMargin = 20.0
-                    let rhsMargin = 20.0
-                    let availableWidth = quoteWidth - lhsMargin - rhsMargin
-                    
-                    let assetSize = CGSize(width: 4, height: 3)//landscape
-//                        let assetSize = CGSize(width: 3, height: 4)
-                    var cSize = CGSize(width: 0, height: 0)
-                    if(assetSize.width > assetSize.height) {
-                        //1 > landscape photo 4:3 w:h
-                        let aRatio = CGSize(width: 4, height: 3) //aspect ratio
-                        let cHeight = availableWidth * aRatio.height / aRatio.width
-                        cSize = CGSize(width: availableWidth, height: cHeight)
+//            let d = cData.dataCode
+            let da = cData.dataArray
+            let dd = cData.contentDataCode
+            
+            if(dd == "a") {
+                for l in da {
+                    if(l == "text") {
+                        let tTopMargin = 20.0
+                        let text = cData.dataTextString
+                        let tContentHeight = estimateHeight(text: text, textWidth: quoteWidth - 20.0 - 20.0, fontSize: 14)
+                        let tHeight = tTopMargin + tContentHeight
+                        contentHeight += tHeight
                     }
-                    else if (assetSize.width < assetSize.height){
-                        //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
-                        let aRatio = CGSize(width: 2, height: 3) //aspect ratio
-                        let cWidth = availableWidth * 2 / 3
-    //                    let cWidth = availableWidth //test full width for portrait
-                        let cHeight = cWidth * aRatio.height / aRatio.width
-                        cSize = CGSize(width: cWidth, height: cHeight)
-                    } else {
-                        //square
-                        let cWidth = availableWidth
-                        cSize = CGSize(width: cWidth, height: cWidth)
-                    }
+                    else if(l == "photo") {
+                        let lhsMargin = 20.0
+                        let rhsMargin = 20.0
+                        let availableWidth = quoteWidth - lhsMargin - rhsMargin
+                        
+                        let assetSize = CGSize(width: 4, height: 3)//landscape
+    //                        let assetSize = CGSize(width: 3, height: 4)
+                        var cSize = CGSize(width: 0, height: 0)
+                        if(assetSize.width > assetSize.height) {
+                            //1 > landscape photo 4:3 w:h
+                            let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                            let cHeight = availableWidth * aRatio.height / aRatio.width
+                            cSize = CGSize(width: round(availableWidth), height: round(cHeight))
+                        }
+                        else if (assetSize.width < assetSize.height){
+                            //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                            let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                            let cWidth = availableWidth * 2 / 3
+        //                    let cWidth = availableWidth //test full width for portrait
+                            let cHeight = cWidth * aRatio.height / aRatio.width
+                            cSize = CGSize(width: round(cWidth), height: round(cHeight))
+                        } else {
+                            //square
+                            let cWidth = availableWidth
+                            cSize = CGSize(width: round(cWidth), height: round(cWidth))
+                        }
 
-                    let pTopMargin = 20.0
-    //                let pContentHeight = 280.0
-                    let pContentHeight = cSize.height
-                    let pHeight = pTopMargin + pContentHeight
-                    contentHeight += pHeight
-                }
-                else if(i == "photo_s") {
-                    let lhsMargin = 20.0
-                    let rhsMargin = 20.0
-                    let descHeight = 40.0
-                    let availableWidth = quoteWidth - lhsMargin - rhsMargin
-                    
-                    let assetSize = CGSize(width: 4, height: 3)
-                    var cSize = CGSize(width: 0, height: 0)
-                    if(assetSize.width > assetSize.height) {
-                        //1 > landscape photo 4:3 w:h
-                        let aRatio = CGSize(width: 4, height: 3) //aspect ratio
-                        let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
-                        cSize = CGSize(width: availableWidth, height: cHeight)
+                        let pTopMargin = 20.0
+        //                let pContentHeight = 280.0
+                        let pContentHeight = cSize.height
+                        let pHeight = pTopMargin + pContentHeight
+                        contentHeight += pHeight
                     }
-                    else if (assetSize.width < assetSize.height){
-                        //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
-                        let aRatio = CGSize(width: 2, height: 3) //aspect ratio
-                        let cWidth = availableWidth * 2 / 3
-                        let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
-                        cSize = CGSize(width: cWidth, height: cHeight)
-                    } else {
-                        //square
-                        let cWidth = availableWidth
-                        cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                    else if(l == "photo_s") {
+                        let lhsMargin = 20.0
+                        let rhsMargin = 20.0
+                        let descHeight = 40.0
+                        let availableWidth = quoteWidth - lhsMargin - rhsMargin
+                        
+                        let assetSize = CGSize(width: 4, height: 3)
+                        var cSize = CGSize(width: 0, height: 0)
+                        if(assetSize.width > assetSize.height) {
+                            //1 > landscape photo 4:3 w:h
+                            let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                            let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
+                            cSize = CGSize(width: round(availableWidth), height: round(cHeight))
+                        }
+                        else if (assetSize.width < assetSize.height){
+                            //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                            let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                            let cWidth = availableWidth * 2 / 3
+                            let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
+                            cSize = CGSize(width: round(cWidth), height: round(cHeight))
+                        } else {
+                            //square
+                            let cWidth = availableWidth
+                            cSize = CGSize(width: round(cWidth), height: round(cWidth + descHeight))
+                        }
+                        
+                        let pTopMargin = 20.0
+        //                let pContentHeight = 280.0
+                        let pContentHeight = cSize.height
+                        let pHeight = pTopMargin + pContentHeight
+                        contentHeight += pHeight
                     }
-                    
-                    let pTopMargin = 20.0
-    //                let pContentHeight = 280.0
-                    let pContentHeight = cSize.height
-                    let pHeight = pTopMargin + pContentHeight
-                    contentHeight += pHeight
-                }
-                else if(i == "video") {
-                    let lhsMargin = 20.0
-                    let rhsMargin = 20.0
-                    let availableWidth = quoteWidth - lhsMargin - rhsMargin
-                    
-                    let assetSize = CGSize(width: 3, height: 4)
-                    var cSize = CGSize(width: 0, height: 0)
-                    if(assetSize.width > assetSize.height) {
-                        //1 > landscape photo 4:3 w:h
-                        let aRatio = CGSize(width: 4, height: 3) //aspect ratio
-                        let cHeight = availableWidth * aRatio.height / aRatio.width
-                        cSize = CGSize(width: availableWidth, height: cHeight)
+                    else if(l == "video") {
+                        let lhsMargin = 20.0
+                        let rhsMargin = 20.0
+                        let availableWidth = quoteWidth - lhsMargin - rhsMargin
+                        
+                        let assetSize = CGSize(width: 3, height: 4)
+                        var cSize = CGSize(width: 0, height: 0)
+                        if(assetSize.width > assetSize.height) {
+                            //1 > landscape photo 4:3 w:h
+                            let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                            let cHeight = availableWidth * aRatio.height / aRatio.width
+                            cSize = CGSize(width: round(availableWidth), height: round(cHeight))
+                        }
+                        else if (assetSize.width < assetSize.height){
+                            //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                            let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                            let cWidth = availableWidth * 2 / 3
+                            let cHeight = cWidth * aRatio.height / aRatio.width
+                            cSize = CGSize(width: round(cWidth), height: round(cHeight))
+                        } else {
+                            //square
+                            let cWidth = availableWidth
+                            cSize = CGSize(width: round(cWidth), height: round(cWidth))
+                        }
+                        
+                        let vTopMargin = 20.0
+        //                let vContentHeight = 350.0 //250
+                        let vContentHeight = cSize.height
+                        let vHeight = vTopMargin + vContentHeight
+                        contentHeight += vHeight
                     }
-                    else if (assetSize.width < assetSize.height){
-                        //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
-                        let aRatio = CGSize(width: 2, height: 3) //aspect ratio
-                        let cWidth = availableWidth * 2 / 3
-                        let cHeight = cWidth * aRatio.height / aRatio.width
-                        cSize = CGSize(width: cWidth, height: cHeight)
-                    } else {
-                        //square
-                        let cWidth = availableWidth
-                        cSize = CGSize(width: cWidth, height: cWidth)
+                    else if(l == "video_l") {
+                        let lhsMargin = 20.0
+                        let rhsMargin = 20.0
+                        let descHeight = 40.0
+                        let availableWidth = quoteWidth - lhsMargin - rhsMargin
+                        
+                        let assetSize = CGSize(width: 3, height: 4)
+                        var cSize = CGSize(width: 0, height: 0)
+                        if(assetSize.width > assetSize.height) {
+                            //1 > landscape photo 4:3 w:h
+                            let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                            let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
+                            cSize = CGSize(width: round(availableWidth), height: round(cHeight))
+                        }
+                        else if (assetSize.width < assetSize.height){
+                            //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                            let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                            let cWidth = availableWidth * 2 / 3
+                            let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
+                            cSize = CGSize(width: round(cWidth), height: round(cHeight))
+                        } else {
+                            //square
+                            let cWidth = availableWidth
+                            cSize = CGSize(width: round(cWidth), height: round(cWidth + descHeight))
+                        }
+                        
+                        let vTopMargin = 20.0
+        //                let vContentHeight = 350.0 //250
+                        let vContentHeight = cSize.height
+                        let vHeight = vTopMargin + vContentHeight
+        //                let vHeight = vTopMargin + vContentHeight + 40.0 //40.0 for bottom container for description
+                        contentHeight += vHeight
                     }
-                    
-                    let vTopMargin = 20.0
-    //                let vContentHeight = 350.0 //250
-                    let vContentHeight = cSize.height
-                    let vHeight = vTopMargin + vContentHeight
-                    contentHeight += vHeight
-                }
-                else if(i == "video_l") {
-                    let lhsMargin = 20.0
-                    let rhsMargin = 20.0
-                    let descHeight = 40.0
-                    let availableWidth = quoteWidth - lhsMargin - rhsMargin
-                    
-                    let assetSize = CGSize(width: 3, height: 4)
-                    var cSize = CGSize(width: 0, height: 0)
-                    if(assetSize.width > assetSize.height) {
-                        //1 > landscape photo 4:3 w:h
-                        let aRatio = CGSize(width: 4, height: 3) //aspect ratio
-                        let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
-                        cSize = CGSize(width: availableWidth, height: cHeight)
+                    else if(l == "quote") {
+                        let tTopMargin = 20.0
+                        let t = "[Quote]"
+                        let tContentHeight = estimateHeight(text: t, textWidth: quoteWidth - 20.0 - 20.0, fontSize: 14)
+                        let tHeight = tTopMargin + tContentHeight
+                        contentHeight += tHeight
                     }
-                    else if (assetSize.width < assetSize.height){
-                        //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
-                        let aRatio = CGSize(width: 2, height: 3) //aspect ratio
-                        let cWidth = availableWidth * 2 / 3
-                        let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
-                        cSize = CGSize(width: cWidth, height: cHeight)
-                    } else {
-                        //square
-                        let cWidth = availableWidth
-                        cSize = CGSize(width: cWidth, height: cWidth + descHeight)
-                    }
-                    
-                    let vTopMargin = 20.0
-    //                let vContentHeight = 350.0 //250
-                    let vContentHeight = cSize.height
-                    let vHeight = vTopMargin + vContentHeight
-    //                let vHeight = vTopMargin + vContentHeight + 40.0 //40.0 for bottom container for description
-                    contentHeight += vHeight
                 }
             }
-//            let qTopMargin = 20.0
+            else if(dd == "na") {
+                
+            }
+            else if(dd == "us") {
+                
+            }
+            
             let qUserPhotoHeight = 28.0
-            let qUserPhotoTopMargin = 20.0 //10
+            let qUserPhotoTopMargin = 15.0 //10
             let qFrameBottomMargin = 20.0 //10
             let qHeight = qUserPhotoHeight + qUserPhotoTopMargin + qFrameBottomMargin
             contentHeight += qHeight
             
             cSize = CGSize(width: quoteWidth, height: contentHeight)
         }
-
+        print("computeContent b: \(cSize.height)")
+        
         return cSize
-    }
-    
-    private func estimateHeight(text: String, textWidth: CGFloat, fontSize: CGFloat) -> CGFloat {
-        if(text == ""){
-            return 0
-        } else {
-            let size = CGSize(width: textWidth, height: 1000) //1000 height is dummy
-            let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: fontSize)]
-            let estimatedFrame = NSString(string: text).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
-            
-            return estimatedFrame.height
-        }
     }
     
     func addTextSection(i: Int, extraContentSize: CGFloat, textToAdd: String, toSetCursor: Bool) {
@@ -2576,14 +2923,14 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                         bTv.textContainerInset = UIEdgeInsets.zero
                         a.tBox = bTv
                         if let currentTBox = pcList[i].tBox {
-                            a.tBoxTopCons = bTv.topAnchor.constraint(equalTo: currentTBox.bottomAnchor, constant: 10) //20
+                            a.tBoxTopCons = bTv.topAnchor.constraint(equalTo: currentTBox.bottomAnchor, constant: 20) //10
                             a.tBoxTopCons?.isActive = true
                         }
                         a.tBoxHeightCons = bTv.heightAnchor.constraint(equalToConstant: 17) //36
                         a.tBoxHeightCons?.isActive = true
                         if let nextTBox = pcList[i + 1].tBox {
                             pcList[i + 1].tBoxTopCons?.isActive = false
-                            pcList[i + 1].tBoxTopCons = nextTBox.topAnchor.constraint(equalTo: bTv.bottomAnchor, constant: 10) //20
+                            pcList[i + 1].tBoxTopCons = nextTBox.topAnchor.constraint(equalTo: bTv.bottomAnchor, constant: 20) //10
                             pcList[i + 1].tBoxTopCons?.isActive = true
                         }
                         
@@ -2629,9 +2976,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                     }
                 }
                 else if(i == pcList.count - 1) {
-                    
-//                    print("addtextsectionC")
-                    
+
                     pcList[i].tBoxBottomCons?.isActive = false
                     
                     let a = PostClip()
@@ -2652,7 +2997,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                     bTv.textContainerInset = UIEdgeInsets.zero
                     a.tBox = bTv
                     if let currentTBox = pcList[i].tBox {
-                        a.tBoxTopCons = bTv.topAnchor.constraint(equalTo: currentTBox.bottomAnchor, constant: 10) //20
+                        a.tBoxTopCons = bTv.topAnchor.constraint(equalTo: currentTBox.bottomAnchor, constant: 20) //10
                         a.tBoxTopCons?.isActive = true
                     }
                     a.tBoxHeightCons = bTv.heightAnchor.constraint(equalToConstant: 17) //36
@@ -2728,7 +3073,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                 else{
                     if let nextTBox = pcList[i + 1].tBox {
                         pcList[i + 1].tBoxTopCons?.isActive = false
-                        pcList[i + 1].tBoxTopCons = nextTBox.topAnchor.constraint(equalTo: prevTBox.bottomAnchor, constant: 10) //20
+                        pcList[i + 1].tBoxTopCons = nextTBox.topAnchor.constraint(equalTo: prevTBox.bottomAnchor, constant: 20) //10
                         pcList[i + 1].tBoxTopCons?.isActive = true
                     }
                 }
@@ -2812,7 +3157,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                         else{
                             if let nextTBox = pcList[i + 1].tBox {
                                 pcList[i + 1].tBoxTopCons?.isActive = false
-                                pcList[i + 1].tBoxTopCons = nextTBox.topAnchor.constraint(equalTo: prevTBox.bottomAnchor, constant: 10) //20
+                                pcList[i + 1].tBoxTopCons = nextTBox.topAnchor.constraint(equalTo: prevTBox.bottomAnchor, constant: 20) //10
                                 pcList[i + 1].tBoxTopCons?.isActive = true
                             }
                         }
@@ -2865,19 +3210,6 @@ class PostCreatorConsolePanelView: CreatorPanelView{
 //        cameraRollPanel.setMultiSelection(limit: maxSelectLimit)
         let maxDurationLimit = 60.0
         cameraRollPanel.setDurationLimit(limit: maxDurationLimit)
-    }
-    
-    func unselectPostClipCell(i : Int) {
-//        if(pcList[i].tBoxType == "p") {
-//            if let currentTBox = pcList[i].tBox as? PostClipPhotoCell {
-//                currentTBox.unselectCell()
-//            }
-//        }
-        
-        //test 1 > not limited to "p" content only
-        if let currentTBox = pcList[i].tBox as? PostClipCell {
-            currentTBox.unselectCell()
-        }
     }
     
     @objc func onBackPostCreatorPanelClicked(gesture: UITapGestureRecognizer) {
@@ -3000,7 +3332,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
             }
             
             //test > adjust scrollview height when keyboard up
-            let scrollViewMargin = keyboardHeight + 60.0 //60 > texttoolpanel
+            let scrollViewMargin = keyboardHeight + textEditPanelHeight //60 > texttoolpanel
             self.scrollViewBottomCons?.constant = -scrollViewMargin
             
             isKeyboardUp = true
@@ -3041,7 +3373,8 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                     if(i == 0) {
                         yHeight += 20.0 //top margin
                     } else {
-                        yHeight += 10.0 //top margin
+//                        yHeight += 10.0 //top margin //ori
+                        yHeight += 20.0 //top margin
                     }
                 }
                 
@@ -3119,7 +3452,7 @@ extension PostCreatorConsolePanelView: PostClipCellDelegate {
                     
                     if(selectedPcIndex != i) {
                         if(selectedPcIndex > -1) {
-                            unselectPostClipCell(i: selectedPcIndex)
+                            unselectPostClip(i: selectedPcIndex)
                         }
                         cell.selectCell()
                         selectedPcIndex = i
@@ -3127,7 +3460,7 @@ extension PostCreatorConsolePanelView: PostClipCellDelegate {
                         //test > scroll to position if not visible
                         let stackViewHeight = stackView.frame.height
                         let topMargin = 50.0 + topInset
-                        let bottomMargin = 90.0 + bottomInset
+                        let bottomMargin = bottomToolPanelHeight + bottomInset
                         let scrollViewHeight = viewHeight - topMargin - bottomMargin //in full mode(keyboard down)
                         var scrollGap = stackViewHeight - scrollViewHeight
                         if(scrollGap <= 0) {
@@ -3383,7 +3716,7 @@ extension PostCreatorConsolePanelView: UITextViewDelegate {
                     
                     if(selectedPcIndex != i) {
                         if(selectedPcIndex > -1) {
-                            unselectPostClipCell(i: selectedPcIndex)
+                            unselectPostClip(i: selectedPcIndex)
                         }
                         selectedPcIndex = i
                     }
@@ -3431,7 +3764,7 @@ extension PostCreatorConsolePanelView: UITextViewDelegate {
                 
                 //print the cursor's X and Y coordinates
                 let y = scrollView.contentOffset.y
-                let scrollViewBottomMargin = keyboardHeight + 60.0 //60
+                let scrollViewBottomMargin = keyboardHeight + textEditPanelHeight //60
                 let sHeight = viewHeight - (50.0 + topInset) - scrollViewBottomMargin
                 let cursorOriginY = stackConvertedRect.origin.y
                 let cursorY = stackConvertedRect.origin.y + caretRect.height
@@ -3527,7 +3860,7 @@ extension PostCreatorConsolePanelView: UITextViewDelegate {
                     
                     //print the cursor's X and Y coordinates
                     let y = scrollView.contentOffset.y
-                    let scrollViewBottomMargin = keyboardHeight + 60.0 //60
+                    let scrollViewBottomMargin = keyboardHeight + textEditPanelHeight //60
                     let sHeight = viewHeight - (50.0 + topInset) - scrollViewBottomMargin
                     let cursorOriginY = stackConvertedRect.origin.y
                     let cursorY = stackConvertedRect.origin.y + caretRect.height
@@ -3658,15 +3991,33 @@ extension PostCreatorConsolePanelView: CameraPhotoRollPanelDelegate{
 
     }
     func didClickMultiPhotoSelect(urls: [URL]){
+//        if(!urls.isEmpty) {
+//            if(selectedPcIndex > -1) {
+//                addContentAtText(urls: urls, dataType: "photo")
+//            } else {
+//                addContentAtMain(urls: urls, dataType: "photo_s", extraYMargin: 0.0, toSetCursor: true)
+//            }
+//        }
+        
+        //test 2 > use contentData instead of Url
         if(!urls.isEmpty) {
-//            let imgUrl = urls[0]
-//            aPhotoB.sd_setImage(with: imgUrl)
+            //convert url to string
+            var vUrlS = [String]()
+            for url in urls {
+                let vUrl = url.absoluteString
+                vUrlS.append(vUrl)
+            }
             
-            print("multiphotoclick \(selectedPcIndex)")
             if(selectedPcIndex > -1) {
-                addContentAtText(urls: urls, dataType: "photo")
+                let cd = ContentData()
+                cd.setDataCode(data: "photo")
+                cd.setDataArray(da: vUrlS)
+                addContentAtText(cData: cd, dataType: "photo")
             } else {
-                addContentAtMain(urls: urls, dataType: "photo_s")
+                let cd = ContentData()
+                cd.setDataCode(data: "photo_s")
+                cd.setDataArray(da: vUrlS)
+                addContentAtMain(cData: cd, dataType: "photo_s", extraYMargin: 0.0, toSetCursor: true)
             }
         }
     }
@@ -3708,12 +4059,23 @@ extension PostCreatorConsolePanelView: CameraVideoRollPanelDelegate{
                 vUrls.append(vUrl)
             }
             
+//            if(selectedPcIndex > -1) {
+//                addContentAtText(urls: vUrls, dataType: "video") //test
+//            } else {
+//                addContentAtMain(urls: vUrls, dataType: "video_l", extraYMargin: 0.0, toSetCursor: true)
+//            }
+            
+            //test 2 > use contentData instead of Url
             if(selectedPcIndex > -1) {
-//                addContentAtText(urls: vUrls, dataType: "v_l")
-                addContentAtText(urls: vUrls, dataType: "video") //test
+                let cd = ContentData()
+                cd.setDataCode(data: "video")
+                cd.setDataArray(da: urls)
+                addContentAtText(cData: cd, dataType: "video")
             } else {
-//                addContentAtMain(urls: vUrls, dataType: "v_l")
-                addContentAtMain(urls: vUrls, dataType: "video_l") //test
+                let cd = ContentData()
+                cd.setDataCode(data: "video")
+                cd.setDataArray(da: urls)
+                addContentAtMain(cData: cd, dataType: "video", extraYMargin: 0.0, toSetCursor: true)
             }
         }
     }

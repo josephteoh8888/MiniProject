@@ -142,9 +142,9 @@ class HPostListBViewCell: UICollectionViewCell {
 //        aGridNameText.centerYAnchor.constraint(equalTo: aUserPhoto.centerYAnchor).isActive = true
         aGridNameText.topAnchor.constraint(equalTo: aUserPhoto.topAnchor).isActive = true
         aGridNameText.leadingAnchor.constraint(equalTo: aUserPhoto.trailingAnchor, constant: 10).isActive = true
-//        aGridNameText.text = "Mic1809"
-//        aGridNameText.text = "Michael Kins"
         aGridNameText.text = "-"
+        aGridNameText.isUserInteractionEnabled = true
+        aGridNameText.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onUserClicked)))
         
         //test > verified badge
 //        let vBtn = UIImageView(image: UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate))
@@ -510,6 +510,8 @@ class HPostListBViewCell: UICollectionViewCell {
         
         //test > clear id
         setId(id: "")
+        setIds(uId: "", pId: "", sId: "")
+        setDataType(dataType: "")
         
         mediaArray.removeAll()
 
@@ -563,24 +565,21 @@ class HPostListBViewCell: UICollectionViewCell {
                     guard let self = self else {
                         return
                     }
+
+                    let uData = UserData()
+                    uData.setData(rData: l)
+                    let l_ = uData.dataCode
                     
-//                    if(!l.isEmpty) {
-//                        let l_0 = l[0]
-                        let uData = UserData()
-                        uData.setData(rData: l)
-                        let l_ = uData.dataCode
+                    if(l_ == "a") {
+                        self.aGridNameText.text = uData.dataTextString
                         
-                        if(l_ == "a") {
-                            self.aGridNameText.text = uData.dataTextString
-                            
-                            let eImageUrl = URL(string: uData.coverPhotoString)
-                            self.aUserPhoto.sd_setImage(with: eImageUrl)
-                            
-                            if(uData.isAccountVerified) {
-                                self.vBtn.image = UIImage(named:"icon_round_verified_b")?.withRenderingMode(.alwaysTemplate)
-                            }
+                        let eImageUrl = URL(string: uData.coverPhotoString)
+                        self.aUserPhoto.sd_setImage(with: eImageUrl)
+                        
+                        if(uData.isAccountVerified) {
+                            self.vBtn.image = UIImage(named:"icon_round_verified_b")?.withRenderingMode(.alwaysTemplate)
                         }
-//                    }
+                    }
                 }
 
                 case .failure(let error):
@@ -640,16 +639,30 @@ class HPostListBViewCell: UICollectionViewCell {
     
     //test > set id for init
     var id = ""
+    var userId = ""
+    var placeId = ""
+    var soundId = ""
+    var dataType = ""
     func setId(id: String) {
         self.id = id
     }
+    func setIds(uId: String, pId: String, sId: String) {
+        self.userId = uId
+        self.placeId = pId
+        self.soundId = sId
+    }
+    func setDataType(dataType: String) {
+        self.dataType = dataType
+    }
     
-    func configure(data: BaseData) {
-        guard let a = data as? PostData else {
+    func configure(data: BaseData, dataType: String) {
+//        guard let a = data as? PostData else {
+        guard let a = data as? BasePostData else {
             return
         }
         
         setId(id: a.id)
+        setDataType(dataType: dataType)
         
         aUserNameText.text = "-"
         aaText.text = "-"
@@ -675,6 +688,8 @@ class HPostListBViewCell: UICollectionViewCell {
             
             let u = a.userId
             let p = a.placeId
+            let s = a.soundId
+            setIds(uId: u, pId: p, sId: s)
             asyncConfigure(data: u)
             asyncConfigurePlace(data: p)
             
@@ -962,7 +977,12 @@ class HPostListBViewCell: UICollectionViewCell {
     //                contentCell.heightAnchor.constraint(equalToConstant: 120).isActive = true  //350
                     contentCell.layer.cornerRadius = 10 //5
                     aTestArray.append(contentCell)
-                    contentCell.configure(data: "a", text: data.dataTextString)
+//                    contentCell.setupContentViews(qPredata: da, text: cl.dataTextString)
+                    contentCell.setupContentViews(qPredata: da, text: cl.dataTextString, contentData: cl)
+//                    let qId = cl.id
+//                    let qContentDataType = cl.contentDataType
+//                    contentCell.configure(id: qId, contentDataType: qContentDataType)
+                    contentCell.configure(contentData: cl)
                     contentCell.aDelegate = self //test
                     
                     //test
@@ -1050,11 +1070,11 @@ class HPostListBViewCell: UICollectionViewCell {
     }
     @objc func onUserClicked(gesture: UITapGestureRecognizer) {
         print("click open user panel:")
-        aDelegate?.hListDidClickVcvClickUser(id: "")
+        aDelegate?.hListDidClickVcvClickUser(id: userId)
     }
     @objc func onPlaceClicked(gesture: UITapGestureRecognizer) {
         print("click open place panel:")
-        aDelegate?.hListDidClickVcvClickPlace(id: "")
+        aDelegate?.hListDidClickVcvClickPlace(id: placeId)
     }
     
     //test > single and double clicked
@@ -1198,13 +1218,13 @@ extension HPostListBViewCell: ContentCellDelegate {
         
     }
     func contentCellDidClickUser(id: String){
-        
+        aDelegate?.hListDidClickVcvClickUser(id: id)
     }
     func contentCellDidClickPlace(id: String){
         
     }
-    func contentCellDidClickPost(id: String){
-        
+    func contentCellDidClickPost(id: String, dataType: String){
+        aDelegate?.hListDidClickVcvClickPost(id: id, dataType: dataType)
     }
     func contentCellDidClickVcvClickPlay(cc: UIView, isPlay: Bool){
         if let j = aTestArray.firstIndex(of: cc) {
@@ -1213,5 +1233,8 @@ extension HPostListBViewCell: ContentCellDelegate {
             
             aDelegate?.hListDidClickVcvClickPlay(vc: self, isPlay: isPlay)
         }
+    }
+    func contentCellResize(cc: UIView){
+        aDelegate?.hListResize(vc: self)
     }
 }

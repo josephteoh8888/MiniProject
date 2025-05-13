@@ -10,7 +10,7 @@ import UIKit
 import SDWebImage
 
 protocol MePostPanelDelegate : AnyObject {
-    func didMePostClickPost(id: String)
+    func didMePostClickPost(id: String, dataType: String)
     func didMePostClickClose()
 }
 //test > new method with uiscrollview of feedcells
@@ -962,8 +962,8 @@ extension MePostListPanelView: ScrollFeedCellDelegate {
     func sfcDidClickVcvClickSound(id: String) {
 //        delegate?.didNotifyClickSound()
     }
-    func sfcDidClickVcvClickPost(id: String) {
-        delegate?.didMePostClickPost(id: id)
+    func sfcDidClickVcvClickPost(id: String, dataType: String) {
+        delegate?.didMePostClickPost(id: id, dataType: dataType)
     }
     func sfcDidClickVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
 
@@ -1015,10 +1015,10 @@ extension MePostListPanelView: TabStackDelegate {
 
 //test
 extension ViewController: MePostPanelDelegate{
-    func didMePostClickPost(id: String){
-//        openPostDetailPanel()
+    func didMePostClickPost(id: String, dataType: String){
         //test > real id for fetching data
-        openPostDetailPanel(id: id)
+//        openPostDetailPanel(id: id)
+        openPostDetailPanel(id: id, dataType: dataType)
     }
     func didMePostClickClose() {
         backPage(isCurrentPageScrollable: false)

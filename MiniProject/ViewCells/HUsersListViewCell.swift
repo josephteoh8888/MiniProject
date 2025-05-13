@@ -168,6 +168,9 @@ class HUsersListViewCell: UICollectionViewCell {
         super.prepareForReuse()
         print("HResultUserListViewCell prepare for reuse")
         
+        //test > clear id
+        setId(id: "")
+        
         let imageUrl = URL(string: "")
         aUserPhoto.sd_setImage(with: imageUrl)
         
@@ -176,11 +179,17 @@ class HUsersListViewCell: UICollectionViewCell {
         vBtn.image = nil
     }
     
-//    func configure(data: String) {
+    //test > set id for init
+    var id = ""
+    func setId(id: String) {
+        self.id = id
+    }
+    
     func configure(data: BaseData) {
         guard let a = data as? UserData else {
             return
         }
+        setId(id: data.id)
         
         let l = a.dataCode
         
@@ -249,7 +258,7 @@ class HUsersListViewCell: UICollectionViewCell {
     }
     
     @objc func onUserClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.didHUsersClickUser(id: "")
+        aDelegate?.didHUsersClickUser(id: id)
     }
 }
 

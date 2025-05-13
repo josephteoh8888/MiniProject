@@ -24,7 +24,7 @@ protocol UserScrollablePanelDelegate : AnyObject {
     func didUClickUserUserScrollable(id: String)
     func didUClickPlaceUserScrollable(id: String)
     func didUClickSoundUserScrollable(id: String)
-    func didUClickUserScrollableVcvClickPost(id: String)
+    func didUClickUserScrollableVcvClickPost(id: String, dataType: String)
     func didUClickUserScrollableVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     func didUClickUserScrollableVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     func didUClickUserSignIn()
@@ -551,6 +551,7 @@ class UserScrollablePanelView: ScrollablePanelView{
         aNameTextB.translatesAutoresizingMaskIntoConstraints = false
         aNameTextB.topAnchor.constraint(equalTo: aPhotoB.bottomAnchor, constant: 10).isActive = true
         aNameTextB.leadingAnchor.constraint(equalTo: aPhotoB.leadingAnchor, constant: 0).isActive = true
+        aNameTextB.trailingAnchor.constraint(equalTo: bPanelView.trailingAnchor, constant: -20).isActive = true
         aNameTextB.text = ""
 
         aUsernameText.textAlignment = .left
@@ -852,18 +853,6 @@ class UserScrollablePanelView: ScrollablePanelView{
 //        aStickyPhoto.sd_setImage(with: stickyImageUrl)
         aStickyPhoto.backgroundColor = .ddmDarkColor
 
-//        let aNameTextC = UILabel()
-        aNameTextC.textAlignment = .left
-        aNameTextC.textColor = .white
-        aNameTextC.font = .boldSystemFont(ofSize: 14)
-        stickyHLight.addSubview(aNameTextC)
-        aNameTextC.translatesAutoresizingMaskIntoConstraints = false
-        aNameTextC.centerYAnchor.constraint(equalTo: stickyHLight.centerYAnchor, constant: 0).isActive = true
-//        aNameTextC.leadingAnchor.constraint(equalTo: stickyHLight.leadingAnchor, constant: 20).isActive = true
-        aNameTextC.leadingAnchor.constraint(equalTo: aStickyPhoto.trailingAnchor, constant: 10).isActive = true
-        aNameTextC.text = ""
-//        aNameTextC.text = ""
-
 //        let aFollowC = UIView()
         aFollowC.backgroundColor = .yellow
         stickyHLight.addSubview(aFollowC)
@@ -887,6 +876,18 @@ class UserScrollablePanelView: ScrollablePanelView{
         aFollowCText.centerYAnchor.constraint(equalTo: aFollowC.centerYAnchor).isActive = true
 //        aFollowCText.text = "Follow"
         aFollowCText.text = ""
+        
+//        let aNameTextC = UILabel()
+        aNameTextC.textAlignment = .left
+        aNameTextC.textColor = .white
+        aNameTextC.font = .boldSystemFont(ofSize: 14)
+        stickyHLight.addSubview(aNameTextC)
+        aNameTextC.translatesAutoresizingMaskIntoConstraints = false
+        aNameTextC.centerYAnchor.constraint(equalTo: stickyHLight.centerYAnchor, constant: 0).isActive = true
+        aNameTextC.leadingAnchor.constraint(equalTo: aStickyPhoto.trailingAnchor, constant: 10).isActive = true
+        aNameTextC.trailingAnchor.constraint(equalTo: aFollowC.leadingAnchor, constant: -10).isActive = true
+        aNameTextC.text = ""
+//        aNameTextC.text = ""
     }
     
     func layoutTabUI() {
@@ -2777,9 +2778,9 @@ extension UserScrollablePanelView: ScrollFeedCellDelegate {
     func sfcDidClickVcvClickSound(id: String) {
 
     }
-    func sfcDidClickVcvClickPost(id: String) {
+    func sfcDidClickVcvClickPost(id: String, dataType: String) {
         pauseFeedPlayingMedia()
-        delegate?.didUClickUserScrollableVcvClickPost(id: id)
+        delegate?.didUClickUserScrollableVcvClickPost(id: id, dataType: dataType)
     }
     func sfcDidClickVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         print("userscroll click photo \(mode)")
@@ -2879,10 +2880,10 @@ extension ViewController: UserScrollablePanelDelegate{
         //test > real id for fetching data
         openSoundPanel(id: id)
     }
-    func didUClickUserScrollableVcvClickPost(id: String){
-//        openPostDetailPanel()
+    func didUClickUserScrollableVcvClickPost(id: String, dataType: String){
         //test > real id for fetching data
-        openPostDetailPanel(id: id)
+//        openPostDetailPanel(id: id)
+        openPostDetailPanel(id: id, dataType: "")
     }
     func didUClickUserScrollableVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
         let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
@@ -3078,8 +3079,8 @@ extension UserScrollablePanelView: CommentScrollableDelegate{
     func didCClickShare(){
         openShareSheet()
     }
-    func didCClickPost(id: String){
-        delegate?.didUClickUserScrollableVcvClickPost(id: id)
+    func didCClickPost(id: String, dataType: String){
+        delegate?.didUClickUserScrollableVcvClickPost(id: id, dataType: dataType)
     }
     func didCClickClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         delegate?.didUClickUserScrollableVcvClickPhoto(id: id, pointX: pointX, pointY: pointY, view: view, mode: mode)

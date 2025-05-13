@@ -10,7 +10,7 @@ import UIKit
 import SDWebImage
 
 protocol PhotoDetailPanelDelegate : AnyObject {
-    func didClickPhotoDetailPanelVcvClickPost(id: String) //try
+    func didClickPhotoDetailPanelVcvClickPost(id: String, dataType: String) //try
     func didClickPhotoDetailPanelVcvClickUser(id: String) //try
     func didClickPhotoDetailClosePanel()
     func didClickPhotoDetailPanelVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
@@ -1632,7 +1632,7 @@ extension PhotoDetailPanelView: UICollectionViewDelegateFlowLayout {
             let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: fontSize)]
             let estimatedFrame = NSString(string: text).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
             
-            return estimatedFrame.height
+            return estimatedFrame.height.rounded(.up)
         }
     }
     
@@ -1775,12 +1775,13 @@ extension PhotoDetailPanelView: UICollectionViewDelegateFlowLayout {
             if(d == "a") {
                 for cl in dataCL {
                     let l = cl.dataCode
-
+                    let da = cl.dataArray
+                    
                     if(l == "text") {
                         let tTopMargin = 20.0
 //                        let tContentHeight = estimateHeight(text: text, textWidth: collectionView.frame.width - indentSize - 30.0, fontSize: 13)
                         let t = cl.dataTextString
-                        let tContentHeight = estimateHeight(text: t, textWidth: collectionView.frame.width - indentSize - 30.0, fontSize: 13) //-indentSize - 30.0
+                        let tContentHeight = estimateHeight(text: t, textWidth: collectionView.frame.width - indentSize - 30.0, fontSize: 14) //-indentSize - 30.0, font 13
                         let tHeight = tTopMargin + tContentHeight
                         contentHeight += tHeight
                     }
@@ -1935,186 +1936,210 @@ extension PhotoDetailPanelView: UICollectionViewDelegateFlowLayout {
                         contentHeight += vHeight
                     }
                     else if(l == "quote") {
-                        //**test > fake data for quote post
-                        var qDataArray = [String]()
-                        qDataArray.append("text")
-        //                qDataArray.append("p")
-        //                qDataArray.append("p_s")
-                        qDataArray.append("video")
-    //                    qDataArray.append("v_l")
-                        //**
-
                         let qLhsMargin = indentSize
                         let qRhsMargin = 20.0
                         let quoteWidth = self.frame.width - qLhsMargin - qRhsMargin
                         
-                        for i in qDataArray {
-                            if(i == "text") {
-                                let tTopMargin = 20.0
-                                let tContentHeight = estimateHeight(text: text, textWidth: quoteWidth - 20.0 - 20.0, fontSize: 14)
-                                let tHeight = tTopMargin + tContentHeight
-                                contentHeight += tHeight
+                        let dd = cl.contentDataCode
+                        if(dd == "a" || dd == "") {
+                            //**test > fake data for quote post
+                            var qDataArray = [String]()
+                            
+                            for d in da {
+                                qDataArray.append(d)
                             }
-                            else if(i == "photo") {
-                                let lhsMargin = 20.0
-                                let rhsMargin = 20.0
-                                let availableWidth = quoteWidth - lhsMargin - rhsMargin
-                                
-                                let assetSize = CGSize(width: 4, height: 3)//landscape
-        //                        let assetSize = CGSize(width: 3, height: 4)
-                                var cSize = CGSize(width: 0, height: 0)
-                                if(assetSize.width > assetSize.height) {
-                                    //1 > landscape photo 4:3 w:h
-                                    let aRatio = CGSize(width: 4, height: 3) //aspect ratio
-                                    let cHeight = availableWidth * aRatio.height / aRatio.width
-//                                    cSize = CGSize(width: availableWidth, height: cHeight)
-                                    //test > round to int to prevent incomplete photo scroll
-                                    cSize = CGSize(width: round(availableWidth), height: round(cHeight))
+                            //**
+                            
+                            for i in qDataArray {
+                                if(i == "text") {
+                                    let tTopMargin = 20.0
+                                    let tContentHeight = estimateHeight(text: text, textWidth: quoteWidth - 20.0 - 20.0, fontSize: 14)
+                                    let tHeight = tTopMargin + tContentHeight
+                                    contentHeight += tHeight
                                 }
-                                else if (assetSize.width < assetSize.height){
-                                    //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
-                                    let aRatio = CGSize(width: 2, height: 3) //aspect ratio
-                                    let cWidth = availableWidth * 2 / 3
-                //                    let cWidth = availableWidth //test full width for portrait
-                                    let cHeight = cWidth * aRatio.height / aRatio.width
-//                                    cSize = CGSize(width: cWidth, height: cHeight)
-                                    //test > round to int to prevent incomplete photo scroll
-                                    cSize = CGSize(width: round(cWidth), height: round(cHeight))
-                                } else {
-                                    //square
-                                    let cWidth = availableWidth
-//                                    cSize = CGSize(width: cWidth, height: cWidth)
-                                    //test > round to int to prevent incomplete photo scroll
-                                    cSize = CGSize(width: round(cWidth), height: round(cWidth))
-                                }
+                                else if(i == "photo") {
+                                    let lhsMargin = 20.0
+                                    let rhsMargin = 20.0
+                                    let availableWidth = quoteWidth - lhsMargin - rhsMargin
+                                    
+                                    let assetSize = CGSize(width: 4, height: 3)//landscape
+            //                        let assetSize = CGSize(width: 3, height: 4)
+                                    var cSize = CGSize(width: 0, height: 0)
+                                    if(assetSize.width > assetSize.height) {
+                                        //1 > landscape photo 4:3 w:h
+                                        let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                                        let cHeight = availableWidth * aRatio.height / aRatio.width
+    //                                    cSize = CGSize(width: availableWidth, height: cHeight)
+                                        //test > round to int to prevent incomplete photo scroll
+                                        cSize = CGSize(width: round(availableWidth), height: round(cHeight))
+                                    }
+                                    else if (assetSize.width < assetSize.height){
+                                        //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                                        let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                                        let cWidth = availableWidth * 2 / 3
+                    //                    let cWidth = availableWidth //test full width for portrait
+                                        let cHeight = cWidth * aRatio.height / aRatio.width
+    //                                    cSize = CGSize(width: cWidth, height: cHeight)
+                                        //test > round to int to prevent incomplete photo scroll
+                                        cSize = CGSize(width: round(cWidth), height: round(cHeight))
+                                    } else {
+                                        //square
+                                        let cWidth = availableWidth
+    //                                    cSize = CGSize(width: cWidth, height: cWidth)
+                                        //test > round to int to prevent incomplete photo scroll
+                                        cSize = CGSize(width: round(cWidth), height: round(cWidth))
+                                    }
 
-                                let pTopMargin = 20.0
-                //                let pContentHeight = 280.0
-                                let pContentHeight = cSize.height
-                                let pHeight = pTopMargin + pContentHeight
-                                contentHeight += pHeight
+                                    let pTopMargin = 20.0
+                    //                let pContentHeight = 280.0
+                                    let pContentHeight = cSize.height
+                                    let pHeight = pTopMargin + pContentHeight
+                                    contentHeight += pHeight
+                                }
+                                else if(i == "photo_s") {
+                                    let lhsMargin = 20.0
+                                    let rhsMargin = 20.0
+                                    let descHeight = 40.0
+                                    let availableWidth = quoteWidth - lhsMargin - rhsMargin
+                                    
+                                    let assetSize = CGSize(width: 4, height: 3)
+                                    var cSize = CGSize(width: 0, height: 0)
+                                    if(assetSize.width > assetSize.height) {
+                                        //1 > landscape photo 4:3 w:h
+                                        let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                                        let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
+    //                                    cSize = CGSize(width: availableWidth, height: cHeight)
+                                        //test > round to int to prevent incomplete photo scroll
+                                        cSize = CGSize(width: round(availableWidth), height: round(cHeight))
+                                    }
+                                    else if (assetSize.width < assetSize.height){
+                                        //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                                        let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                                        let cWidth = availableWidth * 2 / 3
+                                        let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
+    //                                    cSize = CGSize(width: cWidth, height: cHeight)
+                                        //test > round to int to prevent incomplete photo scroll
+                                        cSize = CGSize(width: round(cWidth), height: round(cHeight))
+                                    } else {
+                                        //square
+                                        let cWidth = availableWidth
+    //                                    cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                                        //test > round to int to prevent incomplete photo scroll
+                                        cSize = CGSize(width: round(cWidth), height: round(cWidth + descHeight))
+                                    }
+                                    
+                                    let pTopMargin = 20.0
+                    //                let pContentHeight = 280.0
+                                    let pContentHeight = cSize.height
+                                    let pHeight = pTopMargin + pContentHeight
+                                    contentHeight += pHeight
+                                }
+                                else if(i == "video") {
+                                    let lhsMargin = 20.0
+                                    let rhsMargin = 20.0
+                                    let availableWidth = quoteWidth - lhsMargin - rhsMargin
+                                    
+                                    let assetSize = CGSize(width: 3, height: 4)
+                                    var cSize = CGSize(width: 0, height: 0)
+                                    if(assetSize.width > assetSize.height) {
+                                        //1 > landscape photo 4:3 w:h
+                                        let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                                        let cHeight = availableWidth * aRatio.height / aRatio.width
+    //                                    cSize = CGSize(width: availableWidth, height: cHeight)
+                                        //test > round to int to prevent incomplete photo scroll
+                                        cSize = CGSize(width: round(availableWidth), height: round(cHeight))
+                                    }
+                                    else if (assetSize.width < assetSize.height){
+                                        //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                                        let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                                        let cWidth = availableWidth * 2 / 3
+                                        let cHeight = cWidth * aRatio.height / aRatio.width
+    //                                    cSize = CGSize(width: cWidth, height: cHeight)
+                                        //test > round to int to prevent incomplete photo scroll
+                                        cSize = CGSize(width: round(cWidth), height: round(cHeight))
+                                    } else {
+                                        //square
+                                        let cWidth = availableWidth
+    //                                    cSize = CGSize(width: cWidth, height: cWidth)
+                                        //test > round to int to prevent incomplete photo scroll
+                                        cSize = CGSize(width: round(cWidth), height: round(cWidth))
+                                    }
+                                    
+                                    let vTopMargin = 20.0
+                    //                let vContentHeight = 350.0 //250
+                                    let vContentHeight = cSize.height
+                                    let vHeight = vTopMargin + vContentHeight
+                                    contentHeight += vHeight
+                                }
+                                else if(i == "video_l") {
+                                    let lhsMargin = 20.0
+                                    let rhsMargin = 20.0
+                                    let descHeight = 40.0
+                                    let availableWidth = quoteWidth - lhsMargin - rhsMargin
+                                    
+                                    let assetSize = CGSize(width: 3, height: 4)
+                                    var cSize = CGSize(width: 0, height: 0)
+                                    if(assetSize.width > assetSize.height) {
+                                        //1 > landscape photo 4:3 w:h
+                                        let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                                        let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
+    //                                    cSize = CGSize(width: availableWidth, height: cHeight)
+                                        //test > round to int to prevent incomplete photo scroll
+                                        cSize = CGSize(width: round(availableWidth), height: round(cHeight))
+                                    }
+                                    else if (assetSize.width < assetSize.height){
+                                        //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                                        let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                                        let cWidth = availableWidth * 2 / 3
+                                        let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
+    //                                    cSize = CGSize(width: cWidth, height: cHeight)
+                                        //test > round to int to prevent incomplete photo scroll
+                                        cSize = CGSize(width: round(cWidth), height: round(cHeight))
+                                    } else {
+                                        //square
+                                        let cWidth = availableWidth
+    //                                    cSize = CGSize(width: cWidth, height: cWidth + descHeight)
+                                        //test > round to int to prevent incomplete photo scroll
+                                        cSize = CGSize(width: round(cWidth), height: round(cWidth + descHeight))
+                                    }
+                                    
+                                    let vTopMargin = 20.0
+                    //                let vContentHeight = 350.0 //250
+                                    let vContentHeight = cSize.height
+                                    let vHeight = vTopMargin + vContentHeight
+                    //                let vHeight = vTopMargin + vContentHeight + 40.0 //40.0 for bottom container for description
+                                    contentHeight += vHeight
+                                }
+                                else if(i == "quote") {
+                                    let tTopMargin = 20.0
+                                    let t = "[Quote]"
+                                    let tContentHeight = estimateHeight(text: t, textWidth: quoteWidth - 20.0 - 20.0, fontSize: 14)
+                                    let tHeight = tTopMargin + tContentHeight
+                                    contentHeight += tHeight
+                                }
                             }
-                            else if(i == "photo_s") {
-                                let lhsMargin = 20.0
-                                let rhsMargin = 20.0
-                                let descHeight = 40.0
-                                let availableWidth = quoteWidth - lhsMargin - rhsMargin
-                                
-                                let assetSize = CGSize(width: 4, height: 3)
-                                var cSize = CGSize(width: 0, height: 0)
-                                if(assetSize.width > assetSize.height) {
-                                    //1 > landscape photo 4:3 w:h
-                                    let aRatio = CGSize(width: 4, height: 3) //aspect ratio
-                                    let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
-//                                    cSize = CGSize(width: availableWidth, height: cHeight)
-                                    //test > round to int to prevent incomplete photo scroll
-                                    cSize = CGSize(width: round(availableWidth), height: round(cHeight))
-                                }
-                                else if (assetSize.width < assetSize.height){
-                                    //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
-                                    let aRatio = CGSize(width: 2, height: 3) //aspect ratio
-                                    let cWidth = availableWidth * 2 / 3
-                                    let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
-//                                    cSize = CGSize(width: cWidth, height: cHeight)
-                                    //test > round to int to prevent incomplete photo scroll
-                                    cSize = CGSize(width: round(cWidth), height: round(cHeight))
-                                } else {
-                                    //square
-                                    let cWidth = availableWidth
-//                                    cSize = CGSize(width: cWidth, height: cWidth + descHeight)
-                                    //test > round to int to prevent incomplete photo scroll
-                                    cSize = CGSize(width: round(cWidth), height: round(cWidth + descHeight))
-                                }
-                                
-                                let pTopMargin = 20.0
-                //                let pContentHeight = 280.0
-                                let pContentHeight = cSize.height
-                                let pHeight = pTopMargin + pContentHeight
-                                contentHeight += pHeight
-                            }
-                            else if(i == "video") {
-                                let lhsMargin = 20.0
-                                let rhsMargin = 20.0
-                                let availableWidth = quoteWidth - lhsMargin - rhsMargin
-                                
-                                let assetSize = CGSize(width: 3, height: 4)
-                                var cSize = CGSize(width: 0, height: 0)
-                                if(assetSize.width > assetSize.height) {
-                                    //1 > landscape photo 4:3 w:h
-                                    let aRatio = CGSize(width: 4, height: 3) //aspect ratio
-                                    let cHeight = availableWidth * aRatio.height / aRatio.width
-//                                    cSize = CGSize(width: availableWidth, height: cHeight)
-                                    //test > round to int to prevent incomplete photo scroll
-                                    cSize = CGSize(width: round(availableWidth), height: round(cHeight))
-                                }
-                                else if (assetSize.width < assetSize.height){
-                                    //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
-                                    let aRatio = CGSize(width: 2, height: 3) //aspect ratio
-                                    let cWidth = availableWidth * 2 / 3
-                                    let cHeight = cWidth * aRatio.height / aRatio.width
-//                                    cSize = CGSize(width: cWidth, height: cHeight)
-                                    //test > round to int to prevent incomplete photo scroll
-                                    cSize = CGSize(width: round(cWidth), height: round(cHeight))
-                                } else {
-                                    //square
-                                    let cWidth = availableWidth
-//                                    cSize = CGSize(width: cWidth, height: cWidth)
-                                    //test > round to int to prevent incomplete photo scroll
-                                    cSize = CGSize(width: round(cWidth), height: round(cWidth))
-                                }
-                                
-                                let vTopMargin = 20.0
-                //                let vContentHeight = 350.0 //250
-                                let vContentHeight = cSize.height
-                                let vHeight = vTopMargin + vContentHeight
-                                contentHeight += vHeight
-                            }
-                            else if(i == "video_l") {
-                                let lhsMargin = 20.0
-                                let rhsMargin = 20.0
-                                let descHeight = 40.0
-                                let availableWidth = quoteWidth - lhsMargin - rhsMargin
-                                
-                                let assetSize = CGSize(width: 3, height: 4)
-                                var cSize = CGSize(width: 0, height: 0)
-                                if(assetSize.width > assetSize.height) {
-                                    //1 > landscape photo 4:3 w:h
-                                    let aRatio = CGSize(width: 4, height: 3) //aspect ratio
-                                    let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
-//                                    cSize = CGSize(width: availableWidth, height: cHeight)
-                                    //test > round to int to prevent incomplete photo scroll
-                                    cSize = CGSize(width: round(availableWidth), height: round(cHeight))
-                                }
-                                else if (assetSize.width < assetSize.height){
-                                    //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
-                                    let aRatio = CGSize(width: 2, height: 3) //aspect ratio
-                                    let cWidth = availableWidth * 2 / 3
-                                    let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
-//                                    cSize = CGSize(width: cWidth, height: cHeight)
-                                    //test > round to int to prevent incomplete photo scroll
-                                    cSize = CGSize(width: round(cWidth), height: round(cHeight))
-                                } else {
-                                    //square
-                                    let cWidth = availableWidth
-//                                    cSize = CGSize(width: cWidth, height: cWidth + descHeight)
-                                    //test > round to int to prevent incomplete photo scroll
-                                    cSize = CGSize(width: round(cWidth), height: round(cWidth + descHeight))
-                                }
-                                
-                                let vTopMargin = 20.0
-                //                let vContentHeight = 350.0 //250
-                                let vContentHeight = cSize.height
-                                let vHeight = vTopMargin + vContentHeight
-                //                let vHeight = vTopMargin + vContentHeight + 40.0 //40.0 for bottom container for description
-                                contentHeight += vHeight
-                            }
+                        }
+                        else if(dd == "na") {
+                            let qNpTopMargin = 20.0
+                            let qNpTTopMargin = 10.0 //20
+                            let qNpTBottomMargin = 10.0
+                            let qNpText = "Post does not exist."
+                            let qNpContentHeight = estimateHeight(text: qNpText, textWidth: quoteWidth - 20.0 - 20.0, fontSize: 13)
+                            let qNpHeight = qNpTTopMargin + qNpContentHeight + qNpTBottomMargin + qNpTopMargin
+                            contentHeight += qNpHeight
+                        }
+                        else if(dd == "us") {
+                            let qNpTopMargin = 20.0
+                            let qNpTTopMargin = 10.0 //20
+                            let qNpTBottomMargin = 10.0
+                            let qNpText = "Post violated community rules."
+                            let qNpContentHeight = estimateHeight(text: qNpText, textWidth: quoteWidth - 20.0 - 20.0, fontSize: 13)
+                            let qNpHeight = qNpTTopMargin + qNpContentHeight + qNpTBottomMargin + qNpTopMargin
+                            contentHeight += qNpHeight
                         }
                         let qTopMargin = 20.0
                         let qUserPhotoHeight = 28.0
-                        let qUserPhotoTopMargin = 20.0 //10
-        //                let qContentTopMargin = 10.0
-        //                let qText = "Nice food, nice environment! Worth a visit. \nSo good!\n\n\n\n...\n...\n..."
-        //                let qContentHeight = estimateHeight(text: qText, textWidth: collectionView.frame.width - 20.0 - 20.0, fontSize: 14)
+                        let qUserPhotoTopMargin = 15.0 //20
                         let qFrameBottomMargin = 20.0 //10
                         let qHeight = qTopMargin + qUserPhotoHeight + qUserPhotoTopMargin + qFrameBottomMargin
                         contentHeight += qHeight
@@ -2412,11 +2437,11 @@ extension PhotoDetailPanelView: HListCellDelegate {
     func hListDidClickVcvClickSound(id: String){
 //        delegate?.didClickPostPanelVcvClickSound()
     }
-    func hListDidClickVcvClickPost(id: String) {
+    func hListDidClickVcvClickPost(id: String, dataType: String) {
         print("PostDetailPanelView post clicked")
 
         pausePlayingMedia()
-        delegate?.didClickPhotoDetailPanelVcvClickPost(id: id)
+        delegate?.didClickPhotoDetailPanelVcvClickPost(id: id, dataType: dataType)
     }
     func hListDidClickVcvClickPhoto(id: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         
@@ -2542,6 +2567,25 @@ extension PhotoDetailPanelView: HListCellDelegate {
             }
         }
     }
+    func hListResize(vc: UICollectionViewCell){
+        if let a = photoCV {
+            for cell in a.visibleCells {
+                guard let indexPath = a.indexPath(for: cell) else {
+                    continue
+                }
+                
+                if(cell == vc) {
+                    if let s = cell as? HCommentListViewCell {
+                        var idxArray: [IndexPath] = []
+                        idxArray.append(indexPath)
+                        a.reloadItems(at: idxArray)
+                    }
+                    
+                    break
+                }
+            }
+        }
+    }
 }
 
 extension PhotoDetailPanelView: ShareSheetScrollableDelegate{
@@ -2656,8 +2700,8 @@ extension PhotoDetailPanelView: CommentScrollableDelegate{
     func didCClickShare(){
         openShareSheet()
     }
-    func didCClickPost(id: String){
-        delegate?.didClickPhotoDetailPanelVcvClickPost(id: id)
+    func didCClickPost(id: String, dataType: String){
+        delegate?.didClickPhotoDetailPanelVcvClickPost(id: id, dataType: dataType)
     }
     func didCClickClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         delegate?.didClickPhotoDetailPanelVcvClickPhoto(id: id, pointX: pointX, pointY: pointY, view: view, mode: mode)
@@ -2784,10 +2828,10 @@ extension PhotoDetailPanelView: UITextViewDelegate {
 }
 
 extension ViewController: PhotoDetailPanelDelegate{
-    func didClickPhotoDetailPanelVcvClickPost(id: String) {
-//        openPostDetailPanel()
+    func didClickPhotoDetailPanelVcvClickPost(id: String, dataType: String) {
         //test > real id for fetching data
-        openPostDetailPanel(id: id)
+//        openPostDetailPanel(id: id)
+        openPostDetailPanel(id: id, dataType: dataType)
     }
     func didClickPhotoDetailPanelVcvClickUser(id: String) {
 //        openUserPanel()
@@ -2813,7 +2857,7 @@ extension ViewController: PhotoDetailPanelDelegate{
     func didClickPhotoDetailPanelVcvClickCreate(type: String){
         if(type == "post") {
 //            openPostCreatorPanel()
-            openPostCreatorPanel(objectType: "photo", objectId: "", mode: "")
+            openPostCreatorPanel(objectType: "photo_s", objectId: "", mode: "")
         }
         
     }

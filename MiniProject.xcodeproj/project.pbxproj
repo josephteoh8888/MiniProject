@@ -451,7 +451,6 @@
 		2E670AEC2C31068C00EBA6D3 /* ViewCells */ = {
 			isa = PBXGroup;
 			children = (
-				2E737BB32DA15ED200471096 /* ObjectView.swift */,
 				2E670AEF2C3106CE00EBA6D3 /* HListViewCell.swift */,
 				2EADB52C2C44011B0023B7F2 /* HSingleLocationViewCell.swift */,
 				2E670AF92C3107D200EBA6D3 /* HMultiLocationViewCell.swift */,
@@ -509,6 +508,7 @@
 		2E670B222C311FF800EBA6D3 /* CustomViews */ = {
 			isa = PBXGroup;
 			children = (
+				2E737BB32DA15ED200471096 /* ObjectView.swift */,
 				2E670B252C3120BB00EBA6D3 /* QueueableView.swift */,
 				2E670B4D2C31236400EBA6D3 /* Marker.swift */,
 				2E670B492C31232700EBA6D3 /* SoundMarker.swift */,

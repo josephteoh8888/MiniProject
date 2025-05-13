@@ -27,11 +27,17 @@ class BaseData {
     var contentDataArray = [ContentData]()
 }
 
-class PostData: BaseData {
-    
+class BasePostData: BaseData {
     var userId: String = "" //creator
     var placeId: String = ""
     var soundId: String = ""
+}
+
+//class PostData: BaseData {
+class PostData: BasePostData {
+//    var userId: String = "" //creator
+//    var placeId: String = ""
+//    var soundId: String = ""
     
     func setDataCode(data: String) {
         dataCode = data
@@ -90,11 +96,17 @@ class PostData: BaseData {
         let rDataC = rData.dataCount
         let rDataArray = rData.dataArray
         let rContentDataArray = rData.contentDataArray
+        let rDataUserId = rData.userId
+        let rDataPlaceId = rData.placeId
+        let rDataSoundId = rData.soundId
         
         //populate data
         id = rDataId
         dataCode = rDataType
         dataTextString = rDataText
+        userId = rDataUserId
+        placeId = rDataPlaceId
+        soundId = rDataSoundId
         
         if let loveC = rDataC["love"] {
             dataCount["love"] = loveC
@@ -236,11 +248,11 @@ class VideoData: BaseData {
     }
 }
 
-class CommentData: BaseData {
-    
-    var userId: String = "" //creator
-    var placeId: String = ""
-    var soundId: String = ""
+//class CommentData: BaseData {
+class CommentData: BasePostData {
+//    var userId: String = "" //creator
+//    var placeId: String = ""
+//    var soundId: String = ""
     
     func setData(rData: CommentDataset) {
         let rDataId = rData.id
@@ -414,31 +426,51 @@ class UserData: BaseData {
 }
 
 //*test => content data for storing various content cells in posts/videos
-//class ContentData {
 class ContentData: BaseData {
-//    var dataCode: String = ""
-//    var dataArray = [String]()
-//    var dataTextString: String = ""
-//    
-//    //test > t time for video paused timestamp, necessary for resume
-//    var t_s = 0.0
-//    //test > p for photo carousel
-//    var p_s = 0
+    
+    var contentDataType = ""
+    var contentDataCode = "" //test
     
     func setDataCode(data: String) {
         dataCode = data
     }
     
+    func setContentDataCode(data: String) {
+        contentDataCode = data
+    }
+    
     func setData(rData: ContentDataset) {
-        let rDataType = rData.dataCode
+        let rDataId = rData.id
+        let rDataCode = rData.dataCode
         let rDataArray = rData.dataArray
         let rDataText = rData.dataTextString
+        let rContentDataType = rData.contentDataType
+        let rContentDataCode = rData.contentDataCode
         
+        id = rDataId
         dataTextString = rDataText
-        dataCode = rDataType
+        dataCode = rDataCode
+        contentDataType = rContentDataType
+        contentDataCode = rContentDataCode
         for r in rDataArray {
             dataArray.append(r)
         }
+    }
+    
+    //test > for setting parameter individually -> especially for postclipcell in Post Creator
+    func setContentDataType(dataType: String) {
+        contentDataType = dataType
+    }
+    func setId(dataId: String) {
+        id = dataId
+    }
+    func setDataArray(da: [String]) {
+        for r in da {
+            dataArray.append(r)
+        }
+    }
+    func setDataTextString(dataText: String) {
+        dataTextString = dataText
     }
 }
 //*

@@ -55,38 +55,33 @@ class PostClipCell: UIView {
         aHLightRect1.backgroundColor = .clear
         aHLightRect1.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onClickPostClipPhotoClicked)))
         
-        selectedRect.backgroundColor = .ddmGoldenYellowColor
-        aHLightRect1.addSubview(selectedRect)
-        selectedRect.translatesAutoresizingMaskIntoConstraints = false
-        selectedRect.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 10).isActive = true //10
-        selectedRect.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
-        selectedRect.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-        selectedRect.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: -10).isActive = true //-10
-        selectedRect.layer.cornerRadius = 10
-        selectedRect.isHidden = true
-//        selectedRect.backgroundColor = .ddmDarkColor
-        
-        let panelBG = UIView()
-        panelBG.backgroundColor = .ddmBlackOverlayColor
-//        panelBG.backgroundColor = .ddmDarkColor
-        selectedRect.addSubview(panelBG)
-        panelBG.translatesAutoresizingMaskIntoConstraints = false
-        panelBG.leadingAnchor.constraint(equalTo: selectedRect.leadingAnchor, constant: 2).isActive = true
-        panelBG.topAnchor.constraint(equalTo: selectedRect.topAnchor, constant: 2).isActive = true //5
-        panelBG.bottomAnchor.constraint(equalTo: selectedRect.bottomAnchor, constant: -2).isActive = true
-        panelBG.trailingAnchor.constraint(equalTo: selectedRect.trailingAnchor, constant: -2).isActive = true
-        panelBG.layer.cornerRadius = 10
-//        panelBG.isHidden = true //test
+//        self.backgroundColor = .red
     }
     
     func selectCell() {
-        selectedRect.isHidden = false
+//        selectedRect.isHidden = false
         isSelected = true
+        
+        //test > new selected UI in contentCell
+        if(!aTestArray.isEmpty) {
+            let c = aTestArray.count - 1
+            if let a = aTestArray[c] as? ContentCell{
+                a.selectCell()
+            }
+        }
     }
 
     func unselectCell() {
-        selectedRect.isHidden = true
+//        selectedRect.isHidden = true
         isSelected = false
+        
+        //test > new selected UI in contentCell
+        if(!aTestArray.isEmpty) {
+            let c = aTestArray.count - 1
+            if let a = aTestArray[c] as? ContentCell{
+                a.unselectCell()
+            }
+        }
     }
     
     @objc func onClickPostClipPhotoClicked(gesture: UITapGestureRecognizer) {
@@ -158,14 +153,15 @@ class PostClipCell: UIView {
         }
     }
     
-    func configure(data: String, dataType: String, cSize: CGSize) {
+//    func configure(data: String, dataType: String, cSize: CGSize) {
+    func configure(cData: ContentData, dataType: String, cSize: CGSize) {
         if(dataType == "photo") {
             let contentCell = PostPhotoContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
             aHLightRect1.addSubview(contentCell)
             contentCell.translatesAutoresizingMaskIntoConstraints = false
             contentCell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 20).isActive = true
-            contentCell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 10).isActive = true //20, 0
-            contentCell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true
+            contentCell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //10
+            contentCell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
             contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //370
             contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //280
             contentCell.layer.cornerRadius = 10 //5
@@ -177,14 +173,17 @@ class PostClipCell: UIView {
             contentCell.aDelegate = self //test
             contentCell.setAutohide(isEnabled: false)
             aTestArray.append(contentCell)
+            
+            //test > selectable
+            contentCell.setSelectable(isEnabled: true)
         }
         else if(dataType == "photo_s") {
             let contentCell = PostPhotoShotContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
             aHLightRect1.addSubview(contentCell)
             contentCell.translatesAutoresizingMaskIntoConstraints = false
             contentCell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 20).isActive = true
-            contentCell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 10).isActive = true //20, 0
-            contentCell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true
+            contentCell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //0
+            contentCell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
             contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //370
             contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //280
             contentCell.layer.cornerRadius = 10 //5
@@ -199,14 +198,17 @@ class PostClipCell: UIView {
             contentCell.aDelegate = self //test
             contentCell.setAutohide(isEnabled: false)
             aTestArray.append(contentCell)
+            
+            //test > selectable
+            contentCell.setSelectable(isEnabled: true)
         }
         else if(dataType == "video") {
             let contentCell = PostVideoContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
             aHLightRect1.addSubview(contentCell)
             contentCell.translatesAutoresizingMaskIntoConstraints = false
             contentCell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 20).isActive = true 
-            contentCell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 10).isActive = true //20, 0
-            contentCell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true
+            contentCell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //10
+            contentCell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
             contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //370
             contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //280
             contentCell.layer.cornerRadius = 10 //5
@@ -215,40 +217,53 @@ class PostClipCell: UIView {
             contentCell.aDelegate = self //test
             contentCell.setAutohide(isEnabled: false)
             aTestArray.append(contentCell)
+            
+            //test > selectable
+            contentCell.setSelectable(isEnabled: true)
         }
         else if(dataType == "video_l") {
             let contentCell = PostVideoLoopContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
             aHLightRect1.addSubview(contentCell)
             contentCell.translatesAutoresizingMaskIntoConstraints = false
             contentCell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 20).isActive = true
-            contentCell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 10).isActive = true //20, 0
-            contentCell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true
+            contentCell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //10
+            contentCell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
             contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //370
             contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //280
             contentCell.layer.cornerRadius = 10 //5
-            let t = "Loop text description"
+            let t = "" //Loop text description
             contentCell.setDescHeight(lHeight: 40, txt: t)
             contentCell.redrawUI()
             contentCell.configure(data: "a")
             contentCell.aDelegate = self //test
             contentCell.setAutohide(isEnabled: false)
             aTestArray.append(contentCell)
+            
+            //test > selectable
+            contentCell.setSelectable(isEnabled: true)
         }
         else if(dataType == "quote") {
             let contentCell = PostQuoteContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
             aHLightRect1.addSubview(contentCell)
             contentCell.translatesAutoresizingMaskIntoConstraints = false
             contentCell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 20).isActive = true
-            contentCell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 10).isActive = true //20, 0
-            contentCell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true
+            contentCell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //10
+//            contentCell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
             contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //370
             contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //280
             contentCell.layer.cornerRadius = 10 //5
-            let t = "Nice food, nice environment! Worth a visit. \nSo Good."
             contentCell.aDelegate = self //test
             contentCell.setAutohide(isEnabled: false)
-            contentCell.configure(data: "a", text: t)
+//            contentCell.configure(data: "a", text: t)
+            
+            let da = cData.dataArray
+            let t = cData.dataTextString
+            contentCell.setupContentViews(qPredata: da, text: t, contentData: cData)
+            contentCell.configure(contentData: cData, isToForceRefreshData: true)
             aTestArray.append(contentCell)
+            
+            //test > selectable
+            contentCell.setSelectable(isEnabled: true)
         }
     }
 }
@@ -271,20 +286,26 @@ extension PostClipCell: ContentCellDelegate {
     }
     
     func contentCellDidClickVcvClickPhoto(id: String, cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
-        let aTestFrame = aHLightRect1.frame.origin
-        let ccFrame = cc.frame.origin
+//        let aTestFrame = aHLightRect1.frame.origin
+//        let ccFrame = cc.frame.origin
+//        
+//        let pointX1 = pointX + aTestFrame.x + ccFrame.x
+//        let pointY1 = pointY + aTestFrame.y + ccFrame.y
+//        aDelegate?.pcDidClickPcClickPhoto(pc: self, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
         
-        let pointX1 = pointX + aTestFrame.x + ccFrame.x
-        let pointY1 = pointY + aTestFrame.y + ccFrame.y
-        aDelegate?.pcDidClickPcClickPhoto(pc: self, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
+        //test
+        aDelegate?.pcDidClickPostClipCell(cell: self)
     }
     func contentCellDidClickVcvClickVideo(id: String, cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
-        let aTestFrame = aHLightRect1.frame.origin
-        let ccFrame = cc.frame.origin
+//        let aTestFrame = aHLightRect1.frame.origin
+//        let ccFrame = cc.frame.origin
+//        
+//        let pointX1 = pointX + aTestFrame.x + ccFrame.x
+//        let pointY1 = pointY + aTestFrame.y + ccFrame.y
+//        aDelegate?.pcDidClickPcClickVideo(pc: self, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
         
-        let pointX1 = pointX + aTestFrame.x + ccFrame.x
-        let pointY1 = pointY + aTestFrame.y + ccFrame.y
-        aDelegate?.pcDidClickPcClickVideo(pc: self, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
+        //test
+        aDelegate?.pcDidClickPostClipCell(cell: self)
     }
     func contentCellDidDoubleClickPhoto(pointX: CGFloat, pointY: CGFloat){
         
@@ -298,10 +319,15 @@ extension PostClipCell: ContentCellDelegate {
     func contentCellDidClickPlace(id: String){
         
     }
-    func contentCellDidClickPost(id: String){
+    func contentCellDidClickPost(id: String, dataType: String){
 //        aDelegate?.hListDidClickVcvClickPost()
+        
+        //test
+        aDelegate?.pcDidClickPostClipCell(cell: self)
     }
     func contentCellDidClickVcvClickPlay(cc: UIView, isPlay: Bool){
         aDelegate?.pcDidClickPcClickPlay(pc: self, isPlay: isPlay)
+    }
+    func contentCellResize(cc: UIView){
     }
 }

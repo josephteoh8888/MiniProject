@@ -331,7 +331,7 @@ extension ScrollFeedHResultSoundListCell: HResultListViewDelegate{
     func didHResultClickVideo(id: String){
         
     }
-    func didHResultClickPost(id: String){
+    func didHResultClickPost(id: String, dataType: String){
         
     }
     func didHResultClickSignIn(){

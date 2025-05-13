@@ -172,6 +172,8 @@ class HCommentListViewCell: UICollectionViewCell {
         aGridNameText.topAnchor.constraint(equalTo: aUserPhoto.topAnchor).isActive = true
         aGridNameText.leadingAnchor.constraint(equalTo: eUserCover.trailingAnchor, constant: usernameLhsMargin).isActive = true
         aGridNameText.text = "-"
+        aGridNameText.isUserInteractionEnabled = true
+        aGridNameText.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onUserClicked)))
         
         //test > verified badge
 //        let vBtn = UIImageView(image: UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate))
@@ -463,6 +465,8 @@ class HCommentListViewCell: UICollectionViewCell {
         
         //test > clear id
         setId(id: "")
+        setIds(uId: "", pId: "", sId: "")
+        setDataType(dataType: "")
         
         mediaArray.removeAll()
         
@@ -556,8 +560,20 @@ class HCommentListViewCell: UICollectionViewCell {
     
     //test > set id for init
     var id = ""
+    var userId = ""
+    var placeId = ""
+    var soundId = ""
+    var dataType = ""
     func setId(id: String) {
         self.id = id
+    }
+    func setIds(uId: String, pId: String, sId: String) {
+        self.userId = uId
+        self.placeId = pId
+        self.soundId = sId
+    }
+    func setDataType(dataType: String) {
+        self.dataType = dataType
     }
     
     func configure(data: BaseData) {
@@ -567,6 +583,7 @@ class HCommentListViewCell: UICollectionViewCell {
         }
         
         setId(id: a.id)
+        setDataType(dataType: "comment")
         print("hcomment id: \(id)")
         
         aUserNameText.text = "-" //**
@@ -583,6 +600,7 @@ class HCommentListViewCell: UICollectionViewCell {
             aUserNameText.text = "4hr . 324k views"
             
             let u = a.userId
+            setIds(uId: u, pId: "", sId: "")
             asyncConfigure(data: u)
             
             let dataL = a.dataArray
@@ -596,7 +614,7 @@ class HCommentListViewCell: UICollectionViewCell {
                     let aaText = UILabel()
                     aaText.textAlignment = .left
                     aaText.textColor = .white
-                    aaText.font = .systemFont(ofSize: 13)
+                    aaText.font = .systemFont(ofSize: 14) //13
                     aaText.numberOfLines = 0
                     aTest.addSubview(aaText)
                     aaText.translatesAutoresizingMaskIntoConstraints = false
@@ -871,7 +889,12 @@ class HCommentListViewCell: UICollectionViewCell {
     //                contentCell.heightAnchor.constraint(equalToConstant: 120).isActive = true  //350
                     contentCell.layer.cornerRadius = 10 //5
                     aTestArray.append(contentCell)
-                    contentCell.configure(data: "a", text: data.dataTextString)
+//                    contentCell.setupContentViews(qPredata: da, text: cl.dataTextString)
+                    contentCell.setupContentViews(qPredata: da, text: cl.dataTextString, contentData: cl)
+//                    let qId = cl.id
+//                    let qContentDataType = cl.contentDataType
+//                    contentCell.configure(id: qId, contentDataType: qContentDataType)
+                    contentCell.configure(contentData: cl)
                     contentCell.aDelegate = self //test
                     
                     mediaArray.append(contentCell)
@@ -949,12 +972,11 @@ class HCommentListViewCell: UICollectionViewCell {
     }
     
     @objc func onUserClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.hListDidClickVcvClickUser(id: "")
+        aDelegate?.hListDidClickVcvClickUser(id: userId)
     }
     @objc func onSingleClicked(gesture: UITapGestureRecognizer) {
         print("comment single clicked")
-//        aDelegate?.hListDidClickVcvClickPost(id: "")
-        aDelegate?.hListDidClickVcvClickPost(id: id)
+        aDelegate?.hListDidClickVcvClickPost(id: id, dataType: dataType)
     }
     @objc func onDoubleClicked(gesture: UITapGestureRecognizer) {
         print("comment double clicked")
@@ -1100,13 +1122,14 @@ extension HCommentListViewCell: ContentCellDelegate {
         
     }
     func contentCellDidClickUser(id: String){
-        
+        aDelegate?.hListDidClickVcvClickUser(id: id)
     }
     func contentCellDidClickPlace(id: String){
         
     }
-    func contentCellDidClickPost(id: String){
-        
+    func contentCellDidClickPost(id: String, dataType: String){
+        //test
+        aDelegate?.hListDidClickVcvClickPost(id: id, dataType: dataType)
     }
     func contentCellDidClickVcvClickPlay(cc: UIView, isPlay: Bool){
         if let j = aTestArray.firstIndex(of: cc) {
@@ -1115,6 +1138,10 @@ extension HCommentListViewCell: ContentCellDelegate {
             
             aDelegate?.hListDidClickVcvClickPlay(vc: self, isPlay: isPlay)
         }
+    }
+    func contentCellResize(cc: UIView){
+        print("hcomment reload")
+        aDelegate?.hListResize(vc: self)
     }
 }
 

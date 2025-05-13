@@ -981,7 +981,7 @@ extension MePhotoListPanelView: ScrollFeedCellDelegate {
     func sfcDidClickVcvClickSound(id: String) {
 //        delegate?.didNotifyClickSound()
     }
-    func sfcDidClickVcvClickPost(id: String) {
+    func sfcDidClickVcvClickPost(id: String, dataType: String) {
 //        openPostDetail()
     }
     func sfcDidClickVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {

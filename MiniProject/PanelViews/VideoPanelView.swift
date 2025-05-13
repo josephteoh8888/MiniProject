@@ -14,7 +14,7 @@ protocol VideoPanelDelegate : AnyObject {
     func didClickUser(id: String)
     func didClickPlace(id: String)
     func didClickSound(id: String)
-    func didClickPost(id: String)
+    func didClickPost(id: String, dataType: String)
     func didStartOpenVideoPanel()
     func didFinishOpenVideoPanel()
     func didStartCloseVideoPanel(vpv : VideoPanelView)
@@ -1854,10 +1854,10 @@ extension ViewController: VideoPanelDelegate{
         openSoundPanel(id: id)
     }
     
-    func didClickPost(id: String){
-//        openPostDetailPanel()
+    func didClickPost(id: String, dataType: String){
         //test > real id for fetching data
-        openPostDetailPanel(id: id)
+//        openPostDetailPanel(id: id)
+        openPostDetailPanel(id: id, dataType: dataType)
     }
 
     func didStartOpenVideoPanel() {
@@ -2002,7 +2002,7 @@ extension ViewController: VideoPanelDelegate{
     func didClickVideoPanelVcvClickCreate(type: String){
         if(type == "post") {
 //            openPostCreatorPanel()
-            openPostCreatorPanel(objectType: "video", objectId: "", mode: "")
+            openPostCreatorPanel(objectType: "video_l", objectId: "", mode: "")
         }
         
     }
@@ -2483,8 +2483,8 @@ extension VideoPanelView: CommentScrollableDelegate{
     func didCClickShare(){
         openShareSheet()
     }
-    func didCClickPost(id: String){
-        delegate?.didClickPost(id: id)
+    func didCClickPost(id: String, dataType: String){
+        delegate?.didClickPost(id: id, dataType: dataType)
     }
     func didCClickClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         delegate?.didClickVideoPanelClickPhoto(id: id, pointX: pointX, pointY: pointY, view: view, mode: mode)

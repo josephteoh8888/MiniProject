@@ -322,7 +322,7 @@ class HResultPostListViewCell: UICollectionViewCell {
     }
     //*
     @objc func onPostClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.didHResultClickPost(id: id)
+        aDelegate?.didHResultClickPost(id: id, dataType: "")
         print("hresultpost clicked \(id)")
     }
     @objc func onUserClicked(gesture: UITapGestureRecognizer) {

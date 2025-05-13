@@ -2281,19 +2281,16 @@ class ProfileMeCell: MeCell {
 
                     self.bSpinner.stopAnimating()
                     
-//                    if(!l.isEmpty) {
-//                        let l_0 = l[0]
-                        let pData = UserData()
-                        pData.setData(rData: l)
-                        let l_ = pData.dataCode
-                        if(l_ == "a") {
-                            self.aNameText.text  = pData.dataTextString
-                            self.aFollowAText.text = "@mic809"
-                            
-                            let imageUrl = URL(string: pData.coverPhotoString)
-                            self.aPhoto.sd_setImage(with: imageUrl)
-                        }
-//                    }
+                    let pData = UserData()
+                    pData.setData(rData: l)
+                    let l_ = pData.dataCode
+                    if(l_ == "a") {
+                        self.aNameText.text  = pData.dataTextString
+                        self.aFollowAText.text = "@mic809"
+                        
+                        let imageUrl = URL(string: pData.coverPhotoString)
+                        self.aPhoto.sd_setImage(with: imageUrl)
+                    }
                 }
 
                 case .failure(let error):

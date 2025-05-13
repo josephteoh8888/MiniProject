@@ -306,6 +306,38 @@ class VCAViewCell: VCViewCell {
         aTitleText.widthAnchor.constraint(lessThanOrEqualToConstant: 250).isActive = true
         aTitleText.numberOfLines = 2
         
+        let eMini = UIView()
+        eMini.backgroundColor = .ddmBlackOverlayColor
+//        eMini.backgroundColor = .white
+//        contentView.addSubview(eMini)
+        aContainer.addSubview(eMini)
+        eMini.translatesAutoresizingMaskIntoConstraints = false
+        eMini.bottomAnchor.constraint(equalTo: aTitleText.topAnchor, constant: -5).isActive = true
+        eMini.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15).isActive = true
+//        eMini.bottomAnchor.constraint(equalTo: dMini.topAnchor, constant: -25).isActive = true //-30
+//        eMini.centerXAnchor.constraint(equalTo: dMini.centerXAnchor).isActive = true
+        eMini.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        eMini.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        eMini.layer.cornerRadius = 20
+        eMini.layer.opacity = 0.3 //default 0.3
+
+//        let eImage = SDAnimatedImageView()
+        eImage.contentMode = .scaleAspectFill
+        eImage.layer.masksToBounds = true
+//        let eImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
+//        eImage.sd_setImage(with: eImageUrl)
+//        eImage.backgroundColor = .ddmDarkColor
+//        contentView.addSubview(eImage)
+        aContainer.addSubview(eImage)
+        eImage.translatesAutoresizingMaskIntoConstraints = false
+        eImage.centerXAnchor.constraint(equalTo: eMini.centerXAnchor).isActive = true
+        eImage.centerYAnchor.constraint(equalTo: eMini.centerYAnchor).isActive = true
+        eImage.heightAnchor.constraint(equalToConstant: 40).isActive = true //40
+        eImage.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        eImage.layer.cornerRadius = 20
+        eImage.isUserInteractionEnabled = true
+        eImage.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onUserClicked)))
+        
 //        let aNameText = UILabel()
         aNameText.textAlignment = .left
         aNameText.textColor = .white
@@ -313,15 +345,14 @@ class VCAViewCell: VCViewCell {
 //        contentView.addSubview(aNameText)
         aContainer.addSubview(aNameText)
         aNameText.translatesAutoresizingMaskIntoConstraints = false
-        aNameText.bottomAnchor.constraint(equalTo: aTitleText.topAnchor, constant: -5).isActive = true
-        aNameText.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15).isActive = true
+//        aNameText.bottomAnchor.constraint(equalTo: aTitleText.topAnchor, constant: -5).isActive = true
+//        aNameText.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15).isActive = true
+        aNameText.leadingAnchor.constraint(equalTo: eMini.trailingAnchor, constant: 10).isActive = true //5
+        aNameText.centerYAnchor.constraint(equalTo: eMini.centerYAnchor, constant: 0).isActive = true
         aNameText.text = "-"
-//        aNameText.text = "@Michelle8899 @Michelle8899 @Michelle8899 @Michelle8899 @Michelle8899"
-//        aNameText.layer.shadowColor = UIColor.black.cgColor
-//        aNameText.layer.shadowRadius = 1.0  //ori 3
-//        aNameText.layer.shadowOpacity = 1.0 //ori 1
-//        aNameText.layer.shadowOffset = CGSize(width: 0, height: 0)
         aNameText.widthAnchor.constraint(lessThanOrEqualToConstant: 250).isActive = true
+        aNameText.isUserInteractionEnabled = true
+        aNameText.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onUserClicked)))
         
         //test > verified badge
 //        let vBtn = UIImageView(image: UIImage(named:"icon_round_verified_b")?.withRenderingMode(.alwaysTemplate))
@@ -349,9 +380,8 @@ class VCAViewCell: VCViewCell {
         aBox.clipsToBounds = true
         aBox.translatesAutoresizingMaskIntoConstraints = false
         aBox.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15).isActive = true
-//        aBox.heightAnchor.constraint(equalToConstant: 35).isActive = true //default: 50
-//        aBox.bottomAnchor.constraint(equalTo: videoPanel.bottomAnchor, constant: -30).isActive = true
-        aBox.bottomAnchor.constraint(equalTo: aNameText.topAnchor, constant: -10).isActive = true
+//        aBox.bottomAnchor.constraint(equalTo: aNameText.topAnchor, constant: -10).isActive = true
+        aBox.bottomAnchor.constraint(equalTo: eMini.topAnchor, constant: -10).isActive = true
         aBox.layer.cornerRadius = 10
         aBox.layer.opacity = 0.3
         aBox.isUserInteractionEnabled = true
@@ -655,65 +685,65 @@ class VCAViewCell: VCViewCell {
 //        dText.layer.shadowOpacity = 1.0 //ori 1
 //        dText.layer.shadowOffset = CGSize(width: 1, height: 1)
         
-        let eMini = UIView()
-//        eMini.backgroundColor = .ddmBlackOverlayColor
-        eMini.backgroundColor = .white
-//        contentView.addSubview(eMini)
-        aContainer.addSubview(eMini)
-        eMini.translatesAutoresizingMaskIntoConstraints = false
-        eMini.bottomAnchor.constraint(equalTo: dMini.topAnchor, constant: -25).isActive = true //-30
-        eMini.centerXAnchor.constraint(equalTo: dMini.centerXAnchor).isActive = true
-        eMini.heightAnchor.constraint(equalToConstant: 44).isActive = true
-        eMini.widthAnchor.constraint(equalToConstant: 44).isActive = true
-        eMini.layer.cornerRadius = 22
-        eMini.layer.opacity = 1.0 //default 0.3
-
-//        let eImage = SDAnimatedImageView()
-        eImage.contentMode = .scaleAspectFill
-        eImage.layer.masksToBounds = true
-//        let eImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
-//        eImage.sd_setImage(with: eImageUrl)
-        eImage.backgroundColor = .ddmDarkColor
-//        contentView.addSubview(eImage)
-        aContainer.addSubview(eImage)
-        eImage.translatesAutoresizingMaskIntoConstraints = false
-        eImage.centerXAnchor.constraint(equalTo: eMini.centerXAnchor).isActive = true
-        eImage.centerYAnchor.constraint(equalTo: eMini.centerYAnchor).isActive = true
-        eImage.heightAnchor.constraint(equalToConstant: 40).isActive = true //40
-        eImage.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        eImage.layer.cornerRadius = 20
-        eImage.isUserInteractionEnabled = true
-        eImage.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onUserClicked)))
-        
-        let eAddRing = UIView()
-//        eAddRing.backgroundColor = .black
-//        eAddRing.backgroundColor = .ddmAccentColor
-        eAddRing.backgroundColor = .ddmDarkColor
-//        eAddRing.backgroundColor = .white
-//        eAddRing.backgroundColor = .ddmGoldenYellowColor
-//        contentView.addSubview(eAddRing)
-        aContainer.addSubview(eAddRing)
-        eAddRing.translatesAutoresizingMaskIntoConstraints = false
-        eAddRing.centerXAnchor.constraint(equalTo: eMini.centerXAnchor).isActive = true
-        eAddRing.topAnchor.constraint(equalTo: eMini.bottomAnchor, constant: -10).isActive = true //-7
-        eAddRing.heightAnchor.constraint(equalToConstant: 16).isActive = true //14
-        eAddRing.widthAnchor.constraint(equalToConstant: 16).isActive = true //20
-        eAddRing.layer.cornerRadius = 8
-//        eAddRing.isHidden = true
-
-        let eAddBtn = UIImageView(image: UIImage(named:"icon_round_add_circle")?.withRenderingMode(.alwaysTemplate))
-//        eAddBtn.tintColor = .yellow
-        eAddBtn.tintColor = .white
-//        eAddBtn.tintColor = .ddmBlackOverlayColor
-//        eAddBtn.tintColor = .ddmGoldenYellowColor
-//        eAddBtn.tintColor = .black
-        eAddRing.addSubview(eAddBtn)
-//        aContainer.addSubview(eAddBtn)
-        eAddBtn.translatesAutoresizingMaskIntoConstraints = false
-        eAddBtn.centerXAnchor.constraint(equalTo: eAddRing.centerXAnchor).isActive = true
-        eAddBtn.centerYAnchor.constraint(equalTo: eAddRing.centerYAnchor).isActive = true
-        eAddBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true //22
-        eAddBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
+//        let eMini = UIView()
+////        eMini.backgroundColor = .ddmBlackOverlayColor
+//        eMini.backgroundColor = .white
+////        contentView.addSubview(eMini)
+//        aContainer.addSubview(eMini)
+//        eMini.translatesAutoresizingMaskIntoConstraints = false
+//        eMini.bottomAnchor.constraint(equalTo: dMini.topAnchor, constant: -25).isActive = true //-30
+//        eMini.centerXAnchor.constraint(equalTo: dMini.centerXAnchor).isActive = true
+//        eMini.heightAnchor.constraint(equalToConstant: 44).isActive = true
+//        eMini.widthAnchor.constraint(equalToConstant: 44).isActive = true
+//        eMini.layer.cornerRadius = 22
+//        eMini.layer.opacity = 1.0 //default 0.3
+//
+////        let eImage = SDAnimatedImageView()
+//        eImage.contentMode = .scaleAspectFill
+//        eImage.layer.masksToBounds = true
+////        let eImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
+////        eImage.sd_setImage(with: eImageUrl)
+//        eImage.backgroundColor = .ddmDarkColor
+////        contentView.addSubview(eImage)
+//        aContainer.addSubview(eImage)
+//        eImage.translatesAutoresizingMaskIntoConstraints = false
+//        eImage.centerXAnchor.constraint(equalTo: eMini.centerXAnchor).isActive = true
+//        eImage.centerYAnchor.constraint(equalTo: eMini.centerYAnchor).isActive = true
+//        eImage.heightAnchor.constraint(equalToConstant: 40).isActive = true //40
+//        eImage.widthAnchor.constraint(equalToConstant: 40).isActive = true
+//        eImage.layer.cornerRadius = 20
+//        eImage.isUserInteractionEnabled = true
+//        eImage.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onUserClicked)))
+//        
+//        let eAddRing = UIView()
+////        eAddRing.backgroundColor = .black
+////        eAddRing.backgroundColor = .ddmAccentColor
+//        eAddRing.backgroundColor = .ddmDarkColor
+////        eAddRing.backgroundColor = .white
+////        eAddRing.backgroundColor = .ddmGoldenYellowColor
+////        contentView.addSubview(eAddRing)
+//        aContainer.addSubview(eAddRing)
+//        eAddRing.translatesAutoresizingMaskIntoConstraints = false
+//        eAddRing.centerXAnchor.constraint(equalTo: eMini.centerXAnchor).isActive = true
+//        eAddRing.topAnchor.constraint(equalTo: eMini.bottomAnchor, constant: -10).isActive = true //-7
+//        eAddRing.heightAnchor.constraint(equalToConstant: 16).isActive = true //14
+//        eAddRing.widthAnchor.constraint(equalToConstant: 16).isActive = true //20
+//        eAddRing.layer.cornerRadius = 8
+////        eAddRing.isHidden = true
+//
+//        let eAddBtn = UIImageView(image: UIImage(named:"icon_round_add_circle")?.withRenderingMode(.alwaysTemplate))
+////        eAddBtn.tintColor = .yellow
+//        eAddBtn.tintColor = .white
+////        eAddBtn.tintColor = .ddmBlackOverlayColor
+////        eAddBtn.tintColor = .ddmGoldenYellowColor
+////        eAddBtn.tintColor = .black
+//        eAddRing.addSubview(eAddBtn)
+////        aContainer.addSubview(eAddBtn)
+//        eAddBtn.translatesAutoresizingMaskIntoConstraints = false
+//        eAddBtn.centerXAnchor.constraint(equalTo: eAddRing.centerXAnchor).isActive = true
+//        eAddBtn.centerYAnchor.constraint(equalTo: eAddRing.centerYAnchor).isActive = true
+//        eAddBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true //22
+//        eAddBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
         
         //test dynamic caption/subtitle
 //        let sBox = UIView()
@@ -803,6 +833,7 @@ class VCAViewCell: VCViewCell {
         
         //test > clear id
         setId(id: "")
+        setIds(uId: "", pId: "", sId: "")
         
         //*test > remove time observer
         removeTimeObserverVideo()
@@ -821,6 +852,8 @@ class VCAViewCell: VCViewCell {
         aText.text = "-"
         let eImageUrl = URL(string: "")
         eImage.sd_setImage(with: eImageUrl)
+        let mImageUrl = URL(string: "")
+        mImage.sd_setImage(with: mImageUrl)
         
         bText.text = "0"
         cText.text = "0"
@@ -857,15 +890,15 @@ class VCAViewCell: VCViewCell {
     
     @objc func onUserClicked(gesture: UITapGestureRecognizer) {
         print("click open user panel:")
-        aDelegate?.didClickUser(id: "")
+        aDelegate?.didClickUser(id: userId) //""
     }
     @objc func onPlaceClicked(gesture: UITapGestureRecognizer) {
         print("click open place panel:")
-        aDelegate?.didClickPlace(id: "")
+        aDelegate?.didClickPlace(id: placeId) //""
     }
     @objc func onSoundClicked(gesture: UITapGestureRecognizer) {
         print("click open sound panel:")
-        aDelegate?.didClickSound(id: "")
+        aDelegate?.didClickSound(id: soundId) //""
     }
     @objc func onCommentClicked(gesture: UITapGestureRecognizer) {
         print("click open comment panel:")
@@ -1177,8 +1210,16 @@ class VCAViewCell: VCViewCell {
     
     //test > set id for init
     var id = ""
+    var userId = ""
+    var placeId = ""
+    var soundId = ""
     func setId(id: String) {
         self.id = id
+    }
+    func setIds(uId: String, pId: String, sId: String) {
+        self.userId = uId
+        self.placeId = pId
+        self.soundId = sId
     }
     
     //test > configure cell
@@ -1228,6 +1269,7 @@ class VCAViewCell: VCViewCell {
             let u = data.userId
             let p = data.placeId
             let s = data.soundId
+            setIds(uId: u, pId: p, sId: s)
             asyncConfigure(data: u) //get creator data, e.g. name
             asyncConfigureSound(data: s)
             asyncConfigurePlace(data: p)

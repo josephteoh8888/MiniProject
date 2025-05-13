@@ -10,7 +10,7 @@ import UIKit
 import SDWebImage
 
 protocol MeBookmarkPanelDelegate : AnyObject {
-    func didMeBookmarkClickPost(id: String)
+    func didMeBookmarkClickPost(id: String, dataType: String)
     func didMeBookmarkClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     func didMeBookmarkClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     func didMeBookmarkClickUser(id: String)
@@ -1115,8 +1115,8 @@ extension MeBookmarkListPanelView: ScrollFeedCellDelegate {
     func sfcDidClickVcvClickSound(id: String) {
         delegate?.didMeBookmarkClickSound(id: id)
     }
-    func sfcDidClickVcvClickPost(id: String) {
-        delegate?.didMeBookmarkClickPost(id: id)
+    func sfcDidClickVcvClickPost(id: String, dataType: String) {
+        delegate?.didMeBookmarkClickPost(id: id, dataType: dataType)
     }
     func sfcDidClickVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         //test
@@ -1186,10 +1186,10 @@ extension MeBookmarkListPanelView: TabStackDelegate {
 
 //test
 extension ViewController: MeBookmarkPanelDelegate{
-    func didMeBookmarkClickPost(id: String){
-//        openPostDetailPanel()
+    func didMeBookmarkClickPost(id: String, dataType: String){
         //test > real id for fetching data
-        openPostDetailPanel(id: id)
+//        openPostDetailPanel(id: id)
+        openPostDetailPanel(id: id, dataType: dataType)
     }
     func didMeBookmarkClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
         let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2

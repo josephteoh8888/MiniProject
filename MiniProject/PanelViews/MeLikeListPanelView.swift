@@ -10,7 +10,7 @@ import UIKit
 import SDWebImage
 
 protocol MeLikePanelDelegate : AnyObject {
-    func didMeLikeClickPost(id: String)
+    func didMeLikeClickPost(id: String, dataType: String)
     func didMeLikeClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     func didMeLikeClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     func didMeLikeClickClose()
@@ -1039,8 +1039,8 @@ extension MeLikeListPanelView: ScrollFeedCellDelegate {
     func sfcDidClickVcvClickSound(id: String) {
 
     }
-    func sfcDidClickVcvClickPost(id: String) {
-        delegate?.didMeLikeClickPost(id: id)
+    func sfcDidClickVcvClickPost(id: String, dataType: String) {
+        delegate?.didMeLikeClickPost(id: id, dataType: dataType)
     }
     func sfcDidClickVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         //test
@@ -1110,10 +1110,10 @@ extension MeLikeListPanelView: TabStackDelegate {
 
 //test
 extension ViewController: MeLikePanelDelegate{
-    func didMeLikeClickPost(id: String){
-//        openPostDetailPanel()
+    func didMeLikeClickPost(id: String, dataType: String){
         //test > real id for fetching data
-        openPostDetailPanel(id: id)
+//        openPostDetailPanel(id: id)
+        openPostDetailPanel(id: id, dataType: dataType)
     }
     func didMeLikeClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
         let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2

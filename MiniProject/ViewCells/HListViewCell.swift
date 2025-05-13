@@ -16,7 +16,7 @@ protocol HListCellDelegate : AnyObject {
     func hListDidClickVcvClickUser(id: String)
     func hListDidClickVcvClickPlace(id: String)
     func hListDidClickVcvClickSound(id: String)
-    func hListDidClickVcvClickPost(id: String)
+    func hListDidClickVcvClickPost(id: String, dataType: String)
     func hListDidClickVcvClickPhoto(id: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String)
     func hListDidClickVcvClickVideo(id: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String)
     func hListDidClickVcvSortComment()
@@ -32,6 +32,9 @@ protocol HListCellDelegate : AnyObject {
     func hListDidClickVcvPlayAudio(vc: UICollectionViewCell)
     
     func hListDidClickVcvClickPlay(vc: UICollectionViewCell, isPlay: Bool)
+    
+    //test > reload item for resizing
+    func hListResize(vc: UICollectionViewCell)
 }
 
 //test > horizontal list viewcell for sound panel

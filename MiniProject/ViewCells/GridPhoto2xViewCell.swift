@@ -200,6 +200,8 @@ class GridPhoto2xViewCell: UICollectionViewCell {
         aUserNameText.centerYAnchor.constraint(equalTo: e2UserCover.centerYAnchor, constant: 0).isActive = true
         aUserNameText.leadingAnchor.constraint(equalTo: e2UserCover.trailingAnchor, constant: 5).isActive = true
         aUserNameText.trailingAnchor.constraint(lessThanOrEqualTo: bMiniBtn.leadingAnchor, constant: -20).isActive = true
+        aUserNameText.isUserInteractionEnabled = true
+        aUserNameText.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onUserImageClicked)))
         
         //test > time created
         bCountText.textAlignment = .left
@@ -229,6 +231,7 @@ class GridPhoto2xViewCell: UICollectionViewCell {
         
         //test > clear id
         setId(id: "")
+        setIds(uId: "", pId: "", sId: "")
         
         let imageUrl = URL(string: "")
         gifImage.sd_setImage(with: imageUrl)
@@ -249,8 +252,16 @@ class GridPhoto2xViewCell: UICollectionViewCell {
     
     //test > set id for init
     var id = ""
+    var userId = ""
+    var placeId = ""
+    var soundId = ""
     func setId(id: String) {
         self.id = id
+    }
+    func setIds(uId: String, pId: String, sId: String) {
+        self.userId = uId
+        self.placeId = pId
+        self.soundId = sId
     }
     
     func configure(data: BaseData) {
@@ -265,12 +276,11 @@ class GridPhoto2xViewCell: UICollectionViewCell {
         
         if(l == "a") {
             let u = a.userId
+            setIds(uId: u, pId: "", sId: "")
             asyncConfigure(data: u)
             
-//            aaText.text = "#Tokyo trip"
             aaText.text = a.dataTextString
             
-//            let imageUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
             let imageUrl = URL(string: a.coverPhotoString)
             self.gifImage.sd_setImage(with: imageUrl)
             
@@ -299,19 +309,16 @@ class GridPhoto2xViewCell: UICollectionViewCell {
                         return
                     }
                     
-//                    if(!l.isEmpty) {
-//                        let l_0 = l[0]
-                        let uData = UserData()
-                        uData.setData(rData: l)
-                        let l_ = uData.dataCode
+                    let uData = UserData()
+                    uData.setData(rData: l)
+                    let l_ = uData.dataCode
+                    
+                    if(l_ == "a") {
+                        self.aUserNameText.text = uData.dataTextString
                         
-                        if(l_ == "a") {
-                            self.aUserNameText.text = uData.dataTextString
-                            
-                            let imageUrl2 = URL(string: uData.coverPhotoString)
-                            self.aUserPhoto.sd_setImage(with: imageUrl2)
-                        }
-//                    }
+                        let imageUrl2 = URL(string: uData.coverPhotoString)
+                        self.aUserPhoto.sd_setImage(with: imageUrl2)
+                    }
                 }
 
                 case .failure(let error):
@@ -340,6 +347,6 @@ class GridPhoto2xViewCell: UICollectionViewCell {
         aDelegate?.gridViewClick(id: id, vc: self, pointX: pointX, pointY: pointY, view: gifImage, mode:PhotoTypes.P_SHOT)
     }
     @objc func onUserImageClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.gridViewClickUser(id: "")
+        aDelegate?.gridViewClickUser(id: userId)
     }
 }

@@ -143,9 +143,9 @@ class HPostListAViewCell: UICollectionViewCell {
 //        aGridNameText.centerYAnchor.constraint(equalTo: aUserPhoto.centerYAnchor).isActive = true
         aGridNameText.topAnchor.constraint(equalTo: aUserPhoto.topAnchor).isActive = true
         aGridNameText.leadingAnchor.constraint(equalTo: aUserPhoto.trailingAnchor, constant: 10).isActive = true
-//        aGridNameText.text = "Mic1809"
-//        aGridNameText.text = "Michael Kins"
         aGridNameText.text = "-"
+        aGridNameText.isUserInteractionEnabled = true
+        aGridNameText.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onUserClicked)))
         
         //test > verified badge
 //        let vBtn = UIImageView(image: UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate))
@@ -471,6 +471,8 @@ class HPostListAViewCell: UICollectionViewCell {
         
         //test > clear id
         setId(id: "")
+        setIds(uId: "", pId: "", sId: "")
+        setDataType(dataType: "")
         
         mediaArray.removeAll()
 
@@ -602,8 +604,20 @@ class HPostListAViewCell: UICollectionViewCell {
     
     //test > set id for init
     var id = ""
+    var userId = ""
+    var placeId = ""
+    var soundId = ""
+    var dataType = ""
     func setId(id: String) {
         self.id = id
+    }
+    func setIds(uId: String, pId: String, sId: String) {
+        self.userId = uId
+        self.placeId = pId
+        self.soundId = sId
+    }
+    func setDataType(dataType: String) {
+        self.dataType = dataType
     }
     
     func configure(data: BaseData) {
@@ -613,6 +627,7 @@ class HPostListAViewCell: UICollectionViewCell {
         }
         
         setId(id: a.id)
+        setDataType(dataType: "post")
         
         aUserNameText.text = "-"
         aaText.text = "-"
@@ -636,14 +651,14 @@ class HPostListAViewCell: UICollectionViewCell {
         let d = a.dataCode
         if(d == "a") {
             aUserNameText.text = "3hr . 1.2m views"
-//            aaText.text = "Petronas Twin Tower"
             
             let u = a.userId
             let p = a.placeId
+            let s = a.soundId
+            setIds(uId: u, pId: p, sId: s)
             asyncConfigure(data: u)
             asyncConfigurePlace(data: p)
             
-//            let dataCL = data.contentDataArray
             let dataCL = a.contentDataArray
             for cl in dataCL {
                 let l = cl.dataCode
@@ -931,8 +946,12 @@ class HPostListAViewCell: UICollectionViewCell {
     //                contentCell.heightAnchor.constraint(equalToConstant: 120).isActive = true  //350
                     contentCell.layer.cornerRadius = 10 //5
                     aTestArray.append(contentCell)
-//                    contentCell.configure(data: "a", text: data.dataTextString)
-                    contentCell.configure(data: "a", text: a.dataTextString)
+//                    contentCell.setupContentViews(qPredata: da, text: cl.dataTextString)
+                    contentCell.setupContentViews(qPredata: da, text: cl.dataTextString, contentData: cl)
+//                    let qId = cl.id
+//                    let qContentDataType = cl.contentDataType
+//                    contentCell.configure(id: qId, contentDataType: qContentDataType)
+                    contentCell.configure(contentData: cl)
                     contentCell.aDelegate = self //test
                     
                     //test
@@ -1022,18 +1041,18 @@ class HPostListAViewCell: UICollectionViewCell {
     }
     @objc func onUserClicked(gesture: UITapGestureRecognizer) {
         print("click open user panel:")
-        aDelegate?.hListDidClickVcvClickUser(id: "")
+        aDelegate?.hListDidClickVcvClickUser(id: userId) //""
     }
     @objc func onPlaceClicked(gesture: UITapGestureRecognizer) {
         print("click open place panel:")
-        aDelegate?.hListDidClickVcvClickPlace(id: "")
+        aDelegate?.hListDidClickVcvClickPlace(id: placeId) //""
     }
     
     //test > single and double clicked
     @objc func onSingleClicked(gesture: UITapGestureRecognizer) {
         print("post single clicked")
 //        aDelegate?.hListDidClickVcvClickPost(id: "")
-        aDelegate?.hListDidClickVcvClickPost(id: id)
+        aDelegate?.hListDidClickVcvClickPost(id: id, dataType: dataType)
     }
     @objc func onDoubleClicked(gesture: UITapGestureRecognizer) {
         print("post double clicked")
@@ -1172,13 +1191,13 @@ extension HPostListAViewCell: ContentCellDelegate {
         
     }
     func contentCellDidClickUser(id: String){
-        
+        aDelegate?.hListDidClickVcvClickUser(id: id)
     }
     func contentCellDidClickPlace(id: String){
         
     }
-    func contentCellDidClickPost(id: String){
-        aDelegate?.hListDidClickVcvClickPost(id: id)
+    func contentCellDidClickPost(id: String, dataType: String){
+        aDelegate?.hListDidClickVcvClickPost(id: id, dataType: dataType)
     }
     func contentCellDidClickVcvClickPlay(cc: UIView, isPlay: Bool){
         if let j = aTestArray.firstIndex(of: cc) {
@@ -1187,6 +1206,9 @@ extension HPostListAViewCell: ContentCellDelegate {
             
             aDelegate?.hListDidClickVcvClickPlay(vc: self, isPlay: isPlay)
         }
+    }
+    func contentCellResize(cc: UIView){
+        aDelegate?.hListResize(vc: self)
     }
 }
 

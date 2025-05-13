@@ -18,7 +18,7 @@ protocol HResultListViewDelegate : AnyObject {
     func didHResultClickHashtag()
     func didHResultClickPhoto(id: String)
     func didHResultClickVideo(id: String)
-    func didHResultClickPost(id: String)
+    func didHResultClickPost(id: String, dataType: String)
     
     func didHResultClickSignIn()
 }

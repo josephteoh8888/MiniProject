@@ -5015,12 +5015,15 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
             panel.setQuoteObject(type: "s", id: "#")
         }
         else if(objectType == "post") {
-            panel.setQuoteObject(type: "quote", id: "#")
+            panel.setQuoteObject(type: "post", id: "#")
         }
-        else if(objectType == "photo") {
+        else if(objectType == "comment") {
+            panel.setQuoteObject(type: "comment", id: "#")
+        }
+        else if(objectType == "photo_s") {
             panel.setQuoteObject(type: "photo_s", id: "#")
         }
-        else if(objectType == "video") {
+        else if(objectType == "video_l") {
             panel.setQuoteObject(type: "video_l", id: "#")
         }
         //*
@@ -5193,10 +5196,10 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
     
     //test > shift post detail to viewcontroller and include in [page] array
     func openPostDetailPanel() {
-        openPostDetailPanel(id: "") //default
+        openPostDetailPanel(id: "", dataType: "post") //default
     }
     //test > real id for fetching data
-    func openPostDetailPanel(id: String) {
+    func openPostDetailPanel(id: String, dataType: String) {
         
         //test 1 > as not scrollable panel
         nextPage(isNextPageScrollable: false)
@@ -5208,6 +5211,7 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
         panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
         panel.setId(id: id)
+        panel.setDataType(dataType: dataType)
         panel.initialize()
         panel.delegate = self
         

@@ -10,7 +10,7 @@ import UIKit
 import SDWebImage
 
 protocol MeHistoryPanelDelegate : AnyObject {
-    func didMeHistoryClickPost(id: String)
+    func didMeHistoryClickPost(id: String, dataType: String)
     func didMeHistoryClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     func didMeHistoryClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     func didMeHistoryClickClose()
@@ -1040,8 +1040,8 @@ extension MeHistoryListPanelView: ScrollFeedCellDelegate {
     func sfcDidClickVcvClickSound(id: String) {
 
     }
-    func sfcDidClickVcvClickPost(id: String) {
-        delegate?.didMeHistoryClickPost(id: id)
+    func sfcDidClickVcvClickPost(id: String, dataType: String) {
+        delegate?.didMeHistoryClickPost(id: id, dataType: dataType)
     }
     func sfcDidClickVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         //test
@@ -1111,10 +1111,10 @@ extension MeHistoryListPanelView: TabStackDelegate {
 
 //test
 extension ViewController: MeHistoryPanelDelegate{
-    func didMeHistoryClickPost(id: String){
-//        openPostDetailPanel()
+    func didMeHistoryClickPost(id: String, dataType: String){
         //test > real id for fetching data
-        openPostDetailPanel(id: id)
+//        openPostDetailPanel(id: id)
+        openPostDetailPanel(id: id, dataType: dataType)
     }
     func didMeHistoryClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
         let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2

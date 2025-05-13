@@ -23,7 +23,7 @@ protocol PostPanelDelegate : AnyObject {
     func didClickPostPanelVcvClickUser(id: String) //try
     func didClickPostPanelVcvClickPlace(id: String) //try
     func didClickPostPanelVcvClickSound(id: String) //try
-    func didClickPostPanelVcvClickPost(id: String) //try
+    func didClickPostPanelVcvClickPost(id: String, dataType: String) //try
     func didClickPostPanelVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     func didClickPostPanelVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     
@@ -1790,10 +1790,10 @@ extension ViewController: PostPanelDelegate{
     func didClickPostPanelVcvClickSound(id: String) {
 
     }
-    func didClickPostPanelVcvClickPost(id: String) {
-//        openPostDetailPanel()
+    func didClickPostPanelVcvClickPost(id: String, dataType: String) {
         //test > real id for fetching data
-        openPostDetailPanel(id: id)
+//        openPostDetailPanel(id: id)
+        openPostDetailPanel(id: id, dataType: dataType)
     }
     func didClickPostPanelVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
 //        openPhotoDetailPanel()
@@ -1822,7 +1822,6 @@ extension ViewController: PostPanelDelegate{
     
     func didClickPostPanelVcvClickCreate(type: String){
         if(type == "post") {
-//            openPostCreatorPanel()
             openPostCreatorPanel(objectType: "post", objectId: "", mode: "")
         }
         
@@ -1950,8 +1949,8 @@ extension PostPanelView: CommentScrollableDelegate{
     func didCClickShare(){
         openShareSheet()
     }
-    func didCClickPost(id: String){
-        delegate?.didClickPostPanelVcvClickPost(id: id)
+    func didCClickPost(id: String, dataType: String){
+        delegate?.didClickPostPanelVcvClickPost(id: id, dataType: dataType)
     }
     func didCClickClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         delegate?.didClickPostPanelVcvClickPhoto(id: id, pointX: pointX, pointY: pointY, view: view, mode: mode)
@@ -2002,6 +2001,15 @@ extension PostPanelView: ScrollFeedCellDelegate {
         
         pausePlayingMedia()
         openComment()
+        
+        //test > reload item
+//        if(!self.feedList.isEmpty) {
+//            let b = self.feedList[self.currentIndex]
+//            var idxArray: [IndexPath] = []
+//            let idx = IndexPath(item: 0, section: 0)
+//            idxArray.append(idx)
+//            b.vCV?.reloadItems(at: idxArray)
+//        }
     }
     func sfcDidClickVcvLove() {
         print("fcDidClickVcvLike ")
@@ -2024,9 +2032,9 @@ extension PostPanelView: ScrollFeedCellDelegate {
     func sfcDidClickVcvClickSound(id: String) {
 
     }
-    func sfcDidClickVcvClickPost(id: String) {
+    func sfcDidClickVcvClickPost(id: String, dataType: String) {
         pausePlayingMedia()
-        delegate?.didClickPostPanelVcvClickPost(id: id)
+        delegate?.didClickPostPanelVcvClickPost(id: id,  dataType: dataType)
     }
     func sfcDidClickVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         //test > pause current playing video when go to user

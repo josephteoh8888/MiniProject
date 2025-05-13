@@ -17,7 +17,7 @@ protocol SearchPanelDelegate : AnyObject {
     func didSearchClickPlace(id: String)
     func didSearchClickSound(id: String)
     func didSearchClickHashtag()
-    func didSearchClickPost(id: String)
+    func didSearchClickPost(id: String, dataType: String)
 //    func didSearchClickPhoto()
     func didSearchClickClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
 //    func didSearchClickVideo()
@@ -1119,8 +1119,8 @@ extension SearchPanelView: ScrollFeedCellDelegate {
     func sfcDidClickVcvClickSound(id: String) {
         delegate?.didSearchClickSound(id: id)
     }
-    func sfcDidClickVcvClickPost(id: String) {
-        delegate?.didSearchClickPost(id: id)
+    func sfcDidClickVcvClickPost(id: String, dataType: String) {
+        delegate?.didSearchClickPost(id: id, dataType: dataType)
     }
     func sfcDidClickVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         
@@ -1227,10 +1227,10 @@ extension ViewController: SearchPanelDelegate{
     func didSearchClickHashtag() {
         
     }
-    func didSearchClickPost(id: String){
-//        openPostDetailPanel()
+    func didSearchClickPost(id: String, dataType: String){
         //test > real id for fetching data
-        openPostDetailPanel(id: id)
+//        openPostDetailPanel(id: id)
+        openPostDetailPanel(id: id, dataType: dataType)
     }
     func didSearchClickClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
         let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2

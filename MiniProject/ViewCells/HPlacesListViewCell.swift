@@ -110,15 +110,26 @@ class HPlacesListViewCell: UICollectionViewCell {
         super.prepareForReuse()
         print("HResultUserListViewCell prepare for reuse")
         
+        //test > clear id
+        setId(id: "")
+        
         aNameText.text = "-"
     }
     
-//    func configure(data: String) {
+    //test > set id for init
+    var id = ""
+    func setId(id: String) {
+        self.id = id
+    }
+    
     func configure(data: BaseData) {
 
         guard let a = data as? PlaceData else {
             return
         }
+        
+        setId(id: data.id)
+        
         let l = a.dataCode
         
         if(l == "a") {
@@ -165,7 +176,7 @@ class HPlacesListViewCell: UICollectionViewCell {
     }
     
     @objc func onPlaceClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.didHPlacesClickPlace(id: "")
+        aDelegate?.didHPlacesClickPlace(id: id)
     }
 }
 

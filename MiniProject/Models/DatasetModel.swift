@@ -20,18 +20,9 @@ class BaseDataset {
     var contentDataArray = [ContentDataset]()
 }
 
-//class ContentDataset {
-//    var dataCode: String = ""
-//    var dataArray = [String]()
-//    var dataTextString: String = ""
-//    
-//    func setDataCode(data: String) {
-//        dataCode = data
-//    }
-//}
-
 class ContentDataset : BaseDataset {
     var contentDataType = ""
+    var contentDataCode = "" //test
     
     func setDataCode(data: String) {
         dataCode = data
@@ -39,6 +30,10 @@ class ContentDataset : BaseDataset {
     
     func setId(dataId: String) {
         id = dataId
+    }
+    
+    func setContentDataType(dataType: String) {
+        contentDataType = dataType
     }
 }
 
@@ -325,7 +320,7 @@ class PostDataset: BaseDataset {
 //            dataArray.append("t") //text
 //            dataArray.append("q") //text
 //            dataArray.append("q") //photo
-//            dataArray.append("q") //quote
+            dataArray.append("quote") //quote
             dataArray.append("video") //loop
 //            dataArray.append("v") //video
             dataArray.append("video_l") //loop
@@ -339,7 +334,7 @@ class PostDataset: BaseDataset {
 //            //test > error handling
 //            dataArray.append("us")
             
-//            dataArray.append("quote") //quote
+            dataArray.append("quote") //quote
         }
         else if(data == "c") {
 //            dataArray.append("t")
@@ -356,8 +351,9 @@ class PostDataset: BaseDataset {
             dataArray.append("text") //text
             
             dataArray.append("photo")
-            dataArray.append("photo")
+            dataArray.append("photo_s")
 //            dataArray.append("photo")
+            dataArray.append("quote") //quote
             
 //            //test > error handling
 //            dataArray.append("us")
@@ -378,6 +374,7 @@ class PostDataset: BaseDataset {
             } else if(i == "quote"){
                 let cData = QuoteContentDataset()
                 cData.setDataCode(data: i)
+                cData.setContentDataType(dataType: "comment")
                 cData.setData(data: data) //test
                 contentDataArray.append(cData)
             } else if(i == "text"){
@@ -406,19 +403,19 @@ class PostDataset: BaseDataset {
     }
     
     func setTextString(data: String) {
-        if(data == "a") {
-            dataTextString = "Nice food, nice environment! Worth a visit. \n\nSo Good.\n.\n..\n...\n....\n...\n..\n.\n.\n."
-//            dataTextString = "Nice food, nice environment! Worth a visit. \nSo Good."
-        }
-        else if(data == "b") {
-            dataTextString = "往年的这个时候，iPhone 虽然也是位列销量榜榜首，但那都是上一代的旧机型呀...\n只能说这次 11.11 各家给的优惠都太给力了."
-        }
-        else if(data == "c") {
-            dataTextString = "Vấn đề đã rõ, đã chín, được thực tiễn chứng minh là đúng, thực hiện hiệu quả, đa số đồng tình thì tiếp tục thực hiện"
-        }
-        else if(data == "d") {
-            dataTextString = "A defiant Vladimir Putin said Russia won’t be stopped from pursuing its goals after he swept to a record victory in a presidential election whose outcome was pre-determined."
-        }
+//        if(data == "a") {
+//            dataTextString = "Nice food, nice environment! Worth a visit. \n\nSo Good.\n.\n..\n...\n....\n...\n..\n.\n.\n."
+////            dataTextString = "Nice food, nice environment! Worth a visit. \nSo Good."
+//        }
+//        else if(data == "b") {
+//            dataTextString = "往年的这个时候，iPhone 虽然也是位列销量榜榜首，但那都是上一代的旧机型呀...\n只能说这次 11.11 各家给的优惠都太给力了."
+//        }
+//        else if(data == "c") {
+//            dataTextString = "Vấn đề đã rõ, đã chín, được thực tiễn chứng minh là đúng, thực hiện hiệu quả, đa số đồng tình thì tiếp tục thực hiện"
+//        }
+//        else if(data == "d") {
+//            dataTextString = "A defiant Vladimir Putin said Russia won’t be stopped from pursuing its goals after he swept to a record victory in a presidential election whose outcome was pre-determined."
+//        }
         
         //creator id, sound and place id
         if(data == "a") {
@@ -502,7 +499,7 @@ class CommentDataset: BaseDataset {
             dataArray.append("text") //text
 //            dataArray.append("p") //photo
 //            dataArray.append("t") //text
-            dataArray.append("quote") //text
+            dataArray.append("quote") 
 //            dataArray.append("q") //photo
 //            dataArray.append("q") //quote
             dataArray.append("video_l")
@@ -510,17 +507,17 @@ class CommentDataset: BaseDataset {
         else if(data == "b") {
 ////            dataArray.append("p") //photo
 //            dataArray.append("v") //video
-//            dataArray.append("t") //photo
+            dataArray.append("photo_s") //photo
 //            dataArray.append("v_l") //video
             
             //test > error handling
-            dataArray.append("us")
+//            dataArray.append("us")
         }
         else if(data == "c") {
             dataArray.append("text")
             dataArray.append("photo") //photo
 //            dataArray.append("q") //quote
-            
+            dataArray.append("text")
 //            dataArray.append("c") //comment
             dataArray.append("video")
 //            dataArray.append("p") //photo
@@ -545,12 +542,14 @@ class CommentDataset: BaseDataset {
             } else if(i == "quote"){
                 let cData = QuoteContentDataset()
                 cData.setDataCode(data: i)
+                cData.setContentDataType(dataType: "post")
                 cData.setData(data: data) //test
                 contentDataArray.append(cData)
             } else if(i == "text"){
                 let cData = TextContentDataset()
                 cData.setDataCode(data: i)
-                cData.setTextString(data: data) //test
+//                cData.setTextString(data: data) //ori
+                cData.setTextStringB(data: data) //test
                 contentDataArray.append(cData)
             } else {
                 let cData = ContentDataset()
@@ -561,20 +560,20 @@ class CommentDataset: BaseDataset {
     }
     
     func setTextString(data: String) {
-        if(data == "a") {
-            dataTextString = "Nice food, nice environment! Worth a visit. \n\nSo Good.\n.\n..\n...\n....\n...\n..\n.\n.\n."
-//            dataTextString = "Nice food, nice environment! Worth a visit. \nSo Good."
-        }
-        else if(data == "b") {
-            dataTextString = "往年的这个时候，iPhone 虽然也是位列销量榜榜首，但那都是上一代的旧机型呀...\n只能说这次 11.11 各家给的优惠都太给力了."
-        }
-        else if(data == "c") {
-            dataTextString = "Vấn đề đã rõ, đã chín, được thực tiễn chứng minh là đúng, thực hiện hiệu quả, đa số đồng tình thì tiếp tục thực hiện"
-        }
-        //test
-        else if(data == "d") {
-            dataTextString = "A defiant Vladimir Putin said Russia won’t be stopped from pursuing its goals after he swept to a record victory in a presidential election whose outcome was pre-determined."
-        }
+//        if(data == "a") {
+//            dataTextString = "Nice food, nice environment! Worth a visit. \n\nSo Good.\n.\n..\n...\n....\n...\n..\n.\n.\n."
+////            dataTextString = "Nice food, nice environment! Worth a visit. \nSo Good."
+//        }
+//        else if(data == "b") {
+//            dataTextString = "往年的这个时候，iPhone 虽然也是位列销量榜榜首，但那都是上一代的旧机型呀...\n只能说这次 11.11 各家给的优惠都太给力了."
+//        }
+//        else if(data == "c") {
+//            dataTextString = "Vấn đề đã rõ, đã chín, được thực tiễn chứng minh là đúng, thực hiện hiệu quả, đa số đồng tình thì tiếp tục thực hiện"
+//        }
+//        //test
+//        else if(data == "d") {
+//            dataTextString = "A defiant Vladimir Putin said Russia won’t be stopped from pursuing its goals after he swept to a record victory in a presidential election whose outcome was pre-determined."
+//        }
         
         //creator id, sound and place id
         if(data == "a") {
@@ -971,7 +970,7 @@ class UserDataset: BaseDataset {
         
         //account verified
         if(data == "a") {
-            isAccountVerified = false
+            isAccountVerified = true
         }
         else if(data == "b") {
             isAccountVerified = true
@@ -1007,23 +1006,110 @@ class PhotoContentDataset : ContentDataset {
 }
 
 class QuoteContentDataset : ContentDataset {
+    
+    //test > quote comment for a start
     func setData(data: String) {
-        if(data == "a") {
-            dataArray.append("photo") //photo
-            dataArray.append("video") //video
+        if(contentDataType == "comment") {
+            if(data == "a") {
+                //comment4
+                setId(dataId: "comment4")
+                
+                dataArray.append("text")
+                dataArray.append("photo") //photo
+                dataArray.append("text")
+                dataArray.append("video")
+
+                //store corresponding text from comment
+                dataTextString = "Vấn đề đã rõ, đã chín, được thực tiễn chứng minh là đúng, thực hiện hiệu quả, đa số đồng tình thì tiếp tục thực hiện"
+            }
+            else if(data == "b") {
+                //comment2
+                setId(dataId: "comment2")
+                
+                dataArray.append("text")
+
+                //store corresponding text from comment
+//                dataTextString = "A defiant Vladimir Putin"
+                dataTextString = "A defiant Vladimir Putin said Russia won’t be stopped from pursuing its goals after he swept to a record victory in a presidential election whose outcome was pre-determined."
+            }
+            else if(data == "c") {
+                //comment3
+                setId(dataId: "comment3")
+                
+                dataArray.append("photo_s")
+
+                //store corresponding text from comment
+                dataTextString = "往年的这个时候，iPhone 虽然也是位列销量榜榜首，但那都是上一代的旧机型呀...\n只能说这次 11.11 各家给的优惠都太给力了."
+            }
+            else if(data == "d") {
+                //comment1
+                setId(dataId: "comment1")
+                
+                dataArray.append("text")
+                dataArray.append("quote") //quote
+                dataArray.append("video_l")
+
+                //store corresponding text from comment
+                dataTextString = "Nice food, nice environment! Worth a visit. \n\nSo Good.\n.\n..\n...\n....\n...\n..\n.\n.\n."
+            }
         }
-        else if(data == "b") {
-            dataArray.append("text")
-            dataArray.append("video_l") //photo
-        }
-        else if(data == "c") {
-            dataArray.append("photo_s") //photo
-        }
-        else if(data == "d") {
-            dataArray.append("text")
+        else if(contentDataType == "post"){
+            if(data == "a") {
+                //post4
+                setId(dataId: "post4")
+                
+                dataArray.append("text") //text
+                dataArray.append("video") //video
+                dataArray.append("video_l") //loop
+                dataArray.append("text") //text
+                dataArray.append("photo")
+                dataArray.append("photo_s")
+                dataArray.append("quote") //quote
+
+                //store corresponding text from comment
+//                dataTextString = "China to be a “greedy country”"
+                dataTextString = "China to be a “greedy country” that would take what it wanted"
+            }
+            else if(data == "b") {
+                //post2
+                setId(dataId: "post2")
+                
+                dataArray.append("text") //text
+                dataArray.append("photo") //photo
+                dataArray.append("photo_s") //video
+                dataArray.append("quote") //quote
+                dataArray.append("video") //loop
+                dataArray.append("video_l") //loop
+
+                //store corresponding text from comment
+                dataTextString = "韩国前总统尹锡悦涉嫌带头发动内乱刑事案件将于当地时间14日正式启动审理."
+            }
+            else if(data == "c") {
+                //post3
+                setId(dataId: "post3")
+                
+                dataArray.append("photo") //photo
+                dataArray.append("quote") //quote
+                dataArray.append("video") //loop
+                dataArray.append("video") //video
+
+                //store corresponding text from comment
+                dataTextString = "接收来自宇宙诗人@刘宇Yu_ 的仪式感约定吧"
+            }
+            else if(data == "d") {
+                //post1
+                setId(dataId: "post1")
+                
+                dataArray.append("text") //text
+                dataArray.append("photo_s") //video
+                dataArray.append("text") //text
+                dataArray.append("quote") //quote
+
+                //store corresponding text from comment
+                dataTextString = "The growth outlook of economies in the region will be negatively affected by a fall in external demand partly due to the tariffs’ wider impact on global trade and growth."
+            }
         }
     }
-    //to be substituted with real data #post1 etc
 }
 
 class TextContentDataset : ContentDataset {
@@ -1039,21 +1125,25 @@ class TextContentDataset : ContentDataset {
         }
         else if(data == "d") {
 //            dataTextString = "The 52-year-old Malaysian, who works in a mosque in Malaysia’s Johor state, admitted that many of his friends and family perceived China to be a “greedy country” that would take what it wanted with little regard to the sovereignty of others."
+//            dataTextString = "China to be a “greedy country”"
             dataTextString = "China to be a “greedy country” that would take what it wanted"
         }
-        
-//        if(data == "a") {
-//            dataTextString = "Nice food, nice environment! Worth a visit. \n\nSo Good.\n.\n..\n...\n....\n...\n..\n.\n.\n."
-//        }
-//        else if(data == "b") {
-//            dataTextString = "往年的这个时候，iPhone 虽然也是位列销量榜榜首，但那都是上一代的旧机型呀...\n只能说这次 11.11 各家给的优惠都太给力了."
-//        }
-//        else if(data == "c") {
-//            dataTextString = "Vấn đề đã rõ, đã chín, được thực tiễn chứng minh là đúng, thực hiện hiệu quả, đa số đồng tình thì tiếp tục thực hiện"
-//        }
-//        else if(data == "d") {
-//            dataTextString = "A defiant Vladimir Putin said Russia won’t be stopped from pursuing its goals after he swept to a record victory in a presidential election whose outcome was pre-determined."
-//        }
+    }
+    
+    func setTextStringB(data: String) {
+        if(data == "a") {
+            dataTextString = "Nice food, nice environment! Worth a visit. \n\nSo Good.\n.\n..\n...\n....\n...\n..\n.\n.\n."
+        }
+        else if(data == "b") {
+            dataTextString = "往年的这个时候，iPhone 虽然也是位列销量榜榜首，但那都是上一代的旧机型呀...\n只能说这次 11.11 各家给的优惠都太给力了."
+        }
+        else if(data == "c") {
+            dataTextString = "Vấn đề đã rõ, đã chín, được thực tiễn chứng minh là đúng, thực hiện hiệu quả, đa số đồng tình thì tiếp tục thực hiện"
+        }
+        else if(data == "d") {
+//            dataTextString = "A defiant Vladimir Putin."
+            dataTextString = "A defiant Vladimir Putin said Russia won’t be stopped from pursuing its goals after he swept to a record victory in a presidential election whose outcome was pre-determined."
+        }
     }
 }
 

@@ -25,7 +25,7 @@ protocol SoundScrollablePanelDelegate : AnyObject {
     func didSClickUserSoundScrollable(id: String)
     func didSClickPlaceSoundScrollable(id: String)
     func didSClickSoundSoundScrollable(id: String)
-    func didSClickSoundScrollableVcvClickPost(id: String)
+    func didSClickSoundScrollableVcvClickPost(id: String, dataType: String)
     func didSClickSoundScrollableVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     func didSClickSoundScrollableVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     func didSClickSoundSignIn()
@@ -495,10 +495,8 @@ class SoundScrollablePanelView: ScrollablePanelView{
         bPanelView.addSubview(aNameTextB)
         aNameTextB.translatesAutoresizingMaskIntoConstraints = false
         aNameTextB.topAnchor.constraint(equalTo: aPhotoB.topAnchor, constant: 10).isActive = true
-//        aNameTextB.topAnchor.constraint(equalTo: aObjectGridBG.topAnchor, constant: 5).isActive = true
         aNameTextB.leadingAnchor.constraint(equalTo: aPhotoB.trailingAnchor, constant: 10).isActive = true
-//        aNameTextB.leadingAnchor.constraint(equalTo: aObjectGridBG.trailingAnchor, constant: 10).isActive = true
-//        aNameTextB.text = "Canary Wharf"
+        aNameTextB.trailingAnchor.constraint(equalTo: bPanelView.trailingAnchor, constant: -20).isActive = true
         aNameTextB.text = ""
         
         objectSymbol.image = UIImage(named:"icon_round_music")?.withRenderingMode(.alwaysTemplate)
@@ -802,17 +800,6 @@ class SoundScrollablePanelView: ScrollablePanelView{
         objectSymbolC.widthAnchor.constraint(equalToConstant: 16).isActive = true
         //*
         
-//        let aNameTextC = UILabel()
-        aNameTextC.textAlignment = .left
-        aNameTextC.textColor = .white
-        aNameTextC.font = .boldSystemFont(ofSize: 14)
-        stickyHLight.addSubview(aNameTextC)
-        aNameTextC.translatesAutoresizingMaskIntoConstraints = false
-        aNameTextC.centerYAnchor.constraint(equalTo: stickyHLight.centerYAnchor, constant: 0).isActive = true
-        aNameTextC.leadingAnchor.constraint(equalTo: aStickyGridBG.trailingAnchor, constant: 10).isActive = true
-        aNameTextC.text = ""
-//        aNameTextC.text = ""
-        
 //        let aFollowC = UIView()
         aFollowC.backgroundColor = .yellow
         stickyHLight.addSubview(aFollowC)
@@ -836,6 +823,18 @@ class SoundScrollablePanelView: ScrollablePanelView{
         aFollowCText.centerYAnchor.constraint(equalTo: aFollowC.centerYAnchor).isActive = true
 //        aFollowCText.text = "Save"
         aFollowCText.text = ""
+        
+//        let aNameTextC = UILabel()
+        aNameTextC.textAlignment = .left
+        aNameTextC.textColor = .white
+        aNameTextC.font = .boldSystemFont(ofSize: 14)
+        stickyHLight.addSubview(aNameTextC)
+        aNameTextC.translatesAutoresizingMaskIntoConstraints = false
+        aNameTextC.centerYAnchor.constraint(equalTo: stickyHLight.centerYAnchor, constant: 0).isActive = true
+        aNameTextC.leadingAnchor.constraint(equalTo: aStickyGridBG.trailingAnchor, constant: 10).isActive = true
+        aNameTextC.trailingAnchor.constraint(equalTo: aFollowC.leadingAnchor, constant: -10).isActive = true
+        aNameTextC.text = ""
+//        aNameTextC.text = ""
     }
     
     func preloadAudio() {
@@ -2716,9 +2715,9 @@ extension SoundScrollablePanelView: ScrollFeedCellDelegate {
     func sfcDidClickVcvClickSound(id: String) {
 
     }
-    func sfcDidClickVcvClickPost(id: String) {
+    func sfcDidClickVcvClickPost(id: String, dataType: String) {
         pauseFeedPlayingMedia()
-        delegate?.didSClickSoundScrollableVcvClickPost(id: id)
+        delegate?.didSClickSoundScrollableVcvClickPost(id: id, dataType: dataType)
     }
     func sfcDidClickVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         
@@ -2815,10 +2814,10 @@ extension ViewController: SoundScrollablePanelDelegate{
         //test > real id for fetching data
         openSoundPanel(id: id)
     }
-    func didSClickSoundScrollableVcvClickPost(id: String){
-//        openPostDetailPanel()
+    func didSClickSoundScrollableVcvClickPost(id: String, dataType: String){
         //test > real id for fetching data
-        openPostDetailPanel(id: id)
+//        openPostDetailPanel(id: id)
+        openPostDetailPanel(id: id, dataType: dataType)
     }
     func didSClickSoundScrollableVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
         let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
@@ -3008,8 +3007,8 @@ extension SoundScrollablePanelView: CommentScrollableDelegate{
     func didCClickShare(){
         openShareSheet()
     }
-    func didCClickPost(id: String){
-        delegate?.didSClickSoundScrollableVcvClickPost(id: id)
+    func didCClickPost(id: String, dataType: String){
+        delegate?.didSClickSoundScrollableVcvClickPost(id: id, dataType: dataType)
     }
     func didCClickClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         delegate?.didSClickSoundScrollableVcvClickPhoto(id: id, pointX: pointX, pointY: pointY, view: view, mode: mode)

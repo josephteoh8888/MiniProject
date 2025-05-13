@@ -45,7 +45,7 @@ class DataManager {
             let vData = PostDataset()
             vData.setId(dataId: r)
             if(r == "post1") {
-                vData.setDataCode(data: "a")
+                vData.setDataCode(data: "a") //a
                 vData.setData(data: "b")
                 vData.setDataCount(data: "b")
                 vData.setTextString(data: "b") //b
@@ -63,7 +63,7 @@ class DataManager {
                 vData.setTextString(data: "d")
             }
             else if(r == "post4") {
-                vData.setDataCode(data: "a")
+                vData.setDataCode(data: "a") //a
                 vData.setData(data: "d")
                 vData.setDataCount(data: "a")
                 vData.setTextString(data: "a")
@@ -173,13 +173,13 @@ class DataManager {
             let vData = CommentDataset()
             vData.setId(dataId: r)
             if(r == "comment1") {
-                vData.setDataCode(data: "a")
+                vData.setDataCode(data: "a") //a
                 vData.setData(data: "a")
                 vData.setDataCount(data: "b")
                 vData.setTextString(data: "c")
             }
             else if(r == "comment2") {
-                vData.setDataCode(data: "na") //na
+                vData.setDataCode(data: "a") //na
                 vData.setData(data: "d")
                 vData.setDataCount(data: "c")
                 vData.setTextString(data: "a")

@@ -129,7 +129,7 @@ extension ScrollFeedHResultPostListCell: UICollectionViewDelegateFlowLayout {
         let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: fontSize)]
         let estimatedFrame = NSString(string: text).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
         
-        return estimatedFrame.height
+        return estimatedFrame.height.rounded(.up)
     }
     
     func collectionView(_ collectionView: UICollectionView,
@@ -369,11 +369,11 @@ extension ScrollFeedHResultPostListCell: HResultListViewDelegate{
     func didHResultClickVideo(id: String){
         
     }
-    func didHResultClickPost(id: String){
+    func didHResultClickPost(id: String, dataType: String){
         //test > additional delegate
         bDelegate?.didScrollFeedHResultResignKeyboard()
         
-        aDelegate?.sfcDidClickVcvClickPost(id: id)
+        aDelegate?.sfcDidClickVcvClickPost(id: id, dataType: dataType)
     }
     func didHResultClickSignIn(){
         

@@ -231,7 +231,7 @@ extension ScrollFeedHPhotoListCell: UICollectionViewDelegateFlowLayout {
             let attributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: fontSize)]
             let estimatedFrame = NSString(string: text).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
             
-            return estimatedFrame.height
+            return estimatedFrame.height.rounded(.up)
         }
     }
     
@@ -554,7 +554,7 @@ extension ScrollFeedHPhotoListCell: HListCellDelegate {
     func hListDidClickVcvClickSound(id: String) {
         aDelegate?.sfcDidClickVcvClickSound(id: id)
     }
-    func hListDidClickVcvClickPost(id: String) {
+    func hListDidClickVcvClickPost(id: String, dataType: String) {
 //        aDelegate?.sfcDidClickVcvClickPost()
     }
     func hListDidClickVcvClickPhoto(id: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
@@ -646,5 +646,9 @@ extension ScrollFeedHPhotoListCell: HListCellDelegate {
         }
         
         print("comment playingCellMediaAssetIdx: \(playingCellMediaAssetIdx)")
+    }
+    
+    func hListResize(vc: UICollectionViewCell){
+        
     }
 }

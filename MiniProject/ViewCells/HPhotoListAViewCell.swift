@@ -162,9 +162,9 @@ class HPhotoListAViewCell: UICollectionViewCell {
         aGridNameText.centerYAnchor.constraint(equalTo: aUserPhoto.centerYAnchor).isActive = true
 //        aGridNameText.topAnchor.constraint(equalTo: aUserPhoto.topAnchor).isActive = true
         aGridNameText.leadingAnchor.constraint(equalTo: aUserPhoto.trailingAnchor, constant: 10).isActive = true
-//        aGridNameText.text = "Mic1809"
-//        aGridNameText.text = "Michael Kins"
         aGridNameText.text = "-"
+        aGridNameText.isUserInteractionEnabled = true
+        aGridNameText.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onUserClicked)))
         
         //test > verified badge
 //        let vBtn = UIImageView(image: UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate))
@@ -495,6 +495,7 @@ class HPhotoListAViewCell: UICollectionViewCell {
         
         //test > clear id
         setId(id: "")
+        setIds(uId: "", pId: "", sId: "")
         
         aGridNameText.text = "-"
         photoText.text = "-"
@@ -626,8 +627,16 @@ class HPhotoListAViewCell: UICollectionViewCell {
     
     //test > set id for init
     var id = ""
+    var userId = ""
+    var placeId = ""
+    var soundId = ""
     func setId(id: String) {
         self.id = id
+    }
+    func setIds(uId: String, pId: String, sId: String) {
+        self.userId = uId
+        self.placeId = pId
+        self.soundId = sId
     }
     
     func configure(data: PhotoData, width: CGFloat) {
@@ -657,11 +666,11 @@ class HPhotoListAViewCell: UICollectionViewCell {
         
         if(d == "a") {
             aUserNameText.text = "1.2m views . 3hr"
-//            aaText.text = "Iphone Factory A1"
             
             let u = data.userId
             let p = data.placeId
             let s = data.soundId
+            setIds(uId: u, pId: p, sId: s)
             asyncConfigure(data: u)
             asyncConfigurePlace(data: p)
             
@@ -841,11 +850,11 @@ class HPhotoListAViewCell: UICollectionViewCell {
     }
     @objc func onUserClicked(gesture: UITapGestureRecognizer) {
         print("click open user panel:")
-        aDelegate?.hListDidClickVcvClickUser(id: "")
+        aDelegate?.hListDidClickVcvClickUser(id: userId)
     }
     @objc func onPlaceClicked(gesture: UITapGestureRecognizer) {
         print("click open place panel:")
-        aDelegate?.hListDidClickVcvClickPlace(id: "")
+        aDelegate?.hListDidClickVcvClickPlace(id: placeId)
     }
     
     //test > single and double clicked
@@ -1022,7 +1031,7 @@ extension HPhotoListAViewCell: ContentCellDelegate {
     func contentCellDidClickPlace(id: String){
         
     }
-    func contentCellDidClickPost(id: String){
+    func contentCellDidClickPost(id: String, dataType: String){
         
     }
     func contentCellDidClickVcvClickPlay(cc: UIView, isPlay: Bool){
@@ -1032,6 +1041,8 @@ extension HPhotoListAViewCell: ContentCellDelegate {
             
             aDelegate?.hListDidClickVcvClickPlay(vc: self, isPlay: isPlay)
         }
+    }
+    func contentCellResize(cc: UIView){
     }
 }
 

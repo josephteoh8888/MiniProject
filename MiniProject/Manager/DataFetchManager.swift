@@ -249,6 +249,21 @@ class DataFetchManager {
             }
         })
     }
+    
+    func fetchCommentData2(id: String, completion: @escaping (Result<CommentDataset, Error>) -> Void) {
+        DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s
+            
+            DataManager.shared.initData()
+            
+            if let vData = DataManager.shared.getCommentData(id: id) {
+                completion(.success(vData))
+            }
+            else {
+                //to be replaced with proper error code
+                completion(.failure(FetchDataError.invalidResponse))
+            }
+        })
+    }
     //*
     
 //    func fetchFeedData(id: String, isPaginate: Bool, completion: @escaping (Result<[String], Error>) -> Void) {

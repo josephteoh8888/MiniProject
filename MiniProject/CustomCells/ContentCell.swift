@@ -20,14 +20,19 @@ protocol ContentCellDelegate : AnyObject {
     func contentCellDidClickSound(id: String)
     func contentCellDidClickUser(id: String)
     func contentCellDidClickPlace(id: String)
-    func contentCellDidClickPost(id: String)
+    func contentCellDidClickPost(id: String, dataType: String)
     func contentCellDidClickVcvClickPlay(cc: UIView, isPlay: Bool)
+    
+    //test > reload item for resizing
+    func contentCellResize(cc: UIView)
 }
 
 class ContentCell: UIView {
     func dehideCell() {}
     func hideCell() {}
     func destroyCell() {}
+    func selectCell() {}
+    func unselectCell() {}
 }
 class MediaContentCell: ContentCell {
     func resumeMedia() {}
@@ -51,6 +56,7 @@ class PostPhotoContentCell: ContentCell {
     
     //test
     var isAutohideEnabled = true
+    var isSelectable = false //for post creator panel
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -58,11 +64,9 @@ class PostPhotoContentCell: ContentCell {
         viewWidth = frame.width
         viewHeight = frame.height
         setupViews()
-        
     }
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        
         setupViews()
     }
     
@@ -71,6 +75,8 @@ class PostPhotoContentCell: ContentCell {
     }
     
     func redrawUI() {
+        self.layer.borderWidth = 0.0 //2
+        self.layer.borderColor = UIColor.clear.cgColor //default
         
         let pConBg = UIView()
 //        pConBg.backgroundColor = .ddmDarkColor //.ddmDarkColor
@@ -187,6 +193,24 @@ class PostPhotoContentCell: ContentCell {
     override func dehideCell() {
         scrollView.isHidden = false
     }
+    
+    func setSelectable(isEnabled: Bool) {
+        isSelectable = isEnabled
+    }
+    
+    override func selectCell() {
+        if(isSelectable) {
+            self.layer.borderWidth = 2.0 //2
+            self.layer.borderColor = UIColor.ddmGoldenYellowColor.cgColor //default
+        }
+    }
+
+    override func unselectCell() {
+        if(isSelectable) {
+            self.layer.borderWidth = 0.0 //2
+            self.layer.borderColor = UIColor.clear.cgColor //default
+        }
+    }
 }
 
 extension PostPhotoContentCell: CustomImageViewDelegate {
@@ -290,6 +314,9 @@ class PostPhotoShotContentCell: ContentCell {
     
     //test
     var isAutohideEnabled = true
+    var isSelectable = false //for post creator panel
+    
+    let pConBg = UIView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -316,9 +343,8 @@ class PostPhotoShotContentCell: ContentCell {
     }
     
     func redrawUI() {
-        
-        let pConBg = UIView()
-//        pConBg.backgroundColor = .ddmDarkColor //.ddmDarkColor
+      
+//        let pConBg = UIView()
         pConBg.backgroundColor = .ddmBlackDark
         self.addSubview(pConBg)
         pConBg.frame = CGRect(x: 0, y: 0, width: viewWidth, height: viewHeight)
@@ -356,60 +382,6 @@ class PostPhotoShotContentCell: ContentCell {
         bubbleBox.heightAnchor.constraint(equalToConstant: 3).isActive = true //30
         bubbleBox.isHidden = true
         
-//        let label = UIView()
-//        self.addSubview(label)
-//        label.backgroundColor = .clear
-//        label.translatesAutoresizingMaskIntoConstraints = false
-//        label.heightAnchor.constraint(equalToConstant: 26).isActive = true //30
-//        label.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 5).isActive = true
-//        label.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -5).isActive = true
-//        label.layer.cornerRadius = 5
-//        
-//        let labelBg = UIView()
-//        label.addSubview(labelBg)
-//        labelBg.backgroundColor = .ddmDarkColor
-//        labelBg.translatesAutoresizingMaskIntoConstraints = false
-//        labelBg.topAnchor.constraint(equalTo: label.topAnchor, constant: 0).isActive = true
-//        labelBg.leadingAnchor.constraint(equalTo: label.leadingAnchor, constant: 0).isActive = true
-//        labelBg.trailingAnchor.constraint(equalTo: label.trailingAnchor, constant: 0).isActive = true
-//        labelBg.bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 0).isActive = true
-//        labelBg.layer.opacity = 0.3 //0.5
-//        labelBg.layer.cornerRadius = 5
-//        
-//        let e2UserCover = UIView()
-//        e2UserCover.backgroundColor = .clear
-//        label.addSubview(e2UserCover)
-//        e2UserCover.translatesAutoresizingMaskIntoConstraints = false
-//        e2UserCover.centerYAnchor.constraint(equalTo: label.centerYAnchor, constant: 0).isActive = true
-//        e2UserCover.leadingAnchor.constraint(equalTo: label.leadingAnchor, constant: 5).isActive = true
-//        e2UserCover.heightAnchor.constraint(equalToConstant: 20).isActive = true //28
-//        e2UserCover.widthAnchor.constraint(equalToConstant: 20).isActive = true //28
-//        e2UserCover.layer.cornerRadius = 10
-//        e2UserCover.layer.opacity = 1.0 //default 0.3
-//
-////        let a2UserPhoto = SDAnimatedImageView()
-//        label.addSubview(a2UserPhoto)
-//        a2UserPhoto.translatesAutoresizingMaskIntoConstraints = false
-//        a2UserPhoto.widthAnchor.constraint(equalToConstant: 20).isActive = true //36
-//        a2UserPhoto.heightAnchor.constraint(equalToConstant: 20).isActive = true
-//        a2UserPhoto.centerXAnchor.constraint(equalTo: e2UserCover.centerXAnchor).isActive = true
-//        a2UserPhoto.centerYAnchor.constraint(equalTo: e2UserCover.centerYAnchor).isActive = true
-//        a2UserPhoto.contentMode = .scaleAspectFill
-//        a2UserPhoto.layer.masksToBounds = true
-//        a2UserPhoto.layer.cornerRadius = 10
-//        a2UserPhoto.backgroundColor = .ddmDarkColor
-//        
-//        let aGridNameText = UILabel()
-//        aGridNameText.textAlignment = .left
-//        aGridNameText.textColor = .white
-//        aGridNameText.font = .boldSystemFont(ofSize: 12)
-//        label.addSubview(aGridNameText)
-//        aGridNameText.translatesAutoresizingMaskIntoConstraints = false
-//        aGridNameText.centerYAnchor.constraint(equalTo: e2UserCover.centerYAnchor).isActive = true
-//        aGridNameText.trailingAnchor.constraint(equalTo: label.trailingAnchor, constant: -5).isActive = true
-//        aGridNameText.leadingAnchor.constraint(equalTo: e2UserCover.trailingAnchor, constant: 5).isActive = true
-//        aGridNameText.text = "Shot"
-        
         //test > shot description
         let pConBottom = UIView()
 //        pConBottom.frame = CGRect(x: 0, y: 0, width: 370, height: 40)
@@ -431,61 +403,6 @@ class PostPhotoShotContentCell: ContentCell {
         moreBtn.trailingAnchor.constraint(equalTo: pConBottom.trailingAnchor, constant: -5).isActive = true
         moreBtn.heightAnchor.constraint(equalToConstant: 22).isActive = true //30, 26, 22
         moreBtn.widthAnchor.constraint(equalToConstant: 22).isActive = true
-        
-        //test > reposition "shot" label to desc
-//        let label = UIView()
-//        pConBottom.addSubview(label)
-//        label.backgroundColor = .clear
-//        label.translatesAutoresizingMaskIntoConstraints = false
-//        label.heightAnchor.constraint(equalToConstant: 26).isActive = true //30
-//        label.centerYAnchor.constraint(equalTo: pConBottom.centerYAnchor, constant: 0).isActive = true
-//        label.leadingAnchor.constraint(equalTo: pConBottom.leadingAnchor, constant: 5).isActive = true
-//        label.layer.cornerRadius = 5
-//        
-//        let labelBg = UIView()
-//        label.addSubview(labelBg)
-//        labelBg.backgroundColor = .ddmDarkColor
-//        labelBg.translatesAutoresizingMaskIntoConstraints = false
-//        labelBg.topAnchor.constraint(equalTo: label.topAnchor, constant: 0).isActive = true
-//        labelBg.leadingAnchor.constraint(equalTo: label.leadingAnchor, constant: 0).isActive = true
-//        labelBg.trailingAnchor.constraint(equalTo: label.trailingAnchor, constant: 0).isActive = true
-//        labelBg.bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 0).isActive = true
-//        labelBg.layer.opacity = 0.3 //0.5
-//        labelBg.layer.cornerRadius = 5
-//        
-//        let e2UserCover = UIView()
-//        e2UserCover.backgroundColor = .clear
-//        label.addSubview(e2UserCover)
-//        e2UserCover.translatesAutoresizingMaskIntoConstraints = false
-//        e2UserCover.centerYAnchor.constraint(equalTo: label.centerYAnchor, constant: 0).isActive = true
-//        e2UserCover.leadingAnchor.constraint(equalTo: label.leadingAnchor, constant: 5).isActive = true
-//        e2UserCover.heightAnchor.constraint(equalToConstant: 20).isActive = true //28
-//        e2UserCover.widthAnchor.constraint(equalToConstant: 20).isActive = true //28
-//        e2UserCover.layer.cornerRadius = 10
-//        e2UserCover.layer.opacity = 1.0 //default 0.3
-//
-////        let a2UserPhoto = SDAnimatedImageView()
-//        label.addSubview(a2UserPhoto)
-//        a2UserPhoto.translatesAutoresizingMaskIntoConstraints = false
-//        a2UserPhoto.widthAnchor.constraint(equalToConstant: 20).isActive = true //36
-//        a2UserPhoto.heightAnchor.constraint(equalToConstant: 20).isActive = true
-//        a2UserPhoto.centerXAnchor.constraint(equalTo: e2UserCover.centerXAnchor).isActive = true
-//        a2UserPhoto.centerYAnchor.constraint(equalTo: e2UserCover.centerYAnchor).isActive = true
-//        a2UserPhoto.contentMode = .scaleAspectFill
-//        a2UserPhoto.layer.masksToBounds = true
-//        a2UserPhoto.layer.cornerRadius = 10
-//        a2UserPhoto.backgroundColor = .ddmDarkColor
-//        
-//        let aGridNameText = UILabel()
-//        aGridNameText.textAlignment = .left
-//        aGridNameText.textColor = .white
-//        aGridNameText.font = .boldSystemFont(ofSize: 12)
-//        label.addSubview(aGridNameText)
-//        aGridNameText.translatesAutoresizingMaskIntoConstraints = false
-//        aGridNameText.centerYAnchor.constraint(equalTo: e2UserCover.centerYAnchor).isActive = true
-//        aGridNameText.trailingAnchor.constraint(equalTo: labelBg.trailingAnchor, constant: -5).isActive = true
-//        aGridNameText.leadingAnchor.constraint(equalTo: e2UserCover.trailingAnchor, constant: 5).isActive = true
-//        aGridNameText.text = "Shot"
         
         //test 2 > just user photo at desc
         let e2UserCover = UIView()
@@ -523,6 +440,13 @@ class PostPhotoShotContentCell: ContentCell {
         aaText.trailingAnchor.constraint(equalTo: moreBtn.leadingAnchor, constant: -5).isActive = true //-30
     }
     
+    func changeBaseColorInQuoteMode() {
+        //test
+//        pConBg.backgroundColor = .ddmDarkBlack
+        pConBg.backgroundColor = .ddmDarkColor
+        a2UserPhoto.backgroundColor = .ddmBlackDark
+    }
+    
     var vDataList = [String]()
     var aHLightViewArray = [UIView]()
 //    func configure(data: [String], state: Int) {
@@ -537,7 +461,6 @@ class PostPhotoShotContentCell: ContentCell {
             }
         
             for p_ in vDataList {
-                
 //                let gifUrl = "https://i3.ytimg.com/vi/2mcGhpbWlyg/maxresdefault.jpg"
                 
 //                let gifImage1 = SDAnimatedImageView()
@@ -672,17 +595,23 @@ class PostPhotoShotContentCell: ContentCell {
         scrollView.isHidden = false
     }
     
-//    @objc func onPhotoClicked(gesture: UITapGestureRecognizer) {
-//        print("postphoto click photo:")
-//        let pFrame = scrollView.frame.origin
-//        let pointX = pFrame.x
-//        let pointY = pFrame.y
-////        aDelegate?.contentCellDidClickVcvClickPhoto(cc: self, pointX: pointX, pointY: pointY, view: scrollView, mode: PhotoTypes.P_0)
-//        aDelegate?.contentCellDidClickVcvClickPhoto(cc: self, pointX: pointX, pointY: pointY, view: scrollView, mode: PhotoTypes.P_SHOT_DETAIL)
-//        
-//        //test > hide photo
-////        hideCell()
-//    }
+    func setSelectable(isEnabled: Bool) {
+        isSelectable = isEnabled
+    }
+    
+    override func selectCell() {
+        if(isSelectable) {
+            self.layer.borderWidth = 2.0 //2
+            self.layer.borderColor = UIColor.ddmGoldenYellowColor.cgColor //default
+        }
+    }
+
+    override func unselectCell() {
+        if(isSelectable) {
+            self.layer.borderWidth = 0.0 //2
+            self.layer.borderColor = UIColor.clear.cgColor //default
+        }
+    }
     
     @objc func onPhotoSClicked(gesture: UITapGestureRecognizer) {
         print("postphoto click photo shot:")
@@ -795,6 +724,7 @@ class PostVideoContentCell: MediaContentCell {
     
     //test
     var isAutohideEnabled = true
+    var isSelectable = false //for post creator panel
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -1050,6 +980,24 @@ class PostVideoContentCell: MediaContentCell {
         videoContainer.isHidden = false
     }
     
+    func setSelectable(isEnabled: Bool) {
+        isSelectable = isEnabled
+    }
+    
+    override func selectCell() {
+        if(isSelectable) {
+            self.layer.borderWidth = 2.0 //2
+            self.layer.borderColor = UIColor.ddmGoldenYellowColor.cgColor //default
+        }
+    }
+
+    override func unselectCell() {
+        if(isSelectable) {
+            self.layer.borderWidth = 0.0 //2
+            self.layer.borderColor = UIColor.clear.cgColor //default
+        }
+    }
+    
     override func destroyCell() {
         print("postvideocc destroy cell")
         removeTimeObserverVideo()
@@ -1215,6 +1163,9 @@ class PostVideoLoopContentCell: MediaContentCell {
     
     //test
     var isAutohideEnabled = true
+    var isSelectable = false //for post creator panel
+    
+    let vConBg = UIView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -1241,8 +1192,7 @@ class PostVideoLoopContentCell: MediaContentCell {
     }
     
     func redrawUI() {
-        let vConBg = UIView()
-//        vConBg.backgroundColor = .ddmDarkColor //.ddmDarkColor
+//        let vConBg = UIView()
         vConBg.backgroundColor = .ddmBlackDark
         self.addSubview(vConBg)
         vConBg.frame = CGRect(x: 0, y: 0, width: viewWidth, height: viewHeight) //150, 250
@@ -1418,6 +1368,13 @@ class PostVideoLoopContentCell: MediaContentCell {
         aaText.trailingAnchor.constraint(equalTo: moreBtn.leadingAnchor, constant: -5).isActive = true //-30
     }
     
+    func changeBaseColorInQuoteMode() {
+        //test
+//        vConBg.backgroundColor = .ddmDarkBlack
+        vConBg.backgroundColor = .ddmDarkColor
+        a2UserPhoto.backgroundColor = .ddmBlackDark
+    }
+    
     //test > async fetch asset
     func asyncConfigure(data: String) {
         //test 2 > new method to fetch video data
@@ -1552,6 +1509,24 @@ class PostVideoLoopContentCell: MediaContentCell {
     
     override func dehideCell() {
         videoContainer.isHidden = false
+    }
+    
+    func setSelectable(isEnabled: Bool) {
+        isSelectable = isEnabled
+    }
+    
+    override func selectCell() {
+        if(isSelectable) {
+            self.layer.borderWidth = 2.0 //2
+            self.layer.borderColor = UIColor.ddmGoldenYellowColor.cgColor //default
+        }
+    }
+
+    override func unselectCell() {
+        if(isSelectable) {
+            self.layer.borderWidth = 0.0 //2
+            self.layer.borderColor = UIColor.clear.cgColor //default
+        }
     }
     
     override func destroyCell() {
@@ -2405,6 +2380,14 @@ class PostQuoteContentCell: MediaContentCell {
     
     weak var aDelegate : ContentCellDelegate?
     
+    //test
+    let spinnerCover = UIView()
+    let bSpinner = SpinLoader()
+    let errorText = UILabel()
+    let errorRefreshBtn = UIView()
+    
+    var isSelectable = false //for post creator panel
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -2423,13 +2406,14 @@ class PostQuoteContentCell: MediaContentCell {
         let photoSize = 28.0
         let photoLhsMargin = 20.0 //20
         let usernameLhsMargin = 5.0
-        let indentSize = photoSize + photoLhsMargin + usernameLhsMargin
-        
-        self.layer.borderWidth = 2.0 //2
-        self.layer.borderColor = UIColor.ddmDarkColor.cgColor //default
-//        self.layer.borderColor = UIColor.ddmBlackDark.cgColor
-        self.layer.cornerRadius = 10
+//        let indentSize = photoSize + photoLhsMargin + usernameLhsMargin
+
         self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onQuoteClicked)))
+        //test > bg color
+        self.backgroundColor = .ddmBlackDark
+        //test > border for selectable
+//        self.layer.borderWidth = 2.0 //2
+//        self.layer.borderColor = UIColor.ddmGoldenYellowColor.cgColor //default
         
         let eUserCover = UIView()
 //        eUserCover.backgroundColor = .ddmBlackOverlayColor
@@ -2438,8 +2422,8 @@ class PostQuoteContentCell: MediaContentCell {
         self.addSubview(eUserCover)
 //        aResult.addSubview(eUserCover)
         eUserCover.translatesAutoresizingMaskIntoConstraints = false
-        eUserCover.topAnchor.constraint(equalTo: self.topAnchor, constant: 20).isActive = true //20
-        eUserCover.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
+        eUserCover.topAnchor.constraint(equalTo: self.topAnchor, constant: 15).isActive = true //20
+        eUserCover.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: photoLhsMargin).isActive = true
         eUserCover.heightAnchor.constraint(equalToConstant: photoSize).isActive = true
         eUserCover.widthAnchor.constraint(equalToConstant: photoSize).isActive = true
         eUserCover.layer.cornerRadius = 14
@@ -2462,7 +2446,7 @@ class PostQuoteContentCell: MediaContentCell {
 //        aUserPhoto.sd_setImage(with: imageUrl)
         aUserPhoto.backgroundColor = .ddmDarkColor
         aUserPhoto.isUserInteractionEnabled = true
-//        aUserPhoto.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onUserClicked)))
+        aUserPhoto.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onUserClicked)))
 
 //        let aGridNameText = UILabel()
         aGridNameText.textAlignment = .left
@@ -2475,6 +2459,8 @@ class PostQuoteContentCell: MediaContentCell {
         aGridNameText.centerYAnchor.constraint(equalTo: aUserPhoto.centerYAnchor, constant: 0).isActive = true
         aGridNameText.leadingAnchor.constraint(equalTo: eUserCover.trailingAnchor, constant: usernameLhsMargin).isActive = true
         aGridNameText.text = "-"
+        aGridNameText.isUserInteractionEnabled = true
+        aGridNameText.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onUserClicked)))
         
         //test > verified badge
 //        let vBtn = UIImageView(image: UIImage(named:"icon_round_verified")?.withRenderingMode(.alwaysTemplate))
@@ -2494,6 +2480,66 @@ class PostQuoteContentCell: MediaContentCell {
         aTest.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).isActive = true
         aTest.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -20).isActive = true //-10
         aTest.topAnchor.constraint(equalTo: eUserCover.bottomAnchor, constant: 0).isActive = true
+        //test > size of atest
+//        aTest.backgroundColor = .blue
+        aTest.clipsToBounds = true //to prevent subviews overflowing
+        
+        //test > spinner loader
+//        spinnerCover.backgroundColor = .ddmDarkBlack
+        spinnerCover.backgroundColor = .ddmBlackDark
+        spinnerCover.layer.cornerRadius = 0
+        self.addSubview(spinnerCover)
+        spinnerCover.translatesAutoresizingMaskIntoConstraints = false
+//        spinnerCover.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true //20
+        spinnerCover.topAnchor.constraint(equalTo: eUserCover.bottomAnchor, constant: 20).isActive = true
+        spinnerCover.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20).isActive = true
+        spinnerCover.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -20).isActive = true
+        spinnerCover.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
+        spinnerCover.isHidden = true
+        
+        bSpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
+        spinnerCover.addSubview(bSpinner)
+        bSpinner.translatesAutoresizingMaskIntoConstraints = false
+        bSpinner.centerYAnchor.constraint(equalTo: spinnerCover.centerYAnchor).isActive = true
+        bSpinner.centerXAnchor.constraint(equalTo: spinnerCover.centerXAnchor).isActive = true
+        bSpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        bSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        
+        //test > error handling
+        errorText.textAlignment = .center //left
+        errorText.textColor = .white
+        errorText.font = .systemFont(ofSize: 13)
+        spinnerCover.addSubview(errorText)
+        errorText.clipsToBounds = true
+        errorText.translatesAutoresizingMaskIntoConstraints = false
+        errorText.centerYAnchor.constraint(equalTo: spinnerCover.centerYAnchor, constant: 0).isActive = true
+        errorText.centerXAnchor.constraint(equalTo: spinnerCover.centerXAnchor, constant: -20).isActive = true //-20
+        errorText.text = ""
+//        errorText.text = "Unable to load."
+        errorText.numberOfLines = 0
+        errorText.isHidden = true
+        
+//        errorRefreshBtn.backgroundColor = .ddmDarkBlack //ddmDarkColor
+        spinnerCover.addSubview(errorRefreshBtn)
+        errorRefreshBtn.translatesAutoresizingMaskIntoConstraints = false
+        errorRefreshBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true //ori: 40
+        errorRefreshBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        errorRefreshBtn.centerYAnchor.constraint(equalTo: errorText.centerYAnchor, constant: 0).isActive = true
+        errorRefreshBtn.leadingAnchor.constraint(equalTo: errorText.trailingAnchor).isActive = true
+        errorRefreshBtn.layer.cornerRadius = 20
+        errorRefreshBtn.isUserInteractionEnabled = true
+        errorRefreshBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onErrorRefreshClicked)))
+        errorRefreshBtn.isHidden = true
+        
+        let bMiniBtn = UIImageView(image: UIImage(named:"icon_round_refresh")?.withRenderingMode(.alwaysTemplate))
+//        bMiniBtn.tintColor = .black
+        bMiniBtn.tintColor = .white
+        errorRefreshBtn.addSubview(bMiniBtn)
+        bMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        bMiniBtn.centerXAnchor.constraint(equalTo: errorRefreshBtn.centerXAnchor).isActive = true
+        bMiniBtn.centerYAnchor.constraint(equalTo: errorRefreshBtn.centerYAnchor).isActive = true
+        bMiniBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true //26
+        bMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
     }
     
     //*test
@@ -2519,8 +2565,32 @@ class PostQuoteContentCell: MediaContentCell {
         }
     }
     
+    func setSelectable(isEnabled: Bool) {
+        isSelectable = isEnabled
+    }
+    
+    override func selectCell() {
+        if(isSelectable) {
+            self.layer.borderWidth = 2.0 //2
+            self.layer.borderColor = UIColor.ddmGoldenYellowColor.cgColor //default
+        }
+    }
+
+    override func unselectCell() {
+        if(isSelectable) {
+            self.layer.borderWidth = 0.0 //2
+            self.layer.borderColor = UIColor.clear.cgColor //default
+        }
+    }
+    
     override func destroyCell() {
         print("quote destroy cell")
+        
+        //test > clear id
+        setId(id: "")
+        setIds(uId: "", pId: "", sId: "")
+        setContentDataType(data: "")
+        
         for e in aTestArray {
             //test > destroy inner content cell before removed
             if let a = e as? ContentCell {
@@ -2532,258 +2602,610 @@ class PostQuoteContentCell: MediaContentCell {
         aTestArray.removeAll()
     }
     
-    func configure(data: String, text: String) {
-        asyncConfigure(data: "")
-        
-        //**test > fake data for quote post
-        var qDataArray = [String]()
-        qDataArray.append("text")
-//        qDataArray.append("p")
-//        qDataArray.append("p_s")
-        qDataArray.append("video")
-//        qDataArray.append("v_l")
-        //**
-        
-        for l in qDataArray {
-            if(l == "text") {
-                let aaText = UILabel()
-                aaText.textAlignment = .left
-                aaText.textColor = .white
-                aaText.font = .systemFont(ofSize: 14)
-                aaText.numberOfLines = 0
-                aTest.addSubview(aaText)
-                aaText.translatesAutoresizingMaskIntoConstraints = false
-                if(aTestArray.isEmpty) {
-                    aaText.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true //20
-                } else {
-                    let lastArrayE = aTestArray[aTestArray.count - 1]
-                    aaText.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
-                }
-                aaText.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
-                aaText.trailingAnchor.constraint(equalTo: aTest.trailingAnchor, constant: -20).isActive = true
-//                aaText.bottomAnchor.constraint(equalTo: aTest.bottomAnchor, constant: 0).isActive = true
-                aaText.text = text
-                aTestArray.append(aaText)
-            }
-            else if(l == "photo") {
-                let cellWidth = viewWidth
-                let lhsMargin = 20.0
-                let rhsMargin = 20.0
-                let availableWidth = cellWidth - lhsMargin - rhsMargin
-                
-                let assetSize = CGSize(width: 4, height: 3)//landscape
-//                let assetSize = CGSize(width: 3, height: 4)
-                var cSize = CGSize(width: 0, height: 0)
-                if(assetSize.width > assetSize.height) {
-                    //1 > landscape photo 4:3 w:h
-                    let aRatio = CGSize(width: 4, height: 3) //aspect ratio
-                    let cHeight = availableWidth * aRatio.height / aRatio.width
-                    cSize = CGSize(width: availableWidth, height: cHeight)
-                }
-                else if (assetSize.width < assetSize.height){
-                    //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
-                    let aRatio = CGSize(width: 2, height: 3) //aspect ratio
-                    let cWidth = availableWidth * 2 / 3
-//                    let cWidth = availableWidth //test full width for portrait
-                    let cHeight = cWidth * aRatio.height / aRatio.width
-                    cSize = CGSize(width: cWidth, height: cHeight)
-                } else {
-                    //square
-                    let cWidth = availableWidth
-                    cSize = CGSize(width: cWidth, height: cWidth)
-                }
-                
-                //test 2 > reusable custom view
-//                let contentCell = PostPhotoContentCell(frame: CGRect(x: 0, y: 0, width: 370, height: 280))
-                let contentCell = PostPhotoContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
-                aTest.addSubview(contentCell)
-                contentCell.translatesAutoresizingMaskIntoConstraints = false
-                if(aTestArray.isEmpty) {
-                    contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
-                } else {
-                    let lastArrayE = aTestArray[aTestArray.count - 1]
-                    contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
-                }
-                contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
-//                contentCell.widthAnchor.constraint(equalToConstant: 370).isActive = true  //370
-//                contentCell.heightAnchor.constraint(equalToConstant: 280).isActive = true  //280
-                contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //370
-                contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //280
-                contentCell.layer.cornerRadius = 10 //5
-                aTestArray.append(contentCell)
-                contentCell.redrawUI()
-//                contentCell.configure(data: "a") //ori
-                var da = [String]() //temp solution
-                da.append("https://i3.ytimg.com/vi/2mcGhpbWlyg/maxresdefault.jpg")
-                da.append("https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
-                contentCell.configure(data: da)
-//                contentCell.setState(p: data.p_s)
-                contentCell.setState(p: 0) //do not revert state for simplicity
-                contentCell.aDelegate = self
-                contentCell.setAutohide(isEnabled: isAutohideEnabled)
-            }
-            else if(l == "photo_s") {
-                let cellWidth = viewWidth
-                let lhsMargin = 20.0
-                let rhsMargin = 20.0
-                let descHeight = 40.0
-                let availableWidth = cellWidth - lhsMargin - rhsMargin
-                
-                let assetSize = CGSize(width: 4, height: 3)
-                var cSize = CGSize(width: 0, height: 0)
-                if(assetSize.width > assetSize.height) {
-                    //1 > landscape photo 4:3 w:h
-                    let aRatio = CGSize(width: 4, height: 3) //aspect ratio
-                    let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
-                    cSize = CGSize(width: availableWidth, height: cHeight)
-                }
-                else if (assetSize.width < assetSize.height){
-                    //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
-                    let aRatio = CGSize(width: 2, height: 3) //aspect ratio
-                    let cWidth = availableWidth * 2 / 3
-                    let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
-                    cSize = CGSize(width: cWidth, height: cHeight)
-                } else {
-                    //square
-                    let cWidth = availableWidth
-                    cSize = CGSize(width: cWidth, height: cWidth + descHeight)
-                }
-                
-                //test 2 > reusable custom view
-//                let contentCell = PostPhotoShotContentCell(frame: CGRect(x: 0, y: 0, width: 370, height: 320))
-                let contentCell = PostPhotoShotContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
-                aTest.addSubview(contentCell)
-                contentCell.translatesAutoresizingMaskIntoConstraints = false
-                if(aTestArray.isEmpty) {
-                    contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
-                } else {
-                    let lastArrayE = aTestArray[aTestArray.count - 1]
-                    contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
-                }
-                contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
-//                contentCell.widthAnchor.constraint(equalToConstant: 370).isActive = true  //370
-//                contentCell.heightAnchor.constraint(equalToConstant: 320).isActive = true  //320
-                contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //370
-                contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //320
-                contentCell.layer.cornerRadius = 10 //5
-                aTestArray.append(contentCell)
-                contentCell.setDescHeight(lHeight: descHeight, txt: text)
-                contentCell.redrawUI()
-                contentCell.configure(data: "a")
-//                contentCell.configure(data: "a", state: 0)
-//                var da = [String]() //temp solution
-//                da.append("https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
-//                contentCell.configure(data: da)
-                contentCell.setState(p: 0) //do not revert state for simplicity
-                contentCell.aDelegate = self
-                contentCell.setAutohide(isEnabled: isAutohideEnabled)
-            }
-            else if(l == "video_l") {//loop videos
-                let cellWidth = viewWidth
-                let lhsMargin = 20.0
-                let rhsMargin = 20.0
-                let descHeight = 40.0
-                let availableWidth = cellWidth - lhsMargin - rhsMargin
-                
-                let assetSize = CGSize(width: 3, height: 4)
-                var cSize = CGSize(width: 0, height: 0)
-                if(assetSize.width > assetSize.height) {
-                    //1 > landscape photo 4:3 w:h
-                    let aRatio = CGSize(width: 4, height: 3) //aspect ratio
-                    let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
-                    cSize = CGSize(width: availableWidth, height: cHeight)
-                }
-                else if (assetSize.width < assetSize.height){
-                    //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
-                    let aRatio = CGSize(width: 2, height: 3) //aspect ratio
-                    let cWidth = availableWidth * 2 / 3
-                    let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
-                    cSize = CGSize(width: cWidth, height: cHeight)
-                } else {
-                    //square
-                    let cWidth = availableWidth
-                    cSize = CGSize(width: cWidth, height: cWidth + descHeight)
-                }
-                
-                //test 2 > reusable custom view
-//                let contentCell = PostVideoLoopContentCell(frame: CGRect(x: 0, y: 0, width: 220, height: 390))
-                let contentCell = PostVideoLoopContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
-                aTest.addSubview(contentCell)
-                contentCell.translatesAutoresizingMaskIntoConstraints = false
-                if(aTestArray.isEmpty) {
-                    contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
-                } else {
-                    let lastArrayE = aTestArray[aTestArray.count - 1]
-                    contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
-                }
-                contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
-//                contentCell.widthAnchor.constraint(equalToConstant: 220).isActive = true  //220
-//                contentCell.heightAnchor.constraint(equalToConstant: 390).isActive = true  //390
-                contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //220
-                contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //390
-                contentCell.layer.cornerRadius = 10 //5
-                aTestArray.append(contentCell)
-                contentCell.setDescHeight(lHeight: descHeight, txt: text)
-                contentCell.redrawUI()
-                contentCell.configure(data: "a")
-                contentCell.setState(t: 0.0)
-                contentCell.aDelegate = self
-                contentCell.setAutohide(isEnabled: isAutohideEnabled)
+    @objc func onErrorRefreshClicked(gesture: UITapGestureRecognizer) {
+        print("error quote refresh clicked")
+        //reload entire cell
+        self.aDelegate?.contentCellResize(cc: self)
+    }
+    
+    //test > fetch from contentData
+    func configure(contentData: ContentData) {
+        configure(contentData: contentData, isToForceRefreshData: false)
+    }
+    func configure(contentData: ContentData, isToForceRefreshData: Bool) {
+        let d = contentData.contentDataCode
+        if(d == "" || isToForceRefreshData) {
+            setId(id: contentData.id)
+            setContentDataType(data: contentData.contentDataType)
             
-                mediaArray.append(contentCell)
+            spinnerCover.isHidden = false
+            bSpinner.startAnimating()
+            
+            self.errorText.isHidden = true
+            self.errorRefreshBtn.isHidden = true
+            
+            if(self.contentDataType == "post") {
+                asyncConfigurePost(contentData: contentData)
             }
-            else if(l == "video") { //vi
-                let cellWidth = viewWidth
-                let lhsMargin = 20.0
-                let rhsMargin = 20.0
-                let availableWidth = cellWidth - lhsMargin - rhsMargin
-                
-                let assetSize = CGSize(width: 3, height: 4)
-                var cSize = CGSize(width: 0, height: 0)
-                if(assetSize.width > assetSize.height) {
-                    //1 > landscape photo 4:3 w:h
-                    let aRatio = CGSize(width: 4, height: 3) //aspect ratio
-                    let cHeight = availableWidth * aRatio.height / aRatio.width
-                    cSize = CGSize(width: availableWidth, height: cHeight)
-                }
-                else if (assetSize.width < assetSize.height){
-                    //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
-                    let aRatio = CGSize(width: 2, height: 3) //aspect ratio
-                    let cWidth = availableWidth * 2 / 3
-                    let cHeight = cWidth * aRatio.height / aRatio.width
-                    cSize = CGSize(width: cWidth, height: cHeight)
-                } else {
-                    //square
-                    let cWidth = availableWidth
-                    cSize = CGSize(width: cWidth, height: cWidth)
-                }
-                
-                //test 2 > reusable custom view
-//                let contentCell = PostVideoContentCell(frame: CGRect(x: 0, y: 0, width: 220, height: 350))
-                let contentCell = PostVideoContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
-                aTest.addSubview(contentCell)
-                contentCell.translatesAutoresizingMaskIntoConstraints = false
-                if(aTestArray.isEmpty) {
-                    contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
-                } else {
-                    let lastArrayE = aTestArray[aTestArray.count - 1]
-                    contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
-                }
-                contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
-//                contentCell.widthAnchor.constraint(equalToConstant: 220).isActive = true  //220
-//                contentCell.heightAnchor.constraint(equalToConstant: 350).isActive = true  //350
-                contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //220
-                contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //350
-                contentCell.layer.cornerRadius = 10 //5
-                aTestArray.append(contentCell)
-                contentCell.redrawUI()
-                contentCell.configure(data: "a")
-                contentCell.setState(t: 0.0)
-                contentCell.aDelegate = self
-                contentCell.setAutohide(isEnabled: isAutohideEnabled)
-                
-                mediaArray.append(contentCell)
+            else if (self.contentDataType == "comment") {
+                asyncConfigureComment(contentData: contentData)
             }
+        }
+    }
+    
+    //*test > async fetch post/comment data
+    func asyncConfigurePost(contentData: ContentData) {
+        let id_ = contentData.id
+//        let id_ = "p"
+        DataFetchManager.shared.fetchPostData2(id: id_) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    self.spinnerCover.isHidden = true
+                    self.bSpinner.stopAnimating()
+                    
+                    let pData = PostData()
+                    pData.setData(rData: l)
+                    let l_ = pData.dataCode
+                        
+                    self.configureUI(data: pData)
+                    
+                    //test > reload item
+                    print("quote asyncconfigure post \(l_)")
+                    if(l_ == "na" || l_ == "us") {
+                        contentData.setContentDataCode(data: l_)
+                        self.aDelegate?.contentCellResize(cc: self)
+                    }
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    print("api fail")
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    self.spinnerCover.isHidden = false
+                    self.bSpinner.stopAnimating()
+                    
+                    //error handling e.g. refetch button
+                    self.errorText.text = "Unable to load."
+                    self.errorText.isHidden = false
+                    self.errorRefreshBtn.isHidden = false
+                }
+                break
+            }
+        }
+    }
+    
+    func asyncConfigureComment(contentData: ContentData) {
+        let id_ = contentData.id
+//        let id_ = "s"
+        DataFetchManager.shared.fetchCommentData2(id: id_) { [weak self]result in
+            switch result {
+                case .success(let l):
+
+                //update UI on main thread
+                DispatchQueue.main.async {
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    self.spinnerCover.isHidden = true
+                    self.bSpinner.stopAnimating()
+                    
+                    let pData = CommentData()
+                    pData.setData(rData: l)
+                    let l_ = pData.dataCode
+                        
+                    self.configureUI(data: pData)
+                    
+                    //test > reload item
+                    print("quote asyncconfigure comment \(l_)")
+                    if(l_ == "na" || l_ == "us") {
+                        contentData.setContentDataCode(data: l_)
+                        self.aDelegate?.contentCellResize(cc: self)
+                    }
+                }
+
+                case .failure(let error):
+                DispatchQueue.main.async {
+                    print("api fail")
+                    guard let self = self else {
+                        return
+                    }
+                    
+                    self.spinnerCover.isHidden = false
+                    self.bSpinner.stopAnimating()
+                    
+                    //error handling e.g. refetch button
+                    self.errorText.text = "Unable to load."
+                    self.errorText.isHidden = false
+                    self.errorRefreshBtn.isHidden = false
+                }
+                break
+            }
+        }
+    }
+    
+    //real post/comment data by fetching
+    func configureUI(data: BaseData) {
+        guard let a = data as? BasePostData else {
+            return
+        }
+        
+        let d = a.dataCode
+        
+        self.spinnerCover.isHidden = true
+        self.bSpinner.stopAnimating()
+        
+        if(d == "a") {
+            let u = a.userId
+            setIds(uId: u, pId: "", sId: "")
+            asyncConfigureUser(data: u)
+            
+            let dataCL = a.contentDataArray
+            
+            var elementIdx = 0
+            if(!aTestArray.isEmpty) {
+                for cl in dataCL {
+                    let l = cl.dataCode
+                    let da = cl.dataArray
+                    
+                    if(elementIdx < aTestArray.count) {
+                        let e = aTestArray[elementIdx]
+                        if(l == "text") {
+                            if let a = e as? UILabel {
+                                a.text = cl.dataTextString
+                            }
+                        }
+                        else if(l == "photo") {
+                            if let a = e as? PostPhotoContentCell {
+                                a.configure(data: da)
+                                a.setState(p: 0) //do not revert state for simplicity
+                            }
+                        }
+                        else if(l == "photo_s") {
+                            if let a = e as? PostPhotoShotContentCell {
+                                a.configure(data: "a") //"a"
+                                a.setState(p: 0) //do not revert state for simplicity
+                            }
+                        }
+                        else if(l == "video") {
+                            if let a = e as? PostVideoContentCell {
+                                a.configure(data: "a") //"a"
+                                a.setState(t: 0.0) //do not revert state for simplicity
+                            }
+                        }
+                        else if(l == "video_l") {
+                            if let a = e as? PostVideoLoopContentCell {
+                                a.configure(data: "a") //"a"
+                                a.setState(t: 0.0) //do not revert state for simplicity
+                            }
+                        }
+                        elementIdx += 1
+                    }
+                }
+            }
+        }
+        else if(d == "na") {
+            for e in aTestArray {
+                //test > destroy inner content cell before removed
+                if let a = e as? ContentCell {
+                    a.destroyCell()
+                }
+                
+                e.removeFromSuperview()
+            }
+            aTestArray.removeAll()
+            
+            //test > error handling
+            let cellWidth = viewWidth
+            let lhsMargin = 20.0
+            let rhsMargin = 20.0
+            let availableWidth = cellWidth - lhsMargin - rhsMargin
+            
+            let contentCell = PostNotFoundContentCell(frame: CGRect(x: 0, y: 0, width: availableWidth, height: 120.0))
+            aTest.addSubview(contentCell)
+            contentCell.translatesAutoresizingMaskIntoConstraints = false
+            if(aTestArray.isEmpty) {
+                contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
+            } else {
+                let lastArrayE = aTestArray[aTestArray.count - 1]
+                contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
+            }
+            contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
+            contentCell.trailingAnchor.constraint(equalTo: aTest.trailingAnchor, constant: -20).isActive = true
+            contentCell.layer.cornerRadius = 10 //5
+            aTestArray.append(contentCell)
+            contentCell.redrawUI()
+            
+            if(!aTestArray.isEmpty) {
+                let lastArrayE = aTestArray[aTestArray.count - 1]
+                lastArrayE.bottomAnchor.constraint(equalTo: aTest.bottomAnchor, constant: 0).isActive = true //-10
+            }
+        }
+        else if(d == "us") {
+            for e in aTestArray {
+                //test > destroy inner content cell before removed
+                if let a = e as? ContentCell {
+                    a.destroyCell()
+                }
+                
+                e.removeFromSuperview()
+            }
+            aTestArray.removeAll()
+            
+            //test > error handling
+            let cellWidth = viewWidth
+            let lhsMargin = 20.0
+            let rhsMargin = 20.0
+            let availableWidth = cellWidth - lhsMargin - rhsMargin
+            
+            let contentCell = PostSuspendedContentCell(frame: CGRect(x: 0, y: 0, width: availableWidth, height: 120.0))
+            aTest.addSubview(contentCell)
+            contentCell.translatesAutoresizingMaskIntoConstraints = false
+            if(aTestArray.isEmpty) {
+                contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
+            } else {
+                let lastArrayE = aTestArray[aTestArray.count - 1]
+                contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
+            }
+            contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
+            contentCell.trailingAnchor.constraint(equalTo: aTest.trailingAnchor, constant: -20).isActive = true
+            contentCell.layer.cornerRadius = 10 //5
+            aTestArray.append(contentCell)
+            contentCell.redrawUI()
+            
+            if(!aTestArray.isEmpty) {
+                let lastArrayE = aTestArray[aTestArray.count - 1]
+                lastArrayE.bottomAnchor.constraint(equalTo: aTest.bottomAnchor, constant: 0).isActive = true //-10
+            }
+        }
+    }
+    
+    //test > set id for init
+    var id = ""
+    var userId = ""
+    var placeId = ""
+    var soundId = ""
+    var contentDataType = ""
+    func setId(id: String) {
+        self.id = id
+    }
+    func setIds(uId: String, pId: String, sId: String) {
+        self.userId = uId
+        self.placeId = pId
+        self.soundId = sId
+    }
+    func setContentDataType(data: String) {
+        self.contentDataType = data
+    }
+    
+    //setup views with predata that is stored within post, without fetching the real quote data yet
+    func setupContentViews(qPredata: [String], text: String, contentData: ContentData) {
+        
+        let d = contentData.contentDataCode
+        print("quote setupContentViews: \(d)")
+        if(d == "a" || d == "") {
+            var qDataArray = [String]()
+            
+            for d in qPredata {
+                qDataArray.append(d)
+            }
+            //**
+            
+            for l in qDataArray {
+                if(l == "text") {
+                    let aaText = UILabel()
+                    aaText.textAlignment = .left
+                    aaText.textColor = .white //white
+    //                aaText.textColor = .ddmDarkBlack
+                    aaText.font = .systemFont(ofSize: 14)
+                    aaText.numberOfLines = 0 //0
+                    aTest.addSubview(aaText)
+                    aaText.translatesAutoresizingMaskIntoConstraints = false
+                    if(aTestArray.isEmpty) {
+                        aaText.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true //20
+                    } else {
+                        let lastArrayE = aTestArray[aTestArray.count - 1]
+                        aaText.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
+                    }
+                    aaText.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true //20
+                    aaText.trailingAnchor.constraint(equalTo: aTest.trailingAnchor, constant: -20).isActive = true
+    //                aaText.bottomAnchor.constraint(equalTo: aTest.bottomAnchor, constant: 0).isActive = true
+                    aaText.text = text
+                    aTestArray.append(aaText)
+                }
+                else if(l == "photo") {
+                    let cellWidth = viewWidth
+                    let lhsMargin = 20.0
+                    let rhsMargin = 20.0
+                    let availableWidth = cellWidth - lhsMargin - rhsMargin
+                    
+                    let assetSize = CGSize(width: 4, height: 3)//landscape
+    //                let assetSize = CGSize(width: 3, height: 4)
+                    var cSize = CGSize(width: 0, height: 0)
+                    if(assetSize.width > assetSize.height) {
+                        //1 > landscape photo 4:3 w:h
+                        let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                        let cHeight = availableWidth * aRatio.height / aRatio.width
+                        cSize = CGSize(width: round(availableWidth), height: round(cHeight))
+                    }
+                    else if (assetSize.width < assetSize.height){
+                        //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                        let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                        let cWidth = availableWidth * 2 / 3
+    //                    let cWidth = availableWidth //test full width for portrait
+                        let cHeight = cWidth * aRatio.height / aRatio.width
+                        cSize = CGSize(width: round(cWidth), height: round(cHeight))
+                    } else {
+                        //square
+                        let cWidth = availableWidth
+                        cSize = CGSize(width: round(cWidth), height: round(cWidth))
+                    }
+                    
+                    //test 2 > reusable custom view
+    //                let contentCell = PostPhotoContentCell(frame: CGRect(x: 0, y: 0, width: 370, height: 280))
+                    let contentCell = PostPhotoContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
+                    aTest.addSubview(contentCell)
+                    contentCell.translatesAutoresizingMaskIntoConstraints = false
+                    if(aTestArray.isEmpty) {
+                        contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
+                    } else {
+                        let lastArrayE = aTestArray[aTestArray.count - 1]
+                        contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
+                    }
+                    contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
+    //                contentCell.widthAnchor.constraint(equalToConstant: 370).isActive = true  //370
+    //                contentCell.heightAnchor.constraint(equalToConstant: 280).isActive = true  //280
+                    contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //370
+                    contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //280
+                    contentCell.layer.cornerRadius = 10 //5
+                    aTestArray.append(contentCell)
+                    contentCell.redrawUI()
+//                    var da = [String]() //temp solution
+//                    da.append("https://i3.ytimg.com/vi/2mcGhpbWlyg/maxresdefault.jpg")
+//                    da.append("https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+//                    contentCell.configure(data: da)
+//                    contentCell.setState(p: 0) //do not revert state for simplicity
+                    contentCell.aDelegate = self
+                    contentCell.setAutohide(isEnabled: isAutohideEnabled)
+                }
+                else if(l == "photo_s") {
+                    let cellWidth = viewWidth
+                    let lhsMargin = 20.0
+                    let rhsMargin = 20.0
+                    let descHeight = 40.0
+                    let availableWidth = cellWidth - lhsMargin - rhsMargin
+                    
+                    let assetSize = CGSize(width: 4, height: 3)
+                    var cSize = CGSize(width: 0, height: 0)
+                    if(assetSize.width > assetSize.height) {
+                        //1 > landscape photo 4:3 w:h
+                        let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                        let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
+                        cSize = CGSize(width: round(availableWidth), height: round(cHeight))
+                    }
+                    else if (assetSize.width < assetSize.height){
+                        //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                        let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                        let cWidth = availableWidth * 2 / 3
+                        let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
+                        cSize = CGSize(width: round(cWidth), height: round(cHeight))
+                    } else {
+                        //square
+                        let cWidth = availableWidth
+                        cSize = CGSize(width: round(cWidth), height: round(cWidth + descHeight))
+                    }
+                    
+                    //test 2 > reusable custom view
+    //                let contentCell = PostPhotoShotContentCell(frame: CGRect(x: 0, y: 0, width: 370, height: 320))
+                    let contentCell = PostPhotoShotContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
+                    aTest.addSubview(contentCell)
+                    contentCell.translatesAutoresizingMaskIntoConstraints = false
+                    if(aTestArray.isEmpty) {
+                        contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
+                    } else {
+                        let lastArrayE = aTestArray[aTestArray.count - 1]
+                        contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
+                    }
+                    contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
+    //                contentCell.widthAnchor.constraint(equalToConstant: 370).isActive = true  //370
+    //                contentCell.heightAnchor.constraint(equalToConstant: 320).isActive = true  //320
+                    contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //370
+                    contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //320
+                    contentCell.layer.cornerRadius = 10 //5
+                    aTestArray.append(contentCell)
+                    contentCell.setDescHeight(lHeight: descHeight, txt: text)
+                    contentCell.redrawUI()
+//                    contentCell.configure(data: "a") //"a"
+//                    contentCell.setState(p: 0) //do not revert state for simplicity
+                    contentCell.aDelegate = self
+                    contentCell.setAutohide(isEnabled: isAutohideEnabled)
+                    
+                    //test > change color in quote mode
+                    contentCell.changeBaseColorInQuoteMode()
+                }
+                else if(l == "video_l") {//loop videos
+                    let cellWidth = viewWidth
+                    let lhsMargin = 20.0
+                    let rhsMargin = 20.0
+                    let descHeight = 40.0
+                    let availableWidth = cellWidth - lhsMargin - rhsMargin
+                    
+                    let assetSize = CGSize(width: 3, height: 4)
+                    var cSize = CGSize(width: 0, height: 0)
+                    if(assetSize.width > assetSize.height) {
+                        //1 > landscape photo 4:3 w:h
+                        let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                        let cHeight = availableWidth * aRatio.height / aRatio.width + descHeight
+                        cSize = CGSize(width: round(availableWidth), height: round(cHeight))
+                    }
+                    else if (assetSize.width < assetSize.height){
+                        //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                        let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                        let cWidth = availableWidth * 2 / 3
+                        let cHeight = cWidth * aRatio.height / aRatio.width + descHeight
+                        cSize = CGSize(width: round(cWidth), height: round(cHeight))
+                    } else {
+                        //square
+                        let cWidth = availableWidth
+                        cSize = CGSize(width: round(cWidth), height: round(cWidth + descHeight))
+                    }
+                    
+                    //test 2 > reusable custom view
+    //                let contentCell = PostVideoLoopContentCell(frame: CGRect(x: 0, y: 0, width: 220, height: 390))
+                    let contentCell = PostVideoLoopContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
+                    aTest.addSubview(contentCell)
+                    contentCell.translatesAutoresizingMaskIntoConstraints = false
+                    if(aTestArray.isEmpty) {
+                        contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
+                    } else {
+                        let lastArrayE = aTestArray[aTestArray.count - 1]
+                        contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
+                    }
+                    contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
+    //                contentCell.widthAnchor.constraint(equalToConstant: 220).isActive = true  //220
+    //                contentCell.heightAnchor.constraint(equalToConstant: 390).isActive = true  //390
+                    contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //220
+                    contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //390
+                    contentCell.layer.cornerRadius = 10 //5
+                    aTestArray.append(contentCell)
+                    contentCell.setDescHeight(lHeight: descHeight, txt: text)
+                    contentCell.redrawUI()
+//                    contentCell.configure(data: "a")
+//                    contentCell.setState(t: 0.0)
+                    contentCell.aDelegate = self
+                    contentCell.setAutohide(isEnabled: isAutohideEnabled)
+                
+                    mediaArray.append(contentCell)
+                    
+                    //test > change color in quote mode
+                    contentCell.changeBaseColorInQuoteMode()
+                }
+                else if(l == "video") { //vi
+                    let cellWidth = viewWidth
+                    let lhsMargin = 20.0
+                    let rhsMargin = 20.0
+                    let availableWidth = cellWidth - lhsMargin - rhsMargin
+                    
+                    let assetSize = CGSize(width: 3, height: 4)
+                    var cSize = CGSize(width: 0, height: 0)
+                    if(assetSize.width > assetSize.height) {
+                        //1 > landscape photo 4:3 w:h
+                        let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                        let cHeight = availableWidth * aRatio.height / aRatio.width
+                        cSize = CGSize(width: round(availableWidth), height: round(cHeight))
+                    }
+                    else if (assetSize.width < assetSize.height){
+                        //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                        let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                        let cWidth = availableWidth * 2 / 3
+                        let cHeight = cWidth * aRatio.height / aRatio.width
+                        cSize = CGSize(width: round(cWidth), height: round(cHeight))
+                    } else {
+                        //square
+                        let cWidth = availableWidth
+                        cSize = CGSize(width: round(cWidth), height: round(cWidth))
+                    }
+                    
+                    //test 2 > reusable custom view
+    //                let contentCell = PostVideoContentCell(frame: CGRect(x: 0, y: 0, width: 220, height: 350))
+                    let contentCell = PostVideoContentCell(frame: CGRect(x: 0, y: 0, width: cSize.width, height: cSize.height))
+                    aTest.addSubview(contentCell)
+                    contentCell.translatesAutoresizingMaskIntoConstraints = false
+                    if(aTestArray.isEmpty) {
+                        contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
+                    } else {
+                        let lastArrayE = aTestArray[aTestArray.count - 1]
+                        contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
+                    }
+                    contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
+    //                contentCell.widthAnchor.constraint(equalToConstant: 220).isActive = true  //220
+    //                contentCell.heightAnchor.constraint(equalToConstant: 350).isActive = true  //350
+                    contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //220
+                    contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //350
+                    contentCell.layer.cornerRadius = 10 //5
+                    aTestArray.append(contentCell)
+                    contentCell.redrawUI()
+//                    contentCell.configure(data: "a")
+//                    contentCell.setState(t: 0.0)
+                    contentCell.aDelegate = self
+                    contentCell.setAutohide(isEnabled: isAutohideEnabled)
+                    
+                    mediaArray.append(contentCell)
+                }
+                else if(l == "quote") {
+                    let aaText = UILabel()
+                    aaText.textAlignment = .left
+                    aaText.textColor = .white
+                    aaText.font = .systemFont(ofSize: 14)
+                    aaText.numberOfLines = 0 //0
+                    aTest.addSubview(aaText)
+                    aaText.translatesAutoresizingMaskIntoConstraints = false
+                    if(aTestArray.isEmpty) {
+                        aaText.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true //20
+                    } else {
+                        let lastArrayE = aTestArray[aTestArray.count - 1]
+                        aaText.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
+                    }
+                    aaText.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
+                    aaText.trailingAnchor.constraint(equalTo: aTest.trailingAnchor, constant: -20).isActive = true
+    //                aaText.bottomAnchor.constraint(equalTo: aTest.bottomAnchor, constant: 0).isActive = true
+                    aaText.text = "[Quote]"
+                    aTestArray.append(aaText)
+                }
+            }
+        }
+        else if(d == "na") {
+            //test > error handling
+            let cellWidth = viewWidth
+            let lhsMargin = 20.0
+            let rhsMargin = 20.0
+            let availableWidth = cellWidth - lhsMargin - rhsMargin
+            
+            let contentCell = PostNotFoundContentCell(frame: CGRect(x: 0, y: 0, width: availableWidth, height: 120.0))
+            aTest.addSubview(contentCell)
+            contentCell.translatesAutoresizingMaskIntoConstraints = false
+            if(aTestArray.isEmpty) {
+                contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
+            } else {
+                let lastArrayE = aTestArray[aTestArray.count - 1]
+                contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
+            }
+            contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
+            contentCell.trailingAnchor.constraint(equalTo: aTest.trailingAnchor, constant: -20).isActive = true
+            contentCell.layer.cornerRadius = 10 //5
+            aTestArray.append(contentCell)
+            contentCell.redrawUI()
+        }
+        else if(d == "us") {
+            let cellWidth = viewWidth
+            let lhsMargin = 20.0
+            let rhsMargin = 20.0
+            let availableWidth = cellWidth - lhsMargin - rhsMargin
+            
+            let contentCell = PostSuspendedContentCell(frame: CGRect(x: 0, y: 0, width: availableWidth, height: 120.0))
+            aTest.addSubview(contentCell)
+            contentCell.translatesAutoresizingMaskIntoConstraints = false
+            if(aTestArray.isEmpty) {
+                contentCell.topAnchor.constraint(equalTo: aTest.topAnchor, constant: 20).isActive = true
+            } else {
+                let lastArrayE = aTestArray[aTestArray.count - 1]
+                contentCell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 20).isActive = true
+            }
+            contentCell.leadingAnchor.constraint(equalTo: aTest.leadingAnchor, constant: 20).isActive = true
+            contentCell.trailingAnchor.constraint(equalTo: aTest.trailingAnchor, constant: -20).isActive = true
+            contentCell.layer.cornerRadius = 10 //5
+            aTestArray.append(contentCell)
+            contentCell.redrawUI()
         }
         
         if(!aTestArray.isEmpty) {
@@ -2794,7 +3216,10 @@ class PostQuoteContentCell: MediaContentCell {
     
     @objc func onQuoteClicked(gesture: UITapGestureRecognizer) {
         print("quote post clicked")
-        aDelegate?.contentCellDidClickPost(id: "")
+        aDelegate?.contentCellDidClickPost(id: id, dataType: contentDataType)
+    }
+    @objc func onUserClicked(gesture: UITapGestureRecognizer) {
+        aDelegate?.contentCellDidClickUser(id: userId)
     }
     
     override func pauseMedia() {
@@ -2820,8 +3245,8 @@ class PostQuoteContentCell: MediaContentCell {
     }
     
     //*test > async fetch images/names/videos
-    func asyncConfigure(data: String) {
-        let id = "u1" //u_
+    func asyncConfigureUser(data: String) {
+        let id = data //u1
         DataFetchManager.shared.fetchUserData2(id: id) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -2918,7 +3343,7 @@ extension PostQuoteContentCell: ContentCellDelegate {
     }
     func contentCellDidClickPlace(id: String){
     }
-    func contentCellDidClickPost(id: String){
+    func contentCellDidClickPost(id: String, dataType: String){
 
     }
     func contentCellDidClickVcvClickPlay(cc: UIView, isPlay: Bool){
@@ -2927,6 +3352,8 @@ extension PostQuoteContentCell: ContentCellDelegate {
             
             aDelegate?.contentCellDidClickVcvClickPlay(cc: self, isPlay: isPlay)
         }
+    }
+    func contentCellResize(cc: UIView){
     }
 }
 
