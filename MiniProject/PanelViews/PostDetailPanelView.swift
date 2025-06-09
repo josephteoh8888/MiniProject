@@ -10,14 +10,14 @@ import UIKit
 import SDWebImage
 
 protocol PostDetailPanelDelegate : AnyObject {
-    func didClickPostDetailPanelVcvClickPost(id: String, dataType: String) //try
+    func didClickPostDetailPanelVcvClickPost(id: String, dataType: String, scrollToComment: Bool) //try
     func didClickPostDetailPanelVcvClickUser(id: String) //try
     func didClickPostDetailClosePanel()
     func didClickPostDetailPanelVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     func didClickPostDetailPanelVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     
     //test > click to create new post
-    func didClickPostDetailPanelVcvClickCreate(type: String)
+    func didClickPostDetailPanelVcvClickCreate(type: String, objectType: String, objectId: String)
 }
 class PostDetailPanelView: PanelView, UIGestureRecognizerDelegate{
     
@@ -304,15 +304,9 @@ class PostDetailPanelView: PanelView, UIGestureRecognizerDelegate{
         pausePlayingMedia()
         
         if let a = postCV {
-            openShareSheet()
+            openShareSheet(oType: dataType, oId: id)
             selectedItemIdx = 0
         }
-        
-        //test > reload item
-//        var idxArray: [IndexPath] = []
-//        let idx = IndexPath(item: 0, section: 0)
-//        idxArray.append(idx)
-//        postCV?.reloadItems(at: idxArray)
     }
     
     @objc func onStickyHeaderClicked(gesture: UITapGestureRecognizer) {
@@ -710,11 +704,15 @@ class PostDetailPanelView: PanelView, UIGestureRecognizerDelegate{
     //test > set id for init
     var id = ""
     var dataType = ""
+    var scrollToComment = false
     func setId(id: String) {
         self.id = id
     }
     func setDataType(dataType: String) {
         self.dataType = dataType
+    }
+    func setIsToScrollToComment(scrollToComment: Bool) {
+        self.scrollToComment = scrollToComment
     }
     
     //test > initialization state
@@ -1001,12 +999,17 @@ class PostDetailPanelView: PanelView, UIGestureRecognizerDelegate{
                     }
                     self.postCV?.insertItems(at: indexPaths)
                     //*
+                    
+                    //test > scroll to first comment
+                    if(self.scrollToComment) {
+                        self.postCV?.scrollToItem(at: IndexPath(item: 1, section: 0), at: .top, animated: true)
+                        self.scrollToComment = false
+                    }
 
                     //test
                     if(l.isEmpty) {
                         self.setFooterAaText(text: "No comments yet.")
                         self.configureFooterUI(data: "na")
-//                        self.aaText.text = "No comments yet."
                     }
                 }
 
@@ -1196,7 +1199,7 @@ class PostDetailPanelView: PanelView, UIGestureRecognizerDelegate{
     }
     
     //test > share sheet
-    func openShareSheet() {
+    func openShareSheet(oType: String, oId: String) {
         let sharePanel = ShareSheetScrollableView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
         self.addSubview(sharePanel)
         sharePanel.translatesAutoresizingMaskIntoConstraints = false
@@ -1204,6 +1207,7 @@ class PostDetailPanelView: PanelView, UIGestureRecognizerDelegate{
         sharePanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
         sharePanel.delegate = self
         sharePanel.initialize()
+        sharePanel.setObject(oType: oType, oId: oId)
         
         //test > track comment scrollable view
         pageList.append(sharePanel)
@@ -2784,7 +2788,7 @@ extension PostDetailPanelView: UICollectionViewDataSource {
 }
 
 extension PostDetailPanelView: HListCellDelegate {
-    func hListDidClickVcvComment(vc: UICollectionViewCell) {
+    func hListDidClickVcvComment(vc: UICollectionViewCell, id: String, dataType: String) {
         print("PostDetailPanelView comment clicked")
         if vc is HPostListBViewCell {
             postCV?.setContentOffset(CGPoint(x: 0.0, y: postHeight), animated: true)
@@ -2797,7 +2801,7 @@ extension PostDetailPanelView: HListCellDelegate {
     func hListDidClickVcvLove() {
         print("PostDetailPanelView love clicked")
     }
-    func hListDidClickVcvShare(vc: UICollectionViewCell) {
+    func hListDidClickVcvShare(vc: UICollectionViewCell, id: String, dataType: String) {
         print("PostDetailPanelView share clicked")
 
         pausePlayingMedia()
@@ -2807,7 +2811,7 @@ extension PostDetailPanelView: HListCellDelegate {
                 
                 if(cell == vc) {
                     let selectedIndexPath = a.indexPath(for: cell)
-                    openShareSheet()
+                    openShareSheet(oType: dataType, oId: id)
                     
                     if let c = selectedIndexPath {
                         selectedItemIdx = c.row
@@ -2834,7 +2838,7 @@ extension PostDetailPanelView: HListCellDelegate {
         print("PostDetailPanelView post clicked")
 
         pausePlayingMedia()
-        delegate?.didClickPostDetailPanelVcvClickPost(id: id, dataType: dataType)
+        delegate?.didClickPostDetailPanelVcvClickPost(id: id, dataType: dataType, scrollToComment: false)
     }
     func hListDidClickVcvClickPhoto(id: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         
@@ -2990,7 +2994,7 @@ extension PostDetailPanelView: HListCellDelegate {
 }
 
 extension PostDetailPanelView: ShareSheetScrollableDelegate{
-    func didShareSheetClickCreate(type: String){
+    func didShareSheetClickCreate(type: String, objectType: String, objectId: String){
         //test > for deleting item
         if(!pageList.isEmpty) {
             pageList.remove(at: pageList.count - 1)
@@ -3003,7 +3007,7 @@ extension PostDetailPanelView: ShareSheetScrollableDelegate{
                     
                     //test > create new post
                     if(type == "post") {
-                        delegate?.didClickPostDetailPanelVcvClickCreate(type: "post")
+                        delegate?.didClickPostDetailPanelVcvClickCreate(type: type, objectType: objectType, objectId: objectId)
                     }
                 }
                 else if let b = lastPage as? ShareSheetScrollableView {
@@ -3012,7 +3016,7 @@ extension PostDetailPanelView: ShareSheetScrollableDelegate{
             } else {
                 //test > create new post
                 if(type == "post") {
-                    delegate?.didClickPostDetailPanelVcvClickCreate(type: "post")
+                    delegate?.didClickPostDetailPanelVcvClickCreate(type: type, objectType: objectType, objectId: objectId)
                 }
             }
         }
@@ -3094,14 +3098,14 @@ extension PostDetailPanelView: CommentScrollableDelegate{
             }
         }
     }
-    func didCClickComment(){
-
+    func didCClickComment(id: String, dataType: String){
+        delegate?.didClickPostDetailPanelVcvClickPost(id: id, dataType: dataType, scrollToComment: true)
     }
-    func didCClickShare(){
-        openShareSheet()
+    func didCClickShare(id: String, dataType: String){
+        openShareSheet(oType: dataType, oId: id)
     }
     func didCClickPost(id: String, dataType: String){
-        delegate?.didClickPostDetailPanelVcvClickPost(id: id, dataType: dataType)
+        delegate?.didClickPostDetailPanelVcvClickPost(id: id, dataType: dataType, scrollToComment: false)
     }
     func didCClickClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         delegate?.didClickPostDetailPanelVcvClickPhoto(id: id, pointX: pointX, pointY: pointY, view: view, mode: mode)
@@ -3228,13 +3232,12 @@ extension PostDetailPanelView: UITextViewDelegate {
 }
 
 extension ViewController: PostDetailPanelDelegate{
-    func didClickPostDetailPanelVcvClickPost(id: String, dataType: String) {
+    func didClickPostDetailPanelVcvClickPost(id: String, dataType: String, scrollToComment: Bool) {
         //test > real id for fetching data
-//        openPostDetailPanel(id: id)
-        openPostDetailPanel(id: id, dataType: dataType)
+        openPostDetailPanel(id: id, dataType: dataType, scrollToComment: scrollToComment)
     }
     func didClickPostDetailPanelVcvClickUser(id: String) {
-        openUserPanel()
+//        openUserPanel()
         //test > real id for fetching data
         openUserPanel(id: id)
     }
@@ -3265,10 +3268,10 @@ extension ViewController: PostDetailPanelDelegate{
         self.openVideoPanel(offX: offsetX, offY: offsetY, originatorView: view, originatorViewType: OriginatorTypes.UIVIEW, id: 0, originatorViewId: "", preterminedDatasets: dataset, mode: mode)
     }
     
-    func didClickPostDetailPanelVcvClickCreate(type: String){
+    func didClickPostDetailPanelVcvClickCreate(type: String, objectType: String, objectId: String){
         if(type == "post") {
 //            openPostCreatorPanel()
-            openPostCreatorPanel(objectType: "post", objectId: "", mode: "")
+            openPostCreatorPanel(objectType: objectType, objectId: objectId, mode: "")
         }
         
     }

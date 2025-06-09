@@ -41,7 +41,10 @@ class HPhotoListBViewCell: UICollectionViewCell {
     //test > new method for storing hiding asset
     var hiddenAssetIdx = -1
     var playingMediaAssetIdx = -1
-
+    
+    let titleText = UILabel()
+    var titleTopCons: NSLayoutConstraint?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -182,6 +185,22 @@ class HPhotoListBViewCell: UICollectionViewCell {
         vBtn.widthAnchor.constraint(equalToConstant: 14).isActive = true
         //
         
+        //title
+//        let titleText = UILabel()
+        titleText.textAlignment = .left
+        titleText.textColor = .white
+        titleText.font = .boldSystemFont(ofSize: 14)
+        titleText.numberOfLines = 0
+//        contentView.addSubview(photoText)
+        aCon.addSubview(titleText)
+        titleText.translatesAutoresizingMaskIntoConstraints = false
+//        titleText.topAnchor.constraint(equalTo: aUserPhoto.bottomAnchor, constant: 10).isActive = true
+        titleTopCons = titleText.topAnchor.constraint(equalTo: aUserPhoto.bottomAnchor, constant: 0)
+        titleTopCons?.isActive = true
+        titleText.leadingAnchor.constraint(equalTo: aCon.leadingAnchor, constant: 20).isActive = true
+        titleText.trailingAnchor.constraint(equalTo: aCon.trailingAnchor, constant: -20).isActive = true //-30
+        titleText.text = ""
+        
         //text
 //        let photoText = UILabel()
         photoText.textAlignment = .left
@@ -191,7 +210,8 @@ class HPhotoListBViewCell: UICollectionViewCell {
 //        contentView.addSubview(photoText)
         aCon.addSubview(photoText)
         photoText.translatesAutoresizingMaskIntoConstraints = false
-        photoText.topAnchor.constraint(equalTo: aUserPhoto.bottomAnchor, constant: 10).isActive = true
+//        photoText.topAnchor.constraint(equalTo: aUserPhoto.bottomAnchor, constant: 10).isActive = true
+        photoText.topAnchor.constraint(equalTo: titleText.bottomAnchor, constant: 10).isActive = true //test title
         photoText.leadingAnchor.constraint(equalTo: aCon.leadingAnchor, constant: 20).isActive = true
         photoText.trailingAnchor.constraint(equalTo: aCon.trailingAnchor, constant: -20).isActive = true //-30
 //        photoText.text = data.dataTextString
@@ -544,6 +564,9 @@ class HPhotoListBViewCell: UICollectionViewCell {
         let imageUrl = URL(string: "")
         aUserPhoto.sd_setImage(with: imageUrl)
         
+        titleText.text = ""
+        titleTopCons?.constant = 0.0
+        
         bText.text = "0"
         cText.text = "0"
         dText.text = "0"
@@ -717,12 +740,14 @@ class HPhotoListBViewCell: UICollectionViewCell {
             asyncConfigure(data: u)
             asyncConfigurePlace(data: p)
             
+            photoText.text = data.dataTextString
+            
             let dataCL = a.contentDataArray
             for cl in dataCL {
                 let l = cl.dataCode
                 let da = cl.dataArray
                 
-                photoText.text = data.dataTextString
+//                photoText.text = data.dataTextString
                 
                 let availableWidth = self.frame.width
                 
@@ -810,9 +835,11 @@ class HPhotoListBViewCell: UICollectionViewCell {
                     
                     mediaArray.append(contentCell)
                 }
-//                else if(l == "p") {
-//                    //without music
-//                }
+                else if(l == "t") {
+                    //with title
+                    titleText.text = data.titleTextString
+                    titleTopCons?.constant = 10.0
+                }
             }
         }
         else if(d == "na") {
@@ -881,10 +908,10 @@ class HPhotoListBViewCell: UICollectionViewCell {
     
     @objc func onCommentBtnClicked(gesture: UITapGestureRecognizer) {
         print("photo click comment")
-        aDelegate?.hListDidClickVcvComment(vc: self)
+        aDelegate?.hListDidClickVcvComment(vc: self, id: id, dataType: "photo_s")
     }
     @objc func onShareClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.hListDidClickVcvShare(vc: self)
+        aDelegate?.hListDidClickVcvShare(vc: self, id: id, dataType: "photo_s")
     }
     @objc func onLoveClicked(gesture: UITapGestureRecognizer) {
         reactOnLoveClick()

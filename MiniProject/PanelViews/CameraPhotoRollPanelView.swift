@@ -772,9 +772,7 @@ extension CameraPhotoRollPanelView: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: GridPhotoRollViewCell.identifier, for: indexPath) as! GridPhotoRollViewCell
-        let originInRootView = collectionView.convert(cell.frame.origin, to: self)
-        print("collectionView index: \(indexPath), \(cell.frame.origin.x), \(cell.frame.origin.y), \(originInRootView)")
+        
      }
 }
 
@@ -790,6 +788,7 @@ extension CameraPhotoRollPanelView: GridAssetDelegate {
                     }
                     
                     let data = vDataList[indexPath.row]
+                    print("gridselected: \(indexPath.row)")
                     let selectOrder = data.selectedOrder
                     guard let model = data.model else {
                         return

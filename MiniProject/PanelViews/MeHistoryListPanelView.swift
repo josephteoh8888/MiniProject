@@ -1027,7 +1027,7 @@ extension MeHistoryListPanelView: ScrollFeedCellDelegate {
     func sfcDidClickVcvLove() {
         print("fcDidClickVcvLike ")
     }
-    func sfcDidClickVcvShare() {
+    func sfcDidClickVcvShare(id: String, dataType: String) {
         print("fcDidClickVcvShare ")
     }
 
@@ -1113,8 +1113,7 @@ extension MeHistoryListPanelView: TabStackDelegate {
 extension ViewController: MeHistoryPanelDelegate{
     func didMeHistoryClickPost(id: String, dataType: String){
         //test > real id for fetching data
-//        openPostDetailPanel(id: id)
-        openPostDetailPanel(id: id, dataType: dataType)
+        openPostDetailPanel(id: id, dataType: dataType, scrollToComment: false)
     }
     func didMeHistoryClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
         let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2

@@ -185,6 +185,7 @@ class HPostListAViewCell: UICollectionViewCell {
         aTest.topAnchor.constraint(equalTo: aUserPhoto.bottomAnchor, constant: 0).isActive = true
         //test > click on aTest for click post
 //        aTest.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onSingleClicked)))
+//        aTest.isHidden = true
         
         //test 2 > design location 2
         let aBox = UIView()
@@ -1028,10 +1029,10 @@ class HPostListAViewCell: UICollectionViewCell {
     }
     
     @objc func onCommentBtnClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.hListDidClickVcvComment(vc: self)
+        aDelegate?.hListDidClickVcvComment(vc: self, id: id, dataType: "post")
     }
     @objc func onShareClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.hListDidClickVcvShare(vc: self)
+        aDelegate?.hListDidClickVcvShare(vc: self, id: id, dataType: "post")
     }
     @objc func onLoveClicked(gesture: UITapGestureRecognizer) {
         reactOnLoveClick()
@@ -1113,6 +1114,9 @@ class HPostListAViewCell: UICollectionViewCell {
                 }
             }
         }
+        
+        //test > dehide post
+//        aTest.isHidden = false
     }
     //*
     

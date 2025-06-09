@@ -18,6 +18,8 @@ class BaseDataset {
     var dataCount : [String: Int] = ["love": 0, "comment": 0, "bookmark": 0, "share": 0, "view": 0, "follow": 0, "follower": 0]
     
     var contentDataArray = [ContentDataset]()
+    
+    var titleTextString: String = ""
 }
 
 class ContentDataset : BaseDataset {
@@ -190,6 +192,7 @@ class PhotoDataset: BaseDataset {
         if(data == "a") {
             dataArray.append("p") //photo
             dataArray.append("m") //text
+//            dataArray.append("t") //photo
         }
         else if(data == "b") {
             dataArray.append("p") //photo
@@ -200,6 +203,7 @@ class PhotoDataset: BaseDataset {
         }
         else if(data == "d") {
             dataArray.append("p") //photo
+            dataArray.append("t") //photo
         }
         
         //set content data
@@ -265,6 +269,19 @@ class PhotoDataset: BaseDataset {
         }
         else if(data == "d") {
             coverPhotoString = "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media"
+        }
+        
+        if(data == "a") {
+            titleTextString = ""
+        }
+        else if(data == "b") {
+            titleTextString = "What's going on HERE?!"
+        }
+        else if(data == "c") {
+            titleTextString = ""
+        }
+        else if(data == "d") {
+            titleTextString = "What's happening?"
         }
         
         //creator id, sound and place id
@@ -403,19 +420,6 @@ class PostDataset: BaseDataset {
     }
     
     func setTextString(data: String) {
-//        if(data == "a") {
-//            dataTextString = "Nice food, nice environment! Worth a visit. \n\nSo Good.\n.\n..\n...\n....\n...\n..\n.\n.\n."
-////            dataTextString = "Nice food, nice environment! Worth a visit. \nSo Good."
-//        }
-//        else if(data == "b") {
-//            dataTextString = "往年的这个时候，iPhone 虽然也是位列销量榜榜首，但那都是上一代的旧机型呀...\n只能说这次 11.11 各家给的优惠都太给力了."
-//        }
-//        else if(data == "c") {
-//            dataTextString = "Vấn đề đã rõ, đã chín, được thực tiễn chứng minh là đúng, thực hiện hiệu quả, đa số đồng tình thì tiếp tục thực hiện"
-//        }
-//        else if(data == "d") {
-//            dataTextString = "A defiant Vladimir Putin said Russia won’t be stopped from pursuing its goals after he swept to a record victory in a presidential election whose outcome was pre-determined."
-//        }
         
         //creator id, sound and place id
         if(data == "a") {

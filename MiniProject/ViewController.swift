@@ -5015,16 +5015,16 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
             panel.setQuoteObject(type: "s", id: "#")
         }
         else if(objectType == "post") {
-            panel.setQuoteObject(type: "post", id: "#")
+            panel.setQuoteObject(type: "post", id: objectId)
         }
         else if(objectType == "comment") {
-            panel.setQuoteObject(type: "comment", id: "#")
+            panel.setQuoteObject(type: "comment", id: objectId)
         }
         else if(objectType == "photo_s") {
-            panel.setQuoteObject(type: "photo_s", id: "#")
+            panel.setQuoteObject(type: "photo_s", id: objectId)
         }
         else if(objectType == "video_l") {
-            panel.setQuoteObject(type: "video_l", id: "#")
+            panel.setQuoteObject(type: "video_l", id: objectId)
         }
         //*
         
@@ -5195,11 +5195,12 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
     }
     
     //test > shift post detail to viewcontroller and include in [page] array
-    func openPostDetailPanel() {
-        openPostDetailPanel(id: "", dataType: "post") //default
-    }
+//    func openPostDetailPanel() {
+//        openPostDetailPanel(id: "", dataType: "post", scrollToComment: false) //default
+//    }
     //test > real id for fetching data
-    func openPostDetailPanel(id: String, dataType: String) {
+//    func openPostDetailPanel(id: String, dataType: String){
+    func openPostDetailPanel(id: String, dataType: String, scrollToComment: Bool) {
         
         //test 1 > as not scrollable panel
         nextPage(isNextPageScrollable: false)
@@ -5212,6 +5213,7 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
         panel.setId(id: id)
         panel.setDataType(dataType: dataType)
+        panel.setIsToScrollToComment(scrollToComment: scrollToComment)
         panel.initialize()
         panel.delegate = self
         
@@ -5256,7 +5258,7 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         pageList.append(panel)
     }
     //test > share object panel for more actions on user, place etc
-    func openShareObjectPanel(data: String) {
+    func openShareObjectPanel(oType: String, oId: String) {
         
         //test 1 > as not scrollable panel
 //        nextPage(isNextPageScrollable: false) //ori
@@ -5267,7 +5269,7 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         panel.translatesAutoresizingMaskIntoConstraints = false
         panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
         panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
-        panel.setObjectType(t: data)
+        panel.setObject(oType: oType, oId: oId)
         panel.delegate = self
         
 //        pageList.append(panel)

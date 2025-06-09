@@ -14,7 +14,7 @@ protocol VideoPanelDelegate : AnyObject {
     func didClickUser(id: String)
     func didClickPlace(id: String)
     func didClickSound(id: String)
-    func didClickPost(id: String, dataType: String)
+    func didClickPost(id: String, dataType: String, scrollToComment: Bool)
     func didStartOpenVideoPanel()
     func didFinishOpenVideoPanel()
     func didStartCloseVideoPanel(vpv : VideoPanelView)
@@ -28,7 +28,7 @@ protocol VideoPanelDelegate : AnyObject {
     func didClickVideoPanelClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) //try
     
     //test > click to create new post
-    func didClickVideoPanelVcvClickCreate(type: String)
+    func didClickVideoPanelVcvClickCreate(type: String, objectType: String, objectId: String)
 }
 
 class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
@@ -1607,7 +1607,7 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         pageList.append(commentPanel)
     }
 
-    func openShareSheet() {
+    func openShareSheet(oType: String, oId: String) {
         let sharePanel = ShareSheetScrollableView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
         videoPanel.addSubview(sharePanel)
         sharePanel.translatesAutoresizingMaskIntoConstraints = false
@@ -1615,6 +1615,7 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         sharePanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
         sharePanel.delegate = self
         sharePanel.initialize()
+        sharePanel.setObject(oType: oType, oId: oId)
         
         //test > track comment scrollable view
         pageList.append(sharePanel)
@@ -1854,10 +1855,9 @@ extension ViewController: VideoPanelDelegate{
         openSoundPanel(id: id)
     }
     
-    func didClickPost(id: String, dataType: String){
+    func didClickPost(id: String, dataType: String, scrollToComment: Bool){
         //test > real id for fetching data
-//        openPostDetailPanel(id: id)
-        openPostDetailPanel(id: id, dataType: dataType)
+        openPostDetailPanel(id: id, dataType: dataType, scrollToComment: scrollToComment)
     }
 
     func didStartOpenVideoPanel() {
@@ -1999,10 +1999,10 @@ extension ViewController: VideoPanelDelegate{
         self.openVideoPanel(offX: offsetX, offY: offsetY, originatorView: view, originatorViewType: OriginatorTypes.UIVIEW, id: 0, originatorViewId: "", preterminedDatasets: dataset, mode: mode)
     }
     
-    func didClickVideoPanelVcvClickCreate(type: String){
+    func didClickVideoPanelVcvClickCreate(type: String, objectType: String, objectId: String){
         if(type == "post") {
 //            openPostCreatorPanel()
-            openPostCreatorPanel(objectType: "video_l", objectId: "", mode: "")
+            openPostCreatorPanel(objectType: objectType, objectId: objectId, mode: "")
         }
         
     }
@@ -2348,9 +2348,9 @@ extension VideoPanelView: ScrollFeedVideoCellDelegate {
         pausePlayingMedia()
         openComment()
     }
-    func sfvcDidClickShare(){
+    func sfvcDidClickShare(id: String, dataType: String){
         pausePlayingMedia()
-        openShareSheet()
+        openShareSheet(oType: dataType, oId: id)
     }
     func sfvcDidClickRefresh(){
         //test
@@ -2361,7 +2361,7 @@ extension VideoPanelView: ScrollFeedVideoCellDelegate {
 }
 
 extension VideoPanelView: ShareSheetScrollableDelegate{
-    func didShareSheetClickCreate(type: String){
+    func didShareSheetClickCreate(type: String, objectType: String, objectId: String){
         //test > for deleting item
         if(!pageList.isEmpty) {
             pageList.remove(at: pageList.count - 1)
@@ -2374,7 +2374,7 @@ extension VideoPanelView: ShareSheetScrollableDelegate{
                     
                     //test > create new post
                     if(type == "post") {
-                        delegate?.didClickVideoPanelVcvClickCreate(type: "post")
+                        delegate?.didClickVideoPanelVcvClickCreate(type: type, objectType: objectType, objectId: objectId)
                     }
                 }
                 else if let b = lastPage as? ShareSheetScrollableView {
@@ -2386,7 +2386,7 @@ extension VideoPanelView: ShareSheetScrollableDelegate{
                     
                     //test > create new post
                     if(type == "post") {
-                        delegate?.didClickVideoPanelVcvClickCreate(type: "post")
+                        delegate?.didClickVideoPanelVcvClickCreate(type: type, objectType: objectType, objectId: objectId)
                     }
                 }
             }
@@ -2477,14 +2477,14 @@ extension VideoPanelView: CommentScrollableDelegate{
             }
         }
     }
-    func didCClickComment(){
- 
+    func didCClickComment(id: String, dataType: String){
+        delegate?.didClickPost(id: id, dataType: dataType, scrollToComment: true)
     }
-    func didCClickShare(){
-        openShareSheet()
+    func didCClickShare(id: String, dataType: String){
+        openShareSheet(oType: dataType, oId: id)
     }
     func didCClickPost(id: String, dataType: String){
-        delegate?.didClickPost(id: id, dataType: dataType)
+        delegate?.didClickPost(id: id, dataType: dataType, scrollToComment: false)
     }
     func didCClickClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         delegate?.didClickVideoPanelClickPhoto(id: id, pointX: pointX, pointY: pointY, view: view, mode: mode)

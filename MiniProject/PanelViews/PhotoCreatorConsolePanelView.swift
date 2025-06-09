@@ -1257,9 +1257,6 @@ extension PhotoCreatorConsolePanelView: PhotoFinalizePanelDelegate{
     func didClickFinishPhotoFinalize(){
         backPage()
     }
-//    func didPhotoFinalizeClickUploadSuccess(){
-//        closePhotoCreatorPanel(isAnimated: true)
-//    }
     
     func didPhotoFinalizeClickLocationSelectScrollable(){
         delegate?.didPhotoCreatorClickLocationSelectScrollable()

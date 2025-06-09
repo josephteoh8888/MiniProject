@@ -23,7 +23,7 @@ protocol ScrollFeedVideoCellDelegate : AnyObject {
     func sfvcDidClickPlace(id: String)
     func sfvcDidClickSound(id: String)
     func sfvcDidClickComment()
-    func sfvcDidClickShare()
+    func sfvcDidClickShare(id: String, dataType: String)
     
     func sfvcDidClickRefresh()
 }
@@ -393,7 +393,7 @@ extension ScrollFeedVideoCell: VCViewCellDelegate{
 //        openComment()
         aDelegate?.sfvcDidClickComment()
     }
-    func didClickShare(vc: VCViewCell) {
+    func didClickShare(vc: VCViewCell, id: String, dataType: String) {
         //test
 //        aDelegate?.sfvcDidClickShare()
         
@@ -416,7 +416,7 @@ extension ScrollFeedVideoCell: VCViewCellDelegate{
         guard let idxPath = idxPath else {
             return
         }
-        aDelegate?.sfvcDidClickShare()
+        aDelegate?.sfvcDidClickShare(id: id, dataType: dataType)
         selectedItemIdx = idxPath.row
     }
     func didClickRefresh() {

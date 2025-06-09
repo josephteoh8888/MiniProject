@@ -10,7 +10,7 @@ import UIKit
 import SDWebImage
 
 protocol ShareSheetScrollableDelegate : AnyObject {
-    func didShareSheetClickCreate(type: String)
+    func didShareSheetClickCreate(type: String, objectType: String, objectId: String)
     func didShareSheetClickDelete()
     func didShareSheetClickClosePanel()
     func didShareSheetFinishClosePanel()
@@ -40,6 +40,9 @@ class ShareSheetScrollableView: PanelView, UIGestureRecognizerDelegate{
     let mainPanel = UIView()
     let createPanel = UIView()
     var isCreateModeSelected = false
+    
+    var objectType : String = ""
+    var objectId : String = ""
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -264,6 +267,12 @@ class ShareSheetScrollableView: PanelView, UIGestureRecognizerDelegate{
 
         isInitialized = true
     }
+    
+    func setObject(oType: String, oId: String) {
+        objectType = oType
+        objectId = oId
+    }
+    
     //test
     let mainPanelTopMargin = 20.0
     let createPanelTopMargin = 10.0
@@ -481,13 +490,13 @@ extension ShareSheetScrollableView: UICollectionViewDataSource {
             let data = cVDataList[indexPath.row]
             if(data == "cr_post") {
                 self.removeFromSuperview()
-                delegate?.didShareSheetClickCreate(type: "post")
+                delegate?.didShareSheetClickCreate(type: "post", objectType: objectType, objectId: objectId)
             } else if(data == "cr_photo") {
                 self.removeFromSuperview()
-                delegate?.didShareSheetClickCreate(type: "photo")
+                delegate?.didShareSheetClickCreate(type: "photo_s", objectType: objectType, objectId: objectId)
             } else if(data == "cr_video") {
                 self.removeFromSuperview()
-                delegate?.didShareSheetClickCreate(type: "video")
+                delegate?.didShareSheetClickCreate(type: "video_l", objectType: objectType, objectId: objectId)
             }
         }
      }

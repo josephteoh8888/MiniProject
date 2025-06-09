@@ -835,19 +835,19 @@ extension ScrollFeedHPostListCell: UICollectionViewDataSource {
 }
 
 extension ScrollFeedHPostListCell: HListCellDelegate {
-    func hListDidClickVcvComment(vc: UICollectionViewCell) {
+    func hListDidClickVcvComment(vc: UICollectionViewCell, id: String, dataType: String) {
         aDelegate?.sfcDidClickVcvComment()
     }
     func hListDidClickVcvLove() {
         aDelegate?.sfcDidClickVcvLove()
     }
-    func hListDidClickVcvShare(vc: UICollectionViewCell) {
+    func hListDidClickVcvShare(vc: UICollectionViewCell, id: String, dataType: String) {
         if let a = vCV {
             for cell in a.visibleCells {
                 
                 if(cell == vc) {
                     let selectedIndexPath = a.indexPath(for: cell)
-                    aDelegate?.sfcDidClickVcvShare()
+                    aDelegate?.sfcDidClickVcvShare(id: id, dataType: dataType)
                     
                     if let c = selectedIndexPath {
                         selectedItemIdx = c.row

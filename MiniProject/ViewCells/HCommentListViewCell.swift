@@ -968,7 +968,7 @@ class HCommentListViewCell: UICollectionViewCell {
     }
     
     @objc func onCommentClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.hListDidClickVcvComment(vc: self)
+        aDelegate?.hListDidClickVcvComment(vc: self, id: id, dataType: dataType)
     }
     
     @objc func onUserClicked(gesture: UITapGestureRecognizer) {
@@ -1014,7 +1014,7 @@ class HCommentListViewCell: UICollectionViewCell {
     }
     @objc func onShareClicked(gesture: UITapGestureRecognizer) {
         print("comment share clicked")
-        aDelegate?.hListDidClickVcvShare(vc: self)
+        aDelegate?.hListDidClickVcvShare(vc: self, id: id, dataType: dataType)
     }
     
     func reactOnLoveClick() {

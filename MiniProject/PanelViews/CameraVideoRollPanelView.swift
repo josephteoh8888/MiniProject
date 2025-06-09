@@ -741,13 +741,6 @@ extension CameraVideoRollPanelView: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: GridVideoRollViewCell.identifier, for: indexPath) as! GridVideoRollViewCell
-        let originInRootView = collectionView.convert(cell.frame.origin, to: self)
-        print("collectionView index: \(indexPath), \(cell.frame.origin.x), \(cell.frame.origin.y), \(originInRootView)")
-
-//        let model = vDataList[indexPath.row]
-//        delegate?.didClickVideoSelect(video: model, cameraRollPanel: self)
-        
      }
 }
 

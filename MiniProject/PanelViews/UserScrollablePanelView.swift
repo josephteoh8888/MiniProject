@@ -24,11 +24,11 @@ protocol UserScrollablePanelDelegate : AnyObject {
     func didUClickUserUserScrollable(id: String)
     func didUClickPlaceUserScrollable(id: String)
     func didUClickSoundUserScrollable(id: String)
-    func didUClickUserScrollableVcvClickPost(id: String, dataType: String)
+    func didUClickUserScrollableVcvClickPost(id: String, dataType: String, scrollToComment: Bool)
     func didUClickUserScrollableVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     func didUClickUserScrollableVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     func didUClickUserSignIn()
-    func didUClickUserShare()
+    func didUClickUserShare(id: String)
     
     //test > initialize
     func didFinishInitializeUserScrollable(pv: ScrollablePanelView)
@@ -1360,7 +1360,7 @@ class UserScrollablePanelView: ScrollablePanelView{
     }
 
     //test > share sheet when click on share post
-    func openShareSheet() {
+    func openShareSheet(oType: String, oId: String) {
         let sharePanel = ShareSheetScrollableView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
         panelView.addSubview(sharePanel)
         sharePanel.translatesAutoresizingMaskIntoConstraints = false
@@ -1368,6 +1368,7 @@ class UserScrollablePanelView: ScrollablePanelView{
         sharePanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
         sharePanel.delegate = self
         sharePanel.initialize()
+        sharePanel.setObject(oType: oType, oId: oId)
         
         //test > track share scrollable view
         pageList.append(sharePanel)
@@ -2349,7 +2350,7 @@ class UserScrollablePanelView: ScrollablePanelView{
     
     //test > share object sheet
     @objc func onAClicked(gesture: UITapGestureRecognizer) {
-        delegate?.didUClickUserShare()
+        delegate?.didUClickUserShare(id: getObjectId())
     }
 }
 
@@ -2761,10 +2762,10 @@ extension UserScrollablePanelView: ScrollFeedCellDelegate {
     func sfcDidClickVcvLove() {
         print("fcDidClickVcvLike ")
     }
-    func sfcDidClickVcvShare() {
+    func sfcDidClickVcvShare(id: String, dataType: String) {
         print("fcDidClickVcvShare ")
         pauseFeedPlayingMedia()
-        openShareSheet()
+        openShareSheet(oType: dataType, oId: id)
     }
 
     func sfcDidClickVcvClickUser(id: String) {
@@ -2780,7 +2781,7 @@ extension UserScrollablePanelView: ScrollFeedCellDelegate {
     }
     func sfcDidClickVcvClickPost(id: String, dataType: String) {
         pauseFeedPlayingMedia()
-        delegate?.didUClickUserScrollableVcvClickPost(id: id, dataType: dataType)
+        delegate?.didUClickUserScrollableVcvClickPost(id: id, dataType: dataType, scrollToComment: false)
     }
     func sfcDidClickVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         print("userscroll click photo \(mode)")
@@ -2880,10 +2881,9 @@ extension ViewController: UserScrollablePanelDelegate{
         //test > real id for fetching data
         openSoundPanel(id: id)
     }
-    func didUClickUserScrollableVcvClickPost(id: String, dataType: String){
+    func didUClickUserScrollableVcvClickPost(id: String, dataType: String, scrollToComment: Bool){
         //test > real id for fetching data
-//        openPostDetailPanel(id: id)
-        openPostDetailPanel(id: id, dataType: "")
+        openPostDetailPanel(id: id, dataType: dataType, scrollToComment: scrollToComment)
     }
     func didUClickUserScrollableVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
         let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
@@ -2917,8 +2917,8 @@ extension ViewController: UserScrollablePanelDelegate{
     func didUClickUserSignIn(){
         openLoginPanel()
     }
-    func didUClickUserShare(){
-        openShareObjectPanel(data: "u")
+    func didUClickUserShare(id: String){
+        openShareObjectPanel(oType: "u", oId: id)
     }
 
     func didFinishInitializeUserScrollable(pv: ScrollablePanelView){
@@ -2957,7 +2957,7 @@ extension ViewController: UserScrollablePanelDelegate{
     }
 }
 extension UserScrollablePanelView: ShareSheetScrollableDelegate{
-    func didShareSheetClickCreate(type: String){
+    func didShareSheetClickCreate(type: String, objectType: String, objectId: String){
         //test > for deleting item
         if(!pageList.isEmpty) {
             pageList.remove(at: pageList.count - 1)
@@ -3073,14 +3073,14 @@ extension UserScrollablePanelView: CommentScrollableDelegate{
             }
         }
     }
-    func didCClickComment(){
-        
+    func didCClickComment(id: String, dataType: String){
+        delegate?.didUClickUserScrollableVcvClickPost(id: id, dataType: dataType, scrollToComment: true)
     }
-    func didCClickShare(){
-        openShareSheet()
+    func didCClickShare(id: String, dataType: String){
+        openShareSheet(oType: dataType, oId: id)
     }
     func didCClickPost(id: String, dataType: String){
-        delegate?.didUClickUserScrollableVcvClickPost(id: id, dataType: dataType)
+        delegate?.didUClickUserScrollableVcvClickPost(id: id, dataType: dataType, scrollToComment: false)
     }
     func didCClickClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         delegate?.didUClickUserScrollableVcvClickPhoto(id: id, pointX: pointX, pointY: pointY, view: view, mode: mode)

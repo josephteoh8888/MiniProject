@@ -10,13 +10,13 @@ import UIKit
 import SDWebImage
 
 protocol PhotoDetailPanelDelegate : AnyObject {
-    func didClickPhotoDetailPanelVcvClickPost(id: String, dataType: String) //try
+    func didClickPhotoDetailPanelVcvClickPost(id: String, dataType: String, scrollToComment: Bool) //try
     func didClickPhotoDetailPanelVcvClickUser(id: String) //try
     func didClickPhotoDetailClosePanel()
     func didClickPhotoDetailPanelVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     
     //test > click to create new post
-    func didClickPhotoDetailPanelVcvClickCreate(type: String)
+    func didClickPhotoDetailPanelVcvClickCreate(type: String, objectType: String, objectId: String)
 }
 
 class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
@@ -305,7 +305,7 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
         pausePlayingMedia()
         
         if let a = photoCV {
-            openShareSheet()
+            openShareSheet(oType: "photo_s", oId: id)
             selectedItemIdx = 0
         }
     }
@@ -1134,7 +1134,7 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
     }
     
     //test > share sheet
-    func openShareSheet() {
+    func openShareSheet(oType: String, oId: String) {
         let sharePanel = ShareSheetScrollableView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
         self.addSubview(sharePanel)
         sharePanel.translatesAutoresizingMaskIntoConstraints = false
@@ -1142,6 +1142,7 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
         sharePanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
         sharePanel.delegate = self
         sharePanel.initialize()
+        sharePanel.setObject(oType: oType, oId: oId)
         
         //test > track comment scrollable view
         pageList.append(sharePanel)
@@ -1636,12 +1637,23 @@ extension PhotoDetailPanelView: UICollectionViewDelegateFlowLayout {
         }
     }
     
+    //test > for bold fonts
+    private func estimateBoldTextHeight(text: String, textWidth: CGFloat, fontSize: CGFloat) -> CGFloat {
+        if(text == "") {
+            return 0.0
+        } else {
+            let size = CGSize(width: textWidth, height: 1000) //1000 height is dummy
+            let attributes = [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: fontSize)]
+            let estimatedFrame = NSString(string: text).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
+            
+            return estimatedFrame.height.rounded(.up)
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView,
                    layout collectionViewLayout: UICollectionViewLayout,
                    sizeForItemAt indexPath: IndexPath) -> CGSize {
         print("postpanel collection 2: \(indexPath)")
-//        let lay = collectionViewLayout as! UICollectionViewFlowLayout
-//        let widthPerItem = collectionView.frame.width / 3 - lay.minimumInteritemSpacing
         
         if(indexPath.item == 0) {
             
@@ -1649,6 +1661,7 @@ extension PhotoDetailPanelView: UICollectionViewDelegateFlowLayout {
             let dataL = vcDataList[indexPath.row].dataArray
             let dataCL = vcDataList[indexPath.row].contentDataArray
             let d = vcDataList[indexPath.row].dataCode
+            let titleText = vcDataList[indexPath.row].titleTextString
             
             let statText = "1.2m views . 3hr"
             var contentHeight = 0.0
@@ -1702,9 +1715,12 @@ extension PhotoDetailPanelView: UICollectionViewDelegateFlowLayout {
                         let pHeight = soundTopMargin + soundHeight
                         contentHeight += pHeight
                     }
-//                    else if(l == "p") {
-//
-//                    }
+                    else if(l == "t") {
+                        let tTopMargin = 10.0
+                        let tContentHeight = estimateBoldTextHeight(text: titleText, textWidth: collectionView.frame.width - 20.0 - 20.0, fontSize: 14)
+                        let pHeight = tTopMargin + tContentHeight
+                        contentHeight += pHeight
+                    }
                 }
             }
             else if(d == "na") {
@@ -2391,7 +2407,7 @@ extension PhotoDetailPanelView: UICollectionViewDataSource {
 }
 
 extension PhotoDetailPanelView: HListCellDelegate {
-    func hListDidClickVcvComment(vc: UICollectionViewCell) {
+    func hListDidClickVcvComment(vc: UICollectionViewCell, id: String, dataType: String) {
         print("PostDetailPanelView comment clicked")
    
         if let b = vc as? HPhotoListBViewCell {
@@ -2404,7 +2420,7 @@ extension PhotoDetailPanelView: HListCellDelegate {
     func hListDidClickVcvLove() {
         print("PostDetailPanelView love clicked")
     }
-    func hListDidClickVcvShare(vc: UICollectionViewCell) {
+    func hListDidClickVcvShare(vc: UICollectionViewCell, id: String, dataType: String) {
         print("PostDetailPanelView share clicked")
   
         pausePlayingMedia()
@@ -2414,7 +2430,7 @@ extension PhotoDetailPanelView: HListCellDelegate {
                 
                 if(cell == vc) {
                     let selectedIndexPath = a.indexPath(for: cell)
-                    openShareSheet()
+                    openShareSheet(oType: dataType, oId: id)
                     
                     if let c = selectedIndexPath {
                         selectedItemIdx = c.row
@@ -2441,7 +2457,7 @@ extension PhotoDetailPanelView: HListCellDelegate {
         print("PostDetailPanelView post clicked")
 
         pausePlayingMedia()
-        delegate?.didClickPhotoDetailPanelVcvClickPost(id: id, dataType: dataType)
+        delegate?.didClickPhotoDetailPanelVcvClickPost(id: id, dataType: dataType, scrollToComment: false)
     }
     func hListDidClickVcvClickPhoto(id: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         
@@ -2589,7 +2605,7 @@ extension PhotoDetailPanelView: HListCellDelegate {
 }
 
 extension PhotoDetailPanelView: ShareSheetScrollableDelegate{
-    func didShareSheetClickCreate(type: String){
+    func didShareSheetClickCreate(type: String, objectType: String, objectId: String){
         //test > for deleting item
         if(!pageList.isEmpty) {
             pageList.remove(at: pageList.count - 1)
@@ -2602,7 +2618,7 @@ extension PhotoDetailPanelView: ShareSheetScrollableDelegate{
                     
                     //test > create new post
                     if(type == "post") {
-                        delegate?.didClickPhotoDetailPanelVcvClickCreate(type: "post")
+                        delegate?.didClickPhotoDetailPanelVcvClickCreate(type: type, objectType: objectType, objectId: objectId)
                     }
                 }
                 else if let b = lastPage as? ShareSheetScrollableView {
@@ -2611,7 +2627,7 @@ extension PhotoDetailPanelView: ShareSheetScrollableDelegate{
             } else {
                 //test > create new post
                 if(type == "post") {
-                    delegate?.didClickPhotoDetailPanelVcvClickCreate(type: "post")
+                    delegate?.didClickPhotoDetailPanelVcvClickCreate(type: type, objectType: objectType, objectId: objectId)
                 }
             }
         }
@@ -2694,14 +2710,14 @@ extension PhotoDetailPanelView: CommentScrollableDelegate{
             }
         }
     }
-    func didCClickComment(){
-
+    func didCClickComment(id: String, dataType: String){
+        delegate?.didClickPhotoDetailPanelVcvClickPost(id: id, dataType: dataType, scrollToComment: true)
     }
-    func didCClickShare(){
-        openShareSheet()
+    func didCClickShare(id: String, dataType: String){
+        openShareSheet(oType: dataType, oId: id)
     }
     func didCClickPost(id: String, dataType: String){
-        delegate?.didClickPhotoDetailPanelVcvClickPost(id: id, dataType: dataType)
+        delegate?.didClickPhotoDetailPanelVcvClickPost(id: id, dataType: dataType, scrollToComment: false)
     }
     func didCClickClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         delegate?.didClickPhotoDetailPanelVcvClickPhoto(id: id, pointX: pointX, pointY: pointY, view: view, mode: mode)
@@ -2828,10 +2844,9 @@ extension PhotoDetailPanelView: UITextViewDelegate {
 }
 
 extension ViewController: PhotoDetailPanelDelegate{
-    func didClickPhotoDetailPanelVcvClickPost(id: String, dataType: String) {
+    func didClickPhotoDetailPanelVcvClickPost(id: String, dataType: String, scrollToComment: Bool) {
         //test > real id for fetching data
-//        openPostDetailPanel(id: id)
-        openPostDetailPanel(id: id, dataType: dataType)
+        openPostDetailPanel(id: id, dataType: dataType, scrollToComment: scrollToComment)
     }
     func didClickPhotoDetailPanelVcvClickUser(id: String) {
 //        openUserPanel()
@@ -2854,10 +2869,10 @@ extension ViewController: PhotoDetailPanelDelegate{
         }
     }
     
-    func didClickPhotoDetailPanelVcvClickCreate(type: String){
+    func didClickPhotoDetailPanelVcvClickCreate(type: String, objectType: String, objectId: String){
         if(type == "post") {
 //            openPostCreatorPanel()
-            openPostCreatorPanel(objectType: "photo_s", objectId: "", mode: "")
+            openPostCreatorPanel(objectType: objectType, objectId: objectId, mode: "")
         }
         
     }

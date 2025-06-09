@@ -948,7 +948,7 @@ extension MePostListPanelView: ScrollFeedCellDelegate {
     func sfcDidClickVcvLove() {
         print("fcDidClickVcvLike ")
     }
-    func sfcDidClickVcvShare() {
+    func sfcDidClickVcvShare(id: String, dataType: String) {
         print("fcDidClickVcvShare ")
     }
 
@@ -1018,7 +1018,7 @@ extension ViewController: MePostPanelDelegate{
     func didMePostClickPost(id: String, dataType: String){
         //test > real id for fetching data
 //        openPostDetailPanel(id: id)
-        openPostDetailPanel(id: id, dataType: dataType)
+        openPostDetailPanel(id: id, dataType: dataType, scrollToComment: false)
     }
     func didMePostClickClose() {
         backPage(isCurrentPageScrollable: false)

@@ -969,7 +969,7 @@ extension MeLocationListPanelView: ScrollFeedCellDelegate {
     func sfcDidClickVcvLove() {
         print("fcDidClickVcvLike ")
     }
-    func sfcDidClickVcvShare() {
+    func sfcDidClickVcvShare(id: String, dataType: String) {
         print("fcDidClickVcvShare ")
     }
 

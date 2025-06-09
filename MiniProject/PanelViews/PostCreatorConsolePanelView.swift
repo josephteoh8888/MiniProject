@@ -31,6 +31,46 @@ class PostClip {
     var tBoxHeightCons: NSLayoutConstraint?
     var tvBoxHint : UIView?
     var tBoxType = ""
+    var tBoxContentData : ContentData?
+    var tvBoxDeleteBtn : UIView?
+}
+
+protocol PostClipTextViewDeleteDelegate : AnyObject {
+    func didClickDeleteTextView(pcBtn: PostClipTextViewDeleteBtn)
+}
+class PostClipTextViewDeleteBtn : UIView{
+    weak var delegate : PostClipTextViewDeleteDelegate?
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        setupViews()
+
+    }
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        
+        setupViews()
+    }
+    
+    func setupViews(){
+        self.isUserInteractionEnabled = true
+        self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onTvDeleteClicked)))
+        
+        let minusIcon = UIImageView(image: UIImage(named:"icon_round_delete")?.withRenderingMode(.alwaysTemplate))
+        minusIcon.tintColor = .ddmDarkGrayColor
+        self.addSubview(minusIcon)
+        minusIcon.translatesAutoresizingMaskIntoConstraints = false
+        minusIcon.centerXAnchor.constraint(equalTo: self.centerXAnchor, constant: 0).isActive = true
+        minusIcon.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: 0).isActive = true
+        minusIcon.heightAnchor.constraint(equalToConstant: 20).isActive = true //26
+        minusIcon.widthAnchor.constraint(equalToConstant: 20).isActive = true
+    }
+    
+    @objc func onTvDeleteClicked(gesture: UITapGestureRecognizer) {
+        delegate?.didClickDeleteTextView(pcBtn: self)
+        print("tvdelete clicked")
+    }
 }
 
 class PostCreatorConsolePanelView: CreatorPanelView{
@@ -108,6 +148,18 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     
     let textEditPanelHeight = 60.0
     let bottomToolPanelHeight = 90.0
+    let topPanelHeight = 50.0
+    
+    let titleTv = UITextView()
+    let hintTitleText = UILabel()
+    let addTitleBtn = UIView()
+    let addTitleText = UILabel()
+    let aStickyTitleText = UILabel()
+    let tView = UIView()
+    var titleHeightCons: NSLayoutConstraint?
+    
+    //test page transition => track user journey in creating post
+    var pageList = [PanelView]()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -165,42 +217,66 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         bMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
         
         //test > post upload btn
-//        let aUpload = UIView()
-        aUpload.backgroundColor = .yellow
-        panel.addSubview(aUpload)
-//        stack2.addSubview(aUpload)
-        aUpload.translatesAutoresizingMaskIntoConstraints = false
-        aUpload.heightAnchor.constraint(equalToConstant: 30).isActive = true //30
-        aUpload.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -10).isActive = true
-//        aUpload.topAnchor.constraint(equalTo: panel.topAnchor, constant: 50).isActive = true
-//        aUpload.leadingAnchor.constraint(equalTo: stack2.leadingAnchor, constant: 10).isActive = true
-//        aUpload.trailingAnchor.constraint(equalTo: stack2.trailingAnchor, constant: 0).isActive = true
-        aUpload.centerYAnchor.constraint(equalTo: aBtn.centerYAnchor).isActive = true
-        aUpload.layer.cornerRadius = 10
-        aUpload.isUserInteractionEnabled = true
-        aUpload.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPostUploadNextClicked)))
-
-        let aUploadText = UILabel()
-        aUploadText.textAlignment = .center
-        aUploadText.textColor = .black
-        aUploadText.font = .boldSystemFont(ofSize: 13)
-        panel.addSubview(aUploadText)
+////        let aUpload = UIView()
+//        aUpload.backgroundColor = .yellow
+//        panel.addSubview(aUpload)
+////        stack2.addSubview(aUpload)
+//        aUpload.translatesAutoresizingMaskIntoConstraints = false
+//        aUpload.heightAnchor.constraint(equalToConstant: 30).isActive = true //30
+//        aUpload.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -10).isActive = true
+////        aUpload.topAnchor.constraint(equalTo: panel.topAnchor, constant: 50).isActive = true
+////        aUpload.leadingAnchor.constraint(equalTo: stack2.leadingAnchor, constant: 10).isActive = true
+////        aUpload.trailingAnchor.constraint(equalTo: stack2.trailingAnchor, constant: 0).isActive = true
+//        aUpload.centerYAnchor.constraint(equalTo: aBtn.centerYAnchor).isActive = true
+//        aUpload.layer.cornerRadius = 10
+//        aUpload.isUserInteractionEnabled = true
+//        aUpload.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPostUploadNextClicked)))
+//        aUpload.isHidden = true
+//
+//        let aUploadText = UILabel()
+//        aUploadText.textAlignment = .center
+//        aUploadText.textColor = .black
+//        aUploadText.font = .boldSystemFont(ofSize: 13)
 //        aUpload.addSubview(aUploadText)
-        aUploadText.translatesAutoresizingMaskIntoConstraints = false
-//        aUploadText.centerXAnchor.constraint(equalTo: aUpload.centerXAnchor).isActive = true
-        aUploadText.centerYAnchor.constraint(equalTo: aUpload.centerYAnchor).isActive = true
-        aUploadText.leadingAnchor.constraint(equalTo: aUpload.leadingAnchor, constant: 25).isActive = true
-        aUploadText.trailingAnchor.constraint(equalTo: aUpload.trailingAnchor, constant: -25).isActive = true
-        aUploadText.text = "Post"
+////        aUpload.addSubview(aUploadText)
+//        aUploadText.translatesAutoresizingMaskIntoConstraints = false
+////        aUploadText.centerXAnchor.constraint(equalTo: aUpload.centerXAnchor).isActive = true
+//        aUploadText.centerYAnchor.constraint(equalTo: aUpload.centerYAnchor).isActive = true
+//        aUploadText.leadingAnchor.constraint(equalTo: aUpload.leadingAnchor, constant: 25).isActive = true
+//        aUploadText.trailingAnchor.constraint(equalTo: aUpload.trailingAnchor, constant: -25).isActive = true
+//        aUploadText.text = "Post"
+//        
+//        panel.addSubview(aSpinner)
+//        aSpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
+//        aSpinner.translatesAutoresizingMaskIntoConstraints = false
+//        aSpinner.centerYAnchor.constraint(equalTo: aUpload.centerYAnchor).isActive = true
+//        aSpinner.centerXAnchor.constraint(equalTo: aUpload.centerXAnchor).isActive = true
+//        aSpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
+//        aSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
+//        aSpinner.isUserInteractionEnabled = false
         
-        panel.addSubview(aSpinner)
-        aSpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
-        aSpinner.translatesAutoresizingMaskIntoConstraints = false
-        aSpinner.centerYAnchor.constraint(equalTo: aUpload.centerYAnchor).isActive = true
-        aSpinner.centerXAnchor.constraint(equalTo: aUpload.centerXAnchor).isActive = true
-        aSpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        aSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        aSpinner.isUserInteractionEnabled = false
+        let aNext = UIView()
+        aNext.backgroundColor = .yellow
+        panel.addSubview(aNext)
+        aNext.translatesAutoresizingMaskIntoConstraints = false
+//        aNext.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -20).isActive = true
+        aNext.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        aNext.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        aNext.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -10).isActive = true
+        aNext.centerYAnchor.constraint(equalTo: aBtn.centerYAnchor).isActive = true
+        aNext.layer.cornerRadius = 15
+        aNext.isUserInteractionEnabled = true
+//        aNext.isHidden = true
+        aNext.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPostUploadNextClicked)))
+        
+        let aNextMiniBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right_next")?.withRenderingMode(.alwaysTemplate))
+        aNextMiniBtn.tintColor = .black
+        aNext.addSubview(aNextMiniBtn)
+        aNextMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        aNextMiniBtn.centerXAnchor.constraint(equalTo: aNext.centerXAnchor).isActive = true
+        aNextMiniBtn.centerYAnchor.constraint(equalTo: aNext.centerYAnchor).isActive = true
+        aNextMiniBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        aNextMiniBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
         
         //test > add title
         let aCreateTitleText = UILabel()
@@ -221,98 +297,111 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         panel.addSubview(stickyHLight)
         stickyHLight.translatesAutoresizingMaskIntoConstraints = false
         stickyHLight.leadingAnchor.constraint(equalTo: aBtn.trailingAnchor, constant: 10).isActive = true //20
-        stickyHLight.trailingAnchor.constraint(equalTo: aUpload.leadingAnchor, constant: -10).isActive = true //20
+        stickyHLight.trailingAnchor.constraint(equalTo: aNext.leadingAnchor, constant: -10).isActive = true //20
 //        stickyHLight.trailingAnchor.constraint(equalTo: aStickyHeader.trailingAnchor, constant: -30).isActive = true //20
         stickyHLight.heightAnchor.constraint(equalToConstant: 40).isActive = true //30
         cNameTextCenterYCons = stickyHLight.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 50)
         cNameTextCenterYCons?.isActive = true
-
-        let aStickyPhotoOuter = UIView()
-        aStickyPhotoOuter.backgroundColor = .white
-        stickyHLight.addSubview(aStickyPhotoOuter)
-        aStickyPhotoOuter.translatesAutoresizingMaskIntoConstraints = false
-        aStickyPhotoOuter.leadingAnchor.constraint(equalTo: stickyHLight.leadingAnchor, constant: 0).isActive = true
-        aStickyPhotoOuter.centerYAnchor.constraint(equalTo: stickyHLight.centerYAnchor, constant: 0).isActive = true
-        aStickyPhotoOuter.heightAnchor.constraint(equalToConstant: 28).isActive = true //ori 38
-        aStickyPhotoOuter.widthAnchor.constraint(equalToConstant: 28).isActive = true
-        aStickyPhotoOuter.layer.cornerRadius = 14 //19
-
-//        let aStickyPhoto = SDAnimatedImageView()
-        aStickyPhotoOuter.addSubview(aStickyPhoto)
-        aStickyPhoto.translatesAutoresizingMaskIntoConstraints = false
-        aStickyPhoto.centerXAnchor.constraint(equalTo: aStickyPhotoOuter.centerXAnchor).isActive = true
-        aStickyPhoto.centerYAnchor.constraint(equalTo: aStickyPhotoOuter.centerYAnchor).isActive = true
-        aStickyPhoto.heightAnchor.constraint(equalToConstant: 28).isActive = true //30
-        aStickyPhoto.widthAnchor.constraint(equalToConstant: 28).isActive = true
-//        let stickyImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-        aStickyPhoto.contentMode = .scaleAspectFill
-        aStickyPhoto.layer.masksToBounds = true
-        aStickyPhoto.layer.cornerRadius = 14
-//        aStickyPhoto.sd_setImage(with: stickyImageUrl)
-        aStickyPhoto.backgroundColor = .ddmDarkColor
         
-        let abcBox = UIView()
-//        abBox.backgroundColor = .ddmBlackDark
-//        stackView.addSubview(abBox)
-        stickyHLight.addSubview(abcBox)
-        abcBox.clipsToBounds = true
-        abcBox.translatesAutoresizingMaskIntoConstraints = false
-        abcBox.leadingAnchor.constraint(equalTo: aStickyPhotoOuter.trailingAnchor, constant: 10).isActive = true
-        abcBox.heightAnchor.constraint(equalToConstant: 30).isActive = true //default: 50
-        abcBox.centerYAnchor.constraint(equalTo: aStickyPhotoOuter.centerYAnchor, constant: 0).isActive = true //20
-        abcBox.layer.cornerRadius = 5
-//        abBox.layer.opacity = 0.2 //0.3
-        abcBox.isUserInteractionEnabled = true
-//        abBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPlaceClicked)))
-//        abBox.isHidden = true
-        
-        let bcPublicBox = UIView()
-        bcPublicBox.backgroundColor = .clear //yellow
-        abcBox.addSubview(bcPublicBox)
-        bcPublicBox.clipsToBounds = true
-        bcPublicBox.translatesAutoresizingMaskIntoConstraints = false
-        bcPublicBox.widthAnchor.constraint(equalToConstant: 16).isActive = true //ori: 40
-        bcPublicBox.heightAnchor.constraint(equalToConstant: 16).isActive = true
-        bcPublicBox.centerYAnchor.constraint(equalTo: abcBox.centerYAnchor).isActive = true
-//        bcPublicBox.bottomAnchor.constraint(equalTo: abcBox.bottomAnchor).isActive = true
-        bcPublicBox.leadingAnchor.constraint(equalTo: abcBox.leadingAnchor, constant: 5).isActive = true //10
-        bcPublicBox.layer.cornerRadius = 5 //6
+//        let aStickyTitleText = UILabel()
+        aStickyTitleText.textAlignment = .center
+        aStickyTitleText.textColor = .white
+//        aStickyTitleText.textColor = .ddmBlackOverlayColor
+        aStickyTitleText.font = .boldSystemFont(ofSize: 14) //16
+        stickyHLight.addSubview(aStickyTitleText)
+        aStickyTitleText.translatesAutoresizingMaskIntoConstraints = false
+        aStickyTitleText.centerYAnchor.constraint(equalTo: stickyHLight.centerYAnchor, constant: 0).isActive = true
+        aStickyTitleText.leadingAnchor.constraint(equalTo: stickyHLight.leadingAnchor, constant: 20).isActive = true
+        aStickyTitleText.trailingAnchor.constraint(equalTo: stickyHLight.trailingAnchor, constant: -20).isActive = true
+//        aStickyTitleText.text = "New Title"
+//        aStickyTitleText.isHidden = false
 
-        let bcGridIcon = UIImageView(image: UIImage(named:"icon_round_lock_open")?.withRenderingMode(.alwaysTemplate))
-        bcGridIcon.tintColor = .white
-//        panel.addSubview(bGridIcon)
-        bcPublicBox.addSubview(bcGridIcon)
-        bcGridIcon.translatesAutoresizingMaskIntoConstraints = false
-        bcGridIcon.centerXAnchor.constraint(equalTo: bcPublicBox.centerXAnchor).isActive = true
-        bcGridIcon.centerYAnchor.constraint(equalTo: bcPublicBox.centerYAnchor).isActive = true
-        bcGridIcon.heightAnchor.constraint(equalToConstant: 16).isActive = true
-        bcGridIcon.widthAnchor.constraint(equalToConstant: 16).isActive = true
-
-        let acPublicText = UILabel()
-        acPublicText.textAlignment = .left
-        acPublicText.textColor = .white
-        acPublicText.font = .boldSystemFont(ofSize: 12)
-//        aPublicText.font = .systemFont(ofSize: 12)
-//        contentView.addSubview(aGridNameText)
-        abcBox.addSubview(acPublicText)
-        acPublicText.translatesAutoresizingMaskIntoConstraints = false
-//        aPublicText.bottomAnchor.constraint(equalTo: aUserPhoto.bottomAnchor).isActive = true
-        acPublicText.centerYAnchor.constraint(equalTo: bcPublicBox.centerYAnchor).isActive = true
-//        aPublicText.topAnchor.constraint(equalTo: pMini.topAnchor).isActive = true
-//        aPublicText.trailingAnchor.constraint(equalTo: uView.trailingAnchor, constant: -20).isActive = true
-        acPublicText.leadingAnchor.constraint(equalTo: bcPublicBox.trailingAnchor, constant: 5).isActive = true
-        acPublicText.text = "Public"
-        
-        let bcArrowBtn = UIImageView()
-        bcArrowBtn.image = UIImage(named:"icon_round_arrow_down")?.withRenderingMode(.alwaysTemplate)
-        bcArrowBtn.tintColor = .white
-        abcBox.addSubview(bcArrowBtn)
-        bcArrowBtn.translatesAutoresizingMaskIntoConstraints = false
-        bcArrowBtn.leadingAnchor.constraint(equalTo: acPublicText.trailingAnchor).isActive = true
-        bcArrowBtn.centerYAnchor.constraint(equalTo: acPublicText.centerYAnchor).isActive = true
-        bcArrowBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true //ori 26
-        bcArrowBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        bcArrowBtn.trailingAnchor.constraint(equalTo: abcBox.trailingAnchor, constant: 0).isActive = true //-10
+//        let aStickyPhotoOuter = UIView()
+//        aStickyPhotoOuter.backgroundColor = .white
+//        stickyHLight.addSubview(aStickyPhotoOuter)
+//        aStickyPhotoOuter.translatesAutoresizingMaskIntoConstraints = false
+//        aStickyPhotoOuter.leadingAnchor.constraint(equalTo: stickyHLight.leadingAnchor, constant: 0).isActive = true
+//        aStickyPhotoOuter.centerYAnchor.constraint(equalTo: stickyHLight.centerYAnchor, constant: 0).isActive = true
+//        aStickyPhotoOuter.heightAnchor.constraint(equalToConstant: 28).isActive = true //ori 38
+//        aStickyPhotoOuter.widthAnchor.constraint(equalToConstant: 28).isActive = true
+//        aStickyPhotoOuter.layer.cornerRadius = 14 //19
+//        aStickyPhotoOuter.isHidden = true
+//
+////        let aStickyPhoto = SDAnimatedImageView()
+//        aStickyPhotoOuter.addSubview(aStickyPhoto)
+//        aStickyPhoto.translatesAutoresizingMaskIntoConstraints = false
+//        aStickyPhoto.centerXAnchor.constraint(equalTo: aStickyPhotoOuter.centerXAnchor).isActive = true
+//        aStickyPhoto.centerYAnchor.constraint(equalTo: aStickyPhotoOuter.centerYAnchor).isActive = true
+//        aStickyPhoto.heightAnchor.constraint(equalToConstant: 28).isActive = true //30
+//        aStickyPhoto.widthAnchor.constraint(equalToConstant: 28).isActive = true
+////        let stickyImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//        aStickyPhoto.contentMode = .scaleAspectFill
+//        aStickyPhoto.layer.masksToBounds = true
+//        aStickyPhoto.layer.cornerRadius = 14
+////        aStickyPhoto.sd_setImage(with: stickyImageUrl)
+//        aStickyPhoto.backgroundColor = .ddmDarkColor
+//        
+//        let abcBox = UIView()
+////        abBox.backgroundColor = .ddmBlackDark
+////        stackView.addSubview(abBox)
+//        stickyHLight.addSubview(abcBox)
+//        abcBox.clipsToBounds = true
+//        abcBox.translatesAutoresizingMaskIntoConstraints = false
+//        abcBox.leadingAnchor.constraint(equalTo: aStickyPhotoOuter.trailingAnchor, constant: 10).isActive = true
+//        abcBox.heightAnchor.constraint(equalToConstant: 30).isActive = true //default: 50
+//        abcBox.centerYAnchor.constraint(equalTo: aStickyPhotoOuter.centerYAnchor, constant: 0).isActive = true //20
+//        abcBox.layer.cornerRadius = 5
+////        abBox.layer.opacity = 0.2 //0.3
+//        abcBox.isUserInteractionEnabled = true
+//        abcBox.isHidden = true
+//
+//        let bcPublicBox = UIView()
+//        bcPublicBox.backgroundColor = .clear //yellow
+//        abcBox.addSubview(bcPublicBox)
+//        bcPublicBox.clipsToBounds = true
+//        bcPublicBox.translatesAutoresizingMaskIntoConstraints = false
+//        bcPublicBox.widthAnchor.constraint(equalToConstant: 16).isActive = true //ori: 40
+//        bcPublicBox.heightAnchor.constraint(equalToConstant: 16).isActive = true
+//        bcPublicBox.centerYAnchor.constraint(equalTo: abcBox.centerYAnchor).isActive = true
+////        bcPublicBox.bottomAnchor.constraint(equalTo: abcBox.bottomAnchor).isActive = true
+//        bcPublicBox.leadingAnchor.constraint(equalTo: abcBox.leadingAnchor, constant: 5).isActive = true //10
+//        bcPublicBox.layer.cornerRadius = 5 //6
+//
+//        let bcGridIcon = UIImageView(image: UIImage(named:"icon_round_lock_open")?.withRenderingMode(.alwaysTemplate))
+//        bcGridIcon.tintColor = .white
+////        panel.addSubview(bGridIcon)
+//        bcPublicBox.addSubview(bcGridIcon)
+//        bcGridIcon.translatesAutoresizingMaskIntoConstraints = false
+//        bcGridIcon.centerXAnchor.constraint(equalTo: bcPublicBox.centerXAnchor).isActive = true
+//        bcGridIcon.centerYAnchor.constraint(equalTo: bcPublicBox.centerYAnchor).isActive = true
+//        bcGridIcon.heightAnchor.constraint(equalToConstant: 16).isActive = true
+//        bcGridIcon.widthAnchor.constraint(equalToConstant: 16).isActive = true
+//
+//        let acPublicText = UILabel()
+//        acPublicText.textAlignment = .left
+//        acPublicText.textColor = .white
+//        acPublicText.font = .boldSystemFont(ofSize: 12)
+////        aPublicText.font = .systemFont(ofSize: 12)
+////        contentView.addSubview(aGridNameText)
+//        abcBox.addSubview(acPublicText)
+//        acPublicText.translatesAutoresizingMaskIntoConstraints = false
+////        aPublicText.bottomAnchor.constraint(equalTo: aUserPhoto.bottomAnchor).isActive = true
+//        acPublicText.centerYAnchor.constraint(equalTo: bcPublicBox.centerYAnchor).isActive = true
+////        aPublicText.topAnchor.constraint(equalTo: pMini.topAnchor).isActive = true
+////        aPublicText.trailingAnchor.constraint(equalTo: uView.trailingAnchor, constant: -20).isActive = true
+//        acPublicText.leadingAnchor.constraint(equalTo: bcPublicBox.trailingAnchor, constant: 5).isActive = true
+//        acPublicText.text = "Public"
+//        
+//        let bcArrowBtn = UIImageView()
+//        bcArrowBtn.image = UIImage(named:"icon_round_arrow_down")?.withRenderingMode(.alwaysTemplate)
+//        bcArrowBtn.tintColor = .white
+//        abcBox.addSubview(bcArrowBtn)
+//        bcArrowBtn.translatesAutoresizingMaskIntoConstraints = false
+//        bcArrowBtn.leadingAnchor.constraint(equalTo: acPublicText.trailingAnchor).isActive = true
+//        bcArrowBtn.centerYAnchor.constraint(equalTo: acPublicText.centerYAnchor).isActive = true
+//        bcArrowBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true //ori 26
+//        bcArrowBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
+//        bcArrowBtn.trailingAnchor.constraint(equalTo: abcBox.trailingAnchor, constant: 0).isActive = true //-10
         
         //test > add a scrollview
 //        let scrollView = UIScrollView()
@@ -321,7 +410,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
 //        scrollView.backgroundColor = .clear //default
         scrollView.backgroundColor = .ddmBlackOverlayColor
         scrollView.translatesAutoresizingMaskIntoConstraints = false
-        let topMargin = 50.0 + topInset
+        let topMargin = topPanelHeight + topInset
         scrollView.topAnchor.constraint(equalTo: panel.topAnchor, constant: topMargin).isActive = true
 //        scrollView.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 50).isActive = true
         scrollView.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true
@@ -329,12 +418,10 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         scrollViewBottomCons = scrollView.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: -bottomMargin)
 //        scrollViewBottomCons = scrollView.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: -120)
         scrollViewBottomCons?.isActive = true
-//        scrollView.showsVerticalScrollIndicator = false
-//        scrollView.contentSize = CGSize(width: viewWidth, height: viewHeight - 150)
+        scrollView.showsVerticalScrollIndicator = false
         scrollView.delegate = self
         scrollView.alwaysBounceVertical = true
         
-//        let stackView = UIView()
 //        stackView.backgroundColor = .blue
         stackView.backgroundColor = .clear
         scrollView.addSubview(stackView)
@@ -344,280 +431,109 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         
         stackView.addSubview(uView)
         uView.backgroundColor = .clear
+//        uView.backgroundColor = .red
         uView.translatesAutoresizingMaskIntoConstraints = false
         uView.topAnchor.constraint(equalTo: stackView.topAnchor).isActive = true
         uView.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true
         //test
-//        uView.bottomAnchor.constraint(equalTo: stackView.bottomAnchor, constant: -100).isActive = true //0
+        uView.bottomAnchor.constraint(equalTo: stackView.bottomAnchor, constant: -10).isActive = true //0
+        uView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 0).isActive = true //0
         
         //test > composing post
-//        let pMini = UIView()
-//        eMini.backgroundColor = .ddmBlackOverlayColor
-//        pMini.backgroundColor = .white
-//        panel.addSubview(pMini)
-        uView.addSubview(pMini)
-        pMini.translatesAutoresizingMaskIntoConstraints = false
-        pMini.topAnchor.constraint(equalTo: uView.topAnchor, constant: 20).isActive = true
-        pMini.leadingAnchor.constraint(equalTo: uView.leadingAnchor, constant: 20).isActive = true
-//        pMini.bottomAnchor.constraint(equalTo: uView.bottomAnchor, constant: 0).isActive = true
-        pMiniBottomCons = pMini.bottomAnchor.constraint(equalTo: uView.bottomAnchor, constant: 0)
+//        let tView = UIView()
+        uView.addSubview(tView)
+        tView.translatesAutoresizingMaskIntoConstraints = false
+        tView.topAnchor.constraint(equalTo: uView.topAnchor, constant: 0).isActive = true
+        tView.leadingAnchor.constraint(equalTo: uView.leadingAnchor, constant: 0).isActive = true
+        tView.trailingAnchor.constraint(equalTo: uView.trailingAnchor, constant: 0).isActive = true
+        pMiniBottomCons = tView.bottomAnchor.constraint(equalTo: uView.bottomAnchor, constant: 0)
         pMiniBottomCons?.isActive = true
-        pMini.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        pMini.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        pMini.layer.cornerRadius = 20
-//        pMini.layer.opacity = 1.0 //default 0.3
-
-//        let pImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
-//        let pImage = SDAnimatedImageView()
-        pImage.contentMode = .scaleAspectFill
-        pImage.layer.masksToBounds = true
-//        pImage.sd_setImage(with: pImageUrl)
-        uView.addSubview(pImage)
-        pImage.translatesAutoresizingMaskIntoConstraints = false
-        pImage.centerXAnchor.constraint(equalTo: pMini.centerXAnchor).isActive = true
-        pImage.centerYAnchor.constraint(equalTo: pMini.centerYAnchor).isActive = true
-        pImage.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        pImage.widthAnchor.constraint(equalToConstant: 40).isActive = true //36
-        pImage.layer.cornerRadius = 20
-        pImage.backgroundColor = .ddmDarkColor
-        pImage.isHidden = true
-//        pImage.isUserInteractionEnabled = true
-//        pImage.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onUserClicked)))
+//        tView.backgroundColor = .green
         
-////        let aGridNameText = UILabel()
-//        pNameText.textAlignment = .left
-//        pNameText.textColor = .white
-////        pNameText.font = .boldSystemFont(ofSize: 14)
-//        pNameText.font = .systemFont(ofSize: 14)
-////        contentView.addSubview(aGridNameText)
-//        uView.addSubview(pNameText)
-//        pNameText.translatesAutoresizingMaskIntoConstraints = false
-////        aGridNameText.bottomAnchor.constraint(equalTo: aUserPhoto.bottomAnchor).isActive = true
-//        pNameText.centerYAnchor.constraint(equalTo: pMini.centerYAnchor).isActive = true
-////        pNameText.topAnchor.constraint(equalTo: pMini.topAnchor).isActive = true
-//        pNameText.leadingAnchor.constraint(equalTo: pMini.trailingAnchor, constant: 10).isActive = true
-////        aGridNameText.text = "Mic1809"
-////        pNameText.text = "Michael Kins"
-//        pNameText.text = "-"
+//        let titleTv = UITextView()
+        titleTv.textAlignment = .left
+        titleTv.textColor = .white
+        titleTv.backgroundColor = .clear //clear
+        titleTv.font = .boldSystemFont(ofSize: 14) //13
+        tView.addSubview(titleTv)
+        titleTv.translatesAutoresizingMaskIntoConstraints = false
+        titleTv.topAnchor.constraint(equalTo: tView.topAnchor, constant: 20).isActive = true
+        titleTv.leadingAnchor.constraint(equalTo: tView.leadingAnchor, constant: 20).isActive = true
+        titleTv.trailingAnchor.constraint(equalTo: tView.trailingAnchor, constant: -20).isActive = true
+        titleTv.bottomAnchor.constraint(equalTo: tView.bottomAnchor, constant: -20).isActive = true
+//        titleTv.heightAnchor.constraint(equalToConstant: 17).isActive = true //40
+//        pMiniBottomCons = titleTv.bottomAnchor.constraint(equalTo: uView.bottomAnchor, constant: 0)
+//        pMiniBottomCons?.isActive = true
+        titleHeightCons = titleTv.heightAnchor.constraint(equalToConstant: 17) //36
+        titleHeightCons?.isActive = true
+        titleTv.text = ""
+//        titleTv.text = textToAdd
+        titleTv.tintColor = .yellow
+        titleTv.delegate = self
+        titleTv.textContainerInset = UIEdgeInsets.zero
+//        titleTv.isHidden = true
         
-//        let abBox = UIView()
-//        abBox.backgroundColor = .ddmBlackDark
-//        stackView.addSubview(abBox)
-        uView.addSubview(abBox)
-        abBox.clipsToBounds = true
-        abBox.translatesAutoresizingMaskIntoConstraints = false
-        abBox.leadingAnchor.constraint(equalTo: pMini.trailingAnchor, constant: 10).isActive = true
-        abBox.heightAnchor.constraint(equalToConstant: 30).isActive = true //default: 50
-        abBox.centerYAnchor.constraint(equalTo: pMini.centerYAnchor, constant: 0).isActive = true //20
-        abBox.layer.cornerRadius = 5
-//        abBox.layer.opacity = 0.2 //0.3
-        abBox.isUserInteractionEnabled = true
-//        abBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPlaceClicked)))
-        abBox.isHidden = true
+//        let hintTitleText = UILabel()
+        hintTitleText.textAlignment = .left
+//            hintTitleText.textColor = .white
+        hintTitleText.textColor = .ddmDarkGrayColor
+        hintTitleText.font = .boldSystemFont(ofSize: 14)
+        tView.addSubview(hintTitleText)
+        hintTitleText.translatesAutoresizingMaskIntoConstraints = false
+        hintTitleText.leadingAnchor.constraint(equalTo: titleTv.leadingAnchor, constant: 10).isActive = true
+        hintTitleText.trailingAnchor.constraint(equalTo: tView.trailingAnchor, constant: -20).isActive = true
+        hintTitleText.topAnchor.constraint(equalTo: titleTv.topAnchor, constant: 0).isActive = true //8
+        hintTitleText.text = "Title"
+        hintTitleText.isHidden = true
         
-        let bPublicBox = UIView()
-        bPublicBox.backgroundColor = .clear //yellow
-        abBox.addSubview(bPublicBox)
-        bPublicBox.clipsToBounds = true
-        bPublicBox.translatesAutoresizingMaskIntoConstraints = false
-        bPublicBox.widthAnchor.constraint(equalToConstant: 16).isActive = true //ori: 40
-        bPublicBox.heightAnchor.constraint(equalToConstant: 16).isActive = true
-//        bPublicBox.centerYAnchor.constraint(equalTo: abBox.centerYAnchor).isActive = true
-        bPublicBox.bottomAnchor.constraint(equalTo: abBox.bottomAnchor).isActive = true
-        bPublicBox.leadingAnchor.constraint(equalTo: abBox.leadingAnchor, constant: 5).isActive = true //10
-        bPublicBox.layer.cornerRadius = 5 //6
-
-        let bGridIcon = UIImageView(image: UIImage(named:"icon_round_lock_open")?.withRenderingMode(.alwaysTemplate))
-        bGridIcon.tintColor = .white
-//        panel.addSubview(bGridIcon)
-        bPublicBox.addSubview(bGridIcon)
-        bGridIcon.translatesAutoresizingMaskIntoConstraints = false
-        bGridIcon.centerXAnchor.constraint(equalTo: bPublicBox.centerXAnchor).isActive = true
-        bGridIcon.centerYAnchor.constraint(equalTo: bPublicBox.centerYAnchor).isActive = true
-        bGridIcon.heightAnchor.constraint(equalToConstant: 16).isActive = true
-        bGridIcon.widthAnchor.constraint(equalToConstant: 16).isActive = true
-
-        let aPublicText = UILabel()
-        aPublicText.textAlignment = .left
-        aPublicText.textColor = .white
-        aPublicText.font = .boldSystemFont(ofSize: 12)
-//        aPublicText.font = .systemFont(ofSize: 12)
-//        contentView.addSubview(aGridNameText)
-        abBox.addSubview(aPublicText)
-        aPublicText.translatesAutoresizingMaskIntoConstraints = false
-//        aPublicText.bottomAnchor.constraint(equalTo: aUserPhoto.bottomAnchor).isActive = true
-        aPublicText.centerYAnchor.constraint(equalTo: bPublicBox.centerYAnchor).isActive = true
-//        aPublicText.topAnchor.constraint(equalTo: pMini.topAnchor).isActive = true
-//        aPublicText.trailingAnchor.constraint(equalTo: uView.trailingAnchor, constant: -20).isActive = true
-        aPublicText.leadingAnchor.constraint(equalTo: bPublicBox.trailingAnchor, constant: 5).isActive = true
-        aPublicText.text = "Public"
+        //test > add title btn
+//        let addTitleBtn = UIView()
+        tView.addSubview(addTitleBtn)
+//        addTitleBtn.backgroundColor = .ddmDarkColor
+        addTitleBtn.backgroundColor = .ddmBlackDark
+        addTitleBtn.translatesAutoresizingMaskIntoConstraints = false
+        addTitleBtn.heightAnchor.constraint(equalToConstant: 30).isActive = true //40
+        addTitleBtn.widthAnchor.constraint(equalToConstant: 30).isActive = true
+//        addTitleBtn.topAnchor.constraint(equalTo: tView.topAnchor, constant: 20).isActive = true
+        addTitleBtn.centerYAnchor.constraint(equalTo: titleTv.centerYAnchor, constant: 0).isActive = true //8
+        addTitleBtn.leadingAnchor.constraint(equalTo: tView.leadingAnchor, constant: 20).isActive = true
+        addTitleBtn.layer.cornerRadius = 15 //20
+        addTitleBtn.isUserInteractionEnabled = false
+//        addTitleBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onAddTitleClicked)))
+        addTitleBtn.isHidden = true
         
-        let bArrowBtn = UIImageView()
-        bArrowBtn.image = UIImage(named:"icon_round_arrow_down")?.withRenderingMode(.alwaysTemplate)
-        bArrowBtn.tintColor = .white
-        abBox.addSubview(bArrowBtn)
-        bArrowBtn.translatesAutoresizingMaskIntoConstraints = false
-        bArrowBtn.leadingAnchor.constraint(equalTo: aPublicText.trailingAnchor).isActive = true
-        bArrowBtn.centerYAnchor.constraint(equalTo: aPublicText.centerYAnchor).isActive = true
-        bArrowBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true //ori 26
-        bArrowBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        bArrowBtn.trailingAnchor.constraint(equalTo: abBox.trailingAnchor, constant: 0).isActive = true //-10
+//        let mainZGridIcon = UIImageView(image: UIImage(named:"icon_round_code")?.withRenderingMode(.alwaysTemplate))
+        let addTitleIcon = UIImageView(image: UIImage(named:"icon_round_add")?.withRenderingMode(.alwaysTemplate))
+        addTitleIcon.tintColor = .ddmDarkGrayColor
+//        uView.addSubview(xGridIcon)
+        addTitleBtn.addSubview(addTitleIcon)
+        addTitleIcon.translatesAutoresizingMaskIntoConstraints = false
+        addTitleIcon.centerXAnchor.constraint(equalTo: addTitleBtn.centerXAnchor, constant: 0).isActive = true
+        addTitleIcon.centerYAnchor.constraint(equalTo: addTitleBtn.centerYAnchor, constant: 0).isActive = true
+        addTitleIcon.heightAnchor.constraint(equalToConstant: 20).isActive = true //26
+        addTitleIcon.widthAnchor.constraint(equalToConstant: 20).isActive = true
         
-        //test 2 > design location 2
-//        let aBox = UIView()
-//        aBox.backgroundColor = .ddmBlackOverlayColor
-        aBox.backgroundColor = .ddmBlackDark
-        stackView.addSubview(aBox)
-        aBox.clipsToBounds = true
-        aBox.translatesAutoresizingMaskIntoConstraints = false
-        aBox.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 20).isActive = true
-        aBox.heightAnchor.constraint(equalToConstant: 30).isActive = true //default: 50
-        aBox.topAnchor.constraint(equalTo: uView.bottomAnchor, constant: 40).isActive = true //20
-        aBox.layer.cornerRadius = 5
-//        aBox.layer.opacity = 0.2 //0.3
-        aBox.isUserInteractionEnabled = true
-        aBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onAGridClicked)))
-        aBox.bottomAnchor.constraint(equalTo: stackView.bottomAnchor, constant: -40).isActive = true //-20
-        aBox.isHidden = true
-        
-        let bBox = UIView()
-        bBox.backgroundColor = .clear //yellow
-        aBox.addSubview(bBox)
-        bBox.clipsToBounds = true
-        bBox.translatesAutoresizingMaskIntoConstraints = false
-        bBox.widthAnchor.constraint(equalToConstant: 16).isActive = true //ori: 40
-        bBox.heightAnchor.constraint(equalToConstant: 16).isActive = true
-        bBox.centerYAnchor.constraint(equalTo: aBox.centerYAnchor).isActive = true
-        bBox.leadingAnchor.constraint(equalTo: aBox.leadingAnchor, constant: 5).isActive = true //10
-        bBox.layer.cornerRadius = 5 //6
-
-        let gridViewBtn = UIImageView(image: UIImage(named:"icon_location")?.withRenderingMode(.alwaysTemplate))
-//        let gridViewBtn = UIImageView(image: UIImage(named:"icon_round_location")?.withRenderingMode(.alwaysTemplate))
-//        gridViewBtn.tintColor = .black
-        gridViewBtn.tintColor = .white
-        bBox.addSubview(gridViewBtn)
-        gridViewBtn.translatesAutoresizingMaskIntoConstraints = false
-        gridViewBtn.centerXAnchor.constraint(equalTo: bBox.centerXAnchor).isActive = true
-        gridViewBtn.centerYAnchor.constraint(equalTo: bBox.centerYAnchor).isActive = true
-        gridViewBtn.heightAnchor.constraint(equalToConstant: 16).isActive = true
-        gridViewBtn.widthAnchor.constraint(equalToConstant: 16).isActive = true
-//        gridViewBtn.layer.opacity = 0.5
-
-//        let aaText = UILabel()
-        aaText.textAlignment = .left
-        aaText.textColor = .white
-//        aaText.textColor = .ddmDarkColor
-        aaText.font = .boldSystemFont(ofSize: 12)
-//        aaText.font = .systemFont(ofSize: 12)
-        aBox.addSubview(aaText)
-        aaText.clipsToBounds = true
-        aaText.translatesAutoresizingMaskIntoConstraints = false
-        aaText.topAnchor.constraint(equalTo: aBox.topAnchor, constant: 5).isActive = true
-        aaText.bottomAnchor.constraint(equalTo: aBox.bottomAnchor, constant: -5).isActive = true
-        aaText.leadingAnchor.constraint(equalTo: bBox.trailingAnchor, constant: 5).isActive = true //10
-//        aaText.trailingAnchor.constraint(equalTo: aBox.trailingAnchor, constant: -10).isActive = true
-        aaText.text = "Add Location"
-//        aaText.layer.opacity = 0.5
-
-        let aArrowBtn = UIImageView()
-        aArrowBtn.image = UIImage(named:"icon_round_arrow_down")?.withRenderingMode(.alwaysTemplate)
-        aArrowBtn.tintColor = .white
-        aBox.addSubview(aArrowBtn)
-        aArrowBtn.translatesAutoresizingMaskIntoConstraints = false
-        aArrowBtn.leadingAnchor.constraint(equalTo: aaText.trailingAnchor).isActive = true
-        aArrowBtn.centerYAnchor.constraint(equalTo: bBox.centerYAnchor).isActive = true
-        aArrowBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true //ori 26
-        aArrowBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        aArrowBtn.trailingAnchor.constraint(equalTo: aBox.trailingAnchor, constant: 0).isActive = true //-10
-//        aArrowBtn.isHidden = true
-        
-        lMiniError.backgroundColor = .red
-        stackView.addSubview(lMiniError)
-        lMiniError.translatesAutoresizingMaskIntoConstraints = false
-        lMiniError.trailingAnchor.constraint(equalTo: aBox.trailingAnchor, constant: 5).isActive = true
-        lMiniError.centerYAnchor.constraint(equalTo: aBox.centerYAnchor, constant: 0).isActive = true
-//        lMiniError.topAnchor.constraint(equalTo: maxLimitErrorPanel.topAnchor, constant: 5).isActive = true
-//        lMiniError.bottomAnchor.constraint(equalTo: pText.topAnchor, constant: -5).isActive = true
-        lMiniError.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        lMiniError.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        lMiniError.layer.cornerRadius = 10
-        lMiniError.isHidden = true
-
-        let lMiniBtn = UIImageView(image: UIImage(named:"icon_round_priority")?.withRenderingMode(.alwaysTemplate))
-        lMiniBtn.tintColor = .white
-        lMiniError.addSubview(lMiniBtn)
-        lMiniBtn.translatesAutoresizingMaskIntoConstraints = false
-        lMiniBtn.centerXAnchor.constraint(equalTo: lMiniError.centerXAnchor).isActive = true
-        lMiniBtn.centerYAnchor.constraint(equalTo: lMiniError.centerYAnchor).isActive = true
-        lMiniBtn.heightAnchor.constraint(equalToConstant: 12).isActive = true
-        lMiniBtn.widthAnchor.constraint(equalToConstant: 12).isActive = true
-        
-//        pMiniError.backgroundColor = .red
-//        stackView.addSubview(pMiniError)
-//        pMiniError.translatesAutoresizingMaskIntoConstraints = false
-//        pMiniError.trailingAnchor.constraint(equalTo: uView.trailingAnchor, constant: -20).isActive = true
-//        pMiniError.topAnchor.constraint(equalTo: pMini.bottomAnchor, constant: 20).isActive = true
-////        pMiniError.topAnchor.constraint(equalTo: bTextView.bottomAnchor, constant: 5).isActive = true
-//        pMiniError.heightAnchor.constraint(equalToConstant: 20).isActive = true
-//        pMiniError.widthAnchor.constraint(equalToConstant: 20).isActive = true
-//        pMiniError.layer.cornerRadius = 10
-//        pMiniError.isHidden = true
-//
-//        let pMiniBtn = UIImageView(image: UIImage(named:"icon_round_priority")?.withRenderingMode(.alwaysTemplate))
-//        pMiniBtn.tintColor = .white
-//        pMiniError.addSubview(pMiniBtn)
-//        pMiniBtn.translatesAutoresizingMaskIntoConstraints = false
-//        pMiniBtn.centerXAnchor.constraint(equalTo: pMiniError.centerXAnchor).isActive = true
-//        pMiniBtn.centerYAnchor.constraint(equalTo: pMiniError.centerYAnchor).isActive = true
-//        pMiniBtn.heightAnchor.constraint(equalToConstant: 12).isActive = true
-//        pMiniBtn.widthAnchor.constraint(equalToConstant: 12).isActive = true
-        
-//        //test > post upload btn
-////        let aUpload = UIView()
-//        aUpload.backgroundColor = .yellow
-//        panel.addSubview(aUpload)
-////        stack2.addSubview(aUpload)
-//        aUpload.translatesAutoresizingMaskIntoConstraints = false
-//        aUpload.heightAnchor.constraint(equalToConstant: 30).isActive = true //30
-//        aUpload.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -10).isActive = true
-////        aUpload.topAnchor.constraint(equalTo: panel.topAnchor, constant: 50).isActive = true
-////        aUpload.leadingAnchor.constraint(equalTo: stack2.leadingAnchor, constant: 10).isActive = true
-////        aUpload.trailingAnchor.constraint(equalTo: stack2.trailingAnchor, constant: 0).isActive = true
-//        aUpload.centerYAnchor.constraint(equalTo: aBtn.centerYAnchor).isActive = true
-//        aUpload.layer.cornerRadius = 10
-//        aUpload.isUserInteractionEnabled = true
-//        aUpload.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPostUploadNextClicked)))
-//
-//        let aUploadText = UILabel()
-//        aUploadText.textAlignment = .center
-//        aUploadText.textColor = .black
-//        aUploadText.font = .boldSystemFont(ofSize: 13)
-//        panel.addSubview(aUploadText)
-////        aUpload.addSubview(aUploadText)
-//        aUploadText.translatesAutoresizingMaskIntoConstraints = false
-////        aUploadText.centerXAnchor.constraint(equalTo: aUpload.centerXAnchor).isActive = true
-//        aUploadText.centerYAnchor.constraint(equalTo: aUpload.centerYAnchor).isActive = true
-//        aUploadText.leadingAnchor.constraint(equalTo: aUpload.leadingAnchor, constant: 25).isActive = true
-//        aUploadText.trailingAnchor.constraint(equalTo: aUpload.trailingAnchor, constant: -25).isActive = true
-//        aUploadText.text = "Post"
-//        
-//        panel.addSubview(aSpinner)
-//        aSpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
-//        aSpinner.translatesAutoresizingMaskIntoConstraints = false
-//        aSpinner.centerYAnchor.constraint(equalTo: aUpload.centerYAnchor).isActive = true
-//        aSpinner.centerXAnchor.constraint(equalTo: aUpload.centerXAnchor).isActive = true
-//        aSpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
-//        aSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
-//        aSpinner.isUserInteractionEnabled = false
-        
+//        let addTitleText = UILabel()
+        addTitleText.textAlignment = .left
+//            hintTitleText.textColor = .white
+        addTitleText.textColor = .ddmDarkGrayColor
+        addTitleText.font = .boldSystemFont(ofSize: 14)
+        tView.addSubview(addTitleText)
+        addTitleText.translatesAutoresizingMaskIntoConstraints = false
+        addTitleText.leadingAnchor.constraint(equalTo: addTitleBtn.trailingAnchor, constant: 10).isActive = true
+        addTitleText.centerYAnchor.constraint(equalTo: addTitleBtn.centerYAnchor, constant: 0).isActive = true
+//        addTitleText.topAnchor.constraint(equalTo: titleTv.topAnchor, constant: 0).isActive = true //8
+        addTitleText.text = "Title"
+        addTitleText.isHidden = true
+    
 //        let aSaveDraft = UIView()
         aSaveDraft.backgroundColor = .ddmDarkColor
         panel.addSubview(aSaveDraft)
 //        stack1.addSubview(aSaveDraft)
         aSaveDraft.translatesAutoresizingMaskIntoConstraints = false
         aSaveDraft.heightAnchor.constraint(equalToConstant: 30).isActive = true //30
-        aSaveDraft.trailingAnchor.constraint(equalTo: aUpload.leadingAnchor, constant: -10).isActive = true
-        aSaveDraft.centerYAnchor.constraint(equalTo: aUpload.centerYAnchor).isActive = true
+        aSaveDraft.trailingAnchor.constraint(equalTo: aNext.leadingAnchor, constant: -10).isActive = true
+        aSaveDraft.centerYAnchor.constraint(equalTo: aNext.centerYAnchor).isActive = true
         aSaveDraft.layer.cornerRadius = 10
         aSaveDraft.isUserInteractionEnabled = true
         aSaveDraft.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onSaveDraftNextClicked)))
@@ -714,13 +630,48 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         mainEditPanel.leadingAnchor.constraint(equalTo: toolPanel.leadingAnchor, constant: 0).isActive = true
         mainEditPanel.trailingAnchor.constraint(equalTo: toolPanel.trailingAnchor, constant: 0).isActive = true
         
+        let mainZGrid = UIView()
+        mainEditPanel.addSubview(mainZGrid)
+        mainZGrid.backgroundColor = .ddmDarkColor
+        mainZGrid.translatesAutoresizingMaskIntoConstraints = false
+        mainZGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        mainZGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
+//        mainZGrid.leadingAnchor.constraint(equalTo: mainYGrid.trailingAnchor, constant: 20).isActive = true //10
+        mainZGrid.leadingAnchor.constraint(equalTo: mainEditPanel.leadingAnchor, constant: 20).isActive = true
+        mainZGrid.topAnchor.constraint(equalTo: mainEditPanel.topAnchor, constant: 10).isActive = true
+//        mainZGrid.centerYAnchor.constraint(equalTo: mainXGrid.centerYAnchor, constant: 0).isActive = true
+        mainZGrid.layer.cornerRadius = 20 //10
+        mainZGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onMainEmbedClicked)))
+        
+//        let mainZGridIcon = UIImageView(image: UIImage(named:"icon_round_code")?.withRenderingMode(.alwaysTemplate))
+        let mainZGridIcon = UIImageView(image: UIImage(named:"icon_round_add")?.withRenderingMode(.alwaysTemplate))
+        mainZGridIcon.tintColor = .white
+//        uView.addSubview(xGridIcon)
+        mainEditPanel.addSubview(mainZGridIcon)
+        mainZGridIcon.translatesAutoresizingMaskIntoConstraints = false
+        mainZGridIcon.centerXAnchor.constraint(equalTo: mainZGrid.centerXAnchor, constant: 0).isActive = true
+        mainZGridIcon.centerYAnchor.constraint(equalTo: mainZGrid.centerYAnchor, constant: 0).isActive = true
+        mainZGridIcon.heightAnchor.constraint(equalToConstant: 20).isActive = true //26
+        mainZGridIcon.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        
+        let mainZGridText = UILabel()
+        mainZGridText.textAlignment = .center
+        mainZGridText.textColor = .white
+        mainZGridText.font = .boldSystemFont(ofSize: 10)
+        mainEditPanel.addSubview(mainZGridText)
+        mainZGridText.translatesAutoresizingMaskIntoConstraints = false
+        mainZGridText.topAnchor.constraint(equalTo: mainZGrid.bottomAnchor, constant: 2).isActive = true
+        mainZGridText.centerXAnchor.constraint(equalTo: mainZGrid.centerXAnchor).isActive = true
+        mainZGridText.text = "Embed"
+        
         let mainXGrid = UIView()
         mainEditPanel.addSubview(mainXGrid)
         mainXGrid.backgroundColor = .ddmDarkColor
         mainXGrid.translatesAutoresizingMaskIntoConstraints = false
         mainXGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
         mainXGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        mainXGrid.leadingAnchor.constraint(equalTo: mainEditPanel.leadingAnchor, constant: 20).isActive = true
+//        mainXGrid.leadingAnchor.constraint(equalTo: mainEditPanel.leadingAnchor, constant: 20).isActive = true
+        mainXGrid.leadingAnchor.constraint(equalTo: mainZGrid.trailingAnchor, constant: 20).isActive = true //10
         mainXGrid.topAnchor.constraint(equalTo: mainEditPanel.topAnchor, constant: 10).isActive = true
 //        mainXGrid.centerYAnchor.constraint(equalTo: mainEditPanel.centerYAnchor, constant: 0).isActive = true
         mainXGrid.layer.cornerRadius = 20 //10
@@ -810,39 +761,6 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         mainYGridText.centerXAnchor.constraint(equalTo: mainYGrid.centerXAnchor).isActive = true
         mainYGridText.text = "Photo"
         
-        let mainZGrid = UIView()
-        mainEditPanel.addSubview(mainZGrid)
-        mainZGrid.backgroundColor = .ddmDarkColor
-        mainZGrid.translatesAutoresizingMaskIntoConstraints = false
-        mainZGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        mainZGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        mainZGrid.leadingAnchor.constraint(equalTo: mainYGrid.trailingAnchor, constant: 20).isActive = true //10
-        mainZGrid.topAnchor.constraint(equalTo: mainEditPanel.topAnchor, constant: 10).isActive = true
-//        mainZGrid.centerYAnchor.constraint(equalTo: mainXGrid.centerYAnchor, constant: 0).isActive = true
-        mainZGrid.layer.cornerRadius = 20 //10
-        mainZGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onMainEmbedClicked)))
-        
-//        let mainZGridIcon = UIImageView(image: UIImage(named:"icon_round_code")?.withRenderingMode(.alwaysTemplate))
-        let mainZGridIcon = UIImageView(image: UIImage(named:"icon_round_add")?.withRenderingMode(.alwaysTemplate))
-        mainZGridIcon.tintColor = .white
-//        uView.addSubview(xGridIcon)
-        mainEditPanel.addSubview(mainZGridIcon)
-        mainZGridIcon.translatesAutoresizingMaskIntoConstraints = false
-        mainZGridIcon.centerXAnchor.constraint(equalTo: mainZGrid.centerXAnchor, constant: 0).isActive = true
-        mainZGridIcon.centerYAnchor.constraint(equalTo: mainZGrid.centerYAnchor, constant: 0).isActive = true
-        mainZGridIcon.heightAnchor.constraint(equalToConstant: 20).isActive = true //26
-        mainZGridIcon.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        
-        let mainZGridText = UILabel()
-        mainZGridText.textAlignment = .center
-        mainZGridText.textColor = .white
-        mainZGridText.font = .boldSystemFont(ofSize: 10)
-        mainEditPanel.addSubview(mainZGridText)
-        mainZGridText.translatesAutoresizingMaskIntoConstraints = false
-        mainZGridText.topAnchor.constraint(equalTo: mainZGrid.bottomAnchor, constant: 2).isActive = true
-        mainZGridText.centerXAnchor.constraint(equalTo: mainZGrid.centerXAnchor).isActive = true
-        mainZGridText.text = "Embed"
-        
 //        let photoEditPanel = UIView()
         toolPanel.addSubview(photoEditPanel)
         photoEditPanel.translatesAutoresizingMaskIntoConstraints = false
@@ -884,7 +802,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         photoXGrid.topAnchor.constraint(equalTo: photoEditPanel.topAnchor, constant: 10).isActive = true
 //        photoXGrid.centerYAnchor.constraint(equalTo: photoEditPanel.centerYAnchor, constant: 0).isActive = true
         photoXGrid.layer.cornerRadius = 20 //10
-        photoXGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPhotoAddTextClicked)))
+//        photoXGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPhotoAddTextClicked)))
 
 //        let photoXGridIcon = UIImageView(image: UIImage(named:"icon_round_textfield")?.withRenderingMode(.alwaysTemplate))
         let photoXGridIcon = UIImageView(image: UIImage(named:"icon_round_swap")?.withRenderingMode(.alwaysTemplate))
@@ -919,10 +837,11 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         photoYGrid.topAnchor.constraint(equalTo: photoEditPanel.topAnchor, constant: 10).isActive = true
 //        photoYGrid.centerYAnchor.constraint(equalTo: photoXGrid.centerYAnchor, constant: 0).isActive = true
         photoYGrid.layer.cornerRadius = 20 //10
-        photoYGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPhotoAddPhotoClicked)))
+//        photoYGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPhotoAddPhotoClicked)))
+        photoYGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPhotoAddTextClicked)))
 
-//        let photoYGridIcon = UIImageView(image: UIImage(named:"icon_outline_photo")?.withRenderingMode(.alwaysTemplate))
-        let photoYGridIcon = UIImageView(image: UIImage(named:"icon_round_add_v")?.withRenderingMode(.alwaysTemplate))
+//        let photoYGridIcon = UIImageView(image: UIImage(named:"icon_round_add_v")?.withRenderingMode(.alwaysTemplate))
+        let photoYGridIcon = UIImageView(image: UIImage(named:"icon_round_textfield")?.withRenderingMode(.alwaysTemplate))
         photoYGridIcon.tintColor = .white
 //        uView.addSubview(xGridIcon)
         photoEditPanel.addSubview(photoYGridIcon)
@@ -940,7 +859,8 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         photoYGridText.translatesAutoresizingMaskIntoConstraints = false
         photoYGridText.topAnchor.constraint(equalTo: photoYGrid.bottomAnchor, constant: 2).isActive = true
         photoYGridText.centerXAnchor.constraint(equalTo: photoYGrid.centerXAnchor).isActive = true
-        photoYGridText.text = "Add Photo"
+//        photoYGridText.text = "Add Photo"
+        photoYGridText.text = "Add Text"
         
         let photoVGrid = UIView() //delete vc
 //        photoVGrid.backgroundColor = .ddmDarkColor
@@ -1041,7 +961,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         videoXGrid.topAnchor.constraint(equalTo: videoEditPanel.topAnchor, constant: 10).isActive = true
 //        videoXGrid.centerYAnchor.constraint(equalTo: photoEditPanel.centerYAnchor, constant: 0).isActive = true
         videoXGrid.layer.cornerRadius = 20 //10
-        videoXGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onVideoAddTextClicked)))
+//        videoXGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onVideoAddTextClicked)))
 
         let videoXGridIcon = UIImageView(image: UIImage(named:"icon_round_swap")?.withRenderingMode(.alwaysTemplate))
         videoXGridIcon.tintColor = .white
@@ -1064,39 +984,41 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         videoXGridText.topAnchor.constraint(equalTo: videoXGrid.bottomAnchor, constant: 2).isActive = true
         videoXGridText.centerXAnchor.constraint(equalTo: videoXGrid.centerXAnchor).isActive = true
         videoXGridText.text = "Swap"
-//
-//        let videoYGrid = UIView()
-//        videoEditPanel.addSubview(videoYGrid)
-//        videoYGrid.backgroundColor = .ddmDarkColor
-//        videoYGrid.translatesAutoresizingMaskIntoConstraints = false
-//        videoYGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
-//        videoYGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
-//        videoYGrid.leadingAnchor.constraint(equalTo: videoXGrid.trailingAnchor, constant: 20).isActive = true //0
-//        videoYGrid.topAnchor.constraint(equalTo: videoEditPanel.topAnchor, constant: 10).isActive = true
-////        videoYGrid.centerYAnchor.constraint(equalTo: photoXGrid.centerYAnchor, constant: 0).isActive = true
-//        videoYGrid.layer.cornerRadius = 20 //10
+
+        let videoYGrid = UIView()
+        videoEditPanel.addSubview(videoYGrid)
+        videoYGrid.backgroundColor = .ddmDarkColor
+        videoYGrid.translatesAutoresizingMaskIntoConstraints = false
+        videoYGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        videoYGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        videoYGrid.leadingAnchor.constraint(equalTo: videoXGrid.trailingAnchor, constant: 20).isActive = true //0
+        videoYGrid.topAnchor.constraint(equalTo: videoEditPanel.topAnchor, constant: 10).isActive = true
+//        videoYGrid.centerYAnchor.constraint(equalTo: photoXGrid.centerYAnchor, constant: 0).isActive = true
+        videoYGrid.layer.cornerRadius = 20 //10
 //        videoYGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onVideoAddVideoClicked)))
-//
-////        let photoYGridIcon = UIImageView(image: UIImage(named:"icon_outline_photo")?.withRenderingMode(.alwaysTemplate))
+        videoXGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onVideoAddTextClicked)))
+
 //        let videoYGridIcon = UIImageView(image: UIImage(named:"icon_round_add_v")?.withRenderingMode(.alwaysTemplate))
-//        videoYGridIcon.tintColor = .white
-////        uView.addSubview(xGridIcon)
-//        videoEditPanel.addSubview(videoYGridIcon)
-//        videoYGridIcon.translatesAutoresizingMaskIntoConstraints = false
-//        videoYGridIcon.centerXAnchor.constraint(equalTo: videoYGrid.centerXAnchor, constant: 0).isActive = true
-//        videoYGridIcon.centerYAnchor.constraint(equalTo: videoYGrid.centerYAnchor, constant: 0).isActive = true
-//        videoYGridIcon.heightAnchor.constraint(equalToConstant: 20).isActive = true //26
-//        videoYGridIcon.widthAnchor.constraint(equalToConstant: 20).isActive = true
-//        
-//        let videoYGridText = UILabel()
-//        videoYGridText.textAlignment = .center
-//        videoYGridText.textColor = .white
-//        videoYGridText.font = .boldSystemFont(ofSize: 10)
-//        videoEditPanel.addSubview(videoYGridText)
-//        videoYGridText.translatesAutoresizingMaskIntoConstraints = false
-//        videoYGridText.topAnchor.constraint(equalTo: videoYGrid.bottomAnchor, constant: 2).isActive = true
-//        videoYGridText.centerXAnchor.constraint(equalTo: videoYGrid.centerXAnchor).isActive = true
+        let videoYGridIcon = UIImageView(image: UIImage(named:"icon_round_textfield")?.withRenderingMode(.alwaysTemplate))
+        videoYGridIcon.tintColor = .white
+//        uView.addSubview(xGridIcon)
+        videoEditPanel.addSubview(videoYGridIcon)
+        videoYGridIcon.translatesAutoresizingMaskIntoConstraints = false
+        videoYGridIcon.centerXAnchor.constraint(equalTo: videoYGrid.centerXAnchor, constant: 0).isActive = true
+        videoYGridIcon.centerYAnchor.constraint(equalTo: videoYGrid.centerYAnchor, constant: 0).isActive = true
+        videoYGridIcon.heightAnchor.constraint(equalToConstant: 20).isActive = true //26
+        videoYGridIcon.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        
+        let videoYGridText = UILabel()
+        videoYGridText.textAlignment = .center
+        videoYGridText.textColor = .white
+        videoYGridText.font = .boldSystemFont(ofSize: 10)
+        videoEditPanel.addSubview(videoYGridText)
+        videoYGridText.translatesAutoresizingMaskIntoConstraints = false
+        videoYGridText.topAnchor.constraint(equalTo: videoYGrid.bottomAnchor, constant: 2).isActive = true
+        videoYGridText.centerXAnchor.constraint(equalTo: videoYGrid.centerXAnchor).isActive = true
 //        videoYGridText.text = "Add Video"
+        videoYGridText.text = "Add Text"
         
         let videoVGrid = UIView() //delete vc
 //        videoVGrid.backgroundColor = .ddmDarkColor
@@ -1360,7 +1282,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         aTextOK.layer.cornerRadius = 20 //15
         aTextOK.isUserInteractionEnabled = true
         aTextOK.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onTextNextClicked)))
-//        aTextOK.isHidden = true
+        aTextOK.isHidden = true
         
 //        let aTextOKMiniBtn = UIImageView(image: UIImage(named:"icon_round_done")?.withRenderingMode(.alwaysTemplate))
 //        let aTextOKMiniBtn = UIImageView(image: UIImage(named:"icon_outline_keyboard_hide")?.withRenderingMode(.alwaysTemplate))
@@ -1381,7 +1303,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         maxLimitErrorPanel.translatesAutoresizingMaskIntoConstraints = false
         maxLimitErrorPanel.centerXAnchor.constraint(equalTo: panel.centerXAnchor, constant: 0).isActive = true
         maxLimitErrorPanel.layer.cornerRadius = 10
-        maxLimitErrorPanel.topAnchor.constraint(equalTo: aUpload.bottomAnchor, constant: 5).isActive = true
+        maxLimitErrorPanel.topAnchor.constraint(equalTo: aNext.bottomAnchor, constant: 5).isActive = true
         maxLimitErrorPanel.isHidden = true
         
         let miniError = UIView()
@@ -1447,14 +1369,6 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                 print("dehidecell \(hideCellIndex)")
                 hideCellIndex = -1
             }
-            
-            //test > use contentcell
-//            if let currentTBox = pcList[hideCellIndex].tBox as? ContentCell {
-//                currentTBox.dehideCell()
-//                
-//                print("dehidecell \(hideCellIndex)")
-//                hideCellIndex = -1
-//            }
         }
     }
     
@@ -1466,15 +1380,6 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                 playingMediaAssetIdx = -1
             }
         }
-        
-        //test > use contentcell
-//        if(playingMediaAssetIdx > -1) {
-//            if let currentTBox = pcList[playingMediaAssetIdx].tBox as? MediaContentCell {
-//                currentTBox.pauseMedia()
-//                
-//                playingMediaAssetIdx = -1
-//            }
-//        }
     }
     
     func resumeMediaAsset() {
@@ -1485,15 +1390,6 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                 playingMediaAssetIdx = -1
             }
         }
-        
-        //test > use contentcell
-//        if(playingMediaAssetIdx > -1) {
-//            if let currentTBox = pcList[playingMediaAssetIdx].tBox as? MediaContentCell {
-//                currentTBox.resumeMedia()
-//                
-//                playingMediaAssetIdx = -1
-//            }
-//        }
     }
     
     //test > destroy cell
@@ -1505,15 +1401,6 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                 playingMediaAssetIdx = -1
             }
         }
-        
-        //test > use contentcell
-//        if(playingMediaAssetIdx > -1) {
-//            if let tBox = pcList[playingMediaAssetIdx].tBox as? ContentCell {
-//                tBox.destroyCell()
-//                
-//                playingMediaAssetIdx = -1
-//            }
-//        }
     }
     func destroyCell(i: Int) {
         if(i > -1) {
@@ -1521,13 +1408,6 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                 tBox.destroyCell()
             }
         }
-        
-        //test > use contentcell
-//        if(i > -1) {
-//            if let tBox = pcList[i].tBox as? ContentCell {
-//                tBox.destroyCell()
-//            }
-//        }
     }
     
     func unselectPostClip(i : Int) {
@@ -1537,13 +1417,6 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                 currentTBox.unselectCell()
             }
         }
-        
-        //test > use contentcell
-//        if(i > -1) {
-//            if let currentTBox = pcList[i].tBox as? ContentCell {
-//                currentTBox.unselectCell()
-//            }
-//        }
     }
     
     func getIntersect() {
@@ -1634,42 +1507,50 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                 asyncConfigureUser(data: "a")
                 
                 //test > add first textview
-                addTextSection(i: 0, extraContentSize: 0.0, textToAdd: "", toSetCursor: true)
+                addTextSection(i: 0, extraContentSize: 0.0, textToAdd: "")
                 
                 //* special test > embed post within post
                 if(quoteObjectType != "") {
                     //test > measure content size of real comment
                     if(quoteObjectType == "post") {
-                        asyncConfigurePost(id: "post4", contentPosition: "start")
+                        asyncConfigurePost(id: quoteObjectId, contentPosition: "start") //post4
                     }
                     else if(quoteObjectType == "comment") {
-                        asyncConfigureComment(id: "comment4", contentPosition: "start")
+                        asyncConfigureComment(id: quoteObjectId, contentPosition: "start") //comment4
                     }
                     else if(quoteObjectType == "video_l") {
-                        asyncConfigureVideoLoop(id: "video1", contentPosition: "start")
+                        asyncConfigureVideoLoop(id: quoteObjectId, contentPosition: "start") //video1
                     }
                     else if(quoteObjectType == "photo_s") {
-                        asyncConfigurePhotoShot(id: "photo1", contentPosition: "start")
+                        asyncConfigurePhotoShot(id: quoteObjectId, contentPosition: "start") //photo1
                     }
                 }
                 //*
                 //test > refresh tagged location 
-                if(!predesignatedPlaceList.isEmpty) {
-                    setSelectedLocation(l: "p")
-                }
+//                if(!predesignatedPlaceList.isEmpty) {
+//                    setSelectedLocation(l: "p")
+//                }
                 //
                 
                 //show add location
-                aBox.isHidden = false
+//                aBox.isHidden = false
+                
+                //show add title
+                addTitleBtn.isHidden = false
+                addTitleText.isHidden = false
             } else {
                 let pImageUrl = URL(string: "")
                 pImage.sd_setImage(with: pImageUrl)
                 aStickyPhoto.sd_setImage(with: pImageUrl)
                 pImage.isHidden = true
-                abBox.isHidden = true
+//                abBox.isHidden = true
                 
                 //hide add location
-                aBox.isHidden = true
+//                aBox.isHidden = true
+                
+                //hide add title
+                addTitleBtn.isHidden = true
+                addTitleText.isHidden = true
             }
         }
         isInitialized = true
@@ -1723,7 +1604,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                         self.aStickyPhoto.sd_setImage(with: imageUrl)
                         
                         self.pImage.isHidden = false
-                        self.abBox.isHidden = false
+//                        self.abBox.isHidden = false
                     }
                 }
 
@@ -1739,7 +1620,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                     self.aStickyPhoto.sd_setImage(with: imageUrl)
                     
                     self.pImage.isHidden = true
-                    self.abBox.isHidden = true
+//                    self.abBox.isHidden = true
                 }
                 break
             }
@@ -1748,7 +1629,6 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     //**test > fetch quote object
     func asyncConfigureComment(id: String, contentPosition: String) {
         let id_ = id
-//        let id_ = "s"
         DataFetchManager.shared.fetchCommentData2(id: id_) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -1762,7 +1642,6 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                     //test 1 > use base data
                     let pData = CommentData()
                     pData.setData(rData: l)
-//                    self.computeContentSize(dataType: "quote", bData: pData)
                     
                     //test 2 > use contentData
                     let dataCL = pData.contentDataArray
@@ -1784,20 +1663,8 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                     }
                     cd.setDataArray(da: da)
                     cd.setContentDataCode(data: d)
-                    
                     //test > at initialization
-                    if(contentPosition == "start") {
-                        let textBoxHeight = 17.0
-                        let textBoxTopMargin = 20.0
-                        let extraMargin = textBoxTopMargin + textBoxHeight
-                        self.addContentAtMain(cData: cd, dataType: "quote", extraYMargin: extraMargin, toSetCursor: false)
-                    }
-                    else if(contentPosition == "middle") {
-                        self.addContentAtText(cData: cd, dataType: "quote")
-                    }
-                    else if(contentPosition == "end") {
-                        self.addContentAtMain(cData: cd, dataType: "quote", extraYMargin: 0.0, toSetCursor: true)
-                    }
+                    self.addContent(cData: cd, dataType: "quote")
                 }
 
                 case .failure(let error):
@@ -1813,7 +1680,6 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     }
     func asyncConfigurePost(id: String, contentPosition: String) {
         let id_ = id
-//        let id_ = "s"
         DataFetchManager.shared.fetchPostData2(id: id_) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -1827,7 +1693,6 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                     //test 1 > use base data
                     let pData = PostData()
                     pData.setData(rData: l)
-//                    self.computeContentSize(dataType: "quote", bData: pData)
                     
                     //test 2 > use contentData
                     let dataCL = pData.contentDataArray
@@ -1849,20 +1714,8 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                     }
                     cd.setDataArray(da: da)
                     cd.setContentDataCode(data: d)
-                    
                     //test > at initialization
-                    if(contentPosition == "start") {
-                        let textBoxHeight = 17.0
-                        let textBoxTopMargin = 20.0
-                        let extraMargin = textBoxTopMargin + textBoxHeight
-                        self.addContentAtMain(cData: cd, dataType: "quote", extraYMargin: extraMargin, toSetCursor: false)
-                    }
-                    else if(contentPosition == "middle") {
-                        self.addContentAtText(cData: cd, dataType: "quote")
-                    }
-                    else if(contentPosition == "end") {
-                        self.addContentAtMain(cData: cd, dataType: "quote", extraYMargin: 0.0, toSetCursor: true)
-                    }
+                    self.addContent(cData: cd, dataType: "quote")
                 }
 
                 case .failure(let error):
@@ -1878,7 +1731,6 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     }
     func asyncConfigureVideoLoop(id: String, contentPosition: String) {
         let id_ = id
-//        let id_ = "s"
         DataFetchManager.shared.fetchVideoData2(id: id_) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -1892,7 +1744,6 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                     //test 1 > use base data
                     let pData = VideoData()
                     pData.setData(rData: l)
-//                    self.computeContentSize(dataType: "quote", bData: pData)
                     
                     //test 2 > use contentData
                     let dataCL = pData.contentDataArray
@@ -1901,20 +1752,8 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                     cd.setDataCode(data: "video_l")
                     cd.setId(dataId: id_)
                     cd.setContentDataCode(data: d)
-                    
                     //test > at initialization
-                    if(contentPosition == "start") {
-                        let textBoxHeight = 17.0
-                        let textBoxTopMargin = 20.0
-                        let extraMargin = textBoxTopMargin + textBoxHeight
-                        self.addContentAtMain(cData: cd, dataType: "video_l", extraYMargin: extraMargin, toSetCursor: false)
-                    }
-                    else if(contentPosition == "middle") {
-                        self.addContentAtText(cData: cd, dataType: "video_l")
-                    }
-                    else if(contentPosition == "end") {
-                        self.addContentAtMain(cData: cd, dataType: "video_l", extraYMargin: 0.0, toSetCursor: true)
-                    }
+                    self.addContent(cData: cd, dataType: "video_l")
                 }
 
                 case .failure(let error):
@@ -1930,7 +1769,6 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     }
     func asyncConfigurePhotoShot(id: String, contentPosition: String) {
         let id_ = id
-//        let id_ = "s"
         DataFetchManager.shared.fetchPhotoData2(id: id_) { [weak self]result in
             switch result {
                 case .success(let l):
@@ -1944,7 +1782,6 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                     //test 1 > use base data
                     let pData = PhotoData()
                     pData.setData(rData: l)
-//                    self.computeContentSize(dataType: "quote", bData: pData)
                     
                     //test 2 > use contentData
                     let dataCL = pData.contentDataArray
@@ -1953,20 +1790,8 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                     cd.setDataCode(data: "photo_s")
                     cd.setId(dataId: id_)
                     cd.setContentDataCode(data: d)
-                    
                     //test > at initialization
-                    if(contentPosition == "start") {
-                        let textBoxHeight = 17.0
-                        let textBoxTopMargin = 20.0
-                        let extraMargin = textBoxTopMargin + textBoxHeight
-                        self.addContentAtMain(cData: cd, dataType: "photo_s", extraYMargin: extraMargin, toSetCursor: false)
-                    }
-                    else if(contentPosition == "middle") {
-                        self.addContentAtText(cData: cd, dataType: "photo_s")
-                    }
-                    else if(contentPosition == "end") {
-                        self.addContentAtMain(cData: cd, dataType: "photo_s", extraYMargin: 0.0, toSetCursor: true)
-                    }
+                    self.addContent(cData: cd, dataType: "photo_s")
                 }
 
                 case .failure(let error):
@@ -1988,28 +1813,31 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     
     //test
     override func showLocationSelected() {
-//        aText.text = mapPinString
-        print("showLocationSelected")
+//        setSelectedLocation(l: mapPinString)
         
-        setSelectedLocation(l: mapPinString)
-    }
-    
-    var selectedPlaceList = [String]()
-    func setSelectedLocation(l : String) {
-        removeSelectedLocation()
-        
-        if(selectedPlaceList.isEmpty) {
-            selectedPlaceList.append("p")
-            aaText.text = l
+        //test 2 > post finalize panel
+        if(!pageList.isEmpty) {
+            let a = pageList[pageList.count - 1] as? PostFinalizePanelView
+            a?.setSelectedLocation(l: mapPinString)
         }
     }
     
-    func removeSelectedLocation() {
-        if(!selectedPlaceList.isEmpty) {
-            selectedPlaceList.removeLast()
-            aaText.text = ""
-        }
-    }
+//    var selectedPlaceList = [String]()
+//    func setSelectedLocation(l : String) {
+//        removeSelectedLocation()
+//        
+//        if(selectedPlaceList.isEmpty) {
+//            selectedPlaceList.append("p")
+//            aaText.text = l
+//        }
+//    }
+//    
+//    func removeSelectedLocation() {
+//        if(!selectedPlaceList.isEmpty) {
+//            selectedPlaceList.removeLast()
+//            aaText.text = ""
+//        }
+//    }
     
     //test => attach quote object at initialization
     var quoteObjectType = ""
@@ -2067,31 +1895,16 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         }
     }
     
-    @objc func onAGridClicked(gesture: UITapGestureRecognizer) {
-        //test 2
-        clearErrorUI()
-        resignResponder()
-//        delegate?.didPostCreatorClickLocationSelectScrollable()
-        
-        //test 2
-        let isSignedIn = SignInManager.shared.getStatus()
-        if(isSignedIn) {
-            delegate?.didPostCreatorClickLocationSelectScrollable()
-        }
-        else {
-            delegate?.didPostCreatorClickSignIn()
-        }
-    }
-    
     @objc func onMainAddTextClicked(gesture: UITapGestureRecognizer) {
         
         clearErrorUI()
+        clearTitleUI()
         
         let isSignedIn = SignInManager.shared.getStatus()
         if(isSignedIn) {
             if(!pcList.isEmpty) {
                 if(pcList[pcList.count - 1].tBoxType != "text") {
-                    addTextSection(i: pcList.count - 1, extraContentSize: 0.0, textToAdd: "", toSetCursor: true)
+                    addTextSection(i: pcList.count - 1, extraContentSize: 0.0, textToAdd: "")
                 } else {
                     if let aTBox = pcList[pcList.count - 1].tBox as? UITextView {
                         setFirstResponder(textView: aTBox)
@@ -2106,6 +1919,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     @objc func onMainAddVideoClicked(gesture: UITapGestureRecognizer) {
         //test 3 > add video at the end
         clearErrorUI()
+        clearTitleUI()
         
         let isSignedIn = SignInManager.shared.getStatus()
         if(isSignedIn) {
@@ -2121,6 +1935,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     @objc func onMainAddPhotoClicked(gesture: UITapGestureRecognizer) {
         //test 3 > add photo at the end
         clearErrorUI()
+        clearTitleUI()
         
         let isSignedIn = SignInManager.shared.getStatus()
         if(isSignedIn) {
@@ -2136,6 +1951,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     @objc func onMainEmbedClicked(gesture: UITapGestureRecognizer) {
         
         clearErrorUI()
+        clearTitleUI()
         
         let isSignedIn = SignInManager.shared.getStatus()
         if(isSignedIn) {
@@ -2144,8 +1960,6 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         else {
             delegate?.didPostCreatorClickSignIn()
         }
-        
-//        getIntersect()
     }
     
     @objc func onTextAtClicked(gesture: UITapGestureRecognizer) {
@@ -2155,6 +1969,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     @objc func onTextHashtagClicked(gesture: UITapGestureRecognizer) {
         print("post create addvideo")
         clearErrorUI()
+        clearTitleUI()
         
         //test 2 > open camera
         let aTextBeforeCursor = textBeforeCursor //test > save text as resignresponder() cancel out textbeforecursor
@@ -2167,13 +1982,13 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         
         textBeforeCursor = aTextBeforeCursor
         textAfterCursor = aTextAfterCursor
-
     }
     
     @objc func onTextAddPhotoClicked(gesture: UITapGestureRecognizer) {
         print("post create addphoto")
         
         clearErrorUI()
+        clearTitleUI()
         
         //test 2 > open camera
         let aTextBeforeCursor = textBeforeCursor //test > save text as resignresponder() cancel out textbeforecursor
@@ -2190,47 +2005,24 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     
     @objc func onTextNextClicked(gesture: UITapGestureRecognizer) {
         
-        print("ontextnext \(selectedPcIndex)")
-        clearErrorUI()
-//        resignResponder()
-//        selectedPcIndex = -1
-
-        //test
-        if(pcList[selectedPcIndex].tBoxType == "text") {
-            if let tBoxTv = pcList[selectedPcIndex].tBox as? UITextView {
-                if(selectedPcIndex > 0 && selectedPcIndex < pcList.count - 1) {
-                    if(tBoxTv.text == "") {
-                        //test > delete text section
-                        resignResponder()
-                        removeTextSection(i: selectedPcIndex)
-                        //test
-                        selectedPcIndex = -1
-                    }
-                    else {
-                        resignResponder()
-                        selectedPcIndex = -1
-                    }
-                } else {
-                    resignResponder()
-                    selectedPcIndex = -1
-                }
-            }
-        }
     }
     
     @objc func onPhotoAddTextClicked(gesture: UITapGestureRecognizer) {
         //test > to add text after photo
         clearErrorUI()
+        clearTitleUI()
         
         let isSignedIn = SignInManager.shared.getStatus()
         if(isSignedIn) {
-            if(!pcList.isEmpty) {
-                if(pcList[selectedPcIndex + 1].tBoxType != "text") {
-                    print("photoaddtext A \(selectedPcIndex)")
-                    addTextSection(i: selectedPcIndex, extraContentSize: 0.0, textToAdd: "", toSetCursor: true)
+            if(!pcList.isEmpty && selectedPcIndex > -1 && selectedPcIndex < pcList.count) {
+                var idx = selectedPcIndex
+                if(selectedPcIndex < pcList.count - 1) {
+                    idx = selectedPcIndex + 1
+                }
+                if(pcList[idx].tBoxType != "text") {
+                    addTextSection(i: selectedPcIndex, extraContentSize: 0.0, textToAdd: "")
                 } else {
-                    print("photoaddtext B")
-                    if let aTBox = pcList[selectedPcIndex + 1].tBox as? UITextView {
+                    if let aTBox = pcList[idx].tBox as? UITextView {
                         setFirstResponder(textView: aTBox)
                     }
                 }
@@ -2244,18 +2036,17 @@ class PostCreatorConsolePanelView: CreatorPanelView{
 
     }
     @objc func onPhotoDeleteSectionClicked(gesture: UITapGestureRecognizer) {
-        
         clearErrorUI()
+        clearTitleUI()
         
         unselectPostClip(i: selectedPcIndex)
         activatePanel(panel: "mainEditPanel")
         
         removeContentSection(i: selectedPcIndex)
-//        selectedPcIndex = -1
     }
     @objc func onPhotoNextClicked(gesture: UITapGestureRecognizer) {
-        
         clearErrorUI()
+        clearTitleUI()
         
         unselectPostClip(i: selectedPcIndex)
         selectedPcIndex = -1
@@ -2266,16 +2057,19 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     @objc func onVideoAddTextClicked(gesture: UITapGestureRecognizer) {
         //test > to add text after video
         clearErrorUI()
+        clearTitleUI()
         
         let isSignedIn = SignInManager.shared.getStatus()
         if(isSignedIn) {
-            if(!pcList.isEmpty) {
-                if(pcList[selectedPcIndex + 1].tBoxType != "text") {
-                    print("videoaddtext A \(selectedPcIndex)")
-                    addTextSection(i: selectedPcIndex, extraContentSize: 0.0, textToAdd: "", toSetCursor: true)
+            if(!pcList.isEmpty && selectedPcIndex > -1 && selectedPcIndex < pcList.count) {
+                var idx = selectedPcIndex
+                if(selectedPcIndex < pcList.count - 1) {
+                    idx = selectedPcIndex + 1
+                }
+                if(pcList[idx].tBoxType != "text") {
+                    addTextSection(i: selectedPcIndex, extraContentSize: 0.0, textToAdd: "")
                 } else {
-                    print("videoaddtext B")
-                    if let aTBox = pcList[selectedPcIndex + 1].tBox as? UITextView {
+                    if let aTBox = pcList[idx].tBox as? UITextView {
                         setFirstResponder(textView: aTBox)
                     }
                 }
@@ -2291,16 +2085,17 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     @objc func onVideoDeleteSectionClicked(gesture: UITapGestureRecognizer) {
         
         clearErrorUI()
+        clearTitleUI()
         
         unselectPostClip(i: selectedPcIndex)
         activatePanel(panel: "mainEditPanel")
         
         removeContentSection(i: selectedPcIndex)
-//        selectedPcIndex = -1
     }
     @objc func onVideoNextClicked(gesture: UITapGestureRecognizer) {
         
         clearErrorUI()
+        clearTitleUI()
         
         unselectPostClip(i: selectedPcIndex)
         selectedPcIndex = -1
@@ -2314,16 +2109,17 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     @objc func onEmbedDeleteSectionClicked(gesture: UITapGestureRecognizer) {
         
         clearErrorUI()
+        clearTitleUI()
         
         unselectPostClip(i: selectedPcIndex)
         activatePanel(panel: "mainEditPanel")
         
         removeContentSection(i: selectedPcIndex)
-//        selectedPcIndex = -1
     }
     @objc func onEmbedNextClicked(gesture: UITapGestureRecognizer) {
         
         clearErrorUI()
+        clearTitleUI()
         
         unselectPostClip(i: selectedPcIndex)
         selectedPcIndex = -1
@@ -2353,19 +2149,14 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     }
 
     //test > add photo/video section => in multiple format/layout
-    func addContentSection(i: Int, textToAdd: String, cData: ContentData, cSize: CGSize, dataType: String, extraYMargin: CGFloat, toSetCursor: Bool) {
-        //if index is last member
-        var isIndexLastElement = false
-        var isToAppendText = false
+    func addContentSection(i: Int, textToAdd: String, cData: ContentData, cSize: CGSize, dataType: String) {
+
         if(i == pcList.count - 1) {
             pcList[i].tBoxBottomCons?.isActive = false
-            isIndexLastElement = true
         }
         
         //*test 2 > with reusable cell
         let a = PostClip()
-//        let cell = PostClipCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
-        //test CGSize
         let cell = PostClipCell(frame: CGRect(x: 0 , y: 0, width: cSize.width, height: cSize.height))
         uView.addSubview(cell)
         cell.translatesAutoresizingMaskIntoConstraints = false
@@ -2374,10 +2165,10 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         cell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //test
         cell.redrawUI()
         cell.aDelegate = self
-//        cell.configure(data: "a", dataType: dataType, cSize: cSize)
         cell.configure(cData: cData, dataType: dataType, cSize: cSize)
         a.tBox = cell
         a.tBoxType = dataType //p for photo
+        a.tBoxContentData = cData
         //*
         
         if let currentTBox = pcList[i].tBox {
@@ -2391,153 +2182,420 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                     pcList[i + 1].tBoxTopCons = nextTBox.topAnchor.constraint(equalTo: cell.bottomAnchor, constant: 20) //10
                     pcList[i + 1].tBoxTopCons?.isActive = true
                 }
-                
-                if(pcList[i + 1].tBoxType != "text" && textToAdd != "") {
-                    isToAppendText = true
-                }
+            }
+            //test > for i is last element
+            else if(i == pcList.count - 1) {
+                a.tBoxBottomCons = cell.bottomAnchor.constraint(equalTo: uView.bottomAnchor, constant: 0)
+                a.tBoxBottomCons?.isActive = true
             }
         }
-
+        
         pcList.insert(a, at: i + 1) //means "append" behind selectedindex
         
-        //to append text section if last element
-        if(isIndexLastElement || isToAppendText) {
-            let extraSize = cSize.height + 20.0 + extraYMargin
-            addTextSection(i: i + 1, extraContentSize: extraSize, textToAdd: textToAdd, toSetCursor: toSetCursor)
-        }
-        else {
-            var sHeight = stackView.frame.height
-            if(sHeight <= 0.0) {
-                let pMiniH = 40.0
-                let pMiniTopMargin = 20.0
-                let locationBoxTopMargin = 40.0
-                let locationBoxH = 30.0
-                let locationBoxBottomMargin = 40.0
-                sHeight = pMiniH + pMiniTopMargin + locationBoxTopMargin + locationBoxH + locationBoxBottomMargin
-            }
-            print("addcontentB \(sHeight)")
+        if(textToAdd != "") {
+            //**to append text section
+            print("addcontentXA ")
+            let extraSize = cSize.height + 20.0
+            addTextSection(i: i + 1, extraContentSize: extraSize, textToAdd: textToAdd)
+        } else {
+            //**no text to be added
+            let sHeight = stackView.frame.height
+            print("addcontentXB \(sHeight)")
             let newHeight = sHeight + cSize.height + 20.0
             scrollView.contentSize = CGSize(width: stackView.frame.width, height: newHeight)
             
-            //test > if no text section to add, then keyboard down
-            resignResponder()
+            //*special test 2 > scroll to added asset pc
+            let scrollViewMargin = bottomToolPanelHeight + bottomInset//60 > texttoolpanel
+            let stackViewH = newHeight //stackView.frame.height
+            let scrollViewHeight = viewHeight - (topPanelHeight + topInset) - scrollViewMargin
+            var scrollGap = stackViewH - scrollViewHeight
+            if(scrollGap <= 0) {
+                scrollGap = 0.0
+            }
+
+            let yHeight = computePcPosition(index: i + 1, isInclusive: true) //i
+            let yContentOffset = yHeight/stackViewH * scrollGap
+            print("sv setcontentoffset addcontentXB a: \(i), \(yHeight), \(stackViewH)")
+            print("sv setcontentoffset addcontentXB: \(yContentOffset)")
+            scrollView.setContentOffset(CGPoint(x: 0, y: yContentOffset), animated: false)
+            //*
+            
+            //test > reset selected index
             selectedPcIndex = -1
         }
     }
     
-    //test > add photo or video
-    func addContentAtText(cData: ContentData, dataType: String) {
-        let currentYPosition = computePcPosition(index: selectedPcIndex, isInclusive: true)
-        print("addcontent at text a: \(selectedPcIndex), \(currentYPosition), \(stackView.frame.height)")
-        let stackViewH = stackView.frame.height
-        
-        //test 2 > textbeforecursor, textaftercursor
-        let aTextBeforeCursor = textBeforeCursor
-        let aTextAfterCursor = textAfterCursor
-//        print("xy addphoto: \(selectedPcIndex), \(textBeforeCursor), \(textAfterCursor)")
-        
-        //*test > compute asset size beforehand
-//        let assetSize = computeContentSize(dataType: dataType)
-        //test > new compute method
-        let assetSize = computeContentSize(dataType: dataType, cData: cData)
-        print("addcontent at text: \(assetSize)")
-        //*
-        
-        //test 3 > add photo in index i
-        let initialSelectedIndex = selectedPcIndex
-        //test > new url method
-        addContentSection(i: selectedPcIndex, textToAdd: aTextAfterCursor, cData: cData, cSize: assetSize, dataType: dataType, extraYMargin: 0.0, toSetCursor: true)
-        
-        //TODO 1: remove empty text section when adding photo
-        //case 1: textbeforecursor "", add photo and textview with text below, remove current textview
-        //case 2: textaftercursor "", add photo only, no need to add textview
-        //case 3: cursor in middle, add photo and textview, repopulate both textviews
-        //case 4: empty text, add photo only
-        if(pcList[initialSelectedIndex].tBoxType == "text") {
-            if let tBoxTv = pcList[initialSelectedIndex].tBox as? UITextView {
-                //case 4
-                if(tBoxTv.text == "") {
-//                    print("xy addphoto case 4")
-                    if(initialSelectedIndex > 0) { //test > prevent index 0 from being removed
-                        removeTextSection(i: initialSelectedIndex)
-                        
-                        //the new selectedindex of appended textview has to be deducted -1 coz removal of empty tv
-                        if(selectedPcIndex > initialSelectedIndex) {
-                            selectedPcIndex = selectedPcIndex - 1
-                        }
-                    }
-                }
-                else {
-                    //case 3
-//                    let oldH = tBoxTv.contentSize.height
-                    tBoxTv.text = aTextBeforeCursor
-                    let newH = tBoxTv.contentSize.height
-                    pcList[initialSelectedIndex].tBoxHeightCons?.constant = newH //update tbox height
-//                    print("xy addphoto case 3, \(stackView.frame.height)")
-                    
-                    let currentString: NSString = (tBoxTv.text ?? "") as NSString
-                    let length = currentString.length
-                    if(length > 0) {
-                        pcList[initialSelectedIndex].tvBoxHint?.isHidden = true
-                    } else {
-                        pcList[initialSelectedIndex].tvBoxHint?.isHidden = false
-                    }
-                    
-                    //case 1
-                    if(aTextBeforeCursor == "") {
-//                        print("xy addphoto case 1")
-                        removeTextSection(i: initialSelectedIndex)
-                        
-                        //the new selectedindex of appended textview has to be deducted -1 coz removal of empty tv
-                        if(selectedPcIndex > initialSelectedIndex) {
-                            selectedPcIndex = selectedPcIndex - 1
-                        }
-                    }
-                }
-            }
-        }
-        
-        //test > scroll to position if not visible
-//        let y = scrollView.contentOffset.y
-        let scrollViewBottomMargin = keyboardHeight + textEditPanelHeight //60 => texteditpanel height
-        let stackViewHeight = stackViewH + assetSize.height + 20.0
-        let scrollViewHeight = viewHeight - (50.0 + topInset) - scrollViewBottomMargin
-        var scrollGap = stackViewHeight - scrollViewHeight
-        if(scrollGap <= 0) {
-            scrollGap = 0.0
-        }
-
-        let yHeight = currentYPosition + assetSize.height + 20.0
-        let yContentOffset = yHeight/stackViewHeight * scrollGap
-        scrollView.setContentOffset(CGPoint(x: 0, y: yContentOffset), animated: false)
-        print("xy txt+Photo b: \(selectedPcIndex), \(stackViewHeight), \(scrollViewHeight), \(scrollViewBottomMargin)")
-    }
-    
-    func addContentAtMain(cData: ContentData, dataType: String, extraYMargin: CGFloat, toSetCursor: Bool) {
-        print("addcontent at main a: \(stackView.frame.height), \(extraYMargin)")
+    func addContent(cData: ContentData, dataType: String) {
         if(!pcList.isEmpty) {
-            let initialSelectedIndex = pcList.count - 1
-            
-//            let assetSize = computeContentSize(dataType: dataType)
-            //test > new compute method
-            let assetSize = computeContentSize(dataType: dataType, cData: cData)
-            
-            addContentSection(i: initialSelectedIndex, textToAdd: "", cData: cData, cSize: assetSize, dataType: dataType, extraYMargin: extraYMargin, toSetCursor: toSetCursor)
-
-            if(pcList[initialSelectedIndex].tBoxType == "text") {
-                if let tBoxTv = pcList[initialSelectedIndex].tBox as? UITextView {
-                    if(tBoxTv.text == "") {
-                        //test 1 > prevent fatal error
-                        if(initialSelectedIndex > 0) { //test > prevent index 0 from being removed
-                            removeTextSection(i: initialSelectedIndex)
+            //add content at text
+            if(selectedPcIndex > -1) {
+                print("addcontent at text a: \(selectedPcIndex), \(textBeforeCursor), \(textAfterCursor)")
+                //test 2 > textbeforecursor, textaftercursor
+                let aTextBeforeCursor = textBeforeCursor
+                let aTextAfterCursor = textAfterCursor
+                
+                //*test > compute asset size beforehand
+                let assetSize = computeContentSize(dataType: dataType, cData: cData)
+                //*
+                
+                //test 3 > add photo in index i
+                let initialSelectedIndex = selectedPcIndex
+                addContentSection(i: initialSelectedIndex, textToAdd: aTextAfterCursor, cData: cData, cSize: assetSize, dataType: dataType)
+                
+                //case 1: textbeforecursor "", add photo and textview with text below, remove current textview
+                //case 2: textaftercursor "", add photo only, no need to add textview
+                //case 3: cursor in middle, add photo and textview, repopulate both textviews
+                //case 4: empty text, add photo only
+                if(pcList[initialSelectedIndex].tBoxType == "text") {
+                    if let tBoxTv = pcList[initialSelectedIndex].tBox as? UITextView {
+                        if(tBoxTv.text != "") {
+                            //case 3
+                            tBoxTv.text = aTextBeforeCursor
+                            let newH = tBoxTv.contentSize.height
+                            pcList[initialSelectedIndex].tBoxHeightCons?.constant = newH //update tbox height
                             
-                            //new selectedindex of appended textview has to be deducted -1 coz removal of empty tv
-                            if(selectedPcIndex > initialSelectedIndex) {
-                                selectedPcIndex = selectedPcIndex - 1
+                            let currentString: NSString = (tBoxTv.text ?? "") as NSString
+                            let length = currentString.length
+                            if(length > 0) {
+                                pcList[initialSelectedIndex].tvBoxHint?.isHidden = true
+                                pcList[initialSelectedIndex].tvBoxDeleteBtn?.isHidden = true
+                            } else {
+                                pcList[initialSelectedIndex].tvBoxHint?.isHidden = false
+                                pcList[initialSelectedIndex].tvBoxDeleteBtn?.isHidden = false
                             }
                         }
                     }
                 }
+            }
+            else {
+                //add content at main / no text selected
+                print("addcontent at text b main: \(selectedPcIndex), \(textBeforeCursor), \(textAfterCursor)")
+                let initialSelectedIndex = pcList.count - 1 //last element
+                let assetSize = computeContentSize(dataType: dataType, cData: cData)
+                addContentSection(i: initialSelectedIndex, textToAdd: "", cData: cData, cSize: assetSize, dataType: dataType)
+            }
+        }
+    }
+    
+    func addTextSection(i: Int, extraContentSize: CGFloat, textToAdd: String) {
+        if(pcList.isEmpty) {
+            
+            pMiniBottomCons?.isActive = false //test
+            
+            let a = PostClip()
+            a.tBoxType = "text"
+            let bTv = UITextView()
+            bTv.textAlignment = .left
+            bTv.textColor = .white
+            bTv.backgroundColor = .clear
+            bTv.font = .systemFont(ofSize: 14) //13
+            uView.addSubview(bTv)
+            bTv.translatesAutoresizingMaskIntoConstraints = false
+            bTv.leadingAnchor.constraint(equalTo: uView.leadingAnchor, constant: 20).isActive = true
+            bTv.trailingAnchor.constraint(equalTo: uView.trailingAnchor, constant: -20).isActive = true
+            bTv.text = textToAdd
+            bTv.tintColor = .yellow
+            bTv.delegate = self
+            bTv.textContainerInset = UIEdgeInsets.zero
+            a.tBox = bTv
+//            a.tBoxTopCons = bTv.topAnchor.constraint(equalTo: titleTv.bottomAnchor, constant: 20) //20
+            a.tBoxTopCons = bTv.topAnchor.constraint(equalTo: tView.bottomAnchor, constant: 20) //20
+            a.tBoxTopCons?.isActive = true
+            a.tBoxHeightCons = bTv.heightAnchor.constraint(equalToConstant: 17) //36
+            a.tBoxHeightCons?.isActive = true
+            a.tBoxBottomCons = bTv.bottomAnchor.constraint(equalTo: uView.bottomAnchor, constant: 0)
+            a.tBoxBottomCons?.isActive = true
+            
+            //test ** > add hint text
+            let hintText = UILabel()
+            a.tvBoxHint = hintText
+            hintText.textAlignment = .left
+//            hintText.textColor = .white
+            hintText.textColor = .ddmDarkGrayColor
+            hintText.font = .boldSystemFont(ofSize: 14)
+            uView.addSubview(hintText)
+            hintText.translatesAutoresizingMaskIntoConstraints = false
+            hintText.leadingAnchor.constraint(equalTo: bTv.leadingAnchor, constant: 10).isActive = true
+            hintText.trailingAnchor.constraint(equalTo: uView.trailingAnchor, constant: -20).isActive = true
+            hintText.topAnchor.constraint(equalTo: bTv.topAnchor, constant: 0).isActive = true //8
+            hintText.text = "Start writing..." //"What's happening?...
+            // **
+            
+            pcList.append(a)
+            
+            //test
+            setFirstResponder(textView: bTv)
+            
+            let sHeight = stackView.frame.height
+            let newHeight = sHeight + 17.0 + 20.0 + extraContentSize
+            print("addtextsectionA \(sHeight), \(newHeight), \(extraContentSize)")
+            scrollView.contentSize = CGSize(width: stackView.frame.width, height: newHeight)
+        }
+        else {
+            print("addtextsectionA1 ")
+            if(pcList[i].tBoxType != "text") {
+                if(i < pcList.count - 1) {
+                    if(pcList[i + 1].tBoxType != "text") {
+                        print("addtextsectionB")
+                        
+                        let a = PostClip()
+                        a.tBoxType = "text"
+                        let bTv = UITextView()
+                        bTv.textAlignment = .left
+                        bTv.textColor = .white
+                        bTv.backgroundColor = .clear
+                        bTv.font = .systemFont(ofSize: 14) //13
+                        uView.addSubview(bTv)
+                        bTv.translatesAutoresizingMaskIntoConstraints = false
+                        bTv.leadingAnchor.constraint(equalTo: uView.leadingAnchor, constant: 20).isActive = true
+                        bTv.trailingAnchor.constraint(equalTo: uView.trailingAnchor, constant: -20).isActive = true
+                        bTv.text = textToAdd
+                        bTv.tintColor = .yellow
+                        bTv.delegate = self
+                        bTv.textContainerInset = UIEdgeInsets.zero
+                        a.tBox = bTv
+                        if let currentTBox = pcList[i].tBox {
+                            a.tBoxTopCons = bTv.topAnchor.constraint(equalTo: currentTBox.bottomAnchor, constant: 20) //10
+                            a.tBoxTopCons?.isActive = true
+                        }
+                        a.tBoxHeightCons = bTv.heightAnchor.constraint(equalToConstant: 17) //36
+                        a.tBoxHeightCons?.isActive = true
+                        if let nextTBox = pcList[i + 1].tBox {
+                            pcList[i + 1].tBoxTopCons?.isActive = false
+                            pcList[i + 1].tBoxTopCons = nextTBox.topAnchor.constraint(equalTo: bTv.bottomAnchor, constant: 20) //10
+                            pcList[i + 1].tBoxTopCons?.isActive = true
+                        }
+                        
+                        //test ** > add hint text
+                        let hintText = UILabel()
+                        a.tvBoxHint = hintText
+                        hintText.textAlignment = .left
+//                        hintText.textColor = .white
+                        hintText.textColor = .ddmDarkGrayColor
+                        hintText.font = .boldSystemFont(ofSize: 14)
+                        uView.addSubview(hintText)
+                        hintText.translatesAutoresizingMaskIntoConstraints = false
+                        hintText.leadingAnchor.constraint(equalTo: bTv.leadingAnchor, constant: 10).isActive = true //20
+                        hintText.trailingAnchor.constraint(equalTo: uView.trailingAnchor, constant: -20).isActive = true
+                        hintText.topAnchor.constraint(equalTo: bTv.topAnchor, constant: 0).isActive = true //8
+                        hintText.text = "Add more..."
+                        // **
+                        
+                        //test > add delete text btn
+                        let minusBtn = PostClipTextViewDeleteBtn()
+                        a.tvBoxDeleteBtn = minusBtn
+                        uView.addSubview(minusBtn)
+                        minusBtn.backgroundColor = .ddmBlackDark
+                        minusBtn.translatesAutoresizingMaskIntoConstraints = false
+                        minusBtn.heightAnchor.constraint(equalToConstant: 30).isActive = true //40
+                        minusBtn.widthAnchor.constraint(equalToConstant: 30).isActive = true
+                        minusBtn.centerYAnchor.constraint(equalTo: hintText.centerYAnchor, constant: 0).isActive = true
+                        minusBtn.trailingAnchor.constraint(equalTo: bTv.trailingAnchor, constant: 0).isActive = true
+                        minusBtn.layer.cornerRadius = 15 //20
+    //                    minusBtn.isHidden = true
+                        minusBtn.delegate = self
+                        
+                        pcList.insert(a, at: i + 1) //means "append" behind selectedindex
+                        
+                        //test
+                        setFirstResponder(textView: bTv)
+                        
+                        //test > move cursor to beginning of textview
+                        let beginningPosition = bTv.beginningOfDocument
+                        let newRange = bTv.textRange(from: beginningPosition, to: beginningPosition)
+                        bTv.selectedTextRange = newRange
+                        
+                        //update scrollview content size
+                        let sHeight = stackView.frame.height
+                        let newHeight = sHeight + 17.0 + 20.0 + extraContentSize
+                        scrollView.contentSize = CGSize(width: stackView.frame.width, height: newHeight)
+                    }
+                }
+                else if(i == pcList.count - 1) {
+
+                    pcList[i].tBoxBottomCons?.isActive = false
+                    
+                    let a = PostClip()
+                    a.tBoxType = "text"
+                    let bTv = UITextView()
+                    bTv.textAlignment = .left
+                    bTv.textColor = .white
+                    bTv.backgroundColor = .clear
+                    bTv.font = .systemFont(ofSize: 14) //13
+                    uView.addSubview(bTv)
+                    bTv.translatesAutoresizingMaskIntoConstraints = false
+                    bTv.leadingAnchor.constraint(equalTo: uView.leadingAnchor, constant: 20).isActive = true
+                    bTv.trailingAnchor.constraint(equalTo: uView.trailingAnchor, constant: -20).isActive = true
+                    bTv.text = textToAdd
+                    bTv.tintColor = .yellow
+                    bTv.delegate = self
+                    bTv.textContainerInset = UIEdgeInsets.zero
+                    a.tBox = bTv
+                    if let currentTBox = pcList[i].tBox {
+                        a.tBoxTopCons = bTv.topAnchor.constraint(equalTo: currentTBox.bottomAnchor, constant: 20) //10
+                        a.tBoxTopCons?.isActive = true
+                    }
+                    a.tBoxHeightCons = bTv.heightAnchor.constraint(equalToConstant: 17) //36
+                    a.tBoxHeightCons?.isActive = true
+                    a.tBoxBottomCons = bTv.bottomAnchor.constraint(equalTo: uView.bottomAnchor, constant: 0)
+                    a.tBoxBottomCons?.isActive = true
+                    
+                    //test ** > add hint text
+                    let hintText = UILabel()
+                    a.tvBoxHint = hintText
+                    hintText.textAlignment = .left
+                    hintText.textColor = .white
+                    hintText.font = .boldSystemFont(ofSize: 14)
+                    uView.addSubview(hintText)
+                    hintText.translatesAutoresizingMaskIntoConstraints = false
+                    hintText.leadingAnchor.constraint(equalTo: bTv.leadingAnchor, constant: 10).isActive = true //20
+                    hintText.trailingAnchor.constraint(equalTo: uView.trailingAnchor, constant: -20).isActive = true
+                    hintText.topAnchor.constraint(equalTo: bTv.topAnchor, constant: 0).isActive = true //8
+                    hintText.text = "Add more..."
+                    hintText.layer.opacity = 0.5
+                    // **
+                    
+                    //test > add delete text btn
+                    let minusBtn = PostClipTextViewDeleteBtn()
+                    a.tvBoxDeleteBtn = minusBtn
+                    uView.addSubview(minusBtn)
+                    minusBtn.backgroundColor = .ddmBlackDark
+                    minusBtn.translatesAutoresizingMaskIntoConstraints = false
+                    minusBtn.heightAnchor.constraint(equalToConstant: 30).isActive = true //40
+                    minusBtn.widthAnchor.constraint(equalToConstant: 30).isActive = true
+                    minusBtn.centerYAnchor.constraint(equalTo: hintText.centerYAnchor, constant: 0).isActive = true
+                    minusBtn.trailingAnchor.constraint(equalTo: bTv.trailingAnchor, constant: 0).isActive = true
+                    minusBtn.layer.cornerRadius = 15 //20
+//                    minusBtn.isHidden = true
+                    minusBtn.delegate = self
+                    
+                    pcList.append(a)
+                    
+                    //test
+                    setFirstResponder(textView: bTv)
+                    
+                    //test > move cursor to beginning of textview
+                    let beginningPosition = bTv.beginningOfDocument
+                    let newRange = bTv.textRange(from: beginningPosition, to: beginningPosition)
+                    bTv.selectedTextRange = newRange
+                    
+                    let sHeight = stackView.frame.height
+                    print("addtextsectionC \(sHeight)")
+                    let newHeight = sHeight + 17.0 + 20.0 + extraContentSize
+                    scrollView.contentSize = CGSize(width: stackView.frame.width, height: newHeight)
+                }
+            }
+        }
+    }
+    
+    func removeContentSection(i: Int) {
+        if(i > 0) { //means i-1 element exists, first element must be textview
+            //*test > compute asset size
+            var tBoxSizeH = 0.0
+            if let tBoxTv = pcList[i].tBox {
+                tBoxSizeH = tBoxTv.frame.height
+                print("removePhotoSection \(tBoxSizeH)")
+            }
+            //*
+            
+            //test
+            destroyCell(i: i)
+            
+            pcList[i].tBox?.removeFromSuperview()
+            
+            if let prevTBox = pcList[i - 1].tBox {
+                
+                if(i == pcList.count - 1) { //if current pc is last element
+                    pcList[i].tBoxBottomCons?.isActive = false
+                    pcList[i - 1].tBoxBottomCons = prevTBox.bottomAnchor.constraint(equalTo: uView.bottomAnchor, constant: 0)
+                    pcList[i - 1].tBoxBottomCons?.isActive = true
+                }
+                else{
+                    if let nextTBox = pcList[i + 1].tBox {
+                        pcList[i + 1].tBoxTopCons?.isActive = false
+                        pcList[i + 1].tBoxTopCons = nextTBox.topAnchor.constraint(equalTo: prevTBox.bottomAnchor, constant: 20) //10
+                        pcList[i + 1].tBoxTopCons?.isActive = true
+                    }
+                }
+            }
+            
+            pcList.remove(at: i)
+            
+            //test *> unselect selectedindex
+            selectedPcIndex = -1
+            //*
+            
+            //if previous pc is text section, and next pc is also text section, then combine texts
+            if(i <= pcList.count - 1) {
+                if(pcList[i - 1].tBoxType == "text" && pcList[i].tBoxType == "text") {
+                    removeTextSection(i: i)
+                }
+            }
+            
+            //test > update scrollview content size since photo removed
+            let sHeight = stackView.frame.height
+            let newHeight = sHeight - tBoxSizeH
+            scrollView.contentSize = CGSize(width: stackView.frame.width, height: newHeight)
+        }
+    }
+    
+    func removeTextSection(i: Int) {
+        if(i > 0) {
+            var currentT = ""
+            var prevT = ""
+            if(pcList[i].tBoxType == "text") {
+                if let currentTBox = pcList[i].tBox as? UITextView {
+                    currentT = currentTBox.text
+                }
+                
+                //test
+                destroyCell(i: i)
+                
+                pcList[i].tBox?.removeFromSuperview()
+                pcList[i].tvBoxHint?.removeFromSuperview()
+                pcList[i].tvBoxDeleteBtn?.removeFromSuperview()
+                
+                if(i > 0) { //means i-1 element exists
+                    if let prevTBox = pcList[i - 1].tBox {
+                        //if previous pc is text section, then combine texts
+                        if(pcList[i - 1].tBoxType == "text") {
+                            if let prevTBoxTv = pcList[i - 1].tBox as? UITextView {
+                                prevT = prevTBoxTv.text
+                                if let text = prevT as NSString? {
+                                    let l = text.length
+                                    
+                                    prevT = prevTBoxTv.text
+                                    let newT = prevT + "" + currentT
+                                    prevTBoxTv.text = newT
+                                    
+                                    //test > shift cursor to prev textview
+                                    setFirstResponder(textView: prevTBoxTv)
+                                    
+                                    //move cursor to new position, not end of textview
+                                    if let newPosition = prevTBoxTv.position(from: prevTBoxTv.beginningOfDocument, offset: l) {
+                                        let newRange = prevTBoxTv.textRange(from: newPosition, to: newPosition)
+                                        prevTBoxTv.selectedTextRange = newRange
+                                    }
+                                }
+                            }
+                        }
+                        
+                        if(i == pcList.count - 1) { //if current pc is last element
+                            pcList[i].tBoxBottomCons?.isActive = false
+                            pcList[i - 1].tBoxBottomCons = prevTBox.bottomAnchor.constraint(equalTo: uView.bottomAnchor, constant: 0)
+                            pcList[i - 1].tBoxBottomCons?.isActive = true
+                        }
+                        else{
+                            if let nextTBox = pcList[i + 1].tBox {
+                                pcList[i + 1].tBoxTopCons?.isActive = false
+                                pcList[i + 1].tBoxTopCons = nextTBox.topAnchor.constraint(equalTo: prevTBox.bottomAnchor, constant: 20) //10
+                                pcList[i + 1].tBoxTopCons?.isActive = true
+                            }
+                        }
+                    }
+                }
+            
+                pcList.remove(at: i)
             }
         }
     }
@@ -2766,7 +2824,6 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                         }
                         
                         let vTopMargin = 20.0
-        //                let vContentHeight = 350.0 //250
                         let vContentHeight = cSize.height
                         let vHeight = vTopMargin + vContentHeight
                         contentHeight += vHeight
@@ -2798,7 +2855,6 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                         }
                         
                         let vTopMargin = 20.0
-        //                let vContentHeight = 350.0 //250
                         let vContentHeight = cSize.height
                         let vHeight = vTopMargin + vContentHeight
         //                let vHeight = vTopMargin + vContentHeight + 40.0 //40.0 for bottom container for description
@@ -2814,10 +2870,22 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                 }
             }
             else if(dd == "na") {
-                
+                let qNpTopMargin = 20.0
+                let qNpTTopMargin = 10.0 //20
+                let qNpTBottomMargin = 10.0
+                let qNpText = "Post does not exist."
+                let qNpContentHeight = estimateHeight(text: qNpText, textWidth: quoteWidth - 20.0 - 20.0, fontSize: 13)
+                let qNpHeight = qNpTTopMargin + qNpContentHeight + qNpTBottomMargin + qNpTopMargin
+                contentHeight += qNpHeight
             }
             else if(dd == "us") {
-                
+                let qNpTopMargin = 20.0
+                let qNpTTopMargin = 10.0 //20
+                let qNpTBottomMargin = 10.0
+                let qNpText = "Post violated community rules."
+                let qNpContentHeight = estimateHeight(text: qNpText, textWidth: quoteWidth - 20.0 - 20.0, fontSize: 13)
+                let qNpHeight = qNpTTopMargin + qNpContentHeight + qNpTBottomMargin + qNpTopMargin
+                contentHeight += qNpHeight
             }
             
             let qUserPhotoHeight = 28.0
@@ -2833,340 +2901,66 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         return cSize
     }
     
-    func addTextSection(i: Int, extraContentSize: CGFloat, textToAdd: String, toSetCursor: Bool) {
-        if(pcList.isEmpty) {
-            
-            pMiniBottomCons?.isActive = false //test
-            
-            let a = PostClip()
-            a.tBoxType = "text"
-            let bTv = UITextView()
-            bTv.textAlignment = .left
-            bTv.textColor = .white
-            bTv.backgroundColor = .clear
-            bTv.font = .systemFont(ofSize: 14) //13
-            uView.addSubview(bTv)
-            bTv.translatesAutoresizingMaskIntoConstraints = false
-            bTv.leadingAnchor.constraint(equalTo: uView.leadingAnchor, constant: 20).isActive = true
-            bTv.trailingAnchor.constraint(equalTo: uView.trailingAnchor, constant: -20).isActive = true
-//            bTv.text = ""
-            bTv.text = textToAdd
-            bTv.tintColor = .yellow
-            bTv.delegate = self
-            bTv.textContainerInset = UIEdgeInsets.zero
-            a.tBox = bTv
-            a.tBoxTopCons = bTv.topAnchor.constraint(equalTo: pMini.bottomAnchor, constant: 20) //20
-            a.tBoxTopCons?.isActive = true
-            a.tBoxHeightCons = bTv.heightAnchor.constraint(equalToConstant: 17) //36
-            a.tBoxHeightCons?.isActive = true
-            a.tBoxBottomCons = bTv.bottomAnchor.constraint(equalTo: uView.bottomAnchor, constant: 0)
-            a.tBoxBottomCons?.isActive = true
-            
-            //test ** > add hint text
-            let hintText = UILabel()
-            a.tvBoxHint = hintText
-            hintText.textAlignment = .left
-//            hintText.textColor = .white
-            hintText.textColor = .ddmDarkGrayColor
-            hintText.font = .boldSystemFont(ofSize: 14)
-            uView.addSubview(hintText)
-            hintText.translatesAutoresizingMaskIntoConstraints = false
-            hintText.leadingAnchor.constraint(equalTo: bTv.leadingAnchor, constant: 10).isActive = true
-            hintText.trailingAnchor.constraint(equalTo: uView.trailingAnchor, constant: -20).isActive = true
-            hintText.topAnchor.constraint(equalTo: bTv.topAnchor, constant: 0).isActive = true //8
-            hintText.text = "What's happening?..."
-//            hintText.layer.opacity = 0.5
-            // **
-            
-            pcList.append(a)
-            
-            if(toSetCursor) {
-                setFirstResponder(textView: bTv)
-            }
-            
-            var sHeight = stackView.frame.height
-            if(sHeight <= 0.0) {
-                let pMiniH = 40.0
-                let pMiniTopMargin = 20.0
-                let locationBoxTopMargin = 40.0
-                let locationBoxH = 30.0
-                let locationBoxBottomMargin = 40.0
-                sHeight = pMiniH + pMiniTopMargin + locationBoxTopMargin + locationBoxH + locationBoxBottomMargin
-            }
-            let newHeight = sHeight + 17.0 + 20.0 + extraContentSize
-            print("addtextsectionA \(sHeight), \(newHeight), \(extraContentSize)")
-            scrollView.contentSize = CGSize(width: stackView.frame.width, height: newHeight)
-        }
-        else {
-            print("addtextsectionA1 ")
-            if(pcList[i].tBoxType != "text") {
-                if(i < pcList.count - 1) {
-                    if(pcList[i + 1].tBoxType != "text") {
-                        
-                        print("addtextsectionB")
-                        
-                        let a = PostClip()
-                        a.tBoxType = "text"
-                        let bTv = UITextView()
-                        bTv.textAlignment = .left
-                        bTv.textColor = .white
-                        bTv.backgroundColor = .clear
-                        bTv.font = .systemFont(ofSize: 14) //13
-                        uView.addSubview(bTv)
-                        bTv.translatesAutoresizingMaskIntoConstraints = false
-                        bTv.leadingAnchor.constraint(equalTo: uView.leadingAnchor, constant: 20).isActive = true
-                        bTv.trailingAnchor.constraint(equalTo: uView.trailingAnchor, constant: -20).isActive = true
-//                        bTv.text = ""
-                        bTv.text = textToAdd
-                        bTv.tintColor = .yellow
-                        bTv.delegate = self
-                        bTv.textContainerInset = UIEdgeInsets.zero
-                        a.tBox = bTv
-                        if let currentTBox = pcList[i].tBox {
-                            a.tBoxTopCons = bTv.topAnchor.constraint(equalTo: currentTBox.bottomAnchor, constant: 20) //10
-                            a.tBoxTopCons?.isActive = true
-                        }
-                        a.tBoxHeightCons = bTv.heightAnchor.constraint(equalToConstant: 17) //36
-                        a.tBoxHeightCons?.isActive = true
-                        if let nextTBox = pcList[i + 1].tBox {
-                            pcList[i + 1].tBoxTopCons?.isActive = false
-                            pcList[i + 1].tBoxTopCons = nextTBox.topAnchor.constraint(equalTo: bTv.bottomAnchor, constant: 20) //10
-                            pcList[i + 1].tBoxTopCons?.isActive = true
-                        }
-                        
-                        //test ** > add hint text
-                        let hintText = UILabel()
-                        a.tvBoxHint = hintText
-                        hintText.textAlignment = .left
-//                        hintText.textColor = .white
-                        hintText.textColor = .ddmDarkGrayColor
-                        hintText.font = .boldSystemFont(ofSize: 14)
-                        uView.addSubview(hintText)
-                        hintText.translatesAutoresizingMaskIntoConstraints = false
-                        hintText.leadingAnchor.constraint(equalTo: bTv.leadingAnchor, constant: 10).isActive = true //20
-                        hintText.trailingAnchor.constraint(equalTo: uView.trailingAnchor, constant: -20).isActive = true
-                        hintText.topAnchor.constraint(equalTo: bTv.topAnchor, constant: 0).isActive = true //8
-                        hintText.text = "Add more..."
-//                        hintText.layer.opacity = 0.5
-                        // **
-                        
-                        pcList.insert(a, at: i + 1) //means "append" behind selectedindex
-                        
-                        if(toSetCursor) {
-                            setFirstResponder(textView: bTv)
-                        }
-                        
-                        //test > move cursor to beginning of textview
-                        let beginningPosition = bTv.beginningOfDocument
-                        let newRange = bTv.textRange(from: beginningPosition, to: beginningPosition)
-                        bTv.selectedTextRange = newRange
-                        
-                        //update scrollview content size
-                        var sHeight = stackView.frame.height
-                        if(sHeight <= 0.0) {
-                            let pMiniH = 40.0
-                            let pMiniTopMargin = 20.0
-                            let locationBoxTopMargin = 40.0
-                            let locationBoxH = 30.0
-                            let locationBoxBottomMargin = 40.0
-                            sHeight = pMiniH + pMiniTopMargin + locationBoxTopMargin + locationBoxH + locationBoxBottomMargin
-                        }
-                        let newHeight = sHeight + 17.0 + 20.0 + extraContentSize
-                        scrollView.contentSize = CGSize(width: stackView.frame.width, height: newHeight)
+    //compute relative position of pc view vs stackview
+    func computePcPosition(index : Int, isInclusive: Bool) -> CGFloat {
+//        let initialYHeight = 40.0 + 20.0 //pMini => profile image size & top margin
+        let initialYHeight = tView.frame.height
+        var yHeight = 0.0 + initialYHeight
+        var i = 0
+        if(!self.pcList.isEmpty) {
+            for l in self.pcList {
+                if(!isInclusive) {
+                    if(i == index) {
+                        break
                     }
                 }
-                else if(i == pcList.count - 1) {
 
-                    pcList[i].tBoxBottomCons?.isActive = false
+                if let tBoxTv = l.tBox {
+                    print("computePCposition \(i), \(tBoxTv.frame.height)")
+                    yHeight += 20.0 //top margin
+                    yHeight += tBoxTv.frame.height
                     
-                    let a = PostClip()
-                    a.tBoxType = "text"
-                    let bTv = UITextView()
-                    bTv.textAlignment = .left
-                    bTv.textColor = .white
-                    bTv.backgroundColor = .clear
-                    bTv.font = .systemFont(ofSize: 14) //13
-                    uView.addSubview(bTv)
-                    bTv.translatesAutoresizingMaskIntoConstraints = false
-                    bTv.leadingAnchor.constraint(equalTo: uView.leadingAnchor, constant: 20).isActive = true
-                    bTv.trailingAnchor.constraint(equalTo: uView.trailingAnchor, constant: -20).isActive = true
-//                    bTv.text = ""
-                    bTv.text = textToAdd
-                    bTv.tintColor = .yellow
-                    bTv.delegate = self
-                    bTv.textContainerInset = UIEdgeInsets.zero
-                    a.tBox = bTv
-                    if let currentTBox = pcList[i].tBox {
-                        a.tBoxTopCons = bTv.topAnchor.constraint(equalTo: currentTBox.bottomAnchor, constant: 20) //10
-                        a.tBoxTopCons?.isActive = true
+                    if(i == self.pcList.count - 1) {
+                        yHeight += 10.0 //bottom margin
                     }
-                    a.tBoxHeightCons = bTv.heightAnchor.constraint(equalToConstant: 17) //36
-                    a.tBoxHeightCons?.isActive = true
-                    a.tBoxBottomCons = bTv.bottomAnchor.constraint(equalTo: uView.bottomAnchor, constant: 0)
-                    a.tBoxBottomCons?.isActive = true
-                    
-                    //test ** > add hint text
-                    let hintText = UILabel()
-                    a.tvBoxHint = hintText
-                    hintText.textAlignment = .left
-                    hintText.textColor = .white
-                    hintText.font = .boldSystemFont(ofSize: 14)
-                    uView.addSubview(hintText)
-                    hintText.translatesAutoresizingMaskIntoConstraints = false
-                    hintText.leadingAnchor.constraint(equalTo: bTv.leadingAnchor, constant: 10).isActive = true //20
-                    hintText.trailingAnchor.constraint(equalTo: uView.trailingAnchor, constant: -20).isActive = true
-                    hintText.topAnchor.constraint(equalTo: bTv.topAnchor, constant: 0).isActive = true //8
-                    hintText.text = "Add more..."
-                    hintText.layer.opacity = 0.5
-                    // **
-                    
-                    pcList.append(a)
-                    
-                    if(toSetCursor) {
-                        setFirstResponder(textView: bTv)
-                    }
-                    
-                    //test > move cursor to beginning of textview
-                    let beginningPosition = bTv.beginningOfDocument
-                    let newRange = bTv.textRange(from: beginningPosition, to: beginningPosition)
-                    bTv.selectedTextRange = newRange
-                    
-                    var sHeight = stackView.frame.height
-                    if(sHeight <= 0.0) {
-                        let pMiniH = 40.0
-                        let pMiniTopMargin = 20.0
-                        let locationBoxTopMargin = 40.0
-                        let locationBoxH = 30.0
-                        let locationBoxBottomMargin = 40.0
-                        sHeight = pMiniH + pMiniTopMargin + locationBoxTopMargin + locationBoxH + locationBoxBottomMargin
-                    }
-                    print("addtextsectionC \(sHeight)")
-                    let newHeight = sHeight + 17.0 + 20.0 + extraContentSize
-                    scrollView.contentSize = CGSize(width: stackView.frame.width, height: newHeight)
                 }
+                
+                if(isInclusive) {
+                    if(i == index) {
+                        break
+                    }
+                }
+                
+                i += 1
             }
         }
+        
+        return yHeight
     }
     
-    func removeContentSection(i: Int) {
-        if(i > 0) { //means i-1 element exists, first element must be textview
-            //*test > compute asset size
-            var tBoxSizeH = 0.0
-            if let tBoxTv = pcList[i].tBox {
-                tBoxSizeH = tBoxTv.frame.height
-                print("removePhotoSection \(tBoxSizeH)")
-            }
-            //*
-            
-            //test
-            destroyCell(i: i)
-            
-            pcList[i].tBox?.removeFromSuperview()
-            
-            if let prevTBox = pcList[i - 1].tBox {
-                
-                if(i == pcList.count - 1) { //if current pc is last element
-                    pcList[i].tBoxBottomCons?.isActive = false
-                    pcList[i - 1].tBoxBottomCons = prevTBox.bottomAnchor.constraint(equalTo: uView.bottomAnchor, constant: 0)
-                    pcList[i - 1].tBoxBottomCons?.isActive = true
-                }
-                else{
-                    if let nextTBox = pcList[i + 1].tBox {
-                        pcList[i + 1].tBoxTopCons?.isActive = false
-                        pcList[i + 1].tBoxTopCons = nextTBox.topAnchor.constraint(equalTo: prevTBox.bottomAnchor, constant: 20) //10
-                        pcList[i + 1].tBoxTopCons?.isActive = true
+    func compileDataUploadArray() -> [ContentData]{
+        //test 2 > compile data for upload
+        var cDataUploadArray: [ContentData] = []
+        for pc in pcList {
+            if(pc.tBoxType == "text") {
+                if let tBoxTv = pc.tBox as? UITextView {
+                    if(tBoxTv.text != "") {
+                        let cd = ContentData()
+                        cd.setDataCode(data: "text")
+                        cd.setDataTextString(dataText: tBoxTv.text)
+                        cDataUploadArray.append(cd)
                     }
                 }
             }
-            
-            pcList.remove(at: i)
-            
-            //test *> unselect selectedindex
-            selectedPcIndex = -1
-            //*
-            
-            //if previous pc is text section, and next pc is also text section, then combine texts
-            if(i <= pcList.count - 1) {
-                if(pcList[i - 1].tBoxType == "text" && pcList[i].tBoxType == "text") {
-                    removeTextSection(i: i)
+            else {
+                if let cd = pc.tBoxContentData {
+                    cDataUploadArray.append(cd)
                 }
             }
-            
-            //test > update scrollview content size since photo removed
-            let sHeight = stackView.frame.height
-//                let newHeight = sHeight - 280.0 - 20.0
-            let newHeight = sHeight - tBoxSizeH
-            scrollView.contentSize = CGSize(width: stackView.frame.width, height: newHeight)
         }
-    }
-    
-    func removeTextSection(i: Int) {
-//        if(i > -1) {
-        if(i > 0) {
-            var currentT = ""
-            var prevT = ""
-            if(pcList[i].tBoxType == "text") {
-                if let currentTBox = pcList[i].tBox as? UITextView {
-                    currentT = currentTBox.text
-                }
-                
-                //test
-                destroyCell(i: i)
-                
-                pcList[i].tBox?.removeFromSuperview()
-                pcList[i].tvBoxHint?.removeFromSuperview()
-                
-                if(i > 0) { //means i-1 element exists
-                    if let prevTBox = pcList[i - 1].tBox {
-                        //if previous pc is text section, then combine texts
-                        if(pcList[i - 1].tBoxType == "text") {
-                            if let prevTBoxTv = pcList[i - 1].tBox as? UITextView {
-                                prevT = prevTBoxTv.text
-                                if let text = prevT as NSString? {
-                                    let l = text.length
-                                    
-                                    prevT = prevTBoxTv.text
-                                    let newT = prevT + "" + currentT
-                                    prevTBoxTv.text = newT
-                                    
-                                    //test > shift cursor to prev textview
-                                    setFirstResponder(textView: prevTBoxTv)
-                                    
-                                    //move cursor to new position, not end of textview
-                                    if let newPosition = prevTBoxTv.position(from: prevTBoxTv.beginningOfDocument, offset: l) {
-                                        let newRange = prevTBoxTv.textRange(from: newPosition, to: newPosition)
-                                        prevTBoxTv.selectedTextRange = newRange
-                                    }
-                                }
-                                
-                                //old method > without cursor move to new position
-//                                prevT = prevTBoxTv.text
-//                                let newT = prevT + "" + currentT
-//                                prevTBoxTv.text = newT
-//
-//                                //test > shift cursor to prev textview
-//                                setFirstResponder(textView: prevTBoxTv)
-                            }
-                        }
-                        
-                        if(i == pcList.count - 1) { //if current pc is last element
-                            pcList[i].tBoxBottomCons?.isActive = false
-                            pcList[i - 1].tBoxBottomCons = prevTBox.bottomAnchor.constraint(equalTo: uView.bottomAnchor, constant: 0)
-                            pcList[i - 1].tBoxBottomCons?.isActive = true
-                        }
-                        else{
-                            if let nextTBox = pcList[i + 1].tBox {
-                                pcList[i + 1].tBoxTopCons?.isActive = false
-                                pcList[i + 1].tBoxTopCons = nextTBox.topAnchor.constraint(equalTo: prevTBox.bottomAnchor, constant: 20) //10
-                                pcList[i + 1].tBoxTopCons?.isActive = true
-                            }
-                        }
-                    }
-                }
-            
-                pcList.remove(at: i)
-            }
-        }
+        
+        print("cdataarray: \(cDataUploadArray)")
+        return cDataUploadArray
     }
     
     func openSavePostDraftPromptMsg() {
@@ -3212,13 +3006,42 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         cameraRollPanel.setDurationLimit(limit: maxDurationLimit)
     }
     
+    func openPostFinalize(title: String, data: [ContentData]) {
+        let postFinalizePanel = PostFinalizePanelView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
+        panel.addSubview(postFinalizePanel)
+        postFinalizePanel.translatesAutoresizingMaskIntoConstraints = false
+        postFinalizePanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
+        postFinalizePanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
+        postFinalizePanel.delegate = self
+        
+        pageList.append(postFinalizePanel)
+        
+        if(!predesignatedPlaceList.isEmpty) {
+            let selectedLocation = predesignatedPlaceList[0]
+            postFinalizePanel.setSelectedLocation(l: selectedLocation)
+        }
+        
+        if(title != "") {
+            postFinalizePanel.setTitle(t: title)
+        }
+
+        postFinalizePanel.setContentData(data: data)
+    }
+    
+    func backPage() {
+        if(!pageList.isEmpty) {
+            pageList.remove(at: pageList.count - 1)
+            
+            //test > restart session when exit camera roll
+            if(pageList.isEmpty) {
+            }
+        }
+    }
+    
     @objc func onBackPostCreatorPanelClicked(gesture: UITapGestureRecognizer) {
         clearErrorUI()
+        clearTitleUI()
         resignResponder()
-//        openSavePostDraftPromptMsg()
-
-        //test
-//        openExitVideoEditorPromptMsg()
         
         //test 2
         let isSignedIn = SignInManager.shared.getStatus()
@@ -3232,50 +3055,32 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     
     @objc func onPostUploadNextClicked(gesture: UITapGestureRecognizer) {
         clearErrorUI()
+        clearTitleUI()
         resignResponder()
         
+        //test 2 > open post finalize panel before upload
         let isSignedIn = SignInManager.shared.getStatus()
         if(isSignedIn) {
-            
-//            let sHeight = stackView.frame.height
-//            print("onpostB \(sHeight)")
-            
             if(!pcList.isEmpty) {
                 if(pcList.count == 1) {
                     if(pcList[0].tBoxType == "text") {
                         if let tBoxTv = pcList[0].tBox as? UITextView {
                             if(tBoxTv.text == "") {
                                 configureErrorUI(data: "na-content")
-                            }
-                            else {
-                                if(selectedPlaceList.isEmpty) {
-                                    configureErrorUI(data: "na-location")
-                                }
-                                else {
-                                    aUpload.isHidden = true
-                                    aSpinner.startAnimating()
-                                
-                                    //test 2 > new method to upload data => for in-app msg view
-                                    self.closePostCreatorPanel(isAnimated: true)
-                                    delegate?.didPostCreatorClickUpload(payload: "cc") //payload e.g. location name
-                                }
+                            } else {
+                                let cd = compileDataUploadArray()
+                                let t = titleTv.text ?? ""
+                                openPostFinalize(title: t, data: cd)
                             }
                         }
                     }
+                } else {
+                    let cd = compileDataUploadArray()
+                    let t = titleTv.text ?? ""
+                    openPostFinalize(title: t, data: cd)
                 }
-                else {
-                    if(selectedPlaceList.isEmpty) {
-                        configureErrorUI(data: "na-location")
-                    }
-                    else {
-                        aUpload.isHidden = true
-                        aSpinner.startAnimating()
-                    
-                        //test 2 > new method to upload data => for in-app msg view
-                        self.closePostCreatorPanel(isAnimated: true)
-                        delegate?.didPostCreatorClickUpload(payload: "cc") //payload e.g. location name
-                    }
-                }
+            } else {
+                configureErrorUI(data: "na-content")
             }
         }
         else {
@@ -3285,11 +3090,11 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     
     @objc func onDraftBoxClicked(gesture: UITapGestureRecognizer) {
         resignResponder()
-//        openPostDraftPanel()
     }
     
     @objc func onSaveDraftNextClicked(gesture: UITapGestureRecognizer) {
         clearErrorUI()
+        clearTitleUI()
         resignResponder()
         aSaveDraft.isHidden = true
         bSpinner.startAnimating()
@@ -3319,85 +3124,57 @@ class PostCreatorConsolePanelView: CreatorPanelView{
             let bottomInsetMargin = self.safeAreaInsets.bottom
             print("postcreator tool up \(selectedPcIndex), \(keyboardSize.height), \(bottomInsetMargin) ")
 
-            keyboardHeight = keyboardSize.height
-            
-            if(!isKeyboardUp) {
-                UIView.animate(withDuration: 0.2, delay: 0.0, options: [.curveEaseInOut],
-                    animations: {
-                    self.textEditPanel.transform = CGAffineTransform(translationX: 0, y: -self.keyboardHeight)
-                }, completion: { finished in
-                })
-            } else {
-                self.textEditPanel.transform = CGAffineTransform(translationX: 0, y: -keyboardHeight)
-            }
-            
-            //test > adjust scrollview height when keyboard up
-            let scrollViewMargin = keyboardHeight + textEditPanelHeight //60 > texttoolpanel
-            self.scrollViewBottomCons?.constant = -scrollViewMargin
-            
-            isKeyboardUp = true
-            
-            //*special test 2 > try to move to cursor when keyboard height changes
-            let stackViewH = stackView.frame.height
-            let currentYPosition = computePcPosition(index: selectedPcIndex, isInclusive: true)
-            let scrollViewHeight = viewHeight - (50.0 + topInset) - scrollViewMargin
-            var scrollGap = stackViewH - scrollViewHeight
-            if(scrollGap <= 0) {
-                scrollGap = 0.0
-            }
-
-            let yHeight = currentYPosition
-            let yContentOffset = yHeight/stackViewH * scrollGap
-            print("onkeyboardup \(stackViewH), \(selectedPcIndex), \(currentYPosition)")
-            scrollView.setContentOffset(CGPoint(x: 0, y: yContentOffset), animated: false)
-            //*
-        }
-    }
-    
-    //compute relative position of pc view vs stackview
-    func computePcPosition(index : Int, isInclusive: Bool) -> CGFloat {
-        let initialYHeight = 40.0 + 20.0 //pMini => profile image size & top margin
-        var yHeight = 0.0 + initialYHeight
-        var i = 0
-        if(!self.pcList.isEmpty) {
-            for l in self.pcList {
-                if(!isInclusive) {
-                    if(i == index) {
-                        break
-                    }
-                }
-
-                if let tBoxTv = l.tBox {
-                    print("computePCposition \(i), \(tBoxTv.frame.height)")
-                    yHeight += tBoxTv.frame.height
-                    if(i == 0) {
-                        yHeight += 20.0 //top margin
-                    } else {
-//                        yHeight += 10.0 //top margin //ori
-                        yHeight += 20.0 //top margin
-                    }
+            if(selectedPcIndex > -1) {
+                keyboardHeight = keyboardSize.height
+                
+                if(!isKeyboardUp) {
+                    UIView.animate(withDuration: 0.2, delay: 0.0, options: [.curveEaseInOut],
+                        animations: {
+                        self.textEditPanel.transform = CGAffineTransform(translationX: 0, y: -self.keyboardHeight)
+                    }, completion: { finished in
+                    })
+                } else {
+                    self.textEditPanel.transform = CGAffineTransform(translationX: 0, y: -keyboardHeight)
                 }
                 
-                if(isInclusive) {
-                    if(i == index) {
-                        break
-                    }
-                }
+                //test > adjust scrollview height when keyboard up
+                let scrollViewMargin = keyboardHeight + textEditPanelHeight //60 > texttoolpanel
+                self.scrollViewBottomCons?.constant = -scrollViewMargin
                 
-                i += 1
+                isKeyboardUp = true
+                
+                //*special test 2 > try to move to cursor when keyboard height changes
+                let stackViewH = stackView.frame.height
+                let currentYPosition = computePcPosition(index: selectedPcIndex, isInclusive: true)
+                let scrollViewHeight = viewHeight - (topPanelHeight + topInset) - scrollViewMargin
+                var scrollGap = stackViewH - scrollViewHeight
+                if(scrollGap <= 0) {
+                    scrollGap = 0.0
+                }
+
+                let yHeight = currentYPosition
+                let yContentOffset = yHeight/stackViewH * scrollGap
+    //            print("onkeyboardup \(stackViewH), \(selectedPcIndex), \(currentYPosition)")
+                print("sv setcontentoffset onkey: \(yContentOffset)")
+                scrollView.setContentOffset(CGPoint(x: 0, y: yContentOffset), animated: false)
+                //*
+            }
+            else {
+                keyboardHeight = keyboardSize.height
+                
+                self.textEditPanel.transform = CGAffineTransform(translationX: 0, y: 0)
+                
+                let scrollViewMargin = keyboardHeight
+                self.scrollViewBottomCons?.constant = -scrollViewMargin
+                
+                isKeyboardUp = true
             }
         }
-        
-        return yHeight
     }
     
     func configureErrorUI(data: String) {
         if(data == "e") {
             maxLimitText.text = "Error occurred. Try again"
-        }
-        else if(data == "na-location") {
-            maxLimitText.text = "Location is required"
-            lMiniError.isHidden = false
         }
         else if(data == "na-content") {
             maxLimitText.text = "Content is required"
@@ -3413,6 +3190,19 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         
         lMiniError.isHidden = true
         pMiniError.isHidden = true
+    }
+    
+    func clearTitleUI() {
+        
+        hintTitleText.isHidden = true
+        
+        if(titleTv.text == "") {
+            addTitleBtn.isHidden = false
+            addTitleText.isHidden = false
+        } else {
+            addTitleBtn.isHidden = true
+            addTitleText.isHidden = true
+        }
     }
     
     //test > sticky header title animation when scroll up and down
@@ -3443,42 +3233,19 @@ class PostCreatorConsolePanelView: CreatorPanelView{
 
 extension PostCreatorConsolePanelView: PostClipCellDelegate {
     func pcDidClickPostClipCell(cell: PostClipCell) {
+        //test
+        clearErrorUI()
+        clearTitleUI()
         
         var i = 0
         for pc in pcList {
-//            if(pc.tBoxType == "p") {
-                if(pc.tBox == cell) {
-//                    print("xy click pc: \(i), \(cell)")
-                    
-                    if(selectedPcIndex != i) {
-                        if(selectedPcIndex > -1) {
-                            unselectPostClip(i: selectedPcIndex)
-                        }
-                        cell.selectCell()
-                        selectedPcIndex = i
-                        
-                        //test > scroll to position if not visible
-                        let stackViewHeight = stackView.frame.height
-                        let topMargin = 50.0 + topInset
-                        let bottomMargin = bottomToolPanelHeight + bottomInset
-                        let scrollViewHeight = viewHeight - topMargin - bottomMargin //in full mode(keyboard down)
-                        var scrollGap = stackViewHeight - scrollViewHeight
-                        if(scrollGap <= 0) {
-                            scrollGap = 0.0
-                        }
-                        
-                        if let h = pc.tBox?.frame.height{
-                            let yHeight = computePcPosition(index: selectedPcIndex, isInclusive: false) + h/2
-                            let yHeight2 = computePcPosition(index: selectedPcIndex, isInclusive: false) + h
-                            print("xy yheight: \(yHeight), \(yHeight2), \(stackViewHeight)")
-                            let yContentOffset = yHeight/stackViewHeight * scrollGap
-                            scrollView.setContentOffset(CGPoint(x: 0, y: yContentOffset), animated: false)
-                        }
+            if(pc.tBox == cell) {
+                if(selectedPcIndex != i) {
+                    if(selectedPcIndex > -1) {
+                        unselectPostClip(i: selectedPcIndex)
                     }
-                    else {
-//                        cell.unselectCell()
-//                        selectedPcIndex = -1
-                    }
+                    cell.selectCell()
+                    selectedPcIndex = i
                     
                     resignResponder()
                     
@@ -3493,98 +3260,28 @@ extension PostCreatorConsolePanelView: PostClipCellDelegate {
                     } else if(pc.tBoxType == "photo_s") {
                         activatePanel(panel: "embedEditPanel")
                     }
-                    
-                    break
                 }
-//            }
+                else {
+                    //test > click to unselect cell
+//                    clearErrorUI()
+                    
+                    unselectPostClip(i: selectedPcIndex)
+                    selectedPcIndex = -1
+                    
+                    activatePanel(panel: "mainEditPanel")
+                }
+                
+                break
+            }
             i += 1
         }
     }
     
     func pcDidClickPcClickPhoto(pc: PostClipCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String) {
-        //test 1 > only hide if keyboard down
-        if(selectedPcIndex > -1) {
-            resignResponder()
-            selectedPcIndex = -1
-        } else {
-            var i = 0
-            for p in pcList {
-                if(p.tBox == pc) {
-                    let originInRootView = uView.convert(pc.frame.origin, to: self)
-                    let pointX1 = originInRootView.x + pointX
-                    let pointY1 = originInRootView.y + pointY
 
-                    print("pcclickphoto \(i), \(originInRootView.y)")
-                    delegate?.didPostCreatorClickPhoto(pointX: pointX1, pointY: pointY1, view: view, mode: mode)
-                    pc.hideCell()
-
-                    break
-                }
-                i += 1
-            }
-
-            hideCellIndex = i
-        }
-        
-        //ori > hide cell whether keyboard up or down
-//        var i = 0
-//        for p in pcList {
-//            if(p.tBox == pc) {
-//                let originInRootView = uView.convert(pc.frame.origin, to: self)
-//                let pointX1 = originInRootView.x + pointX
-//                let pointY1 = originInRootView.y + pointY
-//                
-//                print("pcclickphoto \(i), \(originInRootView.y)")
-//                delegate?.didPostCreatorClickPhoto(pointX: pointX1, pointY: pointY1, view: view, mode: mode)
-//                
-//                break
-//            }
-//            i += 1
-//        }
-//        
-//        hideCellIndex = i
     }
     func pcDidClickPcClickVideo(pc: PostClipCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String) {
-        //test 1 > only hide if keyboard down
-        if(selectedPcIndex > -1) {
-            resignResponder()
-            selectedPcIndex = -1
-        } else {
-            var i = 0
-            for p in pcList {
-                if(p.tBox == pc) {
-                    let originInRootView = uView.convert(pc.frame.origin, to: self)
-                    let pointX1 = originInRootView.x + pointX
-                    let pointY1 = originInRootView.y + pointY
-    
-                    print("pcclickvideo \(i), \(originInRootView.y)")
-                    delegate?.didPostCreatorClickVideo(pointX: pointX1, pointY: pointY1, view: view, mode: mode)
-                    pc.hideCell()
-                    
-                    break
-                }
-                i += 1
-            }
-    
-            hideCellIndex = i
-        }
-        
-        //ori > hide cell whether keyboard up or down
-//        var i = 0
-//        for p in pcList {
-//            if(p.tBox == pc) {
-//                let originInRootView = uView.convert(pc.frame.origin, to: self)
-//                let pointX1 = originInRootView.x + pointX
-//                let pointY1 = originInRootView.y + pointY
-//                
-//                print("pcclickvideo \(i), \(originInRootView.y)")
-//                delegate?.didPostCreatorClickVideo(pointX: pointX1, pointY: pointY1, view: view, mode: mode)
-//                break
-//            }
-//            i += 1
-//        }
-//        
-//        hideCellIndex = i
+
     }
     
     func pcDidClickPcClickPlay(pc: PostClipCell, isPlay: Bool) {
@@ -3665,26 +3362,12 @@ extension ViewController: PostCreatorPanelDelegate{
     
     //test > click photo to view
     func didPostCreatorClickPhoto(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
-        
-        let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
-        let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
-        
-        if(mode == PhotoTypes.P_SHOT_DETAIL) {
-            openPhotoDetailPanel()
-        } else if(mode == PhotoTypes.P_0){
-            openPhotoZoomPanel(offX: offsetX, offY: offsetY)
-        }
+
     }
     
     //test > click video to view
     func didPostCreatorClickVideo(pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
-        let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
-        let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
 
-        //test 1 > for video only
-        var dataset = [String]()
-        dataset.append("a")
-        self.openVideoPanel(offX: offsetX, offY: offsetY, originatorView: view, originatorViewType: OriginatorTypes.UIVIEW, id: 0, originatorViewId: "", preterminedDatasets: dataset, mode: mode)
     }
 }
 
@@ -3693,166 +3376,95 @@ extension PostCreatorConsolePanelView: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         print("xy textview begin edit")
         
-        //test
-        clearErrorUI()
-        
-        //test > detect which textview is currently at
-        var i = 0
-        for pc in pcList {
-            if(pc.tBoxType == "text") {
-                if(pc.tBox == textView) {
-                    
-                    //*test > update textview height when merge multiline textview with another textview
-                    let h = textView.contentSize.height
-                    pc.tBoxHeightCons?.constant = h
-                    let currentString: NSString = (textView.text ?? "") as NSString
-                    let length = currentString.length
-                    if(length > 0) {
-                        pc.tvBoxHint?.isHidden = true
-                    } else {
-                        pc.tvBoxHint?.isHidden = false
-                    }
-                    //*
-                    
-                    if(selectedPcIndex != i) {
-                        if(selectedPcIndex > -1) {
-                            unselectPostClip(i: selectedPcIndex)
-                        }
-                        selectedPcIndex = i
-                    }
-                    else {
-                        //same selectedindex
-                    }
-                    
-                    activatePanel(panel: "textEditPanel")
-                    
-                    break
-                }
-            }
-            i += 1
-        }
-        
-//        print("xy begin edit: \(selectedPcIndex), \(keyboardHeight), \(isKeyboardUp)")
-        //test > save height of textview to detect if any change to size
-        let h = textView.contentSize.height
-        currentTextViewHeight = h
-        
-        //test 2 > new method test get string before and after cursor
-        if let selectedRange = textView.selectedTextRange {
-            let cursorPosition = textView.offset(from: textView.beginningOfDocument, to: selectedRange.start)
+        if(textView == titleTv) {
+            clearErrorUI()
             
-            // Convert the UITextView text to NSString for correct indexing
-            if let text = textView.text as NSString? {
-                // Get the string before the cursor
-                let beforeCursor = text.substring(to: cursorPosition)
-                
-                // Get the string after the cursor
-                let afterCursor = text.substring(from: cursorPosition)
-                textBeforeCursor = beforeCursor
-                textAfterCursor = afterCursor
-                
-//                print("Before cursor: \(beforeCursor), After cursor: \(afterCursor)")
+            addTitleBtn.isHidden = true
+            addTitleText.isHidden = true
+            
+            hintTitleText.isHidden = false
+            
+            let currentString: NSString = (textView.text ?? "") as NSString
+            let length = currentString.length
+            if(length > 0) {
+                hintTitleText.isHidden = true
+            } else {
+                hintTitleText.isHidden = false
             }
-        }
-        
-        //test > get current textview cursor in respect to stackview
-        //=> scroll to textview when keyboard is up, which blocks the textview
-        if let tBoxTv = pcList[selectedPcIndex].tBox as? UITextView {
-            if let selectedRange = tBoxTv.selectedTextRange {
-                let caretRect = tBoxTv.caretRect(for: selectedRange.start)
-                let stackConvertedRect = tBoxTv.convert(caretRect, to: stackView) //relative to stackview
-                
-                //print the cursor's X and Y coordinates
-                let y = scrollView.contentOffset.y
-                let scrollViewBottomMargin = keyboardHeight + textEditPanelHeight //60
-                let sHeight = viewHeight - (50.0 + topInset) - scrollViewBottomMargin
-                let cursorOriginY = stackConvertedRect.origin.y
-                let cursorY = stackConvertedRect.origin.y + caretRect.height
-                
-                let lowerYLimit = y
-                let higherYLimit = y + sHeight
-                
-                print("xy begin edit: \(selectedPcIndex), \(keyboardHeight), \(isKeyboardUp), \(cursorOriginY)")
-                
-                if(cursorOriginY > lowerYLimit) {
-                    if(cursorY < higherYLimit) {
-                        print("xy detectcursor1 Yes \(cursorY)")
-                    } else {
-                        let yDiff = abs(cursorY - higherYLimit)
-                        print("xy detectcursor1 N higher \(yDiff), \(cursorY)")
+            
+            if(selectedPcIndex > -1) {
+                unselectPostClip(i: selectedPcIndex)
+            }
+            selectedPcIndex = -1
+
+        } else {
+            //test
+            clearErrorUI()
+            clearTitleUI()
+            
+            //test > detect which textview is currently at
+            var i = 0
+            for pc in pcList {
+                if(pc.tBoxType == "text") {
+                    if(pc.tBox == textView) {
                         
-                        //test > adjust y-contentoffset
-                        if(yDiff <= caretRect.height) {
-                            //test > simulate enter new line
-                            let hDiff = h - currentTextViewHeight
-                            let yOffset = y + hDiff
-                            scrollView.setContentOffset(CGPoint(x: 0, y: yOffset), animated: false)
+                        //*test > update textview height when merge multiline textview with another textview
+                        let h = textView.contentSize.height
+                        pc.tBoxHeightCons?.constant = h
+                        let currentString: NSString = (textView.text ?? "") as NSString
+                        let length = currentString.length
+                        if(length > 0) {
+                            pc.tvBoxHint?.isHidden = true
+                            pc.tvBoxDeleteBtn?.isHidden = true
+                        } else {
+                            pc.tvBoxHint?.isHidden = false
+                            pc.tvBoxDeleteBtn?.isHidden = false
+                        }
+                        //*
+                        
+                        if(selectedPcIndex != i) {
+                            if(selectedPcIndex > -1) {
+                                unselectPostClip(i: selectedPcIndex)
+                            }
+                            selectedPcIndex = i
                         }
                         else {
-                            //test > quick scroll to cursor position
-                            let stackViewHeight = stackView.frame.height
-                            var scrollGap = stackViewHeight - sHeight
-                            if(scrollGap <= 0) {
-                                scrollGap = 0.0
-                            }
-                            let yContentOffset = cursorY/stackViewHeight * scrollGap
-                            scrollView.setContentOffset(CGPoint(x: 0, y: yContentOffset), animated: false)
+                            //same selectedindex
                         }
-                    }
-                } else {
-
-                    let yDiff = abs(cursorOriginY - lowerYLimit)
-                    print("xy detectcursor1 N lower \(yDiff), \(cursorOriginY)")
-                    
-                    //test > adjust y-contentoffset
-                    if(yDiff <= caretRect.height) {
-                        //test > simulate enter new line
-                        let hDiff = h - currentTextViewHeight
-                        let yOffset = y + hDiff
-                        scrollView.setContentOffset(CGPoint(x: 0, y: yOffset), animated: false)
-                    }
-                    else {
-                        //test > quick scroll to cursor position
-                        let stackViewHeight = stackView.frame.height
-                        var scrollGap = stackViewHeight - sHeight
-                        if(scrollGap <= 0) {
-                            scrollGap = 0.0
-                        }
-
-                        let yContentOffset = cursorOriginY/stackViewHeight * scrollGap
-                        scrollView.setContentOffset(CGPoint(x: 0, y: yContentOffset), animated: false)
+                        
+                        activatePanel(panel: "textEditPanel")
+                        
+                        break
                     }
                 }
+                i += 1
             }
-        }
-    }
-    
-    func textViewDidChange(_ textView: UITextView) {
-        
-        let currentString: NSString = (textView.text ?? "") as NSString
-        let length = currentString.length
-        print("xy textview change \(currentString)")
-        
-        //test > check for textview size
-        let h = textView.contentSize.height
-        if(!pcList.isEmpty) {
             
-            //test 2 > efficient method using selectedpcindex
-            let pc = pcList[selectedPcIndex]
-            if(pc.tBoxType == "text" && pc.tBox == textView) {
-                pc.tBoxHeightCons?.constant = h
-
-                if(length > 0) {
-                    pc.tvBoxHint?.isHidden = true
-                } else {
-                    pc.tvBoxHint?.isHidden = false
-                }
+    //        print("xy begin edit: \(selectedPcIndex), \(keyboardHeight), \(isKeyboardUp)")
+            //test > save height of textview to detect if any change to size
+            let h = textView.contentSize.height
+            currentTextViewHeight = h
+            
+            //test 2 > new method test get string before and after cursor
+            if let selectedRange = textView.selectedTextRange {
+                let cursorPosition = textView.offset(from: textView.beginningOfDocument, to: selectedRange.start)
                 
-                //test > update scrollview contentsize
-                scrollView.contentSize = CGSize(width: stackView.frame.width, height: stackView.frame.height)
+                // Convert the UITextView text to NSString for correct indexing
+                if let text = textView.text as NSString? {
+                    // Get the string before the cursor
+                    let beforeCursor = text.substring(to: cursorPosition)
+                    
+                    // Get the string after the cursor
+                    let afterCursor = text.substring(from: cursorPosition)
+                    textBeforeCursor = beforeCursor
+                    textAfterCursor = afterCursor
+                    
+    //                print("Before cursor: \(beforeCursor), After cursor: \(afterCursor)")
+                }
             }
             
             //test > get current textview cursor in respect to stackview
+            //=> scroll to textview when keyboard is up, which blocks the textview
             if let tBoxTv = pcList[selectedPcIndex].tBox as? UITextView {
                 if let selectedRange = tBoxTv.selectedTextRange {
                     let caretRect = tBoxTv.caretRect(for: selectedRange.start)
@@ -3861,72 +3473,192 @@ extension PostCreatorConsolePanelView: UITextViewDelegate {
                     //print the cursor's X and Y coordinates
                     let y = scrollView.contentOffset.y
                     let scrollViewBottomMargin = keyboardHeight + textEditPanelHeight //60
-                    let sHeight = viewHeight - (50.0 + topInset) - scrollViewBottomMargin
+                    let sHeight = viewHeight - (topPanelHeight + topInset) - scrollViewBottomMargin
                     let cursorOriginY = stackConvertedRect.origin.y
                     let cursorY = stackConvertedRect.origin.y + caretRect.height
                     
                     let lowerYLimit = y
                     let higherYLimit = y + sHeight
-
+                    
+                    print("xy begin edit: \(selectedPcIndex), \(keyboardHeight), \(isKeyboardUp), \(cursorOriginY)")
+                    
                     if(cursorOriginY > lowerYLimit) {
                         if(cursorY < higherYLimit) {
-                            print("xy detectcursor Yes \(cursorY)")
+                            print("xy detectcursor1 Yes \(cursorY)")
                         } else {
                             let yDiff = abs(cursorY - higherYLimit)
-//                            print("xy detectcursor N higher \(yDiff), \(cursorY)")
+                            print("xy detectcursor1 N higher \(yDiff), \(cursorY)")
                             
                             //test > adjust y-contentoffset
                             if(yDiff <= caretRect.height) {
                                 //test > simulate enter new line
                                 let hDiff = h - currentTextViewHeight
-                                print("xy detectcursor N higher A: \(yDiff), \(cursorY)")
                                 let yOffset = y + hDiff
+                                print("sv setcontentoffset textbegin a: \(yOffset)")
                                 scrollView.setContentOffset(CGPoint(x: 0, y: yOffset), animated: false)
                             }
                             else {
                                 //test > quick scroll to cursor position
-                                print("xy detectcursor N higher B: \(yDiff), \(cursorY)")
                                 let stackViewHeight = stackView.frame.height
                                 var scrollGap = stackViewHeight - sHeight
                                 if(scrollGap <= 0) {
                                     scrollGap = 0.0
                                 }
                                 let yContentOffset = cursorY/stackViewHeight * scrollGap
+                                print("sv setcontentoffset textbegin b: \(yContentOffset)")
                                 scrollView.setContentOffset(CGPoint(x: 0, y: yContentOffset), animated: false)
                             }
                         }
                     } else {
 
                         let yDiff = abs(cursorOriginY - lowerYLimit)
-//                        print("xy detectcursor N lower \(yDiff), \(cursorOriginY)")
+                        print("xy detectcursor1 N lower \(yDiff), \(cursorOriginY)")
                         
                         //test > adjust y-contentoffset
                         if(yDiff <= caretRect.height) {
                             //test > simulate enter new line
                             let hDiff = h - currentTextViewHeight
-                            print("xy detectcursor N lower C:\(yDiff), \(cursorOriginY)")
                             let yOffset = y + hDiff
+                            print("sv setcontentoffset textbegin c: \(yOffset)")
                             scrollView.setContentOffset(CGPoint(x: 0, y: yOffset), animated: false)
                         }
                         else {
                             //test > quick scroll to cursor position
-                            print("xy detectcursor N lower D:\(yDiff), \(cursorOriginY)")
                             let stackViewHeight = stackView.frame.height
                             var scrollGap = stackViewHeight - sHeight
                             if(scrollGap <= 0) {
                                 scrollGap = 0.0
                             }
-
                             let yContentOffset = cursorOriginY/stackViewHeight * scrollGap
+                            print("sv setcontentoffset textbegin d: \(yContentOffset)")
                             scrollView.setContentOffset(CGPoint(x: 0, y: yContentOffset), animated: false)
                         }
                     }
                 }
             }
+        }
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        
+        if(textView == titleTv) {
+            let currentString: NSString = (textView.text ?? "") as NSString
+            let length = currentString.length
+            if(length > 0) {
+                hintTitleText.isHidden = true
+            } else {
+                hintTitleText.isHidden = false
+            }
             
-            //test > save height of textview to detect if any change to size
-//            print("xy textview change h: \(currentTextViewHeight), \(h)")
-            currentTextViewHeight = h
+            let h = textView.contentSize.height
+            titleHeightCons?.constant = h
+            
+            aStickyTitleText.text = textView.text
+        } else {
+            let currentString: NSString = (textView.text ?? "") as NSString
+            let length = currentString.length
+            print("xy textview change \(currentString)")
+            
+            //test > check for textview size
+            let h = textView.contentSize.height
+            if(!pcList.isEmpty) {
+                
+                //test 2 > efficient method using selectedpcindex
+                let pc = pcList[selectedPcIndex]
+                if(pc.tBoxType == "text" && pc.tBox == textView) {
+                    pc.tBoxHeightCons?.constant = h
+
+                    if(length > 0) {
+                        pc.tvBoxHint?.isHidden = true
+                        pc.tvBoxDeleteBtn?.isHidden = true
+                    } else {
+                        pc.tvBoxHint?.isHidden = false
+                        pc.tvBoxDeleteBtn?.isHidden = false
+                    }
+                    
+                    //test > update scrollview contentsize
+                    scrollView.contentSize = CGSize(width: stackView.frame.width, height: stackView.frame.height)
+                }
+                
+                //test > get current textview cursor in respect to stackview
+                if let tBoxTv = pcList[selectedPcIndex].tBox as? UITextView {
+                    if let selectedRange = tBoxTv.selectedTextRange {
+                        let caretRect = tBoxTv.caretRect(for: selectedRange.start)
+                        let stackConvertedRect = tBoxTv.convert(caretRect, to: stackView) //relative to stackview
+                        
+                        //print the cursor's X and Y coordinates
+                        let y = scrollView.contentOffset.y
+                        let scrollViewBottomMargin = keyboardHeight + textEditPanelHeight //60
+                        let sHeight = viewHeight - (topPanelHeight + topInset) - scrollViewBottomMargin
+                        let cursorOriginY = stackConvertedRect.origin.y
+                        let cursorY = stackConvertedRect.origin.y + caretRect.height
+                        
+                        let lowerYLimit = y
+                        let higherYLimit = y + sHeight
+
+                        if(cursorOriginY > lowerYLimit) {
+                            if(cursorY < higherYLimit) {
+                                print("xy detectcursor Yes \(cursorY)")
+                            } else {
+                                let yDiff = abs(cursorY - higherYLimit)
+    //                            print("xy detectcursor N higher \(yDiff), \(cursorY)")
+                                
+                                //test > adjust y-contentoffset
+                                if(yDiff <= caretRect.height) {
+                                    //test > simulate enter new line
+                                    let hDiff = h - currentTextViewHeight
+                                    print("xy detectcursor N higher A: \(yDiff), \(cursorY)")
+                                    let yOffset = y + hDiff
+                                    print("sv setcontentoffset textchange a: \(yOffset)")
+                                    scrollView.setContentOffset(CGPoint(x: 0, y: yOffset), animated: false)
+                                }
+                                else {
+                                    //test > quick scroll to cursor position
+                                    print("xy detectcursor N higher B: \(yDiff), \(cursorY)")
+                                    let stackViewHeight = stackView.frame.height
+                                    var scrollGap = stackViewHeight - sHeight
+                                    if(scrollGap <= 0) {
+                                        scrollGap = 0.0
+                                    }
+                                    let yContentOffset = cursorY/stackViewHeight * scrollGap
+                                    print("sv setcontentoffset textchange b: \(yContentOffset)")
+                                    scrollView.setContentOffset(CGPoint(x: 0, y: yContentOffset), animated: false)
+                                }
+                            }
+                        } else {
+
+                            let yDiff = abs(cursorOriginY - lowerYLimit)
+    //                        print("xy detectcursor N lower \(yDiff), \(cursorOriginY)")
+                            
+                            //test > adjust y-contentoffset
+                            if(yDiff <= caretRect.height) {
+                                //test > simulate enter new line
+                                let hDiff = h - currentTextViewHeight
+                                print("xy detectcursor N lower C:\(yDiff), \(cursorOriginY)")
+                                let yOffset = y + hDiff
+                                print("sv setcontentoffset textchange c: \(yOffset)")
+                                scrollView.setContentOffset(CGPoint(x: 0, y: yOffset), animated: false)
+                            }
+                            else {
+                                //test > quick scroll to cursor position
+                                print("xy detectcursor N lower D:\(yDiff), \(cursorOriginY)")
+                                let stackViewHeight = stackView.frame.height
+                                var scrollGap = stackViewHeight - sHeight
+                                if(scrollGap <= 0) {
+                                    scrollGap = 0.0
+                                }
+                                let yContentOffset = cursorOriginY/stackViewHeight * scrollGap
+                                print("sv setcontentoffset textchange d: \(yContentOffset)")
+                                scrollView.setContentOffset(CGPoint(x: 0, y: yContentOffset), animated: false)
+                            }
+                        }
+                    }
+                }
+                
+                //test > save height of textview to detect if any change to size
+    //            print("xy textview change h: \(currentTextViewHeight), \(h)")
+                currentTextViewHeight = h
+            }
         }
     }
     
@@ -3936,22 +3668,26 @@ extension PostCreatorConsolePanelView: UITextViewDelegate {
 //        print("xy changeselection: \(selectedPcIndex), \(keyboardHeight)")
         
         //test 2 > get string before and after cursor
-        if let selectedRange = textView.selectedTextRange {
-            let cursorPosition = textView.offset(from: textView.beginningOfDocument, to: selectedRange.start)
+        if(textView == titleTv) {
             
-            // Convert the UITextView text to NSString for correct indexing
-            if let text = textView.text as NSString? {
-                // Get the string before the cursor
-                let beforeCursor = text.substring(to: cursorPosition)
+        } else {
+            if let selectedRange = textView.selectedTextRange {
+                let cursorPosition = textView.offset(from: textView.beginningOfDocument, to: selectedRange.start)
                 
-                // Get the string after the cursor
-                let afterCursor = text.substring(from: cursorPosition)
-                textBeforeCursor = beforeCursor
-                textAfterCursor = afterCursor
-                
-                //test > get length
-                let textLength = text.length
-                print("xy0 Before cursor: \(beforeCursor), After cursor: \(afterCursor); \(cursorPosition), \(textLength)")
+                // Convert the UITextView text to NSString for correct indexing
+                if let text = textView.text as NSString? {
+                    // Get the string before the cursor
+                    let beforeCursor = text.substring(to: cursorPosition)
+                    
+                    // Get the string after the cursor
+                    let afterCursor = text.substring(from: cursorPosition)
+                    textBeforeCursor = beforeCursor
+                    textAfterCursor = afterCursor
+                    
+                    //test > get length
+                    let textLength = text.length
+                    print("xy0 Before cursor: \(beforeCursor), After cursor: \(afterCursor); \(cursorPosition), \(textLength)")
+                }
             }
         }
     }
@@ -3991,13 +3727,6 @@ extension PostCreatorConsolePanelView: CameraPhotoRollPanelDelegate{
 
     }
     func didClickMultiPhotoSelect(urls: [URL]){
-//        if(!urls.isEmpty) {
-//            if(selectedPcIndex > -1) {
-//                addContentAtText(urls: urls, dataType: "photo")
-//            } else {
-//                addContentAtMain(urls: urls, dataType: "photo_s", extraYMargin: 0.0, toSetCursor: true)
-//            }
-//        }
         
         //test 2 > use contentData instead of Url
         if(!urls.isEmpty) {
@@ -4008,17 +3737,10 @@ extension PostCreatorConsolePanelView: CameraPhotoRollPanelDelegate{
                 vUrlS.append(vUrl)
             }
             
-            if(selectedPcIndex > -1) {
-                let cd = ContentData()
-                cd.setDataCode(data: "photo")
-                cd.setDataArray(da: vUrlS)
-                addContentAtText(cData: cd, dataType: "photo")
-            } else {
-                let cd = ContentData()
-                cd.setDataCode(data: "photo_s")
-                cd.setDataArray(da: vUrlS)
-                addContentAtMain(cData: cd, dataType: "photo_s", extraYMargin: 0.0, toSetCursor: true)
-            }
+            let cd = ContentData()
+            cd.setDataCode(data: "photo")
+            cd.setDataArray(da: vUrlS)
+            addContent(cData: cd, dataType: "photo")
         }
     }
 }
@@ -4032,22 +3754,7 @@ extension PostCreatorConsolePanelView: CameraVideoRollPanelDelegate{
     }
     func didClickVideoSelect(video: PHAsset) {
         print("postcreator cameravideo click")
-        //test > convert PHAsset to AVAsset
-//        PHCachingImageManager.default().requestAVAsset(forVideo: video, options: nil) { [weak self] (video, _, _) in
-//
-//            if let avVid = video
-//            {
-//                DispatchQueue.main.async {
-//                    
-//                    //test 2 > open with url => tested OK
-//                    //try get url from avasset
-//                    if let strURL = (video as? AVURLAsset)?.url.absoluteString {
-//                        print("VIDEO URL: ", strURL)
-//
-//                    }
-//                }
-//            }
-//        }
+
     }
     
     func didClickMultiVideoSelect(urls: [String]){
@@ -4059,31 +3766,17 @@ extension PostCreatorConsolePanelView: CameraVideoRollPanelDelegate{
                 vUrls.append(vUrl)
             }
             
-//            if(selectedPcIndex > -1) {
-//                addContentAtText(urls: vUrls, dataType: "video") //test
-//            } else {
-//                addContentAtMain(urls: vUrls, dataType: "video_l", extraYMargin: 0.0, toSetCursor: true)
-//            }
-            
             //test 2 > use contentData instead of Url
-            if(selectedPcIndex > -1) {
-                let cd = ContentData()
-                cd.setDataCode(data: "video")
-                cd.setDataArray(da: urls)
-                addContentAtText(cData: cd, dataType: "video")
-            } else {
-                let cd = ContentData()
-                cd.setDataCode(data: "video")
-                cd.setDataArray(da: urls)
-                addContentAtMain(cData: cd, dataType: "video", extraYMargin: 0.0, toSetCursor: true)
-            }
+            let cd = ContentData()
+            cd.setDataCode(data: "video")
+            cd.setDataArray(da: urls)
+            addContent(cData: cd, dataType: "video")
         }
     }
 }
 
 extension PostCreatorConsolePanelView: PostDraftPanelDelegate{
     func didClickClosePostDraftPanel() {
-        
 //        backPage(isCurrentPageScrollable: false)
     }
 }
@@ -4100,24 +3793,73 @@ extension PostCreatorConsolePanelView: ExitVideoEditorMsgDelegate{
     }
 }
 
+extension PostCreatorConsolePanelView: PostFinalizePanelDelegate{
+    func didInitializePostFinalize(){
+        
+    }
+    func didClickFinishPostFinalize(){
+        backPage()
+    }
+    
+    func didPostFinalizeClickLocationSelectScrollable(){
+        delegate?.didPostCreatorClickLocationSelectScrollable()
+    }
+    
+    func didPostFinalizeClickUpload(payload: String) {
+        closePostCreatorPanel(isAnimated: true)
+        delegate?.didPostCreatorClickUpload(payload: payload)
+    }
+}
+
+extension PostCreatorConsolePanelView: PostClipTextViewDeleteDelegate {
+    func didClickDeleteTextView(pcBtn: PostClipTextViewDeleteBtn){
+        var i = 0
+        for pc in pcList {
+            if(pc.tBoxType == "text") {
+                if(pc.tvBoxDeleteBtn == pcBtn) {
+                    print("deletetv: \(i)")
+
+                    removeTextSection(i: i)
+                    
+                    //test
+                    resignResponder()
+                }
+            }
+            i += 1
+        }
+    }
+}
+
 extension PostCreatorConsolePanelView: UIScrollViewDelegate {
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+//        print("addcontent scroll a: \(stackView.frame.height)")
         print("xxpc scrollview begin: \(scrollView.contentOffset.y)")
-        let scrollOffsetY = scrollView.contentOffset.y
+//        let scrollOffsetY = scrollView.contentOffset.y
         
+        //test 3 > simply unselect cell
         clearErrorUI()
+        clearTitleUI()
+        resignResponder()
+        selectedPcIndex = -1
+        
+        //test 3 > update scrollview contentsize
+        print("stackview h scroll: \(stackView.frame.height)")
+        print("sv setcontentoffset stackscroll: \(stackView.frame.height), \(computePcPosition(index: pcList.count - 1, isInclusive: true))")
+        self.scrollView.contentSize = CGSize(width: stackView.frame.width, height: stackView.frame.height)
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+//        print("addcontent scrolling: \(stackView.frame.height)")
         print("xxpc scrollview scroll: \(scrollView.contentOffset.y), \(stackView.frame.height)")
         
         //test > compute video intersect wrt dummy
         getIntersect()
         
         //test > stickyheader UI respond to scroll change
-        let photoHeight = 40.0
-        let photoTopMargin = 20.0
-        let totalPhotoHeight = photoHeight + photoTopMargin
+//        let photoHeight = 40.0
+//        let photoTopMargin = 20.0
+//        let totalPhotoHeight = photoHeight + photoTopMargin
+        let totalPhotoHeight = tView.frame.height
         let isSignedIn = SignInManager.shared.getStatus()
         if(isSignedIn) {
             if(scrollView.contentOffset.y >= totalPhotoHeight) {

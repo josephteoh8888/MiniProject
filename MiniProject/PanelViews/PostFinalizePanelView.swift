@@ -1,22 +1,21 @@
 //
-//  PhotoFinalizePanelView.swift
+//  blank.swift
 //  MiniProject
 //
-//  Created by Joseph Teoh on 30/06/2024.
+//  Created by Joseph Teoh on 05/04/2025.
 //
-
 import Foundation
 import UIKit
 import SDWebImage
 import AVFoundation
 
-protocol PhotoFinalizePanelDelegate : AnyObject {
-    func didInitializePhotoFinalize()
-    func didClickFinishPhotoFinalize()
-    func didPhotoFinalizeClickUpload(payload: String)
-    func didPhotoFinalizeClickLocationSelectScrollable()
+protocol PostFinalizePanelDelegate : AnyObject {
+    func didInitializePostFinalize()
+    func didClickFinishPostFinalize()
+    func didPostFinalizeClickUpload(payload: String)
+    func didPostFinalizeClickLocationSelectScrollable()
 }
-class PhotoFinalizePanelView: PanelView{
+class PostFinalizePanelView: PanelView{
     var panel = UIView()
     var currentPanelTopCons : CGFloat = 0.0
     var panelTopCons: NSLayoutConstraint?
@@ -24,9 +23,9 @@ class PhotoFinalizePanelView: PanelView{
     var viewHeight: CGFloat = 0
     var viewWidth: CGFloat = 0
     
-    weak var delegate : PhotoFinalizePanelDelegate?
+    weak var delegate : PostFinalizePanelDelegate?
     
-    let bTextView = UITextView()
+//    let bTextView = UITextView()
     let pText = UILabel()
     let aBoxUnder = UIView()
     
@@ -38,8 +37,11 @@ class PhotoFinalizePanelView: PanelView{
     var maxSelectLimit = 5
     let maxLimitErrorPanel = UIView()
     let maxLimitText = UILabel()
-    let pMiniError = UIView()
+//    let pMiniError = UIView()
     let lMiniError = UIView()
+    
+    let gifImage = UIView()
+    let titleText = UILabel()
 
     private let fileManager = FileManager.default
     private lazy var mainDirectoryUrl: URL = {
@@ -129,106 +131,57 @@ class PhotoFinalizePanelView: PanelView{
         stackView.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true
         
         //test > preview GIF and thumbnail for compressed video
-//        let gifUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media")
-        let gifUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
-        let gifImage = SDAnimatedImageView()
-        gifImage.contentMode = .scaleAspectFill
-        gifImage.layer.masksToBounds = true
-        gifImage.sd_setImage(with: gifUrl)
-//        gifImage.sd_setImage(with: getGifOutputURL()) //test
-//        gifImage.sd_setImage(with: getCoverImageOutputURL()) //test
-//        panel.addSubview(gifImage)
+//        let gifImage = UIView()
         stackView.addSubview(gifImage) //test
         gifImage.translatesAutoresizingMaskIntoConstraints = false
-//        gifImage.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -20).isActive = true
-//        gifImage.topAnchor.constraint(equalTo: aBtn.bottomAnchor, constant: 30).isActive = true
         gifImage.trailingAnchor.constraint(equalTo: stackView.trailingAnchor, constant: -20).isActive = true //test
         gifImage.topAnchor.constraint(equalTo: stackView.topAnchor, constant: 20).isActive = true //test
-        gifImage.heightAnchor.constraint(equalToConstant: 90).isActive = true //ori 30
-        gifImage.widthAnchor.constraint(equalToConstant: 90).isActive = true
-        gifImage.layer.cornerRadius = 10
-        gifImage.isUserInteractionEnabled = true
-//        gifImage.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPreviewPhotoClicked)))
+//        gifImage.heightAnchor.constraint(equalToConstant: 90).isActive = true //ori 30
+        gifImage.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 20).isActive = true
         
-        let vPreviewBox = UIView()
-//        vPreviewBox.backgroundColor = .ddmDarkColor
-        stackView.addSubview(vPreviewBox)
-        vPreviewBox.clipsToBounds = true
-        vPreviewBox.translatesAutoresizingMaskIntoConstraints = false
-        vPreviewBox.centerXAnchor.constraint(equalTo: gifImage.centerXAnchor, constant: 0).isActive = true
-        vPreviewBox.topAnchor.constraint(equalTo: gifImage.bottomAnchor, constant: 10).isActive = true
-        vPreviewBox.layer.cornerRadius = 5 //10
-//        vPreviewBox.layer.opacity = 0.3
-        vPreviewBox.isUserInteractionEnabled = true
-//        vPreviewBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPreviewPhotoClicked)))
-        vPreviewBox.isHidden = true
+//        let titleText = UILabel()
+//        titleText.textAlignment = .left
+//        titleText.textColor = .white
+//        titleText.font = .boldSystemFont(ofSize: 14)
+//        gifImage.addSubview(titleText)
+//        titleText.translatesAutoresizingMaskIntoConstraints = false
+//        titleText.leadingAnchor.constraint(equalTo: gifImage.leadingAnchor, constant: 0).isActive = true
+//        titleText.trailingAnchor.constraint(equalTo: gifImage.trailingAnchor, constant: 0).isActive = true
+//        titleText.topAnchor.constraint(equalTo: gifImage.topAnchor, constant: 0).isActive = true
+//        titleText.text = ""
+//        titleText.numberOfLines = 2
         
-        let vPreviewText = UILabel()
-        vPreviewText.textAlignment = .left
-        vPreviewText.textColor = .white
-        vPreviewText.font = .systemFont(ofSize: 10) //14
-        vPreviewBox.addSubview(vPreviewText)
-        vPreviewText.clipsToBounds = true
-        vPreviewText.translatesAutoresizingMaskIntoConstraints = false
-        vPreviewText.leadingAnchor.constraint(equalTo: vPreviewBox.leadingAnchor, constant: 10).isActive = true
-        vPreviewText.trailingAnchor.constraint(equalTo: vPreviewBox.trailingAnchor, constant: -10).isActive = true
-        vPreviewText.topAnchor.constraint(equalTo: vPreviewBox.topAnchor, constant: 10).isActive = true //5
-        vPreviewText.bottomAnchor.constraint(equalTo: vPreviewBox.bottomAnchor, constant: -10).isActive = true //-5
-        vPreviewText.text = "Preview"
-//        vPreviewText.numberOfLines = 1
-        
-        bTextView.textAlignment = .left
-        bTextView.textColor = .white
-        bTextView.backgroundColor = .clear
-        bTextView.font = .systemFont(ofSize: 13)
-//        panel.addSubview(bTextView)
-        stackView.addSubview(bTextView)
-        bTextView.translatesAutoresizingMaskIntoConstraints = false
-//        bTextView.leadingAnchor.constraint(equalTo: aBtn.leadingAnchor, constant: 20).isActive = true
-        bTextView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 20).isActive = true
-        bTextView.trailingAnchor.constraint(equalTo: gifImage.leadingAnchor, constant: -20).isActive = true
-        bTextView.topAnchor.constraint(equalTo: gifImage.topAnchor, constant: 0).isActive = true
-        bTextView.bottomAnchor.constraint(equalTo: gifImage.bottomAnchor, constant: 0).isActive = true
-//        bTextView.heightAnchor.constraint(equalToConstant: 100).isActive = true
-        bTextView.text = ""
-        bTextView.tintColor = .yellow
-//        bTextView.isHidden = true
-        bTextView.delegate = self
-        
-//        let pText = UILabel()
-        pText.textAlignment = .left
+//        pText.textAlignment = .left
 //        pText.textColor = .white
-        pText.textColor = .ddmDarkGrayColor
-        pText.font = .boldSystemFont(ofSize: 14)
-//        panel.addSubview(pText)
-        stackView.addSubview(pText)
-        pText.translatesAutoresizingMaskIntoConstraints = false
-//        pText.leadingAnchor.constraint(equalTo: aBtn.leadingAnchor, constant: 30).isActive = true
-        pText.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 30).isActive = true
-        pText.trailingAnchor.constraint(equalTo: gifImage.leadingAnchor, constant: -20).isActive = true
-        pText.topAnchor.constraint(equalTo: gifImage.topAnchor, constant: 8).isActive = true
-        pText.text = "Caption your Shot..."
-//        pText.layer.opacity = 0.5
+//        pText.font = .systemFont(ofSize: 14)
+//        stackView.addSubview(pText)
+//        pText.translatesAutoresizingMaskIntoConstraints = false
+//        pText.leadingAnchor.constraint(equalTo: gifImage.leadingAnchor, constant: 0).isActive = true
+//        pText.trailingAnchor.constraint(equalTo: gifImage.trailingAnchor, constant: 0).isActive = true
+//        pText.topAnchor.constraint(equalTo: titleText.bottomAnchor, constant: 10).isActive = true
+//        pText.text = "boring...system"
+////        pText.layer.opacity = 0.5
+//        pText.numberOfLines = 4
         
-        pMiniError.backgroundColor = .red
-        stackView.addSubview(pMiniError)
-        pMiniError.translatesAutoresizingMaskIntoConstraints = false
-        pMiniError.leadingAnchor.constraint(equalTo: pText.leadingAnchor, constant: 0).isActive = true
-        pMiniError.bottomAnchor.constraint(equalTo: pText.topAnchor, constant: -5).isActive = true
-//        pMiniError.topAnchor.constraint(equalTo: bTextView.bottomAnchor, constant: 5).isActive = true
-        pMiniError.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        pMiniError.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        pMiniError.layer.cornerRadius = 10
-        pMiniError.isHidden = true
-
-        let pMiniBtn = UIImageView(image: UIImage(named:"icon_round_priority")?.withRenderingMode(.alwaysTemplate))
-        pMiniBtn.tintColor = .white
-        pMiniError.addSubview(pMiniBtn)
-        pMiniBtn.translatesAutoresizingMaskIntoConstraints = false
-        pMiniBtn.centerXAnchor.constraint(equalTo: pMiniError.centerXAnchor).isActive = true
-        pMiniBtn.centerYAnchor.constraint(equalTo: pMiniError.centerYAnchor).isActive = true
-        pMiniBtn.heightAnchor.constraint(equalToConstant: 12).isActive = true
-        pMiniBtn.widthAnchor.constraint(equalToConstant: 12).isActive = true
+//        pMiniError.backgroundColor = .red
+//        stackView.addSubview(pMiniError)
+//        pMiniError.translatesAutoresizingMaskIntoConstraints = false
+//        pMiniError.leadingAnchor.constraint(equalTo: pText.leadingAnchor, constant: 0).isActive = true
+//        pMiniError.bottomAnchor.constraint(equalTo: pText.topAnchor, constant: -5).isActive = true
+////        pMiniError.topAnchor.constraint(equalTo: bTextView.bottomAnchor, constant: 5).isActive = true
+//        pMiniError.heightAnchor.constraint(equalToConstant: 20).isActive = true
+//        pMiniError.widthAnchor.constraint(equalToConstant: 20).isActive = true
+//        pMiniError.layer.cornerRadius = 10
+//        pMiniError.isHidden = true
+//
+//        let pMiniBtn = UIImageView(image: UIImage(named:"icon_round_priority")?.withRenderingMode(.alwaysTemplate))
+//        pMiniBtn.tintColor = .white
+//        pMiniError.addSubview(pMiniBtn)
+//        pMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+//        pMiniBtn.centerXAnchor.constraint(equalTo: pMiniError.centerXAnchor).isActive = true
+//        pMiniBtn.centerYAnchor.constraint(equalTo: pMiniError.centerYAnchor).isActive = true
+//        pMiniBtn.heightAnchor.constraint(equalToConstant: 12).isActive = true
+//        pMiniBtn.widthAnchor.constraint(equalToConstant: 12).isActive = true
         
         //test > line divider for different sections
         let divider = UIView()
@@ -247,50 +200,50 @@ class PhotoFinalizePanelView: PanelView{
         divider.isHidden = true
         
         //**test > add photo, @, # functions for writing post
-        let xGrid = UIView()
-//        panel.addSubview(xGrid)
-        stackView.addSubview(xGrid)
-        xGrid.translatesAutoresizingMaskIntoConstraints = false
-        xGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        xGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
-//        xGrid.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 20).isActive = true
-        xGrid.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 20).isActive = true
-        xGrid.topAnchor.constraint(equalTo: gifImage.bottomAnchor, constant: 10).isActive = true //10
-        
-        let xGridIcon = UIImageView(image: UIImage(named:"icon_round_at")?.withRenderingMode(.alwaysTemplate))
-//        xGridIcon.tintColor = .white
-        xGridIcon.tintColor = .ddmDarkGrayColor
-//        panel.addSubview(xGridIcon)
-        stackView.addSubview(xGridIcon)
-        xGridIcon.translatesAutoresizingMaskIntoConstraints = false
-        xGridIcon.centerXAnchor.constraint(equalTo: xGrid.centerXAnchor, constant: 0).isActive = true
-        xGridIcon.centerYAnchor.constraint(equalTo: xGrid.centerYAnchor, constant: 0).isActive = true
-        xGridIcon.heightAnchor.constraint(equalToConstant: 26).isActive = true //20
-        xGridIcon.widthAnchor.constraint(equalToConstant: 26).isActive = true
-//        xGridIcon.layer.opacity = 0.5
-        
-        let yGrid = UIView()
-//        panel.addSubview(yGrid)
-        stackView.addSubview(yGrid)
-        yGrid.translatesAutoresizingMaskIntoConstraints = false
-        yGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        yGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        yGrid.leadingAnchor.constraint(equalTo: xGrid.trailingAnchor, constant: 0).isActive = true
-        yGrid.centerYAnchor.constraint(equalTo: xGrid.centerYAnchor, constant: 0).isActive = true
-        
-        let yGridIcon = UIImageView(image: UIImage(named:"icon_round_hashtag")?.withRenderingMode(.alwaysTemplate))
-//        yGridIcon.tintColor = .white
-        yGridIcon.tintColor = .ddmDarkGrayColor
-//        panel.addSubview(yGridIcon)
-        stackView.addSubview(yGridIcon)
-        yGridIcon.translatesAutoresizingMaskIntoConstraints = false
-//        yGridIcon.leadingAnchor.constraint(equalTo: xGridIcon.trailingAnchor, constant: 15).isActive = true
-//        yGridIcon.centerYAnchor.constraint(equalTo: xGridIcon.centerYAnchor, constant: 0).isActive = true
-        yGridIcon.centerXAnchor.constraint(equalTo: yGrid.centerXAnchor, constant: 0).isActive = true
-        yGridIcon.centerYAnchor.constraint(equalTo: yGrid.centerYAnchor, constant: 0).isActive = true
-        yGridIcon.heightAnchor.constraint(equalToConstant: 26).isActive = true
-        yGridIcon.widthAnchor.constraint(equalToConstant: 26).isActive = true
-//        yGridIcon.layer.opacity = 0.5
+//        let xGrid = UIView()
+////        panel.addSubview(xGrid)
+//        stackView.addSubview(xGrid)
+//        xGrid.translatesAutoresizingMaskIntoConstraints = false
+//        xGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
+//        xGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
+////        xGrid.leadingAnchor.constraint(equalTo: panel.leadingAnchor, constant: 20).isActive = true
+//        xGrid.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 20).isActive = true
+//        xGrid.topAnchor.constraint(equalTo: gifImage.bottomAnchor, constant: 10).isActive = true //10
+//        
+//        let xGridIcon = UIImageView(image: UIImage(named:"icon_round_at")?.withRenderingMode(.alwaysTemplate))
+////        xGridIcon.tintColor = .white
+//        xGridIcon.tintColor = .ddmDarkGrayColor
+////        panel.addSubview(xGridIcon)
+//        stackView.addSubview(xGridIcon)
+//        xGridIcon.translatesAutoresizingMaskIntoConstraints = false
+//        xGridIcon.centerXAnchor.constraint(equalTo: xGrid.centerXAnchor, constant: 0).isActive = true
+//        xGridIcon.centerYAnchor.constraint(equalTo: xGrid.centerYAnchor, constant: 0).isActive = true
+//        xGridIcon.heightAnchor.constraint(equalToConstant: 26).isActive = true //20
+//        xGridIcon.widthAnchor.constraint(equalToConstant: 26).isActive = true
+////        xGridIcon.layer.opacity = 0.5
+//        
+//        let yGrid = UIView()
+////        panel.addSubview(yGrid)
+//        stackView.addSubview(yGrid)
+//        yGrid.translatesAutoresizingMaskIntoConstraints = false
+//        yGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
+//        yGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
+//        yGrid.leadingAnchor.constraint(equalTo: xGrid.trailingAnchor, constant: 0).isActive = true
+//        yGrid.centerYAnchor.constraint(equalTo: xGrid.centerYAnchor, constant: 0).isActive = true
+//        
+//        let yGridIcon = UIImageView(image: UIImage(named:"icon_round_hashtag")?.withRenderingMode(.alwaysTemplate))
+////        yGridIcon.tintColor = .white
+//        yGridIcon.tintColor = .ddmDarkGrayColor
+////        panel.addSubview(yGridIcon)
+//        stackView.addSubview(yGridIcon)
+//        yGridIcon.translatesAutoresizingMaskIntoConstraints = false
+////        yGridIcon.leadingAnchor.constraint(equalTo: xGridIcon.trailingAnchor, constant: 15).isActive = true
+////        yGridIcon.centerYAnchor.constraint(equalTo: xGridIcon.centerYAnchor, constant: 0).isActive = true
+//        yGridIcon.centerXAnchor.constraint(equalTo: yGrid.centerXAnchor, constant: 0).isActive = true
+//        yGridIcon.centerYAnchor.constraint(equalTo: yGrid.centerYAnchor, constant: 0).isActive = true
+//        yGridIcon.heightAnchor.constraint(equalToConstant: 26).isActive = true
+//        yGridIcon.widthAnchor.constraint(equalToConstant: 26).isActive = true
+////        yGridIcon.layer.opacity = 0.5
         
         //test > setting for video upload
         let aGrid = UIView()
@@ -613,12 +566,10 @@ class PhotoFinalizePanelView: PanelView{
     }
 
     @objc func onPreviewPhotoClicked(gesture: UITapGestureRecognizer) {
-        //test > video preview
-//        openPhotoPreviewPanel()
     }
     
     @objc func onBackPhotoFinalizePanelClicked(gesture: UITapGestureRecognizer) {
-        closePhotoFinalizePanel(isAnimated: true)
+        closePostFinalizePanel(isAnimated: true)
     }
     
     @objc func onPhotoUploadNextClicked(gesture: UITapGestureRecognizer) {
@@ -627,20 +578,15 @@ class PhotoFinalizePanelView: PanelView{
         
         let isSignedIn = SignInManager.shared.getStatus()
         if(isSignedIn) {
-            
-            if(bTextView.text == "") {
-                configureErrorUI(data: "na-caption")
-            } else {
-                if(selectedPlaceList.isEmpty) {
-                    configureErrorUI(data: "na-location")
-                }
-                else {
-                    aUpload.isHidden = true
-                    aSpinner.startAnimating()
-                    
-                    //test 2 > new method to upload data for in-app msg
-                    delegate?.didPhotoFinalizeClickUpload(payload: "cc")
-                }
+            if(selectedPlaceList.isEmpty) {
+                configureErrorUI(data: "na-location")
+            }
+            else {
+                aUpload.isHidden = true
+                aSpinner.startAnimating()
+                
+                //test 2 > new method to upload data for in-app msg
+                delegate?.didPostFinalizeClickUpload(payload: "cc")
             }
         }
         else {
@@ -665,16 +611,15 @@ class PhotoFinalizePanelView: PanelView{
     @objc func onDraftBoxClicked(gesture: UITapGestureRecognizer) {
         clearErrorUI()
         resignResponder()
-//        openPhotoDraftPanel()
     }
     
     @objc func onAGridClicked(gesture: UITapGestureRecognizer) {
         //test 2
         clearErrorUI()
-        delegate?.didPhotoFinalizeClickLocationSelectScrollable()
+        delegate?.didPostFinalizeClickLocationSelectScrollable()
     }
     
-    func closePhotoFinalizePanel(isAnimated: Bool) {
+    func closePostFinalizePanel(isAnimated: Bool) {
         if(isAnimated) {
             UIView.animate(withDuration: 0.2, animations: { //default: 0.2
                 self.panelTopCons?.constant = 0
@@ -682,17 +627,17 @@ class PhotoFinalizePanelView: PanelView{
             }, completion: { _ in
                 self.removeFromSuperview()
                 
-                self.delegate?.didClickFinishPhotoFinalize()
+                self.delegate?.didClickFinishPostFinalize()
             })
         } else {
             self.removeFromSuperview()
             
-            self.delegate?.didClickFinishPhotoFinalize()
+            self.delegate?.didClickFinishPostFinalize()
         }
     }
     
     func activate() {
-        setFirstResponder(textView: bTextView)
+//        setFirstResponder(textView: bTextView)
     }
     
     func setFirstResponder(textView: UITextView) {
@@ -701,6 +646,110 @@ class PhotoFinalizePanelView: PanelView{
     
     func resignResponder() {
         self.endEditing(true)
+    }
+    
+    func setTitle(t : String) {
+        let pText = UILabel()
+        pText.textAlignment = .left
+        pText.textColor = .white
+        pText.font = .boldSystemFont(ofSize: 14)
+        gifImage.addSubview(pText)
+        pText.translatesAutoresizingMaskIntoConstraints = false
+        pText.leadingAnchor.constraint(equalTo: gifImage.leadingAnchor, constant: 0).isActive = true
+        pText.trailingAnchor.constraint(equalTo: gifImage.trailingAnchor, constant: 0).isActive = true
+        if(aTestArray.isEmpty) {
+            pText.topAnchor.constraint(equalTo: gifImage.topAnchor, constant: 0).isActive = true
+        } else {
+            let lastArrayE = aTestArray[aTestArray.count - 1]
+            pText.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 10).isActive = true
+        }
+        pText.text = t
+        pText.numberOfLines = 2
+        aTestArray.append(pText)
+    }
+    
+    var aTestArray = [UIView]()
+    func setContentData(data : [ContentData]) {
+        var isTextAdded = false
+        var isMediaAdded = false
+        for cd in data {
+            let t = cd.dataCode
+            if(!isTextAdded) {
+                if(t == "text") {
+                    let pText = UILabel()
+                    pText.textAlignment = .left
+                    pText.textColor = .white
+                    pText.font = .systemFont(ofSize: 14)
+                    gifImage.addSubview(pText)
+                    pText.translatesAutoresizingMaskIntoConstraints = false
+                    pText.leadingAnchor.constraint(equalTo: gifImage.leadingAnchor, constant: 0).isActive = true
+                    pText.trailingAnchor.constraint(equalTo: gifImage.trailingAnchor, constant: 0).isActive = true
+//                    pText.topAnchor.constraint(equalTo: titleText.bottomAnchor, constant: 10).isActive = true
+                    if(aTestArray.isEmpty) {
+                        pText.topAnchor.constraint(equalTo: gifImage.topAnchor, constant: 0).isActive = true
+                    } else {
+                        let lastArrayE = aTestArray[aTestArray.count - 1]
+                        pText.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 10).isActive = true
+                    }
+                    pText.text = cd.dataTextString
+                    pText.numberOfLines = 4
+                    aTestArray.append(pText)
+                    isTextAdded = true
+                }
+            }
+            
+            if(!isMediaAdded) {
+                if(t == "photo") {
+                    let assetSize = CGSize(width: 3, height: 4)
+                    var cSize = CGSize(width: 0, height: 0)
+                    let cWidth = 90.0
+                    if(assetSize.width > assetSize.height) {
+                        //1 > landscape photo 4:3 w:h
+                        let aRatio = CGSize(width: 4, height: 3) //aspect ratio
+                        let cHeight = cWidth * aRatio.height / aRatio.width
+                        //test > round to int to prevent incomplete photo scroll
+                        cSize = CGSize(width: round(cWidth), height: round(cHeight))
+                    }
+                    else if (assetSize.width < assetSize.height){
+                        //2 > portrait photo 3:4, use 2:3 instead of 9:16 as latter is too tall
+                        let aRatio = CGSize(width: 2, height: 3) //aspect ratio
+                        let cHeight = cWidth * aRatio.height / aRatio.width
+                        //test > round to int to prevent incomplete photo scroll
+                        cSize = CGSize(width: round(cWidth), height: round(cHeight))
+                    } else {
+                        //square
+                        //test > round to int to prevent incomplete photo scroll
+                        cSize = CGSize(width: round(cWidth), height: round(cWidth))
+                    }
+                    let gImage = SDAnimatedImageView()
+                    let gifUrl = URL(string: "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+                    gImage.contentMode = .scaleAspectFill
+                    gImage.layer.masksToBounds = true
+                    gifImage.addSubview(gImage)
+                    gImage.sd_setImage(with: gifUrl)
+                    gImage.translatesAutoresizingMaskIntoConstraints = false
+                    gImage.leadingAnchor.constraint(equalTo: gifImage.leadingAnchor, constant: 0).isActive = true
+                    if(aTestArray.isEmpty) {
+                        gImage.topAnchor.constraint(equalTo: gifImage.topAnchor, constant: 0).isActive = true
+                    } else {
+                        let lastArrayE = aTestArray[aTestArray.count - 1]
+                        gImage.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 10).isActive = true
+                    }
+                    gImage.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true //ori 30
+                    gImage.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true
+                    gImage.layer.cornerRadius = 10
+                    aTestArray.append(gImage)
+                    
+                    isMediaAdded = true
+                }
+            }
+            print("cd finalize: \(cd.dataCode)")
+        }
+        
+        if(!aTestArray.isEmpty) {
+            let lastArrayE = aTestArray[aTestArray.count - 1]
+            lastArrayE.bottomAnchor.constraint(equalTo: gifImage.bottomAnchor, constant: -10).isActive = true
+        }
     }
     
     var selectedPlaceList = [String]()
@@ -738,13 +787,6 @@ class PhotoFinalizePanelView: PanelView{
         if(data == "e") {
             maxLimitText.text = "Error occurred. Try again"
         }
-        else if(data == "na-photo") {
-            maxLimitText.text = "Photo is required"
-        }
-        else if(data == "na-caption") {
-            maxLimitText.text = "Caption is required"
-            pMiniError.isHidden = false
-        }        
         else if(data == "na-location") {
             maxLimitText.text = "Location is required"
             lMiniError.isHidden = false
@@ -757,12 +799,12 @@ class PhotoFinalizePanelView: PanelView{
         maxLimitText.text = ""
         maxLimitErrorPanel.isHidden = true
         
-        pMiniError.isHidden = true
+//        pMiniError.isHidden = true
         lMiniError.isHidden = true
     }
 }
 
-extension PhotoFinalizePanelView: UIScrollViewDelegate {
+extension PostFinalizePanelView: UIScrollViewDelegate {
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         print("xx4 scrollview begin: \(scrollView.contentOffset.y)")
         let scrollOffsetY = scrollView.contentOffset.y
@@ -790,28 +832,22 @@ extension PhotoFinalizePanelView: UIScrollViewDelegate {
     }
 }
 
-extension PhotoFinalizePanelView: UITextViewDelegate {
+extension PostFinalizePanelView: UITextViewDelegate {
 
     func textViewDidChange(_ textView: UITextView) {
-        let currentString: NSString = (textView.text ?? "") as NSString
-        let length = currentString.length
-        if(length > 0) {
-            pText.isHidden = true
-        } else {
-            pText.isHidden = false
-        }
-        print("textView change \(length)")
+//        let currentString: NSString = (textView.text ?? "") as NSString
+//        let length = currentString.length
+//        if(length > 0) {
+//            pText.isHidden = true
+//        } else {
+//            pText.isHidden = false
+//        }
+//        print("textView change \(length)")
     }
     
     func textViewDidBeginEditing(_ textView: UITextView) {
         //test
-        clearErrorUI()
+//        clearErrorUI()
     }
 }
 
-//extension PhotoFinalizePanelView: PhotoDraftPanelDelegate{
-//    func didClickClosePhotoDraftPanel() {
-//        
-////        backPage(isCurrentPageScrollable: false)
-//    }
-//}

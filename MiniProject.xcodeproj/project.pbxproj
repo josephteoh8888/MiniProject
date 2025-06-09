@@ -150,7 +150,7 @@
 		2E670B982C31291100EBA6D3 /* AudioClip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B972C31291100EBA6D3 /* AudioClip.swift */; };
 		2E670B9A2C31292F00EBA6D3 /* VideoClip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B992C31292F00EBA6D3 /* VideoClip.swift */; };
 		2E670B9C2C31294B00EBA6D3 /* DatasetModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B9B2C31294B00EBA6D3 /* DatasetModel.swift */; };
-		2E737BB42DA15ED200471096 /* ObjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E737BB32DA15ED200471096 /* ObjectView.swift */; };
+		2E737BB42DA15ED200471096 /* PostFinalizePanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E737BB32DA15ED200471096 /* PostFinalizePanelView.swift */; };
 		2EADB52B2C4159B70023B7F2 /* SignoutProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB52A2C4159B70023B7F2 /* SignoutProgressView.swift */; };
 		2EADB52D2C44011B0023B7F2 /* HSingleLocationViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB52C2C44011B0023B7F2 /* HSingleLocationViewCell.swift */; };
 		2EADB52F2C4A9FA10023B7F2 /* MeFollowListPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB52E2C4A9FA10023B7F2 /* MeFollowListPanelView.swift */; };
@@ -314,7 +314,7 @@
 		2E670B972C31291100EBA6D3 /* AudioClip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioClip.swift; sourceTree = "<group>"; };
 		2E670B992C31292F00EBA6D3 /* VideoClip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoClip.swift; sourceTree = "<group>"; };
 		2E670B9B2C31294B00EBA6D3 /* DatasetModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatasetModel.swift; sourceTree = "<group>"; };
-		2E737BB32DA15ED200471096 /* ObjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectView.swift; sourceTree = "<group>"; };
+		2E737BB32DA15ED200471096 /* PostFinalizePanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostFinalizePanelView.swift; sourceTree = "<group>"; };
 		2EADB52A2C4159B70023B7F2 /* SignoutProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignoutProgressView.swift; sourceTree = "<group>"; };
 		2EADB52C2C44011B0023B7F2 /* HSingleLocationViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HSingleLocationViewCell.swift; sourceTree = "<group>"; };
 		2EADB52E2C4A9FA10023B7F2 /* MeFollowListPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeFollowListPanelView.swift; sourceTree = "<group>"; };
@@ -439,6 +439,7 @@
 				2E670ADA2C31033300EBA6D3 /* PhotoFinalizePanelView.swift */,
 				2E670ACE2C31026100EBA6D3 /* PostCreatorConsolePanelView.swift */,
 				2E670AA62C30FED000EBA6D3 /* PostDraftPanelView.swift */,
+				2E737BB32DA15ED200471096 /* PostFinalizePanelView.swift */,
 				2E670AD82C31030900EBA6D3 /* PlaceCreatorConsolePanelView.swift */,
 				2E670AB42C31001500EBA6D3 /* LocationSelectScrollablePanelView.swift */,
 				2E670AB22C30FFE600EBA6D3 /* PlaceDraftPanelView.swift */,
@@ -508,7 +509,6 @@
 		2E670B222C311FF800EBA6D3 /* CustomViews */ = {
 			isa = PBXGroup;
 			children = (
-				2E737BB32DA15ED200471096 /* ObjectView.swift */,
 				2E670B252C3120BB00EBA6D3 /* QueueableView.swift */,
 				2E670B4D2C31236400EBA6D3 /* Marker.swift */,
 				2E670B492C31232700EBA6D3 /* SoundMarker.swift */,
@@ -825,7 +825,7 @@
 				2E670A8C2C30476000EBA6D3 /* StrokeUILabel.swift in Sources */,
 				2E670B3E2C31226700EBA6D3 /* ExitVideoEditorMsg.swift in Sources */,
 				2E670AF22C3106EF00EBA6D3 /* HPostListBViewCell.swift in Sources */,
-				2E737BB42DA15ED200471096 /* ObjectView.swift in Sources */,
+				2E737BB42DA15ED200471096 /* PostFinalizePanelView.swift in Sources */,
 				2E670AF62C31073200EBA6D3 /* HPhotoListBViewCell.swift in Sources */,
 				2E670B642C31255C00EBA6D3 /* ScrollFeedHNotifyChatListCell.swift in Sources */,
 				2E670B702C31260F00EBA6D3 /* ScrollFeedGridVideo2xViewCell.swift in Sources */,

@@ -23,12 +23,12 @@ protocol PostPanelDelegate : AnyObject {
     func didClickPostPanelVcvClickUser(id: String) //try
     func didClickPostPanelVcvClickPlace(id: String) //try
     func didClickPostPanelVcvClickSound(id: String) //try
-    func didClickPostPanelVcvClickPost(id: String, dataType: String) //try
+    func didClickPostPanelVcvClickPost(id: String, dataType: String, scrollToComment: Bool) //try
     func didClickPostPanelVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     func didClickPostPanelVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     
     //test > click to create new post
-    func didClickPostPanelVcvClickCreate(type: String)
+    func didClickPostPanelVcvClickCreate(type: String, objectType: String, objectId: String)
 
     //test > for marker animation after video closes
     func didStartPostPanGesture(ppv : PostPanelView)
@@ -1241,7 +1241,7 @@ class PostPanelView: PanelView, UIGestureRecognizerDelegate{
     }
 
     //test > share sheet
-    func openShareSheet() {
+    func openShareSheet(oType: String, oId: String) {
         let sharePanel = ShareSheetScrollableView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
         self.addSubview(sharePanel)
         sharePanel.translatesAutoresizingMaskIntoConstraints = false
@@ -1249,6 +1249,7 @@ class PostPanelView: PanelView, UIGestureRecognizerDelegate{
         sharePanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
         sharePanel.delegate = self
         sharePanel.initialize()
+        sharePanel.setObject(oType: oType, oId: oId)
         
         //test > track share scrollable view
         pageList.append(sharePanel)
@@ -1790,10 +1791,9 @@ extension ViewController: PostPanelDelegate{
     func didClickPostPanelVcvClickSound(id: String) {
 
     }
-    func didClickPostPanelVcvClickPost(id: String, dataType: String) {
+    func didClickPostPanelVcvClickPost(id: String, dataType: String, scrollToComment: Bool) {
         //test > real id for fetching data
-//        openPostDetailPanel(id: id)
-        openPostDetailPanel(id: id, dataType: dataType)
+        openPostDetailPanel(id: id, dataType: dataType, scrollToComment: scrollToComment)
     }
     func didClickPostPanelVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
 //        openPhotoDetailPanel()
@@ -1820,16 +1820,16 @@ extension ViewController: PostPanelDelegate{
         self.openVideoPanel(offX: offsetX, offY: offsetY, originatorView: view, originatorViewType: OriginatorTypes.UIVIEW, id: 0, originatorViewId: "", preterminedDatasets: dataset, mode: mode)
     }
     
-    func didClickPostPanelVcvClickCreate(type: String){
+    func didClickPostPanelVcvClickCreate(type: String, objectType: String, objectId: String){
         if(type == "post") {
-            openPostCreatorPanel(objectType: "post", objectId: "", mode: "")
+            openPostCreatorPanel(objectType: objectType, objectId: objectId, mode: "")
         }
         
     }
 }
 
 extension PostPanelView: ShareSheetScrollableDelegate{
-    func didShareSheetClickCreate(type: String){
+    func didShareSheetClickCreate(type: String, objectType: String, objectId: String){
         //test > for deleting item
         if(!pageList.isEmpty) {
             pageList.remove(at: pageList.count - 1)
@@ -1842,7 +1842,7 @@ extension PostPanelView: ShareSheetScrollableDelegate{
                     
                     //test > create new post
                     if(type == "post") {
-                        delegate?.didClickPostPanelVcvClickCreate(type: "post")
+                        delegate?.didClickPostPanelVcvClickCreate(type: type, objectType: objectType, objectId: objectId)
                     }
                 }
                 else if let b = lastPage as? ShareSheetScrollableView {
@@ -1854,7 +1854,7 @@ extension PostPanelView: ShareSheetScrollableDelegate{
                     
                     //test > create new post
                     if(type == "post") {
-                        delegate?.didClickPostPanelVcvClickCreate(type: "post")
+                        delegate?.didClickPostPanelVcvClickCreate(type: type, objectType: objectType, objectId: objectId)
                     }
                 }
             }
@@ -1943,14 +1943,14 @@ extension PostPanelView: CommentScrollableDelegate{
             }
         }
     }
-    func didCClickComment(){
-        
+    func didCClickComment(id: String, dataType: String){
+        delegate?.didClickPostPanelVcvClickPost(id: id, dataType: dataType, scrollToComment: true)
     }
-    func didCClickShare(){
-        openShareSheet()
+    func didCClickShare(id: String, dataType: String){
+        openShareSheet(oType: dataType, oId: id)
     }
     func didCClickPost(id: String, dataType: String){
-        delegate?.didClickPostPanelVcvClickPost(id: id, dataType: dataType)
+        delegate?.didClickPostPanelVcvClickPost(id: id, dataType: dataType, scrollToComment: false)
     }
     func didCClickClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         delegate?.didClickPostPanelVcvClickPhoto(id: id, pointX: pointX, pointY: pointY, view: view, mode: mode)
@@ -2014,11 +2014,11 @@ extension PostPanelView: ScrollFeedCellDelegate {
     func sfcDidClickVcvLove() {
         print("fcDidClickVcvLike ")
     }
-    func sfcDidClickVcvShare() {
+    func sfcDidClickVcvShare(id: String, dataType: String) {
         print("fcDidClickVcvShare ")
 
         pausePlayingMedia()
-        openShareSheet()
+        openShareSheet(oType: dataType, oId: id)
     }
 
     func sfcDidClickVcvClickUser(id: String) {
@@ -2034,7 +2034,7 @@ extension PostPanelView: ScrollFeedCellDelegate {
     }
     func sfcDidClickVcvClickPost(id: String, dataType: String) {
         pausePlayingMedia()
-        delegate?.didClickPostPanelVcvClickPost(id: id,  dataType: dataType)
+        delegate?.didClickPostPanelVcvClickPost(id: id,  dataType: dataType, scrollToComment: false)
     }
     func sfcDidClickVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         //test > pause current playing video when go to user

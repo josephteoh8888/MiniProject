@@ -25,6 +25,8 @@ class BaseData {
     var p_s = 0
     
     var contentDataArray = [ContentData]()
+    
+    var titleTextString: String = ""
 }
 
 class BasePostData: BaseData {
@@ -53,11 +55,13 @@ class PostData: BasePostData {
         let rDataUserId = rData.userId
         let rDataPlaceId = rData.placeId
         let rDataSoundId = rData.soundId
+        let rDataTitleText = rData.titleTextString
         
         //populate data
         id = rDataId
         dataCode = rDataType
         dataTextString = rDataText
+        titleTextString = rDataTitleText
         userId = rDataUserId
         placeId = rDataPlaceId
         soundId = rDataSoundId
@@ -99,11 +103,13 @@ class PostData: BasePostData {
         let rDataUserId = rData.userId
         let rDataPlaceId = rData.placeId
         let rDataSoundId = rData.soundId
+        let rDataTitleText = rData.titleTextString
         
         //populate data
         id = rDataId
         dataCode = rDataType
         dataTextString = rDataText
+        titleTextString = rDataTitleText
         userId = rDataUserId
         placeId = rDataPlaceId
         soundId = rDataSoundId
@@ -153,12 +159,14 @@ class PhotoData: BaseData {
         let rDataUserId = rData.userId
         let rDataPlaceId = rData.placeId
         let rDataSoundId = rData.soundId
+        let rDataTitleText = rData.titleTextString
         
         //populate data
         id = rDataId
         dataCode = rDataType
         dataTextString = rDataText
         coverPhotoString = rDataCover
+        titleTextString = rDataTitleText
         userId = rDataUserId
         placeId = rDataPlaceId
         soundId = rDataSoundId
@@ -214,12 +222,14 @@ class VideoData: BaseData {
         let rDataUserId = rData.userId
         let rDataPlaceId = rData.placeId
         let rDataSoundId = rData.soundId
+        let rDataTitleText = rData.titleTextString
         
         //populate data
         id = rDataId
         dataCode = rDataType
         dataTextString = rDataText
         coverPhotoString = rDataCover
+        titleTextString = rDataTitleText
         userId = rDataUserId
         placeId = rDataPlaceId
         soundId = rDataSoundId
@@ -264,11 +274,13 @@ class CommentData: BasePostData {
         let rDataUserId = rData.userId
         let rDataPlaceId = rData.placeId
         let rDataSoundId = rData.soundId
+        let rDataTitleText = rData.titleTextString
         
         //populate data
         id = rDataId
         dataCode = rDataType
         dataTextString = rDataText
+        titleTextString = rDataTitleText
         userId = rDataUserId
         placeId = rDataPlaceId
         soundId = rDataSoundId
@@ -316,10 +328,12 @@ class NotifyData: BaseData {
         let rDataUserId = rData.userId
         let rDataPlaceId = rData.placeId
         let rDataSoundId = rData.soundId
+        let rDataTitleText = rData.titleTextString
         
         id = rDataId
         dataCode = rDataType
         dataTextString = rDataText
+        titleTextString = rDataTitleText
         notifyTextString = rDataNotifyText
         userId = rDataUserId
         placeId = rDataPlaceId
@@ -513,39 +527,3 @@ class GeoData {
         return geoType
     }
 }
-
-//class Page {
-//    
-//}
-//
-//class SubTabDataModel {
-//    var identifier: String = ""
-//    var type: String = ""
-//    var currentSection: String = ""
-//    var variant: String = ""
-////    var subTabDataMap = [String : [Post]]()
-//    var subTabCurrentIndexMap = [String : Int]()
-////    var subTabDataFetchStatusMap = [String : FetchPostStatusModel]()
-//
-//    var currentCommentSection: String = ""
-////    var subTabCommentDataMap = [String : [Comment]]()
-//    var subTabCurrentCommentReplyIdMap = [String : String]()
-//    var subTabCommentCurrentIndexMap = [String : Int]()
-////    var subTabCommentDataFetchStatusMap = [String : FetchCommentStatusModel]()
-//    
-//    var isStoryOpened = false, isViewGridOpened = false, isCommentOpened = false, isReplyOpened = false
-//    var isSoundPlaying = false
-//    
-//    //test for types of subtabdata
-////    var profileUserModel: User = User()
-////    var placeItemModel: PlaceItem = PlaceItem()
-////    var soundItemModel: MusicItem = MusicItem()
-////    var trendItemModel: TrendItem = TrendItem()
-////    var campaignItemModel: CampaignItem = CampaignItem()
-//
-//    
-//    init() {
-//
-//    }
-//    
-//}

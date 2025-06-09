@@ -10,9 +10,9 @@ import UIKit
 import SDWebImage
 
 protocol HListCellDelegate : AnyObject {
-    func hListDidClickVcvComment(vc: UICollectionViewCell)
+    func hListDidClickVcvComment(vc: UICollectionViewCell, id: String, dataType: String)
     func hListDidClickVcvLove()
-    func hListDidClickVcvShare(vc: UICollectionViewCell)
+    func hListDidClickVcvShare(vc: UICollectionViewCell, id: String, dataType: String)
     func hListDidClickVcvClickUser(id: String)
     func hListDidClickVcvClickPlace(id: String)
     func hListDidClickVcvClickSound(id: String)

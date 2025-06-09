@@ -161,7 +161,7 @@ class PostClipCell: UIView {
             contentCell.translatesAutoresizingMaskIntoConstraints = false
             contentCell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 20).isActive = true
             contentCell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //10
-            contentCell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
+//            contentCell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
             contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //370
             contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //280
             contentCell.layer.cornerRadius = 10 //5
@@ -183,11 +183,11 @@ class PostClipCell: UIView {
             contentCell.translatesAutoresizingMaskIntoConstraints = false
             contentCell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 20).isActive = true
             contentCell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //0
-            contentCell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
+//            contentCell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
             contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //370
             contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //280
             contentCell.layer.cornerRadius = 10 //5
-            let t = "Shot text description"
+            let t = "" //"Shot text description"
             contentCell.setDescHeight(lHeight: 40, txt: t)
             contentCell.redrawUI()
             contentCell.configure(data: "a") //ori
@@ -208,7 +208,7 @@ class PostClipCell: UIView {
             contentCell.translatesAutoresizingMaskIntoConstraints = false
             contentCell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 20).isActive = true 
             contentCell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //10
-            contentCell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
+//            contentCell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
             contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //370
             contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //280
             contentCell.layer.cornerRadius = 10 //5
@@ -227,7 +227,7 @@ class PostClipCell: UIView {
             contentCell.translatesAutoresizingMaskIntoConstraints = false
             contentCell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 20).isActive = true
             contentCell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true //10
-            contentCell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
+//            contentCell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
             contentCell.widthAnchor.constraint(equalToConstant: cSize.width).isActive = true  //370
             contentCell.heightAnchor.constraint(equalToConstant: cSize.height).isActive = true  //280
             contentCell.layer.cornerRadius = 10 //5

@@ -15,9 +15,9 @@ protocol CommentScrollableDelegate : AnyObject {
     func didCClickSound(id: String)
     func didCClickClosePanel()
     func didCFinishClosePanel()
-    func didCClickComment()
+    func didCClickComment(id: String, dataType: String)
     func didCClickPost(id: String, dataType: String)
-    func didCClickShare()
+    func didCClickShare(id: String, dataType: String)
     func didCClickClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String)
     func didCClickClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String)
 }
@@ -2059,15 +2059,16 @@ extension CommentScrollableView: ErrorUploadCommentMsgDelegate {
     }
 }
 extension CommentScrollableView: HListCellDelegate {
-    func hListDidClickVcvComment(vc: UICollectionViewCell){
+    func hListDidClickVcvComment(vc: UICollectionViewCell, id: String, dataType: String){
         
         pausePlayingMedia()
-        delegate?.didCClickPost(id: "", dataType: "")
+//        delegate?.didCClickPost(id: id, dataType: dataType)
+        delegate?.didCClickComment(id: id, dataType: dataType)
     }
     func hListDidClickVcvLove(){
         
     }
-    func hListDidClickVcvShare(vc: UICollectionViewCell){
+    func hListDidClickVcvShare(vc: UICollectionViewCell, id: String, dataType: String){
         
         pausePlayingMedia()
         
@@ -2076,7 +2077,7 @@ extension CommentScrollableView: HListCellDelegate {
                 
                 if(cell == vc) {
                     let selectedIndexPath = a.indexPath(for: cell)
-                    delegate?.didCClickShare()
+                    delegate?.didCClickShare(id: id, dataType: dataType)
                     
                     if let c = selectedIndexPath {
                         selectedItemIdx = c.row

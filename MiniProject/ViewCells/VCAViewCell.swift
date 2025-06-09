@@ -16,7 +16,7 @@ protocol VCViewCellDelegate : AnyObject {
     func didClickPlace(id: String)
     func didClickSound(id: String)
     func didClickComment()
-    func didClickShare(vc: VCViewCell)
+    func didClickShare(vc: VCViewCell, id: String, dataType: String)
     func didClickRefresh()
 }
 
@@ -469,7 +469,7 @@ class VCAViewCell: VCViewCell {
         mImage.contentMode = .scaleAspectFill
         mImage.layer.masksToBounds = true
 //        mImage.sd_setImage(with: mImageUrl)
-        mImage.backgroundColor = .ddmDarkGreyColor
+//        mImage.backgroundColor = .ddmDarkGreyColor
 //        contentView.addSubview(mImage)
 //        aContainer.addSubview(mImage)
         mMiniC.addSubview(mImage)
@@ -906,7 +906,7 @@ class VCAViewCell: VCViewCell {
     }
     @objc func onShareClicked(gesture: UITapGestureRecognizer) {
         print("click share panel:")
-        aDelegate?.didClickShare(vc: self)
+        aDelegate?.didClickShare(vc: self, id: id, dataType: "video_l")
     }
     @objc func onLoveClicked(gesture: UITapGestureRecognizer) {
         print("click love panel:")

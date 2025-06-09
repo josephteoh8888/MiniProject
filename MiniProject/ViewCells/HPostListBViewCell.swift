@@ -1057,10 +1057,10 @@ class HPostListBViewCell: UICollectionViewCell {
     }
     
     @objc func onCommentBtnClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.hListDidClickVcvComment(vc: self)
+        aDelegate?.hListDidClickVcvComment(vc: self, id: id, dataType: dataType)
     }
     @objc func onShareClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.hListDidClickVcvShare(vc: self)
+        aDelegate?.hListDidClickVcvShare(vc: self, id: id, dataType: dataType)
     }
     @objc func onLoveClicked(gesture: UITapGestureRecognizer) {
         reactOnLoveClick()

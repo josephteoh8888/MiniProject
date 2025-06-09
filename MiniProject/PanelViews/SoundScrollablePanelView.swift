@@ -25,11 +25,11 @@ protocol SoundScrollablePanelDelegate : AnyObject {
     func didSClickUserSoundScrollable(id: String)
     func didSClickPlaceSoundScrollable(id: String)
     func didSClickSoundSoundScrollable(id: String)
-    func didSClickSoundScrollableVcvClickPost(id: String, dataType: String)
+    func didSClickSoundScrollableVcvClickPost(id: String, dataType: String, scrollToComment: Bool)
     func didSClickSoundScrollableVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     func didSClickSoundScrollableVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     func didSClickSoundSignIn()
-    func didSClickSoundShare()
+    func didSClickSoundShare(id: String)
     
     //test > initialize
     func didFinishInitializeSoundScrollablePanel(pv: ScrollablePanelView)
@@ -1307,7 +1307,7 @@ class SoundScrollablePanelView: ScrollablePanelView{
     }
     
     //test > share sheet when click on share post
-    func openShareSheet() {
+    func openShareSheet(oType: String, oId: String) {
         let sharePanel = ShareSheetScrollableView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
         panelView.addSubview(sharePanel)
         sharePanel.translatesAutoresizingMaskIntoConstraints = false
@@ -1315,6 +1315,7 @@ class SoundScrollablePanelView: ScrollablePanelView{
         sharePanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
         sharePanel.delegate = self
         sharePanel.initialize()
+        sharePanel.setObject(oType: oType, oId: oId)
         
         //test > track share scrollable view
         pageList.append(sharePanel)
@@ -2291,7 +2292,7 @@ class SoundScrollablePanelView: ScrollablePanelView{
     
     //test > share object sheet
     @objc func onAClicked(gesture: UITapGestureRecognizer) {
-        delegate?.didSClickSoundShare()
+        delegate?.didSClickSoundShare(id: getObjectId())
     }
 }
 
@@ -2698,10 +2699,10 @@ extension SoundScrollablePanelView: ScrollFeedCellDelegate {
     func sfcDidClickVcvLove() {
         print("fcDidClickVcvLike ")
     }
-    func sfcDidClickVcvShare() {
+    func sfcDidClickVcvShare(id: String, dataType: String) {
         print("fcDidClickVcvShare ")
         pauseFeedPlayingMedia()
-        openShareSheet()
+        openShareSheet(oType: dataType, oId: id)
     }
 
     func sfcDidClickVcvClickUser(id: String) {
@@ -2717,7 +2718,7 @@ extension SoundScrollablePanelView: ScrollFeedCellDelegate {
     }
     func sfcDidClickVcvClickPost(id: String, dataType: String) {
         pauseFeedPlayingMedia()
-        delegate?.didSClickSoundScrollableVcvClickPost(id: id, dataType: dataType)
+        delegate?.didSClickSoundScrollableVcvClickPost(id: id, dataType: dataType, scrollToComment: false)
     }
     func sfcDidClickVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         
@@ -2814,10 +2815,9 @@ extension ViewController: SoundScrollablePanelDelegate{
         //test > real id for fetching data
         openSoundPanel(id: id)
     }
-    func didSClickSoundScrollableVcvClickPost(id: String, dataType: String){
+    func didSClickSoundScrollableVcvClickPost(id: String, dataType: String, scrollToComment: Bool){
         //test > real id for fetching data
-//        openPostDetailPanel(id: id)
-        openPostDetailPanel(id: id, dataType: dataType)
+        openPostDetailPanel(id: id, dataType: dataType, scrollToComment: scrollToComment)
     }
     func didSClickSoundScrollableVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
         let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
@@ -2851,8 +2851,8 @@ extension ViewController: SoundScrollablePanelDelegate{
     func didSClickSoundSignIn(){
         openLoginPanel()
     }
-    func didSClickSoundShare(){
-        openShareObjectPanel(data: "s")
+    func didSClickSoundShare(id: String){
+        openShareObjectPanel(oType: "s", oId: id)
     }
     
     func didFinishInitializeSoundScrollablePanel(pv: ScrollablePanelView){
@@ -2885,7 +2885,7 @@ extension ViewController: SoundScrollablePanelDelegate{
     }
 }
 extension SoundScrollablePanelView: ShareSheetScrollableDelegate{
-    func didShareSheetClickCreate(type: String){
+    func didShareSheetClickCreate(type: String, objectType: String, objectId: String){
         //test > for deleting item
         if(!pageList.isEmpty) {
             pageList.remove(at: pageList.count - 1)
@@ -3001,14 +3001,14 @@ extension SoundScrollablePanelView: CommentScrollableDelegate{
             }
         }
     }
-    func didCClickComment(){
-        
+    func didCClickComment(id: String, dataType: String){
+        delegate?.didSClickSoundScrollableVcvClickPost(id: id, dataType: dataType, scrollToComment: true)
     }
-    func didCClickShare(){
-        openShareSheet()
+    func didCClickShare(id: String, dataType: String){
+        openShareSheet(oType: dataType, oId: id)
     }
     func didCClickPost(id: String, dataType: String){
-        delegate?.didSClickSoundScrollableVcvClickPost(id: id, dataType: dataType)
+        delegate?.didSClickSoundScrollableVcvClickPost(id: id, dataType: dataType, scrollToComment: false)
     }
     func didCClickClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         delegate?.didSClickSoundScrollableVcvClickPhoto(id: id, pointX: pointX, pointY: pointY, view: view, mode: mode)

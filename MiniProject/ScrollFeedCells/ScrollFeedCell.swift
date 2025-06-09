@@ -21,7 +21,7 @@ protocol ScrollFeedCellDelegate : AnyObject {
     func sfcDidClickVcvRefresh() //try
     func sfcDidClickVcvComment() //try
     func sfcDidClickVcvLove() //try
-    func sfcDidClickVcvShare() //try
+    func sfcDidClickVcvShare(id: String, dataType: String) //try
     func sfcDidClickVcvClickUser(id: String) //try
     func sfcDidClickVcvClickPlace(id: String) //try
     func sfcDidClickVcvClickSound(id: String) //try

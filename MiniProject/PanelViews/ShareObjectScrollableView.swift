@@ -11,7 +11,7 @@ import SDWebImage
 
 protocol ShareObjectScrollableDelegate : AnyObject {
 //    func didShareObjectClick()
-    func didShareObjectClickCreate(type: String, objectType: String)
+    func didShareObjectClickCreate(type: String, objectType: String, objectId: String)
     func didShareObjectClickDelete()
     func didShareObjectClickClosePanel()
     func didShareObjectFinishClosePanel()
@@ -39,6 +39,7 @@ class ShareObjectScrollableView: PanelView, UIGestureRecognizerDelegate{
     var cVDataList = [String]()
     
     var objectType = ""
+    var objectId = ""
     
     let mainPanel = UIView()
     let createPanel = UIView()
@@ -281,9 +282,10 @@ class ShareObjectScrollableView: PanelView, UIGestureRecognizerDelegate{
         isInitialized = true
     }
     
-    func setObjectType(t: String) {
-        self.objectType = t
-        if(t == "u") {
+    func setObject(oType: String, oId: String) {
+        self.objectType = oType
+        self.objectId = oId
+        if(oType == "u") {
             aVDataList.append("rp")//report post
             aVDataList.append("d") //dislike
             
@@ -293,7 +295,7 @@ class ShareObjectScrollableView: PanelView, UIGestureRecognizerDelegate{
             bVDataList.append("s")//share to
             bVDataList.append("c")//copy link
             
-        } else if(t == "p") {
+        } else if(oType == "p") {
             aVDataList.append("rp")//report post
             aVDataList.append("d") //dislike
             
@@ -307,7 +309,7 @@ class ShareObjectScrollableView: PanelView, UIGestureRecognizerDelegate{
             cVDataList.append("cr_post")//copy link
             cVDataList.append("cr_photo")//copy link
             cVDataList.append("cr_video")//copy link
-        } else if(t == "s") {
+        } else if(oType == "s") {
             aVDataList.append("rp")//report post
             aVDataList.append("d") //dislike
             
@@ -507,7 +509,7 @@ extension ShareObjectScrollableView: UICollectionViewDataSource {
             
 //            delegate?.didShareObjectClickCreate(type: "post", objectType: objectType)
 //            delegate?.didShareObjectClickCreate(type: "video", objectType: objectType)
-            delegate?.didShareObjectClickCreate(type: "photo", objectType: objectType)
+            delegate?.didShareObjectClickCreate(type: "photo", objectType: objectType, objectId: objectId)
             
         } else if collectionView == bVCV {
             print("vgrid b selected: \(bVDataList[indexPath.row])")
@@ -526,16 +528,16 @@ extension ShareObjectScrollableView: UICollectionViewDataSource {
             let data = cVDataList[indexPath.row]
             if(data == "cr_p") {
                 self.removeFromSuperview()
-                delegate?.didShareObjectClickCreate(type: "p", objectType: objectType)
+                delegate?.didShareObjectClickCreate(type: "p", objectType: objectType, objectId: objectId)
             } else if(data == "cr_post") {
                 self.removeFromSuperview()
-                delegate?.didShareObjectClickCreate(type: "post", objectType: objectType)
+                delegate?.didShareObjectClickCreate(type: "post", objectType: objectType, objectId: objectId)
             } else if(data == "cr_photo") {
                 self.removeFromSuperview()
-                delegate?.didShareObjectClickCreate(type: "photo", objectType: objectType)
+                delegate?.didShareObjectClickCreate(type: "photo", objectType: objectType, objectId: objectId)
             } else if(data == "cr_video") {
                 self.removeFromSuperview()
-                delegate?.didShareObjectClickCreate(type: "video", objectType: objectType)
+                delegate?.didShareObjectClickCreate(type: "video", objectType: objectType, objectId: objectId)
             }
         }
      }
@@ -547,7 +549,7 @@ extension ShareObjectScrollableView: UICollectionViewDataSource {
 
 extension ViewController: ShareObjectScrollableDelegate{
 
-    func didShareObjectClickCreate(type: String, objectType: String){
+    func didShareObjectClickCreate(type: String, objectType: String, objectId: String){
         if(type == "p") {
             if(objectType == "p") {
                 openPlaceCreatorPanel(objectType: "p", objectId: "", mode: "")
