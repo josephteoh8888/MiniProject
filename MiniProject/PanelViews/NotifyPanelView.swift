@@ -910,7 +910,7 @@ extension NotifyPanelView: ScrollFeedCellDelegate {
     func sfcDidClickVcvClickSound(id: String) {
         delegate?.didNotifyClickSound(id: id)
     }
-    func sfcDidClickVcvClickPost(id: String, dataType: String) {
+    func sfcDidClickVcvClickPost(id: String, dataType: String, pointX: CGFloat, pointY: CGFloat) {
 //        openPostDetail()
     }
     func sfcDidClickVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {

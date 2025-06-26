@@ -195,6 +195,21 @@ class HResultPostListViewCell: UICollectionViewCell {
         contentPhoto.isHidden = true
     
     }
+    
+    func hideCell() {
+//        gifImage.isHidden = true
+        
+        //test 2 > try opacity
+        self.layer.opacity = 0.1
+    }
+
+    func dehideCell() {
+//        gifImage.isHidden = false
+        
+        //test 2 > try opacity
+        self.layer.opacity = 1.0
+    }
+    
     override func prepareForReuse() {
         super.prepareForReuse()
         print("HResultUserListViewCell prepare for reuse")
@@ -322,8 +337,16 @@ class HResultPostListViewCell: UICollectionViewCell {
     }
     //*
     @objc func onPostClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.didHResultClickPost(id: id, dataType: "")
+//        aDelegate?.didHResultClickPost(id: id, dataType: "", vc: self, pointX: CGFloat, pointY: CGFloat)
         print("hresultpost clicked \(id)")
+        
+        //test 2 > new method
+        let translation = gesture.location(in: self)
+        let x = translation.x
+        let y = translation.y
+        let pointX = x
+        let pointY = y
+        aDelegate?.didHResultClickPost(id: id, dataType: "", vc: self, pointX: pointX, pointY: pointY)
     }
     @objc func onUserClicked(gesture: UITapGestureRecognizer) {
         aDelegate?.didHResultClickUser(id: "")

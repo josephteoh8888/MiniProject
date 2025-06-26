@@ -139,50 +139,6 @@ class PostFinalizePanelView: PanelView{
 //        gifImage.heightAnchor.constraint(equalToConstant: 90).isActive = true //ori 30
         gifImage.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 20).isActive = true
         
-//        let titleText = UILabel()
-//        titleText.textAlignment = .left
-//        titleText.textColor = .white
-//        titleText.font = .boldSystemFont(ofSize: 14)
-//        gifImage.addSubview(titleText)
-//        titleText.translatesAutoresizingMaskIntoConstraints = false
-//        titleText.leadingAnchor.constraint(equalTo: gifImage.leadingAnchor, constant: 0).isActive = true
-//        titleText.trailingAnchor.constraint(equalTo: gifImage.trailingAnchor, constant: 0).isActive = true
-//        titleText.topAnchor.constraint(equalTo: gifImage.topAnchor, constant: 0).isActive = true
-//        titleText.text = ""
-//        titleText.numberOfLines = 2
-        
-//        pText.textAlignment = .left
-//        pText.textColor = .white
-//        pText.font = .systemFont(ofSize: 14)
-//        stackView.addSubview(pText)
-//        pText.translatesAutoresizingMaskIntoConstraints = false
-//        pText.leadingAnchor.constraint(equalTo: gifImage.leadingAnchor, constant: 0).isActive = true
-//        pText.trailingAnchor.constraint(equalTo: gifImage.trailingAnchor, constant: 0).isActive = true
-//        pText.topAnchor.constraint(equalTo: titleText.bottomAnchor, constant: 10).isActive = true
-//        pText.text = "boring...system"
-////        pText.layer.opacity = 0.5
-//        pText.numberOfLines = 4
-        
-//        pMiniError.backgroundColor = .red
-//        stackView.addSubview(pMiniError)
-//        pMiniError.translatesAutoresizingMaskIntoConstraints = false
-//        pMiniError.leadingAnchor.constraint(equalTo: pText.leadingAnchor, constant: 0).isActive = true
-//        pMiniError.bottomAnchor.constraint(equalTo: pText.topAnchor, constant: -5).isActive = true
-////        pMiniError.topAnchor.constraint(equalTo: bTextView.bottomAnchor, constant: 5).isActive = true
-//        pMiniError.heightAnchor.constraint(equalToConstant: 20).isActive = true
-//        pMiniError.widthAnchor.constraint(equalToConstant: 20).isActive = true
-//        pMiniError.layer.cornerRadius = 10
-//        pMiniError.isHidden = true
-//
-//        let pMiniBtn = UIImageView(image: UIImage(named:"icon_round_priority")?.withRenderingMode(.alwaysTemplate))
-//        pMiniBtn.tintColor = .white
-//        pMiniError.addSubview(pMiniBtn)
-//        pMiniBtn.translatesAutoresizingMaskIntoConstraints = false
-//        pMiniBtn.centerXAnchor.constraint(equalTo: pMiniError.centerXAnchor).isActive = true
-//        pMiniBtn.centerYAnchor.constraint(equalTo: pMiniError.centerYAnchor).isActive = true
-//        pMiniBtn.heightAnchor.constraint(equalToConstant: 12).isActive = true
-//        pMiniBtn.widthAnchor.constraint(equalToConstant: 12).isActive = true
-        
         //test > line divider for different sections
         let divider = UIView()
         divider.backgroundColor = .ddmDarkGrayColor //.ddmDarkColor
@@ -799,7 +755,6 @@ class PostFinalizePanelView: PanelView{
         maxLimitText.text = ""
         maxLimitErrorPanel.isHidden = true
         
-//        pMiniError.isHidden = true
         lMiniError.isHidden = true
     }
 }

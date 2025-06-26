@@ -14,7 +14,7 @@ protocol VideoPanelDelegate : AnyObject {
     func didClickUser(id: String)
     func didClickPlace(id: String)
     func didClickSound(id: String)
-    func didClickPost(id: String, dataType: String, scrollToComment: Bool)
+    func didClickPost(id: String, dataType: String, scrollToComment: Bool, pointX: CGFloat, pointY: CGFloat)
     func didStartOpenVideoPanel()
     func didFinishOpenVideoPanel()
     func didStartCloseVideoPanel(vpv : VideoPanelView)
@@ -69,10 +69,12 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
     var aView = UIView()
     var textPanelBottomCons: NSLayoutConstraint?
     var aTextBoxHeightCons: NSLayoutConstraint?
-    var aTextTrailingCons: NSLayoutConstraint?
-    var aTextBottomCons: NSLayoutConstraint?
+//    var aTextTrailingCons: NSLayoutConstraint?
+//    var aTextBottomCons: NSLayoutConstraint?
     let aTextBox = UITextView()
     var aaViewTrailingCons: NSLayoutConstraint?
+    let sendAaView = UIView()
+    var sendAaViewTrailingCons: NSLayoutConstraint?
     let textPanel = UIView()
     var currentFirstResponder : UITextView?
     var isKeyboardUp = false
@@ -427,7 +429,7 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
     
     //test > setup comment textbox
     func setupCommentTextboxUI() {
-//        bottomBox.backgroundColor = .red
+//        bottomBox.backgroundColor = .black
         bottomBox.backgroundColor = .ddmBlackOverlayColor
         videoPanel.addSubview(bottomBox)
         bottomBox.clipsToBounds = true
@@ -435,22 +437,24 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         bottomBox.leadingAnchor.constraint(equalTo: videoPanel.leadingAnchor, constant: 0).isActive = true
         bottomBox.trailingAnchor.constraint(equalTo: videoPanel.trailingAnchor, constant: 0).isActive = true
 //        bottomBox.heightAnchor.constraint(equalToConstant: 94).isActive = true //default: 50
-//        bottomBox.bottomAnchor.constraint(equalTo: videoPanel.bottomAnchor, constant: 0).isActive = true
+//        bottomBox.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: 0).isActive = true
         bottomBox.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
         bottomBox.heightAnchor.constraint(equalToConstant: 60).isActive = true //default: 50
         bottomBox.isUserInteractionEnabled = true
         let aPanelPanGesture = UIPanGestureRecognizer(target: self, action: #selector(onTextViewPanGesture))
         bottomBox.addGestureRecognizer(aPanelPanGesture)
 //        bottomBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onOpenTextBoxClicked)))
-        
-//        let addCommentContainer = UIView()
+
         bottomBox.addSubview(addCommentContainer)
         addCommentContainer.translatesAutoresizingMaskIntoConstraints = false
-        addCommentContainer.leadingAnchor.constraint(equalTo: bottomBox.leadingAnchor, constant: 0).isActive = true
-        addCommentContainer.trailingAnchor.constraint(equalTo: bottomBox.trailingAnchor, constant: 0).isActive = true
-        addCommentContainer.topAnchor.constraint(equalTo: bottomBox.topAnchor, constant: 0).isActive = true //default: 50
-        addCommentContainer.bottomAnchor.constraint(equalTo: bottomBox.bottomAnchor, constant: 0).isActive = true
         addCommentContainer.isHidden = false
+        addCommentContainer.backgroundColor = .ddmBlackDark
+        addCommentContainer.layer.cornerRadius = 10 //10
+        addCommentContainer.leadingAnchor.constraint(equalTo: bottomBox.leadingAnchor, constant: 20).isActive = true //0
+//        addCommentContainer.leadingAnchor.constraint(equalTo: zGrid.trailingAnchor, constant: 10).isActive = true //0
+        addCommentContainer.trailingAnchor.constraint(equalTo: bottomBox.trailingAnchor, constant: -20).isActive = true //-15
+        addCommentContainer.topAnchor.constraint(equalTo: bottomBox.topAnchor, constant: 10).isActive = true //0
+        addCommentContainer.bottomAnchor.constraint(equalTo: bottomBox.bottomAnchor, constant: -10).isActive = true //0
         addCommentContainer.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onOpenTextBoxClicked)))
         
         let bText = UILabel()
@@ -464,54 +468,9 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         bText.translatesAutoresizingMaskIntoConstraints = false
         bText.leadingAnchor.constraint(equalTo: addCommentContainer.leadingAnchor, constant: 15).isActive = true
         bText.trailingAnchor.constraint(equalTo: addCommentContainer.trailingAnchor, constant: -60).isActive = true
-//        bText.topAnchor.constraint(equalTo: addCommentContainer.topAnchor, constant: 15).isActive = true
         bText.centerYAnchor.constraint(equalTo: addCommentContainer.centerYAnchor, constant: 0).isActive = true
-//        bText.trailingAnchor.constraint(equalTo: bottomBox.trailingAnchor, constant: -60).isActive = true
-//        bText.topAnchor.constraint(equalTo: bottomBox.topAnchor, constant: 15).isActive = true
         bText.text = "Add comment..."
 //        bText.layer.opacity = 0.5
-        
-        let lTextBtn = UIImageView()
-        lTextBtn.image = UIImage(named:"icon_outline_photo")?.withRenderingMode(.alwaysTemplate)
-//        lTextBtn.tintColor = .white
-        lTextBtn.tintColor = .ddmDarkGrayColor
-//        bottomBox.addSubview(lTextBtn)
-        addCommentContainer.addSubview(lTextBtn)
-        lTextBtn.translatesAutoresizingMaskIntoConstraints = false
-//        lTextBtn.trailingAnchor.constraint(equalTo: bottomBox.trailingAnchor, constant: -15).isActive = true
-        lTextBtn.trailingAnchor.constraint(equalTo: addCommentContainer.trailingAnchor, constant: -15).isActive = true
-        lTextBtn.centerYAnchor.constraint(equalTo: bText.centerYAnchor).isActive = true
-        lTextBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
-        lTextBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        lTextBtn.isHidden = false
-
-        let mTextBtn = UIImageView()
-        mTextBtn.image = UIImage(named:"icon_round_emoji")?.withRenderingMode(.alwaysTemplate)
-//        mTextBtn.tintColor = .white
-        mTextBtn.tintColor = .ddmDarkGrayColor
-//        mTextBtn.layer.opacity = 0.5
-//        bottomBox.addSubview(mTextBtn)
-        addCommentContainer.addSubview(mTextBtn)
-        mTextBtn.translatesAutoresizingMaskIntoConstraints = false
-        mTextBtn.trailingAnchor.constraint(equalTo: lTextBtn.leadingAnchor, constant: -10).isActive = true
-        mTextBtn.centerYAnchor.constraint(equalTo: bText.centerYAnchor).isActive = true
-        mTextBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
-        mTextBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        mTextBtn.isHidden = false
-
-        let nTextBtn = UIImageView()
-        nTextBtn.image = UIImage(named:"icon_round_at")?.withRenderingMode(.alwaysTemplate)
-//        nTextBtn.tintColor = .white
-        nTextBtn.tintColor = .ddmDarkGrayColor
-//        nTextBtn.layer.opacity = 0.5
-//        bottomBox.addSubview(nTextBtn)
-        addCommentContainer.addSubview(nTextBtn)
-        nTextBtn.translatesAutoresizingMaskIntoConstraints = false
-        nTextBtn.trailingAnchor.constraint(equalTo: mTextBtn.leadingAnchor, constant: -10).isActive = true
-        nTextBtn.centerYAnchor.constraint(equalTo: bText.centerYAnchor).isActive = true
-        nTextBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
-        nTextBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        nTextBtn.isHidden = false
         
         bottomBox.addSubview(sendCommentContainer)
         sendCommentContainer.translatesAutoresizingMaskIntoConstraints = false
@@ -521,17 +480,26 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         sendCommentContainer.bottomAnchor.constraint(equalTo: bottomBox.bottomAnchor, constant: 0).isActive = true
         sendCommentContainer.isHidden = true
         
-        let sendAaView = UIView()
+//        let sendAaView = UIView()
         sendAaView.backgroundColor = .ddmBlackDark
         sendCommentContainer.addSubview(sendAaView)
         sendAaView.translatesAutoresizingMaskIntoConstraints = false
-//        sendAaView.topAnchor.constraint(equalTo: sendCommentContainer.topAnchor, constant: 10).isActive = true
-        sendAaView.centerYAnchor.constraint(equalTo: sendCommentContainer.centerYAnchor, constant: 0).isActive = true //-10
-        sendAaView.leadingAnchor.constraint(equalTo: sendCommentContainer.leadingAnchor, constant: 15).isActive = true
-        sendAaView.trailingAnchor.constraint(equalTo: sendCommentContainer.trailingAnchor, constant: -50).isActive = true
+        sendAaView.topAnchor.constraint(equalTo: sendCommentContainer.topAnchor, constant: 10).isActive = true
+        sendAaView.leadingAnchor.constraint(equalTo: sendCommentContainer.leadingAnchor, constant: 20).isActive = true //-10
+//        sendAaView.trailingAnchor.constraint(equalTo: sendCommentContainer.trailingAnchor, constant: -50).isActive = true
+        sendAaViewTrailingCons = sendAaView.trailingAnchor.constraint(equalTo: sendCommentContainer.trailingAnchor, constant: -20)
+        sendAaViewTrailingCons?.isActive = true
         sendAaView.heightAnchor.constraint(equalToConstant: 40).isActive = true //36
         sendAaView.layer.cornerRadius = 10
         sendAaView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onOpenTextBoxClicked)))
+        
+        sendASpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
+        sendCommentContainer.addSubview(sendASpinner)
+        sendASpinner.translatesAutoresizingMaskIntoConstraints = false
+        sendASpinner.trailingAnchor.constraint(equalTo: sendCommentContainer.trailingAnchor, constant: -20).isActive = true
+        sendASpinner.centerYAnchor.constraint(equalTo: sendAaView.centerYAnchor).isActive = true
+        sendASpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        sendASpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
         
 //        let sendBText = UILabel()
         sendBText.textAlignment = .left
@@ -547,44 +515,6 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
 //        sendBText.topAnchor.constraint(equalTo: sendAaView.topAnchor, constant: 15).isActive = true
         sendBText.centerYAnchor.constraint(equalTo: sendAaView.centerYAnchor, constant: 0).isActive = true
         sendBText.text = ""
-        
-        sendASpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
-        sendCommentContainer.addSubview(sendASpinner)
-        sendASpinner.translatesAutoresizingMaskIntoConstraints = false
-        sendASpinner.trailingAnchor.constraint(equalTo: sendCommentContainer.trailingAnchor, constant: -15).isActive = true
-        sendASpinner.centerYAnchor.constraint(equalTo: sendAaView.centerYAnchor).isActive = true
-        sendASpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        sendASpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
-
-        sendCommentContainer.addSubview(sendBBox)
-        sendBBox.translatesAutoresizingMaskIntoConstraints = false
-        sendBBox.widthAnchor.constraint(equalToConstant: 30).isActive = true //20
-        sendBBox.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        sendBBox.centerYAnchor.constraint(equalTo: sendAaView.centerYAnchor).isActive = true
-        sendBBox.centerXAnchor.constraint(equalTo: sendASpinner.centerXAnchor).isActive = true
-        sendBBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onClearTextBoxClicked)))
-        sendBBox.isHidden = true
-        
-        let sendBBoxBg = UIView()
-        sendBBoxBg.backgroundColor = .white
-        sendBBox.addSubview(sendBBoxBg)
-        sendBBoxBg.clipsToBounds = true
-        sendBBoxBg.translatesAutoresizingMaskIntoConstraints = false
-        sendBBoxBg.widthAnchor.constraint(equalToConstant: 20).isActive = true //20
-        sendBBoxBg.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        sendBBoxBg.centerYAnchor.constraint(equalTo: sendBBox.centerYAnchor).isActive = true
-        sendBBoxBg.centerXAnchor.constraint(equalTo: sendBBox.centerXAnchor).isActive = true
-//        sendBBox.trailingAnchor.constraint(equalTo: sendCommentContainer.trailingAnchor, constant: -15).isActive = true
-        sendBBoxBg.layer.cornerRadius = 10
-
-        let aBtn = UIImageView(image: UIImage(named:"icon_round_close")?.withRenderingMode(.alwaysTemplate))
-        aBtn.tintColor = .ddmDarkColor
-        sendBBox.addSubview(aBtn)
-        aBtn.translatesAutoresizingMaskIntoConstraints = false
-        aBtn.centerXAnchor.constraint(equalTo: sendBBox.centerXAnchor).isActive = true
-        aBtn.centerYAnchor.constraint(equalTo: sendBBox.centerYAnchor).isActive = true
-        aBtn.heightAnchor.constraint(equalToConstant: 16).isActive = true
-        aBtn.widthAnchor.constraint(equalToConstant: 16).isActive = true
         
         //test > real textview edittext for comment
         videoPanel.addSubview(aView)
@@ -613,133 +543,82 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
 //        textPanelHeightCons?.isActive = true
         textPanel.isHidden = true
         textPanel.isUserInteractionEnabled = true
+//        textPanel.layer.cornerRadius = 10
+//        textPanel.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
+//        let bPanelPanGesture = UIPanGestureRecognizer(target: self, action: #selector(onTextViewPanGesture))
+//        textPanel.addGestureRecognizer(bPanelPanGesture)
 
 //        let sendBox = UIView()
 //        sendBox.backgroundColor = .clear //yellow
         sendBox.backgroundColor = .yellow //yellow
         textPanel.addSubview(sendBox)
         sendBox.translatesAutoresizingMaskIntoConstraints = false
-//        sendBox.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        sendBox.widthAnchor.constraint(equalToConstant: 30).isActive = true
         sendBox.heightAnchor.constraint(equalToConstant: 30).isActive = true //30
-        sendBox.trailingAnchor.constraint(equalTo: textPanel.trailingAnchor, constant: -15).isActive = true //-15
+        sendBox.trailingAnchor.constraint(equalTo: textPanel.trailingAnchor, constant: -20).isActive = true //-15
 //        sendBox.topAnchor.constraint(equalTo: textPanel.topAnchor, constant: 10).isActive = true
-        sendBox.bottomAnchor.constraint(equalTo: textPanel.bottomAnchor, constant: -13).isActive = true //-10
-        sendBox.layer.cornerRadius = 15
+        sendBox.bottomAnchor.constraint(equalTo: textPanel.bottomAnchor, constant: -15).isActive = true //-15
+        sendBox.layer.cornerRadius = 15 //15
         sendBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onSendBtnClicked)))
+        
+        let aNextMiniBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right_next")?.withRenderingMode(.alwaysTemplate))
+        aNextMiniBtn.tintColor = .black
+        sendBox.addSubview(aNextMiniBtn)
+        aNextMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        aNextMiniBtn.centerXAnchor.constraint(equalTo: sendBox.centerXAnchor).isActive = true
+        aNextMiniBtn.centerYAnchor.constraint(equalTo: sendBox.centerYAnchor).isActive = true
+        aNextMiniBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        aNextMiniBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
 
-        let sendBoxText = UILabel()
-        sendBoxText.textAlignment = .center
-        sendBoxText.textColor = .black
-        sendBoxText.font = .boldSystemFont(ofSize: 13)
-        sendBox.addSubview(sendBoxText)
-        sendBoxText.translatesAutoresizingMaskIntoConstraints = false
-//        gBtnText.topAnchor.constraint(equalTo: gBtn.topAnchor, constant: 10).isActive = true
-//        gBtnText.bottomAnchor.constraint(equalTo: gBtn.bottomAnchor, constant: -10).isActive = true
-        sendBoxText.centerYAnchor.constraint(equalTo: sendBox.centerYAnchor).isActive = true
-        sendBoxText.leadingAnchor.constraint(equalTo: sendBox.leadingAnchor, constant: 10).isActive = true
-        sendBoxText.trailingAnchor.constraint(equalTo: sendBox.trailingAnchor, constant: -10).isActive = true
-        sendBoxText.text = "Post"
+        let zZGrid = UIView()
+        textPanel.addSubview(zZGrid)
+        zZGrid.backgroundColor = .ddmBlackDark
+        zZGrid.translatesAutoresizingMaskIntoConstraints = false
+        zZGrid.heightAnchor.constraint(equalToConstant: 30).isActive = true //30
+        zZGrid.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        zZGrid.leadingAnchor.constraint(equalTo: textPanel.leadingAnchor, constant: 20).isActive = true
+        zZGrid.bottomAnchor.constraint(equalTo: textPanel.bottomAnchor, constant: -15).isActive = true //-15
+        zZGrid.layer.cornerRadius = 15 //15
 
+        let zZGridIcon = UIImageView(image: UIImage(named:"icon_round_add")?.withRenderingMode(.alwaysTemplate))
+//        zGridIcon.tintColor = .white
+        zZGridIcon.tintColor = .ddmDarkGrayColor
+        zZGrid.addSubview(zZGridIcon)
+        zZGridIcon.translatesAutoresizingMaskIntoConstraints = false
+//        zGridIcon.centerXAnchor.constraint(equalTo: pMini.centerXAnchor, constant: 0).isActive = true
+//        zGridIcon.bottomAnchor.constraint(equalTo: divider.topAnchor, constant: 0).isActive = true
+        zZGridIcon.centerXAnchor.constraint(equalTo: zZGrid.centerXAnchor, constant: 0).isActive = true
+        zZGridIcon.centerYAnchor.constraint(equalTo: zZGrid.centerYAnchor, constant: 0).isActive = true
+        zZGridIcon.heightAnchor.constraint(equalToConstant: 20).isActive = true //20
+        zZGridIcon.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        
 //        aaView.backgroundColor = .ddmDarkColor
         aaView.backgroundColor = .ddmBlackDark
         textPanel.addSubview(aaView)
         aaView.translatesAutoresizingMaskIntoConstraints = false
         aaView.topAnchor.constraint(equalTo: textPanel.topAnchor, constant: 10).isActive = true
         aaView.bottomAnchor.constraint(equalTo: textPanel.bottomAnchor, constant: -10).isActive = true //-10
-        aaView.leadingAnchor.constraint(equalTo: textPanel.leadingAnchor, constant: 15).isActive = true
-//        aView.trailingAnchor.constraint(equalTo: textPanel.trailingAnchor, constant: -15).isActive = true
-        aaViewTrailingCons = aaView.trailingAnchor.constraint(equalTo: textPanel.trailingAnchor, constant: -15)
+//        aaView.leadingAnchor.constraint(equalTo: textPanel.leadingAnchor, constant: 15).isActive = true
+        aaView.leadingAnchor.constraint(equalTo: zZGrid.trailingAnchor, constant: 10).isActive = true
+        aaViewTrailingCons = aaView.trailingAnchor.constraint(equalTo: textPanel.trailingAnchor, constant: -20)
         aaViewTrailingCons?.isActive = true
         aaView.layer.cornerRadius = 10
 
-        //test > add icons for adding photo etc
-        let zGrid = UIView()
-        textPanel.addSubview(zGrid)
-//        zGrid.backgroundColor = .red
-        zGrid.translatesAutoresizingMaskIntoConstraints = false
-        zGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        zGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        zGrid.trailingAnchor.constraint(equalTo: aaView.trailingAnchor, constant: 0).isActive = true
-        zGrid.bottomAnchor.constraint(equalTo: aaView.bottomAnchor, constant: 0).isActive = true
-
-        let zGridIcon = UIImageView(image: UIImage(named:"icon_outline_photo")?.withRenderingMode(.alwaysTemplate))
-//        zGridIcon.tintColor = .white
-        zGridIcon.tintColor = .ddmDarkGrayColor
-        textPanel.addSubview(zGridIcon)
-        zGridIcon.translatesAutoresizingMaskIntoConstraints = false
-//        zGridIcon.centerXAnchor.constraint(equalTo: pMini.centerXAnchor, constant: 0).isActive = true
-//        zGridIcon.bottomAnchor.constraint(equalTo: divider.topAnchor, constant: 0).isActive = true
-        zGridIcon.centerXAnchor.constraint(equalTo: zGrid.centerXAnchor, constant: 0).isActive = true
-        zGridIcon.centerYAnchor.constraint(equalTo: zGrid.centerYAnchor, constant: 0).isActive = true
-        zGridIcon.heightAnchor.constraint(equalToConstant: 26).isActive = true //20
-        zGridIcon.widthAnchor.constraint(equalToConstant: 26).isActive = true
-//        zGridIcon.layer.opacity = 0.5
-        
-        let yGrid = UIView()
-        textPanel.addSubview(yGrid)
-//        yGrid.backgroundColor = .red
-        yGrid.translatesAutoresizingMaskIntoConstraints = false
-        yGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        yGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        yGrid.trailingAnchor.constraint(equalTo: zGrid.leadingAnchor, constant: 0).isActive = true
-        yGrid.bottomAnchor.constraint(equalTo: aaView.bottomAnchor, constant: 0).isActive = true
-
-        let yGridIcon = UIImageView(image: UIImage(named:"icon_round_emoji")?.withRenderingMode(.alwaysTemplate))
-//        yGridIcon.tintColor = .white
-        yGridIcon.tintColor = .ddmDarkGrayColor
-        textPanel.addSubview(yGridIcon)
-        yGridIcon.translatesAutoresizingMaskIntoConstraints = false
-//        yGridIcon.centerXAnchor.constraint(equalTo: pMini.centerXAnchor, constant: 0).isActive = true
-//        yGridIcon.bottomAnchor.constraint(equalTo: divider.topAnchor, constant: 0).isActive = true
-        yGridIcon.centerXAnchor.constraint(equalTo: yGrid.centerXAnchor, constant: 0).isActive = true
-        yGridIcon.centerYAnchor.constraint(equalTo: yGrid.centerYAnchor, constant: 0).isActive = true
-        yGridIcon.heightAnchor.constraint(equalToConstant: 26).isActive = true //20
-        yGridIcon.widthAnchor.constraint(equalToConstant: 26).isActive = true
-//        yGridIcon.layer.opacity = 0.5
-
-//        let xGrid = UIView()
-        textPanel.addSubview(xGrid)
-//        xGrid.backgroundColor = .red
-        xGrid.translatesAutoresizingMaskIntoConstraints = false
-        xGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        xGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        xGrid.trailingAnchor.constraint(equalTo: yGrid.leadingAnchor, constant: 0).isActive = true
-        xGrid.bottomAnchor.constraint(equalTo: aaView.bottomAnchor, constant: 0).isActive = true
-
-        let xGridIcon = UIImageView(image: UIImage(named:"icon_round_at")?.withRenderingMode(.alwaysTemplate))
-        xGridIcon.tintColor = .ddmDarkGrayColor
-        textPanel.addSubview(xGridIcon)
-        xGridIcon.translatesAutoresizingMaskIntoConstraints = false
-//        xGridIcon.centerXAnchor.constraint(equalTo: pMini.centerXAnchor, constant: 0).isActive = true
-//        xGridIcon.bottomAnchor.constraint(equalTo: divider.topAnchor, constant: 0).isActive = true
-        xGridIcon.centerXAnchor.constraint(equalTo: xGrid.centerXAnchor, constant: 0).isActive = true
-        xGridIcon.centerYAnchor.constraint(equalTo: xGrid.centerYAnchor, constant: 0).isActive = true
-        xGridIcon.heightAnchor.constraint(equalToConstant: 26).isActive = true //20
-        xGridIcon.widthAnchor.constraint(equalToConstant: 26).isActive = true
-//        xGridIcon.layer.opacity = 0.5
-
         aTextBox.textAlignment = .left
         aTextBox.textColor = .white
-//        aTextBox.backgroundColor = .ddmDarkColor
-//        aTextBox.backgroundColor = .green
         aTextBox.backgroundColor = .clear
         aTextBox.font = .systemFont(ofSize: 13)
         textPanel.addSubview(aTextBox)
         aTextBox.translatesAutoresizingMaskIntoConstraints = false
-        aTextBottomCons = aTextBox.bottomAnchor.constraint(equalTo: aaView.bottomAnchor, constant: 0)
-        aTextBottomCons?.isActive = true
+        aTextBox.bottomAnchor.constraint(equalTo: aaView.bottomAnchor, constant: 0).isActive = true
+        aTextBox.trailingAnchor.constraint(equalTo: aaView.trailingAnchor, constant: -10).isActive = true
         aTextBox.leadingAnchor.constraint(equalTo: aaView.leadingAnchor, constant: 10).isActive = true
-//        aTextBox.trailingAnchor.constraint(equalTo: xGrid.leadingAnchor, constant: -10).isActive = true
-        aTextTrailingCons = aTextBox.trailingAnchor.constraint(equalTo: xGrid.leadingAnchor, constant: 0)
-        aTextTrailingCons?.isActive = true
         aTextBox.topAnchor.constraint(equalTo: aaView.topAnchor, constant: 4).isActive = true
         aTextBoxHeightCons = aTextBox.heightAnchor.constraint(equalToConstant: 36)
         aTextBoxHeightCons?.isActive = true
         aTextBox.text = ""
         aTextBox.delegate = self
         aTextBox.tintColor = .yellow
-//        aTextBox.layer.opacity = 0.5
-//        aTextBox.layer.cornerRadius = 10
 
 //        let bbText = UILabel()
         bbText.textAlignment = .left
@@ -1751,6 +1630,11 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         sendCommentContainer.isHidden = false
         
         sendASpinner.startAnimating()
+        sendASpinner.startAnimating()
+        sendAaViewTrailingCons?.isActive = false
+        sendAaViewTrailingCons = sendAaView.trailingAnchor.constraint(equalTo: sendASpinner.leadingAnchor, constant: -10)
+        sendAaViewTrailingCons?.isActive = true
+        
         sendBBox.isHidden = true
         
         isStatusUploading = true
@@ -1782,6 +1666,10 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
                     }
                     
                     self.sendASpinner.stopAnimating()
+                    self.sendAaViewTrailingCons?.isActive = false
+                    self.sendAaViewTrailingCons = self.sendAaView.trailingAnchor.constraint(equalTo: self.sendCommentContainer.trailingAnchor, constant: -20)
+                    self.sendAaViewTrailingCons?.isActive = true
+                    
                     self.sendBBox.isHidden = false
                     self.openErrorUploadMsg()
                     
@@ -1797,16 +1685,12 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         sendBText.text = ""
         
         aaViewTrailingCons?.isActive = false
-        aaViewTrailingCons = aaView.trailingAnchor.constraint(equalTo: textPanel.trailingAnchor, constant: -15)
+        aaViewTrailingCons = aaView.trailingAnchor.constraint(equalTo: textPanel.trailingAnchor, constant: -20)
         aaViewTrailingCons?.isActive = true
-
-        aTextTrailingCons?.isActive = false
-        aTextTrailingCons = aTextBox.trailingAnchor.constraint(equalTo: xGrid.leadingAnchor, constant: 0)
-        aTextTrailingCons?.isActive = true
-
-        aTextBottomCons?.isActive = false
-        aTextBottomCons = aTextBox.bottomAnchor.constraint(equalTo: aaView.bottomAnchor, constant: 0)
-        aTextBottomCons?.isActive = true
+        
+        sendAaViewTrailingCons?.isActive = false
+        sendAaViewTrailingCons = sendAaView.trailingAnchor.constraint(equalTo: sendCommentContainer.trailingAnchor, constant: -20)
+        sendAaViewTrailingCons?.isActive = true
 
         let minHeight = 36.0
         aTextBoxHeightCons?.constant = minHeight
@@ -1855,9 +1739,14 @@ extension ViewController: VideoPanelDelegate{
         openSoundPanel(id: id)
     }
     
-    func didClickPost(id: String, dataType: String, scrollToComment: Bool){
+    func didClickPost(id: String, dataType: String, scrollToComment: Bool, pointX: CGFloat, pointY: CGFloat){
         //test > real id for fetching data
-        openPostDetailPanel(id: id, dataType: dataType, scrollToComment: scrollToComment)
+//        openPostDetailPanel(id: id, dataType: dataType, scrollToComment: scrollToComment)
+        
+        //test > new method
+        let offsetX = pointX - self.view.frame.width/2
+        let offsetY = pointY - self.view.frame.height/2
+        openPostDetailPanel(id: id, dataType: dataType, scrollToComment: scrollToComment, offX: offsetX, offY: offsetY)
     }
 
     func didStartOpenVideoPanel() {
@@ -1977,20 +1866,28 @@ extension ViewController: VideoPanelDelegate{
     }
     
     func didClickVideoPanelClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
-        let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
-        let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
+//        let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
+//        let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
+        //test > new method
+        let offsetX = pointX - self.view.frame.width/2
+        let offsetY = pointY - self.view.frame.height/2
         
         if(mode == PhotoTypes.P_SHOT_DETAIL) {
-//            openPhotoDetailPanel()
             //test > real id for fetching data
-            openPhotoDetailPanel(id: id)
+//            openPhotoDetailPanel(id: id)
+            
+            //test 2 > animated open and close panel
+            openPhotoDetailPanel(id: id, offX: offsetX, offY: offsetY)
         } else if(mode == PhotoTypes.P_0){
             openPhotoZoomPanel(offX: offsetX, offY: offsetY)
         }
     }
     func didClickVideoPanelClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
-        let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
-        let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
+//        let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
+//        let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
+        //test > new method
+        let offsetX = pointX - self.view.frame.width/2
+        let offsetY = pointY - self.view.frame.height/2
 
         //test 1 > for video only
         var dataset = [String]()
@@ -2059,24 +1956,8 @@ extension VideoPanelView: UITextViewDelegate {
             if(estimatedWidth < minUsableTextWidth) {
                 let estimatedHeight = estimatedSize.height
                 if(estimatedHeight < minHeight) {
-                    aTextTrailingCons?.isActive = false
-                    aTextTrailingCons = aTextBox.trailingAnchor.constraint(equalTo: xGrid.leadingAnchor, constant: 0)
-                    aTextTrailingCons?.isActive = true
-    
-                    aTextBottomCons?.isActive = false
-                    aTextBottomCons = aTextBox.bottomAnchor.constraint(equalTo: aaView.bottomAnchor, constant: 0)
-                    aTextBottomCons?.isActive = true
-    
                     aTextBoxHeightCons?.constant = minHeight
                 } else {
-                    aTextTrailingCons?.isActive = false
-                    aTextTrailingCons = aTextBox.trailingAnchor.constraint(equalTo: aaView.trailingAnchor, constant: -10)
-                    aTextTrailingCons?.isActive = true
-    
-                    aTextBottomCons?.isActive = false
-                    aTextBottomCons = aTextBox.bottomAnchor.constraint(equalTo: xGrid.topAnchor, constant: 0)
-                    aTextBottomCons?.isActive = true
-    
                     if(estimatedHeight >= maxHeight) {
                         aTextBoxHeightCons?.constant = maxHeight
                     } else {
@@ -2086,16 +1967,6 @@ extension VideoPanelView: UITextViewDelegate {
             }
             else {
                 let estimatedHeight = estimatedIntrinsicSize.height
-                
-                //make multiline when width exceed min width
-                aTextTrailingCons?.isActive = false
-                aTextTrailingCons = aTextBox.trailingAnchor.constraint(equalTo: aaView.trailingAnchor, constant: -10)
-                aTextTrailingCons?.isActive = true
-    
-                aTextBottomCons?.isActive = false
-                aTextBottomCons = aTextBox.bottomAnchor.constraint(equalTo: xGrid.topAnchor, constant: 0)
-                aTextBottomCons?.isActive = true
-                
                 if(estimatedHeight >= maxHeight) {
                     aTextBoxHeightCons?.constant = maxHeight
                 } else if(estimatedHeight < minHeight) {
@@ -2106,16 +1977,8 @@ extension VideoPanelView: UITextViewDelegate {
             }
         } else {
             aaViewTrailingCons?.isActive = false
-            aaViewTrailingCons = aaView.trailingAnchor.constraint(equalTo: textPanel.trailingAnchor, constant: -15)
+            aaViewTrailingCons = aaView.trailingAnchor.constraint(equalTo: textPanel.trailingAnchor, constant: -20)
             aaViewTrailingCons?.isActive = true
-
-            aTextTrailingCons?.isActive = false
-            aTextTrailingCons = aTextBox.trailingAnchor.constraint(equalTo: xGrid.leadingAnchor, constant: 0)
-            aTextTrailingCons?.isActive = true
-
-            aTextBottomCons?.isActive = false
-            aTextBottomCons = aTextBox.bottomAnchor.constraint(equalTo: aaView.bottomAnchor, constant: 0)
-            aTextBottomCons?.isActive = true
 
             aTextBoxHeightCons?.constant = minHeight
             
@@ -2477,14 +2340,14 @@ extension VideoPanelView: CommentScrollableDelegate{
             }
         }
     }
-    func didCClickComment(id: String, dataType: String){
-        delegate?.didClickPost(id: id, dataType: dataType, scrollToComment: true)
+    func didCClickComment(id: String, dataType: String, pointX: CGFloat, pointY: CGFloat){
+        delegate?.didClickPost(id: id, dataType: dataType, scrollToComment: true, pointX: pointX, pointY: pointY)
     }
     func didCClickShare(id: String, dataType: String){
         openShareSheet(oType: dataType, oId: id)
     }
-    func didCClickPost(id: String, dataType: String){
-        delegate?.didClickPost(id: id, dataType: dataType, scrollToComment: false)
+    func didCClickPost(id: String, dataType: String, pointX: CGFloat, pointY: CGFloat){
+        delegate?.didClickPost(id: id, dataType: dataType, scrollToComment: false, pointX: pointX, pointY: pointY)
     }
     func didCClickClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         delegate?.didClickVideoPanelClickPhoto(id: id, pointX: pointX, pointY: pointY, view: view, mode: mode)

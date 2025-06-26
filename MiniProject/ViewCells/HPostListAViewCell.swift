@@ -37,6 +37,7 @@ class HPostListAViewCell: UICollectionViewCell {
     let cText = UILabel()
     let dText = UILabel()
     let eText = UILabel()
+    let cMiniCon = UIView()
     
     //test > new method for storing hiding asset
     var hiddenAssetIdx = -1
@@ -305,7 +306,7 @@ class HPostListAViewCell: UICollectionViewCell {
         bText.text = "-"
 //        bText.layer.opacity = 0.5
         
-        let cMiniCon = UIView()
+//        let cMiniCon = UIView()
         aCon.addSubview(cMiniCon)
         cMiniCon.translatesAutoresizingMaskIntoConstraints = false
         cMiniCon.topAnchor.constraint(equalTo: bMiniCon.topAnchor, constant: 0).isActive = true
@@ -1029,7 +1030,15 @@ class HPostListAViewCell: UICollectionViewCell {
     }
     
     @objc func onCommentBtnClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.hListDidClickVcvComment(vc: self, id: id, dataType: "post")
+//        aDelegate?.hListDidClickVcvComment(vc: self, id: id, dataType: "post", pointX: 0, pointY: 0)
+        
+        //test 2 > use click position as starting point
+        let translation = gesture.location(in: self)
+        let x = translation.x
+        let y = translation.y
+        let pointX = x
+        let pointY = y
+        aDelegate?.hListDidClickVcvComment(vc: self, id: id, dataType: dataType, pointX: pointX, pointY: pointY)
     }
     @objc func onShareClicked(gesture: UITapGestureRecognizer) {
         aDelegate?.hListDidClickVcvShare(vc: self, id: id, dataType: "post")
@@ -1052,8 +1061,18 @@ class HPostListAViewCell: UICollectionViewCell {
     //test > single and double clicked
     @objc func onSingleClicked(gesture: UITapGestureRecognizer) {
         print("post single clicked")
-//        aDelegate?.hListDidClickVcvClickPost(id: "")
-        aDelegate?.hListDidClickVcvClickPost(id: id, dataType: dataType)
+//        aDelegate?.hListDidClickVcvClickPost(id: id, dataType: dataType, vc: self, pointX: CGFloat, pointY: CGFloat)
+        
+        //test 2 > use click position as starting point
+        let translation = gesture.location(in: self)
+        let x = translation.x
+        let y = translation.y
+        let pointX = x
+        let pointY = y
+        aDelegate?.hListDidClickVcvClickPost(id: id, dataType: dataType, vc: self, pointX: pointX, pointY: pointY)
+        
+        //test > UI for click p_shot_detail
+        self.layer.opacity = 0.1
     }
     @objc func onDoubleClicked(gesture: UITapGestureRecognizer) {
         print("post double clicked")
@@ -1115,8 +1134,8 @@ class HPostListAViewCell: UICollectionViewCell {
             }
         }
         
-        //test > dehide post
-//        aTest.isHidden = false
+        //test > UI for click
+        self.layer.opacity = 1.0
     }
     //*
     
@@ -1166,6 +1185,9 @@ extension HPostListAViewCell: ContentCellDelegate {
         
         let pointX1 = pointX + aTestFrame.x + ccFrame.x
         let pointY1 = pointY + aTestFrame.y + ccFrame.y
+        //test > new computation method
+//        let pointX1 = pointX + aTestFrame.x + ccFrame.x + view.frame.width/2
+//        let pointY1 = pointY + aTestFrame.y + ccFrame.y + view.frame.height/2
         aDelegate?.hListDidClickVcvClickPhoto(id: id, vc: self, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
         
         //test 2 > new method to store hide asset
@@ -1180,6 +1202,9 @@ extension HPostListAViewCell: ContentCellDelegate {
         
         let pointX1 = pointX + aTestFrame.x + ccFrame.x
         let pointY1 = pointY + aTestFrame.y + ccFrame.y
+        //test > new computation method
+//        let pointX1 = pointX + aTestFrame.x + ccFrame.x + view.frame.width/2
+//        let pointY1 = pointY + aTestFrame.y + ccFrame.y + view.frame.height/2
         aDelegate?.hListDidClickVcvClickVideo(id: id, vc: self, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
         
         //test 2 > new method to store hide asset
@@ -1200,8 +1225,25 @@ extension HPostListAViewCell: ContentCellDelegate {
     func contentCellDidClickPlace(id: String){
         
     }
-    func contentCellDidClickPost(id: String, dataType: String){
-        aDelegate?.hListDidClickVcvClickPost(id: id, dataType: dataType)
+    func contentCellDidClickPost(id: String, dataType: String, cc: UIView, pointX: CGFloat, pointY: CGFloat){
+        
+        //test 2 > use click position as starting point
+//        aDelegate?.hListDidClickVcvClickPost(id: id, dataType: dataType, vc: self, pointX: 0, pointY: 0)
+        
+        //test
+        let aTestFrame = aTest.frame.origin
+        let ccFrame = cc.frame.origin
+        
+        let pointX1 = pointX + aTestFrame.x + ccFrame.x
+        let pointY1 = pointY + aTestFrame.y + ccFrame.y
+        
+        aDelegate?.hListDidClickVcvClickPost(id: id, dataType: dataType, vc: self, pointX: pointX1, pointY: pointY1)
+        
+        //test 2 > new method to store hide asset
+        if let j = aTestArray.firstIndex(of: cc) {
+            print("hpostA cc hide videoA: \(j)")
+            hiddenAssetIdx = j
+        }
     }
     func contentCellDidClickVcvClickPlay(cc: UIView, isPlay: Bool){
         if let j = aTestArray.firstIndex(of: cc) {

@@ -835,7 +835,7 @@ extension ScrollFeedHPostListCell: UICollectionViewDataSource {
 }
 
 extension ScrollFeedHPostListCell: HListCellDelegate {
-    func hListDidClickVcvComment(vc: UICollectionViewCell, id: String, dataType: String) {
+    func hListDidClickVcvComment(vc: UICollectionViewCell, id: String, dataType: String, pointX: CGFloat, pointY: CGFloat) {
         aDelegate?.sfcDidClickVcvComment()
     }
     func hListDidClickVcvLove() {
@@ -867,8 +867,29 @@ extension ScrollFeedHPostListCell: HListCellDelegate {
     func hListDidClickVcvClickSound(id: String) {
         aDelegate?.sfcDidClickVcvClickSound(id: id)
     }
-    func hListDidClickVcvClickPost(id: String, dataType: String) {
-        aDelegate?.sfcDidClickVcvClickPost(id: id, dataType: dataType)
+    func hListDidClickVcvClickPost(id: String, dataType: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat) {
+//        aDelegate?.sfcDidClickVcvClickPost(id: id, dataType: dataType)
+        
+        if let a = vCV {
+            for cell in a.visibleCells {
+                
+                if(cell == vc) {
+                    
+                    let originInRootView = a.convert(cell.frame.origin, to: self)
+                    let visibleIndexPath = a.indexPath(for: cell)
+                    let pointX1 = originInRootView.x + pointX
+                    let pointY1 = originInRootView.y + pointY
+                    
+                    aDelegate?.sfcDidClickVcvClickPost(id: id, dataType: dataType, pointX: pointX1, pointY: pointY1)
+                    
+                    if let c = visibleIndexPath {
+                        hideCellIndex = c.row
+                    }
+                    
+                    break
+                }
+            }
+        }
     }
     func hListDidClickVcvClickPhoto(id: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         

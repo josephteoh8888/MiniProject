@@ -92,7 +92,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     let stackView = UIView()
     let uView = UIView()
 //    var boxList = [UIView]()
-    var pMiniBottomCons: NSLayoutConstraint?
+    var tViewBottomCons: NSLayoutConstraint?
 //    var bTextHeightCons: NSLayoutConstraint?
     
     let aUpload = UIView()
@@ -142,7 +142,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     var hideCellIndex = -1
     var playingMediaAssetIdx = -1
     
-    var cNameTextCenterYCons: NSLayoutConstraint?
+//    var cNameTextCenterYCons: NSLayoutConstraint?
     
     let abBox = UIView()
     
@@ -154,7 +154,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     let hintTitleText = UILabel()
     let addTitleBtn = UIView()
     let addTitleText = UILabel()
-    let aStickyTitleText = UILabel()
+//    let aStickyTitleText = UILabel()
     let tView = UIView()
     var titleHeightCons: NSLayoutConstraint?
     
@@ -216,45 +216,6 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         bMiniBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
         bMiniBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
         
-        //test > post upload btn
-////        let aUpload = UIView()
-//        aUpload.backgroundColor = .yellow
-//        panel.addSubview(aUpload)
-////        stack2.addSubview(aUpload)
-//        aUpload.translatesAutoresizingMaskIntoConstraints = false
-//        aUpload.heightAnchor.constraint(equalToConstant: 30).isActive = true //30
-//        aUpload.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -10).isActive = true
-////        aUpload.topAnchor.constraint(equalTo: panel.topAnchor, constant: 50).isActive = true
-////        aUpload.leadingAnchor.constraint(equalTo: stack2.leadingAnchor, constant: 10).isActive = true
-////        aUpload.trailingAnchor.constraint(equalTo: stack2.trailingAnchor, constant: 0).isActive = true
-//        aUpload.centerYAnchor.constraint(equalTo: aBtn.centerYAnchor).isActive = true
-//        aUpload.layer.cornerRadius = 10
-//        aUpload.isUserInteractionEnabled = true
-//        aUpload.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPostUploadNextClicked)))
-//        aUpload.isHidden = true
-//
-//        let aUploadText = UILabel()
-//        aUploadText.textAlignment = .center
-//        aUploadText.textColor = .black
-//        aUploadText.font = .boldSystemFont(ofSize: 13)
-//        aUpload.addSubview(aUploadText)
-////        aUpload.addSubview(aUploadText)
-//        aUploadText.translatesAutoresizingMaskIntoConstraints = false
-////        aUploadText.centerXAnchor.constraint(equalTo: aUpload.centerXAnchor).isActive = true
-//        aUploadText.centerYAnchor.constraint(equalTo: aUpload.centerYAnchor).isActive = true
-//        aUploadText.leadingAnchor.constraint(equalTo: aUpload.leadingAnchor, constant: 25).isActive = true
-//        aUploadText.trailingAnchor.constraint(equalTo: aUpload.trailingAnchor, constant: -25).isActive = true
-//        aUploadText.text = "Post"
-//        
-//        panel.addSubview(aSpinner)
-//        aSpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
-//        aSpinner.translatesAutoresizingMaskIntoConstraints = false
-//        aSpinner.centerYAnchor.constraint(equalTo: aUpload.centerYAnchor).isActive = true
-//        aSpinner.centerXAnchor.constraint(equalTo: aUpload.centerXAnchor).isActive = true
-//        aSpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
-//        aSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
-//        aSpinner.isUserInteractionEnabled = false
-        
         let aNext = UIView()
         aNext.backgroundColor = .yellow
         panel.addSubview(aNext)
@@ -291,118 +252,28 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         aCreateTitleText.text = "New Post"
         aCreateTitleText.isHidden = false
         
-        let stickyHLight = UIView()
-        stickyHLight.backgroundColor = .ddmBlackOverlayColor
-//        stickyHLight.backgroundColor = .blue
-        panel.addSubview(stickyHLight)
-        stickyHLight.translatesAutoresizingMaskIntoConstraints = false
-        stickyHLight.leadingAnchor.constraint(equalTo: aBtn.trailingAnchor, constant: 10).isActive = true //20
-        stickyHLight.trailingAnchor.constraint(equalTo: aNext.leadingAnchor, constant: -10).isActive = true //20
-//        stickyHLight.trailingAnchor.constraint(equalTo: aStickyHeader.trailingAnchor, constant: -30).isActive = true //20
-        stickyHLight.heightAnchor.constraint(equalToConstant: 40).isActive = true //30
-        cNameTextCenterYCons = stickyHLight.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 50)
-        cNameTextCenterYCons?.isActive = true
-        
-//        let aStickyTitleText = UILabel()
-        aStickyTitleText.textAlignment = .center
-        aStickyTitleText.textColor = .white
-//        aStickyTitleText.textColor = .ddmBlackOverlayColor
-        aStickyTitleText.font = .boldSystemFont(ofSize: 14) //16
-        stickyHLight.addSubview(aStickyTitleText)
-        aStickyTitleText.translatesAutoresizingMaskIntoConstraints = false
-        aStickyTitleText.centerYAnchor.constraint(equalTo: stickyHLight.centerYAnchor, constant: 0).isActive = true
-        aStickyTitleText.leadingAnchor.constraint(equalTo: stickyHLight.leadingAnchor, constant: 20).isActive = true
-        aStickyTitleText.trailingAnchor.constraint(equalTo: stickyHLight.trailingAnchor, constant: -20).isActive = true
-//        aStickyTitleText.text = "New Title"
-//        aStickyTitleText.isHidden = false
-
-//        let aStickyPhotoOuter = UIView()
-//        aStickyPhotoOuter.backgroundColor = .white
-//        stickyHLight.addSubview(aStickyPhotoOuter)
-//        aStickyPhotoOuter.translatesAutoresizingMaskIntoConstraints = false
-//        aStickyPhotoOuter.leadingAnchor.constraint(equalTo: stickyHLight.leadingAnchor, constant: 0).isActive = true
-//        aStickyPhotoOuter.centerYAnchor.constraint(equalTo: stickyHLight.centerYAnchor, constant: 0).isActive = true
-//        aStickyPhotoOuter.heightAnchor.constraint(equalToConstant: 28).isActive = true //ori 38
-//        aStickyPhotoOuter.widthAnchor.constraint(equalToConstant: 28).isActive = true
-//        aStickyPhotoOuter.layer.cornerRadius = 14 //19
-//        aStickyPhotoOuter.isHidden = true
-//
-////        let aStickyPhoto = SDAnimatedImageView()
-//        aStickyPhotoOuter.addSubview(aStickyPhoto)
-//        aStickyPhoto.translatesAutoresizingMaskIntoConstraints = false
-//        aStickyPhoto.centerXAnchor.constraint(equalTo: aStickyPhotoOuter.centerXAnchor).isActive = true
-//        aStickyPhoto.centerYAnchor.constraint(equalTo: aStickyPhotoOuter.centerYAnchor).isActive = true
-//        aStickyPhoto.heightAnchor.constraint(equalToConstant: 28).isActive = true //30
-//        aStickyPhoto.widthAnchor.constraint(equalToConstant: 28).isActive = true
-////        let stickyImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-//        aStickyPhoto.contentMode = .scaleAspectFill
-//        aStickyPhoto.layer.masksToBounds = true
-//        aStickyPhoto.layer.cornerRadius = 14
-////        aStickyPhoto.sd_setImage(with: stickyImageUrl)
-//        aStickyPhoto.backgroundColor = .ddmDarkColor
+//        let stickyHLight = UIView()
+//        stickyHLight.backgroundColor = .ddmBlackOverlayColor
+////        stickyHLight.backgroundColor = .blue
+//        panel.addSubview(stickyHLight)
+//        stickyHLight.translatesAutoresizingMaskIntoConstraints = false
+//        stickyHLight.leadingAnchor.constraint(equalTo: aBtn.trailingAnchor, constant: 10).isActive = true //20
+//        stickyHLight.trailingAnchor.constraint(equalTo: aNext.leadingAnchor, constant: -10).isActive = true //20
+//        stickyHLight.heightAnchor.constraint(equalToConstant: 40).isActive = true //30
+//        cNameTextCenterYCons = stickyHLight.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 50)
+//        cNameTextCenterYCons?.isActive = true
 //        
-//        let abcBox = UIView()
-////        abBox.backgroundColor = .ddmBlackDark
-////        stackView.addSubview(abBox)
-//        stickyHLight.addSubview(abcBox)
-//        abcBox.clipsToBounds = true
-//        abcBox.translatesAutoresizingMaskIntoConstraints = false
-//        abcBox.leadingAnchor.constraint(equalTo: aStickyPhotoOuter.trailingAnchor, constant: 10).isActive = true
-//        abcBox.heightAnchor.constraint(equalToConstant: 30).isActive = true //default: 50
-//        abcBox.centerYAnchor.constraint(equalTo: aStickyPhotoOuter.centerYAnchor, constant: 0).isActive = true //20
-//        abcBox.layer.cornerRadius = 5
-////        abBox.layer.opacity = 0.2 //0.3
-//        abcBox.isUserInteractionEnabled = true
-//        abcBox.isHidden = true
-//
-//        let bcPublicBox = UIView()
-//        bcPublicBox.backgroundColor = .clear //yellow
-//        abcBox.addSubview(bcPublicBox)
-//        bcPublicBox.clipsToBounds = true
-//        bcPublicBox.translatesAutoresizingMaskIntoConstraints = false
-//        bcPublicBox.widthAnchor.constraint(equalToConstant: 16).isActive = true //ori: 40
-//        bcPublicBox.heightAnchor.constraint(equalToConstant: 16).isActive = true
-//        bcPublicBox.centerYAnchor.constraint(equalTo: abcBox.centerYAnchor).isActive = true
-////        bcPublicBox.bottomAnchor.constraint(equalTo: abcBox.bottomAnchor).isActive = true
-//        bcPublicBox.leadingAnchor.constraint(equalTo: abcBox.leadingAnchor, constant: 5).isActive = true //10
-//        bcPublicBox.layer.cornerRadius = 5 //6
-//
-//        let bcGridIcon = UIImageView(image: UIImage(named:"icon_round_lock_open")?.withRenderingMode(.alwaysTemplate))
-//        bcGridIcon.tintColor = .white
-////        panel.addSubview(bGridIcon)
-//        bcPublicBox.addSubview(bcGridIcon)
-//        bcGridIcon.translatesAutoresizingMaskIntoConstraints = false
-//        bcGridIcon.centerXAnchor.constraint(equalTo: bcPublicBox.centerXAnchor).isActive = true
-//        bcGridIcon.centerYAnchor.constraint(equalTo: bcPublicBox.centerYAnchor).isActive = true
-//        bcGridIcon.heightAnchor.constraint(equalToConstant: 16).isActive = true
-//        bcGridIcon.widthAnchor.constraint(equalToConstant: 16).isActive = true
-//
-//        let acPublicText = UILabel()
-//        acPublicText.textAlignment = .left
-//        acPublicText.textColor = .white
-//        acPublicText.font = .boldSystemFont(ofSize: 12)
-////        aPublicText.font = .systemFont(ofSize: 12)
-////        contentView.addSubview(aGridNameText)
-//        abcBox.addSubview(acPublicText)
-//        acPublicText.translatesAutoresizingMaskIntoConstraints = false
-////        aPublicText.bottomAnchor.constraint(equalTo: aUserPhoto.bottomAnchor).isActive = true
-//        acPublicText.centerYAnchor.constraint(equalTo: bcPublicBox.centerYAnchor).isActive = true
-////        aPublicText.topAnchor.constraint(equalTo: pMini.topAnchor).isActive = true
-////        aPublicText.trailingAnchor.constraint(equalTo: uView.trailingAnchor, constant: -20).isActive = true
-//        acPublicText.leadingAnchor.constraint(equalTo: bcPublicBox.trailingAnchor, constant: 5).isActive = true
-//        acPublicText.text = "Public"
-//        
-//        let bcArrowBtn = UIImageView()
-//        bcArrowBtn.image = UIImage(named:"icon_round_arrow_down")?.withRenderingMode(.alwaysTemplate)
-//        bcArrowBtn.tintColor = .white
-//        abcBox.addSubview(bcArrowBtn)
-//        bcArrowBtn.translatesAutoresizingMaskIntoConstraints = false
-//        bcArrowBtn.leadingAnchor.constraint(equalTo: acPublicText.trailingAnchor).isActive = true
-//        bcArrowBtn.centerYAnchor.constraint(equalTo: acPublicText.centerYAnchor).isActive = true
-//        bcArrowBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true //ori 26
-//        bcArrowBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
-//        bcArrowBtn.trailingAnchor.constraint(equalTo: abcBox.trailingAnchor, constant: 0).isActive = true //-10
-        
+////        let aStickyTitleText = UILabel()
+//        aStickyTitleText.textAlignment = .center
+//        aStickyTitleText.textColor = .white
+////        aStickyTitleText.textColor = .ddmBlackOverlayColor
+//        aStickyTitleText.font = .boldSystemFont(ofSize: 14) //16
+//        stickyHLight.addSubview(aStickyTitleText)
+//        aStickyTitleText.translatesAutoresizingMaskIntoConstraints = false
+//        aStickyTitleText.centerYAnchor.constraint(equalTo: stickyHLight.centerYAnchor, constant: 0).isActive = true
+//        aStickyTitleText.leadingAnchor.constraint(equalTo: stickyHLight.leadingAnchor, constant: 20).isActive = true
+//        aStickyTitleText.trailingAnchor.constraint(equalTo: stickyHLight.trailingAnchor, constant: -20).isActive = true
+     
         //test > add a scrollview
 //        let scrollView = UIScrollView()
         panel.addSubview(scrollView)
@@ -446,8 +317,8 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         tView.topAnchor.constraint(equalTo: uView.topAnchor, constant: 0).isActive = true
         tView.leadingAnchor.constraint(equalTo: uView.leadingAnchor, constant: 0).isActive = true
         tView.trailingAnchor.constraint(equalTo: uView.trailingAnchor, constant: 0).isActive = true
-        pMiniBottomCons = tView.bottomAnchor.constraint(equalTo: uView.bottomAnchor, constant: 0)
-        pMiniBottomCons?.isActive = true
+        tViewBottomCons = tView.bottomAnchor.constraint(equalTo: uView.bottomAnchor, constant: 0)
+        tViewBottomCons?.isActive = true
 //        tView.backgroundColor = .green
         
 //        let titleTv = UITextView()
@@ -461,9 +332,6 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         titleTv.leadingAnchor.constraint(equalTo: tView.leadingAnchor, constant: 20).isActive = true
         titleTv.trailingAnchor.constraint(equalTo: tView.trailingAnchor, constant: -20).isActive = true
         titleTv.bottomAnchor.constraint(equalTo: tView.bottomAnchor, constant: -20).isActive = true
-//        titleTv.heightAnchor.constraint(equalToConstant: 17).isActive = true //40
-//        pMiniBottomCons = titleTv.bottomAnchor.constraint(equalTo: uView.bottomAnchor, constant: 0)
-//        pMiniBottomCons?.isActive = true
         titleHeightCons = titleTv.heightAnchor.constraint(equalToConstant: 17) //36
         titleHeightCons?.isActive = true
         titleTv.text = ""
@@ -489,22 +357,22 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         //test > add title btn
 //        let addTitleBtn = UIView()
         tView.addSubview(addTitleBtn)
-//        addTitleBtn.backgroundColor = .ddmDarkColor
-        addTitleBtn.backgroundColor = .ddmBlackDark
+//        addTitleBtn.backgroundColor = .ddmBlackDark
         addTitleBtn.translatesAutoresizingMaskIntoConstraints = false
-        addTitleBtn.heightAnchor.constraint(equalToConstant: 30).isActive = true //40
-        addTitleBtn.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        addTitleBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true //30
+        addTitleBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
 //        addTitleBtn.topAnchor.constraint(equalTo: tView.topAnchor, constant: 20).isActive = true
         addTitleBtn.centerYAnchor.constraint(equalTo: titleTv.centerYAnchor, constant: 0).isActive = true //8
         addTitleBtn.leadingAnchor.constraint(equalTo: tView.leadingAnchor, constant: 20).isActive = true
-        addTitleBtn.layer.cornerRadius = 15 //20
+        addTitleBtn.layer.cornerRadius = 10 //15
         addTitleBtn.isUserInteractionEnabled = false
 //        addTitleBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onAddTitleClicked)))
         addTitleBtn.isHidden = true
         
-//        let mainZGridIcon = UIImageView(image: UIImage(named:"icon_round_code")?.withRenderingMode(.alwaysTemplate))
-        let addTitleIcon = UIImageView(image: UIImage(named:"icon_round_add")?.withRenderingMode(.alwaysTemplate))
+//        let addTitleIcon = UIImageView(image: UIImage(named:"icon_round_add")?.withRenderingMode(.alwaysTemplate))
+        let addTitleIcon = UIImageView(image: UIImage(named:"icon_round_add_circle")?.withRenderingMode(.alwaysTemplate))
         addTitleIcon.tintColor = .ddmDarkGrayColor
+//        addTitleIcon.tintColor = .ddmBlackDark
 //        uView.addSubview(xGridIcon)
         addTitleBtn.addSubview(addTitleIcon)
         addTitleIcon.translatesAutoresizingMaskIntoConstraints = false
@@ -525,80 +393,6 @@ class PostCreatorConsolePanelView: CreatorPanelView{
 //        addTitleText.topAnchor.constraint(equalTo: titleTv.topAnchor, constant: 0).isActive = true //8
         addTitleText.text = "Title"
         addTitleText.isHidden = true
-    
-//        let aSaveDraft = UIView()
-        aSaveDraft.backgroundColor = .ddmDarkColor
-        panel.addSubview(aSaveDraft)
-//        stack1.addSubview(aSaveDraft)
-        aSaveDraft.translatesAutoresizingMaskIntoConstraints = false
-        aSaveDraft.heightAnchor.constraint(equalToConstant: 30).isActive = true //30
-        aSaveDraft.trailingAnchor.constraint(equalTo: aNext.leadingAnchor, constant: -10).isActive = true
-        aSaveDraft.centerYAnchor.constraint(equalTo: aNext.centerYAnchor).isActive = true
-        aSaveDraft.layer.cornerRadius = 10
-        aSaveDraft.isUserInteractionEnabled = true
-        aSaveDraft.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onSaveDraftNextClicked)))
-        aSaveDraft.isHidden = true
-
-        let aSaveDraftText = UILabel()
-        aSaveDraftText.textAlignment = .center
-        aSaveDraftText.textColor = .white
-        aSaveDraftText.font = .boldSystemFont(ofSize: 13)
-//        panel.addSubview(aSaveDraftText)
-        aSaveDraft.addSubview(aSaveDraftText)
-        aSaveDraftText.translatesAutoresizingMaskIntoConstraints = false
-//        aSaveDraftText.centerXAnchor.constraint(equalTo: aSaveDraft.centerXAnchor).isActive = true
-        aSaveDraftText.centerYAnchor.constraint(equalTo: aSaveDraft.centerYAnchor).isActive = true
-        aSaveDraftText.leadingAnchor.constraint(equalTo: aSaveDraft.leadingAnchor, constant: 15).isActive = true
-        aSaveDraftText.trailingAnchor.constraint(equalTo: aSaveDraft.trailingAnchor, constant: -15).isActive = true
-        aSaveDraftText.text = "Save Draft"
-        
-        panel.addSubview(bSpinner)
-        bSpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
-        bSpinner.translatesAutoresizingMaskIntoConstraints = false
-        bSpinner.centerYAnchor.constraint(equalTo: aSaveDraft.centerYAnchor).isActive = true
-        bSpinner.centerXAnchor.constraint(equalTo: aSaveDraft.centerXAnchor).isActive = true
-        bSpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        bSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        bSpinner.isUserInteractionEnabled = false
-        
-        let draftBox = UIView()
-        draftBox.backgroundColor = .ddmDarkColor
-        panel.addSubview(draftBox)
-//        stack1.addSubview(aSaveDraft)
-        draftBox.translatesAutoresizingMaskIntoConstraints = false
-        draftBox.heightAnchor.constraint(equalToConstant: 30).isActive = true //30
-        draftBox.trailingAnchor.constraint(equalTo: aSaveDraft.leadingAnchor, constant: -10).isActive = true
-        draftBox.centerYAnchor.constraint(equalTo: aSaveDraft.centerYAnchor).isActive = true
-        draftBox.layer.cornerRadius = 10
-        draftBox.isUserInteractionEnabled = true
-        draftBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onDraftBoxClicked)))
-        draftBox.isHidden = true
-        
-        let draftBoxText = UILabel()
-        draftBoxText.textAlignment = .center
-        draftBoxText.textColor = .white
-        draftBoxText.font = .boldSystemFont(ofSize: 13)
-//        panel.addSubview(aSaveDraftText)
-        draftBox.addSubview(draftBoxText)
-        draftBoxText.translatesAutoresizingMaskIntoConstraints = false
-//        aSaveDraftText.centerXAnchor.constraint(equalTo: aSaveDraft.centerXAnchor).isActive = true
-        draftBoxText.centerYAnchor.constraint(equalTo: draftBox.centerYAnchor).isActive = true
-        draftBoxText.leadingAnchor.constraint(equalTo: draftBox.leadingAnchor, constant: 15).isActive = true
-//        draftBoxText.trailingAnchor.constraint(equalTo: draftBox.trailingAnchor, constant: -15).isActive = true
-        draftBoxText.text = "3"
-        
-        //test > draft icon and number of drafts
-        let bDraftBtn = UIImageView()
-//        bDraftBtn.image = UIImage(named:"icon_round_folder_open")?.withRenderingMode(.alwaysTemplate)
-        bDraftBtn.image = UIImage(named:"icon_round_folder_close")?.withRenderingMode(.alwaysTemplate)
-        bDraftBtn.tintColor = .white
-        draftBox.addSubview(bDraftBtn)
-        bDraftBtn.translatesAutoresizingMaskIntoConstraints = false
-        bDraftBtn.leadingAnchor.constraint(equalTo: draftBoxText.trailingAnchor, constant: 5).isActive = true
-        bDraftBtn.trailingAnchor.constraint(equalTo: draftBox.trailingAnchor, constant: -15).isActive = true
-        bDraftBtn.centerYAnchor.constraint(equalTo: draftBox.centerYAnchor).isActive = true
-        bDraftBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true //ori 30
-        bDraftBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
         
         //**test > tools panel
         toolPanel.backgroundColor = .ddmBlackOverlayColor //black
@@ -630,39 +424,39 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         mainEditPanel.leadingAnchor.constraint(equalTo: toolPanel.leadingAnchor, constant: 0).isActive = true
         mainEditPanel.trailingAnchor.constraint(equalTo: toolPanel.trailingAnchor, constant: 0).isActive = true
         
-        let mainZGrid = UIView()
-        mainEditPanel.addSubview(mainZGrid)
-        mainZGrid.backgroundColor = .ddmDarkColor
-        mainZGrid.translatesAutoresizingMaskIntoConstraints = false
-        mainZGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        mainZGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
-//        mainZGrid.leadingAnchor.constraint(equalTo: mainYGrid.trailingAnchor, constant: 20).isActive = true //10
-        mainZGrid.leadingAnchor.constraint(equalTo: mainEditPanel.leadingAnchor, constant: 20).isActive = true
-        mainZGrid.topAnchor.constraint(equalTo: mainEditPanel.topAnchor, constant: 10).isActive = true
-//        mainZGrid.centerYAnchor.constraint(equalTo: mainXGrid.centerYAnchor, constant: 0).isActive = true
-        mainZGrid.layer.cornerRadius = 20 //10
-        mainZGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onMainEmbedClicked)))
-        
-//        let mainZGridIcon = UIImageView(image: UIImage(named:"icon_round_code")?.withRenderingMode(.alwaysTemplate))
-        let mainZGridIcon = UIImageView(image: UIImage(named:"icon_round_add")?.withRenderingMode(.alwaysTemplate))
-        mainZGridIcon.tintColor = .white
-//        uView.addSubview(xGridIcon)
-        mainEditPanel.addSubview(mainZGridIcon)
-        mainZGridIcon.translatesAutoresizingMaskIntoConstraints = false
-        mainZGridIcon.centerXAnchor.constraint(equalTo: mainZGrid.centerXAnchor, constant: 0).isActive = true
-        mainZGridIcon.centerYAnchor.constraint(equalTo: mainZGrid.centerYAnchor, constant: 0).isActive = true
-        mainZGridIcon.heightAnchor.constraint(equalToConstant: 20).isActive = true //26
-        mainZGridIcon.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        
-        let mainZGridText = UILabel()
-        mainZGridText.textAlignment = .center
-        mainZGridText.textColor = .white
-        mainZGridText.font = .boldSystemFont(ofSize: 10)
-        mainEditPanel.addSubview(mainZGridText)
-        mainZGridText.translatesAutoresizingMaskIntoConstraints = false
-        mainZGridText.topAnchor.constraint(equalTo: mainZGrid.bottomAnchor, constant: 2).isActive = true
-        mainZGridText.centerXAnchor.constraint(equalTo: mainZGrid.centerXAnchor).isActive = true
-        mainZGridText.text = "Embed"
+//        let mainZGrid = UIView()
+//        mainEditPanel.addSubview(mainZGrid)
+//        mainZGrid.backgroundColor = .ddmDarkColor
+//        mainZGrid.translatesAutoresizingMaskIntoConstraints = false
+//        mainZGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
+//        mainZGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
+////        mainZGrid.leadingAnchor.constraint(equalTo: mainYGrid.trailingAnchor, constant: 20).isActive = true //10
+//        mainZGrid.leadingAnchor.constraint(equalTo: mainEditPanel.leadingAnchor, constant: 20).isActive = true
+//        mainZGrid.topAnchor.constraint(equalTo: mainEditPanel.topAnchor, constant: 10).isActive = true
+////        mainZGrid.centerYAnchor.constraint(equalTo: mainXGrid.centerYAnchor, constant: 0).isActive = true
+//        mainZGrid.layer.cornerRadius = 20 //10
+//        mainZGrid.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onMainEmbedClicked)))
+//        
+////        let mainZGridIcon = UIImageView(image: UIImage(named:"icon_round_code")?.withRenderingMode(.alwaysTemplate))
+//        let mainZGridIcon = UIImageView(image: UIImage(named:"icon_round_add")?.withRenderingMode(.alwaysTemplate))
+//        mainZGridIcon.tintColor = .white
+////        uView.addSubview(xGridIcon)
+//        mainEditPanel.addSubview(mainZGridIcon)
+//        mainZGridIcon.translatesAutoresizingMaskIntoConstraints = false
+//        mainZGridIcon.centerXAnchor.constraint(equalTo: mainZGrid.centerXAnchor, constant: 0).isActive = true
+//        mainZGridIcon.centerYAnchor.constraint(equalTo: mainZGrid.centerYAnchor, constant: 0).isActive = true
+//        mainZGridIcon.heightAnchor.constraint(equalToConstant: 20).isActive = true //26
+//        mainZGridIcon.widthAnchor.constraint(equalToConstant: 20).isActive = true
+//        
+//        let mainZGridText = UILabel()
+//        mainZGridText.textAlignment = .center
+//        mainZGridText.textColor = .white
+//        mainZGridText.font = .boldSystemFont(ofSize: 10)
+//        mainEditPanel.addSubview(mainZGridText)
+//        mainZGridText.translatesAutoresizingMaskIntoConstraints = false
+//        mainZGridText.topAnchor.constraint(equalTo: mainZGrid.bottomAnchor, constant: 2).isActive = true
+//        mainZGridText.centerXAnchor.constraint(equalTo: mainZGrid.centerXAnchor).isActive = true
+//        mainZGridText.text = "Add" //embed
         
         let mainXGrid = UIView()
         mainEditPanel.addSubview(mainXGrid)
@@ -670,8 +464,8 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         mainXGrid.translatesAutoresizingMaskIntoConstraints = false
         mainXGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
         mainXGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
-//        mainXGrid.leadingAnchor.constraint(equalTo: mainEditPanel.leadingAnchor, constant: 20).isActive = true
-        mainXGrid.leadingAnchor.constraint(equalTo: mainZGrid.trailingAnchor, constant: 20).isActive = true //10
+        mainXGrid.leadingAnchor.constraint(equalTo: mainEditPanel.leadingAnchor, constant: 20).isActive = true
+//        mainXGrid.leadingAnchor.constraint(equalTo: mainZGrid.trailingAnchor, constant: 20).isActive = true //10
         mainXGrid.topAnchor.constraint(equalTo: mainEditPanel.topAnchor, constant: 10).isActive = true
 //        mainXGrid.centerYAnchor.constraint(equalTo: mainEditPanel.centerYAnchor, constant: 0).isActive = true
         mainXGrid.layer.cornerRadius = 20 //10
@@ -1336,8 +1130,6 @@ class PostCreatorConsolePanelView: CreatorPanelView{
 //        panel.addSubview(aUploadText)
         maxLimitErrorPanel.addSubview(maxLimitText)
         maxLimitText.translatesAutoresizingMaskIntoConstraints = false
-//        maxLimitText.topAnchor.constraint(equalTo: maxLimitErrorPanel.topAnchor, constant: 10).isActive = true
-//        maxLimitText.bottomAnchor.constraint(equalTo: maxLimitErrorPanel.bottomAnchor, constant: -10).isActive = true
         maxLimitText.centerYAnchor.constraint(equalTo: maxLimitErrorPanel.centerYAnchor, constant: 0).isActive = true
         maxLimitText.leadingAnchor.constraint(equalTo: miniError.trailingAnchor, constant: 7).isActive = true
         maxLimitText.trailingAnchor.constraint(equalTo: maxLimitErrorPanel.trailingAnchor, constant: -15).isActive = true
@@ -1504,7 +1296,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         if(!isInitialized) {
             if(isUserLoggedIn) {
                 //test > async fetch user data
-                asyncConfigureUser(data: "a")
+//                asyncConfigureUser(data: "a")
                 
                 //test > add first textview
                 addTextSection(i: 0, extraContentSize: 0.0, textToAdd: "")
@@ -1525,28 +1317,15 @@ class PostCreatorConsolePanelView: CreatorPanelView{
                         asyncConfigurePhotoShot(id: quoteObjectId, contentPosition: "start") //photo1
                     }
                 }
-                //*
-                //test > refresh tagged location 
-//                if(!predesignatedPlaceList.isEmpty) {
-//                    setSelectedLocation(l: "p")
-//                }
-                //
-                
-                //show add location
-//                aBox.isHidden = false
                 
                 //show add title
                 addTitleBtn.isHidden = false
                 addTitleText.isHidden = false
             } else {
-                let pImageUrl = URL(string: "")
-                pImage.sd_setImage(with: pImageUrl)
-                aStickyPhoto.sd_setImage(with: pImageUrl)
-                pImage.isHidden = true
-//                abBox.isHidden = true
-                
-                //hide add location
-//                aBox.isHidden = true
+//                let pImageUrl = URL(string: "")
+//                pImage.sd_setImage(with: pImageUrl)
+//                aStickyPhoto.sd_setImage(with: pImageUrl)
+//                pImage.isHidden = true
                 
                 //hide add title
                 addTitleBtn.isHidden = true
@@ -1566,17 +1345,19 @@ class PostCreatorConsolePanelView: CreatorPanelView{
         
                 self.isInitialized = false
                 self.initialize()
+                print("postcreator AA")
             }
             else {
                 if(self.isUserLoggedIn) {
-                    
+                    print("postcreator AB")
                 } else {
-                    
+                    print("postcreator AC")
                 }
             }
         } else {
             self.isUserLoggedIn = isSignedIn
             self.initialize()
+            print("postcreator AD")
         }
     }
     
@@ -1821,23 +1602,6 @@ class PostCreatorConsolePanelView: CreatorPanelView{
             a?.setSelectedLocation(l: mapPinString)
         }
     }
-    
-//    var selectedPlaceList = [String]()
-//    func setSelectedLocation(l : String) {
-//        removeSelectedLocation()
-//        
-//        if(selectedPlaceList.isEmpty) {
-//            selectedPlaceList.append("p")
-//            aaText.text = l
-//        }
-//    }
-//    
-//    func removeSelectedLocation() {
-//        if(!selectedPlaceList.isEmpty) {
-//            selectedPlaceList.removeLast()
-//            aaText.text = ""
-//        }
-//    }
     
     //test => attach quote object at initialization
     var quoteObjectType = ""
@@ -2280,7 +2044,7 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     func addTextSection(i: Int, extraContentSize: CGFloat, textToAdd: String) {
         if(pcList.isEmpty) {
             
-            pMiniBottomCons?.isActive = false //test
+            tViewBottomCons?.isActive = false //test
             
             let a = PostClip()
             a.tBoxType = "text"
@@ -3193,42 +2957,44 @@ class PostCreatorConsolePanelView: CreatorPanelView{
     }
     
     func clearTitleUI() {
-        
-        hintTitleText.isHidden = true
-        
-        if(titleTv.text == "") {
-            addTitleBtn.isHidden = false
-            addTitleText.isHidden = false
-        } else {
-            addTitleBtn.isHidden = true
-            addTitleText.isHidden = true
+        print("postcreator AClearnTitleUI")
+        if(isUserLoggedIn) {
+            hintTitleText.isHidden = true
+            
+            if(titleTv.text == "") {
+                addTitleBtn.isHidden = false
+                addTitleText.isHidden = false
+            } else {
+                addTitleBtn.isHidden = true
+                addTitleText.isHidden = true
+            }
         }
     }
     
     //test > sticky header title animation when scroll up and down
-    var isCTitleDisplayed = false
-    func cTitleAnimateDisplay() {
-        //title appear
-        if(isCTitleDisplayed == false) {
-            UIView.animate(withDuration: 0.2, animations: {
-                self.cNameTextCenterYCons?.constant = 10.0
-                self.layoutIfNeeded()
-
-                self.isCTitleDisplayed = true
-            })
-        }
-    }
-    func cTitleAnimateHide() {
-        //title hide
-        if(isCTitleDisplayed == true) {
-            UIView.animate(withDuration: 0.2, animations: {
-                self.cNameTextCenterYCons?.constant = 50.0
-                self.layoutIfNeeded()
-
-                self.isCTitleDisplayed = false
-            })
-        }
-    }
+//    var isCTitleDisplayed = false
+//    func cTitleAnimateDisplay() {
+//        //title appear
+//        if(isCTitleDisplayed == false) {
+//            UIView.animate(withDuration: 0.2, animations: {
+//                self.cNameTextCenterYCons?.constant = 10.0
+//                self.layoutIfNeeded()
+//
+//                self.isCTitleDisplayed = true
+//            })
+//        }
+//    }
+//    func cTitleAnimateHide() {
+//        //title hide
+//        if(isCTitleDisplayed == true) {
+//            UIView.animate(withDuration: 0.2, animations: {
+//                self.cNameTextCenterYCons?.constant = 50.0
+//                self.layoutIfNeeded()
+//
+//                self.isCTitleDisplayed = false
+//            })
+//        }
+//    }
 }
 
 extension PostCreatorConsolePanelView: PostClipCellDelegate {
@@ -3553,7 +3319,7 @@ extension PostCreatorConsolePanelView: UITextViewDelegate {
             let h = textView.contentSize.height
             titleHeightCons?.constant = h
             
-            aStickyTitleText.text = textView.text
+//            aStickyTitleText.text = textView.text
         } else {
             let currentString: NSString = (textView.text ?? "") as NSString
             let length = currentString.length
@@ -3849,25 +3615,21 @@ extension PostCreatorConsolePanelView: UIScrollViewDelegate {
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        print("addcontent scrolling: \(stackView.frame.height)")
         print("xxpc scrollview scroll: \(scrollView.contentOffset.y), \(stackView.frame.height)")
         
         //test > compute video intersect wrt dummy
         getIntersect()
-        
-        //test > stickyheader UI respond to scroll change
-//        let photoHeight = 40.0
-//        let photoTopMargin = 20.0
-//        let totalPhotoHeight = photoHeight + photoTopMargin
-        let totalPhotoHeight = tView.frame.height
-        let isSignedIn = SignInManager.shared.getStatus()
-        if(isSignedIn) {
-            if(scrollView.contentOffset.y >= totalPhotoHeight) {
-                cTitleAnimateDisplay()
-            } else {
-                cTitleAnimateHide()
-            }
-        }
+//        
+//        //test > stickyheader UI respond to scroll change
+//        let totalPhotoHeight = tView.frame.height
+//        let isSignedIn = SignInManager.shared.getStatus()
+//        if(isSignedIn) {
+//            if(scrollView.contentOffset.y >= totalPhotoHeight) {
+//                cTitleAnimateDisplay()
+//            } else {
+//                cTitleAnimateHide()
+//            }
+//        }
     }
 
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {

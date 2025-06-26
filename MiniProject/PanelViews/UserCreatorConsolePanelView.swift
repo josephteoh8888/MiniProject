@@ -449,27 +449,34 @@ class UserCreatorConsolePanelView: PanelView{
 //        stack2.addSubview(aUpload)
         aUpload.translatesAutoresizingMaskIntoConstraints = false
         aUpload.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        aUpload.widthAnchor.constraint(equalToConstant: 30).isActive = true
         aUpload.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -10).isActive = true
-//        aUpload.topAnchor.constraint(equalTo: panel.topAnchor, constant: 50).isActive = true
-//        aUpload.leadingAnchor.constraint(equalTo: stack2.leadingAnchor, constant: 10).isActive = true
-//        aUpload.trailingAnchor.constraint(equalTo: stack2.trailingAnchor, constant: 0).isActive = true
         aUpload.centerYAnchor.constraint(equalTo: aBtn.centerYAnchor).isActive = true
-        aUpload.layer.cornerRadius = 10
+        aUpload.layer.cornerRadius = 15 //10
         aUpload.isUserInteractionEnabled = true
         aUpload.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onUserUploadNextClicked)))
 
-        let aUploadText = UILabel()
-        aUploadText.textAlignment = .center
-        aUploadText.textColor = .black
-        aUploadText.font = .boldSystemFont(ofSize: 13)
-//        panel.addSubview(aUploadText)
-        aUpload.addSubview(aUploadText)
-        aUploadText.translatesAutoresizingMaskIntoConstraints = false
-//        aUploadText.centerXAnchor.constraint(equalTo: aUpload.centerXAnchor).isActive = true
-        aUploadText.centerYAnchor.constraint(equalTo: aUpload.centerYAnchor).isActive = true
-        aUploadText.leadingAnchor.constraint(equalTo: aUpload.leadingAnchor, constant: 15).isActive = true //25
-        aUploadText.trailingAnchor.constraint(equalTo: aUpload.trailingAnchor, constant: -15).isActive = true
-        aUploadText.text = "Done" //create
+//        let aUploadText = UILabel()
+//        aUploadText.textAlignment = .center
+//        aUploadText.textColor = .black
+//        aUploadText.font = .boldSystemFont(ofSize: 13)
+////        panel.addSubview(aUploadText)
+//        aUpload.addSubview(aUploadText)
+//        aUploadText.translatesAutoresizingMaskIntoConstraints = false
+////        aUploadText.centerXAnchor.constraint(equalTo: aUpload.centerXAnchor).isActive = true
+//        aUploadText.centerYAnchor.constraint(equalTo: aUpload.centerYAnchor).isActive = true
+//        aUploadText.leadingAnchor.constraint(equalTo: aUpload.leadingAnchor, constant: 15).isActive = true //25
+//        aUploadText.trailingAnchor.constraint(equalTo: aUpload.trailingAnchor, constant: -15).isActive = true
+//        aUploadText.text = "Done" //create
+        
+        let aNextMiniBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right_next")?.withRenderingMode(.alwaysTemplate))
+        aNextMiniBtn.tintColor = .black
+        aUpload.addSubview(aNextMiniBtn)
+        aNextMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        aNextMiniBtn.centerXAnchor.constraint(equalTo: aUpload.centerXAnchor).isActive = true
+        aNextMiniBtn.centerYAnchor.constraint(equalTo: aUpload.centerYAnchor).isActive = true
+        aNextMiniBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        aNextMiniBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
         
         panel.addSubview(aSpinner)
         aSpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
@@ -496,7 +503,7 @@ class UserCreatorConsolePanelView: PanelView{
         pTextField.text = ""
         pTextField.tintColor = .yellow
 //        pTextField.delegate = self
-        pTextField.placeholder = ""
+//        pTextField.placeholder = ""
         
         ppTextField.textAlignment = .left
         ppTextField.textColor = .white
@@ -514,7 +521,21 @@ class UserCreatorConsolePanelView: PanelView{
         ppTextField.text = ""
         ppTextField.tintColor = .yellow
 //        ppTextField.delegate = self
-        ppTextField.placeholder = "Add a name..."
+//        ppTextField.placeholder = "Add a name..."
+        
+        let ppHintText = UILabel()
+        ppHintText.textAlignment = .left
+        ppHintText.textColor = .white
+        ppHintText.font = .systemFont(ofSize: 14)
+//        panel.addSubview(aUploadText)
+        stackView.addSubview(ppHintText)
+        ppHintText.translatesAutoresizingMaskIntoConstraints = false
+        ppHintText.leadingAnchor.constraint(equalTo: ppResult.leadingAnchor, constant: 100).isActive = true
+        ppHintText.trailingAnchor.constraint(equalTo: ppResult.trailingAnchor, constant: -10).isActive = true
+        ppHintText.topAnchor.constraint(equalTo: ppResult.topAnchor, constant: 2).isActive = true
+        ppHintText.bottomAnchor.constraint(equalTo: ppResult.bottomAnchor, constant: -2).isActive = true
+        ppHintText.text = "Add a name..."
+        ppHintText.layer.opacity = 0.3
         
 //        qTextField.textAlignment = .left
 //        qTextField.textColor = .white
@@ -993,6 +1014,14 @@ extension UserCreatorConsolePanelView: UITextViewDelegate {
                 rHint.isHidden = true
             } else {
                 rHint.isHidden = false
+            }
+        } else if (textView == ppTextField) {
+            let currentString: NSString = (textView.text ?? "") as NSString
+            let length = currentString.length
+            if(length > 0) {
+                ppHint.isHidden = true
+            } else {
+                ppHint.isHidden = false
             }
         }
     }

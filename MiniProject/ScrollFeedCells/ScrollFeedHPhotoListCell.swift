@@ -538,7 +538,7 @@ extension ScrollFeedHPhotoListCell: UICollectionViewDataSource {
 }
 
 extension ScrollFeedHPhotoListCell: HListCellDelegate {
-    func hListDidClickVcvComment(vc: UICollectionViewCell, id: String, dataType: String) {
+    func hListDidClickVcvComment(vc: UICollectionViewCell, id: String, dataType: String, pointX: CGFloat, pointY: CGFloat) {
         aDelegate?.sfcDidClickVcvComment()
     }
     func hListDidClickVcvLove() {
@@ -570,7 +570,7 @@ extension ScrollFeedHPhotoListCell: HListCellDelegate {
     func hListDidClickVcvClickSound(id: String) {
         aDelegate?.sfcDidClickVcvClickSound(id: id)
     }
-    func hListDidClickVcvClickPost(id: String, dataType: String) {
+    func hListDidClickVcvClickPost(id: String, dataType: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat) {
 //        aDelegate?.sfcDidClickVcvClickPost()
     }
     func hListDidClickVcvClickPhoto(id: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){

@@ -51,6 +51,7 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
     let bSpinner = SpinLoader()
     
     let rHintText = UILabel()
+    let pHintText = UILabel()
     
     //test > user login/out status
     var isUserLoggedIn = false
@@ -550,7 +551,20 @@ class PlaceCreatorConsolePanelView: CreatorPanelView{
         pTextField.text = ""
         pTextField.tintColor = .yellow
         pTextField.delegate = self
-        pTextField.placeholder = "Give it a nice name"
+        pTextField.placeholder = ""
+        
+        pHintText.textAlignment = .left
+        pHintText.textColor = .white
+        pHintText.font = .systemFont(ofSize: 14)
+//        panel.addSubview(aUploadText)
+        stackView.addSubview(pHintText)
+        pHintText.translatesAutoresizingMaskIntoConstraints = false
+        pHintText.leadingAnchor.constraint(equalTo: pResult.leadingAnchor, constant: 100).isActive = true
+        pHintText.trailingAnchor.constraint(equalTo: pResult.trailingAnchor, constant: -10).isActive = true
+        pHintText.topAnchor.constraint(equalTo: pResult.topAnchor, constant: 2).isActive = true
+        pHintText.bottomAnchor.constraint(equalTo: pResult.bottomAnchor, constant: -2).isActive = true
+        pHintText.text = "Give it a nice name"
+        pHintText.layer.opacity = 0.3
         
         qTextField.textAlignment = .left
         qTextField.textColor = .white
@@ -1079,6 +1093,17 @@ extension PlaceCreatorConsolePanelView: UITextFieldDelegate {
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         print("textfield end edit")
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        let currentString: NSString = (textView.text ?? "") as NSString
+        let length = currentString.length
+        if(length > 0) {
+            pHintText.isHidden = true
+        } else {
+            pHintText.isHidden = false
+        }
+        print("textView change \(length)")
     }
 }
 

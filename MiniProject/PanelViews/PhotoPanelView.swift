@@ -22,7 +22,7 @@ protocol PhotoPanelDelegate : AnyObject {
     func didClickPhotoPanelVcvClickUser(id: String) //try
     func didClickPhotoPanelVcvClickPlace(id: String) //try
     func didClickPhotoPanelVcvClickSound(id: String) //try
-    func didClickPhotoPanelVcvClickPost(id: String, dataType: String, scrollToComment: Bool) //try
+    func didClickPhotoPanelVcvClickPost(id: String, dataType: String, scrollToComment: Bool, pointX: CGFloat, pointY: CGFloat) //try
     func didClickPhotoPanelVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) //try
     func didClickPhotoPanelVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) //try
     
@@ -1796,28 +1796,40 @@ extension ViewController: PhotoPanelDelegate{
         //test > real id for fetching data
         openSoundPanel(id: id)
     }
-    func didClickPhotoPanelVcvClickPost(id: String, dataType: String, scrollToComment: Bool) {
+    func didClickPhotoPanelVcvClickPost(id: String, dataType: String, scrollToComment: Bool, pointX: CGFloat, pointY: CGFloat) {
         //test > real id for fetching data
-        openPostDetailPanel(id: id, dataType: dataType, scrollToComment: scrollToComment)
+//        openPostDetailPanel(id: id, dataType: dataType, scrollToComment: scrollToComment)
+        
+        //test > new method
+        let offsetX = pointX - self.view.frame.width/2
+        let offsetY = pointY - self.view.frame.height/2
+        openPostDetailPanel(id: id, dataType: dataType, scrollToComment: scrollToComment, offX: offsetX, offY: offsetY)
     }
     func didClickPhotoPanelVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
-        
-        let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
-        let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
+//        let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
+//        let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
+        //test > new computation method
+        let offsetX = pointX - self.view.frame.width/2
+        let offsetY = pointY - self.view.frame.height/2
         
         if(mode == PhotoTypes.P_SHOT_DETAIL) {
-//            openPhotoDetailPanel()
             //test > real id for fetching data
-            openPhotoDetailPanel(id: id)
+//            openPhotoDetailPanel(id: id)
+            
+            //test 2 > animated open and close panel
+            openPhotoDetailPanel(id: id, offX: offsetX, offY: offsetY)
         } else if(mode == PhotoTypes.P_0){
             openPhotoZoomPanel(offX: offsetX, offY: offsetY)
         }
     }
     
     func didClickPhotoPanelVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
-        let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
-        let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
-
+//        let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
+//        let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
+        //test > new computation method
+        let offsetX = pointX - self.view.frame.width/2
+        let offsetY = pointY - self.view.frame.height/2
+        
         //test 1 > for video only
         var dataset = [String]()
 //        dataset.append("a")
@@ -1953,14 +1965,14 @@ extension PhotoPanelView: CommentScrollableDelegate{
             }
         }
     }
-    func didCClickComment(id: String, dataType: String){
-        delegate?.didClickPhotoPanelVcvClickPost(id: id, dataType: dataType, scrollToComment: true)
+    func didCClickComment(id: String, dataType: String, pointX: CGFloat, pointY: CGFloat){
+        delegate?.didClickPhotoPanelVcvClickPost(id: id, dataType: dataType, scrollToComment: true, pointX: pointX, pointY: pointY)
     }
     func didCClickShare(id: String, dataType: String){
         openShareSheet(oType: dataType, oId: id)
     }
-    func didCClickPost(id: String, dataType: String){
-        delegate?.didClickPhotoPanelVcvClickPost(id: id, dataType: dataType, scrollToComment: false)
+    func didCClickPost(id: String, dataType: String, pointX: CGFloat, pointY: CGFloat){
+        delegate?.didClickPhotoPanelVcvClickPost(id: id, dataType: dataType, scrollToComment: false, pointX: pointX, pointY: pointY)
     }
     func didCClickClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         delegate?.didClickPhotoPanelVcvClickPhoto(id: id, pointX: pointX, pointY: pointY, view: view, mode: mode)
@@ -2042,7 +2054,7 @@ extension PhotoPanelView: ScrollFeedCellDelegate {
         pausePlayingMedia()
         delegate?.didClickPhotoPanelVcvClickSound(id: id)
     }
-    func sfcDidClickVcvClickPost(id: String, dataType: String) {
+    func sfcDidClickVcvClickPost(id: String, dataType: String, pointX: CGFloat, pointY: CGFloat) {
 
     }
     func sfcDidClickVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {

@@ -12,23 +12,26 @@ import SDWebImage
 protocol MeCellDelegate : AnyObject {
     
     func didMeCellClickUser(id: String)
-    func didMeCellClickBase()
-    func didMeCellClickEditProfile()
+    func didMeCellClickBase(id: String)
+    func didMeCellClickEditProfile(id: String)
     func didMeCellClickAccountSetting()
-    func didMeCellClickFollow()
-    func didMeCellClickHistory()
-    func didMeCellClickLike()
-    func didMeCellClickBookmark()
-    func didMeCellClickLocations()
-    func didMeCellClickComments()
-    func didMeCellClickPosts()
-    func didMeCellClickPhotos()
-    func didMeCellClickVideos()
+    func didMeCellClickFollow(id: String, pointX: CGFloat, pointY: CGFloat, c: MeCell)
+    func didMeCellClickHistory(id: String, pointX: CGFloat, pointY: CGFloat, c: MeCell)
+    func didMeCellClickLike(id: String, pointX: CGFloat, pointY: CGFloat, c: MeCell)
+    func didMeCellClickBookmark(id: String, pointX: CGFloat, pointY: CGFloat, c: MeCell)
+    func didMeCellClickLocations(id: String, pointX: CGFloat, pointY: CGFloat, c: MeCell)
+    func didMeCellClickComments(id: String, pointX: CGFloat, pointY: CGFloat, c: MeCell)
+    func didMeCellClickPosts(id: String, pointX: CGFloat, pointY: CGFloat, c: MeCell)
+    func didMeCellClickPhotos(id: String, pointX: CGFloat, pointY: CGFloat, c: MeCell)
+    func didMeCellClickVideos(id: String, pointX: CGFloat, pointY: CGFloat, c: MeCell)
     func didMeCellClickSignout()
 }
 
 class MeCell: UIView {
     weak var aDelegate : MeCellDelegate?
+    
+    func hideCell() {}
+    func dehideCell() {}
 }
 
 class MultiPhotosMeCell: MeCell {
@@ -284,8 +287,25 @@ class MultiPhotosMeCell: MeCell {
 //        }
     }
     
+    override func dehideCell() {
+        self.layer.opacity = 1.0
+    }
+    
+    override func hideCell() {
+        self.layer.opacity = 0.1
+    }
+    
     @objc func onRectClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.didMeCellClickPhotos()
+//        aDelegate?.didMeCellClickPhotos()
+        //test 2 > use click position as starting point
+        let translation = gesture.location(in: self)
+        let x = translation.x
+        let y = translation.y
+        let pointX = x
+        let pointY = y
+        aDelegate?.didMeCellClickPhotos(id: "", pointX: pointX, pointY: pointY, c: self)
+        
+        hideCell()
     }
     
     @objc func onErrorRefreshClicked(gesture: UITapGestureRecognizer) {
@@ -548,8 +568,25 @@ class MultiLoopsMeCell: MeCell {
 //        }
     }
     
+    override func dehideCell() {
+        self.layer.opacity = 1.0
+    }
+    
+    override func hideCell() {
+        self.layer.opacity = 0.1
+    }
+    
     @objc func onRectClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.didMeCellClickVideos()
+//        aDelegate?.didMeCellClickVideos()
+        //test 2 > use click position as starting point
+        let translation = gesture.location(in: self)
+        let x = translation.x
+        let y = translation.y
+        let pointX = x
+        let pointY = y
+        aDelegate?.didMeCellClickVideos(id: "", pointX: pointX, pointY: pointY, c: self)
+        
+        hideCell()
     }
     
     @objc func onErrorRefreshClicked(gesture: UITapGestureRecognizer) {
@@ -820,8 +857,25 @@ class MultiPostsMeCell: MeCell {
         }
     }
     
+    override func dehideCell() {
+        self.layer.opacity = 1.0
+    }
+    
+    override func hideCell() {
+        self.layer.opacity = 0.1
+    }
+    
     @objc func onRectClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.didMeCellClickPosts()
+//        aDelegate?.didMeCellClickPosts()
+        //test 2 > use click position as starting point
+        let translation = gesture.location(in: self)
+        let x = translation.x
+        let y = translation.y
+        let pointX = x
+        let pointY = y
+        aDelegate?.didMeCellClickPosts(id: "", pointX: pointX, pointY: pointY, c: self)
+        
+        hideCell()
     }
     
     @objc func onErrorRefreshClicked(gesture: UITapGestureRecognizer) {
@@ -965,8 +1019,25 @@ class MultiCommentsMeCell: MeCell {
         }
     }
     
+    override func dehideCell() {
+        self.layer.opacity = 1.0
+    }
+    
+    override func hideCell() {
+        self.layer.opacity = 0.1
+    }
+    
     @objc func onRectClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.didMeCellClickComments()
+//        aDelegate?.didMeCellClickComments()
+        //test 2 > use click position as starting point
+        let translation = gesture.location(in: self)
+        let x = translation.x
+        let y = translation.y
+        let pointX = x
+        let pointY = y
+        aDelegate?.didMeCellClickComments(id: "", pointX: pointX, pointY: pointY, c: self)
+        
+        hideCell()
     }
 }
 
@@ -1052,7 +1123,16 @@ class HistoryMeCell: MeCell {
     }
     
     @objc func onRectClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.didMeCellClickHistory()
+//        aDelegate?.didMeCellClickHistory()
+        //test 2 > use click position as starting point
+        let translation = gesture.location(in: self)
+        let x = translation.x
+        let y = translation.y
+        let pointX = x
+        let pointY = y
+        aDelegate?.didMeCellClickHistory(id: "", pointX: pointX, pointY: pointY, c: self)
+        
+        hideCell()
     }
 }
 
@@ -1137,8 +1217,25 @@ class LikeMeCell: MeCell {
         isInitialized = true
     }
     
+    override func dehideCell() {
+        self.layer.opacity = 1.0
+    }
+    
+    override func hideCell() {
+        self.layer.opacity = 0.1
+    }
+    
     @objc func onRectClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.didMeCellClickLike()
+//        aDelegate?.didMeCellClickLike()
+        //test 2 > use click position as starting point
+        let translation = gesture.location(in: self)
+        let x = translation.x
+        let y = translation.y
+        let pointX = x
+        let pointY = y
+        aDelegate?.didMeCellClickLike(id: "", pointX: pointX, pointY: pointY, c: self)
+        
+        hideCell()
     }
 }
 
@@ -1223,8 +1320,25 @@ class BookmarkMeCell: MeCell {
         isInitialized = true
     }
     
+    override func dehideCell() {
+        self.layer.opacity = 1.0
+    }
+    
+    override func hideCell() {
+        self.layer.opacity = 0.1
+    }
+    
     @objc func onRectClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.didMeCellClickBookmark()
+//        aDelegate?.didMeCellClickBookmark()
+        //test 2 > use click position as starting point
+        let translation = gesture.location(in: self)
+        let x = translation.x
+        let y = translation.y
+        let pointX = x
+        let pointY = y
+        aDelegate?.didMeCellClickBookmark(id: "", pointX: pointX, pointY: pointY, c: self)
+        
+        hideCell()
     }
 }
 
@@ -1419,7 +1533,7 @@ class EditProfileMeCell: MeCell {
     
     @objc func onRectClicked(gesture: UITapGestureRecognizer) {
         
-        aDelegate?.didMeCellClickEditProfile()
+        aDelegate?.didMeCellClickEditProfile(id: "")
     }
 }
 
@@ -1478,7 +1592,7 @@ class FollowerMeCell: MeCell {
         aHLightTitle.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 10).isActive = true
         aHLightTitle.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 10).isActive = true
 //        aHLightTitle.text = "Followers"
-        aHLightTitle.text = "Followers & Followings"
+        aHLightTitle.text = "Follows"
 //        aHLightTitle.isHidden = true
         aHLightTitle.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: -10).isActive = true
         
@@ -1505,8 +1619,24 @@ class FollowerMeCell: MeCell {
         isInitialized = true
     }
     
+    override func dehideCell() {
+        self.layer.opacity = 1.0
+    }
+    
+    override func hideCell() {
+        self.layer.opacity = 0.1
+    }
+    
     @objc func onRectClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.didMeCellClickFollow()
+        //test 2 > use click position as starting point
+        let translation = gesture.location(in: self)
+        let x = translation.x
+        let y = translation.y
+        let pointX = x
+        let pointY = y
+        aDelegate?.didMeCellClickFollow(id: "", pointX: pointX, pointY: pointY, c: self)
+        
+        hideCell()
     }
 }
 
@@ -1764,7 +1894,7 @@ class BaseMeCell: MeCell {
     }
     
     @objc func onRectClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.didMeCellClickBase()
+        aDelegate?.didMeCellClickBase(id: "")
     }
     
     @objc func onErrorRefreshClicked(gesture: UITapGestureRecognizer) {
@@ -2053,8 +2183,25 @@ class LocationMeCell: MeCell {
         }
     }
     
+    override func dehideCell() {
+        self.layer.opacity = 1.0
+    }
+    
+    override func hideCell() {
+        self.layer.opacity = 0.1
+    }
+    
     @objc func onRectClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.didMeCellClickLocations()
+//        aDelegate?.didMeCellClickLocations()
+        //test 2 > use click position as starting point
+        let translation = gesture.location(in: self)
+        let x = translation.x
+        let y = translation.y
+        let pointX = x
+        let pointY = y
+        aDelegate?.didMeCellClickLocations(id: "", pointX: pointX, pointY: pointY, c: self)
+        
+        hideCell()
     }
     
     @objc func onErrorRefreshClicked(gesture: UITapGestureRecognizer) {

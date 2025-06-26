@@ -15,8 +15,8 @@ protocol CommentScrollableDelegate : AnyObject {
     func didCClickSound(id: String)
     func didCClickClosePanel()
     func didCFinishClosePanel()
-    func didCClickComment(id: String, dataType: String)
-    func didCClickPost(id: String, dataType: String)
+    func didCClickComment(id: String, dataType: String, pointX: CGFloat, pointY: CGFloat)
+    func didCClickPost(id: String, dataType: String, pointX: CGFloat, pointY: CGFloat)
     func didCClickShare(id: String, dataType: String)
     func didCClickClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String)
     func didCClickClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String)
@@ -56,10 +56,12 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
     var bView = UIView()
     var textPanelBottomCons: NSLayoutConstraint?
     var aTextBoxHeightCons: NSLayoutConstraint?
-    var aTextTrailingCons: NSLayoutConstraint?
-    var aTextBottomCons: NSLayoutConstraint?
+//    var aTextTrailingCons: NSLayoutConstraint?
+//    var aTextBottomCons: NSLayoutConstraint?
     let aTextBox = UITextView()
     var aaViewTrailingCons: NSLayoutConstraint?
+    let sendAaView = UIView()
+    var sendAaViewTrailingCons: NSLayoutConstraint?
     let textPanel = UIView()
     var currentFirstResponder : UITextView?
     var isKeyboardUp = false
@@ -116,13 +118,13 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
         commentTitleText.textColor = .white
 //        commentTitleText.font = .systemFont(ofSize: 14) //default 14
         commentTitleText.font = .boldSystemFont(ofSize: 13) //default 14
-        commentTitleText.text = "2037 Comments"
+        commentTitleText.text = "Comments" //2037 Comments
         panelView.addSubview(commentTitleText)
         commentTitleText.translatesAutoresizingMaskIntoConstraints = false
 //        commentTitleText.leadingAnchor.constraint(equalTo: panelView.leadingAnchor, constant: 20).isActive = true
 //        commentTitleText.trailingAnchor.constraint(equalTo: panelView.trailingAnchor, constant: 0).isActive = true
         commentTitleText.centerXAnchor.constraint(equalTo: panelView.centerXAnchor, constant: 0).isActive = true
-        commentTitleText.topAnchor.constraint(equalTo: panelView.topAnchor, constant: 20).isActive = true
+        commentTitleText.topAnchor.constraint(equalTo: panelView.topAnchor, constant: 20).isActive = true //20
         commentTitleText.isUserInteractionEnabled = true
         commentTitleText.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onCommentTitleClicked)))
         
@@ -135,6 +137,7 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
         commentTitleBtn.centerYAnchor.constraint(equalTo: commentTitleText.centerYAnchor).isActive = true
         commentTitleBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true //ori 26
         commentTitleBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
+        commentTitleBtn.isHidden = true
         
         let vLayout = UICollectionViewFlowLayout()
         vLayout.scrollDirection = .vertical
@@ -153,7 +156,7 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
         panelView.addSubview(vCV)
         vCV.translatesAutoresizingMaskIntoConstraints = false
 //        vCV.topAnchor.constraint(equalTo: eGrid.bottomAnchor, constant: 20).isActive = true
-        vCV.topAnchor.constraint(equalTo: commentTitleText.bottomAnchor, constant: 20).isActive = true
+        vCV.topAnchor.constraint(equalTo: commentTitleText.bottomAnchor, constant: 20).isActive = true //20
 //        vCV.topAnchor.constraint(equalTo: l1Tab.bottomAnchor, constant: 20).isActive = true
         vCV.leadingAnchor.constraint(equalTo: panelView.leadingAnchor).isActive = true
         vCV.bottomAnchor.constraint(equalTo: panelView.bottomAnchor, constant: 0).isActive = true
@@ -198,11 +201,14 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
 //        let addCommentContainer = UIView()
         bottomBox.addSubview(addCommentContainer)
         addCommentContainer.translatesAutoresizingMaskIntoConstraints = false
-        addCommentContainer.leadingAnchor.constraint(equalTo: bottomBox.leadingAnchor, constant: 0).isActive = true
-        addCommentContainer.trailingAnchor.constraint(equalTo: bottomBox.trailingAnchor, constant: 0).isActive = true
-        addCommentContainer.topAnchor.constraint(equalTo: bottomBox.topAnchor, constant: 0).isActive = true //default: 50
-        addCommentContainer.bottomAnchor.constraint(equalTo: bottomBox.bottomAnchor, constant: 0).isActive = true
         addCommentContainer.isHidden = false
+        addCommentContainer.backgroundColor = .ddmBlackDark
+        addCommentContainer.layer.cornerRadius = 10 //10
+        addCommentContainer.leadingAnchor.constraint(equalTo: bottomBox.leadingAnchor, constant: 20).isActive = true //0
+//        addCommentContainer.leadingAnchor.constraint(equalTo: zGrid.trailingAnchor, constant: 10).isActive = true //0
+        addCommentContainer.trailingAnchor.constraint(equalTo: bottomBox.trailingAnchor, constant: -20).isActive = true //-15
+        addCommentContainer.topAnchor.constraint(equalTo: bottomBox.topAnchor, constant: 10).isActive = true //0
+        addCommentContainer.bottomAnchor.constraint(equalTo: bottomBox.bottomAnchor, constant: -10).isActive = true //0
         addCommentContainer.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onOpenTextBoxClicked)))
         
         let bText = UILabel()
@@ -224,48 +230,6 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
         bText.text = "Add comment..."
 //        bText.layer.opacity = 0.5
         
-        let lTextBtn = UIImageView()
-        lTextBtn.image = UIImage(named:"icon_outline_photo")?.withRenderingMode(.alwaysTemplate)
-//        lTextBtn.tintColor = .white
-        lTextBtn.tintColor = .ddmDarkGrayColor
-//        bottomBox.addSubview(lTextBtn)
-        addCommentContainer.addSubview(lTextBtn)
-        lTextBtn.translatesAutoresizingMaskIntoConstraints = false
-//        lTextBtn.trailingAnchor.constraint(equalTo: bottomBox.trailingAnchor, constant: -15).isActive = true
-        lTextBtn.trailingAnchor.constraint(equalTo: addCommentContainer.trailingAnchor, constant: -15).isActive = true
-        lTextBtn.centerYAnchor.constraint(equalTo: bText.centerYAnchor).isActive = true
-        lTextBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
-        lTextBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        lTextBtn.isHidden = false
-
-        let mTextBtn = UIImageView()
-        mTextBtn.image = UIImage(named:"icon_round_emoji")?.withRenderingMode(.alwaysTemplate)
-//        mTextBtn.tintColor = .white
-        mTextBtn.tintColor = .ddmDarkGrayColor
-//        mTextBtn.layer.opacity = 0.5
-//        bottomBox.addSubview(mTextBtn)
-        addCommentContainer.addSubview(mTextBtn)
-        mTextBtn.translatesAutoresizingMaskIntoConstraints = false
-        mTextBtn.trailingAnchor.constraint(equalTo: lTextBtn.leadingAnchor, constant: -10).isActive = true
-        mTextBtn.centerYAnchor.constraint(equalTo: bText.centerYAnchor).isActive = true
-        mTextBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
-        mTextBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        mTextBtn.isHidden = false
-
-        let nTextBtn = UIImageView()
-        nTextBtn.image = UIImage(named:"icon_round_at")?.withRenderingMode(.alwaysTemplate)
-//        nTextBtn.tintColor = .white
-        nTextBtn.tintColor = .ddmDarkGrayColor
-//        nTextBtn.layer.opacity = 0.5
-//        bottomBox.addSubview(nTextBtn)
-        addCommentContainer.addSubview(nTextBtn)
-        nTextBtn.translatesAutoresizingMaskIntoConstraints = false
-        nTextBtn.trailingAnchor.constraint(equalTo: mTextBtn.leadingAnchor, constant: -10).isActive = true
-        nTextBtn.centerYAnchor.constraint(equalTo: bText.centerYAnchor).isActive = true
-        nTextBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
-        nTextBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        nTextBtn.isHidden = false
-        
         bottomBox.addSubview(sendCommentContainer)
         sendCommentContainer.translatesAutoresizingMaskIntoConstraints = false
         sendCommentContainer.leadingAnchor.constraint(equalTo: bottomBox.leadingAnchor, constant: 0).isActive = true
@@ -274,17 +238,26 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
         sendCommentContainer.bottomAnchor.constraint(equalTo: bottomBox.bottomAnchor, constant: 0).isActive = true
         sendCommentContainer.isHidden = true
         
-        let sendAaView = UIView()
+//        let sendAaView = UIView()
         sendAaView.backgroundColor = .ddmBlackDark
         sendCommentContainer.addSubview(sendAaView)
         sendAaView.translatesAutoresizingMaskIntoConstraints = false
         sendAaView.topAnchor.constraint(equalTo: sendCommentContainer.topAnchor, constant: 10).isActive = true
-//        sendAaView.bottomAnchor.constraint(equalTo: sendCommentContainer.bottomAnchor, constant: -10).isActive = true //-10
-        sendAaView.leadingAnchor.constraint(equalTo: sendCommentContainer.leadingAnchor, constant: 15).isActive = true
-        sendAaView.trailingAnchor.constraint(equalTo: sendCommentContainer.trailingAnchor, constant: -50).isActive = true
+        sendAaView.leadingAnchor.constraint(equalTo: sendCommentContainer.leadingAnchor, constant: 20).isActive = true //-10
+//        sendAaView.trailingAnchor.constraint(equalTo: sendCommentContainer.trailingAnchor, constant: -50).isActive = true
+        sendAaViewTrailingCons = sendAaView.trailingAnchor.constraint(equalTo: sendCommentContainer.trailingAnchor, constant: -20)
+        sendAaViewTrailingCons?.isActive = true
         sendAaView.heightAnchor.constraint(equalToConstant: 40).isActive = true //36
         sendAaView.layer.cornerRadius = 10
         sendAaView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onOpenTextBoxClicked)))
+        
+        sendASpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
+        sendCommentContainer.addSubview(sendASpinner)
+        sendASpinner.translatesAutoresizingMaskIntoConstraints = false
+        sendASpinner.trailingAnchor.constraint(equalTo: sendCommentContainer.trailingAnchor, constant: -20).isActive = true
+        sendASpinner.centerYAnchor.constraint(equalTo: sendAaView.centerYAnchor).isActive = true
+        sendASpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        sendASpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
         
 //        let sendBText = UILabel()
         sendBText.textAlignment = .left
@@ -300,44 +273,6 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
 //        sendBText.topAnchor.constraint(equalTo: sendAaView.topAnchor, constant: 15).isActive = true
         sendBText.centerYAnchor.constraint(equalTo: sendAaView.centerYAnchor, constant: 0).isActive = true
         sendBText.text = ""
-        
-        sendASpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
-        sendCommentContainer.addSubview(sendASpinner)
-        sendASpinner.translatesAutoresizingMaskIntoConstraints = false
-        sendASpinner.trailingAnchor.constraint(equalTo: sendCommentContainer.trailingAnchor, constant: -15).isActive = true
-        sendASpinner.centerYAnchor.constraint(equalTo: sendAaView.centerYAnchor).isActive = true
-        sendASpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        sendASpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        
-        sendCommentContainer.addSubview(sendBBox)
-        sendBBox.translatesAutoresizingMaskIntoConstraints = false
-        sendBBox.widthAnchor.constraint(equalToConstant: 30).isActive = true //20
-        sendBBox.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        sendBBox.centerYAnchor.constraint(equalTo: sendAaView.centerYAnchor).isActive = true
-        sendBBox.centerXAnchor.constraint(equalTo: sendASpinner.centerXAnchor).isActive = true
-        sendBBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onClearTextBoxClicked)))
-        sendBBox.isHidden = true
-        
-        let sendBBoxBg = UIView()
-        sendBBoxBg.backgroundColor = .white
-        sendBBox.addSubview(sendBBoxBg)
-        sendBBoxBg.clipsToBounds = true
-        sendBBoxBg.translatesAutoresizingMaskIntoConstraints = false
-        sendBBoxBg.widthAnchor.constraint(equalToConstant: 20).isActive = true //20
-        sendBBoxBg.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        sendBBoxBg.centerYAnchor.constraint(equalTo: sendBBox.centerYAnchor).isActive = true
-        sendBBoxBg.centerXAnchor.constraint(equalTo: sendBBox.centerXAnchor).isActive = true
-//        sendBBox.trailingAnchor.constraint(equalTo: sendCommentContainer.trailingAnchor, constant: -15).isActive = true
-        sendBBoxBg.layer.cornerRadius = 10
-
-        let aBtn = UIImageView(image: UIImage(named:"icon_round_close")?.withRenderingMode(.alwaysTemplate))
-        aBtn.tintColor = .ddmDarkColor
-        sendBBox.addSubview(aBtn)
-        aBtn.translatesAutoresizingMaskIntoConstraints = false
-        aBtn.centerXAnchor.constraint(equalTo: sendBBox.centerXAnchor).isActive = true
-        aBtn.centerYAnchor.constraint(equalTo: sendBBox.centerYAnchor).isActive = true
-        aBtn.heightAnchor.constraint(equalToConstant: 16).isActive = true
-        aBtn.widthAnchor.constraint(equalToConstant: 16).isActive = true
 
         //test > real textview edittext for comment
         self.addSubview(bView)
@@ -372,27 +307,45 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
         sendBox.backgroundColor = .yellow //yellow
         textPanel.addSubview(sendBox)
         sendBox.translatesAutoresizingMaskIntoConstraints = false
-//        sendBox.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        sendBox.widthAnchor.constraint(equalToConstant: 30).isActive = true
         sendBox.heightAnchor.constraint(equalToConstant: 30).isActive = true //30
-        sendBox.trailingAnchor.constraint(equalTo: textPanel.trailingAnchor, constant: -15).isActive = true //-15
+        sendBox.trailingAnchor.constraint(equalTo: textPanel.trailingAnchor, constant: -20).isActive = true //-15
 //        sendBox.topAnchor.constraint(equalTo: textPanel.topAnchor, constant: 10).isActive = true
-        sendBox.bottomAnchor.constraint(equalTo: textPanel.bottomAnchor, constant: -13).isActive = true //-10
+        sendBox.bottomAnchor.constraint(equalTo: textPanel.bottomAnchor, constant: -15).isActive = true //-10
         sendBox.layer.cornerRadius = 15
         sendBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onSendBtnClicked)))
 
-        let sendBoxText = UILabel()
-        sendBoxText.textAlignment = .center
-        sendBoxText.textColor = .black
-        sendBoxText.font = .boldSystemFont(ofSize: 13)
-        sendBox.addSubview(sendBoxText)
-        sendBoxText.translatesAutoresizingMaskIntoConstraints = false
-//        gBtnText.topAnchor.constraint(equalTo: gBtn.topAnchor, constant: 10).isActive = true
-//        gBtnText.bottomAnchor.constraint(equalTo: gBtn.bottomAnchor, constant: -10).isActive = true
-        sendBoxText.centerYAnchor.constraint(equalTo: sendBox.centerYAnchor).isActive = true
-        sendBoxText.leadingAnchor.constraint(equalTo: sendBox.leadingAnchor, constant: 10).isActive = true
-        sendBoxText.trailingAnchor.constraint(equalTo: sendBox.trailingAnchor, constant: -10).isActive = true
-        sendBoxText.text = "Post"
+        let aNextMiniBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right_next")?.withRenderingMode(.alwaysTemplate))
+        aNextMiniBtn.tintColor = .black
+        sendBox.addSubview(aNextMiniBtn)
+        aNextMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        aNextMiniBtn.centerXAnchor.constraint(equalTo: sendBox.centerXAnchor).isActive = true
+        aNextMiniBtn.centerYAnchor.constraint(equalTo: sendBox.centerYAnchor).isActive = true
+        aNextMiniBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        aNextMiniBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
 
+        let zZGrid = UIView()
+        textPanel.addSubview(zZGrid)
+        zZGrid.backgroundColor = .ddmBlackDark
+        zZGrid.translatesAutoresizingMaskIntoConstraints = false
+        zZGrid.heightAnchor.constraint(equalToConstant: 30).isActive = true //30
+        zZGrid.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        zZGrid.leadingAnchor.constraint(equalTo: textPanel.leadingAnchor, constant: 20).isActive = true
+        zZGrid.bottomAnchor.constraint(equalTo: textPanel.bottomAnchor, constant: -15).isActive = true //-15
+        zZGrid.layer.cornerRadius = 15 //15
+
+        let zZGridIcon = UIImageView(image: UIImage(named:"icon_round_add")?.withRenderingMode(.alwaysTemplate))
+//        zGridIcon.tintColor = .white
+        zZGridIcon.tintColor = .ddmDarkGrayColor
+        zZGrid.addSubview(zZGridIcon)
+        zZGridIcon.translatesAutoresizingMaskIntoConstraints = false
+//        zGridIcon.centerXAnchor.constraint(equalTo: pMini.centerXAnchor, constant: 0).isActive = true
+//        zGridIcon.bottomAnchor.constraint(equalTo: divider.topAnchor, constant: 0).isActive = true
+        zZGridIcon.centerXAnchor.constraint(equalTo: zZGrid.centerXAnchor, constant: 0).isActive = true
+        zZGridIcon.centerYAnchor.constraint(equalTo: zZGrid.centerYAnchor, constant: 0).isActive = true
+        zZGridIcon.heightAnchor.constraint(equalToConstant: 20).isActive = true //20
+        zZGridIcon.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        
         //**test > try a container for textview
 //        aaView.backgroundColor = .ddmDarkColor
         aaView.backgroundColor = .ddmBlackDark
@@ -400,100 +353,27 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
         aaView.translatesAutoresizingMaskIntoConstraints = false
         aaView.topAnchor.constraint(equalTo: textPanel.topAnchor, constant: 10).isActive = true
         aaView.bottomAnchor.constraint(equalTo: textPanel.bottomAnchor, constant: -10).isActive = true //-10
-        aaView.leadingAnchor.constraint(equalTo: textPanel.leadingAnchor, constant: 15).isActive = true
-//        aView.trailingAnchor.constraint(equalTo: textPanel.trailingAnchor, constant: -15).isActive = true
-        aaViewTrailingCons = aaView.trailingAnchor.constraint(equalTo: textPanel.trailingAnchor, constant: -15)
+//        aaView.leadingAnchor.constraint(equalTo: textPanel.leadingAnchor, constant: 15).isActive = true
+        aaView.leadingAnchor.constraint(equalTo: zZGrid.trailingAnchor, constant: 10).isActive = true
+        aaViewTrailingCons = aaView.trailingAnchor.constraint(equalTo: textPanel.trailingAnchor, constant: -20)
         aaViewTrailingCons?.isActive = true
         aaView.layer.cornerRadius = 10
 
-        //test > add icons for adding photo etc
-        let zGrid = UIView()
-        textPanel.addSubview(zGrid)
-//        zGrid.backgroundColor = .red
-        zGrid.translatesAutoresizingMaskIntoConstraints = false
-        zGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        zGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        zGrid.trailingAnchor.constraint(equalTo: aaView.trailingAnchor, constant: 0).isActive = true
-        zGrid.bottomAnchor.constraint(equalTo: aaView.bottomAnchor, constant: 0).isActive = true
-
-        let zGridIcon = UIImageView(image: UIImage(named:"icon_outline_photo")?.withRenderingMode(.alwaysTemplate))
-//        zGridIcon.tintColor = .white
-        zGridIcon.tintColor = .ddmDarkGrayColor
-        textPanel.addSubview(zGridIcon)
-        zGridIcon.translatesAutoresizingMaskIntoConstraints = false
-//        zGridIcon.centerXAnchor.constraint(equalTo: pMini.centerXAnchor, constant: 0).isActive = true
-//        zGridIcon.bottomAnchor.constraint(equalTo: divider.topAnchor, constant: 0).isActive = true
-        zGridIcon.centerXAnchor.constraint(equalTo: zGrid.centerXAnchor, constant: 0).isActive = true
-        zGridIcon.centerYAnchor.constraint(equalTo: zGrid.centerYAnchor, constant: 0).isActive = true
-        zGridIcon.heightAnchor.constraint(equalToConstant: 26).isActive = true //20
-        zGridIcon.widthAnchor.constraint(equalToConstant: 26).isActive = true
-//        zGridIcon.layer.opacity = 0.5
-        
-        let yGrid = UIView()
-        textPanel.addSubview(yGrid)
-//        yGrid.backgroundColor = .red
-        yGrid.translatesAutoresizingMaskIntoConstraints = false
-        yGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        yGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        yGrid.trailingAnchor.constraint(equalTo: zGrid.leadingAnchor, constant: 0).isActive = true
-        yGrid.bottomAnchor.constraint(equalTo: aaView.bottomAnchor, constant: 0).isActive = true
-
-        let yGridIcon = UIImageView(image: UIImage(named:"icon_round_emoji")?.withRenderingMode(.alwaysTemplate))
-//        yGridIcon.tintColor = .white
-        yGridIcon.tintColor = .ddmDarkGrayColor
-        textPanel.addSubview(yGridIcon)
-        yGridIcon.translatesAutoresizingMaskIntoConstraints = false
-//        yGridIcon.centerXAnchor.constraint(equalTo: pMini.centerXAnchor, constant: 0).isActive = true
-//        yGridIcon.bottomAnchor.constraint(equalTo: divider.topAnchor, constant: 0).isActive = true
-        yGridIcon.centerXAnchor.constraint(equalTo: yGrid.centerXAnchor, constant: 0).isActive = true
-        yGridIcon.centerYAnchor.constraint(equalTo: yGrid.centerYAnchor, constant: 0).isActive = true
-        yGridIcon.heightAnchor.constraint(equalToConstant: 26).isActive = true //20
-        yGridIcon.widthAnchor.constraint(equalToConstant: 26).isActive = true
-//        yGridIcon.layer.opacity = 0.5
-
-//        let xGrid = UIView()
-        textPanel.addSubview(xGrid)
-//        xGrid.backgroundColor = .red
-        xGrid.translatesAutoresizingMaskIntoConstraints = false
-        xGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        xGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        xGrid.trailingAnchor.constraint(equalTo: yGrid.leadingAnchor, constant: 0).isActive = true
-        xGrid.bottomAnchor.constraint(equalTo: aaView.bottomAnchor, constant: 0).isActive = true
-
-        let xGridIcon = UIImageView(image: UIImage(named:"icon_round_at")?.withRenderingMode(.alwaysTemplate))
-        xGridIcon.tintColor = .ddmDarkGrayColor
-        textPanel.addSubview(xGridIcon)
-        xGridIcon.translatesAutoresizingMaskIntoConstraints = false
-//        xGridIcon.centerXAnchor.constraint(equalTo: pMini.centerXAnchor, constant: 0).isActive = true
-//        xGridIcon.bottomAnchor.constraint(equalTo: divider.topAnchor, constant: 0).isActive = true
-        xGridIcon.centerXAnchor.constraint(equalTo: xGrid.centerXAnchor, constant: 0).isActive = true
-        xGridIcon.centerYAnchor.constraint(equalTo: xGrid.centerYAnchor, constant: 0).isActive = true
-        xGridIcon.heightAnchor.constraint(equalToConstant: 26).isActive = true //20
-        xGridIcon.widthAnchor.constraint(equalToConstant: 26).isActive = true
-//        xGridIcon.layer.opacity = 0.5
-
         aTextBox.textAlignment = .left
         aTextBox.textColor = .white
-//        aTextBox.backgroundColor = .green
         aTextBox.backgroundColor = .clear
         aTextBox.font = .systemFont(ofSize: 13)
         textPanel.addSubview(aTextBox)
         aTextBox.translatesAutoresizingMaskIntoConstraints = false
-//        aTextBox.bottomAnchor.constraint(equalTo: aaView.bottomAnchor, constant: 0).isActive = true //-10
-//        aTextBox.bottomAnchor.constraint(equalTo: xGrid.topAnchor, constant: 0).isActive = true //-10
-        aTextBottomCons = aTextBox.bottomAnchor.constraint(equalTo: aaView.bottomAnchor, constant: 0)
-        aTextBottomCons?.isActive = true
+        aTextBox.bottomAnchor.constraint(equalTo: aaView.bottomAnchor, constant: 0).isActive = true
+        aTextBox.trailingAnchor.constraint(equalTo: aaView.trailingAnchor, constant: -10).isActive = true
         aTextBox.leadingAnchor.constraint(equalTo: aaView.leadingAnchor, constant: 10).isActive = true
-        aTextTrailingCons = aTextBox.trailingAnchor.constraint(equalTo: xGrid.leadingAnchor, constant: 0)
-        aTextTrailingCons?.isActive = true
         aTextBox.topAnchor.constraint(equalTo: aaView.topAnchor, constant: 4).isActive = true
         aTextBoxHeightCons = aTextBox.heightAnchor.constraint(equalToConstant: 36)
         aTextBoxHeightCons?.isActive = true
         aTextBox.text = ""
         aTextBox.delegate = self
         aTextBox.tintColor = .yellow
-//        aTextBox.layer.opacity = 0.5
-//        aTextBox.layer.cornerRadius = 10
 
 //        let bbText = UILabel()
         bbText.textAlignment = .left
@@ -617,6 +497,11 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
         sendCommentContainer.isHidden = false
         
         sendASpinner.startAnimating()
+        sendASpinner.startAnimating()
+        sendAaViewTrailingCons?.isActive = false
+        sendAaViewTrailingCons = sendAaView.trailingAnchor.constraint(equalTo: sendASpinner.leadingAnchor, constant: -10)
+        sendAaViewTrailingCons?.isActive = true
+        
         sendBBox.isHidden = true
         
         isStatusUploading = true
@@ -650,6 +535,10 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
                     }
                     
                     self.sendASpinner.stopAnimating()
+                    self.sendAaViewTrailingCons?.isActive = false
+                    self.sendAaViewTrailingCons = self.sendAaView.trailingAnchor.constraint(equalTo: self.sendCommentContainer.trailingAnchor, constant: -20)
+                    self.sendAaViewTrailingCons?.isActive = true
+                    
                     self.sendBBox.isHidden = false
                     self.openErrorUploadMsg()
                     
@@ -665,16 +554,12 @@ class CommentScrollableView: PanelView, UIGestureRecognizerDelegate{
         sendBText.text = ""
         
         aaViewTrailingCons?.isActive = false
-        aaViewTrailingCons = aaView.trailingAnchor.constraint(equalTo: textPanel.trailingAnchor, constant: -15)
+        aaViewTrailingCons = aaView.trailingAnchor.constraint(equalTo: textPanel.trailingAnchor, constant: -20)
         aaViewTrailingCons?.isActive = true
-
-        aTextTrailingCons?.isActive = false
-        aTextTrailingCons = aTextBox.trailingAnchor.constraint(equalTo: xGrid.leadingAnchor, constant: 0)
-        aTextTrailingCons?.isActive = true
-
-        aTextBottomCons?.isActive = false
-        aTextBottomCons = aTextBox.bottomAnchor.constraint(equalTo: aaView.bottomAnchor, constant: 0)
-        aTextBottomCons?.isActive = true
+        
+        sendAaViewTrailingCons?.isActive = false
+        sendAaViewTrailingCons = sendAaView.trailingAnchor.constraint(equalTo: sendCommentContainer.trailingAnchor, constant: -20)
+        sendAaViewTrailingCons?.isActive = true
 
         let minHeight = 36.0
         aTextBoxHeightCons?.constant = minHeight
@@ -1984,24 +1869,8 @@ extension CommentScrollableView: UITextViewDelegate {
             if(estimatedWidth < minUsableTextWidth) {
                 let estimatedHeight = estimatedSize.height
                 if(estimatedHeight < minHeight) {
-                    aTextTrailingCons?.isActive = false
-                    aTextTrailingCons = aTextBox.trailingAnchor.constraint(equalTo: xGrid.leadingAnchor, constant: 0)
-                    aTextTrailingCons?.isActive = true
-    
-                    aTextBottomCons?.isActive = false
-                    aTextBottomCons = aTextBox.bottomAnchor.constraint(equalTo: aaView.bottomAnchor, constant: 0)
-                    aTextBottomCons?.isActive = true
-    
                     aTextBoxHeightCons?.constant = minHeight
                 } else {
-                    aTextTrailingCons?.isActive = false
-                    aTextTrailingCons = aTextBox.trailingAnchor.constraint(equalTo: aaView.trailingAnchor, constant: -10)
-                    aTextTrailingCons?.isActive = true
-    
-                    aTextBottomCons?.isActive = false
-                    aTextBottomCons = aTextBox.bottomAnchor.constraint(equalTo: xGrid.topAnchor, constant: 0)
-                    aTextBottomCons?.isActive = true
-    
                     if(estimatedHeight >= maxHeight) {
                         aTextBoxHeightCons?.constant = maxHeight
                     } else {
@@ -2011,16 +1880,6 @@ extension CommentScrollableView: UITextViewDelegate {
             }
             else {
                 let estimatedHeight = estimatedIntrinsicSize.height
-                
-                //make multiline when width exceed min width
-                aTextTrailingCons?.isActive = false
-                aTextTrailingCons = aTextBox.trailingAnchor.constraint(equalTo: aaView.trailingAnchor, constant: -10)
-                aTextTrailingCons?.isActive = true
-    
-                aTextBottomCons?.isActive = false
-                aTextBottomCons = aTextBox.bottomAnchor.constraint(equalTo: xGrid.topAnchor, constant: 0)
-                aTextBottomCons?.isActive = true
-                
                 if(estimatedHeight >= maxHeight) {
                     aTextBoxHeightCons?.constant = maxHeight
                 } else if(estimatedHeight < minHeight) {
@@ -2029,19 +1888,10 @@ extension CommentScrollableView: UITextViewDelegate {
                     aTextBoxHeightCons?.constant = estimatedHeight
                 }
             }
-
         } else {
             aaViewTrailingCons?.isActive = false
-            aaViewTrailingCons = aaView.trailingAnchor.constraint(equalTo: textPanel.trailingAnchor, constant: -15)
+            aaViewTrailingCons = aaView.trailingAnchor.constraint(equalTo: textPanel.trailingAnchor, constant: -20)
             aaViewTrailingCons?.isActive = true
-
-            aTextTrailingCons?.isActive = false
-            aTextTrailingCons = aTextBox.trailingAnchor.constraint(equalTo: xGrid.leadingAnchor, constant: 0)
-            aTextTrailingCons?.isActive = true
-
-            aTextBottomCons?.isActive = false
-            aTextBottomCons = aTextBox.bottomAnchor.constraint(equalTo: aaView.bottomAnchor, constant: 0)
-            aTextBottomCons?.isActive = true
 
             aTextBoxHeightCons?.constant = minHeight
             
@@ -2059,11 +1909,33 @@ extension CommentScrollableView: ErrorUploadCommentMsgDelegate {
     }
 }
 extension CommentScrollableView: HListCellDelegate {
-    func hListDidClickVcvComment(vc: UICollectionViewCell, id: String, dataType: String){
+    func hListDidClickVcvComment(vc: UICollectionViewCell, id: String, dataType: String, pointX: CGFloat, pointY: CGFloat){
         
         pausePlayingMedia()
-//        delegate?.didCClickPost(id: id, dataType: dataType)
-        delegate?.didCClickComment(id: id, dataType: dataType)
+
+//        delegate?.didCClickComment(id: id, dataType: dataType)
+        
+        //test 2 > new method
+        if let a = vCV {
+            for cell in a.visibleCells {
+                
+                if(cell == vc) {
+                    //commentview bounds is fullscreen, so no more conversion is needed
+                    let originInRootView = a.convert(cell.frame.origin, to: self)
+                    let visibleIndexPath = a.indexPath(for: cell)
+                    let pointX1 = originInRootView.x + pointX
+                    let pointY1 = originInRootView.y + pointY
+                    print("comment idx frame origin p: \(pointX1), \(pointY1)")
+                    delegate?.didCClickComment(id: id, dataType: dataType, pointX: pointX1, pointY: pointY1)
+                    
+                    if let c = visibleIndexPath {
+                        hideCellIndex = c.row
+                    }
+                    
+                    break
+                }
+            }
+        }
     }
     func hListDidClickVcvLove(){
         
@@ -2100,9 +1972,31 @@ extension CommentScrollableView: HListCellDelegate {
         pausePlayingMedia()
         delegate?.didCClickSound(id: id)
     }
-    func hListDidClickVcvClickPost(id: String, dataType: String){
+    func hListDidClickVcvClickPost(id: String, dataType: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat){
         pausePlayingMedia()
-        delegate?.didCClickPost(id: id, dataType: dataType)
+//        delegate?.didCClickPost(id: id, dataType: dataType)
+        
+        //test 2 > new method
+        if let a = vCV {
+            for cell in a.visibleCells {
+                
+                if(cell == vc) {
+                    //commentview bounds is fullscreen, so no more conversion is needed
+                    let originInRootView = a.convert(cell.frame.origin, to: self)
+                    let visibleIndexPath = a.indexPath(for: cell)
+                    let pointX1 = originInRootView.x + pointX
+                    let pointY1 = originInRootView.y + pointY
+                    print("comment idx frame origin p: \(pointX1), \(pointY1)")
+                    delegate?.didCClickPost(id: id, dataType: dataType, pointX: pointX1, pointY: pointY1)
+                    
+                    if let c = visibleIndexPath {
+                        hideCellIndex = c.row
+                    }
+                    
+                    break
+                }
+            }
+        }
     }
     func hListDidClickVcvClickPhoto(id: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         

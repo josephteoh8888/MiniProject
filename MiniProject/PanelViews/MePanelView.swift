@@ -13,18 +13,18 @@ protocol MePanelDelegate : AnyObject {
 
     //test > connect to other panel
     func didMeClickUser(id: String)
-    func didMeClickEditProfile()
-    func didMeClickFollowList()
-    func didMeClickHistoryList()
-    func didMeClickBookmarkList()
-    func didMeClickLikeList()
+    func didMeClickEditProfile(id: String)
+    func didMeClickFollowList(id: String, pointX: CGFloat, pointY: CGFloat)
+    func didMeClickHistoryList(id: String, pointX: CGFloat, pointY: CGFloat)
+    func didMeClickBookmarkList(id: String, pointX: CGFloat, pointY: CGFloat)
+    func didMeClickLikeList(id: String, pointX: CGFloat, pointY: CGFloat)
     func didMeClickAccountSettingList()
     func didMeClickBaseList()
-    func didMeClickMultiLocationList()
-    func didMeClickMultiPostList()
-    func didMeClickMultiPhotoList()
-    func didMeClickMultiVideoList()
-    func didMeClickCommentList()
+    func didMeClickMultiLocationList(id: String, pointX: CGFloat, pointY: CGFloat)
+    func didMeClickMultiPostList(id: String, pointX: CGFloat, pointY: CGFloat)
+    func didMeClickMultiPhotoList(id: String, pointX: CGFloat, pointY: CGFloat)
+    func didMeClickMultiVideoList(id: String, pointX: CGFloat, pointY: CGFloat)
+    func didMeClickCommentList(id: String, pointX: CGFloat, pointY: CGFloat)
     func didMeClickLogin()
     func didMeStartSignout()
     func didMeSignoutSuccess()
@@ -45,7 +45,8 @@ class MePanelView: PanelView{
     
     let aHLightSection = UIView()
     var aHLightDataArray = [String]()
-    var aHLightViewArray = [UIView]()
+//    var aHLightViewArray = [UIView]()
+    var aHLightViewArray = [MeCell]()
     
     weak var delegate : MePanelDelegate?
     
@@ -55,6 +56,9 @@ class MePanelView: PanelView{
     
     //test > user login/out status
     var isUserLoggedIn = false
+    
+    //test
+    var hideCellIndex = -1
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -329,9 +333,19 @@ class MePanelView: PanelView{
     
     //test
     override func resumeActiveState() {
-        
         //test > check for signin status when in active state
         asyncFetchSigninStatus()
+        
+        //test
+        dehideCell()
+    }
+    
+    func dehideCell() {
+        if(hideCellIndex > -1) {
+            let currentVc = aHLightViewArray[hideCellIndex]
+            currentVc.dehideCell()
+            hideCellIndex = -1
+        }
     }
     
     //test > initialization state
@@ -378,171 +392,228 @@ class MePanelView: PanelView{
     
     func configureMeCell() {
         for l in aHLightDataArray {
-            let aHLightRect1 = UIView()
-            aHLightSection.addSubview(aHLightRect1)
-            aHLightRect1.translatesAutoresizingMaskIntoConstraints = false
-            aHLightRect1.leadingAnchor.constraint(equalTo: aHLightSection.leadingAnchor, constant: 0).isActive = true //20
-            aHLightRect1.trailingAnchor.constraint(equalTo: aHLightSection.trailingAnchor, constant: 0).isActive = true
-            if(aHLightViewArray.isEmpty) {
-                aHLightRect1.topAnchor.constraint(equalTo: aHLightSection.topAnchor, constant: 0).isActive = true
-            } else {
-                let lastArrayE = aHLightViewArray[aHLightViewArray.count - 1]
-                aHLightRect1.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 10).isActive = true //10
-            }
-            aHLightViewArray.append(aHLightRect1)
-            
             if(l == "a") {
                 let cell = MultiPhotosMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
-                aHLightRect1.addSubview(cell)
+//                aHLightRect1.addSubview(cell)
+                aHLightSection.addSubview(cell)
                 cell.translatesAutoresizingMaskIntoConstraints = false
-                cell.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
-                cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
-                cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
-                cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-//                cell.redrawUI()
+                cell.leadingAnchor.constraint(equalTo: aHLightSection.leadingAnchor, constant: 0).isActive = true
+                cell.trailingAnchor.constraint(equalTo: aHLightSection.trailingAnchor, constant: 0).isActive = true
+                if(aHLightViewArray.isEmpty) {
+                    cell.topAnchor.constraint(equalTo: aHLightSection.topAnchor, constant: 0).isActive = true
+                } else {
+                    let lastArrayE = aHLightViewArray[aHLightViewArray.count - 1]
+                    cell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 10).isActive = true //10
+                }
+                aHLightViewArray.append(cell)
                 cell.initialize()
                 cell.aDelegate = self
             } else if(l == "b") {
                 let cell = MultiLoopsMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
-                aHLightRect1.addSubview(cell)
+//                aHLightRect1.addSubview(cell)
+                aHLightSection.addSubview(cell)
                 cell.translatesAutoresizingMaskIntoConstraints = false
-                cell.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
-                cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
-                cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
-                cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-//                cell.redrawUI()
+                cell.leadingAnchor.constraint(equalTo: aHLightSection.leadingAnchor, constant: 0).isActive = true
+                cell.trailingAnchor.constraint(equalTo: aHLightSection.trailingAnchor, constant: 0).isActive = true
+                if(aHLightViewArray.isEmpty) {
+                    cell.topAnchor.constraint(equalTo: aHLightSection.topAnchor, constant: 0).isActive = true
+                } else {
+                    let lastArrayE = aHLightViewArray[aHLightViewArray.count - 1]
+                    cell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 10).isActive = true //10
+                }
+                aHLightViewArray.append(cell)
                 cell.initialize()
                 cell.aDelegate = self
             } else if(l == "c") {
                 let cell = MultiPostsMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
-                aHLightRect1.addSubview(cell)
+//                aHLightRect1.addSubview(cell)
+                aHLightSection.addSubview(cell)
                 cell.translatesAutoresizingMaskIntoConstraints = false
-                cell.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
-                cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
-                cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
-                cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-//                cell.redrawUI()
+                cell.leadingAnchor.constraint(equalTo: aHLightSection.leadingAnchor, constant: 0).isActive = true
+                cell.trailingAnchor.constraint(equalTo: aHLightSection.trailingAnchor, constant: 0).isActive = true
+                if(aHLightViewArray.isEmpty) {
+                    cell.topAnchor.constraint(equalTo: aHLightSection.topAnchor, constant: 0).isActive = true
+                } else {
+                    let lastArrayE = aHLightViewArray[aHLightViewArray.count - 1]
+                    cell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 10).isActive = true //10
+                }
+                aHLightViewArray.append(cell)
                 cell.initialize()
                 cell.aDelegate = self
             } else if(l == "co") {
                 let cell = MultiCommentsMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
-                aHLightRect1.addSubview(cell)
+//                aHLightRect1.addSubview(cell)
+                aHLightSection.addSubview(cell)
                 cell.translatesAutoresizingMaskIntoConstraints = false
-                cell.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
-                cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
-                cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
-                cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-//                cell.redrawUI()
+                cell.leadingAnchor.constraint(equalTo: aHLightSection.leadingAnchor, constant: 0).isActive = true
+                cell.trailingAnchor.constraint(equalTo: aHLightSection.trailingAnchor, constant: 0).isActive = true
+                if(aHLightViewArray.isEmpty) {
+                    cell.topAnchor.constraint(equalTo: aHLightSection.topAnchor, constant: 0).isActive = true
+                } else {
+                    let lastArrayE = aHLightViewArray[aHLightViewArray.count - 1]
+                    cell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 10).isActive = true //10
+                }
+                aHLightViewArray.append(cell)
                 cell.initialize()
                 cell.aDelegate = self
             } else if(l == "h") {
                 let cell = HistoryMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
-                aHLightRect1.addSubview(cell)
+//                aHLightRect1.addSubview(cell)
+                aHLightSection.addSubview(cell)
                 cell.translatesAutoresizingMaskIntoConstraints = false
-                cell.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
-                cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
-                cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
-                cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-//                cell.redrawUI()
+                cell.leadingAnchor.constraint(equalTo: aHLightSection.leadingAnchor, constant: 0).isActive = true
+                cell.trailingAnchor.constraint(equalTo: aHLightSection.trailingAnchor, constant: 0).isActive = true
+                if(aHLightViewArray.isEmpty) {
+                    cell.topAnchor.constraint(equalTo: aHLightSection.topAnchor, constant: 0).isActive = true
+                } else {
+                    let lastArrayE = aHLightViewArray[aHLightViewArray.count - 1]
+                    cell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 10).isActive = true //10
+                }
+                aHLightViewArray.append(cell)
                 cell.initialize()
                 cell.aDelegate = self
             } else if(l == "l") {
                 let cell = LikeMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
-                aHLightRect1.addSubview(cell)
+//                aHLightRect1.addSubview(cell)
+                aHLightSection.addSubview(cell)
                 cell.translatesAutoresizingMaskIntoConstraints = false
-                cell.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
-                cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
-                cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
-                cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-//                cell.redrawUI()
+                cell.leadingAnchor.constraint(equalTo: aHLightSection.leadingAnchor, constant: 0).isActive = true
+                cell.trailingAnchor.constraint(equalTo: aHLightSection.trailingAnchor, constant: 0).isActive = true
+                if(aHLightViewArray.isEmpty) {
+                    cell.topAnchor.constraint(equalTo: aHLightSection.topAnchor, constant: 0).isActive = true
+                } else {
+                    let lastArrayE = aHLightViewArray[aHLightViewArray.count - 1]
+                    cell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 10).isActive = true //10
+                }
+                aHLightViewArray.append(cell)
                 cell.initialize()
                 cell.aDelegate = self
             } else if(l == "s") {
                 let cell = BookmarkMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
-                aHLightRect1.addSubview(cell)
+//                aHLightRect1.addSubview(cell)
+                aHLightSection.addSubview(cell)
                 cell.translatesAutoresizingMaskIntoConstraints = false
-                cell.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
-                cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
-                cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
-                cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-//                cell.redrawUI()
+                cell.leadingAnchor.constraint(equalTo: aHLightSection.leadingAnchor, constant: 0).isActive = true
+                cell.trailingAnchor.constraint(equalTo: aHLightSection.trailingAnchor, constant: 0).isActive = true
+                if(aHLightViewArray.isEmpty) {
+                    cell.topAnchor.constraint(equalTo: aHLightSection.topAnchor, constant: 0).isActive = true
+                } else {
+                    let lastArrayE = aHLightViewArray[aHLightViewArray.count - 1]
+                    cell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 10).isActive = true //10
+                }
+                aHLightViewArray.append(cell)
                 cell.initialize()
                 cell.aDelegate = self
             } else if(l == "as") {
                 let cell = AccountMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
-                aHLightRect1.addSubview(cell)
+//                aHLightRect1.addSubview(cell)
+                aHLightSection.addSubview(cell)
                 cell.translatesAutoresizingMaskIntoConstraints = false
-                cell.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
-                cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
-                cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
-                cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-//                cell.redrawUI()
+                cell.leadingAnchor.constraint(equalTo: aHLightSection.leadingAnchor, constant: 0).isActive = true
+                cell.trailingAnchor.constraint(equalTo: aHLightSection.trailingAnchor, constant: 0).isActive = true
+                if(aHLightViewArray.isEmpty) {
+                    cell.topAnchor.constraint(equalTo: aHLightSection.topAnchor, constant: 0).isActive = true
+                } else {
+                    let lastArrayE = aHLightViewArray[aHLightViewArray.count - 1]
+                    cell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 10).isActive = true //10
+                }
+                aHLightViewArray.append(cell)
                 cell.initialize()
                 cell.aDelegate = self
             } else if(l == "ba") {
                 let cell = BaseMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
-                aHLightRect1.addSubview(cell)
+//                aHLightRect1.addSubview(cell)
+                aHLightSection.addSubview(cell)
                 cell.translatesAutoresizingMaskIntoConstraints = false
-                cell.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
-                cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
-                cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
-                cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-//                cell.redrawUI()
+                cell.leadingAnchor.constraint(equalTo: aHLightSection.leadingAnchor, constant: 0).isActive = true
+                cell.trailingAnchor.constraint(equalTo: aHLightSection.trailingAnchor, constant: 0).isActive = true
+                if(aHLightViewArray.isEmpty) {
+                    cell.topAnchor.constraint(equalTo: aHLightSection.topAnchor, constant: 0).isActive = true
+                } else {
+                    let lastArrayE = aHLightViewArray[aHLightViewArray.count - 1]
+                    cell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 10).isActive = true //10
+                }
+                aHLightViewArray.append(cell)
                 cell.initialize()
                 cell.aDelegate = self
             } else if(l == "ep") {
                 let cell = EditProfileMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
-                aHLightRect1.addSubview(cell)
+//                aHLightRect1.addSubview(cell)
+                aHLightSection.addSubview(cell)
                 cell.translatesAutoresizingMaskIntoConstraints = false
-                cell.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
-                cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
-                cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
-                cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-//                cell.redrawUI()
+                cell.leadingAnchor.constraint(equalTo: aHLightSection.leadingAnchor, constant: 0).isActive = true
+                cell.trailingAnchor.constraint(equalTo: aHLightSection.trailingAnchor, constant: 0).isActive = true
+                if(aHLightViewArray.isEmpty) {
+                    cell.topAnchor.constraint(equalTo: aHLightSection.topAnchor, constant: 0).isActive = true
+                } else {
+                    let lastArrayE = aHLightViewArray[aHLightViewArray.count - 1]
+                    cell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 10).isActive = true //10
+                }
+                aHLightViewArray.append(cell)
                 cell.initialize()
                 cell.aDelegate = self
             } else if(l == "fr") {
                 let cell = FollowerMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
-                aHLightRect1.addSubview(cell)
+//                aHLightRect1.addSubview(cell)
+                aHLightSection.addSubview(cell)
                 cell.translatesAutoresizingMaskIntoConstraints = false
-                cell.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
-                cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
-                cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
-                cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-//                cell.redrawUI()
+                cell.leadingAnchor.constraint(equalTo: aHLightSection.leadingAnchor, constant: 0).isActive = true
+                cell.trailingAnchor.constraint(equalTo: aHLightSection.trailingAnchor, constant: 0).isActive = true
+                if(aHLightViewArray.isEmpty) {
+                    cell.topAnchor.constraint(equalTo: aHLightSection.topAnchor, constant: 0).isActive = true
+                } else {
+                    let lastArrayE = aHLightViewArray[aHLightViewArray.count - 1]
+                    cell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 10).isActive = true //10
+                }
+                aHLightViewArray.append(cell)
                 cell.initialize()
                 cell.aDelegate = self
             } else if(l == "lo") {
                 let cell = LocationMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
-                aHLightRect1.addSubview(cell)
+//                aHLightRect1.addSubview(cell)
+                aHLightSection.addSubview(cell)
                 cell.translatesAutoresizingMaskIntoConstraints = false
-                cell.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
-                cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
-                cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
-                cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-//                cell.redrawUI()
+                cell.leadingAnchor.constraint(equalTo: aHLightSection.leadingAnchor, constant: 0).isActive = true
+                cell.trailingAnchor.constraint(equalTo: aHLightSection.trailingAnchor, constant: 0).isActive = true
+                if(aHLightViewArray.isEmpty) {
+                    cell.topAnchor.constraint(equalTo: aHLightSection.topAnchor, constant: 0).isActive = true
+                } else {
+                    let lastArrayE = aHLightViewArray[aHLightViewArray.count - 1]
+                    cell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 10).isActive = true //10
+                }
+                aHLightViewArray.append(cell)
                 cell.initialize()
                 cell.aDelegate = self
             } else if(l == "pme") {
                 let cell = ProfileMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
-                aHLightRect1.addSubview(cell)
+//                aHLightRect1.addSubview(cell)
+                aHLightSection.addSubview(cell)
                 cell.translatesAutoresizingMaskIntoConstraints = false
-                cell.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
-                cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
-                cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
-                cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-//                cell.redrawUI()
+                cell.leadingAnchor.constraint(equalTo: aHLightSection.leadingAnchor, constant: 0).isActive = true
+                cell.trailingAnchor.constraint(equalTo: aHLightSection.trailingAnchor, constant: 0).isActive = true
+                if(aHLightViewArray.isEmpty) {
+                    cell.topAnchor.constraint(equalTo: aHLightSection.topAnchor, constant: 0).isActive = true
+                } else {
+                    let lastArrayE = aHLightViewArray[aHLightViewArray.count - 1]
+                    cell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 10).isActive = true //10
+                }
+                aHLightViewArray.append(cell)
                 cell.initialize()
                 cell.aDelegate = self
             } else if(l == "so") {
                 let cell = SignoutMeCell(frame: CGRect(x: 0 , y: 0, width: viewWidth, height: viewHeight))
-                aHLightRect1.addSubview(cell)
+//                aHLightRect1.addSubview(cell)
+                aHLightSection.addSubview(cell)
                 cell.translatesAutoresizingMaskIntoConstraints = false
-                cell.trailingAnchor.constraint(equalTo: aHLightRect1.trailingAnchor, constant: 0).isActive = true
-                cell.leadingAnchor.constraint(equalTo: aHLightRect1.leadingAnchor, constant: 0).isActive = true
-                cell.topAnchor.constraint(equalTo: aHLightRect1.topAnchor, constant: 0).isActive = true
-                cell.bottomAnchor.constraint(equalTo: aHLightRect1.bottomAnchor, constant: 0).isActive = true
-//                cell.redrawUI()
+                cell.leadingAnchor.constraint(equalTo: aHLightSection.leadingAnchor, constant: 0).isActive = true
+                cell.trailingAnchor.constraint(equalTo: aHLightSection.trailingAnchor, constant: 0).isActive = true
+                if(aHLightViewArray.isEmpty) {
+                    cell.topAnchor.constraint(equalTo: aHLightSection.topAnchor, constant: 0).isActive = true
+                } else {
+                    let lastArrayE = aHLightViewArray[aHLightViewArray.count - 1]
+                    cell.topAnchor.constraint(equalTo: lastArrayE.bottomAnchor, constant: 10).isActive = true //10
+                }
+                aHLightViewArray.append(cell)
                 cell.initialize()
                 cell.aDelegate = self
             }
@@ -763,41 +834,164 @@ extension MePanelView: MeCellDelegate{
     func didMeCellClickSignout() {
         asyncSignoutAccount(id: "sign_out")
     }
-    func didMeCellClickBase() {
+    func didMeCellClickBase(id: String) {
         delegate?.didMeClickBaseList()
     }
-    func didMeCellClickEditProfile() {
-        delegate?.didMeClickEditProfile()
+    func didMeCellClickEditProfile(id: String) {
+        delegate?.didMeClickEditProfile(id: id)
     }
     func didMeCellClickAccountSetting(){
         delegate?.didMeClickAccountSettingList()
     }
-    func didMeCellClickFollow(){
-        delegate?.didMeClickFollowList()
+    func didMeCellClickFollow(id: String, pointX: CGFloat, pointY: CGFloat, c: MeCell){
+        let originInRootView = aHLightSection.convert(c.frame.origin, to: self)
+        let pointX1 = originInRootView.x + pointX
+        let pointY1 = originInRootView.y + pointY
+        delegate?.didMeClickFollowList(id: id, pointX: pointX1, pointY: pointY1)
+        
+        var i = 0
+        for cell in aHLightViewArray {
+            if(cell == c) {
+                print("mecell hidden \(i)")
+                hideCellIndex = i
+                break
+            }
+            i += 1
+        }
     }
-    func didMeCellClickHistory(){
-        delegate?.didMeClickHistoryList()
+    func didMeCellClickHistory(id: String, pointX: CGFloat, pointY: CGFloat, c: MeCell){
+        let originInRootView = aHLightSection.convert(c.frame.origin, to: self)
+        let pointX1 = originInRootView.x + pointX
+        let pointY1 = originInRootView.y + pointY
+        delegate?.didMeClickHistoryList(id: id, pointX: pointX1, pointY: pointY1)
+        
+        var i = 0
+        for cell in aHLightViewArray {
+            if(cell == c) {
+                print("mecell hidden \(i)")
+                hideCellIndex = i
+                break
+            }
+            i += 1
+        }
     }
-    func didMeCellClickLike(){
-        delegate?.didMeClickLikeList()
+    func didMeCellClickLike(id: String, pointX: CGFloat, pointY: CGFloat, c: MeCell){
+//        delegate?.didMeClickLikeList()
+        let originInRootView = aHLightSection.convert(c.frame.origin, to: self)
+        let pointX1 = originInRootView.x + pointX
+        let pointY1 = originInRootView.y + pointY
+        delegate?.didMeClickLikeList(id: id, pointX: pointX1, pointY: pointY1)
+        
+        var i = 0
+        for cell in aHLightViewArray {
+            if(cell == c) {
+                print("mecell hidden \(i)")
+                hideCellIndex = i
+                break
+            }
+            i += 1
+        }
     }
-    func didMeCellClickBookmark(){
-        delegate?.didMeClickBookmarkList()
+    func didMeCellClickBookmark(id: String, pointX: CGFloat, pointY: CGFloat, c: MeCell){
+        let originInRootView = aHLightSection.convert(c.frame.origin, to: self)
+        let pointX1 = originInRootView.x + pointX
+        let pointY1 = originInRootView.y + pointY
+        delegate?.didMeClickBookmarkList(id: id, pointX: pointX1, pointY: pointY1)
+        
+        var i = 0
+        for cell in aHLightViewArray {
+            if(cell == c) {
+                print("mecell hidden \(i)")
+                hideCellIndex = i
+                break
+            }
+            i += 1
+        }
     }
-    func didMeCellClickLocations(){
-        delegate?.didMeClickMultiLocationList()
+    func didMeCellClickLocations(id: String, pointX: CGFloat, pointY: CGFloat, c: MeCell){
+//        delegate?.didMeClickMultiLocationList()
+        let originInRootView = aHLightSection.convert(c.frame.origin, to: self)
+        let pointX1 = originInRootView.x + pointX
+        let pointY1 = originInRootView.y + pointY
+        delegate?.didMeClickMultiLocationList(id: id, pointX: pointX1, pointY: pointY1)
+        
+        var i = 0
+        for cell in aHLightViewArray {
+            if(cell == c) {
+                print("mecell hidden \(i)")
+                hideCellIndex = i
+                break
+            }
+            i += 1
+        }
     }
-    func didMeCellClickComments(){
-        delegate?.didMeClickCommentList()
+    func didMeCellClickComments(id: String, pointX: CGFloat, pointY: CGFloat, c: MeCell){
+//        delegate?.didMeClickCommentList()
+        let originInRootView = aHLightSection.convert(c.frame.origin, to: self)
+        let pointX1 = originInRootView.x + pointX
+        let pointY1 = originInRootView.y + pointY
+        delegate?.didMeClickCommentList(id: id, pointX: pointX1, pointY: pointY1)
+        
+        var i = 0
+        for cell in aHLightViewArray {
+            if(cell == c) {
+                print("mecell hidden \(i)")
+                hideCellIndex = i
+                break
+            }
+            i += 1
+        }
     }
-    func didMeCellClickPosts(){
-        delegate?.didMeClickMultiPostList()
+    func didMeCellClickPosts(id: String, pointX: CGFloat, pointY: CGFloat, c: MeCell){
+//        delegate?.didMeClickMultiPostList()
+        let originInRootView = aHLightSection.convert(c.frame.origin, to: self)
+        let pointX1 = originInRootView.x + pointX
+        let pointY1 = originInRootView.y + pointY
+        delegate?.didMeClickMultiPostList(id: id, pointX: pointX1, pointY: pointY1)
+        
+        var i = 0
+        for cell in aHLightViewArray {
+            if(cell == c) {
+                print("mecell hidden \(i)")
+                hideCellIndex = i
+                break
+            }
+            i += 1
+        }
     }
-    func didMeCellClickPhotos(){
-        delegate?.didMeClickMultiPhotoList()
+    func didMeCellClickPhotos(id: String, pointX: CGFloat, pointY: CGFloat, c: MeCell){
+//        delegate?.didMeClickMultiPhotoList()
+        let originInRootView = aHLightSection.convert(c.frame.origin, to: self)
+        let pointX1 = originInRootView.x + pointX
+        let pointY1 = originInRootView.y + pointY
+        delegate?.didMeClickMultiPhotoList(id: id, pointX: pointX1, pointY: pointY1)
+        
+        var i = 0
+        for cell in aHLightViewArray {
+            if(cell == c) {
+                print("mecell hidden \(i)")
+                hideCellIndex = i
+                break
+            }
+            i += 1
+        }
     }
-    func didMeCellClickVideos(){
-        delegate?.didMeClickMultiVideoList()
+    func didMeCellClickVideos(id: String, pointX: CGFloat, pointY: CGFloat, c: MeCell){
+//        delegate?.didMeClickMultiVideoList()
+        let originInRootView = aHLightSection.convert(c.frame.origin, to: self)
+        let pointX1 = originInRootView.x + pointX
+        let pointY1 = originInRootView.y + pointY
+        delegate?.didMeClickMultiVideoList(id: id, pointX: pointX1, pointY: pointY1)
+        
+        var i = 0
+        for cell in aHLightViewArray {
+            if(cell == c) {
+                print("mecell hidden \(i)")
+                hideCellIndex = i
+                break
+            }
+            i += 1
+        }
     }
     func didMeCellClickUser(id: String) {
         delegate?.didMeClickUser(id: id)
@@ -811,20 +1005,41 @@ extension ViewController: MePanelDelegate{
         //test > real id for fetching data
         openUserPanel(id: id)
     }
-    func didMeClickEditProfile(){
-        openMeListPanel(l: "ep")
+    func didMeClickEditProfile(id: String){
+//        openMeListPanel(l: "ep")
+        openUserCreatorPanel(id: id)
     }
-    func didMeClickFollowList(){
-        openMeListPanel(l: "fr")
+    func didMeClickFollowList(id: String, pointX: CGFloat, pointY: CGFloat){
+//        openMeListPanel(l: "fr")
+        
+        //test > new method
+        let offsetX = pointX - self.view.frame.width/2
+        let offsetY = pointY - self.view.frame.height/2
+        openMeListPanel(l: "fr", id: id, offX: offsetX, offY: offsetY)
     }
-    func didMeClickHistoryList(){
-        openMeListPanel(l: "h")
+    func didMeClickHistoryList(id: String, pointX: CGFloat, pointY: CGFloat){
+//        openMeListPanel(l: "h")
+        
+        //test > new method
+        let offsetX = pointX - self.view.frame.width/2
+        let offsetY = pointY - self.view.frame.height/2
+        openMeListPanel(l: "h", id: id, offX: offsetX, offY: offsetY)
     }
-    func didMeClickBookmarkList(){
-        openMeListPanel(l: "s")
+    func didMeClickBookmarkList(id: String, pointX: CGFloat, pointY: CGFloat){
+//        openMeListPanel(l: "s")
+        
+        //test > new method
+        let offsetX = pointX - self.view.frame.width/2
+        let offsetY = pointY - self.view.frame.height/2
+        openMeListPanel(l: "s", id: id, offX: offsetX, offY: offsetY)
     }
-    func didMeClickLikeList(){
-        openMeListPanel(l: "l")
+    func didMeClickLikeList(id: String, pointX: CGFloat, pointY: CGFloat){
+//        openMeListPanel(l: "l")
+        
+        //test > new method
+        let offsetX = pointX - self.view.frame.width/2
+        let offsetY = pointY - self.view.frame.height/2
+        openMeListPanel(l: "l", id: id, offX: offsetX, offY: offsetY)
     }
     func didMeClickAccountSettingList(){
         //real identity verification
@@ -832,19 +1047,35 @@ extension ViewController: MePanelDelegate{
     func didMeClickBaseList(){
         
     }
-    func didMeClickMultiLocationList(){
-        openMeListPanel(l: "lo")
+    func didMeClickMultiLocationList(id: String, pointX: CGFloat, pointY: CGFloat){
+//        openMeListPanel(l: "lo")
+        //test > new method
+        let offsetX = pointX - self.view.frame.width/2
+        let offsetY = pointY - self.view.frame.height/2
+        openMeListPanel(l: "lo", id: id, offX: offsetX, offY: offsetY)
     }
-    func didMeClickMultiPostList(){
-        openMeListPanel(l: "c")
+    func didMeClickMultiPostList(id: String, pointX: CGFloat, pointY: CGFloat){
+//        openMeListPanel(l: "c")
+        //test > new method
+        let offsetX = pointX - self.view.frame.width/2
+        let offsetY = pointY - self.view.frame.height/2
+        openMeListPanel(l: "c", id: id, offX: offsetX, offY: offsetY)
     }
-    func didMeClickMultiPhotoList(){
-        openMeListPanel(l: "a")
+    func didMeClickMultiPhotoList(id: String, pointX: CGFloat, pointY: CGFloat){
+//        openMeListPanel(l: "a")
+        //test > new method
+        let offsetX = pointX - self.view.frame.width/2
+        let offsetY = pointY - self.view.frame.height/2
+        openMeListPanel(l: "a", id: id, offX: offsetX, offY: offsetY)
     }
-    func didMeClickMultiVideoList(){
-        openMeListPanel(l: "b")
+    func didMeClickMultiVideoList(id: String, pointX: CGFloat, pointY: CGFloat){
+//        openMeListPanel(l: "b")
+        //test > new method
+        let offsetX = pointX - self.view.frame.width/2
+        let offsetY = pointY - self.view.frame.height/2
+        openMeListPanel(l: "b", id: id, offX: offsetX, offY: offsetY)
     }
-    func didMeClickCommentList(){
+    func didMeClickCommentList(id: String, pointX: CGFloat, pointY: CGFloat){
         
     }
     func didMeClickLogin() {

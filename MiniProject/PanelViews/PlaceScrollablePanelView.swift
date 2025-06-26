@@ -24,7 +24,7 @@ protocol PlaceScrollablePanelDelegate : AnyObject {
     func didPClickUserPlaceScrollable(id: String)
     func didPClickPlacePlaceScrollable(id: String)
     func didPClickSoundPlaceScrollable(id: String)
-    func didPClickPlaceScrollableVcvClickPost(id: String, dataType: String, scrollToComment: Bool)
+    func didPClickPlaceScrollableVcvClickPost(id: String, dataType: String, scrollToComment: Bool, pointX: CGFloat, pointY: CGFloat)
     func didPClickPlaceScrollableVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     func didPClickPlaceScrollableVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     func didPClickPlaceSignIn()
@@ -344,7 +344,7 @@ class PlaceScrollablePanelView: ScrollablePanelView{
         aMoreBtn.heightAnchor.constraint(equalToConstant: 30).isActive = true //30
         aMoreBtn.widthAnchor.constraint(equalToConstant: 30).isActive = true //30
         aMoreBtn.centerYAnchor.constraint(equalTo: aFollowerCountAText.centerYAnchor, constant: 0).isActive = true
-        aMoreBtn.layer.cornerRadius = 10
+        aMoreBtn.layer.cornerRadius = 15 //10
         //test > for sharing
         aMoreBtn.isUserInteractionEnabled = true
         aMoreBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onAClicked)))
@@ -702,7 +702,8 @@ class PlaceScrollablePanelView: ScrollablePanelView{
         //test > for sharing
         aMoreCBtn.isUserInteractionEnabled = true
         aMoreCBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onAClicked)))
-  
+        aMoreCBtn.isHidden = true
+        
         let eMiniCBtn = UIImageView(image: UIImage(named:"icon_round_share")?.withRenderingMode(.alwaysTemplate).withHorizontallyFlippedOrientation())
         eMiniCBtn.tintColor = .white
 //        eMiniBtn.tintColor = .ddmDarkGrayColor
@@ -1348,7 +1349,7 @@ class PlaceScrollablePanelView: ScrollablePanelView{
             self.aFollow.isHidden = false
             self.aFollowC.isHidden = false
             self.aMoreBtn.isHidden = false
-            self.aMoreCBtn.isHidden = false
+//            self.aMoreCBtn.isHidden = false
             
 //            let aImageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
             let aImageUrl = URL(string: data.coverPhotoString)
@@ -2606,9 +2607,18 @@ extension PlaceScrollablePanelView: ScrollFeedCellDelegate {
     func sfcDidClickVcvClickSound(id: String) {
 
     }
-    func sfcDidClickVcvClickPost(id: String, dataType: String) {
+    func sfcDidClickVcvClickPost(id: String, dataType: String, pointX: CGFloat, pointY: CGFloat) {
         pauseFeedPlayingMedia()
-        delegate?.didPClickPlaceScrollableVcvClickPost(id: id, dataType: dataType, scrollToComment: false)
+//        delegate?.didPClickPlaceScrollableVcvClickPost(id: id, dataType: dataType, scrollToComment: false)
+        
+        //test > new method
+        if(!self.feedList.isEmpty) {
+            let b = self.feedList[self.currentIndex]
+            let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
+            
+            let adjustY = pointY + originInRootView.y
+            delegate?.didPClickPlaceScrollableVcvClickPost(id: id, dataType: dataType, scrollToComment: false, pointX: pointX, pointY: adjustY)
+        }
     }
     func sfcDidClickVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         
@@ -2707,13 +2717,21 @@ extension ViewController: PlaceScrollablePanelDelegate{
         openSoundPanel(id: id)
     }
     
-    func didPClickPlaceScrollableVcvClickPost(id: String, dataType: String, scrollToComment: Bool){
+    func didPClickPlaceScrollableVcvClickPost(id: String, dataType: String, scrollToComment: Bool, pointX: CGFloat, pointY: CGFloat){
         //test > real id for fetching data
-        openPostDetailPanel(id: id, dataType: dataType, scrollToComment: scrollToComment)
+//        openPostDetailPanel(id: id, dataType: dataType, scrollToComment: scrollToComment)
+        
+        //test > new method
+        let offsetX = pointX - self.view.frame.width/2
+        let offsetY = pointY - self.view.frame.height/2
+        openPostDetailPanel(id: id, dataType: dataType, scrollToComment: scrollToComment, offX: offsetX, offY: offsetY)
     }
     func didPClickPlaceScrollableVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
-        let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
-        let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
+//        let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
+//        let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
+        //test > new method
+        let offsetX = pointX - self.view.frame.width/2
+        let offsetY = pointY - self.view.frame.height/2
         
         if(mode == PhotoTypes.P_SHOT) {
             //test > open photo panel with predetermined datasets
@@ -2724,14 +2742,19 @@ extension ViewController: PlaceScrollablePanelDelegate{
         } else if(mode == PhotoTypes.P_0){
             openPhotoZoomPanel(offX: offsetX, offY: offsetY)
         } else if(mode == PhotoTypes.P_SHOT_DETAIL) {
-//            openPhotoDetailPanel()
             //test > real id for fetching data
-            openPhotoDetailPanel(id: id)
+//            openPhotoDetailPanel(id: id)
+            
+            //test 2 > animated open and close panel
+            openPhotoDetailPanel(id: id, offX: offsetX, offY: offsetY)
         }
     }
     func didPClickPlaceScrollableVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
-        let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
-        let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
+//        let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
+//        let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
+        //test > new method
+        let offsetX = pointX - self.view.frame.width/2
+        let offsetY = pointY - self.view.frame.height/2
 
         //test 1 > for video only
         var dataset = [String]()
@@ -2894,14 +2917,14 @@ extension PlaceScrollablePanelView: CommentScrollableDelegate{
             }
         }
     }
-    func didCClickComment(id: String, dataType: String){
-        delegate?.didPClickPlaceScrollableVcvClickPost(id: id, dataType: dataType, scrollToComment: true)
+    func didCClickComment(id: String, dataType: String, pointX: CGFloat, pointY: CGFloat){
+        delegate?.didPClickPlaceScrollableVcvClickPost(id: id, dataType: dataType, scrollToComment: true, pointX: pointX, pointY: pointY)
     }
     func didCClickShare(id: String, dataType: String){
         openShareSheet(oType: dataType, oId: id)
     }
-    func didCClickPost(id: String, dataType: String){
-        delegate?.didPClickPlaceScrollableVcvClickPost(id: id, dataType: dataType, scrollToComment: false)
+    func didCClickPost(id: String, dataType: String, pointX: CGFloat, pointY: CGFloat){
+        delegate?.didPClickPlaceScrollableVcvClickPost(id: id, dataType: dataType, scrollToComment: false, pointX: pointX, pointY: pointY)
     }
     func didCClickClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         delegate?.didPClickPlaceScrollableVcvClickPhoto(id: id, pointX: pointX, pointY: pointY, view: view, mode: mode)

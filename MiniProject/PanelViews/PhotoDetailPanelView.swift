@@ -10,19 +10,25 @@ import UIKit
 import SDWebImage
 
 protocol PhotoDetailPanelDelegate : AnyObject {
-    func didClickPhotoDetailPanelVcvClickPost(id: String, dataType: String, scrollToComment: Bool) //try
+    func didClickPhotoDetailPanelVcvClickPost(id: String, dataType: String, scrollToComment: Bool, pointX: CGFloat, pointY: CGFloat) //try
     func didClickPhotoDetailPanelVcvClickUser(id: String) //try
     func didClickPhotoDetailClosePanel()
     func didClickPhotoDetailPanelVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     
     //test > click to create new post
     func didClickPhotoDetailPanelVcvClickCreate(type: String, objectType: String, objectId: String)
+    
+    //test > for marker animation after video closes
+    func didStartPhotoDetailPanGesture(ppv : PhotoDetailPanelView)
+    func didEndPhotoDetailPanGesture(ppv : PhotoDetailPanelView)
+    func didStartOpenPhotoDetailPanel()
+    func didFinishOpenPhotoDetailPanel()
+    func didStartClosePhotoDetailPanel(ppv : PhotoDetailPanelView)
+    func didFinishClosePhotoDetailPanel(ppv : PhotoDetailPanelView)
 }
 
 class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
-//class PhotoDetailPanelView: PanelView {
-    var panelLeadingCons: NSLayoutConstraint?
-    var currentPanelLeadingCons : CGFloat = 0.0
+    
     var panel = UIView()
     
     var viewHeight: CGFloat = 0
@@ -66,10 +72,12 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
     var aView = UIView()
     var textPanelBottomCons: NSLayoutConstraint?
     var aTextBoxHeightCons: NSLayoutConstraint?
-    var aTextTrailingCons: NSLayoutConstraint?
-    var aTextBottomCons: NSLayoutConstraint?
+//    var aTextTrailingCons: NSLayoutConstraint?
+//    var aTextBottomCons: NSLayoutConstraint?
     let aTextBox = UITextView()
     var aaViewTrailingCons: NSLayoutConstraint?
+    let sendAaView = UIView()
+    var sendAaViewTrailingCons: NSLayoutConstraint?
     let textPanel = UIView()
     var currentFirstResponder : UITextView?
     var isKeyboardUp = false
@@ -87,36 +95,91 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
     //test > scroll view for carousel
     var isCarouselScrolled = false
     
+    //test > circle mask
+    var cView = UIView()
+    var offsetX: CGFloat = 0.0
+    var offsetY: CGFloat = 0.0
+    var panelLeadingCons: NSLayoutConstraint?
+    var currentPanelLeadingCons : CGFloat = 0.0
+    var panelTopCons: NSLayoutConstraint?
+    var currentPanelTopCons : CGFloat = 0.0
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         viewWidth = frame.width
         viewHeight = frame.height
         setupViews()
-
+        setupMaskLayer()
     }
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
         setupViews()
+        setupMaskLayer()
+    }
+    
+    //test > masking into a circle like in snapmap
+    let shapeLayer = CAShapeLayer()
+    var isSubLayerSet = false
+    func setupMaskLayer(){
+//        shapeLayer.fillColor = UIColor.clear.cgColor
+        shapeLayer.fillColor = UIColor.white.cgColor
+        panel.layer.addSublayer(shapeLayer)
+
+        panel.layer.mask = shapeLayer
+    }
+    
+    override func layoutSublayers(of layer: CALayer) {
+        super.layoutSublayers(of: layer)
+
+        print("circle mask layout sublayer")
+
+        //isSubLayerSet is to prevent repeated calling of layoutSublayers()
+        if(!isSubLayerSet) {
+            let width = viewWidth
+//            let height = viewHeight + 100 //ori => 100 is arbitrary
+//            let height = viewHeight //circle is too small, cannot fully cover phone screen
+
+            let sum2 = pow(width, 2) + pow(viewHeight, 2)
+            let height = sqrt(sum2)
+            print("sumsqrt: \(height), \(viewHeight)")
+
+            let oriX = width/2 - height/2 //default 200
+    //        let oriY = height/2 - height/2
+            let oriY = viewHeight/2 - height/2
+            let circlePath = UIBezierPath(ovalIn: CGRect(x: oriX, y: oriY, width: height, height: height))
+            shapeLayer.path = circlePath.cgPath
+
+            isSubLayerSet = true
+        }
     }
     
     func setupViews() {
+        cView.backgroundColor = .black
+        self.addSubview(cView)
+        cView.layer.opacity = 0.0
+        cView.translatesAutoresizingMaskIntoConstraints = false
+        cView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
+        cView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        cView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true //default 0
+        cView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
+        
         //test 1 > list view of videos
         panel.backgroundColor = .ddmBlackOverlayColor
-//        soundPanel.backgroundColor = .blue
         self.addSubview(panel)
         panel.translatesAutoresizingMaskIntoConstraints = false
-//        soundPanel.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-        panel.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
-        panel.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true //default 0
-//        soundPanel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
+//        panel.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+//        panel.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true //default 0
         panel.layer.masksToBounds = true
         panel.layer.cornerRadius = 10 //10
         //test
         panel.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true
+        panel.heightAnchor.constraint(equalToConstant: viewHeight).isActive = true
         panelLeadingCons = panel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0)
         panelLeadingCons?.isActive = true
+        panelTopCons = panel.topAnchor.constraint(equalTo: self.topAnchor, constant: 0)
+        panelTopCons?.isActive = true
         
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -130,7 +193,6 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
             return
         }
         photoCV.register(HCommentListViewCell.self, forCellWithReuseIdentifier: HCommentListViewCell.identifier)
-//        photoCV.register(HPhotoListViewCell.self, forCellWithReuseIdentifier: HPhotoListViewCell.identifier)
         photoCV.register(HPhotoListBViewCell.self, forCellWithReuseIdentifier: HPhotoListBViewCell.identifier)
 //        photoCV.isPagingEnabled = true
         photoCV.dataSource = self
@@ -299,7 +361,10 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
     }
     
     @objc func onBackPanelClicked(gesture: UITapGestureRecognizer) {
-        closePanel(isAnimated: true)
+//        closePanel(isAnimated: true)
+        
+        //test
+        self.delegate?.didStartClosePhotoDetailPanel(ppv: self)
     }
     @objc func onAClicked(gesture: UITapGestureRecognizer) {
         pausePlayingMedia()
@@ -317,18 +382,42 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
     }
     
     var direction = "na"
+    //test > another variable for threshold to shrink postpanel, instead of normal scroll
+    var isToPostPan = false
     @objc func onPanelPanGesture(gesture: UIPanGestureRecognizer) {
         if(gesture.state == .began) {
             
             print("t1 onPanelPanGesture begin: ")
-            self.currentPanelLeadingCons = self.panelLeadingCons!.constant
+//            self.currentPanelLeadingCons = self.panelLeadingCons!.constant //ori
+            
+            //test
+            currentPanelTopCons = panelTopCons!.constant
+            currentPanelLeadingCons = panelLeadingCons!.constant
+            
         } else if(gesture.state == .changed) {
             let translation = gesture.translation(in: self)
             let x = translation.x
             let y = translation.y
             
+//            if(direction == "na") {
+//                if(abs(x) > abs(y)) {
+//                    direction = "x"
+//                } else {
+//                    direction = "y"
+//                }
+//            }
+//            if(direction == "x") {
+//                //test > avoid accidental close panel
+//                if(!isCarouselScrolled) {
+//                    var newX = self.currentPanelLeadingCons + x
+//                    if(newX < 0) {
+//                        newX = 0
+//                    }
+//                    self.panelLeadingCons?.constant = newX
+//                }
+//            }
+            
             //test > determine direction of scroll
-//            print("t1 onSoundPanelPanGesture changed: \(x), \(self.soundPanelLeadingCons!.constant)")
             if(direction == "na") {
                 if(abs(x) > abs(y)) {
                     direction = "x"
@@ -337,36 +426,101 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
                 }
             }
             if(direction == "x") {
-//                var newX = self.currentPanelLeadingCons + x
-//                if(newX < 0) {
-//                    newX = 0
-//                }
-//                self.panelLeadingCons?.constant = newX
-                
-                //test > avoid accidental close panel
-                if(!isCarouselScrolled) {
-                    var newX = self.currentPanelLeadingCons + x
-                    if(newX < 0) {
-                        newX = 0
+//                if(abs(x) > 40) {
+                if(x > 40) {
+                    print("postpanel vcv panning exit")
+                    
+                    //test > include carousel
+                    if(!isCarouselScrolled) {
+                        isToPostPan = true
                     }
-                    self.panelLeadingCons?.constant = newX
+                } else {
+                    print("postpanel vcv panning no exit")
+                }
+            }
+            
+            //test > panning panel exit once x-threshold reached
+            if(isToPostPan) {
+                let distLimit = 100.0
+                let minScale = 0.5
+                let maxCornerRadius = 200.0
+                let x2 = pow(x, 2)
+                let y2 = pow(y, 2)
+                let dist = sqrt(x2 + y2)
+                print("onPan change circle mask: \(dist), \(currentPanelTopCons), \(currentPanelLeadingCons)")
+
+                let width = viewWidth
+                let height = viewHeight
+                var newMaskSize = height + ((100 - height)/distLimit * dist)
+                if(newMaskSize < 100) {
+                    newMaskSize = 100
+                }
+
+                print("onPan change mask: \(newMaskSize), \(viewHeight), \(viewWidth)")
+                let oriX = width/2 - newMaskSize/2 //default 200
+                let oriY = height/2 - newMaskSize/2
+                let circlePath = UIBezierPath(ovalIn: CGRect(x: oriX, y: oriY, width: newMaskSize, height: newMaskSize))
+                shapeLayer.path = circlePath.cgPath
+
+                var newMaskBGOpacity = 1.0 + ((0.0 - 1.0)/distLimit * dist)
+                cView.layer.opacity = Float(newMaskBGOpacity)
+
+                if(newMaskSize <= viewWidth){
+                    panelTopCons?.constant = currentPanelTopCons + y
+                    panelLeadingCons?.constant = currentPanelLeadingCons + x
+                } else {
+                    //test > move back to 0, 0
+                    panelTopCons?.constant = 0.0
+                    panelLeadingCons?.constant = 0.0
                 }
             }
         } else if(gesture.state == .ended){
             
             print("t1 onPanelPanGesture ended: ")
-            if(self.panelLeadingCons!.constant - self.currentPanelLeadingCons < 75) {
-                UIView.animate(withDuration: 0.2, animations: {
-                    self.panelLeadingCons?.constant = 0
-                    self.layoutIfNeeded()
-                }, completion: { _ in
-                })
+//            if(self.panelLeadingCons!.constant - self.currentPanelLeadingCons < 75) {
+//                UIView.animate(withDuration: 0.2, animations: {
+//                    self.panelLeadingCons?.constant = 0
+//                    self.layoutIfNeeded()
+//                }, completion: { _ in
+//                })
+//            } else {
+//                closePanel(isAnimated: true)
+//            }
+//            
+//            //test > determine direction of scroll
+//            direction = "na"
+            
+            //test
+            let width = viewWidth
+            let height = viewHeight + 100
+
+            let distLimit = 100.0 //default : 50
+            let x2 = pow(panelLeadingCons!.constant, 2)
+            let y2 = pow(panelTopCons!.constant, 2)
+            let dist = sqrt(x2 + y2)
+
+            if(dist >= distLimit) {
+                self.delegate?.didStartClosePhotoDetailPanel(ppv: self)
+
             } else {
-                closePanel(isAnimated: true)
+                let oriX = width/2 - height/2 //default 200
+                let oriY = viewHeight/2 - height/2
+                let circlePath = UIBezierPath(ovalIn: CGRect(x: oriX, y: oriY, width: height, height: height))
+                shapeLayer.path = circlePath.cgPath
+
+                //test > move back to 0, 0
+                panelTopCons?.constant = 0.0
+                panelLeadingCons?.constant = 0.0
+
+                //test
+                self.delegate?.didEndPhotoDetailPanGesture(ppv: self)
             }
             
             //test > determine direction of scroll
             direction = "na"
+            
+            //test
+            isToPostPan = false
         }
     }
     
@@ -388,14 +542,16 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
         bottomBox.addGestureRecognizer(aPanelPanGesture)
 //        bottomBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onOpenTextBoxClicked)))
 
-//        let addCommentContainer = UIView()
         bottomBox.addSubview(addCommentContainer)
         addCommentContainer.translatesAutoresizingMaskIntoConstraints = false
-        addCommentContainer.leadingAnchor.constraint(equalTo: bottomBox.leadingAnchor, constant: 0).isActive = true
-        addCommentContainer.trailingAnchor.constraint(equalTo: bottomBox.trailingAnchor, constant: 0).isActive = true
-        addCommentContainer.topAnchor.constraint(equalTo: bottomBox.topAnchor, constant: 0).isActive = true //default: 50
-        addCommentContainer.bottomAnchor.constraint(equalTo: bottomBox.bottomAnchor, constant: 0).isActive = true
         addCommentContainer.isHidden = false
+        addCommentContainer.backgroundColor = .ddmBlackDark
+        addCommentContainer.layer.cornerRadius = 10 //10
+        addCommentContainer.leadingAnchor.constraint(equalTo: bottomBox.leadingAnchor, constant: 20).isActive = true //0
+//        addCommentContainer.leadingAnchor.constraint(equalTo: zGrid.trailingAnchor, constant: 10).isActive = true //0
+        addCommentContainer.trailingAnchor.constraint(equalTo: bottomBox.trailingAnchor, constant: -20).isActive = true //-15
+        addCommentContainer.topAnchor.constraint(equalTo: bottomBox.topAnchor, constant: 10).isActive = true //0
+        addCommentContainer.bottomAnchor.constraint(equalTo: bottomBox.bottomAnchor, constant: -10).isActive = true //0
         addCommentContainer.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onOpenTextBoxClicked)))
         
         let bText = UILabel()
@@ -409,55 +565,9 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
         bText.translatesAutoresizingMaskIntoConstraints = false
         bText.leadingAnchor.constraint(equalTo: addCommentContainer.leadingAnchor, constant: 15).isActive = true
         bText.trailingAnchor.constraint(equalTo: addCommentContainer.trailingAnchor, constant: -60).isActive = true
-//        bText.topAnchor.constraint(equalTo: addCommentContainer.topAnchor, constant: 15).isActive = true
         bText.centerYAnchor.constraint(equalTo: addCommentContainer.centerYAnchor, constant: 0).isActive = true
-//        bText.leadingAnchor.constraint(equalTo: bottomBox.leadingAnchor, constant: 15).isActive = true
-//        bText.trailingAnchor.constraint(equalTo: bottomBox.trailingAnchor, constant: -60).isActive = true
-//        bText.topAnchor.constraint(equalTo: bottomBox.topAnchor, constant: 15).isActive = true
         bText.text = "Add comment..."
 //        bText.layer.opacity = 0.5
-        
-        let lTextBtn = UIImageView()
-        lTextBtn.image = UIImage(named:"icon_outline_photo")?.withRenderingMode(.alwaysTemplate)
-//        lTextBtn.tintColor = .white
-        lTextBtn.tintColor = .ddmDarkGrayColor
-//        bottomBox.addSubview(lTextBtn)
-        addCommentContainer.addSubview(lTextBtn)
-        lTextBtn.translatesAutoresizingMaskIntoConstraints = false
-//        lTextBtn.trailingAnchor.constraint(equalTo: bottomBox.trailingAnchor, constant: -15).isActive = true
-        lTextBtn.trailingAnchor.constraint(equalTo: addCommentContainer.trailingAnchor, constant: -15).isActive = true
-        lTextBtn.centerYAnchor.constraint(equalTo: bText.centerYAnchor).isActive = true
-        lTextBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
-        lTextBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        lTextBtn.isHidden = false
-
-        let mTextBtn = UIImageView()
-        mTextBtn.image = UIImage(named:"icon_round_emoji")?.withRenderingMode(.alwaysTemplate)
-//        mTextBtn.tintColor = .white
-        mTextBtn.tintColor = .ddmDarkGrayColor
-//        mTextBtn.layer.opacity = 0.5
-//        bottomBox.addSubview(mTextBtn)
-        addCommentContainer.addSubview(mTextBtn)
-        mTextBtn.translatesAutoresizingMaskIntoConstraints = false
-        mTextBtn.trailingAnchor.constraint(equalTo: lTextBtn.leadingAnchor, constant: -10).isActive = true
-        mTextBtn.centerYAnchor.constraint(equalTo: bText.centerYAnchor).isActive = true
-        mTextBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
-        mTextBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        mTextBtn.isHidden = false
-
-        let nTextBtn = UIImageView()
-        nTextBtn.image = UIImage(named:"icon_round_at")?.withRenderingMode(.alwaysTemplate)
-//        nTextBtn.tintColor = .white
-        nTextBtn.tintColor = .ddmDarkGrayColor
-//        nTextBtn.layer.opacity = 0.5
-//        bottomBox.addSubview(nTextBtn)
-        addCommentContainer.addSubview(nTextBtn)
-        nTextBtn.translatesAutoresizingMaskIntoConstraints = false
-        nTextBtn.trailingAnchor.constraint(equalTo: mTextBtn.leadingAnchor, constant: -10).isActive = true
-        nTextBtn.centerYAnchor.constraint(equalTo: bText.centerYAnchor).isActive = true
-        nTextBtn.heightAnchor.constraint(equalToConstant: 26).isActive = true
-        nTextBtn.widthAnchor.constraint(equalToConstant: 26).isActive = true
-        nTextBtn.isHidden = false
         
         bottomBox.addSubview(sendCommentContainer)
         sendCommentContainer.translatesAutoresizingMaskIntoConstraints = false
@@ -467,17 +577,26 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
         sendCommentContainer.bottomAnchor.constraint(equalTo: bottomBox.bottomAnchor, constant: 0).isActive = true
         sendCommentContainer.isHidden = true
         
-        let sendAaView = UIView()
+//        let sendAaView = UIView()
         sendAaView.backgroundColor = .ddmBlackDark
         sendCommentContainer.addSubview(sendAaView)
         sendAaView.translatesAutoresizingMaskIntoConstraints = false
         sendAaView.topAnchor.constraint(equalTo: sendCommentContainer.topAnchor, constant: 10).isActive = true
-//        sendAaView.bottomAnchor.constraint(equalTo: sendCommentContainer.bottomAnchor, constant: -10).isActive = true //-10
-        sendAaView.leadingAnchor.constraint(equalTo: sendCommentContainer.leadingAnchor, constant: 15).isActive = true
-        sendAaView.trailingAnchor.constraint(equalTo: sendCommentContainer.trailingAnchor, constant: -50).isActive = true
+        sendAaView.leadingAnchor.constraint(equalTo: sendCommentContainer.leadingAnchor, constant: 20).isActive = true //-10
+//        sendAaView.trailingAnchor.constraint(equalTo: sendCommentContainer.trailingAnchor, constant: -50).isActive = true
+        sendAaViewTrailingCons = sendAaView.trailingAnchor.constraint(equalTo: sendCommentContainer.trailingAnchor, constant: -20)
+        sendAaViewTrailingCons?.isActive = true
         sendAaView.heightAnchor.constraint(equalToConstant: 40).isActive = true //36
         sendAaView.layer.cornerRadius = 10
         sendAaView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onOpenTextBoxClicked)))
+        
+        sendASpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
+        sendCommentContainer.addSubview(sendASpinner)
+        sendASpinner.translatesAutoresizingMaskIntoConstraints = false
+        sendASpinner.trailingAnchor.constraint(equalTo: sendCommentContainer.trailingAnchor, constant: -20).isActive = true
+        sendASpinner.centerYAnchor.constraint(equalTo: sendAaView.centerYAnchor).isActive = true
+        sendASpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        sendASpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
         
 //        let sendBText = UILabel()
         sendBText.textAlignment = .left
@@ -493,44 +612,6 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
 //        sendBText.topAnchor.constraint(equalTo: sendAaView.topAnchor, constant: 15).isActive = true
         sendBText.centerYAnchor.constraint(equalTo: sendAaView.centerYAnchor, constant: 0).isActive = true
         sendBText.text = ""
-        
-        sendASpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
-        sendCommentContainer.addSubview(sendASpinner)
-        sendASpinner.translatesAutoresizingMaskIntoConstraints = false
-        sendASpinner.trailingAnchor.constraint(equalTo: sendCommentContainer.trailingAnchor, constant: -15).isActive = true
-        sendASpinner.centerYAnchor.constraint(equalTo: sendAaView.centerYAnchor).isActive = true
-        sendASpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        sendASpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
-
-        sendCommentContainer.addSubview(sendBBox)
-        sendBBox.translatesAutoresizingMaskIntoConstraints = false
-        sendBBox.widthAnchor.constraint(equalToConstant: 30).isActive = true //20
-        sendBBox.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        sendBBox.centerYAnchor.constraint(equalTo: sendAaView.centerYAnchor).isActive = true
-        sendBBox.centerXAnchor.constraint(equalTo: sendASpinner.centerXAnchor).isActive = true
-        sendBBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onClearTextBoxClicked)))
-        sendBBox.isHidden = true
-        
-        let sendBBoxBg = UIView()
-        sendBBoxBg.backgroundColor = .white
-        sendBBox.addSubview(sendBBoxBg)
-        sendBBoxBg.clipsToBounds = true
-        sendBBoxBg.translatesAutoresizingMaskIntoConstraints = false
-        sendBBoxBg.widthAnchor.constraint(equalToConstant: 20).isActive = true //20
-        sendBBoxBg.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        sendBBoxBg.centerYAnchor.constraint(equalTo: sendBBox.centerYAnchor).isActive = true
-        sendBBoxBg.centerXAnchor.constraint(equalTo: sendBBox.centerXAnchor).isActive = true
-//        sendBBox.trailingAnchor.constraint(equalTo: sendCommentContainer.trailingAnchor, constant: -15).isActive = true
-        sendBBoxBg.layer.cornerRadius = 10
-
-        let aBtn = UIImageView(image: UIImage(named:"icon_round_close")?.withRenderingMode(.alwaysTemplate))
-        aBtn.tintColor = .ddmDarkColor
-        sendBBox.addSubview(aBtn)
-        aBtn.translatesAutoresizingMaskIntoConstraints = false
-        aBtn.centerXAnchor.constraint(equalTo: sendBBox.centerXAnchor).isActive = true
-        aBtn.centerYAnchor.constraint(equalTo: sendBBox.centerYAnchor).isActive = true
-        aBtn.heightAnchor.constraint(equalToConstant: 16).isActive = true
-        aBtn.widthAnchor.constraint(equalToConstant: 16).isActive = true
         
         //test > real textview edittext for comment
         panel.addSubview(aView)
@@ -569,104 +650,56 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
         sendBox.backgroundColor = .yellow //yellow
         textPanel.addSubview(sendBox)
         sendBox.translatesAutoresizingMaskIntoConstraints = false
-//        sendBox.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        sendBox.widthAnchor.constraint(equalToConstant: 30).isActive = true
         sendBox.heightAnchor.constraint(equalToConstant: 30).isActive = true //30
-        sendBox.trailingAnchor.constraint(equalTo: textPanel.trailingAnchor, constant: -15).isActive = true //-15
+        sendBox.trailingAnchor.constraint(equalTo: textPanel.trailingAnchor, constant: -20).isActive = true //-15
 //        sendBox.topAnchor.constraint(equalTo: textPanel.topAnchor, constant: 10).isActive = true
-        sendBox.bottomAnchor.constraint(equalTo: textPanel.bottomAnchor, constant: -13).isActive = true //-10
-        sendBox.layer.cornerRadius = 15
+        sendBox.bottomAnchor.constraint(equalTo: textPanel.bottomAnchor, constant: -15).isActive = true //-15
+        sendBox.layer.cornerRadius = 15 //15
         sendBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onSendBtnClicked)))
+        
+        let aNextMiniBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right_next")?.withRenderingMode(.alwaysTemplate))
+        aNextMiniBtn.tintColor = .black
+        sendBox.addSubview(aNextMiniBtn)
+        aNextMiniBtn.translatesAutoresizingMaskIntoConstraints = false
+        aNextMiniBtn.centerXAnchor.constraint(equalTo: sendBox.centerXAnchor).isActive = true
+        aNextMiniBtn.centerYAnchor.constraint(equalTo: sendBox.centerYAnchor).isActive = true
+        aNextMiniBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        aNextMiniBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
 
-        let sendBoxText = UILabel()
-        sendBoxText.textAlignment = .center
-        sendBoxText.textColor = .black
-        sendBoxText.font = .boldSystemFont(ofSize: 13)
-        sendBox.addSubview(sendBoxText)
-        sendBoxText.translatesAutoresizingMaskIntoConstraints = false
-//        gBtnText.topAnchor.constraint(equalTo: gBtn.topAnchor, constant: 10).isActive = true
-//        gBtnText.bottomAnchor.constraint(equalTo: gBtn.bottomAnchor, constant: -10).isActive = true
-        sendBoxText.centerYAnchor.constraint(equalTo: sendBox.centerYAnchor).isActive = true
-        sendBoxText.leadingAnchor.constraint(equalTo: sendBox.leadingAnchor, constant: 10).isActive = true
-        sendBoxText.trailingAnchor.constraint(equalTo: sendBox.trailingAnchor, constant: -10).isActive = true
-        sendBoxText.text = "Post"
+        let zZGrid = UIView()
+        textPanel.addSubview(zZGrid)
+        zZGrid.backgroundColor = .ddmBlackDark
+        zZGrid.translatesAutoresizingMaskIntoConstraints = false
+        zZGrid.heightAnchor.constraint(equalToConstant: 30).isActive = true //30
+        zZGrid.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        zZGrid.leadingAnchor.constraint(equalTo: textPanel.leadingAnchor, constant: 20).isActive = true
+        zZGrid.bottomAnchor.constraint(equalTo: textPanel.bottomAnchor, constant: -15).isActive = true //-15
+        zZGrid.layer.cornerRadius = 15 //15
 
+        let zZGridIcon = UIImageView(image: UIImage(named:"icon_round_add")?.withRenderingMode(.alwaysTemplate))
+//        zGridIcon.tintColor = .white
+        zZGridIcon.tintColor = .ddmDarkGrayColor
+        zZGrid.addSubview(zZGridIcon)
+        zZGridIcon.translatesAutoresizingMaskIntoConstraints = false
+//        zGridIcon.centerXAnchor.constraint(equalTo: pMini.centerXAnchor, constant: 0).isActive = true
+//        zGridIcon.bottomAnchor.constraint(equalTo: divider.topAnchor, constant: 0).isActive = true
+        zZGridIcon.centerXAnchor.constraint(equalTo: zZGrid.centerXAnchor, constant: 0).isActive = true
+        zZGridIcon.centerYAnchor.constraint(equalTo: zZGrid.centerYAnchor, constant: 0).isActive = true
+        zZGridIcon.heightAnchor.constraint(equalToConstant: 20).isActive = true //20
+        zZGridIcon.widthAnchor.constraint(equalToConstant: 20).isActive = true
+        
 //        aaView.backgroundColor = .ddmDarkColor
         aaView.backgroundColor = .ddmBlackDark
         textPanel.addSubview(aaView)
         aaView.translatesAutoresizingMaskIntoConstraints = false
         aaView.topAnchor.constraint(equalTo: textPanel.topAnchor, constant: 10).isActive = true
         aaView.bottomAnchor.constraint(equalTo: textPanel.bottomAnchor, constant: -10).isActive = true //-10
-        aaView.leadingAnchor.constraint(equalTo: textPanel.leadingAnchor, constant: 15).isActive = true
-//        aView.trailingAnchor.constraint(equalTo: textPanel.trailingAnchor, constant: -15).isActive = true
-        aaViewTrailingCons = aaView.trailingAnchor.constraint(equalTo: textPanel.trailingAnchor, constant: -15)
+//        aaView.leadingAnchor.constraint(equalTo: textPanel.leadingAnchor, constant: 15).isActive = true
+        aaView.leadingAnchor.constraint(equalTo: zZGrid.trailingAnchor, constant: 10).isActive = true
+        aaViewTrailingCons = aaView.trailingAnchor.constraint(equalTo: textPanel.trailingAnchor, constant: -20)
         aaViewTrailingCons?.isActive = true
         aaView.layer.cornerRadius = 10
-
-        //test > add icons for adding photo etc
-        let zGrid = UIView()
-        textPanel.addSubview(zGrid)
-//        zGrid.backgroundColor = .red
-        zGrid.translatesAutoresizingMaskIntoConstraints = false
-        zGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        zGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        zGrid.trailingAnchor.constraint(equalTo: aaView.trailingAnchor, constant: 0).isActive = true
-        zGrid.bottomAnchor.constraint(equalTo: aaView.bottomAnchor, constant: 0).isActive = true
-
-        let zGridIcon = UIImageView(image: UIImage(named:"icon_outline_photo")?.withRenderingMode(.alwaysTemplate))
-//        zGridIcon.tintColor = .white
-        zGridIcon.tintColor = .ddmDarkGrayColor
-        textPanel.addSubview(zGridIcon)
-        zGridIcon.translatesAutoresizingMaskIntoConstraints = false
-//        zGridIcon.centerXAnchor.constraint(equalTo: pMini.centerXAnchor, constant: 0).isActive = true
-//        zGridIcon.bottomAnchor.constraint(equalTo: divider.topAnchor, constant: 0).isActive = true
-        zGridIcon.centerXAnchor.constraint(equalTo: zGrid.centerXAnchor, constant: 0).isActive = true
-        zGridIcon.centerYAnchor.constraint(equalTo: zGrid.centerYAnchor, constant: 0).isActive = true
-        zGridIcon.heightAnchor.constraint(equalToConstant: 26).isActive = true //20
-        zGridIcon.widthAnchor.constraint(equalToConstant: 26).isActive = true
-//        zGridIcon.layer.opacity = 0.5
-        
-        let yGrid = UIView()
-        textPanel.addSubview(yGrid)
-//        yGrid.backgroundColor = .red
-        yGrid.translatesAutoresizingMaskIntoConstraints = false
-        yGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        yGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        yGrid.trailingAnchor.constraint(equalTo: zGrid.leadingAnchor, constant: 0).isActive = true
-        yGrid.bottomAnchor.constraint(equalTo: aaView.bottomAnchor, constant: 0).isActive = true
-
-        let yGridIcon = UIImageView(image: UIImage(named:"icon_round_emoji")?.withRenderingMode(.alwaysTemplate))
-//        yGridIcon.tintColor = .white
-        yGridIcon.tintColor = .ddmDarkGrayColor
-        textPanel.addSubview(yGridIcon)
-        yGridIcon.translatesAutoresizingMaskIntoConstraints = false
-//        yGridIcon.centerXAnchor.constraint(equalTo: pMini.centerXAnchor, constant: 0).isActive = true
-//        yGridIcon.bottomAnchor.constraint(equalTo: divider.topAnchor, constant: 0).isActive = true
-        yGridIcon.centerXAnchor.constraint(equalTo: yGrid.centerXAnchor, constant: 0).isActive = true
-        yGridIcon.centerYAnchor.constraint(equalTo: yGrid.centerYAnchor, constant: 0).isActive = true
-        yGridIcon.heightAnchor.constraint(equalToConstant: 26).isActive = true //20
-        yGridIcon.widthAnchor.constraint(equalToConstant: 26).isActive = true
-//        yGridIcon.layer.opacity = 0.5
-
-//        let xGrid = UIView()
-        textPanel.addSubview(xGrid)
-//        xGrid.backgroundColor = .red
-        xGrid.translatesAutoresizingMaskIntoConstraints = false
-        xGrid.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        xGrid.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        xGrid.trailingAnchor.constraint(equalTo: yGrid.leadingAnchor, constant: 0).isActive = true
-        xGrid.bottomAnchor.constraint(equalTo: aaView.bottomAnchor, constant: 0).isActive = true
-
-        let xGridIcon = UIImageView(image: UIImage(named:"icon_round_at")?.withRenderingMode(.alwaysTemplate))
-        xGridIcon.tintColor = .ddmDarkGrayColor
-        textPanel.addSubview(xGridIcon)
-        xGridIcon.translatesAutoresizingMaskIntoConstraints = false
-//        xGridIcon.centerXAnchor.constraint(equalTo: pMini.centerXAnchor, constant: 0).isActive = true
-//        xGridIcon.bottomAnchor.constraint(equalTo: divider.topAnchor, constant: 0).isActive = true
-        xGridIcon.centerXAnchor.constraint(equalTo: xGrid.centerXAnchor, constant: 0).isActive = true
-        xGridIcon.centerYAnchor.constraint(equalTo: xGrid.centerYAnchor, constant: 0).isActive = true
-        xGridIcon.heightAnchor.constraint(equalToConstant: 26).isActive = true //20
-        xGridIcon.widthAnchor.constraint(equalToConstant: 26).isActive = true
-//        xGridIcon.layer.opacity = 0.5
 
         aTextBox.textAlignment = .left
         aTextBox.textColor = .white
@@ -674,11 +707,9 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
         aTextBox.font = .systemFont(ofSize: 13)
         textPanel.addSubview(aTextBox)
         aTextBox.translatesAutoresizingMaskIntoConstraints = false
-        aTextBottomCons = aTextBox.bottomAnchor.constraint(equalTo: aaView.bottomAnchor, constant: 0)
-        aTextBottomCons?.isActive = true
+        aTextBox.bottomAnchor.constraint(equalTo: aaView.bottomAnchor, constant: 0).isActive = true
+        aTextBox.trailingAnchor.constraint(equalTo: aaView.trailingAnchor, constant: -10).isActive = true
         aTextBox.leadingAnchor.constraint(equalTo: aaView.leadingAnchor, constant: 10).isActive = true
-        aTextTrailingCons = aTextBox.trailingAnchor.constraint(equalTo: xGrid.leadingAnchor, constant: 0)
-        aTextTrailingCons?.isActive = true
         aTextBox.topAnchor.constraint(equalTo: aaView.topAnchor, constant: 4).isActive = true
         aTextBoxHeightCons = aTextBox.heightAnchor.constraint(equalToConstant: 36)
         aTextBoxHeightCons?.isActive = true
@@ -723,28 +754,71 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
     
     func closePanel(isAnimated: Bool) {
         if(isAnimated) {
-            UIView.animate(withDuration: 0.2, animations: {
-                self.panelLeadingCons?.constant = self.frame.width
-                self.layoutIfNeeded()
-            }, completion: { _ in
+//            UIView.animate(withDuration: 0.2, animations: {
+//                self.panelLeadingCons?.constant = self.frame.width
+//                self.layoutIfNeeded()
+//            }, completion: { _ in
+//                //test > stop video before closing panel
+//                self.destroyCell()
+//                
+//                self.removeFromSuperview()
+//                
+//                //move back to origin
+//                self.panelLeadingCons?.constant = 0
+//                self.delegate?.didClickPhotoDetailClosePanel()
+//            })
+            
+            UIView.animate(withDuration: 0.5, delay: 0, options: [.curveEaseInOut], animations: {
+                self.panel.transform = CGAffineTransform(scaleX: 0.01, y: 0.01)
+                    .concatenating(CGAffineTransform(translationX: self.offsetX, y: self.offsetY))
+                self.panel.layer.cornerRadius = 200
+
+            }, completion: { finished in
                 //test > stop video before closing panel
                 self.destroyCell()
-//                self.pausePlayingMedia()
                 
                 self.removeFromSuperview()
-                
-                //move back to origin
-                self.panelLeadingCons?.constant = 0
-                self.delegate?.didClickPhotoDetailClosePanel()
+
+                self.delegate?.didFinishClosePhotoDetailPanel(ppv : self)
             })
         } else {
             //test > stop video before closing panel
             self.destroyCell()
-//            self.pausePlayingMedia()
             
             self.removeFromSuperview()
             
-            self.delegate?.didClickPhotoDetailClosePanel()
+//            self.delegate?.didClickPhotoDetailClosePanel()
+            self.delegate?.didFinishClosePhotoDetailPanel(ppv : self)
+        }
+    }
+    
+    func open(offX: CGFloat, offY: CGFloat, delay: CGFloat, isAnimated: Bool) {
+
+        //test > make video panel return to original size
+        self.panel.transform = CGAffineTransform.identity
+        panelTopCons?.constant = 0
+        panelLeadingCons?.constant = 0
+        self.panel.layer.cornerRadius = 10
+
+        if(isAnimated) {
+            self.delegate?.didStartOpenPhotoDetailPanel()
+
+            offsetX = offX
+            offsetY = offY
+
+            self.panel.layer.cornerRadius = 200 //default: 10
+            self.panel.transform = CGAffineTransform(scaleX: 0.001, y: 0.001).concatenating(CGAffineTransform(translationX: offX, y: offY))
+            UIView.animate(withDuration: 0.2, delay: delay, options: [.curveEaseInOut], //default: 0.2
+                animations: {
+                self.panel.transform = CGAffineTransform.identity
+                self.panel.layer.cornerRadius = 10
+                
+            }, completion: { finished in
+                self.delegate?.didFinishOpenPhotoDetailPanel()
+
+                //test
+                self.initialize()
+            })
         }
     }
     
@@ -829,7 +903,8 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
     
     func configureUI(data: String) {
         if(data == "a") {
-            aMoreCBtn.isHidden = false
+//            aMoreCBtn.isHidden = false
+            aMoreCBtn.isHidden = true
         } else {
             deconfigureUI()
         }
@@ -860,13 +935,13 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
                     
 //                    if(!l.isEmpty) {
 //                        let l_ = l[0]
-//                        
+//
 //                        //test 2 > new append method
 //                        let photoData = PhotoData()
 //                        photoData.setData(rData: l_)
 //                        self.vcDataList.append(photoData)
 //                        self.photoCV?.reloadData()
-//                        
+//
 //                        //test
 //                        let dataType = l_.dataCode
 //                        self.configureUI(data: dataType)
@@ -1543,6 +1618,11 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
         sendCommentContainer.isHidden = false
         
         sendASpinner.startAnimating()
+        sendASpinner.startAnimating()
+        sendAaViewTrailingCons?.isActive = false
+        sendAaViewTrailingCons = sendAaView.trailingAnchor.constraint(equalTo: sendASpinner.leadingAnchor, constant: -10)
+        sendAaViewTrailingCons?.isActive = true
+        
         sendBBox.isHidden = true
         
         isStatusUploading = true
@@ -1576,6 +1656,10 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
                     }
                     
                     self.sendASpinner.stopAnimating()
+                    self.sendAaViewTrailingCons?.isActive = false
+                    self.sendAaViewTrailingCons = self.sendAaView.trailingAnchor.constraint(equalTo: self.sendCommentContainer.trailingAnchor, constant: -20)
+                    self.sendAaViewTrailingCons?.isActive = true
+                    
                     self.sendBBox.isHidden = false
                     self.openErrorUploadMsg()
                     
@@ -1591,16 +1675,12 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
         sendBText.text = ""
         
         aaViewTrailingCons?.isActive = false
-        aaViewTrailingCons = aaView.trailingAnchor.constraint(equalTo: textPanel.trailingAnchor, constant: -15)
+        aaViewTrailingCons = aaView.trailingAnchor.constraint(equalTo: textPanel.trailingAnchor, constant: -20)
         aaViewTrailingCons?.isActive = true
-
-        aTextTrailingCons?.isActive = false
-        aTextTrailingCons = aTextBox.trailingAnchor.constraint(equalTo: xGrid.leadingAnchor, constant: 0)
-        aTextTrailingCons?.isActive = true
-
-        aTextBottomCons?.isActive = false
-        aTextBottomCons = aTextBox.bottomAnchor.constraint(equalTo: aaView.bottomAnchor, constant: 0)
-        aTextBottomCons?.isActive = true
+        
+        sendAaViewTrailingCons?.isActive = false
+        sendAaViewTrailingCons = sendAaView.trailingAnchor.constraint(equalTo: sendCommentContainer.trailingAnchor, constant: -20)
+        sendAaViewTrailingCons?.isActive = true
 
         let minHeight = 36.0
         aTextBoxHeightCons?.constant = minHeight
@@ -2325,14 +2405,11 @@ extension PhotoDetailPanelView: UICollectionViewDelegate {
 
         //test > change title to comments when scrolled to comment section
         if(scrollOffsetY < postHeight) {
-            stickyCommentTitleAnimateHide()
+//            stickyCommentTitleAnimateHide()
         } else {
-            stickyCommentTitleAnimateDisplay()
+//            stickyCommentTitleAnimateDisplay()
         }
         print("p scrollview scroll: \(isStickyCommentTitleDisplayed), \(scrollView.contentOffset.y)")
-        
-        //test > react to intersected index
-//        reactToIntersectedAudio(intersectedIdx: getIntersectedIdx())
         
         //test 2 > try new intersect
         getIntersect2()
@@ -2407,7 +2484,7 @@ extension PhotoDetailPanelView: UICollectionViewDataSource {
 }
 
 extension PhotoDetailPanelView: HListCellDelegate {
-    func hListDidClickVcvComment(vc: UICollectionViewCell, id: String, dataType: String) {
+    func hListDidClickVcvComment(vc: UICollectionViewCell, id: String, dataType: String, pointX: CGFloat, pointY: CGFloat) {
         print("PostDetailPanelView comment clicked")
    
         if let b = vc as? HPhotoListBViewCell {
@@ -2453,11 +2530,34 @@ extension PhotoDetailPanelView: HListCellDelegate {
     func hListDidClickVcvClickSound(id: String){
 //        delegate?.didClickPostPanelVcvClickSound()
     }
-    func hListDidClickVcvClickPost(id: String, dataType: String) {
+    func hListDidClickVcvClickPost(id: String, dataType: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat) {
         print("PostDetailPanelView post clicked")
 
         pausePlayingMedia()
-        delegate?.didClickPhotoDetailPanelVcvClickPost(id: id, dataType: dataType, scrollToComment: false)
+//        delegate?.didClickPhotoDetailPanelVcvClickPost(id: id, dataType: dataType, scrollToComment: false)
+        
+        if let a = photoCV {
+
+            for cell in a.visibleCells {
+                
+                if(cell == vc) {
+                    
+                    let originInRootView = a.convert(cell.frame.origin, to: self)
+                    let visibleIndexPath = a.indexPath(for: cell)
+                    let pointX1 = originInRootView.x + pointX
+                    let pointY1 = originInRootView.y + pointY
+                    
+                    //already converted cell origin to self, no need to add margin of scrollview
+                    delegate?.didClickPhotoDetailPanelVcvClickPost(id: id, dataType: dataType, scrollToComment: false, pointX: pointX1, pointY: pointY1)
+                    
+                    if let c = visibleIndexPath {
+                        hideCellIndex = c.row
+                    }
+                    
+                    break
+                }
+            }
+        }
     }
     func hListDidClickVcvClickPhoto(id: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         
@@ -2710,14 +2810,14 @@ extension PhotoDetailPanelView: CommentScrollableDelegate{
             }
         }
     }
-    func didCClickComment(id: String, dataType: String){
-        delegate?.didClickPhotoDetailPanelVcvClickPost(id: id, dataType: dataType, scrollToComment: true)
+    func didCClickComment(id: String, dataType: String, pointX: CGFloat, pointY: CGFloat){
+        delegate?.didClickPhotoDetailPanelVcvClickPost(id: id, dataType: dataType, scrollToComment: true, pointX: pointX, pointY: pointY)
     }
     func didCClickShare(id: String, dataType: String){
         openShareSheet(oType: dataType, oId: id)
     }
-    func didCClickPost(id: String, dataType: String){
-        delegate?.didClickPhotoDetailPanelVcvClickPost(id: id, dataType: dataType, scrollToComment: false)
+    func didCClickPost(id: String, dataType: String, pointX: CGFloat, pointY: CGFloat){
+        delegate?.didClickPhotoDetailPanelVcvClickPost(id: id, dataType: dataType, scrollToComment: false, pointX: pointX, pointY: pointY)
     }
     func didCClickClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         delegate?.didClickPhotoDetailPanelVcvClickPhoto(id: id, pointX: pointX, pointY: pointY, view: view, mode: mode)
@@ -2778,24 +2878,8 @@ extension PhotoDetailPanelView: UITextViewDelegate {
             if(estimatedWidth < minUsableTextWidth) {
                 let estimatedHeight = estimatedSize.height
                 if(estimatedHeight < minHeight) {
-                    aTextTrailingCons?.isActive = false
-                    aTextTrailingCons = aTextBox.trailingAnchor.constraint(equalTo: xGrid.leadingAnchor, constant: 0)
-                    aTextTrailingCons?.isActive = true
-    
-                    aTextBottomCons?.isActive = false
-                    aTextBottomCons = aTextBox.bottomAnchor.constraint(equalTo: aaView.bottomAnchor, constant: 0)
-                    aTextBottomCons?.isActive = true
-    
                     aTextBoxHeightCons?.constant = minHeight
                 } else {
-                    aTextTrailingCons?.isActive = false
-                    aTextTrailingCons = aTextBox.trailingAnchor.constraint(equalTo: aaView.trailingAnchor, constant: -10)
-                    aTextTrailingCons?.isActive = true
-    
-                    aTextBottomCons?.isActive = false
-                    aTextBottomCons = aTextBox.bottomAnchor.constraint(equalTo: xGrid.topAnchor, constant: 0)
-                    aTextBottomCons?.isActive = true
-    
                     if(estimatedHeight >= maxHeight) {
                         aTextBoxHeightCons?.constant = maxHeight
                     } else {
@@ -2805,16 +2889,6 @@ extension PhotoDetailPanelView: UITextViewDelegate {
             }
             else {
                 let estimatedHeight = estimatedIntrinsicSize.height
-                
-                //make multiline when width exceed min width
-                aTextTrailingCons?.isActive = false
-                aTextTrailingCons = aTextBox.trailingAnchor.constraint(equalTo: aaView.trailingAnchor, constant: -10)
-                aTextTrailingCons?.isActive = true
-    
-                aTextBottomCons?.isActive = false
-                aTextBottomCons = aTextBox.bottomAnchor.constraint(equalTo: xGrid.topAnchor, constant: 0)
-                aTextBottomCons?.isActive = true
-                
                 if(estimatedHeight >= maxHeight) {
                     aTextBoxHeightCons?.constant = maxHeight
                 } else if(estimatedHeight < minHeight) {
@@ -2825,16 +2899,8 @@ extension PhotoDetailPanelView: UITextViewDelegate {
             }
         } else {
             aaViewTrailingCons?.isActive = false
-            aaViewTrailingCons = aaView.trailingAnchor.constraint(equalTo: textPanel.trailingAnchor, constant: -15)
+            aaViewTrailingCons = aaView.trailingAnchor.constraint(equalTo: textPanel.trailingAnchor, constant: -20)
             aaViewTrailingCons?.isActive = true
-
-            aTextTrailingCons?.isActive = false
-            aTextTrailingCons = aTextBox.trailingAnchor.constraint(equalTo: xGrid.leadingAnchor, constant: 0)
-            aTextTrailingCons?.isActive = true
-
-            aTextBottomCons?.isActive = false
-            aTextBottomCons = aTextBox.bottomAnchor.constraint(equalTo: aaView.bottomAnchor, constant: 0)
-            aTextBottomCons?.isActive = true
 
             aTextBoxHeightCons?.constant = minHeight
             
@@ -2844,26 +2910,35 @@ extension PhotoDetailPanelView: UITextViewDelegate {
 }
 
 extension ViewController: PhotoDetailPanelDelegate{
-    func didClickPhotoDetailPanelVcvClickPost(id: String, dataType: String, scrollToComment: Bool) {
+    func didClickPhotoDetailPanelVcvClickPost(id: String, dataType: String, scrollToComment: Bool, pointX: CGFloat, pointY: CGFloat) {
         //test > real id for fetching data
-        openPostDetailPanel(id: id, dataType: dataType, scrollToComment: scrollToComment)
+//        openPostDetailPanel(id: id, dataType: dataType, scrollToComment: scrollToComment)
+        
+        //test > new computation method
+        let offsetX = pointX - self.view.frame.width/2
+        let offsetY = pointY - self.view.frame.height/2
+        openPostDetailPanel(id: id, dataType: dataType, scrollToComment: scrollToComment, offX: offsetX, offY: offsetY)
     }
     func didClickPhotoDetailPanelVcvClickUser(id: String) {
-//        openUserPanel()
         //test > real id for fetching data
         openUserPanel(id: id)
     }
     func didClickPhotoDetailClosePanel() {
-        backPage(isCurrentPageScrollable: false)
+//        backPage(isCurrentPageScrollable: false)
     }
     func didClickPhotoDetailPanelVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
-        let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
-        let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
-
+//        let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
+//        let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
+        //test > new computation method
+        let offsetX = pointX - self.view.frame.width/2
+        let offsetY = pointY - self.view.frame.height/2
+        
         if(mode == PhotoTypes.P_SHOT_DETAIL) {
-//            openPhotoDetailPanel()
             //test > real id for fetching data
-            openPhotoDetailPanel(id: id)
+//            openPhotoDetailPanel(id: id)
+            
+            //test 2 > animated open and close panel
+            openPhotoDetailPanel(id: id, offX: offsetX, offY: offsetY)
         } else if(mode == PhotoTypes.P_0){
             openPhotoZoomPanel(offX: offsetX, offY: offsetY)
         }
@@ -2871,9 +2946,29 @@ extension ViewController: PhotoDetailPanelDelegate{
     
     func didClickPhotoDetailPanelVcvClickCreate(type: String, objectType: String, objectId: String){
         if(type == "post") {
-//            openPostCreatorPanel()
             openPostCreatorPanel(objectType: objectType, objectId: objectId, mode: "")
         }
+    }
+    
+    func didStartPhotoDetailPanGesture(ppv : PhotoDetailPanelView) {
         
+    }
+    func didEndPhotoDetailPanGesture(ppv : PhotoDetailPanelView) {
+        
+    }
+    func didStartOpenPhotoDetailPanel() {
+        
+    }
+    func didFinishOpenPhotoDetailPanel() {
+        
+    }
+    func didStartClosePhotoDetailPanel(ppv : PhotoDetailPanelView) {
+        ppv.offsetX = ppv.offsetX - ppv.panelLeadingCons!.constant
+        ppv.offsetY = ppv.offsetY - ppv.panelTopCons!.constant
+
+        ppv.closePanel(isAnimated: true)
+    }
+    func didFinishClosePhotoDetailPanel(ppv : PhotoDetailPanelView) {
+        backPage(isCurrentPageScrollable: false)
     }
 }

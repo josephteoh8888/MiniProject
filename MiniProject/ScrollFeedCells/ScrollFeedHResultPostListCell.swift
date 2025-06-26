@@ -13,6 +13,8 @@ class ScrollFeedHResultPostListCell: ScrollFeedHResultListCell {
     //test > vcv pan vs collectionview scroll
 //    weak var aDelegate : ScrollFeedCellDelegate?
 //    var vDataList = [String]()
+    //test
+    var hideCellIndex = -1
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -80,6 +82,27 @@ class ScrollFeedHResultPostListCell: ScrollFeedHResultListCell {
         aSpinner.centerXAnchor.constraint(equalTo: vCV.centerXAnchor).isActive = true
         aSpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
         aSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
+    }
+    
+    //test > make viewcell image reappear after video panel closes
+    func dehideCell(){
+        if(hideCellIndex > -1) {
+            let vc = vCV?.cellForItem(at: IndexPath(item: hideCellIndex, section: 0))
+            guard let b = vc as? HResultPostListViewCell else {
+                return
+            }
+            b.dehideCell()
+            hideCellIndex = -1
+        }
+    }
+    
+    func hideCellAt(itemIndex: Int) {
+        let vc = vCV?.cellForItem(at: IndexPath(item: itemIndex, section: 0))
+        guard let b = vc as? HResultPostListViewCell else {
+            return
+        }
+        b.hideCell()
+        hideCellIndex = itemIndex
     }
     
     override func setShowVerticalScroll(isShowVertical: Bool) {
@@ -369,11 +392,32 @@ extension ScrollFeedHResultPostListCell: HResultListViewDelegate{
     func didHResultClickVideo(id: String){
         
     }
-    func didHResultClickPost(id: String, dataType: String){
+    func didHResultClickPost(id: String, dataType: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat){
         //test > additional delegate
         bDelegate?.didScrollFeedHResultResignKeyboard()
         
-        aDelegate?.sfcDidClickVcvClickPost(id: id, dataType: dataType)
+//        aDelegate?.sfcDidClickVcvClickPost(id: id, dataType: dataType, pointX: 0, pointY: 0)
+        
+        //test > new method
+        if let a = vCV {
+            for cell in a.visibleCells {
+                
+                if(cell == vc) {
+                    
+                    let originInRootView = a.convert(cell.frame.origin, to: self)
+                    let visibleIndexPath = a.indexPath(for: cell)
+                    let pointX1 = originInRootView.x + pointX
+                    let pointY1 = originInRootView.y + pointY
+                    
+                    if let indexPath = visibleIndexPath {
+                        aDelegate?.sfcDidClickVcvClickPost(id: id, dataType: dataType, pointX: pointX1, pointY: pointY1)
+                        hideCellAt(itemIndex: indexPath.row)
+                    }
+                    
+                    break
+                }
+            }
+        }
     }
     func didHResultClickSignIn(){
         

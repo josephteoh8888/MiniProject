@@ -8,11 +8,6 @@
 import Foundation
 import UIKit
 
-protocol ScrollFeedHResultListCellDelegate : AnyObject {
-    
-    func didScrollFeedHResultClickSignIn()
-    func didScrollFeedHResultResignKeyboard()
-}
 class ScrollFeedHResultUserListCell: ScrollFeedHResultListCell {
     
     //test > vcv pan vs collectionview scroll
@@ -335,7 +330,7 @@ extension ScrollFeedHResultUserListCell: HResultListViewDelegate{
     func didHResultClickVideo(id: String){
         
     }
-    func didHResultClickPost(id: String, dataType: String){
+    func didHResultClickPost(id: String, dataType: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat){
         
     }
     func didHResultClickSignIn(){

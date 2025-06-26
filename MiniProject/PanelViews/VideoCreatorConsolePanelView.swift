@@ -1536,12 +1536,14 @@ class VideoCreatorConsolePanelView: CreatorPanelView{
         aTextOK.trailingAnchor.constraint(equalTo: panel.trailingAnchor, constant: -20).isActive = true
         aTextOK.heightAnchor.constraint(equalToConstant: 30).isActive = true
         aTextOK.widthAnchor.constraint(equalToConstant: 30).isActive = true
-        aTextOK.centerYAnchor.constraint(equalTo: textPanel.centerYAnchor, constant: 0).isActive = true
+//        aTextOK.centerYAnchor.constraint(equalTo: textPanel.centerYAnchor, constant: 0).isActive = true
+        aTextOK.bottomAnchor.constraint(equalTo: textPanel.bottomAnchor, constant: 0).isActive = true
         aTextOK.layer.cornerRadius = 15
         aTextOK.isUserInteractionEnabled = true
         aTextOK.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onTextNextClicked)))
         
-        let aTextOKMiniBtn = UIImageView(image: UIImage(named:"icon_round_done")?.withRenderingMode(.alwaysTemplate))
+//        let aTextOKMiniBtn = UIImageView(image: UIImage(named:"icon_round_done")?.withRenderingMode(.alwaysTemplate))
+        let aTextOKMiniBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right_next")?.withRenderingMode(.alwaysTemplate))
         aTextOKMiniBtn.tintColor = .black
         textPanel.addSubview(aTextOKMiniBtn)
         aTextOKMiniBtn.translatesAutoresizingMaskIntoConstraints = false

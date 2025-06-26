@@ -97,11 +97,17 @@ class GridPhotoViewCell: UICollectionViewCell {
     }
     
     func hideCell() {
-        gifImage.isHidden = true
+//        gifImage.isHidden = true
+        
+        //test 2 > try opacity
+        self.layer.opacity = 0.1
     }
 
     func dehideCell() {
-        gifImage.isHidden = false
+//        gifImage.isHidden = false
+        
+        //test 2 > try opacity
+        self.layer.opacity = 1.0
     }
     
     override func prepareForReuse() {
@@ -190,8 +196,11 @@ class GridPhotoViewCell: UICollectionViewCell {
     }
     @objc func onGifImageClicked(gesture: UITapGestureRecognizer) {
         let pFrame = gifImage.frame.origin
-        let pointX = pFrame.x
-        let pointY = pFrame.y
+//        let pointX = pFrame.x
+//        let pointY = pFrame.y
+        //test > new computation
+        let pointX = pFrame.x + gifImage.frame.width/2
+        let pointY = pFrame.y + gifImage.frame.height/2
         aDelegate?.gridViewClick(id: id, vc: self, pointX: pointX, pointY: pointY, view: gifImage, mode:PhotoTypes.P_SHOT)
     }
 }

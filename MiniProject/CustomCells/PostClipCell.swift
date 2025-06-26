@@ -319,7 +319,7 @@ extension PostClipCell: ContentCellDelegate {
     func contentCellDidClickPlace(id: String){
         
     }
-    func contentCellDidClickPost(id: String, dataType: String){
+    func contentCellDidClickPost(id: String, dataType: String, cc: UIView, pointX: CGFloat, pointY: CGFloat){
 //        aDelegate?.hListDidClickVcvClickPost()
         
         //test

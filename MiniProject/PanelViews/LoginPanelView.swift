@@ -373,7 +373,7 @@ class LoginPanelView: PanelView{
         aFollowText.leadingAnchor.constraint(equalTo: aFollow.leadingAnchor, constant: 20).isActive = true
         aFollowText.trailingAnchor.constraint(equalTo: aFollow.trailingAnchor, constant: -20).isActive = true
         aFollowText.centerYAnchor.constraint(equalTo: aFollow.centerYAnchor).isActive = true
-        aFollowText.text = "Sign Up"
+        aFollowText.text = "Sign Up" //Sign Up
 
         //test > bPanel => Sign up
         bPanel.backgroundColor = .ddmBlackOverlayColor

@@ -379,7 +379,8 @@ class PhotoCreatorConsolePanelView: CreatorPanelView{
         aPromptBoxInner.trailingAnchor.constraint(equalTo: aPromptBox.trailingAnchor, constant: 0).isActive = true
         aPromptBoxInner.leadingAnchor.constraint(equalTo: aPromptBox.leadingAnchor, constant: 0).isActive = true
       
-        let lhsAddBtn = UIImageView(image: UIImage(named:"icon_round_add_circle")?.withRenderingMode(.alwaysTemplate))
+//        let lhsAddBtn = UIImageView(image: UIImage(named:"icon_round_add_circle")?.withRenderingMode(.alwaysTemplate))
+        let lhsAddBtn = UIImageView(image: UIImage(named:"icon_round_add_v")?.withRenderingMode(.alwaysTemplate))
         lhsAddBtn.tintColor = .white //.ddmBlackOverlayColor
         aPromptBoxInner.addSubview(lhsAddBtn)
         lhsAddBtn.translatesAutoresizingMaskIntoConstraints = false

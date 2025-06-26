@@ -843,6 +843,7 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
 //        menuAddOuter.layer.masksToBounds = true
         let menuAddOuter = UIView()
         menuAddOuter.backgroundColor = .yellow
+//        menuAddOuter.backgroundColor = .ddmGoldenYellowColor
         menuAddOuter.layer.cornerRadius = 10
         stack3.addSubview(menuAddOuter)
         menuAddOuter.translatesAutoresizingMaskIntoConstraints = false
@@ -3749,134 +3750,35 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         pageList.append(panel)
     }
     
-    func openMeListPanel(l : String) {
-        
+    func openMeListPanel(l: String, id: String, offX: CGFloat, offY: CGFloat) {
+        nextPage(isNextPageScrollable: false)
+
         //test > use reusable method
-        if(l == "ep") {
-            nextPage(isNextPageScrollable: false)
-            
-            let panel = UserCreatorConsolePanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
-            self.view.addSubview(panel)
-            panel.translatesAutoresizingMaskIntoConstraints = false
-            panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
-            panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
-            panel.initializeEditMode()
-            panel.delegate = self
-            
-            pageList.append(panel)
-        }
-        else if(l == "fr") {
-            nextPage(isNextPageScrollable: false)
-
-            //test > use reusable method
-            let panel = MeFollowListPanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
-            self.view.addSubview(panel)
-            panel.translatesAutoresizingMaskIntoConstraints = false
-            panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
-            panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
-            panel.delegate = self
-            panel.initialize()
-            
-            pageList.append(panel)
-        }
-        else if(l == "l") {
-            nextPage(isNextPageScrollable: false)
-
-            //test > use reusable method
-            let panel = MeLikeListPanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
-            self.view.addSubview(panel)
-            panel.translatesAutoresizingMaskIntoConstraints = false
-            panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
-            panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
-            panel.delegate = self
-            panel.initialize()
-            
-            pageList.append(panel)
-        }
-        else if(l == "s") {
-            nextPage(isNextPageScrollable: false)
-
-            //test > use reusable method
-            let panel = MeBookmarkListPanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
-            self.view.addSubview(panel)
-            panel.translatesAutoresizingMaskIntoConstraints = false
-            panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
-            panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
-            panel.delegate = self
-            panel.initialize()
-            
-            pageList.append(panel)
-        }
-        else if(l == "h") {
-            nextPage(isNextPageScrollable: false)
-
-            //test > use reusable method
-            let panel = MeHistoryListPanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
-            self.view.addSubview(panel)
-            panel.translatesAutoresizingMaskIntoConstraints = false
-            panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
-            panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
-            panel.delegate = self
-            panel.initialize()
-            
-            pageList.append(panel)
-        }
-        else if(l == "lo") {
-            nextPage(isNextPageScrollable: false)
-
-            //test > use reusable method
-            let panel = MeLocationListPanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
-            self.view.addSubview(panel)
-            panel.translatesAutoresizingMaskIntoConstraints = false
-            panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
-            panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
-            panel.delegate = self
-            panel.initialize()
-            
-            pageList.append(panel)
-        }
-        else if(l == "a") {
-            nextPage(isNextPageScrollable: false)
-
-            //test > use reusable method
-            let panel = MePhotoListPanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
-            self.view.addSubview(panel)
-            panel.translatesAutoresizingMaskIntoConstraints = false
-            panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
-            panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
-            panel.delegate = self
-            panel.initialize()
-            
-            pageList.append(panel)
-        }
-        else if(l == "b") {
-            nextPage(isNextPageScrollable: false)
-
-            //test > use reusable method
-            let panel = MeVideoListPanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
-            self.view.addSubview(panel)
-            panel.translatesAutoresizingMaskIntoConstraints = false
-            panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
-            panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
-            panel.delegate = self
-            panel.initialize()
-            
-            pageList.append(panel)
-        }
-        else if(l == "c") {
-            nextPage(isNextPageScrollable: false)
-
-            //test > use reusable method
-            let panel = MePostListPanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
-            self.view.addSubview(panel)
-            panel.translatesAutoresizingMaskIntoConstraints = false
-            panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
-            panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
-            panel.delegate = self
-            panel.initialize()
-            
-            pageList.append(panel)
-        }
+        let panel = MeListPanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
+        self.view.addSubview(panel)
+        panel.translatesAutoresizingMaskIntoConstraints = false
+        panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
+        panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
+        panel.delegate = self
+//            panel.initialize()
+        panel.setType(type: l)
+        panel.open(offX: offX, offY: offY, delay: 0.0, isAnimated: true)
+        
+        pageList.append(panel)
+    }
+    
+    func openUserCreatorPanel(id: String) {
+        nextPage(isNextPageScrollable: false)
+        
+        let panel = UserCreatorConsolePanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
+        self.view.addSubview(panel)
+        panel.translatesAutoresizingMaskIntoConstraints = false
+        panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
+        panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
+        panel.initializeEditMode()
+        panel.delegate = self
+        
+        pageList.append(panel)
     }
     
     func getSinglePlacePoint() {
@@ -5221,26 +5123,63 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         
         print("pagelist : \(pageList)")
     }
-    func openPhotoDetailPanel() {
-        openPhotoDetailPanel(id: "") //default
-    }
-    func openPhotoDetailPanel(id: String) {
-        
-        //test 1 > as not scrollable panel
+    //test > animated open and close with shrinking mask
+    func openPostDetailPanel(id: String, dataType: String, scrollToComment: Bool, offX: CGFloat, offY: CGFloat) {
         nextPage(isNextPageScrollable: false)
 
         //test > use reusable method
+        let panel = PostDetailPanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
+        self.view.addSubview(panel)
+        panel.translatesAutoresizingMaskIntoConstraints = false
+        panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
+        panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
+        panel.setId(id: id)
+        panel.setDataType(dataType: dataType)
+        panel.setIsToScrollToComment(scrollToComment: scrollToComment)
+//        panel.initialize()
+        panel.delegate = self
+        panel.open(offX: offX, offY: offY, delay: 0.0, isAnimated: true)
+        
+        pageList.append(panel)
+    }
+    
+//    func openPhotoDetailPanel() {
+//        openPhotoDetailPanel(id: "") //default
+//    }
+//    func openPhotoDetailPanel(id: String) {
+//        
+//        //test 1 > as not scrollable panel
+//        nextPage(isNextPageScrollable: false)
+//
+//        //test > use reusable method
+//        let panel = PhotoDetailPanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
+//        self.view.addSubview(panel)
+//        panel.translatesAutoresizingMaskIntoConstraints = false
+//        panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
+//        panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
+//        panel.setId(id: id)
+//        panel.initialize()
+//        panel.delegate = self
+//        
+//        pageList.append(panel)
+//    }
+    //test > animated open and close with shrinking mask
+    func openPhotoDetailPanel(id: String, offX: CGFloat, offY: CGFloat) {
+        nextPage(isNextPageScrollable: false)
+
         let panel = PhotoDetailPanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
         self.view.addSubview(panel)
         panel.translatesAutoresizingMaskIntoConstraints = false
         panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
         panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
         panel.setId(id: id)
-        panel.initialize()
+//        panel.initialize()
         panel.delegate = self
+        panel.open(offX: offX, offY: offY, delay: 0.0, isAnimated: true)
         
         pageList.append(panel)
     }
+    
     func openPhotoZoomPanel(offX: CGFloat, offY: CGFloat) {
         
         //test 1 > as not scrollable panel

@@ -25,7 +25,7 @@ protocol ScrollFeedCellDelegate : AnyObject {
     func sfcDidClickVcvClickUser(id: String) //try
     func sfcDidClickVcvClickPlace(id: String) //try
     func sfcDidClickVcvClickSound(id: String) //try
-    func sfcDidClickVcvClickPost(id: String, dataType: String) //try
+    func sfcDidClickVcvClickPost(id: String, dataType: String, pointX: CGFloat, pointY: CGFloat) //try
     func sfcDidClickVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) //try
     func sfcDidClickVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) //try
     
@@ -37,6 +37,11 @@ protocol ScrollFeedCellDelegate : AnyObject {
     //test
 //    func sfcAutoplayVideo(cell: ScrollFeedCell?, vCCell: HPostListAViewCell?)
     func sfcAutoplayVideo(cell: ScrollFeedCell?, vCCell: UICollectionViewCell?)
+}
+
+protocol ScrollFeedHResultListCellDelegate : AnyObject {
+    func didScrollFeedHResultClickSignIn()
+    func didScrollFeedHResultResignKeyboard()
 }
 
 class ScrollFeedCell: UIView {
@@ -106,6 +111,8 @@ class ScrollFeedHResultListCell: ScrollFeedCell {
 
     //test > additional delegate
     weak var bDelegate : ScrollFeedHResultListCellDelegate?
+    
+    func destroyCell() {}
 }
 
 class ScrollFeedHNotifyListCell: ScrollFeedCell {

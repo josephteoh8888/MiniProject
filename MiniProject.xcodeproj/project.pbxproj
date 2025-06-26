@@ -153,7 +153,7 @@
 		2E737BB42DA15ED200471096 /* PostFinalizePanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E737BB32DA15ED200471096 /* PostFinalizePanelView.swift */; };
 		2EADB52B2C4159B70023B7F2 /* SignoutProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB52A2C4159B70023B7F2 /* SignoutProgressView.swift */; };
 		2EADB52D2C44011B0023B7F2 /* HSingleLocationViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB52C2C44011B0023B7F2 /* HSingleLocationViewCell.swift */; };
-		2EADB52F2C4A9FA10023B7F2 /* MeFollowListPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB52E2C4A9FA10023B7F2 /* MeFollowListPanelView.swift */; };
+		2EADB52F2C4A9FA10023B7F2 /* MeListPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB52E2C4A9FA10023B7F2 /* MeListPanelView.swift */; };
 		2EADB5312C4BB1DB0023B7F2 /* MeHistoryListPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB5302C4BB1DB0023B7F2 /* MeHistoryListPanelView.swift */; };
 		2EADB5332C4BD8CC0023B7F2 /* MeBookmarkListPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB5322C4BD8CC0023B7F2 /* MeBookmarkListPanelView.swift */; };
 		2EADB5352C4BE3240023B7F2 /* MeLikeListPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB5342C4BE3240023B7F2 /* MeLikeListPanelView.swift */; };
@@ -317,7 +317,7 @@
 		2E737BB32DA15ED200471096 /* PostFinalizePanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostFinalizePanelView.swift; sourceTree = "<group>"; };
 		2EADB52A2C4159B70023B7F2 /* SignoutProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignoutProgressView.swift; sourceTree = "<group>"; };
 		2EADB52C2C44011B0023B7F2 /* HSingleLocationViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HSingleLocationViewCell.swift; sourceTree = "<group>"; };
-		2EADB52E2C4A9FA10023B7F2 /* MeFollowListPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeFollowListPanelView.swift; sourceTree = "<group>"; };
+		2EADB52E2C4A9FA10023B7F2 /* MeListPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeListPanelView.swift; sourceTree = "<group>"; };
 		2EADB5302C4BB1DB0023B7F2 /* MeHistoryListPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeHistoryListPanelView.swift; sourceTree = "<group>"; };
 		2EADB5322C4BD8CC0023B7F2 /* MeBookmarkListPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeBookmarkListPanelView.swift; sourceTree = "<group>"; };
 		2EADB5342C4BE3240023B7F2 /* MeLikeListPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeLikeListPanelView.swift; sourceTree = "<group>"; };
@@ -412,7 +412,7 @@
 				2E670AE22C3103DD00EBA6D3 /* PostDetailPanelView.swift */,
 				2E670ADC2C31035100EBA6D3 /* PhotoDetailPanelView.swift */,
 				2E670AA02C30FE1300EBA6D3 /* PhotoZoomPanelView.swift */,
-				2EADB52E2C4A9FA10023B7F2 /* MeFollowListPanelView.swift */,
+				2EADB52E2C4A9FA10023B7F2 /* MeListPanelView.swift */,
 				2EADB5302C4BB1DB0023B7F2 /* MeHistoryListPanelView.swift */,
 				2EADB5322C4BD8CC0023B7F2 /* MeBookmarkListPanelView.swift */,
 				2EADB5342C4BE3240023B7F2 /* MeLikeListPanelView.swift */,
@@ -809,7 +809,7 @@
 				2E670A9D2C30FCCF00EBA6D3 /* ShareSheetScrollableView.swift in Sources */,
 				2E670A8E2C30479E00EBA6D3 /* Colors.swift in Sources */,
 				2E670AE72C31041B00EBA6D3 /* MePanelView.swift in Sources */,
-				2EADB52F2C4A9FA10023B7F2 /* MeFollowListPanelView.swift in Sources */,
+				2EADB52F2C4A9FA10023B7F2 /* MeListPanelView.swift in Sources */,
 				2E670B7E2C31275400EBA6D3 /* ShadowView.swift in Sources */,
 				2E670AB32C30FFE600EBA6D3 /* PlaceDraftPanelView.swift in Sources */,
 				2E670B4C2C31234500EBA6D3 /* MiniApp.swift in Sources */,
@@ -1065,6 +1065,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6C9AGPWCYH;
@@ -1084,6 +1085,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ddm.MiniProject;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1096,6 +1098,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6C9AGPWCYH;
@@ -1115,6 +1118,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ddm.MiniProject;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

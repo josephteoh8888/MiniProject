@@ -20,7 +20,7 @@ protocol ContentCellDelegate : AnyObject {
     func contentCellDidClickSound(id: String)
     func contentCellDidClickUser(id: String)
     func contentCellDidClickPlace(id: String)
-    func contentCellDidClickPost(id: String, dataType: String)
+    func contentCellDidClickPost(id: String, dataType: String, cc: UIView, pointX: CGFloat, pointY: CGFloat)
     func contentCellDidClickVcvClickPlay(cc: UIView, isPlay: Bool)
     
     //test > reload item for resizing
@@ -187,11 +187,17 @@ class PostPhotoContentCell: ContentCell {
     }
     
     override func hideCell() {
-        scrollView.isHidden = true
+//        scrollView.isHidden = true
+        
+        //test 2 > try opacity
+        self.layer.opacity = 0.1
     }
     
     override func dehideCell() {
-        scrollView.isHidden = false
+//        scrollView.isHidden = false
+        
+        //test 2 > try opacity
+        self.layer.opacity = 1.0
     }
     
     func setSelectable(isEnabled: Bool) {
@@ -216,8 +222,11 @@ class PostPhotoContentCell: ContentCell {
 extension PostPhotoContentCell: CustomImageViewDelegate {
     func customImageViewClickPhoto(){
         let pFrame = scrollView.frame.origin
-        let pointX = pFrame.x
-        let pointY = pFrame.y
+//        let pointX = pFrame.x
+//        let pointY = pFrame.y
+        //test > new computation method
+        let pointX = pFrame.x + scrollView.frame.width/2
+        let pointY = pFrame.y + scrollView.frame.height/2
         aDelegate?.contentCellDidClickVcvClickPhoto(id: "", cc: self, pointX: pointX, pointY: pointY, view: scrollView, mode: PhotoTypes.P_0)
         
         //test > hide photo
@@ -588,11 +597,17 @@ class PostPhotoShotContentCell: ContentCell {
     }
     
     override func hideCell() {
-        scrollView.isHidden = true
+//        scrollView.isHidden = true
+        
+        //test 2 > try opacity
+        self.layer.opacity = 0.1
     }
     
     override func dehideCell() {
-        scrollView.isHidden = false
+//        scrollView.isHidden = false
+        
+        //test 2 > try opacity
+        self.layer.opacity = 1.0
     }
     
     func setSelectable(isEnabled: Bool) {
@@ -616,21 +631,37 @@ class PostPhotoShotContentCell: ContentCell {
     @objc func onPhotoSClicked(gesture: UITapGestureRecognizer) {
         print("postphoto click photo shot:")
         let pFrame = scrollView.frame.origin
-        let pointX = pFrame.x
-        let pointY = pFrame.y
+//        let pointX = pFrame.x
+//        let pointY = pFrame.y
+        //test > new computation method
+        let pointX = pFrame.x + scrollView.frame.width/2
+        let pointY = pFrame.y + scrollView.frame.height/2
         aDelegate?.contentCellDidClickVcvClickPhoto(id: "", cc: self, pointX: pointX, pointY: pointY, view: scrollView, mode: PhotoTypes.P_SHOT_DETAIL)
         
         //test > hide photo
 //        hideCell()
+        
+        //test > hide photo
+        if(isAutohideEnabled) {
+            hideCell()
+        }
     }
 }
 
 extension PostPhotoShotContentCell: CustomImageViewDelegate {
     func customImageViewClickPhoto(){
         let pFrame = scrollView.frame.origin
-        let pointX = pFrame.x
-        let pointY = pFrame.y
+//        let pointX = pFrame.x
+//        let pointY = pFrame.y
+        //test > new computation method
+        let pointX = pFrame.x + scrollView.frame.width/2
+        let pointY = pFrame.y + scrollView.frame.height/2
         aDelegate?.contentCellDidClickVcvClickPhoto(id: "", cc: self, pointX: pointX, pointY: pointY, view: scrollView, mode: PhotoTypes.P_SHOT_DETAIL)
+        
+        //test > hide photo
+        if(isAutohideEnabled) {
+            hideCell()
+        }
     }
     
     func customImageViewDoubleClickPhoto(pointX: CGFloat, pointY: CGFloat){
@@ -973,11 +1004,17 @@ class PostVideoContentCell: MediaContentCell {
     }
     
     override func hideCell() {
-        videoContainer.isHidden = true
+//        videoContainer.isHidden = true
+        
+        //test 2 > try opacity
+        self.layer.opacity = 0.1
     }
     
     override func dehideCell() {
-        videoContainer.isHidden = false
+//        videoContainer.isHidden = false
+        
+        //test 2 > try opacity
+        self.layer.opacity = 1.0
     }
     
     func setSelectable(isEnabled: Bool) {
@@ -1036,8 +1073,11 @@ class PostVideoContentCell: MediaContentCell {
     @objc func onVideoClicked(gesture: UITapGestureRecognizer) {
         print("postphoto click video:")
         let pFrame = videoContainer.frame.origin
-        let pointX = pFrame.x
-        let pointY = pFrame.y
+//        let pointX = pFrame.x
+//        let pointY = pFrame.y
+        //test > new computation method
+        let pointX = pFrame.x + videoContainer.frame.width/2
+        let pointY = pFrame.y + videoContainer.frame.height/2
         aDelegate?.contentCellDidClickVcvClickVideo(id: "", cc: self, pointX: pointX, pointY: pointY, view: videoContainer, mode: VideoTypes.V_0)
         
         //test > hide photo
@@ -1504,11 +1544,17 @@ class PostVideoLoopContentCell: MediaContentCell {
     }
     
     override func hideCell() {
-        videoContainer.isHidden = true
+//        videoContainer.isHidden = true
+        
+        //test 2 > try opacity
+        self.layer.opacity = 0.1
     }
     
     override func dehideCell() {
-        videoContainer.isHidden = false
+//        videoContainer.isHidden = false
+        
+        //test 2 > try opacity
+        self.layer.opacity = 1.0
     }
     
     func setSelectable(isEnabled: Bool) {
@@ -1567,8 +1613,11 @@ class PostVideoLoopContentCell: MediaContentCell {
     @objc func onVideoLClicked(gesture: UITapGestureRecognizer) {
         print("postphoto click video loop:")
         let pFrame = videoContainer.frame.origin
-        let pointX = pFrame.x
-        let pointY = pFrame.y
+//        let pointX = pFrame.x
+//        let pointY = pFrame.y
+        //test > new computation method
+        let pointX = pFrame.x + videoContainer.frame.width/2
+        let pointY = pFrame.y + videoContainer.frame.height/2
         aDelegate?.contentCellDidClickVcvClickVideo(id: "", cc: self, pointX: pointX, pointY: pointY, view: videoContainer, mode: VideoTypes.V_LOOP)
         
         //test > hide photo
@@ -1582,8 +1631,11 @@ class PostVideoLoopContentCell: MediaContentCell {
     @objc func onVideoClicked(gesture: UITapGestureRecognizer) {
         print("postphoto click video:")
         let pFrame = videoContainer.frame.origin
-        let pointX = pFrame.x
-        let pointY = pFrame.y
+//        let pointX = pFrame.x
+//        let pointY = pFrame.y
+        //test > new computation method
+        let pointX = pFrame.x + videoContainer.frame.width/2
+        let pointY = pFrame.y + videoContainer.frame.height/2
         aDelegate?.contentCellDidClickVcvClickVideo(id: "", cc: self, pointX: pointX, pointY: pointY, view: videoContainer, mode: VideoTypes.V_LOOP)
         
         //test > hide photo
@@ -1827,11 +1879,17 @@ class ShotPhotoContentCell: ContentCell {
     }
     
     override func hideCell() {
-        scrollView.isHidden = true
+//        scrollView.isHidden = true
+        
+        //test 2 > try opacity
+        self.layer.opacity = 0.1
     }
     
     override func dehideCell() {
-        scrollView.isHidden = false
+//        scrollView.isHidden = false
+        
+        //test 2 > try opacity
+        self.layer.opacity = 1.0
     }
     
 //    @objc func onPhotoClicked(gesture: UITapGestureRecognizer) {
@@ -1849,8 +1907,11 @@ class ShotPhotoContentCell: ContentCell {
 extension ShotPhotoContentCell: CustomImageViewDelegate {
     func customImageViewClickPhoto(){
         let pFrame = scrollView.frame.origin
-        let pointX = pFrame.x
-        let pointY = pFrame.y
+//        let pointX = pFrame.x
+//        let pointY = pFrame.y
+        //test > new computation method
+        let pointX = pFrame.x + scrollView.frame.width/2
+        let pointY = pFrame.y + scrollView.frame.height/2
         aDelegate?.contentCellDidClickVcvClickPhoto(id: "", cc: self, pointX: pointX, pointY: pointY, view: scrollView, mode: PhotoTypes.P_0)
         
         //test > hide photo
@@ -2563,6 +2624,9 @@ class PostQuoteContentCell: MediaContentCell {
                 a.dehideCell()
             }
         }
+        
+        //test > UI for click
+        self.layer.opacity = 1.0
     }
     
     func setSelectable(isEnabled: Bool) {
@@ -3216,7 +3280,18 @@ class PostQuoteContentCell: MediaContentCell {
     
     @objc func onQuoteClicked(gesture: UITapGestureRecognizer) {
         print("quote post clicked")
-        aDelegate?.contentCellDidClickPost(id: id, dataType: contentDataType)
+//        aDelegate?.contentCellDidClickPost(id: id, dataType: contentDataType, cc: self, pointX: 0, pointY: 0)
+        
+        //test 2 > use click position as starting point
+        let translation = gesture.location(in: self)
+        let x = translation.x
+        let y = translation.y
+        let pointX = x
+        let pointY = y
+        aDelegate?.contentCellDidClickPost(id: id, dataType: contentDataType, cc: self, pointX: pointX, pointY: pointY)
+        
+        //test > UI for click p_shot_detail
+        self.layer.opacity = 0.1
     }
     @objc func onUserClicked(gesture: UITapGestureRecognizer) {
         aDelegate?.contentCellDidClickUser(id: userId)
@@ -3343,7 +3418,7 @@ extension PostQuoteContentCell: ContentCellDelegate {
     }
     func contentCellDidClickPlace(id: String){
     }
-    func contentCellDidClickPost(id: String, dataType: String){
+    func contentCellDidClickPost(id: String, dataType: String, cc: UIView, pointX: CGFloat, pointY: CGFloat){
 
     }
     func contentCellDidClickVcvClickPlay(cc: UIView, isPlay: Bool){

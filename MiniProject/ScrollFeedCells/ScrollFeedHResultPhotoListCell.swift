@@ -347,6 +347,7 @@ extension ScrollFeedHResultPhotoListCell: GridViewCellDelegate {
                         //test 2 > override mode of phototype
                         let o_mode = PhotoTypes.P_SHOT_DETAIL
                         aDelegate?.sfcDidClickVcvClickPhoto(id: id, pointX: pointX1, pointY: pointY1, view: view, mode: o_mode)
+                        hideCellAt(itemIndex: indexPath.row)
                         
                         //test > additional delegate
                         bDelegate?.didScrollFeedHResultResignKeyboard()

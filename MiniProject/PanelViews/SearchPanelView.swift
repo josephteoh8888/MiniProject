@@ -17,7 +17,7 @@ protocol SearchPanelDelegate : AnyObject {
     func didSearchClickPlace(id: String)
     func didSearchClickSound(id: String)
     func didSearchClickHashtag()
-    func didSearchClickPost(id: String, dataType: String)
+    func didSearchClickPost(id: String, dataType: String, pointX: CGFloat, pointY: CGFloat)
 //    func didSearchClickPhoto()
     func didSearchClickClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
 //    func didSearchClickVideo()
@@ -329,8 +329,6 @@ class SearchPanelView: PanelView{
                 stack.setText(code: d, d: "Locations")
             } else if(d == DataTypes.SOUND) {
                 stack.setText(code: d, d: "Sounds")
-            } else if(d == "h") {
-                stack.setText(code: d, d: "Hashtags")
             }
         }
     }
@@ -354,11 +352,8 @@ class SearchPanelView: PanelView{
                 stackFeed = ScrollFeedHResultLocationListCell()
             } else if(d == DataTypes.SOUND) {
                 stackFeed = ScrollFeedHResultSoundListCell()
-            } else if(d == "h") {
-                stackFeed = ScrollFeedHResultHashtagListCell()
-            } else {
-                stackFeed = ScrollFeedHResultMainListCell()
             }
+            
             guard let stackFeed = stackFeed else {
                 return
             }
@@ -424,6 +419,9 @@ class SearchPanelView: PanelView{
                 b.dehideCell()
             }
             else if let c = feed as? ScrollFeedHResultPhotoListCell {
+                c.dehideCell()
+            }
+            else if let c = feed as? ScrollFeedHResultPostListCell {
                 c.dehideCell()
             }
         }
@@ -1119,8 +1117,18 @@ extension SearchPanelView: ScrollFeedCellDelegate {
     func sfcDidClickVcvClickSound(id: String) {
         delegate?.didSearchClickSound(id: id)
     }
-    func sfcDidClickVcvClickPost(id: String, dataType: String) {
-        delegate?.didSearchClickPost(id: id, dataType: dataType)
+    func sfcDidClickVcvClickPost(id: String, dataType: String, pointX: CGFloat, pointY: CGFloat) {
+//        delegate?.didSearchClickPost(id: id, dataType: dataType)
+        
+        //test > new method
+        if(!self.feedList.isEmpty) {
+            let b = self.feedList[self.currentIndex]
+            let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
+            
+            let adjustY = pointY + originInRootView.y
+            print("searchphoto ori: \(pointY), \(originInRootView.y)")
+            delegate?.didSearchClickPost(id: id, dataType: dataType, pointX: pointX, pointY: adjustY)
+        }
     }
     func sfcDidClickVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
         
@@ -1227,16 +1235,23 @@ extension ViewController: SearchPanelDelegate{
     func didSearchClickHashtag() {
         
     }
-    func didSearchClickPost(id: String, dataType: String){
+    func didSearchClickPost(id: String, dataType: String, pointX: CGFloat, pointY: CGFloat){
         //test > real id for fetching data
-        openPostDetailPanel(id: id, dataType: dataType, scrollToComment: false)
+//        openPostDetailPanel(id: id, dataType: dataType, scrollToComment: false)
+        
+        //test > new method
+        let offsetX = pointX - self.view.frame.width/2
+        let offsetY = pointY - self.view.frame.height/2
+        openPostDetailPanel(id: id, dataType: dataType, scrollToComment: false, offX: offsetX, offY: offsetY)
     }
     func didSearchClickClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
-        let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
-        let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
+//        let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
+//        let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
+        //test > new method
+        let offsetX = pointX - self.view.frame.width/2
+        let offsetY = pointY - self.view.frame.height/2
         
         if(mode == PhotoTypes.P_SHOT) {
-//            openPhotoDetailPanel()
             
             //test > open photo panel with predetermined datasets
             var dataset = [String]()
@@ -1247,14 +1262,19 @@ extension ViewController: SearchPanelDelegate{
         }
         //test
         else if(mode == PhotoTypes.P_SHOT_DETAIL) {
-//            openPhotoDetailPanel()
             //test > real id for fetching data
-            openPhotoDetailPanel(id: id)
+//            openPhotoDetailPanel(id: id)
+            
+            //test 2 > animated open and close panel
+            openPhotoDetailPanel(id: id, offX: offsetX, offY: offsetY)
         }
     }
     func didSearchClickClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
-        let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
-        let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
+//        let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
+//        let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
+        //test > new method
+        let offsetX = pointX - self.view.frame.width/2
+        let offsetY = pointY - self.view.frame.height/2
 
         //test 1 > for video only
         var dataset = [String]()
