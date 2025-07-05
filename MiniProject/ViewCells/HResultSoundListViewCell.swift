@@ -14,7 +14,7 @@ protocol HResultListViewDelegate : AnyObject {
     //test > connect to other panel
     func didHResultClickUser(id: String)
     func didHResultClickPlace(id: String)
-    func didHResultClickSound(id: String)
+    func didHResultClickSound(id: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String)
     func didHResultClickHashtag()
     func didHResultClickPhoto(id: String)
     func didHResultClickVideo(id: String)
@@ -202,6 +202,20 @@ class HResultSoundListViewCell: UICollectionViewCell {
         self.id = id
     }
     
+    func hideCell() {
+//        gifImage.isHidden = true
+        
+        //test 2 > try opacity
+        self.layer.opacity = 0.1
+    }
+
+    func dehideCell() {
+//        gifImage.isHidden = false
+        
+        //test 2 > try opacity
+        self.layer.opacity = 1.0
+    }
+    
     func configure(data: BaseData) {
         guard let a = data as? SoundData else {
             return
@@ -277,6 +291,14 @@ class HResultSoundListViewCell: UICollectionViewCell {
     //*
     
     @objc func onUserClicked(gesture: UITapGestureRecognizer) {
-        aDelegate?.didHResultClickSound(id: id)
+//        aDelegate?.didHResultClickSound(id: id)
+        
+        //test 2 > new method
+        let translation = gesture.location(in: self)
+        let x = translation.x
+        let y = translation.y
+        let pointX = x
+        let pointY = y
+        aDelegate?.didHResultClickSound(id: id, vc: self, pointX: pointX, pointY: pointY, view: aUserPhoto, mode: SoundTypes.S_0)
     }
 }

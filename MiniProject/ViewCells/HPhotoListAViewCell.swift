@@ -1077,8 +1077,25 @@ extension HPhotoListAViewCell: ContentCellDelegate {
             print("photo content cell double clicked: \(pointX), \(pointY)")
         }
     }
-    func contentCellDidClickSound(id: String){
-        aDelegate?.hListDidClickVcvClickSound(id: id)
+    func contentCellDidClickSound(id: String, cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+//        aDelegate?.hListDidClickVcvClickSound(id: id)
+        
+        //test > new method
+        let aTestFrame = aTest.frame.origin
+        let ccFrame = cc.frame.origin
+        
+        let pointX1 = pointX + aTestFrame.x + ccFrame.x
+        let pointY1 = pointY + aTestFrame.y + ccFrame.y
+        //test > new computation method
+//        let pointX1 = pointX + aTestFrame.x + ccFrame.x + view.frame.width/2
+//        let pointY1 = pointY + aTestFrame.y + ccFrame.y + view.frame.height/2
+        aDelegate?.hListDidClickVcvClickSound(id: id, vc: self, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
+        
+        //test 2 > new method to store hide asset
+        if let j = aTestArray.firstIndex(of: cc) {
+            print("hphotoA cc hide photoA: \(j)")
+            hiddenAssetIdx = j
+        }
     }
     func contentCellDidClickUser(id: String){
         

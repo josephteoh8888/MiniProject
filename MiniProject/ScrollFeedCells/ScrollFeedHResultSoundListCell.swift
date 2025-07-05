@@ -14,6 +14,8 @@ class ScrollFeedHResultSoundListCell: ScrollFeedHResultListCell {
 //    weak var aDelegate : ScrollFeedCellDelegate?
 //    var vDataList = [String]()
     
+    var hideCellIndex = -1
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -80,6 +82,27 @@ class ScrollFeedHResultSoundListCell: ScrollFeedHResultListCell {
         aSpinner.centerXAnchor.constraint(equalTo: vCV.centerXAnchor).isActive = true
         aSpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
         aSpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
+    }
+    
+    //test > make viewcell image reappear after video panel closes
+    func dehideCell(){
+        if(hideCellIndex > -1) {
+            let vc = vCV?.cellForItem(at: IndexPath(item: hideCellIndex, section: 0))
+            guard let b = vc as? HResultSoundListViewCell else {
+                return
+            }
+            b.dehideCell()
+            hideCellIndex = -1
+        }
+    }
+    
+    func hideCellAt(itemIndex: Int) {
+        let vc = vCV?.cellForItem(at: IndexPath(item: itemIndex, section: 0))
+        guard let b = vc as? HResultSoundListViewCell else {
+            return
+        }
+        b.hideCell()
+        hideCellIndex = itemIndex
     }
     
     override func setShowVerticalScroll(isShowVertical: Bool) {
@@ -316,11 +339,32 @@ extension ScrollFeedHResultSoundListCell: HResultListViewDelegate{
     func didHResultClickPlace(id: String){
         
     }
-    func didHResultClickSound(id: String){
+    func didHResultClickSound(id: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         //test > additional delegate
         bDelegate?.didScrollFeedHResultResignKeyboard()
         
-        aDelegate?.sfcDidClickVcvClickSound(id: id)
+//        aDelegate?.sfcDidClickVcvClickSound(id: id)
+        
+        //test > new method
+        if let a = vCV {
+            for cell in a.visibleCells {
+                
+                if(cell == vc) {
+                    
+                    let originInRootView = a.convert(cell.frame.origin, to: self)
+                    let visibleIndexPath = a.indexPath(for: cell)
+                    let pointX1 = originInRootView.x + pointX
+                    let pointY1 = originInRootView.y + pointY
+                    
+                    if let indexPath = visibleIndexPath {
+                        aDelegate?.sfcDidClickVcvClickSound(id: id, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
+                        hideCellAt(itemIndex: indexPath.row)
+                    }
+                    
+                    break
+                }
+            }
+        }
     }
     func didHResultClickHashtag() {
         

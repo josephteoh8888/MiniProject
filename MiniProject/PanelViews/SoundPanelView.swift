@@ -1,8 +1,8 @@
 //
-//  VideoPanelView.swift
+//  MeLocationListPanelView.swift
 //  MiniProject
 //
-//  Created by Joseph Teoh on 30/06/2024.
+//  Created by Joseph Teoh on 20/07/2024.
 //
 
 import Foundation
@@ -10,37 +10,38 @@ import UIKit
 import SDWebImage
 import GoogleMaps
 
-protocol VideoPanelDelegate : AnyObject {
-    func didClickUser(id: String)
-    func didClickPlace(id: String)
-    func didClickSound(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
-    func didClickPost(id: String, dataType: String, scrollToComment: Bool, pointX: CGFloat, pointY: CGFloat)
-    func didStartOpenVideoPanel()
-    func didFinishOpenVideoPanel()
-    func didStartCloseVideoPanel(vpv : VideoPanelView)
-    func didFinishCloseVideoPanel(vpv : VideoPanelView)
+protocol SoundPanelDelegate : AnyObject {
+    func didSoundClickUser(id: String)
+    func didSoundClickPlace(id: String)
+    func didSoundClickSound(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
+    func didSoundClickPost(id: String, dataType: String, scrollToComment: Bool, pointX: CGFloat, pointY: CGFloat)
+    func didStartOpenSoundPanel()
+    func didFinishOpenSoundPanel()
+    func didStartCloseSoundPanel(spv : SoundPanelView)
+    func didFinishCloseSoundPanel(spv : SoundPanelView)
 
     //test > for marker animation after video closes
-    func didStartVideoPanGesture(vpv : VideoPanelView)
-    func didEndVideoPanGesture(vpv : VideoPanelView)
+    func didStartSoundPanGesture(spv : SoundPanelView)
+    func didEndSoundPanGesture(spv : SoundPanelView)
     
-    func didClickVideoPanelClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) //try
-    func didClickVideoPanelClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) //try
+    func didClickSoundPanelClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) //try
+    func didClickSoundPanelClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) //try
     
     //test > click to create new post
-    func didClickVideoPanelVcvClickCreate(type: String, objectType: String, objectId: String)
+    func didClickSoundPanelVcvClickCreate(type: String, objectType: String, objectId: String)
 }
 
-class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
-    var videoPanel = UIView()
+class SoundPanelView: PanelView, UIGestureRecognizerDelegate{
+    
+    var soundPanel = UIView()
     var vcDataList = [String]()
     
-    weak var delegate : VideoPanelDelegate?
+    weak var delegate : SoundPanelDelegate?
 
-    var videoPanelTopCons: NSLayoutConstraint?
-    var videoPanelLeadingCons: NSLayoutConstraint?
-    var currentVideoTopCons : CGFloat = 0.0
-    var currentVideoLeadingCons : CGFloat = 0.0
+    var soundPanelTopCons: NSLayoutConstraint?
+    var soundPanelLeadingCons: NSLayoutConstraint?
+    var currentSoundTopCons : CGFloat = 0.0
+    var currentSoundLeadingCons : CGFloat = 0.0
 
     var viewHeight: CGFloat = 0
     var viewWidth: CGFloat = 0
@@ -49,10 +50,6 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
     var offsetY: CGFloat = 0.0
 
     let aStickyHeader = UIView()
-    
-    //test > comment panel
-//    var panelTopCons: NSLayoutConstraint?
-//    var currentPanelTopCons : CGFloat = 0.0
 
     //test > black out
     let blackBox = UIView()
@@ -69,8 +66,6 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
     var aView = UIView()
     var textPanelBottomCons: NSLayoutConstraint?
     var aTextBoxHeightCons: NSLayoutConstraint?
-//    var aTextTrailingCons: NSLayoutConstraint?
-//    var aTextBottomCons: NSLayoutConstraint?
     let aTextBox = UITextView()
     var aaViewTrailingCons: NSLayoutConstraint?
     let sendAaView = UIView()
@@ -112,16 +107,15 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
     var tempCurrentIndex = 0
     
     let feedScrollView = UIScrollView()
-    var feedList = [ScrollFeedVideoCell]()
+    var feedList = [ScrollFeedSoundCell]()
     var currentIndex = 0
 
     let tabScrollLHSBtn = UIView()
     let tabScrollRHSBtn = UIView()
     
     var isMultipleTab = false
-//    var predeterminedDatasets = [String]()
-    var predeterminedDatasets = [VideoDataset]() //test > real data structure
-    var uiMode = VideoTypes.V_LOOP //"loop", "video"
+    var predeterminedDatasets = [SoundDataset]() //test > real data structure
+    var uiMode = SoundTypes.S_VOICE
     
     //test > track comment scrollable view
     var pageList = [PanelView]()
@@ -140,16 +134,16 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         setupViews()
         setupMaskLayer()
     }
-
+    
     //test > masking into a circle like in snapmap
     let shapeLayer = CAShapeLayer()
     var isSubLayerSet = false
     func setupMaskLayer(){
 //        shapeLayer.fillColor = UIColor.clear.cgColor
         shapeLayer.fillColor = UIColor.white.cgColor
-        videoPanel.layer.addSublayer(shapeLayer)
+        soundPanel.layer.addSublayer(shapeLayer)
 
-        videoPanel.layer.mask = shapeLayer
+        soundPanel.layer.mask = shapeLayer
     }
 
     override func layoutSublayers(of layer: CALayer) {
@@ -176,7 +170,7 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
             isSubLayerSet = true
         }
     }
-
+    
     func setupViews() {
 
         cView.backgroundColor = .black
@@ -188,37 +182,27 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         cView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true //default 0
         cView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
 
-//        videoPanel.backgroundColor = .black
-        videoPanel.backgroundColor = .ddmBlackOverlayColor
-        self.addSubview(videoPanel)
-        videoPanel.translatesAutoresizingMaskIntoConstraints = false
-//        videoPanel.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-//        videoPanel.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
-//        videoPanel.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true //default 0
-//        videoPanel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).isActive = true
-        videoPanel.layer.masksToBounds = true
+        soundPanel.backgroundColor = .ddmBlackOverlayColor
+        self.addSubview(soundPanel)
+        soundPanel.translatesAutoresizingMaskIntoConstraints = false
+        soundPanel.layer.masksToBounds = true
         //test
-        videoPanel.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true
-        videoPanel.heightAnchor.constraint(equalToConstant: viewHeight).isActive = true
-        videoPanelTopCons = videoPanel.topAnchor.constraint(equalTo: self.topAnchor, constant: 0)
-        videoPanelTopCons?.isActive = true
-        videoPanelLeadingCons = videoPanel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0)
-        videoPanelLeadingCons?.isActive = true
+        soundPanel.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true
+        soundPanel.heightAnchor.constraint(equalToConstant: viewHeight).isActive = true
+        soundPanelTopCons = soundPanel.topAnchor.constraint(equalTo: self.topAnchor, constant: 0)
+        soundPanelTopCons?.isActive = true
+        soundPanelLeadingCons = soundPanel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0)
+        soundPanelLeadingCons?.isActive = true
         
-        //test > try uicollectionview instead of static image
-//        vcDataList.append("a")
-//        vcDataList.append("a")//nil
-//        vcDataList.append("a")//nil
-        
-        videoPanel.addSubview(feedScrollView)
+        soundPanel.addSubview(feedScrollView)
         feedScrollView.backgroundColor = .ddmBlackOverlayColor
 //        feedScrollView.backgroundColor = .black
         feedScrollView.translatesAutoresizingMaskIntoConstraints = false
-        feedScrollView.topAnchor.constraint(equalTo: videoPanel.topAnchor).isActive = true
+        feedScrollView.topAnchor.constraint(equalTo: soundPanel.topAnchor).isActive = true
 //        feedScrollView.bottomAnchor.constraint(equalTo: videoPanel.bottomAnchor, constant: -94).isActive = true
-        feedScrollView.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -60).isActive = true //60 is bottom container for entering comment etc
-        feedScrollView.leadingAnchor.constraint(equalTo: videoPanel.leadingAnchor, constant: 0).isActive = true
-        feedScrollView.trailingAnchor.constraint(equalTo: videoPanel.trailingAnchor, constant: 0).isActive = true
+        feedScrollView.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true //-60 is bottom container for entering comment etc
+        feedScrollView.leadingAnchor.constraint(equalTo: soundPanel.leadingAnchor, constant: 0).isActive = true
+        feedScrollView.trailingAnchor.constraint(equalTo: soundPanel.trailingAnchor, constant: 0).isActive = true
         feedScrollView.showsHorizontalScrollIndicator = false
         feedScrollView.alwaysBounceHorizontal = true //test
         feedScrollView.isPagingEnabled = true
@@ -226,33 +210,29 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         
         //test > sticky header => for "for you", "following", "subscribing"
         aStickyHeader.backgroundColor = .clear
-        videoPanel.addSubview(aStickyHeader)
+        soundPanel.addSubview(aStickyHeader)
         aStickyHeader.translatesAutoresizingMaskIntoConstraints = false
-        aStickyHeader.trailingAnchor.constraint(equalTo: videoPanel.trailingAnchor).isActive = true
+        aStickyHeader.trailingAnchor.constraint(equalTo: soundPanel.trailingAnchor).isActive = true
         aStickyHeader.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 50).isActive = true
         aStickyHeader.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive = true
-        aStickyHeader.leadingAnchor.constraint(equalTo: videoPanel.leadingAnchor, constant: 0).isActive = true
+        aStickyHeader.leadingAnchor.constraint(equalTo: soundPanel.leadingAnchor, constant: 0).isActive = true
         
         //**test bottom comment box => fake edittext
-        setupCommentTextboxUI()
+//        setupCommentTextboxUI()
         //**
 
         //test > black out when close
 //        let blackBox = UIView()
         blackBox.backgroundColor = .white
-        videoPanel.addSubview(blackBox)
+        soundPanel.addSubview(blackBox)
         blackBox.clipsToBounds = true
         blackBox.translatesAutoresizingMaskIntoConstraints = false
-        blackBox.leadingAnchor.constraint(equalTo: videoPanel.leadingAnchor, constant: 0).isActive = true
-        blackBox.trailingAnchor.constraint(equalTo: videoPanel.trailingAnchor, constant: 0).isActive = true
-        blackBox.topAnchor.constraint(equalTo: videoPanel.topAnchor, constant: 0).isActive = true
-        blackBox.bottomAnchor.constraint(equalTo: videoPanel.bottomAnchor, constant: 0).isActive = true
+        blackBox.leadingAnchor.constraint(equalTo: soundPanel.leadingAnchor, constant: 0).isActive = true
+        blackBox.trailingAnchor.constraint(equalTo: soundPanel.trailingAnchor, constant: 0).isActive = true
+        blackBox.topAnchor.constraint(equalTo: soundPanel.topAnchor, constant: 0).isActive = true
+        blackBox.bottomAnchor.constraint(equalTo: soundPanel.bottomAnchor, constant: 0).isActive = true
         blackBox.isUserInteractionEnabled = false
         blackBox.layer.opacity = 0
-
-        //test > gesture recognizer for dragging user panel
-//        let panelPanGesture = UIPanGestureRecognizer(target: self, action: #selector(onVideoPanelPanGesture))
-//        self.addGestureRecognizer(panelPanGesture)
         
         //test > vcv gesture
         let vPanelPanGesture = UIPanGestureRecognizer(target: self, action: #selector(onVCVPanGesture))
@@ -277,11 +257,11 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
 //            if(vcDataList.count > 1) {
                 if(currentIndex == 0 || currentIndex == vcDataList.count - 1) {
                     
-                    currentVideoTopCons = videoPanelTopCons!.constant
-                    currentVideoLeadingCons = videoPanelLeadingCons!.constant
+                    currentSoundTopCons = soundPanelTopCons!.constant
+                    currentSoundLeadingCons = soundPanelLeadingCons!.constant
 
                     //test
-                    self.delegate?.didStartVideoPanGesture(vpv: self)
+                    self.delegate?.didStartSoundPanGesture(spv: self)
                 }
 //            }
         } else if(gesture.state == .changed) {
@@ -358,7 +338,7 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
                 let x2 = pow(x, 2)
                 let y2 = pow(y, 2)
                 let dist = sqrt(x2 + y2)
-                print("onPan change circle mask: \(dist), \(currentVideoTopCons), \(currentVideoLeadingCons)")
+                print("onPan change circle mask: \(dist), \(currentSoundTopCons), \(currentSoundLeadingCons)")
 
                 let width = viewWidth
                 let height = viewHeight
@@ -377,12 +357,12 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
                 cView.layer.opacity = Float(newMaskBGOpacity)
 
                 if(newMaskSize <= viewWidth){
-                    videoPanelTopCons?.constant = currentVideoTopCons + y
-                    videoPanelLeadingCons?.constant = currentVideoLeadingCons + x
+                    soundPanelTopCons?.constant = currentSoundTopCons + y
+                    soundPanelLeadingCons?.constant = currentSoundLeadingCons + x
                 } else {
                     //test > move back to 0, 0
-                    videoPanelTopCons?.constant = 0.0
-                    videoPanelLeadingCons?.constant = 0.0
+                    soundPanelTopCons?.constant = 0.0
+                    soundPanelLeadingCons?.constant = 0.0
                 }
             }
         }
@@ -396,12 +376,12 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
                    let height = viewHeight + 100 //+100 for big circle mask
 
                    let distLimit = 100.0 //default : 50
-                   let x2 = pow(videoPanelLeadingCons!.constant, 2)
-                   let y2 = pow(videoPanelTopCons!.constant, 2)
+                   let x2 = pow(soundPanelLeadingCons!.constant, 2)
+                   let y2 = pow(soundPanelTopCons!.constant, 2)
                    let dist = sqrt(x2 + y2)
 
                    if(dist >= distLimit) {
-                       self.delegate?.didStartCloseVideoPanel(vpv: self)
+                       self.delegate?.didStartCloseSoundPanel(spv: self)
                    } else {
                        let oriX = width/2 - height/2 //default 200
                        let oriY = viewHeight/2 - height/2
@@ -409,12 +389,12 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
                        shapeLayer.path = circlePath.cgPath
 
                        //test > move back to 0, 0
-                       videoPanelTopCons?.constant = 0.0
-                       videoPanelLeadingCons?.constant = 0.0
+                       soundPanelTopCons?.constant = 0.0
+                       soundPanelLeadingCons?.constant = 0.0
 
 
                        //test
-                       self.delegate?.didEndVideoPanGesture(vpv: self)
+                       self.delegate?.didEndSoundPanGesture(spv: self)
                    }
                }
                
@@ -427,214 +407,6 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
        }
     }
     
-    //test > setup comment textbox
-    func setupCommentTextboxUI() {
-//        bottomBox.backgroundColor = .black
-        bottomBox.backgroundColor = .ddmBlackOverlayColor
-        videoPanel.addSubview(bottomBox)
-        bottomBox.clipsToBounds = true
-        bottomBox.translatesAutoresizingMaskIntoConstraints = false
-        bottomBox.leadingAnchor.constraint(equalTo: videoPanel.leadingAnchor, constant: 0).isActive = true
-        bottomBox.trailingAnchor.constraint(equalTo: videoPanel.trailingAnchor, constant: 0).isActive = true
-//        bottomBox.heightAnchor.constraint(equalToConstant: 94).isActive = true //default: 50
-//        bottomBox.bottomAnchor.constraint(equalTo: panel.bottomAnchor, constant: 0).isActive = true
-        bottomBox.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: 0).isActive = true
-        bottomBox.heightAnchor.constraint(equalToConstant: 60).isActive = true //default: 50
-        bottomBox.isUserInteractionEnabled = true
-        let aPanelPanGesture = UIPanGestureRecognizer(target: self, action: #selector(onTextViewPanGesture))
-        bottomBox.addGestureRecognizer(aPanelPanGesture)
-//        bottomBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onOpenTextBoxClicked)))
-
-        bottomBox.addSubview(addCommentContainer)
-        addCommentContainer.translatesAutoresizingMaskIntoConstraints = false
-        addCommentContainer.isHidden = false
-        addCommentContainer.backgroundColor = .ddmBlackDark
-        addCommentContainer.layer.cornerRadius = 10 //10
-        addCommentContainer.leadingAnchor.constraint(equalTo: bottomBox.leadingAnchor, constant: 20).isActive = true //0
-//        addCommentContainer.leadingAnchor.constraint(equalTo: zGrid.trailingAnchor, constant: 10).isActive = true //0
-        addCommentContainer.trailingAnchor.constraint(equalTo: bottomBox.trailingAnchor, constant: -20).isActive = true //-15
-        addCommentContainer.topAnchor.constraint(equalTo: bottomBox.topAnchor, constant: 10).isActive = true //0
-        addCommentContainer.bottomAnchor.constraint(equalTo: bottomBox.bottomAnchor, constant: -10).isActive = true //0
-        addCommentContainer.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onOpenTextBoxClicked)))
-        
-        let bText = UILabel()
-        bText.textAlignment = .left
-//        bText.textColor = .white
-        bText.textColor = .ddmDarkGrayColor
-        bText.font = .boldSystemFont(ofSize: 13)
-        addCommentContainer.addSubview(bText)
-//        bottomBox.addSubview(bText)
-        bText.clipsToBounds = true
-        bText.translatesAutoresizingMaskIntoConstraints = false
-        bText.leadingAnchor.constraint(equalTo: addCommentContainer.leadingAnchor, constant: 15).isActive = true
-        bText.trailingAnchor.constraint(equalTo: addCommentContainer.trailingAnchor, constant: -60).isActive = true
-        bText.centerYAnchor.constraint(equalTo: addCommentContainer.centerYAnchor, constant: 0).isActive = true
-        bText.text = "Add comment..."
-//        bText.layer.opacity = 0.5
-        
-        bottomBox.addSubview(sendCommentContainer)
-        sendCommentContainer.translatesAutoresizingMaskIntoConstraints = false
-        sendCommentContainer.leadingAnchor.constraint(equalTo: bottomBox.leadingAnchor, constant: 0).isActive = true
-        sendCommentContainer.trailingAnchor.constraint(equalTo: bottomBox.trailingAnchor, constant: 0).isActive = true
-        sendCommentContainer.topAnchor.constraint(equalTo: bottomBox.topAnchor, constant: 0).isActive = true //default: 50
-        sendCommentContainer.bottomAnchor.constraint(equalTo: bottomBox.bottomAnchor, constant: 0).isActive = true
-        sendCommentContainer.isHidden = true
-        
-//        let sendAaView = UIView()
-        sendAaView.backgroundColor = .ddmBlackDark
-        sendCommentContainer.addSubview(sendAaView)
-        sendAaView.translatesAutoresizingMaskIntoConstraints = false
-        sendAaView.topAnchor.constraint(equalTo: sendCommentContainer.topAnchor, constant: 10).isActive = true
-        sendAaView.leadingAnchor.constraint(equalTo: sendCommentContainer.leadingAnchor, constant: 20).isActive = true //-10
-//        sendAaView.trailingAnchor.constraint(equalTo: sendCommentContainer.trailingAnchor, constant: -50).isActive = true
-        sendAaViewTrailingCons = sendAaView.trailingAnchor.constraint(equalTo: sendCommentContainer.trailingAnchor, constant: -20)
-        sendAaViewTrailingCons?.isActive = true
-        sendAaView.heightAnchor.constraint(equalToConstant: 40).isActive = true //36
-        sendAaView.layer.cornerRadius = 10
-        sendAaView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onOpenTextBoxClicked)))
-        
-        sendASpinner.setConfiguration(size: 20, lineWidth: 2, gap: 6, color: .white)
-        sendCommentContainer.addSubview(sendASpinner)
-        sendASpinner.translatesAutoresizingMaskIntoConstraints = false
-        sendASpinner.trailingAnchor.constraint(equalTo: sendCommentContainer.trailingAnchor, constant: -20).isActive = true
-        sendASpinner.centerYAnchor.constraint(equalTo: sendAaView.centerYAnchor).isActive = true
-        sendASpinner.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        sendASpinner.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        
-//        let sendBText = UILabel()
-        sendBText.textAlignment = .left
-        sendBText.textColor = .white
-//        bText.textColor = .ddmDarkGrayColor
-        sendBText.font = .systemFont(ofSize: 13)
-        sendAaView.addSubview(sendBText)
-//        bottomBox.addSubview(bText)
-        sendBText.clipsToBounds = true
-        sendBText.translatesAutoresizingMaskIntoConstraints = false
-        sendBText.leadingAnchor.constraint(equalTo: sendAaView.leadingAnchor, constant: 15).isActive = true
-        sendBText.trailingAnchor.constraint(equalTo: sendAaView.trailingAnchor, constant: -60).isActive = true
-//        sendBText.topAnchor.constraint(equalTo: sendAaView.topAnchor, constant: 15).isActive = true
-        sendBText.centerYAnchor.constraint(equalTo: sendAaView.centerYAnchor, constant: 0).isActive = true
-        sendBText.text = ""
-        
-        //test > real textview edittext for comment
-        videoPanel.addSubview(aView)
-        aView.translatesAutoresizingMaskIntoConstraints = false
-        aView.widthAnchor.constraint(equalToConstant: viewWidth).isActive = true
-        aView.heightAnchor.constraint(equalToConstant: viewHeight).isActive = true
-        aView.isUserInteractionEnabled = true
-        aView.isHidden = true
-//        aView.backgroundColor = .clear
-//        aView.backgroundColor = .ddmBlackOverlayColor
-        aView.backgroundColor = .black
-        aView.layer.opacity = 0.3 //0.2
-        let cPanelPanGesture = UIPanGestureRecognizer(target: self, action: #selector(onTextViewPanGesture))
-        aView.addGestureRecognizer(cPanelPanGesture)
-        aView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onCloseTextBoxClicked)))
-
-//        textPanel.backgroundColor = .black
-        textPanel.backgroundColor = .ddmBlackOverlayColor
-        videoPanel.addSubview(textPanel)
-        textPanel.translatesAutoresizingMaskIntoConstraints = false
-        textPanel.leadingAnchor.constraint(equalTo: videoPanel.leadingAnchor).isActive = true
-        textPanel.trailingAnchor.constraint(equalTo: videoPanel.trailingAnchor).isActive = true
-        textPanelBottomCons = textPanel.bottomAnchor.constraint(equalTo: videoPanel.bottomAnchor, constant: 0)
-        textPanelBottomCons?.isActive = true
-//        textPanelHeightCons = textPanel.heightAnchor.constraint(equalToConstant: 60)
-//        textPanelHeightCons?.isActive = true
-        textPanel.isHidden = true
-        textPanel.isUserInteractionEnabled = true
-//        textPanel.layer.cornerRadius = 10
-//        textPanel.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
-//        let bPanelPanGesture = UIPanGestureRecognizer(target: self, action: #selector(onTextViewPanGesture))
-//        textPanel.addGestureRecognizer(bPanelPanGesture)
-
-//        let sendBox = UIView()
-//        sendBox.backgroundColor = .clear //yellow
-        sendBox.backgroundColor = .yellow //yellow
-        textPanel.addSubview(sendBox)
-        sendBox.translatesAutoresizingMaskIntoConstraints = false
-        sendBox.widthAnchor.constraint(equalToConstant: 30).isActive = true
-        sendBox.heightAnchor.constraint(equalToConstant: 30).isActive = true //30
-        sendBox.trailingAnchor.constraint(equalTo: textPanel.trailingAnchor, constant: -20).isActive = true //-15
-//        sendBox.topAnchor.constraint(equalTo: textPanel.topAnchor, constant: 10).isActive = true
-        sendBox.bottomAnchor.constraint(equalTo: textPanel.bottomAnchor, constant: -15).isActive = true //-15
-        sendBox.layer.cornerRadius = 15 //15
-        sendBox.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onSendBtnClicked)))
-        
-        let aNextMiniBtn = UIImageView(image: UIImage(named:"icon_round_arrow_right_next")?.withRenderingMode(.alwaysTemplate))
-        aNextMiniBtn.tintColor = .black
-        sendBox.addSubview(aNextMiniBtn)
-        aNextMiniBtn.translatesAutoresizingMaskIntoConstraints = false
-        aNextMiniBtn.centerXAnchor.constraint(equalTo: sendBox.centerXAnchor).isActive = true
-        aNextMiniBtn.centerYAnchor.constraint(equalTo: sendBox.centerYAnchor).isActive = true
-        aNextMiniBtn.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        aNextMiniBtn.widthAnchor.constraint(equalToConstant: 20).isActive = true
-
-        let zZGrid = UIView()
-        textPanel.addSubview(zZGrid)
-        zZGrid.backgroundColor = .ddmBlackDark
-        zZGrid.translatesAutoresizingMaskIntoConstraints = false
-        zZGrid.heightAnchor.constraint(equalToConstant: 30).isActive = true //30
-        zZGrid.widthAnchor.constraint(equalToConstant: 30).isActive = true
-        zZGrid.leadingAnchor.constraint(equalTo: textPanel.leadingAnchor, constant: 20).isActive = true
-        zZGrid.bottomAnchor.constraint(equalTo: textPanel.bottomAnchor, constant: -15).isActive = true //-15
-        zZGrid.layer.cornerRadius = 15 //15
-
-        let zZGridIcon = UIImageView(image: UIImage(named:"icon_round_add")?.withRenderingMode(.alwaysTemplate))
-//        zGridIcon.tintColor = .white
-        zZGridIcon.tintColor = .ddmDarkGrayColor
-        zZGrid.addSubview(zZGridIcon)
-        zZGridIcon.translatesAutoresizingMaskIntoConstraints = false
-//        zGridIcon.centerXAnchor.constraint(equalTo: pMini.centerXAnchor, constant: 0).isActive = true
-//        zGridIcon.bottomAnchor.constraint(equalTo: divider.topAnchor, constant: 0).isActive = true
-        zZGridIcon.centerXAnchor.constraint(equalTo: zZGrid.centerXAnchor, constant: 0).isActive = true
-        zZGridIcon.centerYAnchor.constraint(equalTo: zZGrid.centerYAnchor, constant: 0).isActive = true
-        zZGridIcon.heightAnchor.constraint(equalToConstant: 20).isActive = true //20
-        zZGridIcon.widthAnchor.constraint(equalToConstant: 20).isActive = true
-        
-//        aaView.backgroundColor = .ddmDarkColor
-        aaView.backgroundColor = .ddmBlackDark
-        textPanel.addSubview(aaView)
-        aaView.translatesAutoresizingMaskIntoConstraints = false
-        aaView.topAnchor.constraint(equalTo: textPanel.topAnchor, constant: 10).isActive = true
-        aaView.bottomAnchor.constraint(equalTo: textPanel.bottomAnchor, constant: -10).isActive = true //-10
-//        aaView.leadingAnchor.constraint(equalTo: textPanel.leadingAnchor, constant: 15).isActive = true
-        aaView.leadingAnchor.constraint(equalTo: zZGrid.trailingAnchor, constant: 10).isActive = true
-        aaViewTrailingCons = aaView.trailingAnchor.constraint(equalTo: textPanel.trailingAnchor, constant: -20)
-        aaViewTrailingCons?.isActive = true
-        aaView.layer.cornerRadius = 10
-
-        aTextBox.textAlignment = .left
-        aTextBox.textColor = .white
-        aTextBox.backgroundColor = .clear
-        aTextBox.font = .systemFont(ofSize: 13)
-        textPanel.addSubview(aTextBox)
-        aTextBox.translatesAutoresizingMaskIntoConstraints = false
-        aTextBox.bottomAnchor.constraint(equalTo: aaView.bottomAnchor, constant: 0).isActive = true
-        aTextBox.trailingAnchor.constraint(equalTo: aaView.trailingAnchor, constant: -10).isActive = true
-        aTextBox.leadingAnchor.constraint(equalTo: aaView.leadingAnchor, constant: 10).isActive = true
-        aTextBox.topAnchor.constraint(equalTo: aaView.topAnchor, constant: 4).isActive = true
-        aTextBoxHeightCons = aTextBox.heightAnchor.constraint(equalToConstant: 36)
-        aTextBoxHeightCons?.isActive = true
-        aTextBox.text = ""
-        aTextBox.delegate = self
-        aTextBox.tintColor = .yellow
-
-//        let bbText = UILabel()
-        bbText.textAlignment = .left
-//        bbText.textColor = .white
-        bbText.textColor = .ddmDarkGrayColor
-        bbText.font = .boldSystemFont(ofSize: 13)
-        textPanel.addSubview(bbText)
-        bbText.clipsToBounds = true
-        bbText.translatesAutoresizingMaskIntoConstraints = false
-        bbText.leadingAnchor.constraint(equalTo: aTextBox.leadingAnchor, constant: 10).isActive = true
-//        bbText.trailingAnchor.constraint(equalTo: xGrid.leadingAnchor, constant: -10).isActive = true
-        bbText.topAnchor.constraint(equalTo: aTextBox.topAnchor, constant: 8).isActive = true
-        bbText.text = "Say something nice..."
-//        bbText.layer.opacity = 0.5
-    }
-    
     //test > redraw UI based on originator(from marker or mini app)
     func defineDataset() {
         if(isMultipleTab) {
@@ -644,13 +416,6 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         } else {
             vcDataList.append("a")
         }
-//        if(originatorViewType == OriginatorTypes.MAP_VIDEO_MINIAPP_UIVIEW) {
-//            vcDataList.append("fy") //for you
-//            vcDataList.append("f") //following
-//            vcDataList.append("e") //eats
-//        } else {
-//            vcDataList.append("a")
-//        }
     }
     
     func redrawUI() {
@@ -666,8 +431,8 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
             tabScrollView.heightAnchor.constraint(equalToConstant: 40).isActive = true //ori 60
             tabScrollView.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
     //        tabScrollView.topAnchor.constraint(equalTo: aFollow.bottomAnchor, constant: 20).isActive = true
-            tabScrollView.leadingAnchor.constraint(equalTo: videoPanel.leadingAnchor, constant: tabScrollMargin).isActive = true //70
-            tabScrollView.trailingAnchor.constraint(equalTo: videoPanel.trailingAnchor, constant: -tabScrollMargin).isActive = true
+            tabScrollView.leadingAnchor.constraint(equalTo: soundPanel.leadingAnchor, constant: tabScrollMargin).isActive = true //70
+            tabScrollView.trailingAnchor.constraint(equalTo: soundPanel.trailingAnchor, constant: -tabScrollMargin).isActive = true
             tabScrollView.showsHorizontalScrollIndicator = false
             tabScrollView.alwaysBounceHorizontal = true //test
     //        tabScrollView.isHidden = true
@@ -768,7 +533,7 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
             addFeedBtn.translatesAutoresizingMaskIntoConstraints = false
             addFeedBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true //ori: 40
             addFeedBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
-            addFeedBtn.trailingAnchor.constraint(equalTo: videoPanel.trailingAnchor, constant: -10).isActive = true
+            addFeedBtn.trailingAnchor.constraint(equalTo: soundPanel.trailingAnchor, constant: -10).isActive = true
             addFeedBtn.centerYAnchor.constraint(equalTo: tabScrollView.centerYAnchor, constant: 0).isActive = true
             addFeedBtn.isUserInteractionEnabled = true
             addFeedBtn.isHidden = true
@@ -804,7 +569,7 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         
         //test 2
         for r in datasets {
-            let vData = VideoDataset()
+            let vData = SoundDataset()
             vData.setupData(data: r)
             predeterminedDatasets.append(vData)
         }
@@ -813,20 +578,13 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
     func setUiMode(mode : String){
         uiMode = mode
         
-        if(mode == VideoTypes.V_0) {
+        if(mode == SoundTypes.S_0) {
             bottomBox.isHidden = true
         }
     }
     
     func setOriginatorViewType(type : String){
         originatorViewType = type
-        
-        //test > redraw UI based on originator(from marker or mini app)
-//        defineDataset()
-//        redrawUI()
-//
-//        //test
-//        redrawScrollFeedUI()
     }
     func getOriginatorViewType() -> String {
         return originatorViewType
@@ -853,52 +611,39 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
     func getOriginatorId() -> String{
         return originatorViewId
     }
-
+    
     func open(offX: CGFloat, offY: CGFloat, delay: CGFloat, isAnimated: Bool) {
 
         //test > make video panel return to original size
-        self.videoPanel.transform = CGAffineTransform.identity
-        videoPanelTopCons?.constant = 0
-        videoPanelLeadingCons?.constant = 0
-        self.videoPanel.layer.cornerRadius = 10
+        self.soundPanel.transform = CGAffineTransform.identity
+        soundPanelTopCons?.constant = 0
+        soundPanelLeadingCons?.constant = 0
+        self.soundPanel.layer.cornerRadius = 10
 
         if(isAnimated) {
-            self.delegate?.didStartOpenVideoPanel()
+            self.delegate?.didStartOpenSoundPanel()
 
             offsetX = offX
             offsetY = offY
 
-            self.videoPanel.layer.cornerRadius = 200 //default: 10
-            self.videoPanel.transform = CGAffineTransform(scaleX: 0.001, y: 0.001).concatenating(CGAffineTransform(translationX: offX, y: offY))
+            self.soundPanel.layer.cornerRadius = 200 //default: 10
+            self.soundPanel.transform = CGAffineTransform(scaleX: 0.001, y: 0.001).concatenating(CGAffineTransform(translationX: offX, y: offY))
             UIView.animate(withDuration: 0.2, delay: delay, options: [.curveEaseInOut], //default: 0.2
                 animations: {
-                self.videoPanel.transform = CGAffineTransform.identity
-                self.videoPanel.layer.cornerRadius = 10
+                self.soundPanel.transform = CGAffineTransform.identity
+                self.soundPanel.layer.cornerRadius = 10
                 
                 //test > single video view
                 if(!self.predeterminedDatasets.isEmpty) {
                     self.asyncInitPredeterminedDatasets(dataset: self.predeterminedDatasets)
                 }
             }, completion: { finished in
-                self.delegate?.didFinishOpenVideoPanel()
+                self.delegate?.didFinishOpenSoundPanel()
 
                 self.isPanelOpen = true
 
-                //test > async fetch data
-//                self.asyncFetchFeed(id: "post_feed")
+                print("soundCVpanel open video panel")
 
-                print("videoCVpanel open video panel")
-                
-                //test > fetch data when open
-//                let feed = self.feedList[self.currentIndex]
-//                if(!feed.isInitialized) {
-//                    self.asyncFetchFeed(cell: feed, id: "video_feed")
-//                    feed.isInitialized = true
-//                }
-                
-                //test > init panel
-//                self.initialize()
-                
                 //test > single video view
                 if(self.predeterminedDatasets.isEmpty) {
                     self.initialize()
@@ -912,10 +657,10 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         if(isAnimated) {
 
             UIView.animate(withDuration: 0.5, delay: 0, options: [.curveEaseInOut], animations: {
-                self.videoPanel.transform = CGAffineTransform(scaleX: 0.01, y: 0.01)
+                self.soundPanel.transform = CGAffineTransform(scaleX: 0.01, y: 0.01)
 //                self.videoPanel.transform = CGAffineTransform(scaleX: 0.3, y: 0.3)
                     .concatenating(CGAffineTransform(translationX: self.offsetX, y: self.offsetY))
-                self.videoPanel.layer.cornerRadius = 200
+                self.soundPanel.layer.cornerRadius = 200
 
                 if(self.isTypeBlackOut) {
                     self.blackBox.layer.opacity = 1 //test
@@ -930,7 +675,7 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
 
                 self.removeFromSuperview()
 
-                self.delegate?.didFinishCloseVideoPanel(vpv : self)
+                self.delegate?.didFinishCloseSoundPanel(spv : self)
 
                 self.isPanelOpen = false //test
             })
@@ -943,7 +688,7 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
 
             self.removeFromSuperview()
 
-            delegate?.didFinishCloseVideoPanel(vpv : self)
+            delegate?.didFinishCloseSoundPanel(spv : self)
 
             self.isPanelOpen = false //test
         }
@@ -1013,14 +758,15 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         print("vpanel bottominset: \(bottomInset)")
         
         let viewWidth = viewWidth
-        let feedHeight = viewHeight - bottomInset - 60 //60 is bottom box for entering comment
+        let feedHeight = viewHeight - bottomInset
+//        let feedHeight = viewHeight - bottomInset - 60 //60 is bottom box for entering comment
         for _ in vcDataList {
             
-            let stack = ScrollFeedVideoCell()
+            let stack = ScrollFeedSoundCell()
             feedScrollView.addSubview(stack)
             stack.translatesAutoresizingMaskIntoConstraints = false
             if(feedList.isEmpty) {
-                stack.leadingAnchor.constraint(equalTo: feedScrollView.leadingAnchor, constant: 0).isActive = true 
+                stack.leadingAnchor.constraint(equalTo: feedScrollView.leadingAnchor, constant: 0).isActive = true
             } else {
                 let lastArrayE = feedList[feedList.count - 1]
                 stack.leadingAnchor.constraint(equalTo: lastArrayE.trailingAnchor, constant: 0).isActive = true //20
@@ -1029,15 +775,11 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
             stack.heightAnchor.constraint(equalToConstant: feedHeight).isActive = true
             feedList.append(stack)
 
-//            stack.initialize()
             stack.aDelegate = self
             
             //*test > add loading spinner before fetch data
-            let vData = VideoData()
+            let vData = SoundData()
             vData.setDataStatus(data: "b")
-//            vData.setDataType(data: "b")
-//            vData.setData(data: "b")
-//            vData.setTextString(data: "b")
             stack.vcDataList.append(vData)
             //*
         }
@@ -1088,7 +830,7 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         self.arrowReactToTabScroll(tabXOffset: xTabOffset)
         self.reactToTabSectionChange(index: self.currentIndex)
     }
-
+    
     func asyncInit(id: String) {
         //use fetchdata() for time delay to get width for layout
         DataFetchManager.shared.fetchData(id: id) { [weak self]result in
@@ -1111,7 +853,7 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
                         let feed = self.feedList[self.currentIndex]
                         if(!feed.isInitialized) {
                             
-                            self.asyncFetchFeed(cell: feed, id: "video_feed")
+                            self.asyncFetchFeed(cell: feed, id: "sound_feed")
                             feed.isInitialized = true
                         }
                     }
@@ -1124,22 +866,18 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         }
     }
     
-//    func asyncInitPredeterminedDatasets(dataset: [String]) {
-    func asyncInitPredeterminedDatasets(dataset: [VideoDataset]) {
+    func asyncInitPredeterminedDatasets(dataset: [SoundDataset]) {
         if(!self.feedList.isEmpty) {
             let feed = feedList[currentIndex]
             
             feed.vcDataList.removeAll() //remove spinner "b"
 
-            var tempDataList = [VideoData]()
+            var tempDataList = [SoundData]()
             for i in dataset {
-                let vData = VideoData()
-//                vData.setDataType(data: i)
-//                vData.setData(data: i)
-//                vData.setTextString(data: i)
+                let vData = SoundData()
                 vData.setData(rData: i)
                 
-                if(uiMode == VideoTypes.V_0) {
+                if(uiMode == SoundTypes.S_0) {
                     vData.setUIMode(mode: uiMode)
                 }
                 tempDataList.append(vData)
@@ -1154,7 +892,7 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
             isInitialized = true
         }
     }
-
+    
     //test > fetch data => temp fake data => try refresh data first
     func refreshFetchData() {
         if(!self.feedList.isEmpty) {
@@ -1163,11 +901,8 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
             feed.vcDataList.removeAll()
 
             //add loading spinner
-            let vData = VideoData()
+            let vData = SoundData()
             vData.setDataStatus(data: "b")
-//            vData.setDataType(data: "b")
-//            vData.setData(data: "b")
-//            vData.setTextString(data: "b")
             feed.vcDataList.append(vData)
             //
             
@@ -1177,15 +912,15 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
             feed.dataPaginateStatus = ""
             feed.pageNumber = 0
 
-            asyncFetchFeed(cell: feed, id: "video_feed")
+            asyncFetchFeed(cell: feed, id: "sound_feed")
             
             //test > clear comment textbox when scroll to another video
-            clearBottomCommentBox()
+//            clearBottomCommentBox()
         }
     }
 
     //**test > remove elements from dataset n uicollectionview
-    func removeData(cell: ScrollFeedVideoCell?, idxToRemove: Int) {
+    func removeData(cell: ScrollFeedSoundCell?, idxToRemove: Int) {
         guard let feed = cell else {
             return
         }
@@ -1195,33 +930,17 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
                 let idx = IndexPath(item: idxToRemove, section: 0)
                 indexPaths.append(idx)
                 
-                //*test > recalibrate currentindexpath
-//                var newIdx = 0
-//                if(idxToRemove > 0) {
-//                    newIdx = idxToRemove - 1
-//                }
-                //*
-                
                 feed.vcDataList.remove(at: idxToRemove)
                 
                 //test > footer to show msg when no more data
                 if(feed.vcDataList.isEmpty) {
-                    let vData = VideoData()
+                    let vData = SoundData()
                     vData.setDataStatus(data: "d")
-//                    vData.setDataType(data: "d")
-//                    vData.setData(data: "d")
-//                    vData.setTextString(data: "d")
                     feed.vcDataList.append(vData)
                     
                     feed.videoCV?.reloadData()
-                    
-                    //test > recalibrate currentindexpath
-//                    feed.currentIndexPath = IndexPath(item: 0, section: 0) //to play video when willDisplay()
                 } else {
                     feed.videoCV?.deleteItems(at: indexPaths)
-                    
-                    //test > recalibrate currentindexpath
-//                    feed.currentIndexPath = IndexPath(item: newIdx, section: 0)
                 }
                 
                 feed.unselectItemData()
@@ -1229,19 +948,19 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         }
     }
     
-    func asyncFetchFeed(cell: ScrollFeedVideoCell?, id: String) {
+    func asyncFetchFeed(cell: ScrollFeedSoundCell?, id: String) {
 
         cell?.dataFetchState = "start"
 
-        let id_ = "video"
+        let id_ = "post"
         let isPaginate = false
-        DataFetchManager.shared.fetchVideoFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+        DataFetchManager.shared.fetchSoundFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
             switch result {
                 case .success(let l):
 
                 //update UI on main thread
                 DispatchQueue.main.async {
-                    print("api success asyncFetchFeed \(id), \(l.count)")
+                    print("api success sound asyncFetchFeed \(id), \(l.count)")
 
                     //test 2 > insert array to idx[0], not just append
                     guard let feed = cell else {
@@ -1249,28 +968,18 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
                     }
 
                     //test 2 > new append method
-                    var tempDataList = [VideoData]()
+                    var tempDataList = [SoundData]()
                     if(!l.isEmpty) {
-                        // push loading spinner to bottom if still need to load more data
-                        // otherwise, remove loading spinner
-//                        feed.vcDataList.remove(at: 0) //remove loading spinner
-                        
                         for i in l {
-                            let vData = VideoData()
-//                            vData.setDataType(data: i)
-//                            vData.setData(data: i)
-//                            vData.setTextString(data: i)
+                            let vData = SoundData()
                             vData.setData(rData: i)
                             tempDataList.append(vData)
                         }
                     } else {
                         feed.vcDataList.remove(at: 0) //remove loading spinner
                         
-                        let vData = VideoData()
+                        let vData = SoundData()
                         vData.setDataStatus(data: "d")
-//                        vData.setDataType(data: "d")
-//                        vData.setData(data: "d")
-//                        vData.setTextString(data: "d")
                         tempDataList.append(vData)
                     }
                     feed.vcDataList.insert(contentsOf: tempDataList, at: 0)
@@ -1287,14 +996,11 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
                         return
                     }
                     
-                    var tempDataList = [VideoData]()
+                    var tempDataList = [SoundData]()
                     feed.vcDataList.remove(at: 0) //remove loading spinner
                     
-                    let vData = VideoData()
+                    let vData = SoundData()
                     vData.setDataStatus(data: "e")
-//                    vData.setDataType(data: "e")
-//                    vData.setData(data: "e")
-//                    vData.setTextString(data: "e")
                     tempDataList.append(vData)
                     
                     feed.vcDataList.insert(contentsOf: tempDataList, at: 0)
@@ -1308,15 +1014,14 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         }
     }
 
-    func asyncPaginateFetchFeed(cell: ScrollFeedVideoCell?, id: String) {
+    func asyncPaginateFetchFeed(cell: ScrollFeedSoundCell?, id: String) {
 
         cell?.pageNumber += 1
         cell?.dataPaginateStatus = "start"
 
-        let id_ = "video"
+        let id_ = "post"
         let isPaginate = true
-//        let isPaginate = false
-        DataFetchManager.shared.fetchVideoFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
+        DataFetchManager.shared.fetchSoundFeedData(id: id_, isPaginate: isPaginate) { [weak self]result in
             switch result {
                 case .success(let l):
 
@@ -1340,15 +1045,11 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
                             //no more data => END
                             feed.dataPaginateStatus = "end"
 
-                            let vData = VideoData()
+                            let vData = SoundData()
                             vData.setDataStatus(data: "c")
-//                            vData.setDataType(data: "c")
-//                            vData.setData(data: "c")
-//                            vData.setTextString(data: "c")
                             feed.vcDataList[feed.vcDataList.count - 1] = vData
                             
                             //test 2 > new reload method
-//                            feed.videoCV?.reloadData()
                             var indexPaths = [IndexPath]()
                             let idx = IndexPath(item: w, section: 0)
                             indexPaths.append(idx)
@@ -1361,12 +1062,9 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
                             var indexPaths = [IndexPath]()
                             var j = 0
                             
-                            var tempDataList = [VideoData]()
+                            var tempDataList = [SoundData]()
                             for i in l {
-                                let vData = VideoData()
-//                                vData.setDataType(data: i)
-//                                vData.setData(data: i)
-//                                vData.setTextString(data: i)
+                                let vData = SoundData()
                                 vData.setData(rData: i)
                                 tempDataList.append(vData)
                                 
@@ -1394,17 +1092,11 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
                     guard let feed = cell else {
                         return
                     }
-                    
-//                    var tempDataList = [VideoData]()
-                    
-                    let vData = VideoData()
+ 
+                    let vData = SoundData()
                     vData.setDataStatus(data: "e")
-//                    vData.setDataType(data: "e")
-//                    vData.setData(data: "e")
-//                    vData.setTextString(data: "e")
                     feed.vcDataList[feed.vcDataList.count - 1] = vData
 
-//                    feed.videoCV?.reloadData()
                     //test > new reload method
                     var indexPaths = [IndexPath]()
                     let idx = IndexPath(item: feed.vcDataList.count - 1, section: 0)
@@ -1417,7 +1109,7 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
             }
         }
     }
-
+    
     //test > start play video
     func startPlayingMedia() {
         if(!self.feedList.isEmpty) {
@@ -1460,10 +1152,9 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
             b.dehideCell()
         }
     }
-
+    
     //test
     override func resumeActiveState() {
-        
         //test > only resume video if no comment scrollable view/any other view
         if(pageList.isEmpty) {
             resumePlayingMedia()
@@ -1478,7 +1169,6 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
             }
         }
     }
-    
     override func resumeMedia() {
         if(pageList.isEmpty) {
             resumePlayingMedia()
@@ -1499,12 +1189,12 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
             }
         }
     }
-
+    
     //test > add comment panel
     func openComment() {
         let commentPanel = CommentScrollableView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
 //        videoPanel.insertSubview(commentPanel, belowSubview: bottomBox)
-        videoPanel.addSubview(commentPanel)
+        soundPanel.addSubview(commentPanel)
         commentPanel.translatesAutoresizingMaskIntoConstraints = false
         commentPanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
         commentPanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
@@ -1517,7 +1207,7 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
 
     func openShareSheet(oType: String, oId: String) {
         let sharePanel = ShareSheetScrollableView(frame: CGRect(x: 0 , y: 0, width: self.frame.width, height: self.frame.height))
-        videoPanel.addSubview(sharePanel)
+        soundPanel.addSubview(sharePanel)
         sharePanel.translatesAutoresizingMaskIntoConstraints = false
         sharePanel.heightAnchor.constraint(equalToConstant: self.frame.height).isActive = true
         sharePanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
@@ -1538,7 +1228,7 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
         errorPanel.widthAnchor.constraint(equalToConstant: self.frame.width).isActive = true
         errorPanel.delegate = self
     }
-
+    
     //test > tab section UI Change (hardcoded - to be fixed in future)
     func reactToTabSectionChange(index: Int) {
         
@@ -1554,228 +1244,40 @@ class VideoPanelView: PanelView, UIGestureRecognizerDelegate{
             }
         }
     }
-    
-    //test > adjust textview bottom margin when keyboard up
-    override func keyboardUp(margin: CGFloat) {
-        
-        //test 2 > check pagelist first
-        if(pageList.isEmpty) {
-            guard let firstResponder = self.currentFirstResponder else {
-                return
-            }
-            if(firstResponder == aTextBox) {
-                print("currentfirstresponder true : \(firstResponder)")
-
-                textPanel.isHidden = false
-                aView.isHidden = false
-
-                if(!isKeyboardUp) {
-                    UIView.animate(withDuration: 0.2, delay: 0.0, options: [.curveEaseInOut],
-                        animations: {
-                        self.textPanel.transform = CGAffineTransform(translationX: 0, y: -margin)
-                    }, completion: { finished in
-                    })
-                } else {
-                    self.textPanel.transform = CGAffineTransform(translationX: 0, y: -margin)
-                }
-
-                isKeyboardUp = true
-            }
-        }
-        else {
-            let c = pageList[pageList.count - 1]
-            c.keyboardUp(margin: margin)
-        }
-    }
-    
-    @objc func onOpenTextBoxClicked(gesture: UITapGestureRecognizer) {
-
-        if(getVCDataType() == "a") {
-            if(!isStatusUploading) {
-                setFirstResponder(textView: aTextBox)
-            }
-        }
-    }
-    @objc func onCloseTextBoxClicked(gesture: UITapGestureRecognizer) {
-        //test > check if textbox is empty
-        if(aTextBox.text != "") {
-            sendBText.text = aTextBox.text
-            addCommentContainer.isHidden = true
-            sendCommentContainer.isHidden = false
-            sendBBox.isHidden = false
-        } else {
-            sendBText.text = ""
-            addCommentContainer.isHidden = false
-            sendCommentContainer.isHidden = true
-            sendBBox.isHidden = true
-            
-            clearTextbox()
-        }
-        
-        resignResponder()
-
-        self.textPanel.transform = CGAffineTransform(translationX: 0, y: 0)
-    }
-    @objc func onClearTextBoxClicked(gesture: UITapGestureRecognizer) {
-        clearBottomCommentBox()
-    }
-    
-    func clearBottomCommentBox() {
-        
-        sendBBox.isHidden = true
-        addCommentContainer.isHidden = false
-        sendCommentContainer.isHidden = true
-        
-        clearTextbox()
-    }
-
-    @objc func onSendBtnClicked(gesture: UITapGestureRecognizer) {
-        
-        sendBText.text = aTextBox.text
-        
-        resignResponder()
-        asyncSendNewData()
-
-        self.textPanel.transform = CGAffineTransform(translationX: 0, y: 0)
-    }
-
-    func setFirstResponder(textView: UITextView) {
-        currentFirstResponder = textView
-        textView.becomeFirstResponder()
-    }
-
-    func resignResponder() {
-        self.endEditing(true)
-        currentFirstResponder = nil
-
-        isKeyboardUp = false
-        textPanel.isHidden = true
-        aView.isHidden = true
-    }
-
-    var isStatusUploading = false
-    func asyncSendNewData() {
-        addCommentContainer.isHidden = true
-        sendCommentContainer.isHidden = false
-        
-        sendASpinner.startAnimating()
-        sendASpinner.startAnimating()
-        sendAaViewTrailingCons?.isActive = false
-        sendAaViewTrailingCons = sendAaView.trailingAnchor.constraint(equalTo: sendASpinner.leadingAnchor, constant: -10)
-        sendAaViewTrailingCons?.isActive = true
-        
-        sendBBox.isHidden = true
-        
-        isStatusUploading = true
-        
-        let id = "c_"
-        DataUploadManager.shared.sendCommentData(id: id) { [weak self]result in
-            switch result {
-                case .success(let l):
-
-                DispatchQueue.main.async {
-                    guard let self = self else {
-                        return
-                    }
-                    
-                    self.addCommentContainer.isHidden = false
-                    self.sendCommentContainer.isHidden = true
-                    
-                    self.sendASpinner.stopAnimating()
-                    
-                    self.clearTextbox()
-                    
-                    self.isStatusUploading = false
-                }
-
-                case .failure(let error):
-                DispatchQueue.main.async {
-                    guard let self = self else {
-                        return
-                    }
-                    
-                    self.sendASpinner.stopAnimating()
-                    self.sendAaViewTrailingCons?.isActive = false
-                    self.sendAaViewTrailingCons = self.sendAaView.trailingAnchor.constraint(equalTo: self.sendCommentContainer.trailingAnchor, constant: -20)
-                    self.sendAaViewTrailingCons?.isActive = true
-                    
-                    self.sendBBox.isHidden = false
-                    self.openErrorUploadMsg()
-                    
-                    self.isStatusUploading = false
-                }
-                break
-            }
-        }
-    }
-    
-    func clearTextbox() {
-        aTextBox.text = ""
-        sendBText.text = ""
-        
-        aaViewTrailingCons?.isActive = false
-        aaViewTrailingCons = aaView.trailingAnchor.constraint(equalTo: textPanel.trailingAnchor, constant: -20)
-        aaViewTrailingCons?.isActive = true
-        
-        sendAaViewTrailingCons?.isActive = false
-        sendAaViewTrailingCons = sendAaView.trailingAnchor.constraint(equalTo: sendCommentContainer.trailingAnchor, constant: -20)
-        sendAaViewTrailingCons?.isActive = true
-
-        let minHeight = 36.0
-        aTextBoxHeightCons?.constant = minHeight
-        
-        bbText.isHidden = false
-    }
-    
-    //test > view pan gesture to prevent video panel move by panning textview
-    @objc func onTextViewPanGesture(gesture: UIPanGestureRecognizer) {
-        print("onPan start A: ")
-    }
-    
-    //test > helper function to get current viewcell datatype
-    func getVCDataType() -> String {
-        if(!self.feedList.isEmpty) {
-            let feed = feedList[currentIndex]
-            if(!feed.vcDataList.isEmpty) {
-                let d = feed.vcDataList[feed.currentIndexPath.row].dataCode
-                return d
-            }
-        }
-        return ""
-    }
 }
 
-//test > link delegate implementation in VideoPanelView with VC
-extension ViewController: VideoPanelDelegate{
-    func didClickUser(id: String) {
+//test > link delegate implementation in SoundPanelView with VC
+extension ViewController: SoundPanelDelegate{
+    func didSoundClickUser(id: String) {
         deactivateQueueState()
-//        openUserPanel()
         //test > real id for fetching data
         openUserPanel(id: id)
     }
 
-    func didClickPlace(id: String) {
+    func didSoundClickPlace(id: String) {
         deactivateQueueState()
+//        openPlacePanel()
         //test > real id for fetching data
         openPlacePanel(id: id)
     }
 
-    func didClickSound(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func didSoundClickSound(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
 //        deactivateQueueState()
         //test > real id for fetching data
 //        openSoundPanel(id: id)
         
-        //test > new method for non-scrollable
+        //test > new method
         let offsetX = pointX - self.view.frame.width/2
         let offsetY = pointY - self.view.frame.height/2
 
         //test 1 > for video only
         var dataset = [String]()
+//        dataset.append("a")
         dataset.append("a")
-        self.openSoundPanel(offX: offsetX, offY: offsetY, originatorView: view, originatorViewType: OriginatorTypes.UIVIEW, id: 0, originatorViewId: "", preterminedDatasets: dataset, mode: SoundTypes.S_0)
+        self.openSoundPanel(offX: offsetX, offY: offsetY, originatorView: view, originatorViewType: OriginatorTypes.UIVIEW, id: 0, originatorViewId: "", preterminedDatasets: dataset, mode: mode)
     }
     
-    func didClickPost(id: String, dataType: String, scrollToComment: Bool, pointX: CGFloat, pointY: CGFloat){
+    func didSoundClickPost(id: String, dataType: String, scrollToComment: Bool, pointX: CGFloat, pointY: CGFloat){
         //test > real id for fetching data
 //        openPostDetailPanel(id: id, dataType: dataType, scrollToComment: scrollToComment)
         
@@ -1785,77 +1287,77 @@ extension ViewController: VideoPanelDelegate{
         openPostDetailPanel(id: id, dataType: dataType, scrollToComment: scrollToComment, offX: offsetX, offY: offsetY)
     }
 
-    func didStartOpenVideoPanel() {
+    func didStartOpenSoundPanel() {
         //activate queue object video state when video opens
         activateQueueState()
     }
-    func didFinishOpenVideoPanel() {
+    func didFinishOpenSoundPanel() {
         //test > stop any pulsewave if video opens
         stopPulseWave()
     }
-    func didStartCloseVideoPanel(vpv : VideoPanelView) {
+    func didStartCloseSoundPanel(spv : SoundPanelView) {
 
         //test > dequeue object deactivate video active state
         deactivateQueueState()
 
-        if(vpv.originatorViewType == OriginatorTypes.MARKER) {
+        if(spv.originatorViewType == OriginatorTypes.MARKER) {
             guard let mapView = self.mapView else {
                 return
             }
-            guard let coord = vpv.coordinateLocation else {
+            guard let coord = spv.coordinateLocation else {
                 return
             }
             let point = mapView.projection.point(for: coord)
-            vpv.offsetX = point.x - self.view.frame.width/2
-            vpv.offsetY = point.y - self.view.frame.height/2
-            vpv.offsetX = vpv.offsetX - vpv.videoPanelLeadingCons!.constant
-            vpv.offsetY = vpv.offsetY - vpv.videoPanelTopCons!.constant + vpv.adjustmentY
+            spv.offsetX = point.x - self.view.frame.width/2
+            spv.offsetY = point.y - self.view.frame.height/2
+            spv.offsetX = spv.offsetX - spv.soundPanelLeadingCons!.constant
+            spv.offsetY = spv.offsetY - spv.soundPanelTopCons!.constant + spv.adjustmentY
 
-            vpv.close(isAnimated: true)
+            spv.close(isAnimated: true)
 
-        } else if(vpv.originatorViewType == OriginatorTypes.PULSEWAVE){
+        } else if(spv.originatorViewType == OriginatorTypes.PULSEWAVE){
             guard let mapView = self.mapView else {
                 return
             }
-            guard let coord = vpv.coordinateLocation else {
+            guard let coord = spv.coordinateLocation else {
                 return
             }
             let point = mapView.projection.point(for: coord)
-            vpv.offsetX = point.x - self.view.frame.width/2
-            vpv.offsetY = point.y - self.view.frame.height/2
-            vpv.offsetX = vpv.offsetX - vpv.videoPanelLeadingCons!.constant
-            vpv.offsetY = vpv.offsetY - vpv.videoPanelTopCons!.constant
+            spv.offsetX = point.x - self.view.frame.width/2
+            spv.offsetY = point.y - self.view.frame.height/2
+            spv.offsetX = spv.offsetX - spv.soundPanelLeadingCons!.constant
+            spv.offsetY = spv.offsetY - spv.soundPanelTopCons!.constant
 
-            vpv.close(isAnimated: true)
+            spv.close(isAnimated: true)
         } else {
-            vpv.offsetX = vpv.offsetX - vpv.videoPanelLeadingCons!.constant
-            vpv.offsetY = vpv.offsetY - vpv.videoPanelTopCons!.constant
+            spv.offsetX = spv.offsetX - spv.soundPanelLeadingCons!.constant
+            spv.offsetY = spv.offsetY - spv.soundPanelTopCons!.constant
 
-            vpv.close(isAnimated: true)
+            spv.close(isAnimated: true)
         }
     }
 
-    func didFinishCloseVideoPanel(vpv : VideoPanelView) {
+    func didFinishCloseSoundPanel(spv : SoundPanelView) {
 
         //test
         backPage(isCurrentPageScrollable: false)
 
         //test > get marker id for marker closing animation
-        if(vpv.originatorViewType == OriginatorTypes.MARKER) {
-            print("didFinishCloseVideoPanel \(vpv.getOriginatorId())")
-            if var a = self.markerGeoMarkerIdList[vpv.getOriginatorId()] {
+        if(spv.originatorViewType == OriginatorTypes.MARKER) {
+            print("didFinishCloseVideoPanel \(spv.getOriginatorId())")
+            if var a = self.markerGeoMarkerIdList[spv.getOriginatorId()] {
                 a.animateFromVideoClose()
             }
-        } else if(vpv.originatorViewType == OriginatorTypes.MAP_TOP_UIVIEW){
+        } else if(spv.originatorViewType == OriginatorTypes.MAP_TOP_UIVIEW){
             shutterSemiTransparentGifImage()
-        } else if(vpv.originatorViewType == OriginatorTypes.MAP_VIDEO_MINIAPP_UIVIEW){
+        } else if(spv.originatorViewType == OriginatorTypes.MAP_VIDEO_MINIAPP_UIVIEW){
 //            shutterBMiniGifImage()
             if(selectedMiniAppIndex > -1) {
                 miniAppViewList[selectedMiniAppIndex].shutterMiniGifImage()
             }
         }
         //test > make viewcell reappear after video panel closes
-        else if(vpv.originatorViewType == OriginatorTypes.UIVIEW){
+        else if(spv.originatorViewType == OriginatorTypes.UIVIEW){
             if(!pageList.isEmpty) {
 //                if let c = pageList[pageList.count - 1] as? PlaceScrollablePanelView {
 //                    c.dehideViewCell()
@@ -1870,30 +1372,30 @@ extension ViewController: VideoPanelDelegate{
         }
     }
 
-    func didStartVideoPanGesture(vpv : VideoPanelView) {
+    func didStartSoundPanGesture(spv : SoundPanelView) {
         //test > hide marker ready for shutter after video closes
-        if(vpv.originatorViewType == OriginatorTypes.MARKER) {
-            if var a = self.markerGeoMarkerIdList[vpv.getOriginatorId()] {
+        if(spv.originatorViewType == OriginatorTypes.MARKER) {
+            if var a = self.markerGeoMarkerIdList[spv.getOriginatorId()] {
                 a.hideForShutter()
             }
-        } else if(vpv.originatorViewType == OriginatorTypes.MAP_TOP_UIVIEW){
+        } else if(spv.originatorViewType == OriginatorTypes.MAP_TOP_UIVIEW){
             hideSemiTransparentGifImage()
-        } else if(vpv.originatorViewType == OriginatorTypes.MAP_VIDEO_MINIAPP_UIVIEW){
+        } else if(spv.originatorViewType == OriginatorTypes.MAP_VIDEO_MINIAPP_UIVIEW){
 //            hideBMiniGifImage()
             if(selectedMiniAppIndex > -1) {
                 miniAppViewList[selectedMiniAppIndex].hideMiniGifImage()
             }
         }
     }
-    func didEndVideoPanGesture(vpv : VideoPanelView) {
+    func didEndSoundPanGesture(spv : SoundPanelView) {
         //test > de-hide marker ready for shutter if video NOT close, resume play
-        if(vpv.originatorViewType == OriginatorTypes.MARKER) {
-            if var a = self.markerGeoMarkerIdList[vpv.getOriginatorId()] {
+        if(spv.originatorViewType == OriginatorTypes.MARKER) {
+            if var a = self.markerGeoMarkerIdList[spv.getOriginatorId()] {
                 a.dehideForShutter()
             }
-        } else if(vpv.originatorViewType == OriginatorTypes.MAP_TOP_UIVIEW){
+        } else if(spv.originatorViewType == OriginatorTypes.MAP_TOP_UIVIEW){
             dehideSemiTransparentGifImage()
-        } else if(vpv.originatorViewType == OriginatorTypes.MAP_VIDEO_MINIAPP_UIVIEW){
+        } else if(spv.originatorViewType == OriginatorTypes.MAP_VIDEO_MINIAPP_UIVIEW){
 //            dehideBMiniGifImage()
             if(selectedMiniAppIndex > -1) {
                 miniAppViewList[selectedMiniAppIndex].dehideMiniGifImage()
@@ -1901,7 +1403,7 @@ extension ViewController: VideoPanelDelegate{
         }
     }
     
-    func didClickVideoPanelClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func didClickSoundPanelClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
 //        let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
 //        let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
         //test > new method
@@ -1918,7 +1420,7 @@ extension ViewController: VideoPanelDelegate{
             openPhotoZoomPanel(offX: offsetX, offY: offsetY)
         }
     }
-    func didClickVideoPanelClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+    func didClickSoundPanelClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
 //        let offsetX = pointX - self.view.frame.width/2 + view.frame.width/2
 //        let offsetY = pointY - self.view.frame.height/2 + view.frame.height/2
         //test > new method
@@ -1932,7 +1434,7 @@ extension ViewController: VideoPanelDelegate{
         self.openVideoPanel(offX: offsetX, offY: offsetY, originatorView: view, originatorViewType: OriginatorTypes.UIVIEW, id: 0, originatorViewId: "", preterminedDatasets: dataset, mode: mode)
     }
     
-    func didClickVideoPanelVcvClickCreate(type: String, objectType: String, objectId: String){
+    func didClickSoundPanelVcvClickCreate(type: String, objectType: String, objectId: String){
         if(type == "post") {
 //            openPostCreatorPanel()
             openPostCreatorPanel(objectType: objectType, objectId: objectId, mode: "")
@@ -1941,89 +1443,7 @@ extension ViewController: VideoPanelDelegate{
     }
 }
 
-extension VideoPanelView: ErrorUploadCommentMsgDelegate {
-    func didEUCommentClickProceed() {
-        asyncSendNewData()
-    }
-    func didEUCommentClickDeny(){
-        //test
-//        setFirstResponder(textView: aTextBox)
-    }
-}
-
-//test > textview delegate for comment
-extension VideoPanelView: UITextViewDelegate {
-//    func textView(_ textView: UITextView, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-//        let maxLength = 20
-//        let currentString: NSString = (textView.text ?? "") as NSString
-//        let newString: NSString =  currentString.replacingCharacters(in: range, with: string) as NSString
-//
-//        return newString.length <= maxLength
-//    }
-
-    func textViewDidChange(_ textView: UITextView) {
-        let minHeight = 36.0
-        let maxHeight = 72.0
-        
-//        let size = CGSize(width: self.frame.width, height: .infinity)
-        let emojiBtnWidth = 40.0
-        let textboxMargin = 10.0
-        var maxUsableTextWidth = aaView.frame.size.width - textboxMargin * 2
-        var minUsableTextWidth = aaView.frame.size.width - emojiBtnWidth * 3 - textboxMargin * 2
-        let size = CGSize(width: minUsableTextWidth, height: 1000)
-        let estimatedSize = textView.sizeThatFits(size)
-        
-        let intrinsicSize = CGSize(width: maxUsableTextWidth, height: 1000)
-        let estimatedIntrinsicSize = textView.sizeThatFits(intrinsicSize)
-        
-        //tets 2 > check length of textview text
-        let currentString: NSString = (textView.text ?? "") as NSString
-        print("textviewdelegate: \(currentString.length), \(estimatedSize), \(aaView.frame.size.width)")
-
-        if(currentString.length > 0) {
-            aaViewTrailingCons?.isActive = false
-            aaViewTrailingCons = aaView.trailingAnchor.constraint(equalTo: sendBox.leadingAnchor, constant: -10)
-            aaViewTrailingCons?.isActive = true
-
-            bbText.isHidden = true
-            
-            //test 2 > check width and height
-            let estimatedWidth = estimatedIntrinsicSize.width
-            if(estimatedWidth < minUsableTextWidth) {
-                let estimatedHeight = estimatedSize.height
-                if(estimatedHeight < minHeight) {
-                    aTextBoxHeightCons?.constant = minHeight
-                } else {
-                    if(estimatedHeight >= maxHeight) {
-                        aTextBoxHeightCons?.constant = maxHeight
-                    } else {
-                        aTextBoxHeightCons?.constant = estimatedHeight
-                    }
-                }
-            }
-            else {
-                let estimatedHeight = estimatedIntrinsicSize.height
-                if(estimatedHeight >= maxHeight) {
-                    aTextBoxHeightCons?.constant = maxHeight
-                } else if(estimatedHeight < minHeight) {
-                    aTextBoxHeightCons?.constant = minHeight
-                } else {
-                    aTextBoxHeightCons?.constant = estimatedHeight
-                }
-            }
-        } else {
-            aaViewTrailingCons?.isActive = false
-            aaViewTrailingCons = aaView.trailingAnchor.constraint(equalTo: textPanel.trailingAnchor, constant: -20)
-            aaViewTrailingCons?.isActive = true
-
-            aTextBoxHeightCons?.constant = minHeight
-            
-            bbText.isHidden = false
-        }
-    }
-}
-
-extension VideoPanelView: UIScrollViewDelegate {
+extension SoundPanelView: UIScrollViewDelegate {
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         
         //test 3 > new scrollview method
@@ -2061,7 +1481,7 @@ extension VideoPanelView: UIScrollViewDelegate {
 
             if(!self.tabList.isEmpty) {
                 let currentItemIndex = tempCurrentIndex
-                let currentX = videoPanel.frame.width * CGFloat(currentItemIndex)
+                let currentX = soundPanel.frame.width * CGFloat(currentItemIndex)
                 let currentTabWidth = tabList[currentItemIndex].frame.width
                 var hOffsetX = 0.0
                 if(xOffset >= currentX) {
@@ -2069,10 +1489,10 @@ extension VideoPanelView: UIScrollViewDelegate {
                     if(currentItemIndex < tabList.count - 1) {
                         nextTabWidth = tabList[currentItemIndex + 1].frame.width
                     }
-                    hOffsetX = (xOffset - currentX)/(videoPanel.frame.width) * currentTabWidth + currentTabSelectLeadingCons
+                    hOffsetX = (xOffset - currentX)/(soundPanel.frame.width) * currentTabWidth + currentTabSelectLeadingCons
                     tabSelectLeadingCons?.constant = hOffsetX
 
-                    let hWidth = (xOffset - currentX)/(videoPanel.frame.width) * (nextTabWidth - currentTabWidth) + currentTabWidth
+                    let hWidth = (xOffset - currentX)/(soundPanel.frame.width) * (nextTabWidth - currentTabWidth) + currentTabWidth
                     tabSelectWidthCons?.constant = hWidth
                 }
                 else if (xOffset < currentX) {
@@ -2081,10 +1501,10 @@ extension VideoPanelView: UIScrollViewDelegate {
                         prevTabWidth = tabList[currentItemIndex - 1].frame.width
                     }
 
-                    hOffsetX = (xOffset - currentX)/(videoPanel.frame.width) * prevTabWidth + currentTabSelectLeadingCons
+                    hOffsetX = (xOffset - currentX)/(soundPanel.frame.width) * prevTabWidth + currentTabSelectLeadingCons
                     tabSelectLeadingCons?.constant = hOffsetX
 
-                    let hWidth = (xOffset - currentX)/(videoPanel.frame.width) * (currentTabWidth - prevTabWidth) + currentTabWidth
+                    let hWidth = (xOffset - currentX)/(soundPanel.frame.width) * (currentTabWidth - prevTabWidth) + currentTabWidth
                     tabSelectWidthCons?.constant = hWidth
                 }
                 
@@ -2106,7 +1526,7 @@ extension VideoPanelView: UIScrollViewDelegate {
             if(!self.feedList.isEmpty) {
                 let feed = self.feedList[rIndex]
                 if(!feed.isInitialized) {
-                    asyncFetchFeed(cell: feed, id: "video_feed")
+                    asyncFetchFeed(cell: feed, id: "sound_feed")
                     feed.isInitialized = true
                 }
             }
@@ -2140,7 +1560,7 @@ extension VideoPanelView: UIScrollViewDelegate {
             reactToTabSectionChange(index: currentIndex)
             
             //test > clear comment textbox when scroll to another video
-            clearBottomCommentBox()
+//            clearBottomCommentBox()
         }
     }
     
@@ -2188,18 +1608,18 @@ extension VideoPanelView: UIScrollViewDelegate {
     }
 }
 
-extension VideoPanelView: ScrollFeedVideoCellDelegate {
-    func sfvcWillBeginDragging(offsetY: CGFloat) {
+extension SoundPanelView: ScrollFeedSoundCellDelegate {
+    func sfscWillBeginDragging(offsetY: CGFloat) {
 
     }
-    func sfvcScrollViewDidScroll(offsetY: CGFloat){
+    func sfscScrollViewDidScroll(offsetY: CGFloat){
 
     }
-    func sfvcSrollViewDidEndDecelerating(offsetY: CGFloat){
+    func sfscSrollViewDidEndDecelerating(offsetY: CGFloat){
         //test > clear comment textbox when scroll to another video
-        clearBottomCommentBox()
+//        clearBottomCommentBox()
     }
-    func sfvcScrollViewDidEndDragging(offsetY: CGFloat, decelerate: Bool){
+    func sfscScrollViewDidEndDragging(offsetY: CGFloat, decelerate: Bool){
         
         //test > open single video
         if(offsetY < -100) {
@@ -2209,19 +1629,17 @@ extension VideoPanelView: ScrollFeedVideoCellDelegate {
         }
     }
 
-    func sfvcAsyncFetchFeed(){
+    func sfscAsyncFetchFeed(){
 
     }
-    func sfvcAsyncPaginateFeed(cell: ScrollFeedVideoCell?){
-//        asyncPaginateFetchFeed(cell: cell, id: "video_feed_end")
-        
+    func sfscAsyncPaginateFeed(cell: ScrollFeedSoundCell?){
         //test > open single video
         if(self.predeterminedDatasets.isEmpty) {
-            asyncPaginateFetchFeed(cell: cell, id: "video_feed_end")
+            asyncPaginateFetchFeed(cell: cell, id: "sound_feed_end")
         }
     }
     
-    func sfvcAutoplayVideo(cell: ScrollFeedVideoCell?, vCCell: VCViewCell?) {
+    func sfscAutoplayVideo(cell: ScrollFeedSoundCell?, vCCell: SCViewCell?) {
         if(!self.feedList.isEmpty) {
             let aVc = feedList[currentIndex]
             print("fvcAutoplayVideo \(aVc == cell), \(cell)")
@@ -2231,17 +1649,17 @@ extension VideoPanelView: ScrollFeedVideoCellDelegate {
         }
     }
     
-    func sfvcDidClickUser(id: String) {
+    func sfscDidClickUser(id: String) {
         pausePlayingMedia()
-        delegate?.didClickUser(id: id)
+        delegate?.didSoundClickUser(id: id)
     }
-    func sfvcDidClickPlace(id: String){
+    func sfscDidClickPlace(id: String){
         pausePlayingMedia()
-        delegate?.didClickPlace(id: id)
+        delegate?.didSoundClickPlace(id: id)
     }
-    func sfvcDidClickSound(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
+    func sfscDidClickSound(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
         pausePlayingMedia()
-//        delegate?.didClickSound(id: id)
+//        delegate?.didSoundClickSound(id: id)
         
         if(!self.feedList.isEmpty) {
             let b = self.feedList[self.currentIndex]
@@ -2250,18 +1668,18 @@ extension VideoPanelView: ScrollFeedVideoCellDelegate {
             
             let adjustY = pointY + originInRootView.y
             
-            delegate?.didClickSound(id: id, pointX: pointX, pointY: adjustY, view: view, mode: mode)
+            delegate?.didSoundClickSound(id: id, pointX: pointX, pointY: adjustY, view: view, mode: mode)
         }
     }
-    func sfvcDidClickComment(){
+    func sfscDidClickComment(){
         pausePlayingMedia()
         openComment()
     }
-    func sfvcDidClickShare(id: String, dataType: String){
+    func sfscDidClickShare(id: String, dataType: String){
         pausePlayingMedia()
         openShareSheet(oType: dataType, oId: id)
     }
-    func sfvcDidClickRefresh(){
+    func sfscDidClickRefresh(){
         //test
         if(self.predeterminedDatasets.isEmpty) {
             self.refreshFetchData()
@@ -2269,7 +1687,7 @@ extension VideoPanelView: ScrollFeedVideoCellDelegate {
     }
 }
 
-extension VideoPanelView: ShareSheetScrollableDelegate{
+extension SoundPanelView: ShareSheetScrollableDelegate{
     func didShareSheetClickCreate(type: String, objectType: String, objectId: String){
         //test > for deleting item
         if(!pageList.isEmpty) {
@@ -2283,7 +1701,7 @@ extension VideoPanelView: ShareSheetScrollableDelegate{
                     
                     //test > create new post
                     if(type == "post") {
-                        delegate?.didClickVideoPanelVcvClickCreate(type: type, objectType: objectType, objectId: objectId)
+                        delegate?.didClickSoundPanelVcvClickCreate(type: type, objectType: objectType, objectId: objectId)
                     }
                 }
                 else if let b = lastPage as? ShareSheetScrollableView {
@@ -2295,7 +1713,7 @@ extension VideoPanelView: ShareSheetScrollableDelegate{
                     
                     //test > create new post
                     if(type == "post") {
-                        delegate?.didClickVideoPanelVcvClickCreate(type: type, objectType: objectType, objectId: objectId)
+                        delegate?.didClickSoundPanelVcvClickCreate(type: type, objectType: objectType, objectId: objectId)
                     }
                 }
             }
@@ -2354,17 +1772,17 @@ extension VideoPanelView: ShareSheetScrollableDelegate{
     }
 }
 
-extension VideoPanelView: CommentScrollableDelegate{
+extension SoundPanelView: CommentScrollableDelegate{
     func didCClickUser(id: String){
-        delegate?.didClickUser(id: id)
+        delegate?.didSoundClickUser(id: id)
     }
     func didCClickPlace(id: String){
-        delegate?.didClickPlace(id: id)
+        delegate?.didSoundClickPlace(id: id)
     }
     func didCClickSound(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
-//        delegate?.didClickSound(id: id)
+//        delegate?.didSoundClickSound(id: id)
         
-        delegate?.didClickSound(id: id, pointX: pointX, pointY: pointY, view: view, mode: mode)
+        delegate?.didSoundClickSound(id: id, pointX: pointX, pointY: pointY, view: view, mode: mode)
     }
     func didCClickClosePanel(){
         
@@ -2389,23 +1807,33 @@ extension VideoPanelView: CommentScrollableDelegate{
         }
     }
     func didCClickComment(id: String, dataType: String, pointX: CGFloat, pointY: CGFloat){
-        delegate?.didClickPost(id: id, dataType: dataType, scrollToComment: true, pointX: pointX, pointY: pointY)
+        delegate?.didSoundClickPost(id: id, dataType: dataType, scrollToComment: true, pointX: pointX, pointY: pointY)
     }
     func didCClickShare(id: String, dataType: String){
         openShareSheet(oType: dataType, oId: id)
     }
     func didCClickPost(id: String, dataType: String, pointX: CGFloat, pointY: CGFloat){
-        delegate?.didClickPost(id: id, dataType: dataType, scrollToComment: false, pointX: pointX, pointY: pointY)
+        delegate?.didSoundClickPost(id: id, dataType: dataType, scrollToComment: false, pointX: pointX, pointY: pointY)
     }
     func didCClickClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
-        delegate?.didClickVideoPanelClickPhoto(id: id, pointX: pointX, pointY: pointY, view: view, mode: mode)
+        delegate?.didClickSoundPanelClickPhoto(id: id, pointX: pointX, pointY: pointY, view: view, mode: mode)
     }
     func didCClickClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
-        delegate?.didClickVideoPanelClickVideo(id: id, pointX: pointX, pointY: pointY, view: view, mode: mode)
+        delegate?.didClickSoundPanelClickVideo(id: id, pointX: pointX, pointY: pointY, view: view, mode: mode)
     }
 }
 
-extension VideoPanelView: TabStackDelegate {
+extension SoundPanelView: ErrorUploadCommentMsgDelegate {
+    func didEUCommentClickProceed() {
+        //temp
+//        asyncSendNewData()
+    }
+    func didEUCommentClickDeny(){
+
+    }
+}
+
+extension SoundPanelView: TabStackDelegate {
     func didClickTabStack(tabCode: String, isSelected: Bool) {
         if let index = vcDataList.firstIndex(of: tabCode) {
             print("tabstack index clicked: \(index), \(tabCode)")

@@ -17,7 +17,7 @@ protocol ContentCellDelegate : AnyObject {
     func contentCellDidClickVcvClickPhoto(id: String, cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String)
     func contentCellDidClickVcvClickVideo(id: String, cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String)
     func contentCellDidDoubleClickPhoto(pointX: CGFloat, pointY: CGFloat)
-    func contentCellDidClickSound(id: String)
+    func contentCellDidClickSound(id: String, cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String)
     func contentCellDidClickUser(id: String)
     func contentCellDidClickPlace(id: String)
     func contentCellDidClickPost(id: String, dataType: String, cc: UIView, pointX: CGFloat, pointY: CGFloat)
@@ -2008,6 +2008,8 @@ class ShotSoundContentCell: MediaContentCell {
     var t_s_ = 0.0
     //2) indicate whether asset is loaded, then only playable
     
+    var isAutohideEnabled = true
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -2256,6 +2258,24 @@ class ShotSoundContentCell: MediaContentCell {
         self.id = id
     }
     
+    func setAutohide(isEnabled: Bool) {
+        isAutohideEnabled = isEnabled
+    }
+    
+    override func hideCell() {
+//        videoContainer.isHidden = true
+        
+        //test 2 > try opacity
+        self.layer.opacity = 0.1
+    }
+    
+    override func dehideCell() {
+//        videoContainer.isHidden = false
+        
+        //test 2 > try opacity
+        self.layer.opacity = 1.0
+    }
+    
     func configure(data: String) {
         
         setId(id: data)
@@ -2277,7 +2297,23 @@ class ShotSoundContentCell: MediaContentCell {
     
     @objc func onSoundClicked(gesture: UITapGestureRecognizer) {
         print("postphoto click sound btn:")
-        aDelegate?.contentCellDidClickSound(id: id)
+//        aDelegate?.contentCellDidClickSound(id: id)
+        
+        let pFrame = aaBox.frame.origin
+//        let pointX = pFrame.x
+//        let pointY = pFrame.y
+        //test > new computation method
+        let pointX = pFrame.x + aaBox.frame.width/2
+        let pointY = pFrame.y + aaBox.frame.height/2
+        aDelegate?.contentCellDidClickSound(id: "", cc: self, pointX: pointX, pointY: pointY, view: aaBox, mode: SoundTypes.S_0)
+        
+        //test > hide photo
+//        hideCell() //disabled for testing only
+        
+        //test > hide photo
+        if(isAutohideEnabled) {
+            hideCell()
+        }
     }
     
     @objc func onErrorRefreshClicked(gesture: UITapGestureRecognizer) {
@@ -3410,8 +3446,13 @@ extension PostQuoteContentCell: ContentCellDelegate {
     func contentCellDidDoubleClickPhoto(pointX: CGFloat, pointY: CGFloat){
         
     }
-    func contentCellDidClickSound(id: String){
+    func contentCellDidClickSound(id: String, cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        let aTestFrame = aTest.frame.origin
+        let ccFrame = cc.frame.origin
         
+        let pointX1 = pointX + aTestFrame.x + ccFrame.x
+        let pointY1 = pointY + aTestFrame.y + ccFrame.y
+        aDelegate?.contentCellDidClickSound(id: id, cc: self, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
     }
     func contentCellDidClickUser(id: String){
         

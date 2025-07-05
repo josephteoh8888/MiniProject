@@ -258,6 +258,62 @@ class VideoData: BaseData {
     }
 }
 
+class SoundData: BaseData {
+    
+    var coverPhotoString: String = ""
+    var isAccountVerified = false
+    //default UI mode
+    var uiMode = SoundTypes.S_VOICE
+    
+    var userId: String = "" //creator
+    var placeId: String = ""
+    
+    func setUIMode(mode: String) {
+        uiMode = mode
+    }
+    
+    func setData(rData: SoundDataset) {
+        let rDataId = rData.id
+        let rDataType = rData.dataCode
+        let rDataArray = rData.dataArray
+        let rDataText = rData.dataTextString
+        let rDataC = rData.dataCount
+        let rDataP = rData.coverPhotoString
+        let rDataVerified = rData.isAccountVerified
+        let rDataUserId = rData.userId
+        let rDataPlaceId = rData.placeId
+        
+        id = rDataId
+        dataCode = rDataType
+        dataTextString = rDataText
+        coverPhotoString = rDataP
+        isAccountVerified = rDataVerified
+        userId = rDataUserId
+        placeId = rDataPlaceId
+        
+        if let loveC = rDataC["love"] {
+            dataCount["love"] = loveC
+        }
+        if let commentC = rDataC["comment"] {
+            dataCount["comment"] = commentC
+        }
+        if let bookmarkC = rDataC["bookmark"] {
+            dataCount["bookmark"] = bookmarkC
+        }
+        if let shareC = rDataC["share"] {
+            dataCount["share"] = shareC
+        }
+        for r in rDataArray {
+            dataArray.append(r)
+        }
+    }
+    
+    func setDataStatus(data: String) {
+        dataCode = data
+        dataArray.append(data)
+    }
+}
+
 //class CommentData: BaseData {
 class CommentData: BasePostData {
 //    var userId: String = "" //creator
@@ -351,35 +407,6 @@ class PlaceData: BaseData {
     var isAccountVerified = false
     
     func setData(rData: PlaceDataset) {
-        let rDataId = rData.id
-        let rDataType = rData.dataCode
-        let rDataArray = rData.dataArray
-        let rDataText = rData.dataTextString
-        let rDataC = rData.dataCount
-        let rDataP = rData.coverPhotoString
-        let rDataVerified = rData.isAccountVerified
-        
-        id = rDataId
-        dataCode = rDataType
-        dataTextString = rDataText
-        coverPhotoString = rDataP
-        isAccountVerified = rDataVerified
-        
-        if let loveC = rDataC["bookmark"] {
-            dataCount["bookmark"] = loveC
-        }
-        for r in rDataArray {
-            dataArray.append(r)
-        }
-    }
-}
-
-class SoundData: BaseData {
-    
-    var coverPhotoString: String = ""
-    var isAccountVerified = false
-    
-    func setData(rData: SoundDataset) {
         let rDataId = rData.id
         let rDataType = rData.dataCode
         let rDataArray = rData.dataArray

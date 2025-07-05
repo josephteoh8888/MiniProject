@@ -1122,6 +1122,14 @@ class HistoryMeCell: MeCell {
         isInitialized = true
     }
     
+    override func dehideCell() {
+        self.layer.opacity = 1.0
+    }
+    
+    override func hideCell() {
+        self.layer.opacity = 0.1
+    }
+    
     @objc func onRectClicked(gesture: UITapGestureRecognizer) {
 //        aDelegate?.didMeCellClickHistory()
         //test 2 > use click position as starting point

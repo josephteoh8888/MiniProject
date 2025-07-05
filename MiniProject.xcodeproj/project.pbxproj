@@ -128,7 +128,7 @@
 		2E670B682C31259200EBA6D3 /* ScrollFeedHResultUserListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B672C31259200EBA6D3 /* ScrollFeedHResultUserListCell.swift */; };
 		2E670B6A2C3125AC00EBA6D3 /* ScrollFeedHResultMainListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B692C3125AC00EBA6D3 /* ScrollFeedHResultMainListCell.swift */; };
 		2E670B6C2C3125D400EBA6D3 /* ScrollFeedHResultPostListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B6B2C3125D400EBA6D3 /* ScrollFeedHResultPostListCell.swift */; };
-		2E670B6E2C3125F000EBA6D3 /* ScrollFeedHResultHashtagListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B6D2C3125F000EBA6D3 /* ScrollFeedHResultHashtagListCell.swift */; };
+		2E670B6E2C3125F000EBA6D3 /* ScrollFeedSoundCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B6D2C3125F000EBA6D3 /* ScrollFeedSoundCell.swift */; };
 		2E670B702C31260F00EBA6D3 /* ScrollFeedGridVideo2xViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B6F2C31260F00EBA6D3 /* ScrollFeedGridVideo2xViewCell.swift */; };
 		2E670B722C31262A00EBA6D3 /* ScrollFeedHResultVideoListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B712C31262A00EBA6D3 /* ScrollFeedHResultVideoListCell.swift */; };
 		2E670B742C31264700EBA6D3 /* ScrollFeedGridVideo3xViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E670B732C31264700EBA6D3 /* ScrollFeedGridVideo3xViewCell.swift */; };
@@ -154,11 +154,11 @@
 		2EADB52B2C4159B70023B7F2 /* SignoutProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB52A2C4159B70023B7F2 /* SignoutProgressView.swift */; };
 		2EADB52D2C44011B0023B7F2 /* HSingleLocationViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB52C2C44011B0023B7F2 /* HSingleLocationViewCell.swift */; };
 		2EADB52F2C4A9FA10023B7F2 /* MeListPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB52E2C4A9FA10023B7F2 /* MeListPanelView.swift */; };
-		2EADB5312C4BB1DB0023B7F2 /* MeHistoryListPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB5302C4BB1DB0023B7F2 /* MeHistoryListPanelView.swift */; };
-		2EADB5332C4BD8CC0023B7F2 /* MeBookmarkListPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB5322C4BD8CC0023B7F2 /* MeBookmarkListPanelView.swift */; };
-		2EADB5352C4BE3240023B7F2 /* MeLikeListPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB5342C4BE3240023B7F2 /* MeLikeListPanelView.swift */; };
-		2EADB5372C4BE9220023B7F2 /* MeLocationListPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB5362C4BE9220023B7F2 /* MeLocationListPanelView.swift */; };
-		2EADB5392C4BF5310023B7F2 /* MePostListPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB5382C4BF5310023B7F2 /* MePostListPanelView.swift */; };
+		2EADB5312C4BB1DB0023B7F2 /* SCAViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB5302C4BB1DB0023B7F2 /* SCAViewCell.swift */; };
+		2EADB5332C4BD8CC0023B7F2 /* SCBViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB5322C4BD8CC0023B7F2 /* SCBViewCell.swift */; };
+		2EADB5352C4BE3240023B7F2 /* SoundCreatorConsolePanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB5342C4BE3240023B7F2 /* SoundCreatorConsolePanelView.swift */; };
+		2EADB5372C4BE9220023B7F2 /* SoundPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB5362C4BE9220023B7F2 /* SoundPanelView.swift */; };
+		2EADB5392C4BF5310023B7F2 /* SoundFinalizePanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB5382C4BF5310023B7F2 /* SoundFinalizePanelView.swift */; };
 		2EADB53B2C4BF59F0023B7F2 /* MePhotoListPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB53A2C4BF59F0023B7F2 /* MePhotoListPanelView.swift */; };
 		2EADB53D2C4BF5F40023B7F2 /* MeVideoListPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB53C2C4BF5F40023B7F2 /* MeVideoListPanelView.swift */; };
 		2EADB53F2C6E41D80023B7F2 /* ErrorUploadCommentMsgView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EADB53E2C6E41D80023B7F2 /* ErrorUploadCommentMsgView.swift */; };
@@ -292,7 +292,7 @@
 		2E670B672C31259200EBA6D3 /* ScrollFeedHResultUserListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollFeedHResultUserListCell.swift; sourceTree = "<group>"; };
 		2E670B692C3125AC00EBA6D3 /* ScrollFeedHResultMainListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollFeedHResultMainListCell.swift; sourceTree = "<group>"; };
 		2E670B6B2C3125D400EBA6D3 /* ScrollFeedHResultPostListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollFeedHResultPostListCell.swift; sourceTree = "<group>"; };
-		2E670B6D2C3125F000EBA6D3 /* ScrollFeedHResultHashtagListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollFeedHResultHashtagListCell.swift; sourceTree = "<group>"; };
+		2E670B6D2C3125F000EBA6D3 /* ScrollFeedSoundCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollFeedSoundCell.swift; sourceTree = "<group>"; };
 		2E670B6F2C31260F00EBA6D3 /* ScrollFeedGridVideo2xViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollFeedGridVideo2xViewCell.swift; sourceTree = "<group>"; };
 		2E670B712C31262A00EBA6D3 /* ScrollFeedHResultVideoListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollFeedHResultVideoListCell.swift; sourceTree = "<group>"; };
 		2E670B732C31264700EBA6D3 /* ScrollFeedGridVideo3xViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollFeedGridVideo3xViewCell.swift; sourceTree = "<group>"; };
@@ -318,11 +318,11 @@
 		2EADB52A2C4159B70023B7F2 /* SignoutProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignoutProgressView.swift; sourceTree = "<group>"; };
 		2EADB52C2C44011B0023B7F2 /* HSingleLocationViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HSingleLocationViewCell.swift; sourceTree = "<group>"; };
 		2EADB52E2C4A9FA10023B7F2 /* MeListPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeListPanelView.swift; sourceTree = "<group>"; };
-		2EADB5302C4BB1DB0023B7F2 /* MeHistoryListPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeHistoryListPanelView.swift; sourceTree = "<group>"; };
-		2EADB5322C4BD8CC0023B7F2 /* MeBookmarkListPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeBookmarkListPanelView.swift; sourceTree = "<group>"; };
-		2EADB5342C4BE3240023B7F2 /* MeLikeListPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeLikeListPanelView.swift; sourceTree = "<group>"; };
-		2EADB5362C4BE9220023B7F2 /* MeLocationListPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeLocationListPanelView.swift; sourceTree = "<group>"; };
-		2EADB5382C4BF5310023B7F2 /* MePostListPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MePostListPanelView.swift; sourceTree = "<group>"; };
+		2EADB5302C4BB1DB0023B7F2 /* SCAViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SCAViewCell.swift; sourceTree = "<group>"; };
+		2EADB5322C4BD8CC0023B7F2 /* SCBViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SCBViewCell.swift; sourceTree = "<group>"; };
+		2EADB5342C4BE3240023B7F2 /* SoundCreatorConsolePanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundCreatorConsolePanelView.swift; sourceTree = "<group>"; };
+		2EADB5362C4BE9220023B7F2 /* SoundPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundPanelView.swift; sourceTree = "<group>"; };
+		2EADB5382C4BF5310023B7F2 /* SoundFinalizePanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundFinalizePanelView.swift; sourceTree = "<group>"; };
 		2EADB53A2C4BF59F0023B7F2 /* MePhotoListPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MePhotoListPanelView.swift; sourceTree = "<group>"; };
 		2EADB53C2C4BF5F40023B7F2 /* MeVideoListPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeVideoListPanelView.swift; sourceTree = "<group>"; };
 		2EADB53E2C6E41D80023B7F2 /* ErrorUploadCommentMsgView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorUploadCommentMsgView.swift; sourceTree = "<group>"; };
@@ -409,17 +409,13 @@
 				2E670AC22C31016400EBA6D3 /* PostPanelView.swift */,
 				2E670AD02C31028200EBA6D3 /* PhotoPanelView.swift */,
 				2E670AA22C30FE4A00EBA6D3 /* VideoPanelView.swift */,
+				2EADB5362C4BE9220023B7F2 /* SoundPanelView.swift */,
 				2E670AE22C3103DD00EBA6D3 /* PostDetailPanelView.swift */,
 				2E670ADC2C31035100EBA6D3 /* PhotoDetailPanelView.swift */,
 				2E670AA02C30FE1300EBA6D3 /* PhotoZoomPanelView.swift */,
 				2EADB52E2C4A9FA10023B7F2 /* MeListPanelView.swift */,
-				2EADB5302C4BB1DB0023B7F2 /* MeHistoryListPanelView.swift */,
-				2EADB5322C4BD8CC0023B7F2 /* MeBookmarkListPanelView.swift */,
-				2EADB5342C4BE3240023B7F2 /* MeLikeListPanelView.swift */,
-				2EADB5382C4BF5310023B7F2 /* MePostListPanelView.swift */,
 				2EADB53A2C4BF59F0023B7F2 /* MePhotoListPanelView.swift */,
 				2EADB53C2C4BF5F40023B7F2 /* MeVideoListPanelView.swift */,
-				2EADB5362C4BE9220023B7F2 /* MeLocationListPanelView.swift */,
 				2E670AD62C3102E700EBA6D3 /* CommentScrollableView.swift */,
 				2E670A9C2C30FCCF00EBA6D3 /* ShareSheetScrollableView.swift */,
 				2EBFCBA22C7B08A100EA9169 /* ShareObjectScrollableView.swift */,
@@ -434,6 +430,8 @@
 				2E670AAA2C30FF2500EBA6D3 /* VideoEditorPanelView.swift */,
 				2E670AA42C30FE9A00EBA6D3 /* VideoDraftPanelView.swift */,
 				2E670AB02C30FFBE00EBA6D3 /* VideoFinalizePanelView.swift */,
+				2EADB5342C4BE3240023B7F2 /* SoundCreatorConsolePanelView.swift */,
+				2EADB5382C4BF5310023B7F2 /* SoundFinalizePanelView.swift */,
 				2E670AAC2C30FF5000EBA6D3 /* PhotoCreatorConsolePanelView.swift */,
 				2E670AB82C31008400EBA6D3 /* PhotoDraftPanelView.swift */,
 				2E670ADA2C31033300EBA6D3 /* PhotoFinalizePanelView.swift */,
@@ -466,6 +464,8 @@
 				2E670AFF2C31082B00EBA6D3 /* HResultPostListViewCell.swift */,
 				2E670B112C31094A00EBA6D3 /* VCAViewCell.swift */,
 				2E670B132C31096B00EBA6D3 /* VCBViewCell.swift */,
+				2EADB5302C4BB1DB0023B7F2 /* SCAViewCell.swift */,
+				2EADB5322C4BD8CC0023B7F2 /* SCBViewCell.swift */,
 				2E670B0F2C31092B00EBA6D3 /* HPostListAViewCell.swift */,
 				2E670AF12C3106EF00EBA6D3 /* HPostListBViewCell.swift */,
 				2E670B172C3109AA00EBA6D3 /* HPhotoListAViewCell.swift */,
@@ -487,13 +487,13 @@
 				2E670B512C3123C800EBA6D3 /* ScrollFeedHResultLocationListCell.swift */,
 				2E670B672C31259200EBA6D3 /* ScrollFeedHResultUserListCell.swift */,
 				2E670B532C3123E800EBA6D3 /* ScrollFeedHResultSoundListCell.swift */,
-				2E670B6D2C3125F000EBA6D3 /* ScrollFeedHResultHashtagListCell.swift */,
 				2E670B692C3125AC00EBA6D3 /* ScrollFeedHResultMainListCell.swift */,
 				2E670B592C31245800EBA6D3 /* ScrollFeedHResultPhotoListCell.swift */,
 				2E670B712C31262A00EBA6D3 /* ScrollFeedHResultVideoListCell.swift */,
 				2E670B6B2C3125D400EBA6D3 /* ScrollFeedHResultPostListCell.swift */,
 				2E670B5D2C3124A700EBA6D3 /* ScrollFeedCell.swift */,
 				2E670B552C31240700EBA6D3 /* ScrollFeedVideoCell.swift */,
+				2E670B6D2C3125F000EBA6D3 /* ScrollFeedSoundCell.swift */,
 				2E670B612C31250100EBA6D3 /* ScrollFeedHPostListCell.swift */,
 				2E670B5F2C3124E000EBA6D3 /* ScrollFeedHPhotoListCell.swift */,
 				2E670B632C31255C00EBA6D3 /* ScrollFeedHNotifyChatListCell.swift */,
@@ -783,7 +783,7 @@
 				2E670AE32C3103DD00EBA6D3 /* PostDetailPanelView.swift in Sources */,
 				2E670AD72C3102E700EBA6D3 /* CommentScrollableView.swift in Sources */,
 				2E670B682C31259200EBA6D3 /* ScrollFeedHResultUserListCell.swift in Sources */,
-				2EADB5352C4BE3240023B7F2 /* MeLikeListPanelView.swift in Sources */,
+				2EADB5352C4BE3240023B7F2 /* SoundCreatorConsolePanelView.swift in Sources */,
 				2E670B7C2C31273200EBA6D3 /* OvalView.swift in Sources */,
 				2E670AE92C31043900EBA6D3 /* NotifyPanelView.swift in Sources */,
 				2E670B6A2C3125AC00EBA6D3 /* ScrollFeedHResultMainListCell.swift in Sources */,
@@ -791,7 +791,7 @@
 				2E670AA92C30FEF900EBA6D3 /* InAppMsgView.swift in Sources */,
 				2E670A862C30448D00EBA6D3 /* CacheManager.swift in Sources */,
 				2E670B0A2C3108D600EBA6D3 /* HResultHashtagListViewCell.swift in Sources */,
-				2EADB5372C4BE9220023B7F2 /* MeLocationListPanelView.swift in Sources */,
+				2EADB5372C4BE9220023B7F2 /* SoundPanelView.swift in Sources */,
 				2E670B2C2C31212600EBA6D3 /* PhotoMarker.swift in Sources */,
 				2E670A902C3047D500EBA6D3 /* GeohashBox.swift in Sources */,
 				2E670ADB2C31033300EBA6D3 /* PhotoFinalizePanelView.swift in Sources */,
@@ -813,14 +813,14 @@
 				2E670B7E2C31275400EBA6D3 /* ShadowView.swift in Sources */,
 				2E670AB32C30FFE600EBA6D3 /* PlaceDraftPanelView.swift in Sources */,
 				2E670B4C2C31234500EBA6D3 /* MiniApp.swift in Sources */,
-				2E670B6E2C3125F000EBA6D3 /* ScrollFeedHResultHashtagListCell.swift in Sources */,
+				2E670B6E2C3125F000EBA6D3 /* ScrollFeedSoundCell.swift in Sources */,
 				2E670AB72C31006000EBA6D3 /* CreatorPanelView.swift in Sources */,
 				2E670B832C3127CA00EBA6D3 /* JobHighlightCell.swift in Sources */,
 				2E670AE52C3103FB00EBA6D3 /* SearchPanelView.swift in Sources */,
 				2E670ACD2C31023D00EBA6D3 /* PlaceSelectPanelView.swift in Sources */,
 				2E670B662C31257700EBA6D3 /* ScrollFeedHNotifyInboxListCell.swift in Sources */,
 				2E670B282C3120DF00EBA6D3 /* PulseWave.swift in Sources */,
-				2EADB5332C4BD8CC0023B7F2 /* MeBookmarkListPanelView.swift in Sources */,
+				2EADB5332C4BD8CC0023B7F2 /* SCBViewCell.swift in Sources */,
 				2E670B1E2C310A1400EBA6D3 /* GridPhoto2xViewCell.swift in Sources */,
 				2E670A8C2C30476000EBA6D3 /* StrokeUILabel.swift in Sources */,
 				2E670B3E2C31226700EBA6D3 /* ExitVideoEditorMsg.swift in Sources */,
@@ -868,7 +868,7 @@
 				2EADB53F2C6E41D80023B7F2 /* ErrorUploadCommentMsgView.swift in Sources */,
 				2EADB52D2C44011B0023B7F2 /* HSingleLocationViewCell.swift in Sources */,
 				2EADB53D2C4BF5F40023B7F2 /* MeVideoListPanelView.swift in Sources */,
-				2EADB5312C4BB1DB0023B7F2 /* MeHistoryListPanelView.swift in Sources */,
+				2EADB5312C4BB1DB0023B7F2 /* SCAViewCell.swift in Sources */,
 				2E670A8A2C30471700EBA6D3 /* SignInManager.swift in Sources */,
 				2E670AB92C31008400EBA6D3 /* PhotoDraftPanelView.swift in Sources */,
 				2E670B022C31085B00EBA6D3 /* GridVideo2xViewCell.swift in Sources */,
@@ -909,7 +909,7 @@
 				2E670B142C31096B00EBA6D3 /* VCBViewCell.swift in Sources */,
 				2E670AD32C3102A600EBA6D3 /* UserCreatorConsolePanelView.swift in Sources */,
 				2E670AEB2C31045900EBA6D3 /* UserScrollablePanelView.swift in Sources */,
-				2EADB5392C4BF5310023B7F2 /* MePostListPanelView.swift in Sources */,
+				2EADB5392C4BF5310023B7F2 /* SoundFinalizePanelView.swift in Sources */,
 				2E670AF02C3106CE00EBA6D3 /* HListViewCell.swift in Sources */,
 				2E670A722C2D55FF00EBA6D3 /* SceneDelegate.swift in Sources */,
 				2E670AFA2C3107D200EBA6D3 /* HMultiLocationViewCell.swift in Sources */,

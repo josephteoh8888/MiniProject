@@ -141,6 +141,11 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         notificationCenter.addObserver(self, selector: #selector(onKeyboardChange), name: UIResponder.keyboardDidChangeFrameNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(onKeyboardWillChange), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
         
+        //test > app background/foreground state
+        notificationCenter.addObserver(self, selector: #selector(onAppDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(onAppWillResignActive), name: UIApplication.willResignActiveNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(onAppWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(onAppDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
         //test > artificial map pan, pinch
 //        turnOnArtificialMapPan()
 //        turnOnArtificialMapPinch()
@@ -180,6 +185,33 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
                 }
             }
         }
+    }
+    @objc func onAppDidEnterBackground(notification: Notification) {
+        print("lifecycle App onAppDidEnterBackground")
+    }
+    @objc func onAppWillEnterForeground(notification: Notification) {
+        print("lifecycle App onAppWillEnterForeground")
+    }
+    @objc func onAppWillResignActive(notification: Notification) {
+        print("lifecycle App onAppWillResignActive")
+        if(!pageList.isEmpty) {
+            if let c = pageList[pageList.count - 1] as? PanelView {
+                c.pauseMedia()
+            }
+        }
+    }
+    @objc func onAppDidBecomeActive(notification: Notification) {
+        print("lifecycle App onAppDidBecomeActive")
+        if(!pageList.isEmpty) {
+            if let c = pageList[pageList.count - 1] as? PanelView {
+                c.resumeMedia()
+            }
+        }
+    }
+    //test > when vc is terminated
+    deinit {
+        print("lifecycle deinit ViewController")
+        NotificationCenter.default.removeObserver(self)
     }
     
     var topInset = 0.0
@@ -3175,6 +3207,7 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         
         miniAppDataList.append("loop")
         miniAppDataList.append("location")
+        miniAppDataList.append("voice")
         miniAppDataList.append("post")
         miniAppDataList.append("photo")
         //test > other mini apps
@@ -3218,6 +3251,8 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
                 app1.setText(code: mA, d: "Rides")
             } else if(mA == "hotel") {
                 app1.setText(code: mA, d: "Hotels")
+            } else if(mA == "voice") {
+                app1.setText(code: mA, d: "Voices")
             }
             
             miniAppViewList.append(app1)
@@ -4780,69 +4815,154 @@ class ViewController: UIViewController, GMSMapViewDelegate, UIGestureRecognizerD
         }
     }
     
-//test > method 2 => non-scrollable
+    //test > method 2 => try scrollable for sound panel
 //    func openSoundPanel() {
+//        openSoundPanel(id: "") //default
+//    }
+//    func openSoundPanel(id: String) {
 //        //test > dequeue before transition
 //        stopPulseWave()
-//        dequeueVideo()
+//        dequeueObject()
 //
 //        //test
-//        nextPage(isNextPageScrollable: false)
+//        nextPage(isNextPageScrollable: true)
 //
-//        //add sound panel
-//        let soundPanel = SoundPanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
-//        self.view.addSubview(soundPanel)
-//        soundPanel.translatesAutoresizingMaskIntoConstraints = false
-//        soundPanel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
-//        soundPanel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
-//        soundPanel.delegate = self
+//        bBox.isHidden = false
+//        bBoxBtn.isHidden = false
 //
-//        pageList.append(soundPanel)
+//        turnOnPlacesMiniSemiTransparent(type: "s")
+//
+//        let panel = SoundScrollablePanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
+//        self.view.addSubview(panel)
+//        panel.translatesAutoresizingMaskIntoConstraints = false
+//        panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
+//        panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
+//        panel.delegate = self
+//
+//        pageList.append(panel)
+//
+//        //test > generate map scrollable id
+//        appScrollableId = generateRandomId()
+//        panel.setScrollableId(id: appScrollableId)
 //
 //        //test > set objectid for fetching data
-//        soundPanel.setObjectId(id: "s")
+//        panel.setObjectId(id: id) //"s"
 //
 //        //test > initialize panel
-//        soundPanel.initialize()
+//        panel.panelTopCons = panel.topAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 0)
+//        panel.panelTopCons?.isActive = true
+//        panel.initialize()
 //    }
     
-    //test > method 2 => try scrollable for sound panel
-    func openSoundPanel() {
-        openSoundPanel(id: "") //default
+    //test > method 2 => non-scrollable
+    func openSoundPanel(offX: CGFloat, offY: CGFloat, originatorView: UIView, originatorViewType: String, id: Int) {
+        openSoundPanel(offX: offX, offY: offY, originatorView: originatorView, originatorViewType: originatorViewType, id: id, originatorViewId: "", preterminedDatasets: [String](), mode: SoundTypes.S_VOICE)
     }
-    func openSoundPanel(id: String) {
-        //test > dequeue before transition
-        stopPulseWave()
-        dequeueObject()
+    
+    func openSoundPanel(offX: CGFloat, offY: CGFloat, originatorView: UIView, originatorViewType: String, id: Int, originatorViewId: String) {
+        openSoundPanel(offX: offX, offY: offY, originatorView: originatorView, originatorViewType: originatorViewType, id: id, originatorViewId: originatorViewId, preterminedDatasets: [String](), mode: SoundTypes.S_VOICE)
+    }
+    
+    func openSoundPanel(offX: CGFloat, offY: CGFloat, originatorView: UIView, originatorViewType: String, id: Int, originatorViewId: String, preterminedDatasets: [String], mode: String) {
+        
+        nextPage(isNextPageScrollable: false)
 
-        //test
-        nextPage(isNextPageScrollable: true)
+        //add video panel
+        let soundPanel = SoundPanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
+        self.view.addSubview(soundPanel)
+        soundPanel.translatesAutoresizingMaskIntoConstraints = false
+        soundPanel.heightAnchor.constraint(equalToConstant: self.view.frame.size.height).isActive = true
+        soundPanel.widthAnchor.constraint(equalToConstant: self.view.frame.size.width).isActive = true
+        soundPanel.layer.masksToBounds = true
+        soundPanel.delegate = self
 
-        bBox.isHidden = false
-        bBoxBtn.isHidden = false
+        pageList.append(soundPanel)
 
-        turnOnPlacesMiniSemiTransparent(type: "s")
+        //test > centralize open video process here
+        soundPanel.setOriginatorViewType(type: originatorViewType)
+        soundPanel.setId(id: id)
+        //test > marker id
+        soundPanel.setOriginatorId(originatorId: originatorViewId)
+        
+        //test > predetermined datasets > video enlarged from posts
+        soundPanel.setPreterminedDatasets(datasets: preterminedDatasets)
+        soundPanel.setUiMode(mode: mode)
+        
+        //test > to be removed soon
+        if(originatorViewType == OriginatorTypes.MAP_VIDEO_MINIAPP_UIVIEW) {
+            soundPanel.setDatasetUI(isMultiTab: true)
+        } else {
+            soundPanel.setDatasetUI(isMultiTab: false)
+        }
 
-        let panel = SoundScrollablePanelView(frame: CGRect(x: 0 , y: 0, width: self.view.frame.width, height: self.view.frame.height))
-        self.view.addSubview(panel)
-        panel.translatesAutoresizingMaskIntoConstraints = false
-        panel.heightAnchor.constraint(equalToConstant: view.frame.height).isActive = true
-        panel.widthAnchor.constraint(equalToConstant: view.frame.width).isActive = true
-        panel.delegate = self
-
-        pageList.append(panel)
-
-        //test > generate map scrollable id
-        appScrollableId = generateRandomId()
-        panel.setScrollableId(id: appScrollableId)
-
-        //test > set objectid for fetching data
-        panel.setObjectId(id: id) //"s"
-
-        //test > initialize panel
-        panel.panelTopCons = panel.topAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 0)
-        panel.panelTopCons?.isActive = true
-        panel.initialize()
+        if(originatorViewType == OriginatorTypes.MARKER) {
+            guard let a = originatorView as? ExploreMarker else {
+                return
+            }
+            guard let coord = a.coordinateLocation else {
+                return
+            }
+            //*set markerhight adjustment
+            let markerHeight = a.frame.size.height
+            let adjustmentY = -markerHeight/2
+            //*set coord
+            soundPanel.setCoordinateLocation(coord: coord)
+            soundPanel.setAdjustmentY(adY: adjustmentY)
+            //*open video panel
+            guard let mapView = self.mapView else {
+                return
+            }
+            let point = mapView.projection.point(for: coord)
+            let offsetX = point.x - self.view.frame.width/2
+            let offsetY = point.y - self.view.frame.height/2 + adjustmentY //as marker is floating on top real coordinate, not right at center
+            
+            soundPanel.open(offX: offsetX, offY: offsetY, delay: 0.0, isAnimated: true)
+        } else if (originatorViewType == OriginatorTypes.PLACEMARKER) {
+            guard let a = originatorView as? PlaceMarker else {
+                return
+            }
+            guard let coord = a.coordinateLocation else {
+                return
+            }
+            //*set markerhight adjustment
+            let markerHeight = a.frame.size.height
+            let adjustmentY = -markerHeight/2
+            //*set coord
+            soundPanel.setCoordinateLocation(coord: coord)
+            soundPanel.setAdjustmentY(adY: adjustmentY)
+            //*open video panel
+            guard let mapView = self.mapView else {
+                return
+            }
+            let point = mapView.projection.point(for: coord)
+            let offsetX = point.x - self.view.frame.width/2
+            let offsetY = point.y - self.view.frame.height/2 + adjustmentY //as marker is floating on top real coordinate, not right at center
+            
+            soundPanel.open(offX: offsetX, offY: offsetY, delay: 0.0, isAnimated: true)
+        } else if(originatorViewType == OriginatorTypes.PULSEWAVE) {
+            guard let a = originatorView as? PulseWave else {
+                return
+            }
+            guard let coord = a.coordinateLocation else {
+                return
+            }
+            //*set coord
+            soundPanel.setCoordinateLocation(coord: coord)
+            //*set blackout
+            soundPanel.setTypeBlackOut()
+            //*open video panel
+            guard let mapView = self.mapView else {
+                return
+            }
+            let point = mapView.projection.point(for: coord)
+            let offsetX = point.x - self.view.frame.width/2
+            let offsetY = point.y - self.view.frame.height/2
+            
+            soundPanel.open(offX: offsetX, offY: offsetY, delay: 0.0, isAnimated: true)
+        } else {
+            //includes uicollectionviews from sound panel, user panel
+            soundPanel.open(offX: offX, offY: offY, delay: 0.0, isAnimated: true)
+        }
     }
     
     func openVideoCreatorPanel() {

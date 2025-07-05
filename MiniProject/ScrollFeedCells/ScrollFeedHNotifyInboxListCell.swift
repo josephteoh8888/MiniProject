@@ -297,7 +297,7 @@ extension ScrollFeedHNotifyInboxListCell: HNotifyListViewDelegate{
         aDelegate?.sfcDidClickVcvClickPlace(id: "")
     }
     func didHNotifyClickSound(){
-        aDelegate?.sfcDidClickVcvClickSound(id: "")
+//        aDelegate?.sfcDidClickVcvClickSound(id: "")
     }
     func didHNotifyClickHashtag(){
         

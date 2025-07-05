@@ -333,6 +333,7 @@ class MePanelView: PanelView{
     
     //test
     override func resumeActiveState() {
+        print("mepanel resume")
         //test > check for signin status when in active state
         asyncFetchSigninStatus()
         
@@ -351,9 +352,7 @@ class MePanelView: PanelView{
     //test > initialization state
     var isInitialized = false
     func initialize() {
-        
         if(!isInitialized) {
-            
             if(isUserLoggedIn) {
                 aLoggedOutBox.isHidden = true
                 
@@ -764,6 +763,7 @@ class MePanelView: PanelView{
         
                 self.isInitialized = false
                 self.initialize()
+                print("mepanel A")
             }
             //test > recheck UI for aLoggedOut
             else {
@@ -772,10 +772,12 @@ class MePanelView: PanelView{
                 } else {
                     self.aLoggedOutBox.isHidden = false
                 }
+                print("mepanel B")
             }
         } else {
             self.isUserLoggedIn = isSignedIn
             self.initialize()
+            print("mepanel C")
         }
     }
 }

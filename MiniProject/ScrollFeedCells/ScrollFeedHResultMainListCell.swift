@@ -56,7 +56,7 @@ class ScrollFeedHResultMainListCell: ScrollFeedHResultListCell {
         vCV.register(HResultUserListViewCell.self, forCellWithReuseIdentifier: HResultUserListViewCell.identifier)
         vCV.register(HResultSoundListViewCell.self, forCellWithReuseIdentifier: HResultSoundListViewCell.identifier)
         vCV.register(HResultLocationListViewCell.self, forCellWithReuseIdentifier: HResultLocationListViewCell.identifier)
-        vCV.register(HResultHashtagListViewCell.self, forCellWithReuseIdentifier: HResultHashtagListViewCell.identifier)
+//        vCV.register(HResultHashtagListViewCell.self, forCellWithReuseIdentifier: HResultHashtagListViewCell.identifier)
         vCV.dataSource = self
         vCV.delegate = self
         vCV.showsVerticalScrollIndicator = false

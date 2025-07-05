@@ -23,7 +23,7 @@ protocol PlaceScrollablePanelDelegate : AnyObject {
     //test > connect to other panel
     func didPClickUserPlaceScrollable(id: String)
     func didPClickPlacePlaceScrollable(id: String)
-    func didPClickSoundPlaceScrollable(id: String)
+    func didPClickSoundPlaceScrollable(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String)
     func didPClickPlaceScrollableVcvClickPost(id: String, dataType: String, scrollToComment: Bool, pointX: CGFloat, pointY: CGFloat)
     func didPClickPlaceScrollableVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     func didPClickPlaceScrollableVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
@@ -1171,7 +1171,7 @@ class PlaceScrollablePanelView: ScrollablePanelView{
         delegate?.didPClickUserPlaceScrollable(id: "")
     }
     @objc func onCPhotoClicked(gesture: UITapGestureRecognizer) {
-        delegate?.didPClickSoundPlaceScrollable(id: "")
+//        delegate?.didPClickSoundPlaceScrollable(id: "")
     }
 
     override func setStateTarget(target: CLLocationCoordinate2D) {
@@ -2009,6 +2009,26 @@ class PlaceScrollablePanelView: ScrollablePanelView{
             }
         }
     }
+    override func resumeMedia() {
+        if(pageList.isEmpty) {
+            resumeFeedPlayingMedia()
+        }
+        else {
+            if let c = pageList[pageList.count - 1] as? CommentScrollableView {
+                c.resumePlayingMedia()
+            }
+        }
+    }
+    override func pauseMedia() {
+        if(pageList.isEmpty) {
+            pauseFeedPlayingMedia()
+        }
+        else {
+            if let c = pageList[pageList.count - 1] as? CommentScrollableView {
+                c.pausePlayingMedia()
+            }
+        }
+    }
     
     //test > make viewcell image reappear after video panel closes
     func dehideCell() {
@@ -2604,7 +2624,7 @@ extension PlaceScrollablePanelView: ScrollFeedCellDelegate {
         pauseFeedPlayingMedia()
         delegate?.didPClickPlacePlaceScrollable(id: id)
     }
-    func sfcDidClickVcvClickSound(id: String) {
+    func sfcDidClickVcvClickSound(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
 
     }
     func sfcDidClickVcvClickPost(id: String, dataType: String, pointX: CGFloat, pointY: CGFloat) {
@@ -2711,10 +2731,20 @@ extension ViewController: PlaceScrollablePanelDelegate{
         //test > real id for fetching data
         openPlacePanel(id: id)
     }
-    func didPClickSoundPlaceScrollable(id: String){
+    func didPClickSoundPlaceScrollable(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
 //        openSoundPanel()
         //test > real id for fetching data
-        openSoundPanel(id: id)
+//        openSoundPanel(id: id)
+        
+        //test > new method
+        let offsetX = pointX - self.view.frame.width/2
+        let offsetY = pointY - self.view.frame.height/2
+
+        //test 1 > for video only
+        var dataset = [String]()
+//        dataset.append("a")
+        dataset.append("a")
+        self.openSoundPanel(offX: offsetX, offY: offsetY, originatorView: view, originatorViewType: OriginatorTypes.UIVIEW, id: 0, originatorViewId: "", preterminedDatasets: dataset, mode: mode)
     }
     
     func didPClickPlaceScrollableVcvClickPost(id: String, dataType: String, scrollToComment: Bool, pointX: CGFloat, pointY: CGFloat){
@@ -2893,8 +2923,8 @@ extension PlaceScrollablePanelView: CommentScrollableDelegate{
     func didCClickPlace(id: String){
         delegate?.didPClickPlacePlaceScrollable(id: id)
     }
-    func didCClickSound(id: String){
-        delegate?.didPClickSoundPlaceScrollable(id: id)
+    func didCClickSound(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        delegate?.didPClickSoundPlaceScrollable(id: id, pointX: pointX, pointY: pointY, view: view, mode: mode)
     }
     func didCClickClosePanel(){
 //        bottomBox.isHidden = true

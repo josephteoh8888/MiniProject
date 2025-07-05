@@ -864,8 +864,29 @@ extension ScrollFeedHPostListCell: HListCellDelegate {
     func hListDidClickVcvClickPlace(id: String) {
         aDelegate?.sfcDidClickVcvClickPlace(id: id)
     }
-    func hListDidClickVcvClickSound(id: String) {
-        aDelegate?.sfcDidClickVcvClickSound(id: id)
+    func hListDidClickVcvClickSound(id: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String) {
+//        aDelegate?.sfcDidClickVcvClickSound(id: id)
+        
+        if let a = vCV {
+            for cell in a.visibleCells {
+                
+                if(cell == vc) {
+                    
+                    let originInRootView = a.convert(cell.frame.origin, to: self)
+                    let visibleIndexPath = a.indexPath(for: cell)
+                    let pointX1 = originInRootView.x + pointX
+                    let pointY1 = originInRootView.y + pointY
+                    
+                    aDelegate?.sfcDidClickVcvClickSound(id: id, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
+                    
+                    if let c = visibleIndexPath {
+                        hideCellIndex = c.row
+                    }
+                    
+                    break
+                }
+            }
+        }
     }
     func hListDidClickVcvClickPost(id: String, dataType: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat) {
 //        aDelegate?.sfcDidClickVcvClickPost(id: id, dataType: dataType)

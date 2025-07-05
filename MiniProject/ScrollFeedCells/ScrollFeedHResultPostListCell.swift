@@ -380,7 +380,7 @@ extension ScrollFeedHResultPostListCell: HResultListViewDelegate{
     func didHResultClickPlace(id: String){
         
     }
-    func didHResultClickSound(id: String){
+    func didHResultClickSound(id: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
 //        aDelegate?.sfcDidClickVcvClickSound()
     }
     func didHResultClickHashtag() {

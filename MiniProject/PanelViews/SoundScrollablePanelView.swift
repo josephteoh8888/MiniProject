@@ -24,7 +24,7 @@ protocol SoundScrollablePanelDelegate : AnyObject {
     //test > connect to other panel
     func didSClickUserSoundScrollable(id: String)
     func didSClickPlaceSoundScrollable(id: String)
-    func didSClickSoundSoundScrollable(id: String)
+    func didSClickSoundSoundScrollable(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     func didSClickSoundScrollableVcvClickPost(id: String, dataType: String, scrollToComment: Bool, pointX: CGFloat, pointY: CGFloat)
     func didSClickSoundScrollableVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     func didSClickSoundScrollableVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
@@ -1249,13 +1249,13 @@ class SoundScrollablePanelView: ScrollablePanelView{
     }
 
     @objc func onAPhotoClicked(gesture: UITapGestureRecognizer) {
-        delegate?.didSClickSoundSoundScrollable(id: "")
+//        delegate?.didSClickSoundSoundScrollable(id: "")
     }
     @objc func onBPhotoClicked(gesture: UITapGestureRecognizer) {
         delegate?.didSClickUserSoundScrollable(id: "")
     }
     @objc func onCPhotoClicked(gesture: UITapGestureRecognizer) {
-        delegate?.didSClickSoundSoundScrollable(id: "")
+//        delegate?.didSClickSoundSoundScrollable(id: "")
     }
 
     override func setStateTarget(target: CLLocationCoordinate2D) {
@@ -2118,6 +2118,26 @@ class SoundScrollablePanelView: ScrollablePanelView{
             }
         }
     }
+    override func resumeMedia() {
+        if(pageList.isEmpty) {
+            resumeFeedPlayingMedia()
+        }
+        else {
+            if let c = pageList[pageList.count - 1] as? CommentScrollableView {
+                c.resumePlayingMedia()
+            }
+        }
+    }
+    override func pauseMedia() {
+        if(pageList.isEmpty) {
+            pauseFeedPlayingMedia()
+        }
+        else {
+            if let c = pageList[pageList.count - 1] as? CommentScrollableView {
+                c.pausePlayingMedia()
+            }
+        }
+    }
     
     //test > make viewcell image reappear after video panel closes
     func dehideCell() {
@@ -2631,7 +2651,7 @@ extension SoundScrollablePanelView: HighlightCellDelegate {
         
     }
     func didHighlightClickSound(id: String) {
-        delegate?.didSClickSoundSoundScrollable(id: id)
+//        delegate?.didSClickSoundSoundScrollable(id: id)
     }
     
     func didHighlightClickRefresh(){
@@ -2714,7 +2734,7 @@ extension SoundScrollablePanelView: ScrollFeedCellDelegate {
         pauseFeedPlayingMedia()
         delegate?.didSClickPlaceSoundScrollable(id: id)
     }
-    func sfcDidClickVcvClickSound(id: String) {
+    func sfcDidClickVcvClickSound(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
 
     }
     func sfcDidClickVcvClickPost(id: String, dataType: String, pointX: CGFloat, pointY: CGFloat) {
@@ -2820,10 +2840,20 @@ extension ViewController: SoundScrollablePanelDelegate{
         //test > real id for fetching data
         openPlacePanel(id: id)
     }
-    func didSClickSoundSoundScrollable(id: String){
+    func didSClickSoundSoundScrollable(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
 //        openSoundPanel()
         //test > real id for fetching data
-        openSoundPanel(id: id)
+//        openSoundPanel(id: id)
+        
+        //test > new method
+        let offsetX = pointX - self.view.frame.width/2
+        let offsetY = pointY - self.view.frame.height/2
+        
+        //test 1 > for video only
+        var dataset = [String]()
+//        dataset.append("a")
+        dataset.append("a")
+        self.openSoundPanel(offX: offsetX, offY: offsetY, originatorView: view, originatorViewType: OriginatorTypes.UIVIEW, id: 0, originatorViewId: "", preterminedDatasets: dataset, mode: mode)
     }
     func didSClickSoundScrollableVcvClickPost(id: String, dataType: String, scrollToComment: Bool, pointX: CGFloat, pointY: CGFloat){
         //test > real id for fetching data
@@ -3000,8 +3030,8 @@ extension SoundScrollablePanelView: CommentScrollableDelegate{
     func didCClickPlace(id: String){
         delegate?.didSClickPlaceSoundScrollable(id: id)
     }
-    func didCClickSound(id: String){
-        delegate?.didSClickSoundSoundScrollable(id: id)
+    func didCClickSound(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+        delegate?.didSClickSoundSoundScrollable(id: id, pointX: pointX, pointY: pointY, view: view, mode: mode)
     }
     func didCClickClosePanel(){
 //        bottomBox.isHidden = true

@@ -1268,6 +1268,26 @@ class PhotoDetailPanelView: PanelView, UIGestureRecognizerDelegate{
             }
         }
     }
+    override func resumeMedia() {
+        if(pageList.isEmpty) {
+            resumePlayingMedia()
+        }
+        else {
+            if let c = pageList[pageList.count - 1] as? CommentScrollableView {
+                c.resumePlayingMedia()
+            }
+        }
+    }
+    override func pauseMedia() {
+        if(pageList.isEmpty) {
+            pausePlayingMedia()
+        }
+        else {
+            if let c = pageList[pageList.count - 1] as? CommentScrollableView {
+                c.pausePlayingMedia()
+            }
+        }
+    }
     
     //test > dehide cell
     func dehideCell() {
@@ -2527,7 +2547,7 @@ extension PhotoDetailPanelView: HListCellDelegate {
     func hListDidClickVcvClickPlace(id: String){
 //        delegate?.didClickPostPanelVcvClickPlace()
     }
-    func hListDidClickVcvClickSound(id: String){
+    func hListDidClickVcvClickSound(id: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
 //        delegate?.didClickPostPanelVcvClickSound()
     }
     func hListDidClickVcvClickPost(id: String, dataType: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat) {
@@ -2785,7 +2805,7 @@ extension PhotoDetailPanelView: CommentScrollableDelegate{
     func didCClickPlace(id: String){
 
     }
-    func didCClickSound(id: String){
+    func didCClickSound(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
 
     }
     func didCClickClosePanel(){

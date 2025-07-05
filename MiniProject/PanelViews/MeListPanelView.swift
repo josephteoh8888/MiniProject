@@ -18,7 +18,7 @@ protocol MeListPanelDelegate : AnyObject {
     func didMeListClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
 //    func didMeListClickUser(id: String)
     func didMeListClickPlace(id: String)
-    func didMeListClickSound(id: String)
+    func didMeListClickSound(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     
     //test > for marker animation after video closes
     func didStartMeListPanGesture(ppv : MeListPanelView)
@@ -1327,8 +1327,16 @@ extension MeListPanelView: ScrollFeedCellDelegate {
     func sfcDidClickVcvClickPlace(id: String) {
         delegate?.didMeListClickPlace(id: id)
     }
-    func sfcDidClickVcvClickSound(id: String) {
-        delegate?.didMeListClickSound(id: id)
+    func sfcDidClickVcvClickSound(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+//        delegate?.didMeListClickSound(id: id)
+        
+        if(!feedList.isEmpty) {
+            let b = self.feedList[self.currentIndex]
+            let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
+            
+            let adjustY = pointY + originInRootView.y
+            delegate?.didMeListClickSound(id: id, pointX: pointX, pointY: adjustY, view: view, mode: mode)
+        }
     }
     func sfcDidClickVcvClickPost(id: String, dataType: String, pointX: CGFloat, pointY: CGFloat) {
         //test
@@ -1459,9 +1467,18 @@ extension ViewController: MeListPanelDelegate{
         //test > real id for fetching data
         openPlacePanel(id: id)
     }
-    func didMeListClickSound(id: String){
+    func didMeListClickSound(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String){
         //test > real id for fetching data
-        openSoundPanel(id: id)
+//        openSoundPanel(id: id)
+        
+        let offsetX = pointX - self.view.frame.width/2
+        let offsetY = pointY - self.view.frame.height/2
+
+        //test 1 > for video only
+        var dataset = [String]()
+//        dataset.append("a")
+        dataset.append("a")
+        self.openSoundPanel(offX: offsetX, offY: offsetY, originatorView: view, originatorViewType: OriginatorTypes.UIVIEW, id: 0, originatorViewId: "", preterminedDatasets: dataset, mode: mode)
     }
     
     //test > for marker animation after video closes

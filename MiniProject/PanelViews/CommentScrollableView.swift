@@ -12,7 +12,7 @@ import SDWebImage
 protocol CommentScrollableDelegate : AnyObject {
     func didCClickUser(id: String)
     func didCClickPlace(id: String)
-    func didCClickSound(id: String)
+    func didCClickSound(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String)
     func didCClickClosePanel()
     func didCFinishClosePanel()
     func didCClickComment(id: String, dataType: String, pointX: CGFloat, pointY: CGFloat)
@@ -1968,9 +1968,30 @@ extension CommentScrollableView: HListCellDelegate {
         pausePlayingMedia()
         delegate?.didCClickPlace(id: id)
     }
-    func hListDidClickVcvClickSound(id: String){
+    func hListDidClickVcvClickSound(id: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         pausePlayingMedia()
-        delegate?.didCClickSound(id: id)
+//        delegate?.didCClickSound(id: id)
+        
+        if let a = vCV {
+            for cell in a.visibleCells {
+                
+                if(cell == vc) {
+                    //commentview bounds is fullscreen, so no more conversion is needed
+                    let originInRootView = a.convert(cell.frame.origin, to: self)
+                    let visibleIndexPath = a.indexPath(for: cell)
+                    let pointX1 = originInRootView.x + pointX
+                    let pointY1 = originInRootView.y + pointY
+                    print("comment idx frame origin p: \(pointX1), \(pointY1)")
+                    delegate?.didCClickSound(id: id, pointX: pointX1, pointY: pointY1, view: view, mode: mode)
+                    
+                    if let c = visibleIndexPath {
+                        hideCellIndex = c.row
+                    }
+                    
+                    break
+                }
+            }
+        }
     }
     func hListDidClickVcvClickPost(id: String, dataType: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat){
         pausePlayingMedia()

@@ -24,7 +24,7 @@ protocol ScrollFeedCellDelegate : AnyObject {
     func sfcDidClickVcvShare(id: String, dataType: String) //try
     func sfcDidClickVcvClickUser(id: String) //try
     func sfcDidClickVcvClickPlace(id: String) //try
-    func sfcDidClickVcvClickSound(id: String) //try
+    func sfcDidClickVcvClickSound(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) //try
     func sfcDidClickVcvClickPost(id: String, dataType: String, pointX: CGFloat, pointY: CGFloat) //try
     func sfcDidClickVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) //try
     func sfcDidClickVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) //try

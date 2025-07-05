@@ -62,3 +62,8 @@ enum PhotoTypes {
     static let P_SHOT_DETAIL = "PhotoShotDetail"
     static let P_0 = "Photo" //simple photo
 }
+
+enum SoundTypes {
+    static let S_VOICE = "SoundVoice"
+    static let S_0 = "Sound" //simple video
+}

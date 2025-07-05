@@ -15,7 +15,7 @@ protocol SearchPanelDelegate : AnyObject {
     //test > connect to other panel
     func didSearchClickUser(id: String)
     func didSearchClickPlace(id: String)
-    func didSearchClickSound(id: String)
+    func didSearchClickSound(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     func didSearchClickHashtag()
     func didSearchClickPost(id: String, dataType: String, pointX: CGFloat, pointY: CGFloat)
 //    func didSearchClickPhoto()
@@ -422,6 +422,9 @@ class SearchPanelView: PanelView{
                 c.dehideCell()
             }
             else if let c = feed as? ScrollFeedHResultPostListCell {
+                c.dehideCell()
+            }
+            else if let c = feed as? ScrollFeedHResultSoundListCell {
                 c.dehideCell()
             }
         }
@@ -1114,8 +1117,17 @@ extension SearchPanelView: ScrollFeedCellDelegate {
     func sfcDidClickVcvClickPlace(id: String) {
         delegate?.didSearchClickPlace(id: id)
     }
-    func sfcDidClickVcvClickSound(id: String) {
-        delegate?.didSearchClickSound(id: id)
+    func sfcDidClickVcvClickSound(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
+//        delegate?.didSearchClickSound(id: id)
+        
+        //test
+        if(!self.feedList.isEmpty) {
+            let b = self.feedList[self.currentIndex]
+            let originInRootView = feedScrollView.convert(b.frame.origin, to: self)
+            
+            let adjustY = pointY + originInRootView.y
+            delegate?.didSearchClickSound(id: id, pointX: pointX, pointY: adjustY, view: view, mode: mode)
+        }
     }
     func sfcDidClickVcvClickPost(id: String, dataType: String, pointX: CGFloat, pointY: CGFloat) {
 //        delegate?.didSearchClickPost(id: id, dataType: dataType)
@@ -1227,10 +1239,20 @@ extension ViewController: SearchPanelDelegate{
         //test > real id for fetching data
         openPlacePanel(id: id)
     }
-    func didSearchClickSound(id: String) {
+    func didSearchClickSound(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
 //        openSoundPanel()
         //test > real id for fetching data
-        openSoundPanel(id: id)
+//        openSoundPanel(id: id)
+        
+        //test > new method
+        let offsetX = pointX - self.view.frame.width/2
+        let offsetY = pointY - self.view.frame.height/2
+
+        //test 1 > for video only
+        var dataset = [String]()
+//        dataset.append("a")
+        dataset.append("a")
+        self.openSoundPanel(offX: offsetX, offY: offsetY, originatorView: view, originatorViewType: OriginatorTypes.UIVIEW, id: 0, originatorViewId: "", preterminedDatasets: dataset, mode: mode)
     }
     func didSearchClickHashtag() {
         

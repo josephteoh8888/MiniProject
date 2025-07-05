@@ -269,6 +269,18 @@ class MiniApp: QueueableView {
             aMiniImageCircleBg.widthAnchor.constraint(equalToConstant: 32).isActive = true
             aMiniImageCircleBg.layer.cornerRadius = 16
         }
+        else if(appCode == "voice") {
+            aMiniImage.image = UIImage(named:"flaticon_icon_home_photo")
+            aMiniImageCircleBg.isHidden = true
+            
+            aMiniGifImage.isHidden = true
+            
+            aMiniImage.heightAnchor.constraint(equalToConstant: 32).isActive = true //32
+            aMiniImage.widthAnchor.constraint(equalToConstant: 32).isActive = true
+            aMiniImageCircleBg.heightAnchor.constraint(equalToConstant: 32).isActive = true //28, 32
+            aMiniImageCircleBg.widthAnchor.constraint(equalToConstant: 32).isActive = true
+            aMiniImageCircleBg.layer.cornerRadius = 16
+        }
     }
     
     func shutterMiniGifImage() {
@@ -373,6 +385,24 @@ extension ViewController: MiniAppDelegate{
                     if(id == miniAppViewList[index].getId()) {
                         if(d) {
                             self.openPhotoPanel(offX: offsetX1, offY: offsetY1, originatorView: miniAppViewList[index], originatorViewType: OriginatorTypes.MAP_VIDEO_MINIAPP_UIVIEW, id: id)
+                        }
+                    }
+                }
+            } else if(code == "voice"){
+                dequeueObject()
+                let qId = addQueueObject()
+                if(qId != -1) {
+                    miniAppViewList[index].setId(id: qId)
+                }
+
+                //result from queue
+                if(!queueObjectList.isEmpty) {
+                    let d = queueObjectList[queueObjectList.count - 1].getIsToOpenPanel()
+                    let id = queueObjectList[queueObjectList.count - 1].getId()
+                    if(id == miniAppViewList[index].getId()) {
+                        if(d) {
+                            print("async pulsewave start open video: ")
+                            self.openSoundPanel(offX: offsetX1, offY: offsetY1, originatorView: miniAppViewList[index], originatorViewType: OriginatorTypes.MAP_VIDEO_MINIAPP_UIVIEW, id: id)
                         }
                     }
                 }

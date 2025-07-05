@@ -1154,7 +1154,7 @@ extension HCommentListViewCell: ContentCellDelegate {
     func contentCellDidDoubleClickPhoto(pointX: CGFloat, pointY: CGFloat){
         
     }
-    func contentCellDidClickSound(id: String){
+    func contentCellDidClickSound(id: String, cc: UIView, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         
     }
     func contentCellDidClickUser(id: String){

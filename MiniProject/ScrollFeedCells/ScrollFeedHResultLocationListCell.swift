@@ -319,7 +319,7 @@ extension ScrollFeedHResultLocationListCell: HResultListViewDelegate{
         
         aDelegate?.sfcDidClickVcvClickPlace(id: id)
     }
-    func didHResultClickSound(id: String){
+    func didHResultClickSound(id: String, vc: UICollectionViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
         
     }
     func didHResultClickHashtag() {

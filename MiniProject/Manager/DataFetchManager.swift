@@ -519,6 +519,51 @@ class DataFetchManager {
         })
     }
     
+//    func fetchSoundFeedData(id: String, isPaginate: Bool, completion: @escaping (Result<[SoundDataset], Error>) -> Void) {
+//        DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s
+//            //ori
+////            var newData = [String]()
+//            
+//            //*test 2 > real data structure
+//            var newDataset = [SoundDataset]()
+////            let newDataString = ["a", "na", "a", "a"]
+//            let newIdString = ["sound1", "sound2", "sound3", "sound4"]
+//            
+//            if(id == "sound") {
+//                if(isPaginate == false) {
+//                    //ori
+////                    newData.append("a")
+////                    newData.append("na") //a
+////                    newData.append("a") //a
+////                    newData.append("a") //a
+//                    
+//                    //test 2 > real data structure
+////                    for r in newDataString {
+////                        let vData = VideoDataset()
+////                        vData.setupData(data: r)
+////                        newDataset.append(vData)
+////                    }
+//                    
+//                    //test 3 > datamanager method
+//                    DataManager.shared.initData()
+//                    for r in newIdString {
+//                        if let vData = DataManager.shared.getSoundData(id: r) {
+//                            newDataset.append(vData)
+//                        }
+//                    }
+//                } else  {
+//                    //video_feed_end
+////                    newData.append("a")
+//                }
+////                completion(.success(newData))
+//                completion(.success(newDataset))
+//            }
+//            else {
+//                completion(.failure(FetchDataError.invalidResponse))
+//            }
+//        })
+//    }
+    
     func fetchNotifyFeedData(id: String, isPaginate: Bool, completion: @escaping (Result<[NotifyDataset], Error>) -> Void) {
         DispatchQueue.global().asyncAfter(deadline: .now()+0.6, execute: { //0.6s
 //            var newData = [String]()

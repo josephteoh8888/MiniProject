@@ -18,4 +18,11 @@ class PanelView: UIView {
     func resumeActiveState() {
         
     }
+    
+    func pauseMedia() {
+        
+    }
+    func resumeMedia() {
+        
+    }
 }

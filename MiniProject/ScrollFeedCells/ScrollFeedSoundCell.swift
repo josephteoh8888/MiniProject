@@ -1,5 +1,5 @@
 //
-//  ScrollFeedVideoCell.swift
+//  ScrollFeedHResultHashtagListCell.swift
 //  MiniProject
 //
 //  Created by Joseph Teoh on 30/06/2024.
@@ -9,33 +9,31 @@ import Foundation
 import UIKit
 import SDWebImage
 
-protocol ScrollFeedVideoCellDelegate : AnyObject {
-    func sfvcWillBeginDragging(offsetY: CGFloat)
-    func sfvcScrollViewDidScroll(offsetY: CGFloat)
-    func sfvcSrollViewDidEndDecelerating(offsetY: CGFloat)
-    func sfvcScrollViewDidEndDragging(offsetY: CGFloat, decelerate: Bool)
+protocol ScrollFeedSoundCellDelegate : AnyObject {
+    func sfscWillBeginDragging(offsetY: CGFloat)
+    func sfscScrollViewDidScroll(offsetY: CGFloat)
+    func sfscSrollViewDidEndDecelerating(offsetY: CGFloat)
+    func sfscScrollViewDidEndDragging(offsetY: CGFloat, decelerate: Bool)
     
-    func sfvcAsyncFetchFeed()
-    func sfvcAsyncPaginateFeed(cell: ScrollFeedVideoCell?)
-    func sfvcAutoplayVideo(cell: ScrollFeedVideoCell?, vCCell: VCViewCell?)
+    func sfscAsyncFetchFeed()
+    func sfscAsyncPaginateFeed(cell: ScrollFeedSoundCell?)
+    func sfscAutoplayVideo(cell: ScrollFeedSoundCell?, vCCell: SCViewCell?)
     
-    func sfvcDidClickUser(id: String)
-    func sfvcDidClickPlace(id: String)
-    func sfvcDidClickSound(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
-    func sfvcDidClickComment()
-    func sfvcDidClickShare(id: String, dataType: String)
+    func sfscDidClickUser(id: String)
+    func sfscDidClickPlace(id: String)
+    func sfscDidClickSound(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
+    func sfscDidClickComment()
+    func sfscDidClickShare(id: String, dataType: String)
     
-    func sfvcDidClickRefresh()
+    func sfscDidClickRefresh()
 }
 
-//TODO: erase currentIndexPath, replace with visibleitems
-class ScrollFeedVideoCell: UIView {
-    
-    var vcDataList = [VideoData]()
+class ScrollFeedSoundCell: UIView {
+    var vcDataList = [SoundData]()
     var videoCV : UICollectionView?
     var currentIndexPath = IndexPath(item: 0, section: 0)
     
-    weak var aDelegate : ScrollFeedVideoCellDelegate?
+    weak var aDelegate : ScrollFeedSoundCellDelegate?
     
     var dataFetchState = ""
     var dataPaginateStatus = "" //test
@@ -66,12 +64,6 @@ class ScrollFeedVideoCell: UIView {
     
     private func addSubViews() {
 
-//        let vData = VideoData()
-//        vData.setDataType(data: "b")
-//        vData.setData(data: "b")
-//        vData.setTextString(data: "b")
-//        vcDataList.append(vData)
-
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
 //        layout.itemSize = CGSize(width: self.frame.size.width, height: self.frame.size.height)
@@ -82,8 +74,8 @@ class ScrollFeedVideoCell: UIView {
         guard let videoCV = videoCV else {
             return
         }
-        videoCV.register(VCAViewCell.self, forCellWithReuseIdentifier: VCAViewCell.identifier)
-        videoCV.register(VCBViewCell.self, forCellWithReuseIdentifier: VCBViewCell.identifier)
+        videoCV.register(SCAViewCell.self, forCellWithReuseIdentifier: SCAViewCell.identifier)
+        videoCV.register(SCBViewCell.self, forCellWithReuseIdentifier: SCBViewCell.identifier)
         videoCV.isPagingEnabled = true
         videoCV.dataSource = self
         videoCV.delegate = self
@@ -109,7 +101,7 @@ class ScrollFeedVideoCell: UIView {
         }
         print("aaa startplay: \(a.indexPathsForVisibleItems), \(currentIndexPath)")
         let currentVc = a.cellForItem(at: self.currentIndexPath)
-        guard let b = currentVc as? VCViewCell else {
+        guard let b = currentVc as? SCViewCell else {
             return
         }
         if(currentIndexPath.row > -1) {
@@ -128,7 +120,7 @@ class ScrollFeedVideoCell: UIView {
         }
         print("aaa resume: \(a.indexPathsForVisibleItems), \(currentIndexPath)")
         let currentVc = a.cellForItem(at: self.currentIndexPath)
-        guard let b = currentVc as? VCViewCell else {
+        guard let b = currentVc as? SCViewCell else {
             return
         }
         if(currentIndexPath.row > -1) {
@@ -147,7 +139,7 @@ class ScrollFeedVideoCell: UIView {
         }
         print("aaa stopplay: \(a.indexPathsForVisibleItems), \(currentIndexPath)")
         let currentVc = a.cellForItem(at: self.currentIndexPath)
-        guard let b = currentVc as? VCViewCell else {
+        guard let b = currentVc as? SCViewCell else {
             return
         }
         if(currentIndexPath.row > -1) {
@@ -166,7 +158,7 @@ class ScrollFeedVideoCell: UIView {
         }
         print("aaa pause: \(a.indexPathsForVisibleItems), \(currentIndexPath)")
         let currentVc = a.cellForItem(at: self.currentIndexPath)
-        guard let b = currentVc as? VCViewCell else {
+        guard let b = currentVc as? SCViewCell else {
             return
         }
         if(currentIndexPath.row > -1) {
@@ -184,7 +176,7 @@ class ScrollFeedVideoCell: UIView {
             return
         }
         for cell in a.visibleCells {
-            if let c = cell as? VCViewCell {
+            if let c = cell as? SCViewCell {
                 c.destroyCell()
             }
         }
@@ -206,7 +198,7 @@ class ScrollFeedVideoCell: UIView {
     func dehideCell(){
         if(hideCellIndex > -1) {
             let vc = videoCV?.cellForItem(at: IndexPath(item: hideCellIndex, section: 0))
-            guard let b = vc as? VCViewCell else {
+            guard let b = vc as? SCViewCell else {
                 return
             }
             b.dehideCell()
@@ -216,7 +208,7 @@ class ScrollFeedVideoCell: UIView {
     
     func hideCellAt(itemIndex: Int) {
         let vc = videoCV?.cellForItem(at: IndexPath(item: itemIndex, section: 0))
-        guard let b = vc as? VCViewCell else {
+        guard let b = vc as? SCViewCell else {
             return
         }
         b.hideCell()
@@ -224,7 +216,7 @@ class ScrollFeedVideoCell: UIView {
     }
 }
 
-extension ScrollFeedVideoCell: UICollectionViewDelegateFlowLayout {
+extension ScrollFeedSoundCell: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                   layout collectionViewLayout: UICollectionViewLayout,
                   insetForSectionAt section: Int) -> UIEdgeInsets {
@@ -243,51 +235,24 @@ extension ScrollFeedVideoCell: UICollectionViewDelegateFlowLayout {
 //        print("video scroll page point willdisplay: \(currentIndexPath),/ \(indexPath), \(collectionView.indexPathsForVisibleItems)")
         print("video scroll page point willdisplay: \(currentIndexPath), \(indexPath), \(isUserScrolling)")
         
-//        let w = self.vcDataList.count - 1
-//        let x = self.currentIndexPath.row
-//        let y = self.vcDataList[w].dataType
-//        let z = self.vcDataList[x].dataType
-//        
-//        if indexPath.row == vcDataList.count - 1 {
-//
-//            //test
-//            print("FeedVideoCell willdisplay: \(dataFetchState)")
-//            if(dataFetchState == "end") { //means asyncFetchData has been performed once(initialized)
-//                if(y == "b") {
-//                    if(dataPaginateStatus == "") {
-//                        //test
-//                        aDelegate?.sfvcAsyncPaginateFeed(cell: self)
-//                    }
-//                }
-//            }
-//        }
-//
         //test 2
         if indexPath.row == vcDataList.count - 1 {
             if(dataFetchState == "end") { //means asyncFetchData has been performed once(initialized)
                 let y = vcDataList[indexPath.row].dataCode
                 if(y == "b") {
                     if(dataPaginateStatus == "") {
-                        aDelegate?.sfvcAsyncPaginateFeed(cell: self)
+                        aDelegate?.sfscAsyncPaginateFeed(cell: self)
                     }
                 }
             }
         }
         
-////        //test > autoplay if current indexpath is the same as willDisplay indexpath, e.g. reload data
-//        if(currentIndexPath == indexPath && z == "a") {
-//            if let c = cell as? VCViewCell {
-//                print("FeedVideoCell willdisplay play: \(indexPath), \(currentIndexPath)")
-//                aDelegate?.sfvcAutoplayVideo(cell: self, vCCell: c)
-//            }
-//        }
-        
         //test 2 > only play video if user not scrolling
         if(!isUserScrolling) {
             let z = vcDataList[indexPath.row].dataCode
             if(z == "a") {
-                if let c = cell as? VCViewCell {
-                    aDelegate?.sfvcAutoplayVideo(cell: self, vCCell: c)
+                if let c = cell as? SCViewCell {
+                    aDelegate?.sfscAutoplayVideo(cell: self, vCCell: c)
                 }
             }
             //test > renew currentindexpath after deleted item
@@ -298,14 +263,14 @@ extension ScrollFeedVideoCell: UICollectionViewDelegateFlowLayout {
         print("video scroll page point enddisplay: \(indexPath)")
         
         //test > stop video when scroll past
-        if let c = cell as? VCViewCell {
+        if let c = cell as? SCViewCell {
             c.stopVideo()
             print("FeedVideoCell didEndDisplay stop video: \(indexPath)")
         }
     }
 }
 
-extension ScrollFeedVideoCell: UICollectionViewDataSource {
+extension ScrollFeedSoundCell: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return vcDataList.count
     }
@@ -314,9 +279,9 @@ extension ScrollFeedVideoCell: UICollectionViewDataSource {
         
         print("FeedVideoCell cellForItem: \(indexPath)")
         
-        //test > for ui mode = pure_video
-        if(vcDataList[indexPath.row].uiMode == VideoTypes.V_LOOP) {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: VCAViewCell.identifier, for: indexPath) as! VCAViewCell
+        //ORI
+        if(vcDataList[indexPath.row].uiMode == SoundTypes.S_0) {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SCAViewCell.identifier, for: indexPath) as! SCAViewCell
             cell.aDelegate = self
             
             //test > video
@@ -324,7 +289,9 @@ extension ScrollFeedVideoCell: UICollectionViewDataSource {
             
             return cell
         } else {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: VCBViewCell.identifier, for: indexPath) as! VCBViewCell
+//            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SCBViewCell.identifier, for: indexPath) as! SCBViewCell
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SCAViewCell.identifier, for: indexPath) as! SCAViewCell
+            cell.aDelegate = self
             
             //test > video
             cell.configure(data: vcDataList[indexPath.row])
@@ -334,11 +301,11 @@ extension ScrollFeedVideoCell: UICollectionViewDataSource {
     }
 }
 
-extension ScrollFeedVideoCell: UICollectionViewDelegate {
+extension ScrollFeedSoundCell: UICollectionViewDelegate {
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         print("scrollview begin: \(scrollView.contentOffset.y)")
         print("video scroll page point begin drag: ")
-        aDelegate?.sfvcWillBeginDragging(offsetY: scrollView.contentOffset.y)
+        aDelegate?.sfscWillBeginDragging(offsetY: scrollView.contentOffset.y)
         
         //test
         isUserScrolling = true
@@ -346,7 +313,7 @@ extension ScrollFeedVideoCell: UICollectionViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         print("scrollview scroll: ")
-        aDelegate?.sfvcScrollViewDidScroll(offsetY: scrollView.contentOffset.y)
+        aDelegate?.sfscScrollViewDidScroll(offsetY: scrollView.contentOffset.y)
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
@@ -374,7 +341,7 @@ extension ScrollFeedVideoCell: UICollectionViewDelegate {
         
         currentIndexPath = visibleIndexPath
         
-        guard let b = currentVc as? VCViewCell else {
+        guard let b = currentVc as? SCViewCell else {
             return
         }
         
@@ -387,7 +354,7 @@ extension ScrollFeedVideoCell: UICollectionViewDelegate {
             }
         }
         
-        aDelegate?.sfvcSrollViewDidEndDecelerating(offsetY: scrollView.contentOffset.y)
+        aDelegate?.sfscSrollViewDidEndDecelerating(offsetY: scrollView.contentOffset.y)
         
         //test
         isUserScrolling = false
@@ -396,21 +363,21 @@ extension ScrollFeedVideoCell: UICollectionViewDelegate {
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         print("scrollview end drag: \(scrollView.contentOffset.y), \(decelerate)")
 //        print("video scroll page point end drag: ")
-        aDelegate?.sfvcScrollViewDidEndDragging(offsetY: scrollView.contentOffset.y, decelerate: decelerate)
+        aDelegate?.sfscScrollViewDidEndDragging(offsetY: scrollView.contentOffset.y, decelerate: decelerate)
     }
 }
 
-extension ScrollFeedVideoCell: VCViewCellDelegate{
-    func didClickUser(id: String) {
-        aDelegate?.sfvcDidClickUser(id: id)
+extension ScrollFeedSoundCell: SCViewCellDelegate{
+    func didSCClickUser(id: String) {
+        aDelegate?.sfscDidClickUser(id: id)
     }
     
-    func didClickPlace(id: String) {
-        aDelegate?.sfvcDidClickPlace(id: id)
+    func didSCClickPlace(id: String) {
+        aDelegate?.sfscDidClickPlace(id: id)
     }
     
-    func didClickSound(id: String, vc: VCViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String) {
-//        aDelegate?.sfvcDidClickSound(id: id)
+    func didSCClickSound(id: String, vc: SCViewCell, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String) {
+//        aDelegate?.sfscDidClickSound(id: id)
         
         //test > new method for non-scrollable panel
         if let a = videoCV {
@@ -423,7 +390,7 @@ extension ScrollFeedVideoCell: VCViewCellDelegate{
                     let pointX1 = originInRootView.x + pointX
                     let pointY1 = originInRootView.y + pointY
                     
-                    aDelegate?.sfvcDidClickSound(id: id, pointX: pointX1, pointY: pointY1, view:view, mode: mode)
+                    aDelegate?.sfscDidClickSound(id: id, pointX: pointX1, pointY: pointY1, view:view, mode: mode)
                     
                     if let c = visibleIndexPath {
                         hideCellIndex = c.row
@@ -435,37 +402,25 @@ extension ScrollFeedVideoCell: VCViewCellDelegate{
         }
     }
     
-    func didClickComment() {
+    func didSCClickComment() {
 //        openComment()
-        aDelegate?.sfvcDidClickComment()
+        aDelegate?.sfscDidClickComment()
     }
-    func didClickShare(vc: VCViewCell, id: String, dataType: String) {
-        //test
-//        aDelegate?.sfvcDidClickShare()
+    func didSCClickShare(vc: SCViewCell, id: String, dataType: String) {
         
         guard let a = self.videoCV else {
             return
         }
-        //test 2
-//        print("video scroll page point share: \(a.indexPathsForVisibleItems)")
-//        let currentVc = a.cellForItem(at: self.currentIndexPath)
-//        if(currentVc == vc) {
-//            
-//            aDelegate?.sfvcDidClickShare()
-//            
-//            selectedItemIdx = currentIndexPath.row
-//            print("scrollfeedvideo selected \(selectedItemIdx)")
-//        }
         
         //test 3 > use indexpath for visible item
         let idxPath = a.indexPath(for: vc)
         guard let idxPath = idxPath else {
             return
         }
-        aDelegate?.sfvcDidClickShare(id: id, dataType: dataType)
+        aDelegate?.sfscDidClickShare(id: id, dataType: dataType)
         selectedItemIdx = idxPath.row
     }
-    func didClickRefresh() {
-        aDelegate?.sfvcDidClickRefresh()
+    func didSCClickRefresh() {
+        aDelegate?.sfscDidClickRefresh()
     }
 }

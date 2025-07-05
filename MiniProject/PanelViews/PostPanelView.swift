@@ -22,7 +22,7 @@ protocol PostPanelDelegate : AnyObject {
     func didClickPostPanelVcvShare() //try
     func didClickPostPanelVcvClickUser(id: String) //try
     func didClickPostPanelVcvClickPlace(id: String) //try
-    func didClickPostPanelVcvClickSound(id: String) //try
+    func didClickPostPanelVcvClickSound(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) //try
     func didClickPostPanelVcvClickPost(id: String, dataType: String, scrollToComment: Bool, pointX: CGFloat, pointY: CGFloat) //try
     func didClickPostPanelVcvClickPhoto(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
     func didClickPostPanelVcvClickVideo(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String)
@@ -1306,6 +1306,26 @@ class PostPanelView: PanelView, UIGestureRecognizerDelegate{
             }
         }
     }
+    override func resumeMedia() {
+        if(pageList.isEmpty) {
+            resumePlayingMedia()
+        }
+        else {
+            if let c = pageList[pageList.count - 1] as? CommentScrollableView {
+                c.resumePlayingMedia()
+            }
+        }
+    }
+    override func pauseMedia() {
+        if(pageList.isEmpty) {
+            pausePlayingMedia()
+        }
+        else {
+            if let c = pageList[pageList.count - 1] as? CommentScrollableView {
+                c.pausePlayingMedia()
+            }
+        }
+    }
     func dehideCell() {
         if(!self.feedList.isEmpty) {
             let b = feedList[currentIndex]
@@ -1788,7 +1808,7 @@ extension ViewController: PostPanelDelegate{
         //test > real id for fetching data
         openPlacePanel(id: id)
     }
-    func didClickPostPanelVcvClickSound(id: String) {
+    func didClickPostPanelVcvClickSound(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
 
     }
     func didClickPostPanelVcvClickPost(id: String, dataType: String, scrollToComment: Bool, pointX: CGFloat, pointY: CGFloat) {
@@ -1931,8 +1951,10 @@ extension PostPanelView: CommentScrollableDelegate{
     func didCClickPlace(id: String){
         delegate?.didClickPostPanelVcvClickPlace(id: id)
     }
-    func didCClickSound(id: String){
-        delegate?.didClickPostPanelVcvClickSound(id: id)
+    func didCClickSound(id: String, pointX: CGFloat, pointY: CGFloat, view: UIView, mode: String){
+//        delegate?.didClickPostPanelVcvClickSound(id: id)
+        
+        delegate?.didClickPostPanelVcvClickSound(id: id, pointX: pointX, pointY: pointY, view: view, mode: mode)
     }
     func didCClickClosePanel(){
 //        bottomBox.isHidden = true
@@ -2041,7 +2063,7 @@ extension PostPanelView: ScrollFeedCellDelegate {
         pausePlayingMedia()
         delegate?.didClickPostPanelVcvClickPlace(id: id)
     }
-    func sfcDidClickVcvClickSound(id: String) {
+    func sfcDidClickVcvClickSound(id: String, pointX: CGFloat, pointY: CGFloat, view:UIView, mode: String) {
 
     }
     func sfcDidClickVcvClickPost(id: String, dataType: String, pointX: CGFloat, pointY: CGFloat) {

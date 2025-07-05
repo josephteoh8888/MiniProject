@@ -191,15 +191,16 @@ class PhotoDataset: BaseDataset {
     func setData(data: String) {
         if(data == "a") {
             dataArray.append("p") //photo
-            dataArray.append("m") //text
-//            dataArray.append("t") //photo
+//            dataArray.append("m") //text
+            dataArray.append("t") //photo
         }
         else if(data == "b") {
             dataArray.append("p") //photo
         }
         else if(data == "c") {
             dataArray.append("p") //photo
-            dataArray.append("m") //photo
+//            dataArray.append("m") //photo
+            dataArray.append("t") //photo
         }
         else if(data == "d") {
             dataArray.append("p") //photo
@@ -806,9 +807,14 @@ class SoundDataset: BaseDataset {
     var coverPhotoString: String = ""
     var isAccountVerified = false
     
+    var userId: String = "" //creator
+    var placeId: String = ""
+    
     func setupData(data: String) {
         dataCode = data
         dataArray.append(data)
+        setDataCount(data: data)
+        setTextString(data: data)
     }
     
     func setId(dataId: String) {
@@ -825,16 +831,28 @@ class SoundDataset: BaseDataset {
     
     func setDataCount(data: String) {
         if(data == "a") {
-            dataCount["bookmark"] = 460004
+            dataCount["love"] = 3796
+            dataCount["comment"] = 209
+            dataCount["share"] = 98
+            dataCount["bookmark"] = 890
         }
         else if(data == "b") {
-            dataCount["bookmark"] = 7890
+            dataCount["love"] = 675
+            dataCount["comment"] = 2708
+            dataCount["share"] = 719
+            dataCount["bookmark"] = 604
         }
         else if(data == "c") {
+            dataCount["love"] = 74
+            dataCount["comment"] = 921
+            dataCount["share"] = 32
             dataCount["bookmark"] = 34
         }
         else if(data == "d") {
-            dataCount["bookmark"] = 905783
+            dataCount["love"] = 18312
+            dataCount["comment"] = 1309
+            dataCount["share"] = 478
+            dataCount["bookmark"] = 57
         }
     }
     
@@ -858,13 +876,14 @@ class SoundDataset: BaseDataset {
             coverPhotoString = "https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg"
         }
         else if(data == "b") {
-            coverPhotoString = "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media"
+            coverPhotoString =
+            "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media"
         }
         else if(data == "c") {
             coverPhotoString = "https://i3.ytimg.com/vi/2mcGhpbWlyg/maxresdefault.jpg"
         }
         else if(data == "d") {
-            coverPhotoString = "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media"
+            coverPhotoString = "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_gif_4.gif?alt=media"
         }
         
         //account verified
@@ -879,6 +898,24 @@ class SoundDataset: BaseDataset {
         }
         else if(data == "d") {
             isAccountVerified = true
+        }
+        
+        //creator id, sound and place id
+        if(data == "a") {
+            userId = "u2"
+            placeId = "p3"
+        }
+        else if(data == "b") {
+            userId = "u1"
+            placeId = "p4"
+        }
+        else if(data == "c") {
+            userId = "u4"
+            placeId = "p1"
+        }
+        else if(data == "d") {
+            userId = "u3"
+            placeId = "p2"
         }
     }
 }

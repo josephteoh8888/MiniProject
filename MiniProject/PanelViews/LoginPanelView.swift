@@ -1086,6 +1086,7 @@ class LoginPanelView: PanelView{
 extension ViewController: LoginPanelDelegate{
     func didClickCloseLoginPanel(){
         //test 1 > as not scrollable
+        print("mepanel login close")
         backPage(isCurrentPageScrollable: false)
     }
     func didClickCreateUserAccount(){

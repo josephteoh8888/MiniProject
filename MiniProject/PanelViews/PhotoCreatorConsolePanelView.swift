@@ -416,6 +416,7 @@ class PhotoCreatorConsolePanelView: CreatorPanelView{
         audioFrame.layer.cornerRadius = 10
         audioFrame.isUserInteractionEnabled = true
         audioFrame.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onSelectAudioClicked)))
+        audioFrame.isHidden = true
         
         audioScrollBase.backgroundColor = .ddmGoldenYellowColor
         panel.insertSubview(audioScrollBase, belowSubview: audioFrame)

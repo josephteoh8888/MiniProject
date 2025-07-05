@@ -1,8 +1,8 @@
 //
-//  VCBViewCell.swift
+//  MeBookmarkListPanelView.swift
 //  MiniProject
 //
-//  Created by Joseph Teoh on 30/06/2024.
+//  Created by Joseph Teoh on 20/07/2024.
 //
 
 import Foundation
@@ -10,13 +10,11 @@ import UIKit
 import SDWebImage
 import AVFoundation
 
-class VCBViewCell: VCViewCell {
+class SCBViewCell: SCViewCell {
     
-    static let identifier = "VCBViewCell"
+    static let identifier = "SCBViewCell"
     var gifImage = SDAnimatedImageView()
     
-//    var playerLooper: AVPlayerLooper!
-//    var queuePlayer: AVQueuePlayer!
     let videoContainer = UIView()
     //test > avplayer instead of looper
     var player: AVPlayer!
@@ -122,20 +120,21 @@ class VCBViewCell: VCViewCell {
         aContainer.clipsToBounds = true
         aContainer.layer.cornerRadius = 10
         aContainer.isHidden = true
+        aContainer.backgroundColor = .ddmDarkBlack
         
-        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
-        gifImage.contentMode = .scaleAspectFill
-        gifImage.clipsToBounds = true
-        gifImage.sd_setImage(with: imageUrl)
-        gifImage.layer.cornerRadius = 10
-//        contentView.addSubview(gifImage)
-        aContainer.addSubview(gifImage)
-        gifImage.translatesAutoresizingMaskIntoConstraints = false
-        gifImage.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-        gifImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
-        gifImage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
-        gifImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
-//        gifImage.isHidden = true
+//        let imageUrl = URL(string: "https://firebasestorage.googleapis.com/v0/b/dandanmap-37085.appspot.com/o/users%2FMW26M6lXx3TLD7zWc6409pfzYet1%2Fpost%2FhzBDMLjPLaaux0i6VODb%2Fvideo%2F0%2Fimg_0_OzBhXd4L5TSA0n3tQ7C8m.jpg?alt=media")
+//        gifImage.contentMode = .scaleAspectFill
+//        gifImage.clipsToBounds = true
+//        gifImage.sd_setImage(with: imageUrl)
+//        gifImage.layer.cornerRadius = 10
+////        contentView.addSubview(gifImage)
+//        aContainer.addSubview(gifImage)
+//        gifImage.translatesAutoresizingMaskIntoConstraints = false
+//        gifImage.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
+//        gifImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
+//        gifImage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
+//        gifImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
+////        gifImage.isHidden = true
         
 //        contentView.addSubview(videoContainer)
         aContainer.addSubview(videoContainer)
@@ -146,7 +145,7 @@ class VCBViewCell: VCViewCell {
         videoContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
         videoContainer.clipsToBounds = true
         videoContainer.layer.cornerRadius = 10
-//        videoContainer.isHidden = true
+        videoContainer.isHidden = true
         
         //test > flash loader for video loading
 //        let fLoader = FlashLoader()
@@ -162,6 +161,38 @@ class VCBViewCell: VCViewCell {
         fLoader.trailingAnchor.constraint(equalTo: aContainer.trailingAnchor, constant: -10).isActive = true
 //        fLoader.startAnimating()
         
+        gifImage.contentMode = .scaleAspectFill
+        gifImage.clipsToBounds = true
+        gifImage.layer.cornerRadius = 10
+        aContainer.addSubview(gifImage)
+        gifImage.translatesAutoresizingMaskIntoConstraints = false
+        gifImage.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
+        gifImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
+        gifImage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
+        gifImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
+        
+        let blurEffect = UIBlurEffect(style: .light)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.frame = contentView.bounds
+        aContainer.addSubview(blurEffectView)
+        
+        //cover photo
+        let lhsMargin = 70.0
+        let rhsMargin = 70.0
+        let xWidth = self.frame.width - lhsMargin - rhsMargin
+        let coverPhoto = SDAnimatedImageView()
+        coverPhoto.contentMode = .scaleAspectFill
+        coverPhoto.clipsToBounds = true
+        coverPhoto.layer.cornerRadius = 10
+        aContainer.addSubview(coverPhoto)
+        coverPhoto.translatesAutoresizingMaskIntoConstraints = false
+        coverPhoto.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
+        coverPhoto.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: -80).isActive = true
+        coverPhoto.widthAnchor.constraint(equalToConstant: xWidth).isActive = true
+        coverPhoto.heightAnchor.constraint(equalToConstant: xWidth).isActive = true
+        let imageUrl = URL(string:"https://i3.ytimg.com/vi/VjXTddVwFmw/maxresdefault.jpg")
+        coverPhoto.sd_setImage(with: imageUrl)
+        
         //video control buttons
 //        contentView.addSubview(pauseVideoView)
         aContainer.addSubview(pauseVideoView)
@@ -171,7 +202,14 @@ class VCBViewCell: VCViewCell {
         pauseVideoView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
         pauseVideoView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
         pauseVideoView.isHidden = false
-        pauseVideoView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPauseVideoClicked)))
+        //test > added double tap for love click shortcut
+        let atapGR = UITapGestureRecognizer(target: self, action: #selector(onSingleTapped))
+        atapGR.numberOfTapsRequired = 1
+        pauseVideoView.addGestureRecognizer(atapGR)
+        let tapGR = UITapGestureRecognizer(target: self, action: #selector(onDoubleTapped))
+        tapGR.numberOfTapsRequired = 2
+        pauseVideoView.addGestureRecognizer(tapGR)
+        atapGR.require(toFail: tapGR)
         
         //test > added double tap for love click shortcut
 //        let atapGR = UITapGestureRecognizer(target: self, action: #selector(onPauseVideoClicked))
@@ -182,33 +220,35 @@ class VCBViewCell: VCViewCell {
 //        pauseVideoView.addGestureRecognizer(tapGR)
 //        atapGR.require(toFail: tapGR)
         
-//        contentView.addSubview(playVideoView)
-        aContainer.addSubview(playVideoView)
-        playVideoView.translatesAutoresizingMaskIntoConstraints = false
-        playVideoView.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-        playVideoView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
-        playVideoView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
-        playVideoView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
-        playVideoView.isHidden = true
-        playVideoView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onResumeVideoClicked)))
-        
-//        let playBtn = UIImageView(image: UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate))
+        //test > pause/play btn at bottom RHS
         playBtn.image = UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate)
+//        playBtn.image = UIImage(named:"icon_round_pause")?.withRenderingMode(.alwaysTemplate)
         playBtn.tintColor = .white
-//        contentView.addSubview(playBtn)
-        playVideoView.addSubview(playBtn)
+        aContainer.addSubview(playBtn)
         playBtn.translatesAutoresizingMaskIntoConstraints = false
-        playBtn.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 0).isActive = true
-//        mBtn.bottomAnchor.constraint(equalTo: videoPanel.bottomAnchor, constant: -30).isActive = true
-        playBtn.centerXAnchor.constraint(equalTo: contentView.centerXAnchor, constant: 0).isActive = true
-        playBtn.heightAnchor.constraint(equalToConstant: 150).isActive = true
-        playBtn.widthAnchor.constraint(equalToConstant: 150).isActive = true
-        playBtn.layer.opacity = 0.5
-        playBtn.layer.shadowColor = UIColor.gray.cgColor
-        playBtn.layer.shadowRadius = 3.0  //ori 3
-        playBtn.layer.shadowOpacity = 0.5 //ori 1
-        playBtn.layer.shadowOffset = CGSize(width: 2, height: 2)
+        playBtn.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -30).isActive = true //-30
+//        playBtn.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15).isActive = true
+        playBtn.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15).isActive = true
+        playBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        playBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        playBtn.isUserInteractionEnabled = true
+        playBtn.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPauseVideoClicked)))
         
+        let playLine = UIView()
+        playLine.backgroundColor = .white
+//        contentView.addSubview(aBox)
+        aContainer.addSubview(playLine)
+        playLine.clipsToBounds = true
+        playLine.translatesAutoresizingMaskIntoConstraints = false
+//        playLine.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20).isActive = true //15
+        playLine.leadingAnchor.constraint(equalTo: playBtn.trailingAnchor, constant: 10).isActive = true
+        playLine.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20).isActive = true
+        playLine.centerYAnchor.constraint(equalTo: playBtn.centerYAnchor, constant: 0).isActive = true
+        playLine.layer.cornerRadius = 2
+        playLine.layer.opacity = 0.3
+//        playLine.isUserInteractionEnabled = true
+//        playLine.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(onPlaceClicked)))
+        playLine.heightAnchor.constraint(equalToConstant: 4).isActive = true
     }
     
     override func layoutSubviews() {
@@ -262,19 +302,20 @@ class VCBViewCell: VCViewCell {
     
     @objc func onPauseVideoClicked(gesture: UITapGestureRecognizer) {
         print("click pause video:")
-//        aDelegate?.didClickPauseVideo()
-
-        pauseVideoView.isHidden = true
-        playVideoView.isHidden = false
-        pauseVideo()
+        
+        if(vidPlayStatus == "play") {
+            pauseVideo()
+        } else {
+            resumeVideo()
+        }
     }
-    @objc func onResumeVideoClicked(gesture: UITapGestureRecognizer) {
-        print("click resume video:")
-//        aDelegate?.didClickResumeVideo()
 
-        pauseVideoView.isHidden = false
-        playVideoView.isHidden = true
-        resumeVideo()
+    //test > double tap to love a video
+    @objc func onSingleTapped(gesture: UITapGestureRecognizer) {
+        print("click single tapped video:")
+    }
+    @objc func onDoubleTapped(gesture: UITapGestureRecognizer) {
+        print("click double tapped video:")
     }
     
     var searchTimer: Timer?
@@ -298,7 +339,7 @@ class VCBViewCell: VCViewCell {
     }
     
     //test > async fetch asset
-    func asyncConfigureVideo(data: VideoData) {
+    func asyncConfigureVideo(data: SoundData) {
         
         startFlashLoaderAnimation()
         
@@ -374,7 +415,7 @@ class VCBViewCell: VCViewCell {
         self.id = id
     }
     
-    func configure(data: VideoData) {
+    func configure(data: SoundData) {
         
         setId(id: data.id)
         
@@ -421,30 +462,7 @@ class VCBViewCell: VCViewCell {
         
         //avplayer with loop
 //        video urls: temp_video_1.mp4, temp_video_2.mp4, temp_video_3.mp4, temp_video_4.mp4
-        let videoURL = "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_video_4.mp4?alt=media"
-//        let videoURL = "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_audio_4.m4a?alt=media"
-//        let url = CacheManager.shared.getCacheUrlFor(videoUrl: videoURL)
-//        self.queuePlayer = AVQueuePlayer()
-//        let playerView = AVPlayerLayer(player: queuePlayer)
-//        let playerItem = AVPlayerItem(url: url)
-//        playerLooper = AVPlayerLooper(player: queuePlayer, templateItem: playerItem)
-//        playerView.frame = contentView.bounds
-//        playerView.videoGravity = .resizeAspectFill
-//        videoContainer.layer.addSublayer(playerView)
-//
-//        pauseVideoView.isHidden = false
-//        playVideoView.isHidden = true
-//
-//        stopVideo()
-////        playVideo()
-//        print("dummy configure: \(data)")
-//
-//        //test > get duration of video 2
-//        let d = getDuration(ofVideoAt: url)
-//        print("vcviewcell duration: \(d)")
-//
-//        //test > TimeObserver for progresslistener
-//        addTimeObserver()
+//        let videoURL = "https://firebasestorage.googleapis.com/v0/b/trail-test-45362.appspot.com/o/temp_video_4.mp4?alt=media"
         
         //test 3 > async load video
         asyncConfigureVideo(data: data)
@@ -493,50 +511,52 @@ class VCBViewCell: VCViewCell {
     }
     
     override func playVideo() {
-        pauseVideoView.isHidden = false
-        playVideoView.isHidden = true
-        
-//        queuePlayer.seek(to: .zero)
-//        queuePlayer.play()
-        player?.seek(to: .zero)
-        player?.play()
-        
-        vidPlayStatus = "play"
-        
-        print("vcBviewcell play")
-    }
-    
-    override func stopVideo() {
 //        pauseVideoView.isHidden = false
 //        playVideoView.isHidden = true
         
-//        queuePlayer.seek(to: .zero)
-//        queuePlayer.pause()
+        player?.seek(to: .zero)
+        player?.play()
+        
+//        vidPlayStatus = "play"
+        //test
+        reactOnPlayStatus(status: "play")
+    }
+    
+    override func stopVideo() {
         player?.seek(to: .zero)
         player?.pause()
         
-        vidPlayStatus = "pause"
+//        vidPlayStatus = "pause"
+        print("cell stop video")
+        //test
+        reactOnPlayStatus(status: "pause")
     }
     
     override func pauseVideo() {
-//        pauseVideoView.isHidden = true
-//        playVideoView.isHidden = false
-        
-//        queuePlayer.pause()
         player?.pause()
         
-        vidPlayStatus = "pause"
+//        vidPlayStatus = "pause"
+        //test
+        reactOnPlayStatus(status: "pause")
     }
     
     override func resumeVideo() {
-        pauseVideoView.isHidden = false
-        playVideoView.isHidden = true
-        
-//        queuePlayer.play()
+//        pauseVideoView.isHidden = false
+//        playVideoView.isHidden = true
+
         player?.play()
         
-        vidPlayStatus = "play"
-        
-        print("vcBviewcell resume")
+//        vidPlayStatus = "play"
+        //test
+        reactOnPlayStatus(status: "play")
+    }
+    
+    func reactOnPlayStatus(status: String) {
+        vidPlayStatus = status
+        if(status == "play") {
+            playBtn.image = UIImage(named:"icon_round_pause")?.withRenderingMode(.alwaysTemplate)
+        } else {
+            playBtn.image = UIImage(named:"icon_round_play")?.withRenderingMode(.alwaysTemplate)
+        }
     }
 }
